@@ -1,4 +1,14 @@
 {
+  "name": "refined-prun",
+  "version": "1",
+  "scripts": {
+    "build": "webpack --config webpack.dev.js",
+    "package": "webpack --config webpack.prod.js"
+  },
+  "dependencies": {
+    "build": "^0.1.4",
+    "plotly.js-dist-min": "^2.30.1"
+  },
   "devDependencies": {
     "@types/chrome": "^0.0.268",
     "@types/plotly.js-dist-min": "^2.3.4",
@@ -9,14 +19,5 @@
     "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^6.0.1"
-  },
-  "name": "pmmg-beautifier",
-  "scripts": {
-    "build": "webpack --config webpack.dev.js",
-    "package": "webpack --config webpack.prod.js"
-  },
-  "dependencies": {
-    "build": "^0.1.4",
-    "plotly.js-dist-min": "^2.30.1"
   }
 }

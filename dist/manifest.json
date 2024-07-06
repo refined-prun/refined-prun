@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "PMMG Extended",
-  "description": "Improve and tweak the interface elements of PrUn website",
-  "version": "1.12.6",
+  "name": "Refined PrUn",
+  "description": "Browser extension that simplifies the Prosperous Universe interface and adds useful features",
+  "version": "1",
   "icons": {
     "128": "icon128.png"
   },
