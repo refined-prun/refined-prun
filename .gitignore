@@ -1,8 +1,21 @@
-node_modules
-src.zip
-dist/main.js
-dist/main.js.map
-.idea
-.vscode
-desktop.ini
+# dependencies
+**/node_modules
+
+# testing
+**/coverage
+
+# build
+**/dist
+**/build
+
+# env
+**/.env.local
+**/.env
+
+# etc
 .DS_Store
+.idea
+**/.turbo
+
+# compiled
+chrome-extension/public/manifest.json

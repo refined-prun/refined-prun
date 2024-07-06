@@ -1,0 +1,26 @@
+{
+  "name": "@refined-prun/storage",
+  "description": "chrome extension storage",
+  "private": true,
+  "sideEffects": false,
+  "files": [
+    "dist/**"
+  ],
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "index.ts",
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build:esm": "tsc --module es2015 --target es5 --outDir dist/esm",
+    "build:cjs": "tsc --module commonjs --target es5 --outDir dist/cjs",
+    "ready": "pnpm build:esm && pnpm build:cjs",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "pnpm lint --fix",
+    "prettier": "prettier . --write --ignore-path ../../.prettierignore",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@refined-prun/tsconfig": "workspace:*"
+  }
+}

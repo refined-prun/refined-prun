@@ -1,0 +1,34 @@
+{
+  "name": "chrome-extension",
+  "description": "chrome extension",
+  "scripts": {
+    "clean": "rimraf ../../dist",
+    "build": "tsc --noEmit && vite build",
+    "build:firefox": "tsc --noEmit && cross-env __FIREFOX__=true vite build",
+    "build:watch": "cross-env __DEV__=true vite build -w --mode development",
+    "build:firefox:watch": "cross-env __DEV__=true __FIREFOX__=true vite build -w --mode development",
+    "dev": "pnpm build:watch",
+    "dev:firefox": "pnpm build:firefox:watch",
+    "test": "vitest run",
+    "lint": "eslint ./ --ext .ts,.js,.tsx,.jsx",
+    "lint:fix": "pnpm lint --fix",
+    "prettier": "prettier . --write --ignore-path ../.prettierignore",
+    "type-check": "tsc --noEmit"
+  },
+  "type": "module",
+  "dependencies": {
+    "webextension-polyfill": "^0.12.0",
+    "@refined-prun/storage": "workspace:*"
+  },
+  "devDependencies": {
+    "@refined-prun/dev-utils": "workspace:*",
+    "@refined-prun/hmr": "workspace:*",
+    "@refined-prun/tsconfig": "workspace:*",
+    "@laynezh/vite-plugin-lib-assets": "^0.5.23",
+    "@types/chrome": "^0.0.268",
+    "@types/firefox-webext-browser": "^120.0.4",
+    "@types/ws": "^8.5.10",
+    "magic-string": "^0.30.10",
+    "ts-loader": "^9.5.1"
+  }
+}
