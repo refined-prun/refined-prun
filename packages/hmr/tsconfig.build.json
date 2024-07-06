@@ -1,0 +1,9 @@
+{
+  "extends": "@refined-prun/tsconfig/utils",
+  "compilerOptions": {
+    "outDir": "dist",
+    "types": ["chrome"]
+  },
+  "exclude": ["lib/injections/**/*"],
+  "include": ["lib", "index.ts"]
+}

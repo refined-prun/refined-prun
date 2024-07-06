@@ -1,0 +1,10 @@
+{
+  "extends": "@refined-prun/tsconfig/base",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"]
+    },
+  },
+  "include": ["src"]
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "ready": {
+      "outputs": ["dist/**", "build/**"]
+    },
+    "dev": {
+      "outputs": ["dist/**", "build/**"],
+      "env": ["__FIREFOX__"],
+      "persistent": true
+    },
+    "build": {
+      "dependsOn": ["^build", "ready"],
+      "env": ["__FIREFOX__"],
+      "outputs": ["../../dist/**", "dist/**", "build/**"]
+    },
+    "type-check": {
+      "cache": false
+    },
+    "lint": {
+      "cache": false
+    },
+    "lint:fix": {
+      "cache": false
+    },
+    "prettier": {
+      "cache": false
+    },
+    "test": {
+      "dependsOn": [
+        "^test", "^build"
+      ],
+      "cache": false
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

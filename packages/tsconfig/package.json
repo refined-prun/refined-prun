@@ -1,0 +1,5 @@
+{
+  "name": "@refined-prun/tsconfig",
+  "description": "tsconfig for chrome extension",
+  "private": true
+}
