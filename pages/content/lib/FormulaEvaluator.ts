@@ -129,6 +129,9 @@ function addListeners(buffer, tag) {
 }
 
 export function evaluateMath(expression, depth?: number) {
+  let result;
+  let right;
+  let left;
   // Keep track of how many evaluation steps have been taken to cap it.
   if (!depth) {
     depth = 0;
@@ -139,7 +142,7 @@ export function evaluateMath(expression, depth?: number) {
   expression = expression.replace(/,/g, '.');
 
   // If any invalid characters exist, do not evaluate it.
-  if (/[^0-9.,+\-\/*\^\(\)]/.test(expression)) {
+  if (/[^0-9.,+\-/*^()]/.test(expression)) {
     return null;
   }
 
@@ -154,7 +157,7 @@ export function evaluateMath(expression, depth?: number) {
     expression = '('.repeat(rightCount - leftCount) + expression;
   }
 
-  var match = expression.match(/\(/);
+  let match = expression.match(/\(/);
   if (match) {
     let pCounter = 1; // Count the number of parenthesis to close
     let substring = expression.substring(match.index + 1);
@@ -200,11 +203,11 @@ export function evaluateMath(expression, depth?: number) {
   // All parenthesis have been resolved
 
   // Evaluate exponents
-  var match = expression.match(/(?:(?<!\d))(-?\d+(?:\.\d+)?)\^(-?\d+(?:\.\d+)?)/);
+  match = expression.match(/(?:(?<!\d))(-?\d+(?:\.\d+)?)\^(-?\d+(?:\.\d+)?)/);
   if (match) {
-    var left = parseFloat(match[1]);
-    var right = parseFloat(match[2]);
-    var result = Math.pow(left, right);
+    left = parseFloat(match[1]);
+    right = parseFloat(match[2]);
+    result = Math.pow(left, right);
     expression = expression.replace(match[0], result.toString());
     expression = evaluateMath(expression, depth + 1);
     return expression;
@@ -214,9 +217,9 @@ export function evaluateMath(expression, depth?: number) {
   const multMatch = expression.match(/(?:(?<!\d))(-?\d+(?:\.\d+)?)\*(-?\d+(?:\.\d+)?)/);
   const divMatch = expression.match(/(?:(?<!\d))(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)/);
   if (multMatch && (!divMatch || divMatch.index > multMatch.index)) {
-    var left = parseFloat(multMatch[1]);
-    var right = parseFloat(multMatch[2]);
-    var result = left * right;
+    left = parseFloat(multMatch[1]);
+    right = parseFloat(multMatch[2]);
+    result = left * right;
     expression = expression.replace(multMatch[0], result.toString());
     expression = evaluateMath(expression, depth + 1);
     return expression;
@@ -224,9 +227,9 @@ export function evaluateMath(expression, depth?: number) {
 
   // Evaluate division
   else if (divMatch) {
-    var left = parseFloat(divMatch[1]);
-    var right = parseFloat(divMatch[2]);
-    var result = left / right;
+    left = parseFloat(divMatch[1]);
+    right = parseFloat(divMatch[2]);
+    result = left / right;
     expression = expression.replace(divMatch[0], result.toString());
     expression = evaluateMath(expression, depth + 1);
     return expression;
@@ -234,11 +237,11 @@ export function evaluateMath(expression, depth?: number) {
 
   // Evaluate addition/subtraction
   const addMatch = expression.match(/(?:(?<!\d))(-?\d+(?:\.\d+)?)\+(-?\d+(?:\.\d+)?)/);
-  const subMatch = expression.match(/(?:(?<!\d))(-?\d+(?:\.\d+)?)\-(-?\d+(?:\.\d+)?)/);
+  const subMatch = expression.match(/(?:(?<!\d))(-?\d+(?:\.\d+)?)-(-?\d+(?:\.\d+)?)/);
   if (addMatch && (!subMatch || subMatch.index > addMatch.index)) {
-    var left = parseFloat(addMatch[1]);
-    var right = parseFloat(addMatch[2]);
-    var result = left + right;
+    left = parseFloat(addMatch[1]);
+    right = parseFloat(addMatch[2]);
+    result = left + right;
     expression = expression.replace(addMatch[0], result.toString());
     expression = evaluateMath(expression, depth + 1);
     return expression;
@@ -246,9 +249,9 @@ export function evaluateMath(expression, depth?: number) {
 
   // Evaluate subtraction
   else if (subMatch) {
-    var left = parseFloat(subMatch[1]);
-    var right = parseFloat(subMatch[2]);
-    var result = left - right;
+    left = parseFloat(subMatch[1]);
+    right = parseFloat(subMatch[2]);
+    result = left - right;
     expression = expression.replace(subMatch[0], result.toString());
     expression = evaluateMath(expression, depth + 1);
     return expression;

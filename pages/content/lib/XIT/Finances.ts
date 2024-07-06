@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   clearChildren,
   createFinancialTextBox,
@@ -111,6 +112,7 @@ export class Finances {
 
 // Draw the correct screen based on the parameters (should split out into multiple functions probably)
 function chooseScreen(finResult, params) {
+  let i;
   // Params consists of [tile, parameters, pmmgSettings, webData]
   finResult = finResult['PMMG-Finance'];
   if (!params[0] || !params[1] || !params[2] || !params[3]) {
@@ -332,7 +334,7 @@ function chooseScreen(finResult, params) {
     const resultDiv = document.createElement('div');
     spreadsheetDiv.appendChild(resultDiv);
     if (pmmgSettings['PMMGExtended']['fin_spreadsheet'] && pmmgSettings['PMMGExtended']['fin_sheet_name']) {
-      const sheetID = pmmgSettings['PMMGExtended']['fin_spreadsheet'].match(/\/d\/([^\/]+)/);
+      const sheetID = pmmgSettings['PMMGExtended']['fin_spreadsheet'].match(/\/d\/([^/]+)/);
       if (sheetID && sheetID[1]) {
         drawGSTable(resultDiv, webData['custom_prices']);
       }
@@ -451,7 +453,7 @@ function chooseScreen(finResult, params) {
 
     const tbody = createTable(tile, ['Date', 'Equity', 'Delete']);
 
-    for (var i = 0; i < finResult['History'].length; i++) {
+    for (i = 0; i < finResult['History'].length; i++) {
       const row = document.createElement('tr');
       tbody.appendChild(row);
 
@@ -682,7 +684,7 @@ function chooseScreen(finResult, params) {
       ),
     );
 
-    for (var i = finResult['History'].length - 1; i >= 0; i--) {
+    for (i = finResult['History'].length - 1; i >= 0; i--) {
       if (lastReading[0] - finResult['History'][i][0] > 86400000 * 7) {
         break;
       }
@@ -707,7 +709,7 @@ function chooseScreen(finResult, params) {
     if (table) {
       const topRow = table.querySelector('thead > tr');
       if (topRow) {
-        for (var i = 1; i < topRow.children.length; i++) {
+        for (i = 1; i < topRow.children.length; i++) {
           (topRow.children[i] as HTMLElement).style.textAlign = 'right';
         }
       }
@@ -959,7 +961,7 @@ function chooseScreen(finResult, params) {
     if (table) {
       const topRow = table.querySelector('thead > tr');
       if (topRow) {
-        for (var i = 1; i < topRow.children.length; i++) {
+        for (i = 1; i < topRow.children.length; i++) {
           (topRow.children[i] as HTMLElement).style.textAlign = 'right';
         }
       }
@@ -1042,7 +1044,7 @@ function drawGSTable(resultDiv, prices) {
 
 function generateGraph(graphType, finResult, locationsArray, currency, width = 400, height = 200) {
   switch (graphType.toLowerCase()) {
-    case 'history':
+    case 'history': {
       const dateData = [] as any[];
       const finData = [] as any[];
 
@@ -1054,7 +1056,7 @@ function generateGraph(graphType, finResult, locationsArray, currency, width = 4
         dateData.push(new Date(entry[0]).toISOString());
         finData.push(Number((entry[1] + entry[2] + entry[3] - entry[4]).toPrecision(4)));
       });
-      var formattedDate = dateYearFormatter2.format(1729566792000);
+      let formattedDate = dateYearFormatter2.format(1729566792000);
       formattedDate = formattedDate.replace('10', '%m').replace('21', '%d').replace('22', '%d').replace('24', '%y');
       const linePlot = generateLineGraph(
         dateData,
@@ -1070,7 +1072,8 @@ function generateGraph(graphType, finResult, locationsArray, currency, width = 4
         formattedDate,
       );
       return linePlot;
-    case 'assetpie':
+    }
+    case 'assetpie': {
       const latestReport = finResult['History'][finResult['History'].length - 1];
       const pieCanvas = generatePieChart(
         ['Fixed', 'Current', 'Liquid'],
@@ -1079,7 +1082,8 @@ function generateGraph(graphType, finResult, locationsArray, currency, width = 4
         height,
       );
       return pieCanvas;
-    case 'locationspie':
+    }
+    case 'locationspie': {
       const locationNames = [] as any[];
       const locationValue = [] as any[];
       locationsArray.forEach(location => {
@@ -1089,6 +1093,7 @@ function generateGraph(graphType, finResult, locationsArray, currency, width = 4
 
       const locPieCanvas = generatePieChart(locationNames, locationValue, width, height);
       return locPieCanvas;
+    }
   }
   return null;
 }
@@ -1440,7 +1445,7 @@ function interpretCX(CXString, result) {
         priceType = data[1];
       }
       break;
-    default:
+    default: {
       const info = CXString.split(' ');
       CX = info[0];
       switch (info[1]) {
@@ -1454,6 +1459,7 @@ function interpretCX(CXString, result) {
           priceType = 'BidPrice';
           break;
       }
+    }
   }
   return [CX, priceType];
 }

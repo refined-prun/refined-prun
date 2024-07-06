@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Selector } from './Selector';
 import { MaterialNames, PlanetNames, SystemNames, Stations } from './GameProperties';
 import { Style, CategoryColors, WithStyles, DefaultColors } from './Style';
@@ -998,6 +999,7 @@ export function showSuccessDialog(tile, message: string = 'Action succeeded!') {
 }
 
 export function drawLineChart(xData, yData, xSize, ySize, xLabel?, yLabel?, lineColor?, isDates?, currencySymbol?) {
+  let i;
   const canvas = document.createElement('canvas');
   canvas.height = ySize;
   canvas.width = xSize;
@@ -1037,7 +1039,7 @@ export function drawLineChart(xData, yData, xSize, ySize, xLabel?, yLabel?, line
   const scaleX = (xSize - zeroX) / (maxX - minX);
   const scaleY = zeroY / (maxY - minY);
 
-  for (var i = 0; i < xData.length - 1; i++) {
+  for (i = 0; i < xData.length - 1; i++) {
     context.beginPath();
     context.moveTo((xData[i] - minX) * scaleX + zeroX, zeroY - (yData[i] - minY) * scaleY);
     context.lineTo((xData[i + 1] - minX) * scaleX + zeroX, zeroY - (yData[i + 1] - minY) * scaleY);
@@ -1083,6 +1085,7 @@ export function drawLineChart(xData, yData, xSize, ySize, xLabel?, yLabel?, line
 }
 
 export function drawPieChart(data, size, text?, colors?) {
+  let i;
   const pieSize = size / 2 - 12;
   const centerX = size * 1.5;
   const centerY = size / 2 + 12;
@@ -1100,7 +1103,7 @@ export function drawPieChart(data, size, text?, colors?) {
     return null;
   }
 
-  for (var i = 0; i < data.length; i++) {
+  for (i = 0; i < data.length; i++) {
     const pieAngle = (data[i] / sum) * 2 * Math.PI;
     context.beginPath();
     context.arc(centerX, centerY, pieSize, angle, angle + pieAngle);
@@ -1126,7 +1129,7 @@ export function drawPieChart(data, size, text?, colors?) {
   angle = 0;
   let minX = centerX - pieSize;
   let maxX = centerX + pieSize;
-  for (var i = 0; i < data.length; i++) {
+  for (i = 0; i < data.length; i++) {
     const pieAngle = (data[i] / sum) * 2 * Math.PI;
     const percent = ' - ' + ((data[i] / sum) * 100).toLocaleString(undefined, { maximumFractionDigits: 0 }) + '%';
     const textInfo = context.measureText(text[i] + percent);

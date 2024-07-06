@@ -47,6 +47,7 @@ export abstract class XITModule {
   abstract name: string; // Title of the buffer
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const XITClasses: { [key: string]: new (...args: any[]) => XITModule } = {
   INV: FIOInventory,
   CALCULATOR: Calculator,

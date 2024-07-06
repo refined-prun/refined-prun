@@ -23,7 +23,7 @@ export class LocalMarketAds implements Module {
         // If it does...
         const count = parseInt(matches[2]); // Find the number of items
         const totalCents = parseInt(matches[3].replace(/[,.]/g, '')); // Find the total cost
-        var priceSpan; // No longer actually a span, just a text node we insert the price after
+        let priceSpan; // No longer actually a span, just a text node we insert the price after
         Array.from(element.childNodes).forEach(node => {
           if (node.nodeValue && node.nodeValue.slice(1) in CurrencySymbols) {
             priceSpan = node;

@@ -325,11 +325,12 @@ function sortInventory(inventory, sortOptions, result, tag, screenName, planetNa
     } // No sorting to do
 
     if (sortingDetails[4]) {
-      var materialsToSort = [];
+      let materialsToSort = [];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (sortingDetails[2] as any[]).forEach(category => {
         materialsToSort = materialsToSort.concat(category[1]);
       });
-      var materialsToSort = materialsToSort.filter((c, index) => {
+      materialsToSort = materialsToSort.filter((c, index) => {
         return materialsToSort.indexOf(c) === index;
       });
 
@@ -349,6 +350,7 @@ function sortInventory(inventory, sortOptions, result, tag, screenName, planetNa
       materials.sort(materialSort);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (sortingDetails[2] as any[]).forEach(category => {
       // For each sorting category...
       // Add a header

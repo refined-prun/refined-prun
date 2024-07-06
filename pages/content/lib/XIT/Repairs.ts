@@ -99,6 +99,7 @@ export class Repairs {
         header.style.paddingTop = '0';
         hr.appendChild(header);
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const buildings = [] as any[];
       this.userInfo['PMMG-User-Info']['sites'].forEach(site => {
         if (site.type != 'BASE') {
@@ -139,6 +140,7 @@ export class Repairs {
       title.classList.add('title');
       this.tile.appendChild(title);
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const siteData = [] as any[];
       this.userInfo['PMMG-User-Info']['sites'].forEach(site => {
         if (

@@ -27,8 +27,8 @@ export class ShippingAds implements Module {
         const tonnage = parseFloat(matches[1].replace(/[,.]/g, '')) / 100; // Find the tons, converting it into a float
         const size = parseFloat(matches[2].replace(/[,.]/g, '')) / 100; // Find the m^3, converting it into a float
 
-        var unit;
-        var count;
+        let unit;
+        let count;
         if (tonnage > size) {
           // Determine whether the price per ton or m^3 is greater, and show that one
           unit = 't';
@@ -41,7 +41,7 @@ export class ShippingAds implements Module {
         // Create and add the price per ton/m^3 to the ad
         const totalCents = parseInt(totalCost.replace(/[,.]/g, ''));
         const perItem = (totalCents / count / 100).toLocaleString(undefined, { maximumFractionDigits: 2 });
-        var priceSpan; // No longer actually a span, just a text node we insert the price after
+        let priceSpan; // No longer actually a span, just a text node we insert the price after
         Array.from(element.childNodes).forEach(node => {
           if (node.nodeValue && node.nodeValue.slice(1) in CurrencySymbols) {
             priceSpan = node;

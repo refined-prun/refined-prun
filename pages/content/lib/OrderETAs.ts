@@ -58,7 +58,9 @@ export class OrderETAs implements Module {
                 );
               }
             }
-          } catch (TypeError) {}
+          } catch (TypeError) {
+            /* empty */
+          }
         } else {
           inQueue = true;
         }

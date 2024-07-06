@@ -214,6 +214,7 @@ function dispStoredList(result, param) {
   });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createEditInterface(tile, result, parameters, settings: any[] = [], listObj) {
   const prefilled = settings.length != 0;
 
@@ -299,6 +300,7 @@ function createEditInterface(tile, result, parameters, settings: any[] = [], lis
   saveInputDiv.appendChild(saveButton);
 
   saveButton.addEventListener('click', function () {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const commandInfo = [] as any[];
     for (let i = 0; i < form.children.length - 2; i += 2) {
       if (!form.children[i] || !form.children[i + 1]) {

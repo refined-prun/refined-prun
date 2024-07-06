@@ -89,7 +89,9 @@ export class Debug {
 function Debug_post(tile, parameters, jsondata) {
   try {
     console.log(JSON.parse(jsondata));
-  } catch (ex) {}
+  } catch (ex) {
+    /* empty */
+  }
   downloadFile(jsondata, 'fio-endpoint' + Date.now().toString() + '.json', false);
   return [tile, parameters];
 }

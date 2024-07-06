@@ -5,6 +5,7 @@ import { Selector } from './Selector';
 import { saveSettings, Settings } from './Settings';
 
 export interface Module {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   run(buffers: any[]);
 
   cleanup();
@@ -67,6 +68,7 @@ export class ModuleRunner {
   loop() {
     // Gets all buffers
     const bufferDivs = getBuffers('');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const buffers = [] as any[];
     bufferDivs.forEach(buffer => {
       const header = buffer.querySelector(Selector.BufferHeader);

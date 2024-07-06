@@ -130,7 +130,8 @@ export class DataHealth {
       ? ((Date.now() - this.userInfo['PMMG-User-Info']['cx_prices']['Age']) / 3600000).toLocaleString(undefined, {
           maximumFractionDigits: 0,
         }) + 'h'
-      : (false as any);
+      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (false as any);
     otherTable.appendChild(createTableRow('CX Price Age', cxPriceAge));
 
     const clearButton = document.createElement('button');

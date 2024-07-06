@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-this-alias */
 import {
   clearChildren,
   createTextSpan,
@@ -137,7 +138,7 @@ async function createSummaryScreen(tile, parentBuffer) {
           case 'Paste JSON':
             popup.addPopupRow('text', 'Import', undefined, undefined, undefined);
             break;
-          case 'Upload JSON':
+          case 'Upload JSON': {
             popup.addPopupRow('button', 'Import', 'UPLOAD', undefined, function () {
               // Trigger file import
               fileInput.click();
@@ -151,6 +152,7 @@ async function createSummaryScreen(tile, parentBuffer) {
             fileInput.style.display = 'none';
             importElem.appendChild(fileInput);
             break;
+          }
         }
 
         popup.moveRowToBottom(1);
@@ -170,7 +172,7 @@ async function createSummaryScreen(tile, parentBuffer) {
 
       let parsedData;
       switch (importType) {
-        case 'Paste JSON':
+        case 'Paste JSON': {
           const rawData = importRow.rowInput.value;
           try {
             parsedData = JSON.parse(rawData);
@@ -184,7 +186,8 @@ async function createSummaryScreen(tile, parentBuffer) {
             return;
           }
           break;
-        case 'Upload JSON':
+        }
+        case 'Upload JSON': {
           const fileImport = importRow.rowInput.children[0];
           if (fileImport) {
             if (fileImport.files && fileImport.files[0]) {
@@ -220,6 +223,7 @@ async function createSummaryScreen(tile, parentBuffer) {
             importRow.row.classList.add(...Style.FormError);
             return;
           }
+        }
       }
 
       const storageValue = await getLocalStoragePromise('PMMG-Action');
@@ -398,6 +402,7 @@ class GenerateScreen {
     }
     // Populate table otherwise
     this.groups.forEach((group, groupIndex) => {
+      let contentText;
       const row = document.createElement('tr');
 
       // Column stating the type of the group on the row. "Manual", "Resupply", etc
@@ -418,7 +423,7 @@ class GenerateScreen {
       ) {
         case 'Manual':
           if (group.materials) {
-            var contentText = '';
+            contentText = '';
             Object.keys(group.materials).forEach(mat => {
               contentText +=
                 group.materials[mat].toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' ' + mat + ', ';
@@ -431,7 +436,7 @@ class GenerateScreen {
           break;
         case 'Resupply':
           if (group.planet && group.days) {
-            var contentText =
+            contentText =
               'Resupply ' +
               group.planet +
               ' with ' +
@@ -446,7 +451,7 @@ class GenerateScreen {
           break;
         case 'Repair':
           if (group.planet) {
-            var contentText =
+            contentText =
               'Repair buildings on ' +
               group.planet +
               (group.days && group.days != 0 && group.days != ''
@@ -523,9 +528,9 @@ class GenerateScreen {
 
     // Add other rows depending on the group type
     switch (group.type) {
-      case 'Resupply':
+      case 'Resupply': {
         // Get list of planets
-        var possiblePlanets = [] as any[];
+        const possiblePlanets = [] as any[];
         this.userInfo['PMMG-User-Info'].workforce.forEach(planet => {
           if (planet.PlanetName) {
             possiblePlanets.push(planet.PlanetName);
@@ -562,9 +567,10 @@ class GenerateScreen {
           undefined,
         );
         break;
-      case 'Repair':
+      }
+      case 'Repair': {
         // Get list of planets
-        possiblePlanets = [] as any[];
+        const possiblePlanets = [] as any[];
         this.userInfo['PMMG-User-Info'].sites.forEach(planet => {
           if (planet.PlanetName && planet.type == 'BASE') {
             possiblePlanets.push(planet.PlanetName);
@@ -593,9 +599,10 @@ class GenerateScreen {
           undefined,
         );
         break;
-      case 'Manual':
+      }
+      case 'Manual': {
         // Create rows corresponding to current materials stored in group
-        var numMaterials = 0; // Stores how many materials there are listed
+        let numMaterials = 0; // Stores how many materials there are listed
         if (group.materials) {
           Object.keys(group.materials).forEach(mat => {
             popup.addPopupRow(
@@ -639,6 +646,7 @@ class GenerateScreen {
           popup.form.insertBefore(newAmtRow.row, popup.form.children[popup.form.children.length - 3]);
         });
         break;
+      }
     }
 
     // Add row to save and corresponding function
@@ -651,7 +659,7 @@ class GenerateScreen {
         group.name = name;
 
         switch (group.type) {
-          case 'Resupply':
+          case 'Resupply': {
             group.planet = popup.getRowByName('Planet').rowInput.value;
             group.days = parseFloat(popup.getRowByName('Days').rowInput.value || 0);
             group.useBaseInv = popup.getRowByName('Use Base Inv').rowInput.checked;
@@ -662,12 +670,14 @@ class GenerateScreen {
               delete group.exclusions;
             }
             break;
-          case 'Repair':
+          }
+          case 'Repair': {
             group.planet = popup.getRowByName('Planet').rowInput.value;
             group.days = popup.getRowByName('Day Threshold').rowInput.value;
             group.advanceDays = popup.getRowByName('Time Offset').rowInput.value;
             break;
-          case 'Manual':
+          }
+          case 'Manual': {
             group.materials = {};
 
             const numMaterials = (popup.rows.length - 3) / 2;
@@ -683,6 +693,7 @@ class GenerateScreen {
               }
             }
             break;
+          }
         }
         popup.destroy();
         thisObj.generateGroupForm();
@@ -813,9 +824,9 @@ class GenerateScreen {
 
     // Add more rows depending on the type of the action
     switch (action.type) {
-      case 'CX Buy':
+      case 'CX Buy': {
         // Add group dropdown
-        var groupNames = this.groups.filter(obj => obj.name && obj.name !== '').map(obj => obj.name);
+        const groupNames = this.groups.filter(obj => obj.name && obj.name !== '').map(obj => obj.name);
         // Add index of selected option to end of list because of poor design decisions in popup class
         if (action.group && groupNames.indexOf(action.group)) {
           groupNames.push(groupNames.indexOf(action.group));
@@ -827,7 +838,7 @@ class GenerateScreen {
 
         // Add exchanges dropdown
         // Add index of selected option to end of list because of poor design decisions in popup class
-        var exchanges = ['AI1', 'CI1', 'IC1', 'NC1', 'CI2', 'NC2'] as any[];
+        const exchanges = ['AI1', 'CI1', 'IC1', 'NC1', 'CI2', 'NC2'] as any[];
         if (action.exchange && exchanges.indexOf(action.exchange)) {
           exchanges.push(exchanges.indexOf(action.exchange));
         } else {
@@ -936,6 +947,7 @@ class GenerateScreen {
           undefined,
         );
         break;
+      }
     }
 
     // Add row to save and corresponding function
@@ -1687,7 +1699,7 @@ function executeAction(
 
   // Fill in fields/modify buffer
   switch (action.type) {
-    case 'CXBuy':
+    case 'CXBuy': {
       // Get all the inputs on the buffer and assign them accordingly. There has to be a better way to do this.
       const inputs = buffer.querySelectorAll('input');
       const quantityInput = inputs[0];
@@ -1708,7 +1720,8 @@ function executeAction(
       changeValue(quantityInput, action.parameters.amount.toString());
       changeValue(priceInput, action.parameters.priceLimit.toString());
       break;
-    case 'transferMaterialSet':
+    }
+    case 'transferMaterialSet': {
       // Get and set relevant inputs on the buffer
       const sourceSelect = buffer.querySelector(Selector.StoreSelect) as HTMLSelectElement;
 
@@ -1727,7 +1740,7 @@ function executeAction(
 
       // Select correct source inventory
       sourceSelect.click();
-      var sourceID;
+      let sourceID;
       (Array.from(sourceSelect.children) as HTMLOptionElement[]).forEach(child => {
         if (child.textContent == action.parameters.source) {
           sourceID = child.value;
@@ -1745,6 +1758,7 @@ function executeAction(
 
       //changeSelectValue(sourceSelect, sourceID);
       break;
+    }
   }
 
   // Add listener to the button to start waiting for feedback. Then move button back and go to next action
@@ -1885,7 +1899,7 @@ function generatePrettyName(action) {
   let name = '';
 
   switch (action.type) {
-    case 'CXBuy':
+    case 'CXBuy': {
       const matches = action.buffer.match(/CXPO ([A-Za-z0-9]{1,3})\.([A-Za-z0-9]{3})/);
       if (matches && matches[1] && matches[2]) {
         name =
@@ -1900,6 +1914,7 @@ function generatePrettyName(action) {
           '/u';
       }
       break;
+    }
   }
 
   return name;

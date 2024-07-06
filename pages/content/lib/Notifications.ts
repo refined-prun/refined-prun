@@ -78,6 +78,7 @@ export class Notifications implements Module {
               if (matches != null && matches[1] != undefined && Materials[matches[1]] != undefined) {
                 notText = notText.replace(new RegExp(matches[1]), Materials[matches[1]][0]);
               }
+              break;
             case 'order filled':
               notText = notText.replace(/ Commodity Exchange/, '');
               matches = notText.match(/([A-z -]+) order/);
@@ -94,11 +95,11 @@ export class Notifications implements Module {
               break;
             case 'arrived at':
               notText = notText.replace(/its destination /, '');
-              const match = notText.match(/AVI-[0-9A-Z]{5}/);
-              if (match && match[0]) {
+              matches = notText.match(/AVI-[0-9A-Z]{5}/);
+              if (matches && matches[0]) {
                 this.userInfo['PMMG-User-Info'].ships.forEach(ship => {
-                  if (ship.registration == match[0] && ship.name) {
-                    notText = (notText || '').replace(match[0], ship.name);
+                  if (ship.registration == matches[0] && ship.name) {
+                    notText = (notText || '').replace(matches[0], ship.name);
                   }
                 });
               }

@@ -44,7 +44,7 @@ export function getPrices(webData, sheetURL, sheetName) {
   };
 
   // Parse the URL
-  const sheetID = sheetURL.match(/\/d\/([^\/]+)/);
+  const sheetID = sheetURL.match(/\/d\/([^/]+)/);
   if (!sheetID || !sheetID[1]) {
     return;
   }

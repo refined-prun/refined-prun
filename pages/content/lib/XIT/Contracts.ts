@@ -40,7 +40,9 @@ export class Contracts {
         contract['IsFaction'] = false;
         contract['materialConditions'] = [];
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const selfConditions = [] as any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const partnerConditions = [] as any;
 
         contract.conditions.map(condition => {

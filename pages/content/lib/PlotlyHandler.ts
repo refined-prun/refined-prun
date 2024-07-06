@@ -69,12 +69,13 @@ export function generateLineGraph(
 }
 
 export function generatePieChart(labelData, numericalData, plotWidth, plotHeight) {
+  let i;
   let colorScheme = DefaultColors;
-  for (var i = 0; i < labelData.length / 8; i++) {
+  for (i = 0; i < labelData.length / 8; i++) {
     colorScheme = colorScheme.concat(DefaultColors);
   }
 
-  for (var i = 20; i < labelData.length; i++) {
+  for (i = 20; i < labelData.length; i++) {
     labelData[i] = 'Other';
   }
 
@@ -88,7 +89,7 @@ export function generatePieChart(labelData, numericalData, plotWidth, plotHeight
       textinfo: 'label',
       marker: { colors: colorScheme },
       insidetextorientation: 'horizontal',
-      // @ts-ignore
+      // @ts-expect-error typing errors
       textfont: { color: '#cccccc' },
       automargin: true,
       sort: false,

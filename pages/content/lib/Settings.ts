@@ -6,6 +6,7 @@ const defaultSettings = {
   },
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Settings = typeof defaultSettings & { [key: string]: any };
 const settingsKey = 'PMMGExtended';
 
@@ -19,6 +20,7 @@ export async function loadSettings() {
   return <Settings>data;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function migrate(data: any) {
   const settings = data[settingsKey];
   settings.loaded_before = settings.loaded_before ?? false;

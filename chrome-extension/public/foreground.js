@@ -6,9 +6,10 @@ if (typeof browser === 'undefined') {
   var browser = chrome;
 }
 
-var func;
-if (typeof listen === 'undefined') {
-  function listen(event) {
+// eslint-disable-next-line no-undef
+var func = listen;
+if (typeof func === 'undefined') {
+  const listen = event => {
     if (event.source != window) return;
 
     if (typeof browser === 'undefined') {
@@ -23,10 +24,8 @@ if (typeof listen === 'undefined') {
     if (event.data.message && event.data.message === 'prep_registration') {
       browser.runtime.sendMessage(event.data);
     }
-  }
+  };
 
-  func = listen;
-} else {
   func = listen;
 }
 

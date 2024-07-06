@@ -53,6 +53,7 @@ export class Burn {
     // Burn data is non-empty
     this.tile.id = 'pmmg-load-success';
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const planetBurn = [] as any[];
 
     // To do multiple planets, multiple planetBurns need to be created

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   clearChildren,
   getLocalStorage,
@@ -312,6 +313,7 @@ const editPopupTypes = {
 
 // This function is called every time something changes on the popup.
 function updatePopupInfo(junk, params) {
+  let planetNames;
   if (!params[0] || !params[1] || !params[2]) {
     return;
   }
@@ -338,7 +340,7 @@ function updatePopupInfo(junk, params) {
     } else if (typeValue == 'Resupply') {
       // If it was changed to Resupply
       // Add in the planet row
-      var planetNames = [] as any[];
+      planetNames = [] as any[];
 
       if (userInfo['PMMG-User-Info']['workforce']) {
         planetNames = userInfo['PMMG-User-Info']['workforce'].map(planet => planet.PlanetName);
@@ -362,7 +364,7 @@ function updatePopupInfo(junk, params) {
         [popup, info, userInfo],
       );
     } else if (typeValue == 'Repair') {
-      var planetNames = [] as any[];
+      planetNames = [] as any[];
 
       if (userInfo['PMMG-User-Info']['sites']) {
         planetNames = userInfo['PMMG-User-Info']['sites']
@@ -395,15 +397,16 @@ function updatePopupInfo(junk, params) {
 
   // Update the values in info
   switch (typeValue) {
-    case 'Text':
+    case 'Text': {
       const textRow = popup.getRowByName('Text');
       if (textRow) {
         info['name'] = textRow.rowInput.value;
       }
       break;
-    case 'Resupply':
-      var planetRow = popup.getRowByName('Planet');
-      var daysRow = popup.getRowByName('Days');
+    }
+    case 'Resupply': {
+      const planetRow = popup.getRowByName('Planet');
+      const daysRow = popup.getRowByName('Days');
       if (planetRow) {
         info['planet'] = planetRow.rowInput.selectedOptions[0].value;
       }
@@ -411,15 +414,18 @@ function updatePopupInfo(junk, params) {
         info['days'] = daysRow.rowInput.value;
       }
       break;
-    case 'Repair':
-      planetRow = popup.getRowByName('Planet');
-      daysRow = popup.getRowByName('Threshold');
+    }
+    case 'Repair': {
+      const planetRow = popup.getRowByName('Planet');
+      const daysRow = popup.getRowByName('Threshold');
       if (planetRow) {
         info['planet'] = planetRow.rowInput.selectedOptions[0].value;
       }
       if (daysRow) {
         info['days'] = daysRow.rowInput.value;
       }
+      break;
+    }
   }
 
   info['type'] = typeValue;
@@ -456,7 +462,7 @@ function addChecklistItem(params) {
 
   // Do some post-processing of the info
   switch (info.type) {
-    case 'Resupply':
+    case 'Resupply': {
       info.name =
         'Supply [[p:' +
         info['planet'] +
@@ -484,7 +490,8 @@ function addChecklistItem(params) {
         }
       });
       break;
-    case 'Repair':
+    }
+    case 'Repair': {
       info.name =
         'Repair buildings on [[p:' +
         info['planet'] +
@@ -523,6 +530,7 @@ function addChecklistItem(params) {
         info['children'].push(child);
       });
       break;
+    }
   }
 
   popup.destroy();
@@ -650,7 +658,8 @@ class Checklist {
     this.recreate();
   }
 
-  recreate() { // Toggles the checklist to refresh with the latest info from local storage. Shouldn't shift around the user's position on the checklist. Also serves as a way to generate the checklist for the first time
+  recreate() {
+    // Toggles the checklist to refresh with the latest info from local storage. Shouldn't shift around the user's position on the checklist. Also serves as a way to generate the checklist for the first time
     getLocalStorage('PMMG-Checklists', this.recreateCallback, this);
   }
 
@@ -753,6 +762,7 @@ class CheckItem {
 
     this.item.appendChild(mainTextDiv);
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const thisObject = this;
 
     if (!this.isChild) {
@@ -786,12 +796,14 @@ class CheckItem {
     }
   }
 
-  changeCheckedState() { // Update the display of the current check item (false to true or true to false)
+  changeCheckedState() {
+    // Update the display of the current check item (false to true or true to false)
     this.checkInfo.completed = !this.checkInfo.completed;
     this.checkCircle.innerHTML = this.checkInfo.completed ? filledCircle : unfilledCircle;
 
     getLocalStorage('PMMG-Checklists', updateStoredChecklists, [this.checkInfo, this.checklist, false, this.isChild]);
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const thisObject = this;
 
     setTimeout(function () {

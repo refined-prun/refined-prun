@@ -29,6 +29,7 @@ export class Sort {
     const tile = this.tile;
     const parameters = this.parameters;
     const pmmgSettings = this.pmmgSettings;
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const sortObj = this;
 
     clearChildren(tile);
@@ -156,6 +157,7 @@ export class Sort {
 }
 
 // Creates the interface to add a new sorting option
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: any[] = []) {
   const prefilled = settings.length != 0;
   const overlapDiv = document.createElement('div');
@@ -270,10 +272,12 @@ function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: a
   saveInputDiv.appendChild(saveButton);
 
   saveButton.addEventListener('click', function () {
+    let i;
     const itemAbbreviation = getValueOfPopupRow(form.firstChild);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sortingInfo = [] as any[];
-    for (var i = 1; i < form.children.length - 4; i += 2) {
+    for (i = 1; i < form.children.length - 4; i += 2) {
       if (!form.children[i] || !form.children[i + 1]) {
         break;
       }
@@ -293,7 +297,7 @@ function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: a
       return;
     }
     if (prefilled) {
-      for (var i = 0; i < pmmgSettings['PMMGExtended']['sorting'].length; i++) {
+      for (i = 0; i < pmmgSettings['PMMGExtended']['sorting'].length; i++) {
         if (pmmgSettings['PMMGExtended']['sorting'][i] == settings) {
           pmmgSettings['PMMGExtended']['sorting'][i] = [
             itemAbbreviation,

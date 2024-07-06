@@ -21,13 +21,13 @@ export class AdvancedMode implements Module {
     } // Must be enabled to run
 
     // Clean Fleet Buffers
-    var buffers = getBuffersFromList('FLT', allBuffers);
+    let buffers = getBuffersFromList('FLT', allBuffers);
     buffers.forEach(buffer => {
       cleanFleet(buffer, this.tag);
     });
 
     // Clean INV Buffers
-    var buffers = getBuffersFromList('INV', allBuffers);
+    buffers = getBuffersFromList('INV', allBuffers);
     buffers.forEach(buffer => {
       cleanInv(buffer, this.tag);
     });

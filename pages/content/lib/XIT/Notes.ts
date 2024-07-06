@@ -51,6 +51,7 @@ class NoteStructure {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function CreateNotes(tile: HTMLDivElement, parameters: any[]) {
   if (!tile) {
     throw new Error("Parameter 'tile' is required.");
@@ -90,6 +91,7 @@ async function displayNotesList(tile: HTMLDivElement): Promise<void> {
   });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function generateNotesTable(notesStorage: { [p: string]: any }, tile: HTMLDivElement) {
   if (!tile) {
     throw new Error("Parameter 'tile' is required.");
