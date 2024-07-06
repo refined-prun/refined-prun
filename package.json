@@ -1,0 +1,22 @@
+{
+  "devDependencies": {
+    "@types/chrome": "^0.0.268",
+    "@types/plotly.js-dist-min": "^2.3.4",
+    "terser-webpack-plugin": "^5.3.10",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.0.4",
+    "webextension-polyfill-ts": "^0.26.0",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-merge": "^6.0.1"
+  },
+  "name": "pmmg-beautifier",
+  "scripts": {
+    "build": "webpack --config webpack.dev.js",
+    "package": "webpack --config webpack.prod.js"
+  },
+  "dependencies": {
+    "build": "^0.1.4",
+    "plotly.js-dist-min": "^2.30.1"
+  }
+}

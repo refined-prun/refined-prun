@@ -1,0 +1,528 @@
+.cursor-move {
+  cursor: default !important;
+}
+
+.cursor-move:active {
+  cursor: move !important;
+}
+
+.pb-scroll {
+  overflow-y: scroll;
+  flex: 1;
+  width: 120px;
+  vertical-align: top;
+}
+
+.pb-scroll::-webkit-scrollbar {
+  width: 0;
+}
+
+.pb-scroll::-moz-scrollbar {
+  width: 0;
+}
+
+.pb-minimize {
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: auto;
+  margin-right: 3px;
+  margin-top: 1px;
+  text-align: center;
+  width: 18px;
+  cursor: pointer;
+}
+
+.pb-minimize-cx:hover {
+  color: #26353e;
+  background-color: #3fa2de;
+}
+
+.pb-minimize-cx {
+  background-color: #26353e;
+  color: #3fa2de;
+}
+
+.pb-minimize-settings:hover {
+  color: #ddd;
+}
+
+.mat-element-large {
+  height: 48px;
+  width: 48px;
+}
+
+.mat-element-large div.ColoredIcon__container___djaR4r2 {
+  height: 48px;
+  width: 48px;
+  font-size: 15.84px;
+  cursor: pointer;
+}
+
+.mat-element-small {
+  height: 32px;
+  width: 32px;
+}
+
+.check-time-complete {
+  text-decoration: line-through;
+}
+
+.check-time-overdue {
+  color: #d9534f;
+}
+
+.check-time {
+  color: rgb(153, 153, 153)
+}
+
+.check-item {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: solid 1px #555;
+}
+
+.checked-text {
+  text-decoration: line-through;
+  color: rgb(153, 153, 153)
+}
+
+.delete-button {
+  background-color: #d9534f;
+  border: none;
+  color: #fff;
+  line-height: 17px;
+  font-weight: bold;
+  outline: none;
+  padding: 0 8px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  color: #222;
+}
+
+.pb-burn-minimize {
+  display: inline-block;
+  width: 26px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.notes-wrapper .title.note-title {
+  padding-top: 5px;
+}
+
+.pb-note-overlay {
+  background-color: #42361d;
+  color: #cccccc;
+  margin: 10px;
+  padding: 10px;
+  border: 0;
+  width: calc(100% - 20px);
+  height: calc(100% - 20px - 20px);
+  position: absolute;
+  top: 20px;
+  left: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  overflow-y: scroll;
+  font-family: "Droid Sans", sans-serif;
+  font-size: 13.333px;
+  line-height: 1.5;
+  tab-size: 4;
+}
+
+.pb-note-overlay::-webkit-scrollbar {
+  width: 0;
+}
+
+.pb-note-overlay::-moz-scrollbar {
+  width: 0;
+}
+
+.pb-note-textbox {
+  color: transparent;
+  background: transparent;
+  caret-color: white;
+  margin: 10px;
+  padding: 10px;
+  border: 0;
+  width: calc(100% - 20px);
+  height: calc(100% - 20px - 20px);
+  position: absolute;
+  top: 20px;
+  left: 0;
+  overflow-y: scroll;
+  font-family: "Droid Sans", sans-serif;
+  font-size: 13.333px;
+  line-height: 1.5;
+  tab-size: 4;
+  resize: none;
+  z-index: 1;
+}
+
+.pb-note-textbox:focus {
+  outline: none;
+}
+
+.pb-note-textbox::-webkit-scrollbar {
+  width: 0;
+}
+
+.pb-note-textbox::-moz-scrollbar {
+  width: 0;
+}
+
+.pb-note-link {
+  color: #3fa2de;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+}
+
+.pb-note-link:hover {
+  color: #f7a600 !important;
+}
+
+.pb-read-textarea {
+  margin: 5px;
+  resize: none;
+  overflow-y: scroll;
+  font-family: "Droid Sans", sans-serif;
+  font-size: 11px;
+  line-height: 1.5;
+  tab-size: 4;
+  width: calc(100% - 10px);
+  height: 86px;
+  background-color: #23282b;
+  color: #bbbbbb;
+  border-color: #2b485a;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.pb-read-textarea:focus {
+  outline: none;
+}
+
+.pb-read-textarea::-webkit-scrollbar {
+  width: 0;
+}
+
+.pb-read-textarea::-moz-scrollbar {
+  width: 0;
+}
+
+.check-wrapper {
+  margin: 5px;
+}
+
+.tooltip-base {
+  display: flex;
+  position: absolute !important;
+  font-family: "Droid Sans", sans-serif;
+  font-size: 10px;
+  color: #bbb
+}
+
+.tooltip {
+  display: none;
+  margin-left: 100px;
+}
+
+.tooltip-base:hover .tooltip {
+  display: block;
+  background-color: #23282b;
+  position: absolute;
+}
+
+.select {
+  border: 0px;
+  border-bottom: 1px solid #8d6411;
+  background-color: #42361d;
+  color: #bbb;
+  outline: none;
+}
+
+.title {
+  font-weight: bold;
+  display: block;
+  font-size: 16px;
+  padding-left: 5px;
+}
+
+.flex-table {
+  width: 100%;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: left;
+  align-items: left;
+}
+
+.list {
+  display: block;
+  padding: 5px;
+}
+
+.chat-line {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(8em, 1fr) minmax(8em, 4fr) minmax(8em, 15fr);
+  grid-column-gap: 1px;
+  font-size: 11px;
+  line-height: 1.1;
+}
+
+.time-date {
+  color: #444444;
+  display: inline-block;
+  padding: 2px 5px;
+  padding-right: 0px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.chat-name {
+  display: inline-block;
+  text-align: right;
+  color: #999999;
+  text-overflow: ellipsis;
+  padding: 2px 5px;
+  border-right: 1px solid #999999;
+}
+
+.chat-message {
+  display: inline-block;
+  text-align: left;
+  color: #bbbbbb;
+  word-break: break-word;
+  padding: 2px 5px;
+}
+
+.fin-title {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 0px;
+  padding: 6px 4px 2px;
+  background-color: rgba(63, 162, 222, 0.15);
+}
+
+td.burn-green {
+  background-color: #345034 !important;
+  color: #9fbb9f;
+}
+
+tr:hover td.burn-green {
+  background-color: #506c50 !important;
+}
+
+td.burn-yellow {
+  background-color: #836e24 !important;
+  color: #f6df94;
+}
+
+tr:hover td.burn-yellow {
+  background-color: #9f8a40 !important;
+}
+
+td.burn-red {
+  background-color: #5a3130 !important;
+  color: #c59c9b;
+}
+
+tr:hover td.burn-red {
+  background-color: #764d4c !important;
+}
+
+td.burn-green-no-hover {
+  background-color: #345034 !important;
+  color: #9fbb9f;
+}
+
+td.burn-yellow-no-hover {
+  background-color: #836e24 !important;
+  color: #f6df94;
+}
+
+td.burn-red-no-hover {
+  background-color: #5a3130 !important;
+  color: #c59c9b;
+}
+
+.inv-header {
+  display: inline;
+  padding: 2px 8px;
+  color: #3fa2de;
+}
+
+.inv-body {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: stretch;
+  margin-bottom: 23px;
+  padding: 5px 8px;
+}
+
+.progress-bar {
+  width: 30px;
+  height: 9px;
+  border: 1px solid #999;
+  margin: 1px 2px;
+}
+
+.progress-bar::-webkit-progress-value {
+  background: #f7a600;
+}
+
+.grey-progress-bar::-webkit-progress-value {
+  background: #d9534f;
+}
+
+.good-progress-bar::-webkit-progress-value {
+  background: #5cb85c;
+}
+
+.warning-progress-bar::-webkit-progress-value {
+  background: #ffc856;
+}
+
+.danger-progress-bar::-webkit-progress-value {
+  background: #d9534f;
+}
+
+.xit-tile {
+  background-color: #222222 !important;
+  padding-top: 4px;
+  display: flex;
+  flex-flow: column;
+}
+
+.refresh-button {
+  background-color: #f7a600;
+  color: #eee;
+  border-width: 0px;
+  padding: 0px 8px;
+  display: block;
+  font-weight: bold;
+  font-size: 11px;
+  cursor: pointer;
+  margin: 4px 8px;
+}
+
+.refresh-button:hover {
+  color: #1e1e1e;
+}
+
+.notification {
+  display: inline-block;
+  min-width: 65px;
+  max-width: 65px;
+}
+
+.fin-box {
+  margin: 1px;
+  min-width: 100px;
+  width: calc(33% - 2px);
+  max-width: 150px;
+  padding: 4px;
+  background-color: #23282b;
+  display: inline-block;
+}
+
+.link {
+  color: #3fa2de;
+  cursor: pointer;
+  display: block;
+}
+
+.link:hover {
+  color: #f7a600 !important;
+}
+
+.chat-image {
+  max-height: 300px;
+  max-width: 90%;
+}
+
+.input-text {
+  padding: 0px 5px;
+  margin: 5px;
+  background-color: #42361d;
+  border-width: 0px;
+  border-bottom: 1px solid #8d6411;
+  color: #cccccc;
+
+}
+
+.input-text:focus {
+  outline: none;
+}
+
+.hidden-element {
+  display: none !important;
+  visibility: false !important;
+  max-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 0px !important;
+}
+
+.button-upper-right {
+  background-color: transparent;
+  color: #bbb;
+  fill: #bbb;
+  cursor: pointer;
+  display: block;
+  font-size: 24px;
+  margin-top: -8px;
+}
+
+.button-upper-right:hover {
+  color: #000 !important;
+  fill: #000;
+  background-color: rgb(247, 166, 0);
+}
+
+.pb-marker {
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: 33px;
+}
+
+.pb-marker > div {
+  background: #29353f;
+  border-color: #314b5f;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px 4px 4px 0px;
+  height: 100%;
+  width: 100%;
+  display: none;
+}
+
+.pb-marker:hover > div {
+  display: block;
+}
+
+.pb-marker > div > div {
+  margin: 1px;
+}
+
+div.Head__container___3ecBw0E > div:nth-child(2) {
+  flex-shrink: 0;
+}
+
+/*
+  Fix PrUN Bugs
+  This one no longer works but needs to be done
+*/
+div.ScrollView__view___ovf59Tk {
+  inset: -1px !important;
+}

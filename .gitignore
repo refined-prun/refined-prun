@@ -1,0 +1,8 @@
+node_modules
+src.zip
+dist/main.js
+dist/main.js.map
+.idea
+.vscode
+desktop.ini
+.DS_Store
