@@ -27,7 +27,7 @@ export default defineConfig({
     makeManifestPlugin({ outDir }),
     isDev && watchRebuildPlugin({
       entry: {
-        'enhanced-prun': {
+        'refined-prun': {
           refresh: true,
         },
         popup: {
@@ -39,7 +39,7 @@ export default defineConfig({
       },
     }),
     isDev && makeEntryPointPlugin({
-      entry: ['enhanced-prun', 'popup']
+      entry: ['refined-prun', 'popup']
     }),
   ],
   publicDir: resolve(rootDir, 'public'),
@@ -59,7 +59,7 @@ export default defineConfig({
         chunkFileNames: '[name].js',
       },
       input: {
-        'enhanced-prun': resolve(__dirname, 'src/index.ts'),
+        'refined-prun': resolve(__dirname, 'src/refined-prun.ts'),
         popup: resolve(__dirname, 'src/popup/popup.ts'),
         'service_worker': resolve(__dirname, 'src/background/index.ts'),
       },

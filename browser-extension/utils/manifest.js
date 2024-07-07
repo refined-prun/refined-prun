@@ -39,8 +39,8 @@ const manifest = {
     },
     {
       matches: [apex],
-      js: ['enhanced-prun.js'],
-      css: ['enhanced-prun.css'],
+      js: ['refined-prun.js'],
+      css: ['refined-prun.css'],
       run_at: 'document_end',
     },
   ],
