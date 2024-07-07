@@ -1,20 +1,16 @@
----
-name: Feature request
-about: Suggest an idea for this project
-title: ''
-labels: enhancement
-assignees: Razenpok
+name: 🆕 Suggest an improvement or new feature
+description: ———
+labels: enhancement, under discussion
+body:
+- type: markdown
+  attributes:
+  value: |
+      👋 Consider contributing by fixing some [easy bugs](https://github.com/refined-prun/refined-prun/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%22small%22+label%3Abug).
 
----
-
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
-
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
-
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
-
-**Additional context**
-Add any other context or screenshots about the feature request here.
+      🏞️ You can provide screenshots/mockups to better visualize your idea. Files can be dropped in this field
+- id: description
+  type: textarea
+  attributes:
+  label: Description
+  validations:
+  required: true

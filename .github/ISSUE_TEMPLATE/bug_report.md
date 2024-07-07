@@ -1,32 +1,44 @@
----
-name: Bug report
-about: Create a report to help us improve
-title: ''
+name: 🐛 Report a bug
+description: ———
 labels: bug
-assignees: Razenpok
+body:
+- type: markdown
+  attributes:
+  value: |
+  # Thanks for reporting a bug! ⛰
 
----
+      Help us replicate the issue by filling in this form. You can use the "Find feature" button in the options page to find which feature is causing the issue.
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+      Please ensure:
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+      - The bug is caused by Refined PrUn. It doesn't happen if I disable the extension.
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+      Include in this issue:
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+      - Screenshots/video/gif demonstrating the bug, if it’s visual
+      - Console errors, if any
 
-**Desktop (please complete the following information):**
- - OS: [e.g. Mac, Window, Linux]
- - Browser [e.g. chrome, firefox]
- - Node Version [e.g. 18.12.0]
-
-**Additional context**
-Add any other context about the problem here.
+- id: description
+  type: textarea
+  attributes:
+  label: Description
+  validations:
+  required: true
+- id: repro
+  type: textarea
+  attributes:
+  label: How to replicate the issue
+  validations:
+  required: true
+- id: version
+  type: input
+  attributes:
+  label: Extension version
+  validations:
+  required: true
+- id: browser
+  type: input
+  attributes:
+  label: Browser(s) used
+  validations:
+  required: true
