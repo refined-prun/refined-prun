@@ -1,6 +1,6 @@
-import { Module } from './ModuleRunner';
-import { Selector } from './Selector';
-import { createTextSpan, genericCleanup, parseDuration } from './util';
+import { Module } from '../ModuleRunner';
+import { Selector } from '../Selector';
+import { createTextSpan, genericCleanup, parseDuration } from '../util';
 
 export class QueueLoad implements Module {
   private tag = 'pb-queue-load';

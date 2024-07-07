@@ -1,5 +1,5 @@
-import { Module } from './ModuleRunner';
-import { genericCleanup, getBuffersFromList, showBuffer } from './util';
+import { Module } from '../ModuleRunner';
+import { genericCleanup, getBuffersFromList, showBuffer } from '../util';
 
 export class CalculatorButton implements Module {
   private tag = 'pb-calc';

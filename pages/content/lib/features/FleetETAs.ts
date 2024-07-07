@@ -1,5 +1,5 @@
-import { Module } from './ModuleRunner';
-import { convertDurationToETA, parseDuration, createTextSpan, genericCleanup, getBuffersFromList } from './util';
+import { Module } from '../ModuleRunner';
+import { convertDurationToETA, parseDuration, createTextSpan, genericCleanup, getBuffersFromList } from '../util';
 
 /**
  * Parse Fleet ETA times and add the actual date-time of arrival

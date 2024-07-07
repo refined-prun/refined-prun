@@ -1,6 +1,6 @@
-import { Module } from './ModuleRunner';
-import { getBuffersFromList } from './util';
-import { Selector } from './Selector';
+import { Module } from '../ModuleRunner';
+import { getBuffersFromList } from '../util';
+import { Selector } from '../Selector';
 
 /**
  * Display images or gifs in chat

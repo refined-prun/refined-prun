@@ -1,6 +1,6 @@
-import { Module } from './ModuleRunner';
-import { getBuffersFromList, cleanPlanetName, createTextSpan, genericCleanup } from './util';
-import { Selector } from './Selector';
+import { Module } from '../ModuleRunner';
+import { getBuffersFromList, cleanPlanetName, createTextSpan, genericCleanup } from '../util';
+import { Selector } from '../Selector';
 
 export class AdvancedMode implements Module {
   private tag = 'pb-advanced';

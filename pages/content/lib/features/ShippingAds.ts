@@ -1,7 +1,7 @@
-import { Module } from './ModuleRunner';
-import { Selector } from './Selector';
-import { createTextSpan, genericCleanup } from './util';
-import { CurrencySymbols } from './GameProperties';
+import { Module } from '../ModuleRunner';
+import { Selector } from '../Selector';
+import { createTextSpan, genericCleanup } from '../util';
+import { CurrencySymbols } from '../GameProperties';
 
 // Adds the rate per unit ton or m^3 to LM ads
 export class ShippingAds implements Module {

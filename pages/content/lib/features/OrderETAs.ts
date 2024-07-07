@@ -1,6 +1,6 @@
-import { Module } from './ModuleRunner';
-import { Selector } from './Selector';
-import { convertDurationToETA, parseDuration, createTextSpan, genericCleanup } from './util';
+import { Module } from '../ModuleRunner';
+import { Selector } from '../Selector';
+import { convertDurationToETA, parseDuration, createTextSpan, genericCleanup } from '../util';
 
 export class OrderETAs implements Module {
   private tag = 'pb-order-eta';

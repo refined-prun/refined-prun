@@ -1,4 +1,4 @@
-import { Module } from './ModuleRunner';
+import { Module } from '../ModuleRunner';
 import {
   getBuffersFromList,
   parseInvName,
@@ -9,10 +9,10 @@ import {
   showBuffer,
   createMaterialElement,
   calculateBurn,
-} from './util';
-import { Selector } from './Selector';
-import { Style } from './Style';
-import { MaterialNames, SortingTriangleHTML } from './GameProperties';
+} from '../util';
+import { Selector } from '../Selector';
+import { Style } from '../Style';
+import { MaterialNames, SortingTriangleHTML } from '../GameProperties';
 
 /**
  * Sort inventory into custom categories

@@ -1,8 +1,8 @@
-import { Module } from './ModuleRunner';
-import { getBuffersFromList, createTextSpan } from './util';
-import { Selector } from './Selector';
-import { WithStyles, Style } from './Style';
-import { Exchanges } from './GameProperties';
+import { Module } from '../ModuleRunner';
+import { getBuffersFromList, createTextSpan } from '../util';
+import { Selector } from '../Selector';
+import { WithStyles, Style } from '../Style';
+import { Exchanges } from '../GameProperties';
 
 export class CompactUI implements Module {
   private tag = 'pb-compactui';

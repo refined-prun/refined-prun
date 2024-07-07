@@ -1,7 +1,7 @@
-import { Module } from './ModuleRunner';
-import { getBuffersFromList } from './util';
-import { Selector } from './Selector';
-import { Style } from './Style';
+import { Module } from '../ModuleRunner';
+import { getBuffersFromList } from '../util';
+import { Selector } from '../Selector';
+import { Style } from '../Style';
 
 /**
  * Minimize Large Headers on Buffers

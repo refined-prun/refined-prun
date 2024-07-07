@@ -1,7 +1,7 @@
-import { Module } from './ModuleRunner';
-import { changeValue } from './util';
-import { Selector } from './Selector';
-import { PlanetCommands, PlanetNames } from './GameProperties';
+import { Module } from '../ModuleRunner';
+import { changeValue } from '../util';
+import { Selector } from '../Selector';
+import { PlanetCommands, PlanetNames } from '../GameProperties';
 
 export class CommandCorrecter implements Module {
   cleanup() {

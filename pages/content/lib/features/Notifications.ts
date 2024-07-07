@@ -1,7 +1,7 @@
-import { Module } from './ModuleRunner';
-import { Selector } from './Selector';
-import { genericCleanup } from './util';
-import { Materials } from './GameProperties';
+import { Module } from '../ModuleRunner';
+import { Selector } from '../Selector';
+import { genericCleanup } from '../util';
+import { Materials } from '../GameProperties';
 
 export class Notifications implements Module {
   private tag = 'pb-nots';

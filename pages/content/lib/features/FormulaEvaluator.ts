@@ -1,6 +1,6 @@
-import { Module } from './ModuleRunner';
-import { getBuffersFromList, changeValue } from './util';
-import { MaterialNames, Materials } from './GameProperties';
+import { Module } from '../ModuleRunner';
+import { getBuffersFromList, changeValue } from '../util';
+import { MaterialNames, Materials } from '../GameProperties';
 
 export class FormulaReplacer implements Module {
   private tag = 'pb-formulas';

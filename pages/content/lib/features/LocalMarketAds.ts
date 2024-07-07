@@ -1,7 +1,7 @@
-import { Module } from './ModuleRunner';
-import { Selector } from './Selector';
-import { createTextSpan, genericCleanup } from './util';
-import { CurrencySymbols } from './GameProperties';
+import { Module } from '../ModuleRunner';
+import { Selector } from '../Selector';
+import { createTextSpan, genericCleanup } from '../util';
+import { CurrencySymbols } from '../GameProperties';
 
 // Create Per Unit Prices on LM Ads
 export class LocalMarketAds implements Module {

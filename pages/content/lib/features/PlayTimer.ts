@@ -1,5 +1,5 @@
-import { Module } from './ModuleRunner';
-import { getLocalStorage, setSettings } from './util';
+import { Module } from '../ModuleRunner';
+import { getLocalStorage, setSettings } from '../util';
 
 export class PlayTimer implements Module {
   public frequency = 60;

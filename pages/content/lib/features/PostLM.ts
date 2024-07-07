@@ -1,7 +1,7 @@
-import { Module } from './ModuleRunner';
-import { Selector } from './Selector';
-import { Materials, CurrencySymbols } from './GameProperties';
-import { createTextSpan, genericCleanup } from './util';
+import { Module } from '../ModuleRunner';
+import { Selector } from '../Selector';
+import { Materials, CurrencySymbols } from '../GameProperties';
+import { createTextSpan, genericCleanup } from '../util';
 
 export class PostLM implements Module {
   private webData;

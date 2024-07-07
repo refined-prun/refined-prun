@@ -1,8 +1,8 @@
-import { Module } from './ModuleRunner';
-import { getBuffersFromList, createTextSpan } from './util';
-import { Exchanges, ExchangeTickers, Materials } from './GameProperties';
-import { Selector } from './Selector';
-import { Style } from './Style';
+import { Module } from '../ModuleRunner';
+import { getBuffersFromList, createTextSpan } from '../util';
+import { Exchanges, ExchangeTickers, Materials } from '../GameProperties';
+import { Selector } from '../Selector';
+import { Style } from '../Style';
 
 export class CXPOOrderBook implements Module {
   private tag = 'pb-cxpo-ob';

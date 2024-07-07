@@ -1,7 +1,7 @@
-import { Module } from './ModuleRunner';
-import { getBuffersFromList, setSettings } from './util';
-import { Selector } from './Selector';
-import { appendStyle, PmmgStylesheet, Style } from './Style';
+import { Module } from '../ModuleRunner';
+import { getBuffersFromList, setSettings } from '../util';
+import { Selector } from '../Selector';
+import { appendStyle, PmmgStylesheet, Style } from '../Style';
 
 export class ChatDeleteButton implements Module {
   private tag = 'pb-chat-delete';

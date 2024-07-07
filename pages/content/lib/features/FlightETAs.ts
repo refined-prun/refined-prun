@@ -1,5 +1,5 @@
-import { Module } from './ModuleRunner';
-import { convertDurationToETA, parseDuration, createTextSpan, genericCleanup, getBuffersFromList } from './util';
+import { Module } from '../ModuleRunner';
+import { convertDurationToETA, parseDuration, createTextSpan, genericCleanup, getBuffersFromList } from '../util';
 
 export class FlightETAs implements Module {
   private tag = 'pb-sfc-eta';

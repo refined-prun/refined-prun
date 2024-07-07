@@ -1,5 +1,5 @@
-import { Module } from './ModuleRunner';
-import { getBuffersFromList } from './util';
+import { Module } from '../ModuleRunner';
+import { getBuffersFromList } from '../util';
 
 export class CXOBHighlighter implements Module {
   private tag = 'pb-cxob-highlight';

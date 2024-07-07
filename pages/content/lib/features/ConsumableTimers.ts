@@ -1,6 +1,6 @@
-import { Module } from './ModuleRunner';
-import { parseBaseName, findCorrespondingPlanet, createTextSpan, getBuffersFromList, calculateBurn } from './util';
-import { Selector } from './Selector';
+import { Module } from '../ModuleRunner';
+import { parseBaseName, findCorrespondingPlanet, createTextSpan, getBuffersFromList, calculateBurn } from '../util';
+import { Selector } from '../Selector';
 
 /**
  * Get inventory and burn data and implement on WF buffers

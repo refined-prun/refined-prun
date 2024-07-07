@@ -24,7 +24,7 @@ interface ModuleEntry {
 }
 
 export class ModuleRunner {
-  private readonly modules: ModuleEntry[]; // The list of modules run by the extension
+  private readonly modules: ModuleEntry[]; // The list of features run by the extension
   private readonly xit: XITHandler; // The XIT module, run separately
   private userInfo;
   private result: Settings; // The stored settings
@@ -41,7 +41,7 @@ export class ModuleRunner {
     this.updateActiveModules(result);
   }
 
-  // Enable or disable modules based on settings preference
+  // Enable or disable features based on settings preference
   private updateActiveModules(result) {
     if (result['PMMGExtended']['disabled'] == undefined) {
       return;

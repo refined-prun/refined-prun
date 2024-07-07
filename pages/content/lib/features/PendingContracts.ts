@@ -1,6 +1,6 @@
-import { Module } from './ModuleRunner';
-import { createTextSpan, genericCleanup, createContractDict } from './util';
-import { Selector } from './Selector';
+import { Module } from '../ModuleRunner';
+import { createTextSpan, genericCleanup, createContractDict } from '../util';
+import { Selector } from '../Selector';
 
 export class PendingContracts implements Module {
   private tag = 'pb-pending-contracts';

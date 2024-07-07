@@ -1,7 +1,7 @@
-import { Module } from './ModuleRunner';
-import { Selector } from './Selector';
-import { Style } from './Style';
-import { genericCleanup, showBuffer, createTextSpan } from './util';
+import { Module } from '../ModuleRunner';
+import { Selector } from '../Selector';
+import { Style } from '../Style';
+import { genericCleanup, showBuffer, createTextSpan } from '../util';
 
 export class Sidebar implements Module {
   private tag = 'pb-sidebar';

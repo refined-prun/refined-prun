@@ -1,33 +1,32 @@
-import { FlightETAs } from './FlightETAs';
+import { FlightETAs } from '@lib/features/FlightETAs';
 import { ModuleRunner } from './ModuleRunner';
-import { OrderETAs } from './OrderETAs';
-import { FleetETAs } from './FleetETAs';
-import { QueueLoad } from './QueueLoad';
-import { Notifications } from './Notifications';
+import { OrderETAs } from '@lib/features/OrderETAs';
+import { FleetETAs } from '@lib/features/FleetETAs';
+import { QueueLoad } from '@lib/features/QueueLoad';
+import { Notifications } from '@lib/features/Notifications';
 import { getCXPrices, getPrices } from './BackgroundRunner';
 import { getSpecial } from './util';
 import { appendStyle, PmmgStylesheet } from './Style';
-import { ScreenUnpack } from './ScreenUnpack';
-import { Sidebar } from './Sidebar';
-import { CommandCorrecter } from './CommandCorrecter';
-import { CalculatorButton } from './CalculatorButton';
-import { ImageCreator } from './ImageCreator';
-import { InventoryOrganizer } from './InventoryOrganizer';
-import { HeaderMinimizer } from './HeaderMinimizer';
-import { PendingContracts } from './PendingContracts';
-import { CompactUI } from './CompactUI';
+import { ScreenUnpack } from '@lib/features/ScreenUnpack';
+import { Sidebar } from '@lib/features/Sidebar';
+import { CommandCorrecter } from '@lib/features/CommandCorrecter';
+import { CalculatorButton } from '@lib/features/CalculatorButton';
+import { ImageCreator } from '@lib/features/ImageCreator';
+import { InventoryOrganizer } from '@lib/features/InventoryOrganizer';
+import { HeaderMinimizer } from '@lib/features/HeaderMinimizer';
+import { PendingContracts } from '@lib/features/PendingContracts';
+import { CompactUI } from '@lib/features/CompactUI';
 import { calculateFinancials } from './XIT/Finances';
-import { FormulaReplacer } from './FormulaEvaluator';
-import { AdvancedMode } from './AdvancedMode';
-import { CXOBHighlighter } from './CXOBHighlighter';
-import { CXPOOrderBook } from './CXPOOrderBook';
-import { ChatDeleteButton } from './ChatDeleteButton';
-import { IconMarkers } from './IconMarkers';
-//import { InsetFixer } from "./InsetFixer";
-import { LocalMarketAds } from './LocalMarketAds';
-import { ConsumableTimers } from './ConsumableTimers';
-import { ShippingAds } from './ShippingAds';
-import { PostLM } from './PostLM';
+import { FormulaReplacer } from '@lib/features/FormulaEvaluator';
+import { AdvancedMode } from '@lib/features/AdvancedMode';
+import { CXOBHighlighter } from '@lib/features/CXOBHighlighter';
+import { CXPOOrderBook } from '@lib/features/CXPOOrderBook';
+import { ChatDeleteButton } from '@lib/features/ChatDeleteButton';
+import { IconMarkers } from '@lib/features/IconMarkers';
+import { LocalMarketAds } from '@lib/features/LocalMarketAds';
+import { ConsumableTimers } from '@lib/features/ConsumableTimers';
+import { ShippingAds } from '@lib/features/ShippingAds';
+import { PostLM } from '@lib/features/PostLM';
 import { loadSettings, Settings } from './Settings';
 
 // The main function that initializes everything
@@ -100,7 +99,7 @@ async function mainRun() {
     // 72000000
     window.setTimeout(() => calculateFinancials(webData, userInfo, result, true), 1000);
   }
-  // Create the object that will run all the modules in a loop
+  // Create the object that will run all the features in a loop
   const runner = new ModuleRunner(
     [
       new OrderETAs(),
