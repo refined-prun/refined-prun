@@ -16,7 +16,8 @@
       "jsx": true
     },
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "sourceType": "module",
+    "jsxPragma": "h"
   },
   "plugins": ["@typescript-eslint", "import", "prettier"],
   "rules": {

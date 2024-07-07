@@ -2,6 +2,9 @@
   "extends": "@refined-prun/tsconfig/app.json",
   "compilerOptions": {
     "baseUrl": "./",
+    "jsx": "react",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "DocumentFragment",
     "types": [
       "vite/client",
       "node"

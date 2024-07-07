@@ -18,13 +18,14 @@
   },
   "type": "module",
   "dependencies": {
+    "dom-chef": "^5.1.1",
     "plotly.js-dist-min": "^2.30.1",
     "webextension-polyfill": "^0.12.0"
   },
   "devDependencies": {
+    "@laynezh/vite-plugin-lib-assets": "^0.5.23",
     "@refined-prun/hmr": "workspace:*",
     "@refined-prun/tsconfig": "workspace:*",
-    "@laynezh/vite-plugin-lib-assets": "^0.5.23",
     "@types/chrome": "^0.0.268",
     "@types/firefox-webext-browser": "^120.0.4",
     "@types/plotly.js-dist-min": "^2.3.4"
