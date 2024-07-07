@@ -1,0 +1,24 @@
+{
+  "extends": "@refined-prun/tsconfig/app.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "types": [
+      "vite/client",
+      "node"
+    ],
+    "paths": {
+      "@root/*": [
+        "./*"
+      ],
+      "@src/*": [
+        "src/*"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "utils",
+    "vite.config.mts",
+    "node_modules/@types"
+  ]
+}

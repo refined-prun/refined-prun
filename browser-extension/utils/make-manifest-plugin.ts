@@ -1,14 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { convertManifestToString, colorLog } from '@refined-prun/dev-utils';
 import type { PluginOption } from 'vite';
 import { pathToFileURL } from 'url';
 import * as process from 'process';
+import { convertManifestToString } from './manifest-parser';
+import { colorLog } from './logger';
 
 const { resolve } = path;
 
-const rootDir = resolve(__dirname, '..', '..');
-const manifestFile = resolve(rootDir, 'manifest.js');
+const manifestFile = resolve(__dirname, 'manifest.js');
 
 const getManifestWithCacheBurst = (): Promise<{ default: chrome.runtime.ManifestV3 }> => {
   const withCacheBurst = (path: string) => `${path}?${Date.now().toString()}`;

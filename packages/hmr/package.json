@@ -26,6 +26,8 @@
   "devDependencies": {
     "@refined-prun/tsconfig": "workspace:*",
     "@rollup/plugin-sucrase": "^5.0.2",
+    "@types/chrome": "^0.0.268",
+    "@types/firefox-webext-browser": "^120.0.4",
     "@types/ws": "^8.5.10",
     "esm": "^3.2.25",
     "fast-glob": "^3.3.2",

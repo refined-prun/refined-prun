@@ -5,10 +5,14 @@ import { LOCAL_RELOAD_SOCKET_URL } from '../constant';
 import * as fs from 'fs';
 import path from 'path';
 
-type PluginConfig = {
-  onStart?: () => void;
+type EntryOption = {
   reload?: boolean;
   refresh?: boolean;
+};
+
+type PluginConfig = {
+  onStart?: () => void;
+  entry: { [key: string]: EntryOption };
 };
 
 const injectionsPath = path.resolve(__dirname, '..', '..', '..', 'build', 'injections');
@@ -19,9 +23,6 @@ const reloadCode = fs.readFileSync(path.resolve(injectionsPath, 'reload.js'), 'u
 export function watchRebuildPlugin(config: PluginConfig): PluginOption {
   let ws: WebSocket | null = null;
   const id = Math.random().toString(36);
-  const { refresh, reload } = config;
-
-  const hmrCode = (refresh ? refreshCode : '') + (reload ? reloadCode : '');
 
   function initializeWebSocket() {
     if (!ws) {
@@ -58,6 +59,14 @@ export function watchRebuildPlugin(config: PluginConfig): PluginOption {
     generateBundle(_options, bundle) {
       for (const module of Object.values(bundle)) {
         if (module.type === 'chunk') {
+          const fileName = path.basename(module.fileName).split('.')[0];
+          const fileConfig = config.entry[fileName];
+          if (fileConfig === undefined) {
+            continue;
+          }
+          const { refresh, reload } = fileConfig;
+
+          const hmrCode = (refresh ? refreshCode : '') + (reload ? reloadCode : '');
           module.code = `(function() {let __HMR_ID = "${id}";\n` + hmrCode + '\n' + '})();' + '\n' + module.code;
         }
       }

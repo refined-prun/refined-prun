@@ -1,4 +1,4 @@
-import { ProcessMessage } from '@lib/background/uploader';
+import { ProcessMessage } from '@root/src/background/uploader';
 
 if (__CHROME__) {
   // Chrome-MV3 service worker

@@ -1,4 +1,4 @@
-import '@src/index.css';
+import './popup.css';
 
 const clearButton = document.getElementById('clearbutton')!;
 

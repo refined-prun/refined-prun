@@ -6,7 +6,11 @@ import type { PluginOption } from 'vite';
  * make entry point file for content script cache busting
  */
 
-export function makeEntryPointPlugin(): PluginOption {
+type PluginConfig = {
+  entry: string[];
+};
+
+export function makeEntryPointPlugin(config: PluginConfig): PluginOption {
   const cleanupTargets = new Set<string>();
   const isFirefox = process.env.__FIREFOX__ === 'true';
 
@@ -19,6 +23,10 @@ export function makeEntryPointPlugin(): PluginOption {
       }
       for (const module of Object.values(bundle)) {
         const fileName = path.basename(module.fileName);
+        const entryName = fileName.split('.')[0];
+        if (!config.entry.includes(entryName)) {
+          continue;
+        }
         const newFileName = fileName.replace('.js', '_dev.js');
         switch (module.type) {
           case 'asset':

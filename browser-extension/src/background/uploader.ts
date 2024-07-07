@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { transmitted_events } from '@lib/background/default_event_payload';
+import { transmitted_events } from '../background/default_event_payload';
 
 const eventQueue: any[] = [];
 let processingqueue = false;

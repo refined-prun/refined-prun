@@ -22,10 +22,10 @@ const manifest = {
     'https://rest.fnar.net/',
   ],
   background: {
-    service_worker: 'background.iife.js',
+    service_worker: 'service_worker.js',
   },
   action: {
-    default_popup: 'popup/index.html',
+    default_popup: 'popup.html',
     default_icon: 'icon-34.png',
   },
   icons: {
@@ -35,13 +35,12 @@ const manifest = {
     {
       matches: [apex],
       js: ['document_start.js'],
-      css: ['content.css'],
       run_at: 'document_start',
     },
     {
       matches: [apex],
-      js: ['content/index.iife.js'],
-      css: ['content.css'],
+      js: ['enhanced-prun.js'],
+      css: ['enhanced-prun.css'],
       run_at: 'document_end',
     },
   ],
