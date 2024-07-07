@@ -28,6 +28,7 @@ import { ConsumableTimers } from '@src/features/ConsumableTimers';
 import { ShippingAds } from '@src/features/ShippingAds';
 import { PostLM } from '@src/features/PostLM';
 import { loadSettings, Settings } from './Settings';
+import features from '@src/feature-registry';
 
 // The main function that initializes everything
 async function mainRun() {
@@ -99,6 +100,7 @@ async function mainRun() {
     // 72000000
     window.setTimeout(() => calculateFinancials(webData, userInfo, result, true), 1000);
   }
+  await features.init();
   // Create the object that will run all the features in a loop
   const runner = new ModuleRunner(
     [

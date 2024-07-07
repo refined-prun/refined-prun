@@ -1,6 +1,7 @@
 {
   "extends": "@refined-prun/tsconfig/app.json",
   "compilerOptions": {
+    "module": "es2022",
     "baseUrl": "./",
     "jsx": "react",
     "jsxFactory": "h",

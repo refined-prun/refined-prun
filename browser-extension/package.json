@@ -18,8 +18,12 @@
   },
   "type": "module",
   "dependencies": {
+    "code-tag": "^1.2.0",
     "dom-chef": "^5.1.1",
+    "onetime": "^7.0.0",
     "plotly.js-dist-min": "^2.30.1",
+    "type-fest": "^4.21.0",
+    "typed-query-selector": "^2.11.2",
     "webextension-polyfill": "^0.12.0"
   },
   "devDependencies": {
