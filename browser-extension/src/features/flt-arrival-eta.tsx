@@ -85,6 +85,6 @@ export function init() {
 }
 
 void features.add({
-  id: 'display-fleet-arrival-eta',
+  id: 'flt-arrival-eta',
   init,
 });
