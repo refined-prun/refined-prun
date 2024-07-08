@@ -21,7 +21,7 @@
   },
   "include": [
     "src",
-    "utils",
+    "dev-tools",
     "vite.config.mts",
     "node_modules/@types"
   ]

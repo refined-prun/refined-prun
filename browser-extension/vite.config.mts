@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import libAssetsPlugin from '@laynezh/vite-plugin-lib-assets';
-import makeManifestPlugin from './utils/make-manifest-plugin';
+import makeManifestPlugin from './dev-tools/make-manifest-plugin';
 import { watchPublicPlugin, watchRebuildPlugin } from '@refined-prun/hmr';
 
 const rootDir = resolve(__dirname);
