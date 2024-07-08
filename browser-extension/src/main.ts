@@ -1,7 +1,6 @@
 import { FlightETAs } from '@src/features/FlightETAs';
 import { ModuleRunner } from './ModuleRunner';
 import { OrderETAs } from '@src/features/OrderETAs';
-import { FleetETAs } from '@src/features/FleetETAs';
 import { QueueLoad } from '@src/features/QueueLoad';
 import { Notifications } from '@src/features/Notifications';
 import { getCXPrices, getPrices } from './BackgroundRunner';
@@ -29,6 +28,7 @@ import { ShippingAds } from '@src/features/ShippingAds';
 import { PostLM } from '@src/features/PostLM';
 import { loadSettings, Settings } from './Settings';
 import features from '@src/feature-registry';
+import buffers from '@src/prun-ui/prun-buffers';
 
 // The main function that initializes everything
 async function mainRun() {
@@ -100,13 +100,13 @@ async function mainRun() {
     // 72000000
     window.setTimeout(() => calculateFinancials(webData, userInfo, result, true), 1000);
   }
+  buffers.track();
   await features.init();
   // Create the object that will run all the features in a loop
   const runner = new ModuleRunner(
     [
       new OrderETAs(),
       new FlightETAs(),
-      new FleetETAs(),
       new QueueLoad(),
       new InventoryOrganizer(userInfo, result),
       new Notifications(userInfo),
