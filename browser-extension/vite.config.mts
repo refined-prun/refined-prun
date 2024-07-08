@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import libAssetsPlugin from '@laynezh/vite-plugin-lib-assets';
 import makeManifestPlugin from './utils/make-manifest-plugin';
-import { makeEntryPointPlugin, watchPublicPlugin, watchRebuildPlugin } from '@refined-prun/hmr';
+import { watchPublicPlugin, watchRebuildPlugin } from '@refined-prun/hmr';
 
 const rootDir = resolve(__dirname);
 const srcDir = resolve(rootDir, 'src');
@@ -26,20 +26,11 @@ export default defineConfig({
     watchPublicPlugin(),
     makeManifestPlugin({ outDir }),
     isDev && watchRebuildPlugin({
-      entry: {
-        'refined-prun': {
-          refresh: true,
-        },
-        popup: {
-          refresh: true,
-        },
+      options: {
         'service_worker': {
-          reload: true,
+          serviceWorker: true,
         },
       },
-    }),
-    isDev && makeEntryPointPlugin({
-      entry: ['refined-prun', 'popup']
     }),
   ],
   publicDir: resolve(rootDir, 'public'),
@@ -60,7 +51,7 @@ export default defineConfig({
       },
       input: {
         'refined-prun': resolve(__dirname, 'src/refined-prun.ts'),
-        popup: resolve(__dirname, 'src/popup/popup.ts'),
+        'popup': resolve(__dirname, 'src/popup/popup.ts'),
         'service_worker': resolve(__dirname, 'src/background/index.ts'),
       },
     },

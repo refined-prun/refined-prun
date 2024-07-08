@@ -5,15 +5,14 @@ import { LOCAL_RELOAD_SOCKET_URL } from '../constant';
 import * as fs from 'fs';
 import path from 'path';
 
-type EntryOption = {
-  reload?: boolean;
-  refresh?: boolean;
-};
+interface ChunkOptions {
+  serviceWorker?: boolean;
+}
 
-type PluginConfig = {
+interface PluginConfig {
   onStart?: () => void;
-  entry: { [key: string]: EntryOption };
-};
+  options: { [key: string]: ChunkOptions };
+}
 
 const injectionsPath = path.resolve(__dirname, '..', '..', '..', 'build', 'injections');
 
@@ -21,11 +20,11 @@ const refreshCode = fs.readFileSync(path.resolve(injectionsPath, 'refresh.js'), 
 const reloadCode = fs.readFileSync(path.resolve(injectionsPath, 'reload.js'), 'utf-8');
 
 export function watchRebuildPlugin(config: PluginConfig): PluginOption {
-  let ws: WebSocket | null = null;
+  let ws: WebSocket | undefined = undefined;
   const id = Math.random().toString(36);
 
   function initializeWebSocket() {
-    if (!ws) {
+    if (ws === undefined) {
       ws = new WebSocket(LOCAL_RELOAD_SOCKET_URL);
       ws.onopen = () => {
         console.log(`[HMR] Connected to dev-server at ${LOCAL_RELOAD_SOCKET_URL}`);
@@ -33,7 +32,7 @@ export function watchRebuildPlugin(config: PluginConfig): PluginOption {
       ws.onerror = () => {
         console.error(`[HMR] Failed to start server at ${LOCAL_RELOAD_SOCKET_URL}`);
         console.warn('Retrying in 5 seconds...');
-        ws = null;
+        ws = undefined;
         setTimeout(() => initializeWebSocket(), 5_000);
       };
     }
@@ -56,20 +55,40 @@ export function watchRebuildPlugin(config: PluginConfig): PluginOption {
       }
       ws.send(MessageInterpreter.send({ type: 'build_complete', id }));
     },
-    generateBundle(_options, bundle) {
+    generateBundle(options, bundle) {
+      const outputDir = options.dir;
+      if (!outputDir) {
+        throw new Error('Output directory not found');
+      }
       for (const module of Object.values(bundle)) {
         if (module.type === 'chunk') {
-          const fileName = path.basename(module.fileName).split('.')[0];
-          const fileConfig = config.entry[fileName];
-          if (fileConfig === undefined) {
-            continue;
-          }
-          const { refresh, reload } = fileConfig;
-
-          const hmrCode = (refresh ? refreshCode : '') + (reload ? reloadCode : '');
-          module.code = `(function() {let __HMR_ID = "${id}";\n` + hmrCode + '\n' + '})();' + '\n' + module.code;
+          const fileName = path.basename(module.fileName);
+          const chunkOptions = config.options[fileName.split('.')[0]];
+          const { serviceWorker } = chunkOptions ?? {};
+          const hmrFileName = fileName.replace('.js', '_hmr.js');
+          const hmrCode = serviceWorker ? reloadCode : refreshCode;
+          const hmrFile = `(function() {let __HMR_ID = "${id}";\n` + hmrCode + '\n' + '})();';
+          fs.writeFileSync(path.resolve(outputDir, hmrFileName), hmrFile);
+          // Extract code to a separate file for script cache busting
+          const devFileName = fileName.replace('.js', '_dev.js');
+          fs.writeFileSync(path.resolve(outputDir, devFileName), module.code);
+          module.code =
+            importStatement(hmrFileName, serviceWorker) + '\n' + importStatement(devFileName, serviceWorker);
         }
       }
     },
   };
+}
+
+function importStatement(fileName: string, serviceWorker?: boolean) {
+  const isFirefox = process.env.__FIREFOX__ === 'true';
+  if (isFirefox) {
+    return `import(browser.runtime.getURL('${fileName}'));`;
+  }
+
+  if (serviceWorker) {
+    return `import './${fileName}';`;
+  }
+
+  return `import('./${fileName}');`;
 }

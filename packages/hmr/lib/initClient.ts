@@ -1,11 +1,17 @@
 import { LOCAL_RELOAD_SOCKET_URL } from './constant';
 import MessageInterpreter from './interpreter';
 
+let firstConnect = true;
+
 export default function initReloadClient({ id, onUpdate }: { id: string; onUpdate: () => void }) {
   let ws: WebSocket | null = null;
   try {
     ws = new WebSocket(LOCAL_RELOAD_SOCKET_URL);
     ws.onopen = () => {
+      if (!firstConnect) {
+        onUpdate();
+      }
+      firstConnect = false;
       ws?.addEventListener('message', event => {
         const message = MessageInterpreter.receive(String(event.data));
         if (message.type === 'ping') {

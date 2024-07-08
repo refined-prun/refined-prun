@@ -23,6 +23,7 @@ const manifest = {
   ],
   background: {
     service_worker: 'service_worker.js',
+    type: 'module',
   },
   action: {
     default_popup: 'popup.html',
