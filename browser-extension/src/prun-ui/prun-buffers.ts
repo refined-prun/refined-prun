@@ -38,7 +38,7 @@ async function onFrameAdded(frame: HTMLDivElement) {
   const commandParts = commandElement.textContent!.split(' ');
   const buffer: PrUnBuffer = {
     frame,
-    command: commandParts[0].toLowerCase(),
+    command: commandParts[0].toUpperCase(),
     parameter: commandParts[1],
   };
   const buffers = getMapArray(commandBuffers, buffer.command);
@@ -96,7 +96,7 @@ async function waitUntilScrollViewNotEmpty(scrollView: Element) {
 }
 
 function observeBuffers(command: string, observer: PrUnBufferObserver) {
-  command = command.toLowerCase();
+  command = command.toUpperCase();
   const observers = getMapArray(commandObservers, command);
   observers.push(observer);
   const buffers = getMapArray(commandBuffers, command);
