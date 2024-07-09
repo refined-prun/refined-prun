@@ -3,6 +3,7 @@ import { $ } from 'select-dom';
 import { convertDurationToETA, parseDuration } from '@src/util';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
+import { observeCharacterDataChanged, observeChildListChanged, observeChildren } from '@src/utils/mutation-observer';
 
 function observeBuffer(frame: HTMLDivElement) {
   const tbody = $('table > tbody', frame);
@@ -13,25 +14,19 @@ function observeBuffer(frame: HTMLDivElement) {
     return;
   }
 
-  Array.from(tbody.rows).forEach(observeRow);
-  const observer = new MutationObserver(mutations => {
-    for (const mutation of mutations) {
-      mutation.addedNodes.forEach(observeRow);
-    }
-  });
-  observer.observe(tbody, { childList: true });
+  observeChildren(tbody, observeRow);
 }
 
-function observeRow(node: Node) {
-  const row = node as HTMLTableRowElement;
+function observeRow(row: Node) {
+  if (!(row instanceof HTMLTableRowElement)) {
+    return;
+  }
   const etaColumn = row.children[7];
   const etaSpan = <span className="rpu-flt-eta" />;
-  observeEtaColumn(etaColumn, etaSpan);
-  const observer = new MutationObserver(() => observeEtaColumn(etaColumn, etaSpan));
-  observer.observe(etaColumn, { childList: true });
+  observeChildListChanged(etaColumn, () => updateEtaColumn(etaColumn, etaSpan));
 }
 
-function observeEtaColumn(etaColumn: Element, etaSpan: Element) {
+function updateEtaColumn(etaColumn: Element, etaSpan: Element) {
   const children = etaColumn.children;
   if (children.length === 0) {
     // A ship is stationary, duration span is not present.
@@ -57,13 +52,7 @@ function observeEtaColumn(etaColumn: Element, etaSpan: Element) {
   }
 
   etaColumn.appendChild(etaSpan);
-  observeDurationSpan(child, etaSpan);
-}
-
-function observeDurationSpan(durationSpan: Element, etaSpan: Element) {
-  setEta(durationSpan, etaSpan);
-  const observer = new MutationObserver(() => setEta(durationSpan, etaSpan));
-  observer.observe(durationSpan, { characterData: true });
+  observeCharacterDataChanged(child, () => setEta(child, etaSpan));
 }
 
 function setEta(durationSpan: Element, etaSpan: Element) {
@@ -80,7 +69,7 @@ function onBufferCreated(buffer: PrUnBuffer) {
   observeBuffer(buffer.frame);
 }
 
-export function init() {
+function init() {
   buffers.observe('FLT', onBufferCreated);
 }
 
