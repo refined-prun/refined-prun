@@ -78,4 +78,7 @@ export const Selector = {
   ActionConfirmationMessage: "span[class~='ActionConfirmationOverlay__message___OajoGeh']",
   StoreSelect: "select[class~='StoreSelect__container___tDwUv6W']",
   MaterialSelector: "input[class~='MaterialSelector__input___tyJaKPm']",
+  ContextBar: "div[class~='ContextControls__container___dzDODeW']",
+  TileControls: "div[class~='TileFrame__controls___g5J41WG']",
+  HiddenControls: "div[class~='TileControls__controls___biW6ray']",
 };

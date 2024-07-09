@@ -164,7 +164,7 @@ export class XITHandler implements Module {
           refreshButton.appendChild(createTextSpan('⟳'));
           refreshButton.classList.add('button-upper-right');
           refreshButton.classList.add(this.tag);
-          refreshButton.style.fontSize = '16px';
+          refreshButton.style.fontSize = CHROME ? '16px' : '18px';
           refreshButton.style.paddingTop = CHROME ? '12px' : '7px';
           refreshButton.classList.add('refresh');
           (buffer.children[3] || buffer.children[2]).insertBefore(

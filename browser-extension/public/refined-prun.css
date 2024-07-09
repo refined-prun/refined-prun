@@ -519,6 +519,10 @@ div.Head__container___3ecBw0E > div:nth-child(2) {
   flex-shrink: 0;
 }
 
+div.TileControls__splitControls___fcU57en {
+  display: inline-flex;
+}
+
 /*
   Fix PrUN Bugs
   This one no longer works but needs to be done

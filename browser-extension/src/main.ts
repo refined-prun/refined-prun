@@ -9,7 +9,7 @@ import { appendStyle, PmmgStylesheet } from './Style';
 import { ScreenUnpack } from '@src/features/ScreenUnpack';
 import { Sidebar } from '@src/features/Sidebar';
 import { CommandCorrecter } from '@src/features/CommandCorrecter';
-import { CalculatorButton } from '@src/features/CalculatorButton';
+import { TopRightButtons } from '@src/features/TopRightButtons';
 import { ImageCreator } from '@src/features/ImageCreator';
 import { InventoryOrganizer } from '@src/features/InventoryOrganizer';
 import { HeaderMinimizer } from '@src/features/HeaderMinimizer';
@@ -26,6 +26,7 @@ import { LocalMarketAds } from '@src/features/LocalMarketAds';
 import { ConsumableTimers } from '@src/features/ConsumableTimers';
 import { ShippingAds } from '@src/features/ShippingAds';
 import { PostLM } from '@src/features/PostLM';
+import { ProdBurnLink } from '@src/features/ProdBurnLink';
 import { loadSettings, Settings } from './Settings';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
@@ -115,7 +116,7 @@ async function mainRun() {
       new HeaderMinimizer(result['PMMGExtended']['minimize_by_default']),
       new AdvancedMode(result['PMMGExtended']['advanced_mode']),
       new CommandCorrecter(),
-      new CalculatorButton(),
+      new TopRightButtons(),
       new Sidebar(result['PMMGExtended']['sidebar']),
       new PendingContracts(userInfo),
       new CompactUI(result),
@@ -129,6 +130,7 @@ async function mainRun() {
       new LocalMarketAds(),
       new PostLM(webData),
       new ConsumableTimers(result['PMMGExtended']['burn_thresholds'], userInfo),
+      new ProdBurnLink(),
     ],
     result,
     webData,
@@ -142,4 +144,4 @@ async function mainRun() {
   })();
 }
 
-mainRun();
+void mainRun();

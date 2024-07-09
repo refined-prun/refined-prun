@@ -124,6 +124,30 @@ export class Notifications implements Module {
 // Words to search for, their types, and colors courtesy of Ray K
 // Searches must be lower case
 const Searchers = [
+  // German searchers
+  ['antrag', 'antrag', '#ffda94'],
+  ['vertrag', 'vertrag', 'rgb(247, 166, 0)'],
+  ['vertragskondition erfüllt', 'vertrag', 'rgb(247, 166, 0)'],
+  ['einladung', 'konzern', '#8f52cc'],
+  ['produziert', 'prod', '#3fa2de'],
+  ['angenommen', 'anzeige', '#449c57'],
+  ['transaktionwurden', 'handel', '#008000'],
+  ['transaktionenwurden', 'handel', '#008000'],
+  ['order erfüllt', 'order', '#cc2929'],
+  ['zielort', 'schiff', '#b336b3'],
+  ['bevölkerungsbericht', 'bericht', '#00aa77'],
+  ['die wahl', 'wahl', '#ffda94'],
+  ['kandidatur', 'parlament', '#ffda94'],
+  ['rules', 'rules', '#ffda94'], // Missing
+  ['globale handelskammer', 'COGC', '#8f52cc'],
+  ['expert', 'expert', '#ff8a00'], // Missing
+  ['bevölkerungsinfrastr', 'POPI', '#8f52cc'],
+  ['warehous', 'war', '#cc2929'], // Missing
+  ['shipbuilding project', 'ship', '#8f52cc'], // Missing
+  ['planetary project', 'infra', '#8f52cc'], // Missing
+  ['versorgungsgüter', 'erhaltung', '#b37b32'], // Placeholder
+
+  // English searchers
   ['a new motion', 'motion', '#ffda94'],
   ['contract', 'contract', 'rgb(247, 166, 0)'],
   ['our corporation', 'corp', '#8f52cc'],
@@ -144,7 +168,7 @@ const Searchers = [
   ['chamber of global commerce', 'COGC', '#8f52cc'],
   ['expert', 'expert', '#ff8a00'],
   ['population infrastructure project', 'POPI', '#8f52cc'],
-  ['POPI project', 'POPI', '#8f52cc'],
+  ['POPI', 'POPI', '#8f52cc'],
   ['apex', 'update', '#00aa77'],
   ['warehous', 'war', '#cc2929'],
   ['shipbuilding project', 'ship', '#8f52cc'],

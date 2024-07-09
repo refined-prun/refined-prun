@@ -17,6 +17,12 @@ export const Style = {
     'Button__inline___Ffw9bbn',
   ],
 
+  // Context bar styles
+  ContextBar: ['ContextControls__container___dzDODeW'],
+  ContextButton: ['ContextControls__item____QDkFMH', 'fonts__font-regular___Sxp1xjo', 'type__type-small___pMQhMQO'],
+  ContextCommand: ['ContextControls__cmd___BXQDTL_'],
+  ContextLabel: ['ContextControls__label___xomE3De'],
+
   // Misc styles
   AppContainer: ['App__container__QWpTbzo'],
   LoadingLoader: ['Loading__loader___t97qqaP'],

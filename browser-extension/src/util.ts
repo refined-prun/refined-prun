@@ -19,6 +19,81 @@ export const dateYearFormatter2 = new Intl.DateTimeFormat(undefined, {
   year: '2-digit',
 });
 
+// Add context buttons. (Append returned object to empty tile)
+export function createContextButtonRow(buttonAbbreviations, buttonLabels, buttonLinks) {
+  const contextBar = document.createElement('div');
+  contextBar.classList.add(...Style.ContextBar);
+
+  if (!(buttonAbbreviations.length == buttonLabels.length && buttonLabels.length == buttonLinks.length)) {
+    // Mismatch parameter lengths
+    return contextBar;
+  }
+
+  for (let i = 0; i < buttonAbbreviations.length; i++) {
+    contextBar.appendChild(createContextButton(buttonAbbreviations[i], buttonLabels[i], buttonLinks[i]));
+  }
+
+  return contextBar;
+}
+
+export function createContextButton(buttonAbbreviation, buttonLabel, buttonLink) {
+  const contextButton = document.createElement('div');
+  contextButton.classList.add(...Style.ContextButton);
+
+  const contextSpan1 = document.createElement('span');
+  const contextSpan2 = createTextSpan(buttonAbbreviation);
+
+  contextSpan2.classList.add(...Style.ContextCommand);
+
+  contextSpan1.appendChild(contextSpan2);
+  contextButton.appendChild(contextSpan1);
+
+  const contextLabel = createTextSpan(': ' + buttonLabel);
+  contextLabel.classList.add(...Style.ContextLabel);
+
+  contextButton.appendChild(contextLabel);
+
+  const link = buttonLink;
+
+  contextButton.addEventListener('click', function () {
+    showBuffer(link);
+  });
+
+  return contextButton;
+}
+
+export function createSettingsButton(text, width, toggled, f) {
+  const button = document.createElement('span');
+  const bar = document.createElement('div');
+  if (toggled) {
+    bar.classList.add(...Style.SettingsBarToggled);
+  } else {
+    bar.classList.add(...Style.SettingsBarUntoggled);
+  }
+  const textBox = document.createElement('div');
+  textBox.classList.add(...Style.SettingsText);
+  textBox.textContent = text;
+  button.classList.add(...Style.SettingsButton);
+  bar.style.width = width + 'px';
+  bar.style.maxWidth = width + 'px';
+  bar.style.height = '2px';
+  button.appendChild(bar);
+  button.appendChild(textBox);
+  button.addEventListener('click', function () {
+    if (toggled) {
+      bar.classList.remove(...Style.SettingsBarToggled);
+      bar.classList.add(...Style.SettingsBarUntoggled);
+      toggled = false;
+    } else {
+      bar.classList.remove(...Style.SettingsBarUntoggled);
+      bar.classList.add(...Style.SettingsBarToggled);
+      toggled = true;
+    }
+    f();
+  });
+  return button;
+}
+
 // Download a file containing fileData with fileName
 export function downloadFile(fileData, fileName, isJSON: boolean = true) {
   const blob = new Blob([isJSON ? JSON.stringify(fileData) : fileData], { type: 'text/plain' });
@@ -262,6 +337,31 @@ export function parseBaseName(text) {
   }
 }
 
+// Parse the base name on PROD buffers
+export function parseProdName(text) {
+  try {
+    let match = text.match(/([A-Z]{2}-[0-9]{3} [a-z]) Production/); // Unnamed system unnamed planet
+    if (match && match[1]) {
+      return match[1].replace(' ', '');
+    }
+    match = text.match(/([A-z ]*) - ([A-z ]*) Production/); // Named system named planet
+    if (match && match[1] && match[2]) {
+      return match[2];
+    }
+    match = text.match(/([A-z ]*) ([A-z]) Production/); // Named system unnamed planet
+    if (match && match[1] && match[2] && SystemNames[match[1].toUpperCase()]) {
+      return SystemNames[match[1].toUpperCase()] + match[2].toLowerCase();
+    }
+    match = text.match(/[A-Z]{2}-[0-9]{3} - ([A-z ]*) Production/); // Unnamed system named planet
+    if (match && match[1]) {
+      return match[1];
+    }
+    return null;
+  } catch (TypeError) {
+    return text;
+  }
+}
+
 // Parse the inventory name on inventory buffers
 export function parseInvName(text) {
   try {
@@ -378,6 +478,7 @@ export function getSpecial() {
  * @param amount - The number shown in the lower right of the material. "none" indicates no number
  * @param text - Indicates whether the full material name should appear under the material element
  * @param small - Indicates whether the material is full size (as in an inventory) or small (as in a WF buffer)
+ * @param building - Indicates whether the material is a building ticker
  */
 export function createMaterialElement(
   ticker,
@@ -385,8 +486,9 @@ export function createMaterialElement(
   amount: string = 'none',
   text: boolean = false,
   small: boolean = false,
+  building?,
 ) {
-  if (!MaterialNames[ticker] && ticker != 'SHPT') {
+  if (!MaterialNames[ticker] && ticker != 'SHPT' && !building) {
     return null;
   } // Return nothing if the material isn't recognized
   const name = (MaterialNames[ticker] || ['Shipment'])[0]; // The full name of the material (Basic Bulkhead)
@@ -402,9 +504,14 @@ export function createMaterialElement(
   const material = document.createElement('div'); // The colored material square
   material.classList.add(...WithStyles(Style.MaterialElement)); // Apply styles
   material.appendChild(matTextWrapper);
-  material.style.background = CategoryColors[category][0]; // Apply colors
-  material.style.color = CategoryColors[category][1];
-  material.title = name; // Provide the material with a title when hovered over
+  if (building) {
+    material.style.background = 'linear-gradient(135deg, rgb(52, 140, 160), rgb(77, 165, 185))'; // Apply colors
+    material.style.color = 'rgb(179, 255, 255)';
+  } else {
+    material.style.background = CategoryColors[category][0]; // Apply colors
+    material.style.color = CategoryColors[category][1];
+    material.title = name; // Provide the material with a title when hovered over
+  } // Provide the material with a title when hovered over
   material.addEventListener('click', function () {
     // Show MAT buffer when clicked
     showBuffer('MAT ' + ticker.toUpperCase());
