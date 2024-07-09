@@ -1,5 +1,8 @@
 import { downloadFile, clearChildren, XITWebRequest } from '../util';
 import { Style } from '../Style';
+import { h } from 'dom-chef';
+import { $$ } from 'select-dom';
+import PrUnCss from '@src/prun-ui/prun-css';
 
 export class Debug {
   private tile: HTMLElement;
@@ -44,6 +47,7 @@ export class Debug {
         'pmmg-user-info' + Date.now().toString() + '.json',
       ),
     );
+    downloadButtons.appendChild(createDownloadPrUnCssClassesButton());
     const endpointLabel = document.createElement('div');
     endpointLabel.textContent = 'Get FIO Endpoint (ex: /infrastructure/Proxion)';
     endpointLabel.style.display = 'block';
@@ -109,4 +113,56 @@ function createDownloadButton(data, buttonName, fileName) {
     downloadFile(data, fileName);
   });
   return downloadButton;
+}
+
+function createDownloadPrUnCssClassesButton() {
+  const classes = [PrUnCss.Button.btn, PrUnCss.Button.primary].join(' ');
+  return (
+    <button
+      className={classes}
+      style={{
+        display: 'block',
+        marginLeft: '4px',
+        marginBottom: '4px',
+      }}
+      onClick={downloadPrUnCssClasses}>
+      Export CSS classes
+    </button>
+  );
+}
+
+function downloadPrUnCssClasses() {
+  const classes: string[] = [];
+  const styles = $$('style', document.head);
+  for (const style of styles) {
+    const text = style.textContent;
+    if (text === null) {
+      continue;
+    }
+    const matches = text.match(/\w+__\w+___\w+/g);
+    for (const match of matches ?? []) {
+      classes.push(match);
+    }
+  }
+  classes.sort();
+  const result = {};
+  for (const cssClass of classes) {
+    const parts = cssClass.replace('.', '').replace('___', '_').replace('__', '_').split('_');
+    const parent = parts[0];
+    if (parent === '') {
+      continue;
+    }
+    const child = parts[1];
+    let parentObject = result[parent];
+    if (parentObject === undefined) {
+      parentObject = {};
+      result[parent] = parentObject;
+    }
+    if (parentObject[child] !== undefined) {
+      continue;
+    }
+    parentObject[child] = cssClass.replace('.', '');
+  }
+  const json = JSON.stringify(result, undefined, 2);
+  downloadFile(json, 'prun-css-classes.json', false);
 }

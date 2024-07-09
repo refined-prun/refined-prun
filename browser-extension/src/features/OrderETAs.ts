@@ -1,6 +1,7 @@
 import { Module } from '../ModuleRunner';
 import { Selector } from '../Selector';
 import { convertDurationToETA, parseDuration, createTextSpan, genericCleanup } from '../util';
+import PrUnCss from '@src/prun-ui/prun-css';
 
 export class OrderETAs implements Module {
   private tag = 'pb-order-eta';
@@ -25,7 +26,7 @@ export class OrderETAs implements Module {
       let lineTimes = [] as number[];
       let timeElapsed = 0;
       prodSlots.forEach(prodItem => {
-        if (prodItem.classList.contains(Selector.ProdItem)) {
+        if (prodItem.classList.contains(PrUnCss.OrderSlot.container)) {
           try {
             let duration;
             if (inQueue) {
