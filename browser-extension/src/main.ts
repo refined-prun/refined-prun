@@ -1,4 +1,3 @@
-import { FlightETAs } from '@src/features/FlightETAs';
 import { ModuleRunner } from './ModuleRunner';
 import { OrderETAs } from '@src/features/OrderETAs';
 import { QueueLoad } from '@src/features/QueueLoad';
@@ -107,7 +106,6 @@ async function mainRun() {
   const runner = new ModuleRunner(
     [
       new OrderETAs(),
-      new FlightETAs(),
       new QueueLoad(),
       new InventoryOrganizer(userInfo, result),
       new Notifications(userInfo),

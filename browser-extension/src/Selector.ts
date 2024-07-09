@@ -81,4 +81,5 @@ export const Selector = {
   ContextBar: "div[class~='ContextControls__container___dzDODeW']",
   TileControls: "div[class~='TileFrame__controls___g5J41WG']",
   HiddenControls: "div[class~='TileControls__controls___biW6ray']",
+  MissionPlanTable: 'MissionPlan__table___U0_VvN6',
 };
