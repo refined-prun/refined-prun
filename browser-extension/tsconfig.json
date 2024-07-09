@@ -6,23 +6,11 @@
     "jsx": "react",
     "jsxFactory": "h",
     "jsxFragmentFactory": "DocumentFragment",
-    "types": [
-      "vite/client",
-      "node"
-    ],
+    "types": ["vite/client", "node"],
     "paths": {
-      "@root/*": [
-        "./*"
-      ],
-      "@src/*": [
-        "src/*"
-      ]
+      "@root/*": ["./*"],
+      "@src/*": ["src/*"]
     }
   },
-  "include": [
-    "src",
-    "dev-tools",
-    "vite.config.mts",
-    "node_modules/@types"
-  ]
+  "include": ["src", "dev-tools", "vite.config.mts", "node_modules/@types"]
 }

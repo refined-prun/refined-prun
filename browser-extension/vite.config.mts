@@ -25,13 +25,14 @@ export default defineConfig({
     }),
     watchPublicPlugin(),
     makeManifestPlugin({ outDir }),
-    isDev && watchRebuildPlugin({
-      options: {
-        'service_worker': {
-          serviceWorker: true,
+    isDev &&
+      watchRebuildPlugin({
+        options: {
+          service_worker: {
+            serviceWorker: true,
+          },
         },
-      },
-    }),
+      }),
   ],
   publicDir: resolve(rootDir, 'public'),
   build: {
@@ -51,8 +52,8 @@ export default defineConfig({
       },
       input: {
         'refined-prun': resolve(__dirname, 'src/refined-prun.ts'),
-        'popup': resolve(__dirname, 'src/popup/popup.ts'),
-        'service_worker': resolve(__dirname, 'src/background/index.ts'),
+        popup: resolve(__dirname, 'src/popup/popup.ts'),
+        service_worker: resolve(__dirname, 'src/background/index.ts'),
       },
     },
   },

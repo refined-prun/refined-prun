@@ -72,7 +72,7 @@
 }
 
 .check-time {
-  color: rgb(153, 153, 153)
+  color: rgb(153, 153, 153);
 }
 
 .check-item {
@@ -83,7 +83,7 @@
 
 .checked-text {
   text-decoration: line-through;
-  color: rgb(153, 153, 153)
+  color: rgb(153, 153, 153);
 }
 
 .delete-button {
@@ -127,7 +127,7 @@
   overflow-wrap: anywhere;
   white-space: pre-wrap;
   overflow-y: scroll;
-  font-family: "Droid Sans", sans-serif;
+  font-family: 'Droid Sans', sans-serif;
   font-size: 13.333px;
   line-height: 1.5;
   tab-size: 4;
@@ -154,7 +154,7 @@
   top: 20px;
   left: 0;
   overflow-y: scroll;
-  font-family: "Droid Sans", sans-serif;
+  font-family: 'Droid Sans', sans-serif;
   font-size: 13.333px;
   line-height: 1.5;
   tab-size: 4;
@@ -189,7 +189,7 @@
   margin: 5px;
   resize: none;
   overflow-y: scroll;
-  font-family: "Droid Sans", sans-serif;
+  font-family: 'Droid Sans', sans-serif;
   font-size: 11px;
   line-height: 1.5;
   tab-size: 4;
@@ -221,9 +221,9 @@
 .tooltip-base {
   display: flex;
   position: absolute !important;
-  font-family: "Droid Sans", sans-serif;
+  font-family: 'Droid Sans', sans-serif;
   font-size: 10px;
-  color: #bbb
+  color: #bbb;
 }
 
 .tooltip {
@@ -457,7 +457,6 @@ td.burn-red-no-hover {
   border-width: 0px;
   border-bottom: 1px solid #8d6411;
   color: #cccccc;
-
 }
 
 .input-text:focus {
