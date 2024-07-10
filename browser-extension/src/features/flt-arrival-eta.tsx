@@ -22,7 +22,7 @@ function observeRow(row: Node) {
     return;
   }
   const etaColumn = row.children[7];
-  const etaSpan = <span className="rpu-flt-eta" />;
+  const etaSpan = <span className="rprun-flt-eta" />;
   observeChildListChanged(etaColumn, () => updateEtaColumn(etaColumn, etaSpan));
 }
 

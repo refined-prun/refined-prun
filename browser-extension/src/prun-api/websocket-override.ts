@@ -1,10 +1,10 @@
 (function () {
-  if (window['RPU_COLLECTOR_HAS_RUN'] === true) {
+  if (window['RPRUN_COLLECTOR_HAS_RUN'] === true) {
     console.debug('Already injected websocket rebinding');
     return;
   }
 
-  window['RPU_COLLECTOR_HAS_RUN'] = true;
+  window['RPRUN_COLLECTOR_HAS_RUN'] = true;
   const NativeWebSocket = window.WebSocket;
   const callWebSocket = NativeWebSocket.apply.bind(NativeWebSocket);
   let wsAddListener = NativeWebSocket.prototype.addEventListener;
@@ -42,7 +42,7 @@
 
       window.postMessage(
         {
-          message: 'rpu-websocket-message',
+          message: 'rprun-websocket-message',
           payload: event.data,
           context,
         },

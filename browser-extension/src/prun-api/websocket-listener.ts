@@ -23,7 +23,7 @@ export function listenWebSocket() {
     if (event.source !== window) {
       return;
     }
-    if (event.data.message === 'rpu-websocket-message') {
+    if (event.data.message === 'rprun-websocket-message') {
       ProcessMessage(event.data);
     }
   });

@@ -7,7 +7,7 @@ import getCallerID from './caller-id.js';
 
 type ObserverListener<ExpectedElement extends Element> = (element: ExpectedElement, options: SignalAsOptions) => void;
 
-const animation = 'rpu-selector-observer';
+const animation = 'rprun-selector-observer';
 const getListener =
   <Selector extends string, ExpectedElement extends ParseSelector<Selector, HTMLElement>>(
     seenMark: string,
@@ -43,7 +43,7 @@ export default function observe<Selector extends string, ExpectedElement extends
   }
 
   const selector = String(selectors); // Array#toString() creates a comma-separated string
-  const seenMark = 'rpu-seen-' + getCallerID();
+  const seenMark = 'rprun-seen-' + getCallerID();
 
   registerAnimation();
 

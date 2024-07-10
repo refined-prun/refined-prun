@@ -4,7 +4,7 @@ import buffers from '@src/prun-ui/prun-buffers';
 import { h } from 'dom-chef';
 import { $$ } from 'select-dom';
 
-const tag = 'rpu-sfc-eta';
+const tag = 'rprun-sfc-eta';
 
 function updateBuffer(buffer: PrUnBuffer) {
   if (!buffer.frame.isConnected) {
