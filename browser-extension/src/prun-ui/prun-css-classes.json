@@ -1769,6 +1769,9 @@
   },
   "Workforces": {
     "bar": "Workforces__bar___C_C3awt",
+    "daysMissing": "Workforces__daysMissing___OtIzANT",
+    "daysSupplied": "Workforces__daysSupplied___OUj3H09",
+    "daysWarning": "Workforces__daysWarning___GH9G7Lu",
     "header": "Workforces__header___EPvc2OF",
     "icon": "Workforces__icon___IYHOdgw",
     "info": "Workforces__info___Gqyibfa",
