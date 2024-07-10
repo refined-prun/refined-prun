@@ -29,9 +29,12 @@ import { ProdBurnLink } from '@src/features/ProdBurnLink';
 import { loadSettings, Settings } from './Settings';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
+import { listenWebSocket } from '@src/prun-api/websocket-listener';
 
 // The main function that initializes everything
 async function mainRun() {
+  listenWebSocket();
+
   let result: Settings;
   try {
     result = await loadSettings();
@@ -39,6 +42,8 @@ async function mainRun() {
     console.error('PMMG: Failed to load settings');
     throw e;
   }
+
+  await waitUntilPrUnLoaded();
 
   // Detect what date it is for... no reason.
   const specialTime = getSpecial() && !result['PMMGExtended']['surprises_opt_out'];
@@ -140,6 +145,20 @@ async function mainRun() {
     runner.loop();
     runner.loopUserInfo();
   })();
+}
+
+function waitUntilPrUnLoaded() {
+  return new Promise<void>(resolve => {
+    function checkContainer() {
+      const container = document.getElementById('container');
+      if (container !== null && container.children.length > 0) {
+        resolve();
+        return;
+      }
+      requestAnimationFrame(checkContainer);
+    }
+    checkContainer();
+  });
 }
 
 void mainRun();

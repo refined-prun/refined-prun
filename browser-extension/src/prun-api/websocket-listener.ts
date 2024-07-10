@@ -1,16 +1,38 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { transmitted_events } from '../background/default_event_payload';
+import { transmitted_events } from '@src/prun-api/default-event-payload';
 
-const eventQueue: any[] = [];
-let processingqueue = false;
+interface WebSocketMessage {
+  message: string;
+  payload: string;
+  context: string;
+}
+
+interface ApiEvent {
+  payload: any;
+  context: string;
+}
+
+export function listenWebSocket() {
+  void getLocalStorage('PMMGContext', result => {
+    if (result['PMMGContext']) {
+      companyContext = result['PMMGContext'];
+    }
+  });
+
+  window.addEventListener('message', function (event) {
+    if (event.source !== window) {
+      return;
+    }
+    if (event.data.message === 'rpu-websocket-message') {
+      ProcessMessage(event.data);
+    }
+  });
+}
+
+const eventQueue: ApiEvent[] = [];
+let processingQueue = false;
 
 let companyContext;
-
-getLocalStorage('PMMGContext', function (result) {
-  if (result['PMMGContext']) {
-    companyContext = result['PMMGContext'];
-  }
-});
 
 const loggedMessageTypes = [
   'COMEX_BROKER_DATA',
@@ -30,27 +52,27 @@ const loggedMessageTypes = [
   'ACCOUNTING_CASH_BALANCES',
 ];
 
-async function ProcessEvent(eventdata, event_list, full_event?) {
+async function ProcessEvent(apiEvent: ApiEvent, event_list, full_event?) {
+  const eventData = apiEvent.payload;
   // Log everything
   /*
   const badTypes = ["ACTION_COMPLETED", "DATA_DATA", "CHANNEL_DATA", "CHANNEL_USER_LIST", "CHANNEL_UNSEEN_MESSAGES_COUNT"];
-  if(eventdata && !badTypes.includes(eventdata.messageType))
+  if(eventData && !badTypes.includes(eventData.messageType))
   {
-    console.log(eventdata.messageType);
-    console.log(eventdata);
+    console.log(eventData.messageType);
+    console.log(eventData);
   }*/
 
   // Detect bad events
-  if (typeof eventdata === 'undefined' || eventdata === null || typeof eventdata.messageType === 'undefined') {
+  if (typeof eventData === 'undefined' || eventData === null || typeof eventData.messageType === 'undefined') {
     return;
   }
 
   const isCompanyContext =
-    eventdata.pmmg_context === undefined ||
-    eventdata.pmmg_context === null ||
+    apiEvent.context === undefined ||
     companyContext === undefined ||
     companyContext === null ||
-    eventdata.pmmg_context == companyContext;
+    apiEvent.context == companyContext;
   if (!isCompanyContext) {
     // We're running under a non-company context
     //console.log("Running under non-company context!");
@@ -59,17 +81,17 @@ async function ProcessEvent(eventdata, event_list, full_event?) {
 
   // Handle determining the current context
   if (
-    eventdata.messageType == 'ACTION_COMPLETED' &&
-    eventdata.payload &&
-    eventdata.payload.message &&
-    eventdata.payload.message.messageType == 'USER_DATA' &&
-    eventdata.payload.message.payload &&
-    eventdata.payload.message.payload.contexts
+    eventData.messageType == 'ACTION_COMPLETED' &&
+    eventData.payload &&
+    eventData.payload.message &&
+    eventData.payload.message.messageType == 'USER_DATA' &&
+    eventData.payload.message.payload &&
+    eventData.payload.message.payload.contexts
   ) {
     console.log('Found USER_DATA payload');
-    for (const context in eventdata.payload.message.payload.contexts) {
-      if (eventdata.payload.message.payload.contexts[context].type == 'COMPANY') {
-        companyContext = eventdata.payload.message.payload.contexts[context].id;
+    for (const context in eventData.payload.message.payload.contexts) {
+      if (eventData.payload.message.payload.contexts[context].type == 'COMPANY') {
+        companyContext = eventData.payload.message.payload.contexts[context].id;
         setSettings({ PMMGContext: companyContext });
         console.log('Found company context: ' + companyContext);
         break;
@@ -77,60 +99,67 @@ async function ProcessEvent(eventdata, event_list, full_event?) {
     }
   }
 
-  //console.debug(eventdata);
+  //console.debug(eventData);
 
   // Log Events into Storage
-  if (eventdata && eventdata.messageType && loggedMessageTypes.includes(eventdata.messageType)) {
+  if (eventData && eventData.messageType && loggedMessageTypes.includes(eventData.messageType)) {
     //console.log("Logging Event into Storage");
-    await getLocalStorage('PMMG-User-Info', logEvent, eventdata);
+    await getLocalStorage('PMMG-User-Info', logEvent, eventData);
     await sleep(50);
     return;
   }
 
   // Process Events
-  if (eventdata.messageType in event_list) {
-    console.debug('Event to process: ' + eventdata.messageType);
+  if (eventData.messageType in event_list) {
+    console.debug('Event to process: ' + eventData.messageType);
     if (typeof full_event === 'undefined') {
-      full_event = eventdata;
+      full_event = eventData;
     }
-    const match_event = event_list[eventdata.messageType];
+    const match_event = event_list[eventData.messageType];
     if (typeof match_event === 'undefined') {
       console.error('messagetype should be in list, but we still failed?');
     }
 
     if (match_event.action == 'subprocess_payload') {
       //console.log("Processing Subevent")
-      await ProcessEvent(eventdata.payload.message, match_event.payload_events, full_event);
+      await ProcessEvent(
+        {
+          payload: eventData.payload.message,
+          context: apiEvent.context,
+        },
+        match_event.payload_events,
+        full_event,
+      );
     }
   } else {
-    //console.debug("Event not found: " + eventdata.messageType);
+    //console.debug("Event not found: " + eventData.messageType);
   }
 }
 
-export function ProcessMessage(event) {
+export function ProcessMessage(message: WebSocketMessage) {
   //console.log("Processing Mesage");
   // Do stuff with event.data (received data).
   const re_event = /^[0-9:\s]*(?<event>\[\s*"event".*\])[\s0-9:.]*/m;
   //console.log(re_event);
   //console.log(event.data);
-  const result = event.data.match(re_event);
+  const result = message.payload.match(re_event);
   //console.log(result);
   if (result && result.groups && result.groups.event) {
-    const eventdata = JSON.parse(result.groups.event)[1];
+    const payload = JSON.parse(result.groups.event)[1];
     //console.log("Event found");
-    //console.log(eventdata);
+    //console.log(payload);
     //console.log("Queueing Event");
-    QueueEvent(eventdata);
+    QueueEvent({ payload, context: message.context });
   }
 }
 
-async function QueueEvent(eventdata) {
+async function QueueEvent(apiEvent: ApiEvent) {
   //console.debug("Queue event; eventQueue.size " + eventQueue.length);
-  //console.debug("Queue event; processing? " + processingqueue);
+  //console.debug("Queue event; processing? " + processingQueue);
 
-  eventQueue.push(eventdata);
-  if (processingqueue === false) {
-    processingqueue = true;
+  eventQueue.push(apiEvent);
+  if (!processingQueue) {
+    processingQueue = true;
     //console.debug("Queue event processing; queue size? " + eventQueue.length);
 
     let currentEvent = eventQueue.shift();
@@ -141,7 +170,7 @@ async function QueueEvent(eventdata) {
       currentEvent = eventQueue.shift();
     }
 
-    processingqueue = false;
+    processingQueue = false;
   }
 }
 
@@ -568,16 +597,15 @@ async function setSettings(result) {
 // Also pass the params through to the callback function
 async function getLocalStorage(storageName, callbackFunction, params?) {
   let isRetrieved = false;
-  //console.log("Trying to Get Data");
-  try {
-    browser.storage.local.get(storageName).then(function (result) {
-      //console.log("Successfully Got Data");
-      isRetrieved = true;
-      callbackFunction(result, params);
-    }); // For FireFox, throws an error in Chrome
-  } catch (err) {
+  if (__CHROME__) {
     chrome.storage.local.get([storageName], function (result) {
       // For Chrome, doesn't work in FireFox
+      isRetrieved = true;
+      callbackFunction(result, params);
+    });
+  } else {
+    browser.storage.local.get(storageName).then(function (result) {
+      //console.log("Successfully Got Data");
       isRetrieved = true;
       callbackFunction(result, params);
     });

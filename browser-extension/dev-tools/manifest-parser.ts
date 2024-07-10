@@ -19,7 +19,6 @@ function convertToFirefoxCompatibleManifest(manifest: Manifest) {
   };
   manifestCopy.web_accessible_resources = manifest.web_accessible_resources![0].resources;
   const permissions = manifest.host_permissions!.concat(manifest.permissions!);
-  permissions.push('webNavigation');
   delete manifestCopy.host_permissions;
   manifestCopy.permissions = permissions;
   manifestCopy.browser_action = manifest.action;

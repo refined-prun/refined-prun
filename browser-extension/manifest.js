@@ -14,17 +14,13 @@ const manifest = {
   name: '__MSG_extensionName__',
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
-  permissions: ['storage', 'activeTab', 'scripting', 'tabs'],
+  permissions: ['storage', 'scripting'],
   host_permissions: [
     'https://apex.prosperousuniverse.com/',
     'https://script.google.com/',
     'https://script.googleusercontent.com/',
     'https://rest.fnar.net/',
   ],
-  background: {
-    service_worker: 'service_worker.js',
-    type: 'module',
-  },
   action: {
     default_popup: 'popup.html',
     default_icon: 'icon-34.png',
@@ -35,14 +31,14 @@ const manifest = {
   content_scripts: [
     {
       matches: [apex],
-      js: ['document_start.js'],
+      js: ['websocket-override-inject.js'],
       run_at: 'document_start',
     },
     {
       matches: [apex],
       js: ['refined-prun.js'],
       css: ['refined-prun.css'],
-      run_at: 'document_end',
+      run_at: 'document_start',
     },
   ],
   web_accessible_resources: [

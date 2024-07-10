@@ -6,6 +6,7 @@ import { watchPublicPlugin, watchRebuildPlugin } from '@refined-prun/hmr';
 
 const rootDir = resolve(__dirname);
 const srcDir = resolve(rootDir, 'src');
+const manifestFile = resolve(__dirname, 'manifest.js');
 
 const isDev = process.env.__DEV__ === 'true';
 const isProduction = !isDev;
@@ -24,15 +25,21 @@ export default defineConfig({
       outputPath: outDir,
     }),
     watchPublicPlugin(),
-    makeManifestPlugin({ outDir }),
+    makeManifestPlugin({ 
+      outDir,
+      manifestFile,
+    }),
     isDev &&
-      watchRebuildPlugin({
-        options: {
-          service_worker: {
-            serviceWorker: true,
-          },
+    watchRebuildPlugin({
+      options: {
+        'websocket-override': {
+          skip: true,
         },
-      }),
+        'websocket-override-inject': {
+          skip: true,
+        },
+      },
+    }),
   ],
   publicDir: resolve(rootDir, 'public'),
   build: {
@@ -53,7 +60,8 @@ export default defineConfig({
       input: {
         'refined-prun': resolve(__dirname, 'src/refined-prun.ts'),
         popup: resolve(__dirname, 'src/popup/popup.ts'),
-        service_worker: resolve(__dirname, 'src/background/index.ts'),
+        'websocket-override': resolve(__dirname, 'src/prun-api/websocket-override.ts'),
+        'websocket-override-inject': resolve(__dirname, 'src/prun-api/websocket-override-inject.ts'),
       },
     },
   },

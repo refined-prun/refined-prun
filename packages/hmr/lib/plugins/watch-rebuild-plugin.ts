@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import path from 'path';
 
 interface ChunkOptions {
+  skip?: boolean;
   serviceWorker?: boolean;
 }
 
@@ -64,7 +65,10 @@ export function watchRebuildPlugin(config: PluginConfig): PluginOption {
         if (module.type === 'chunk') {
           const fileName = path.basename(module.fileName);
           const chunkOptions = config.options[fileName.split('.')[0]];
-          const { serviceWorker } = chunkOptions ?? {};
+          const { serviceWorker, skip } = chunkOptions ?? {};
+          if (skip) {
+            continue;
+          }
           const hmrFileName = fileName.replace('.js', '_hmr.js');
           const hmrCode = serviceWorker ? reloadCode : refreshCode;
           const hmrFile = `(function() {let __HMR_ID = "${id}";\n` + hmrCode + '\n' + '})();';

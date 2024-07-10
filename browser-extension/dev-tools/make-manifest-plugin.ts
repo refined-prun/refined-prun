@@ -8,9 +8,12 @@ import { colorLog } from './logger';
 
 const { resolve } = path;
 
-const manifestFile = resolve(__dirname, 'manifest.js');
+interface PluginOptions {
+  outDir: string;
+  manifestFile: string;
+}
 
-const getManifestWithCacheBurst = (): Promise<{ default: chrome.runtime.ManifestV3 }> => {
+function getManifestWithCacheBurst(manifestFile: string): Promise<{ default: chrome.runtime.ManifestV3 }> {
   const withCacheBurst = (path: string) => `${path}?${Date.now().toString()}`;
   /**
    * In Windows, import() doesn't work without file:// protocol.
@@ -20,9 +23,9 @@ const getManifestWithCacheBurst = (): Promise<{ default: chrome.runtime.Manifest
     return import(withCacheBurst(pathToFileURL(manifestFile).href));
   }
   return import(withCacheBurst(manifestFile));
-};
+}
 
-export default function makeManifestPlugin(config: { outDir: string }): PluginOption {
+export default function makeManifestPlugin(config: PluginOptions): PluginOption {
   function makeManifest(manifest: chrome.runtime.ManifestV3, to: string) {
     if (!fs.existsSync(to)) {
       fs.mkdirSync(to);
@@ -38,11 +41,11 @@ export default function makeManifestPlugin(config: { outDir: string }): PluginOp
   return {
     name: 'make-manifest',
     buildStart() {
-      this.addWatchFile(manifestFile);
+      this.addWatchFile(config.manifestFile);
     },
     async writeBundle() {
       const outDir = config.outDir;
-      const manifest = await getManifestWithCacheBurst();
+      const manifest = await getManifestWithCacheBurst(config.manifestFile);
       makeManifest(manifest.default, outDir);
     },
   };
