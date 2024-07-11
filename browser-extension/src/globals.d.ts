@@ -9,3 +9,9 @@ interface PrUnBuffer {
   command: string;
   parameter: string;
 }
+
+interface WindowMessage {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  payload: any;
+  context: string | undefined;
+}

@@ -1,32 +1,36 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { transmitted_events } from '@src/prun-api/default-event-payload';
 
-interface WebSocketMessage {
-  message: string;
-  payload: string;
-  context: string;
-}
-
 interface ApiEvent {
   payload: any;
-  context: string;
+  context: string | undefined;
 }
 
-export function listenWebSocket() {
-  void getLocalStorage('PMMGContext', result => {
+export async function listenWebSocket() {
+  await getLocalStorage('PMMGContext', result => {
     if (result['PMMGContext']) {
       companyContext = result['PMMGContext'];
     }
   });
 
-  window.addEventListener('message', function (event) {
+  listenWindowMessages(ProcessMessage);
+}
+
+export function listenWindowMessages(listener: (event: WindowMessage) => void) {
+  window.addEventListener('message', event => {
     if (event.source !== window) {
       return;
     }
-    if (event.data.message === 'rprun-websocket-message') {
-      ProcessMessage(event.data);
+    if (event.data.type === 'rprun-window-message') {
+      listener(event.data.data);
     }
   });
+  window.postMessage(
+    {
+      type: 'rprun-listener-ready',
+    },
+    '*',
+  );
 }
 
 const eventQueue: ApiEvent[] = [];
@@ -136,7 +140,7 @@ async function ProcessEvent(apiEvent: ApiEvent, event_list, full_event?) {
   }
 }
 
-export function ProcessMessage(message: WebSocketMessage) {
+export function ProcessMessage(message: WindowMessage) {
   //console.log("Processing Mesage");
   // Do stuff with event.data (received data).
   const re_event = /^[0-9:\s]*(?<event>\[\s*"event".*\])[\s0-9:.]*/m;

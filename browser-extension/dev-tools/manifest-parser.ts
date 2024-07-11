@@ -13,10 +13,6 @@ function convertToFirefoxCompatibleManifest(manifest: Manifest) {
   } as { [key: string]: unknown };
 
   manifestCopy.manifest_version = 2;
-  manifestCopy.background = {
-    scripts: [manifest.background?.service_worker],
-    type: 'module',
-  };
   manifestCopy.web_accessible_resources = manifest.web_accessible_resources![0].resources;
   const permissions = manifest.host_permissions!.concat(manifest.permissions!);
   delete manifestCopy.host_permissions;

@@ -52,7 +52,6 @@ export default defineConfig({
       external: ['chrome'],
       output: {
         dir: outDir,
-        preserveModules: false,
         entryFileNames: '[name].js',
         assetFileNames: '[name].[ext]',
         chunkFileNames: '[name].js',

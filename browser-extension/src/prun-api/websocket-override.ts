@@ -5,6 +5,37 @@
   }
 
   window['RPRUN_COLLECTOR_HAS_RUN'] = true;
+  let pendingMessages: WindowMessage[] = [];
+  let listenerReady = false;
+
+  window.addEventListener('message', event => {
+    if (event.source !== window) {
+      return;
+    }
+    if (event.data.type === 'rprun-listener-ready') {
+      listenerReady = true;
+      for (const message of pendingMessages) {
+        sendWindowMessage(message);
+      }
+      pendingMessages = [];
+    }
+  });
+
+  function sendWindowMessage(data: WindowMessage) {
+    if (!listenerReady) {
+      pendingMessages.push(data);
+      return;
+    }
+
+    window.postMessage(
+      {
+        type: 'rprun-window-message',
+        data,
+      },
+      '*',
+    );
+  }
+
   const NativeWebSocket = window.WebSocket;
   const callWebSocket = NativeWebSocket.apply.bind(NativeWebSocket);
   let wsAddListener = NativeWebSocket.prototype.addEventListener;
@@ -40,14 +71,10 @@
         context = undefined;
       }
 
-      window.postMessage(
-        {
-          message: 'rprun-websocket-message',
-          payload: event.data,
-          context,
-        },
-        '*',
-      );
+      sendWindowMessage({
+        payload: event.data,
+        context,
+      });
     });
     return ws;
     // @ts-expect-error It just works
