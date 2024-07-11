@@ -24,8 +24,6 @@ export const Style = {
   ContextLabel: ['ContextControls__label___xomE3De'],
 
   // Misc styles
-  AppContainer: ['App__container__QWpTbzo'],
-  LoadingLoader: ['Loading__loader___t97qqaP'],
   SidebarSectionHead: ['Sidebar__sectionHead____NHLKDT', 'fonts__font-regular___Sxp1xjo'],
   SidebarSectionContent: ['Sidebar__sectionContent___wgGYFop', 'fonts__font-regular___Sxp1xjo'],
   SidebarLine: ['Sidebar__contract___J0gmlzN', 'Sidebar__sidebar-line___bE2rbRb'],
