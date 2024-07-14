@@ -36,51 +36,49 @@
     );
   }
 
-  const NativeWebSocket = window.WebSocket;
-  const callWebSocket = NativeWebSocket.apply.bind(NativeWebSocket);
-  let wsAddListener = NativeWebSocket.prototype.addEventListener;
-  wsAddListener = wsAddListener.call.bind(wsAddListener);
-  // @ts-expect-error It just works
-  window.WebSocket = function WebSocket(this: unknown, url: string | URL, protocols: string | string[] | undefined) {
-    let ws: WebSocket;
-    if (!(this instanceof WebSocket)) {
-      // Called without 'new' (browsers will throw an error).
-      // @ts-expect-error This is expected
-      // eslint-disable-next-line prefer-rest-params
-      ws = callWebSocket(this, arguments);
-    } else if (arguments.length === 0) {
-      // No arguments (browsers will throw an error)
-      // @ts-expect-error This is expected
-      ws = new NativeWebSocket();
-    } else if (arguments.length === 1) {
-      ws = new NativeWebSocket(url);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function interceptor(this: WebSocket, listener: (this: WebSocket, ev: MessageEvent) => any, ev: MessageEvent) {
+    const url = window.location.href;
+    const match = url.match(/.*context=(?<Context>[0-9a-fA-F]{32})/);
+
+    let context: string | undefined;
+    if (match && match.groups && Object.hasOwn(match.groups, 'Context')) {
+      context = '"' + match.groups['Context'] + '"';
     } else {
-      ws = new NativeWebSocket(url, protocols);
+      context = undefined;
     }
 
-    // @ts-expect-error It just works
-    wsAddListener(ws, 'message', function (event: MessageEvent) {
-      //console.debug("Websocket message occurred");
-      const url = window.location.href;
-      const match = url.match(/.*context=(?<Context>[0-9a-fA-F]{32})/);
-
-      let context: string | undefined;
-      if (match && match.groups && Object.hasOwn(match.groups, 'Context')) {
-        context = '"' + match.groups['Context'] + '"';
-      } else {
-        context = undefined;
-      }
-
-      sendWindowMessage({
-        payload: event.data,
-        context,
-      });
+    sendWindowMessage({
+      payload: ev.data,
+      context,
     });
-    return ws;
-    // @ts-expect-error It just works
-  }.bind();
 
-  window.WebSocket.prototype = NativeWebSocket.prototype;
-  window.WebSocket.prototype.constructor = window.WebSocket;
+    listener.call(this, ev);
+  }
+
+  window.WebSocket = new Proxy(WebSocket, {
+    construct(target: typeof WebSocket, args: [string, (string | string[])?]) {
+      const ws = new target(...args);
+
+      return new Proxy(ws, {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        set(target: WebSocket, prop: string | symbol, value: any) {
+          if (prop === 'onmessage') {
+            target.onmessage = interceptor.bind(target, value);
+            return true;
+          }
+          return Reflect.set(target, prop, value);
+        },
+        get(target, prop) {
+          if (prop === 'send') {
+            // Wtf, why doesn't it work with `Reflect.get`???
+            return target.send.bind(target);
+          }
+          return Reflect.get(target, prop);
+        },
+      });
+    },
+  });
+
   console.log('RPrUn: Injected WebSocket listener.');
 })();
