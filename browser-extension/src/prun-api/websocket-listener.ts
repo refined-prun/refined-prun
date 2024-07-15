@@ -13,18 +13,24 @@ export async function listenWebSocket() {
     }
   });
 
-  listenWindowMessages(ProcessMessage);
-}
-
-export function listenWindowMessages(listener: (event: WindowMessage) => void) {
   window.addEventListener('message', event => {
     if (event.source !== window) {
       return;
     }
-    if (event.data.type === 'rprun-window-message') {
-      listener(event.data.data);
+    if (event.data.type === 'rprun-message-received') {
+      const data = <WebSocketWindowMessage>event.data;
+      ProcessMessage(data);
+      window.postMessage(
+        <WebSocketWindowMessage>{
+          type: 'rprun-message-processed',
+          id: data.id,
+          data: data.data,
+        },
+        '*',
+      );
     }
   });
+
   window.postMessage(
     {
       type: 'rprun-listener-ready',
@@ -140,13 +146,13 @@ async function ProcessEvent(apiEvent: ApiEvent, event_list, full_event?) {
   }
 }
 
-export function ProcessMessage(message: WindowMessage) {
+export function ProcessMessage(message: WebSocketWindowMessage) {
   //console.log("Processing Mesage");
   // Do stuff with event.data (received data).
   const re_event = /^[0-9:\s]*(?<event>\[\s*"event".*\])[\s0-9:.]*/m;
   //console.log(re_event);
   //console.log(event.data);
-  const result = message.payload.match(re_event);
+  const result = message.data.match(re_event);
   //console.log(result);
   if (result && result.groups && result.groups.event) {
     const payload = JSON.parse(result.groups.event)[1];

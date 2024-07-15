@@ -1,12 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 (function () {
-  if (window['RPRUN_COLLECTOR_HAS_RUN'] === true) {
-    console.debug('Already injected websocket rebinding');
+  if (window['REFINED_PRUN'] === true) {
+    console.debug('Already injected WebSocket interceptor');
     return;
   }
 
-  window['RPRUN_COLLECTOR_HAS_RUN'] = true;
-  let pendingMessages: WindowMessage[] = [];
+  window['REFINED_PRUN'] = true;
+
+  interface PendingMessage {
+    id: number;
+    event: MessageEvent;
+    callback: (ev: MessageEvent) => void;
+    context?: string;
+  }
+
   let listenerReady = false;
+  let queuedEvents: PendingMessage[] = [];
+  const pendingCallbacks: Map<number, PendingMessage> = new Map();
+  let callbackId = 0;
 
   window.addEventListener('message', event => {
     if (event.source !== window) {
@@ -14,29 +25,53 @@
     }
     if (event.data.type === 'rprun-listener-ready') {
       listenerReady = true;
-      for (const message of pendingMessages) {
-        sendWindowMessage(message);
+      for (const event of queuedEvents) {
+        forwardMessage(event);
       }
-      pendingMessages = [];
+      queuedEvents = [];
+    }
+    if (event.data.type === 'rprun-message-processed') {
+      const data = <WebSocketWindowMessage>event.data;
+      const message = pendingCallbacks.get(data.id);
+      pendingCallbacks.delete(data.id);
+      if (message === undefined || data.reject) {
+        return;
+      }
+
+      if (data.override) {
+        const eventProxy = new Proxy(message.event, {
+          get(target, prop) {
+            if (prop === 'data') {
+              return data.data;
+            }
+            return Reflect.get(target, prop);
+          },
+        });
+        message.callback(eventProxy);
+      } else {
+        message.callback(message.event);
+      }
     }
   });
 
-  function sendWindowMessage(data: WindowMessage) {
+  function forwardMessage(event: PendingMessage) {
     if (!listenerReady) {
-      pendingMessages.push(data);
+      queuedEvents.push(event);
       return;
     }
 
+    pendingCallbacks.set(event.id, event);
     window.postMessage(
-      {
-        type: 'rprun-window-message',
-        data,
+      <WebSocketWindowMessage>{
+        type: 'rprun-message-received',
+        id: event.id,
+        data: event.event.data,
+        context: event.context,
       },
       '*',
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function interceptor(this: WebSocket, listener: (this: WebSocket, ev: MessageEvent) => any, ev: MessageEvent) {
     const url = window.location.href;
     const match = url.match(/.*context=(?<Context>[0-9a-fA-F]{32})/);
@@ -48,12 +83,12 @@
       context = undefined;
     }
 
-    sendWindowMessage({
-      payload: ev.data,
+    forwardMessage({
+      id: callbackId++,
+      event: ev,
+      callback: listener.bind(this),
       context,
     });
-
-    listener.call(this, ev);
   }
 
   window.WebSocket = new Proxy(WebSocket, {
@@ -61,8 +96,7 @@
       const ws = new target(...args);
 
       return new Proxy(ws, {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        set(target: WebSocket, prop: string | symbol, value: any) {
+        set(target, prop, value) {
           if (prop === 'onmessage') {
             target.onmessage = interceptor.bind(target, value);
             return true;
@@ -80,5 +114,5 @@
     },
   });
 
-  console.log('RPrUn: Injected WebSocket listener.');
+  console.log('Refined PrUn: Injected WebSocket interceptor');
 })();
