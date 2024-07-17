@@ -1,5 +1,6 @@
 import { createTextSpan, clearChildren, setSettings } from '../util';
 import { NonProductionBuildings } from '../GameProperties';
+import { userData } from '@src/prun-api/user-data';
 
 // This entire module is really, really messy and needs to be rewritten.
 export class Repairs {
@@ -21,17 +22,13 @@ export class Repairs {
     const pmmgSettings = this.pmmgSettings;
 
     clearChildren(this.tile);
-    if (
-      !this.userInfo['PMMG-User-Info'] ||
-      !this.userInfo['PMMG-User-Info']['sites'] ||
-      !this.userInfo['PMMG-User-Info']['ships']
-    ) {
+    if (!this.userInfo['PMMG-User-Info'] || !this.userInfo['PMMG-User-Info']['sites']) {
       this.tile.textContent = 'Loading Repair Data...';
       this.tile.id = 'pmmg-reload';
       return;
     }
 
-    const ships = this.userInfo['PMMG-User-Info']['ships'];
+    const ships = userData.ships;
 
     // Generate repairs screen for all things
     if (this.parameters.length < 2) {

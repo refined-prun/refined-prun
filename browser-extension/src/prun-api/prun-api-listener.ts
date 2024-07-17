@@ -187,9 +187,6 @@ async function logEvent(result, eventdata) {
   if (!result['PMMG-User-Info']['cxos']) {
     result['PMMG-User-Info']['cxos'] = [];
   }
-  if (!result['PMMG-User-Info']['ships']) {
-    result['PMMG-User-Info']['ships'] = {};
-  }
 
   let matchIndex: any;
   let planetId: any;
@@ -522,8 +519,8 @@ async function logEvent(result, eventdata) {
         }
       });
       break;
-    case 'SHIP_SHIPS': // ships
-      result['PMMG-User-Info'].ships = eventdata.payload.ships;
+    case 'SHIP_SHIPS':
+      userData.ships = eventdata.payload.ships;
       break;
   }
 

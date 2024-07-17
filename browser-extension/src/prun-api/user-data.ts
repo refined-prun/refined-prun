@@ -47,6 +47,58 @@ interface FXOSEntry {
   trades: [];
 }
 
+interface ShipEntry {
+  id: string;
+  idShipStore: string;
+  idStlFuelStore: string;
+  idFtlFuelStore: string;
+  registration: string;
+  name: string;
+  commissioningTime: CommissioningTime;
+  blueprintNaturalId: string;
+  address: null;
+  flightId: string;
+  acceleration: number;
+  thrust: number;
+  mass: number;
+  operatingEmptyMass: number;
+  volume: number;
+  reactorPower: number;
+  emitterPower: number;
+  stlFuelStoreId: string;
+  stlFuelFlowRate: number;
+  ftlFuelStoreId: string;
+  operatingTimeStl: OperatingTime;
+  operatingTimeFtl: OperatingTime;
+  condition: number;
+  lastRepair: null;
+  repairMaterials: RepairMaterial[];
+  status: string;
+}
+
+interface CommissioningTime {
+  timestamp: number;
+}
+
+interface OperatingTime {
+  millis: number;
+}
+
+interface RepairMaterial {
+  material: Material;
+  amount: number;
+}
+
+interface Material {
+  name: string;
+  id: string;
+  ticker: string;
+  category: string;
+  weight: number;
+  volume: number;
+  resource: boolean;
+}
+
 export const userData = {
   sites: [],
   storage: [],
@@ -57,5 +109,5 @@ export const userData = {
   cxos: [],
   fxos: [] as FXOSEntry[],
   cxob: {} as { [key: string]: CXOBEntry },
-  ships: {},
+  ships: [] as ShipEntry[],
 };
