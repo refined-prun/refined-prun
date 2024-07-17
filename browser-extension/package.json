@@ -20,9 +20,11 @@
   "dependencies": {
     "code-tag": "^1.2.0",
     "dom-chef": "^5.1.1",
+    "engine.io-parser": "^5.2.3",
     "onetime": "^7.0.0",
     "plotly.js-dist-min": "^2.30.1",
     "select-dom": "^9.0.0",
+    "socket.io-parser": "^4.2.4",
     "type-fest": "^4.21.0",
     "typed-query-selector": "^2.11.2",
     "webextension-polyfill": "^0.12.0"
@@ -33,6 +35,7 @@
     "@refined-prun/tsconfig": "workspace:*",
     "@types/chrome": "^0.0.268",
     "@types/firefox-webext-browser": "^120.0.4",
-    "@types/plotly.js-dist-min": "^2.3.4"
+    "@types/plotly.js-dist-min": "^2.3.4",
+    "@types/socket.io-parser": "^3.0.0"
   }
 }

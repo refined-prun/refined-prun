@@ -31,7 +31,7 @@ const manifest = {
   content_scripts: [
     {
       matches: [apex],
-      js: ['websocket-override-inject.js'],
+      js: ['socket-io-proxy-inject.js'],
       run_at: 'document_start',
     },
     {

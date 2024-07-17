@@ -29,11 +29,11 @@ import { ProdBurnLink } from '@src/features/ProdBurnLink';
 import { loadSettings, Settings } from './Settings';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
-import { listenWebSocket } from '@src/prun-api/websocket-listener';
+import { listenPrUnApi } from '@src/prun-api/prun-api-listener';
 
 // The main function that initializes everything
 async function mainRun() {
-  listenWebSocket();
+  listenPrUnApi();
 
   let result: Settings;
   try {

@@ -32,10 +32,10 @@ export default defineConfig({
     isDev &&
     watchRebuildPlugin({
       options: {
-        'websocket-override': {
+        'socket-io-proxy': {
           skip: true,
         },
-        'websocket-override-inject': {
+        'socket-io-proxy-inject': {
           skip: true,
         },
       },
@@ -59,8 +59,8 @@ export default defineConfig({
       input: {
         'refined-prun': resolve(__dirname, 'src/refined-prun.ts'),
         popup: resolve(__dirname, 'src/popup/popup.ts'),
-        'websocket-override': resolve(__dirname, 'src/prun-api/websocket-override.ts'),
-        'websocket-override-inject': resolve(__dirname, 'src/prun-api/websocket-override-inject.ts'),
+        'socket-io-proxy': resolve(__dirname, 'src/prun-api/socket-io-proxy.ts'),
+        'socket-io-proxy-inject': resolve(__dirname, 'src/prun-api/socket-io-proxy-inject.ts'),
       },
     },
   },
