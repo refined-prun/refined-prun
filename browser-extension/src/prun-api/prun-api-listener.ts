@@ -202,45 +202,43 @@ async function logEvent(result, eventdata) {
 
   switch (eventdata.messageType) {
     case 'SITE_SITES':
-      result['PMMG-User-Info']['sites'] = result['PMMG-User-Info']['sites'].filter(item => item.type !== 'BASE');
+      result['PMMG-User-Info'].sites = result['PMMG-User-Info'].sites.filter(item => item.type !== 'BASE');
 
-      eventdata['payload']['sites'].forEach(site => {
-        const planetId = site['address']['lines'][1]['entity']['naturalId'];
-        const planetName = site['address']['lines'][1]['entity']['name'];
+      eventdata.payload.sites.forEach(site => {
+        const planetId = site.address.lines[1].entity.naturalId;
+        const planetName = site.address.lines[1].entity.name;
 
         const siteData = {
           PlanetName: planetName,
           PlanetNaturalId: planetId,
-          siteId: site['siteId'],
+          siteId: site.siteId,
           buildings: <unknown[]>[],
           type: 'BASE',
         };
 
-        site['platforms'].forEach(building => {
-          const buildingTicker = building['module']['reactorTicker'];
+        site.platforms.forEach(building => {
+          const buildingTicker = building.module.reactorTicker;
 
-          const lastRepair = building['lastRepair']
-            ? building['lastRepair']['timestamp']
-            : building['creationTime']['timestamp'];
+          const lastRepair = building.lastRepair ? building.lastRepair.timestamp : building.creationTime.timestamp;
 
-          siteData['buildings'].push({
+          siteData.buildings.push({
             buildingTicker: buildingTicker,
             lastRepair: lastRepair,
-            condition: building['condition'],
-            reclaimableMaterials: building['reclaimableMaterials'],
-            repairMaterials: building['repairMaterials'],
+            condition: building.condition,
+            reclaimableMaterials: building.reclaimableMaterials,
+            repairMaterials: building.repairMaterials,
           });
         });
 
-        result['PMMG-User-Info']['sites'].push(siteData);
+        result['PMMG-User-Info'].sites.push(siteData);
       });
 
-      if (result['PMMG-User-Info']['storage']) {
+      if (result['PMMG-User-Info'].storage) {
         const planets = {};
-        result['PMMG-User-Info']['sites'].forEach(site => {
+        result['PMMG-User-Info'].sites.forEach(site => {
           planets[site.siteId] = [site.PlanetName, site.PlanetNaturalId];
         });
-        result['PMMG-User-Info']['storage'].forEach(store => {
+        result['PMMG-User-Info'].storage.forEach(store => {
           if (planets[store.addressableId]) {
             store.PlanetName = planets[store.addressableId][0];
             store.PlanetNaturalId = planets[store.addressableId][1];
@@ -250,37 +248,37 @@ async function logEvent(result, eventdata) {
       break;
     case 'STORAGE_STORAGES':
       //console.log(eventdata.payload.stores);
-      eventdata['payload']['stores'].forEach(store => {
-        const duplicateStoreIndex = result['PMMG-User-Info']['storage'].findIndex(item => item.id === store['id']);
+      eventdata.payload.stores.forEach(store => {
+        const duplicateStoreIndex = result['PMMG-User-Info'].storage.findIndex(item => item.id === store.id);
 
-        const givenItems = store['items'];
-        store['items'] = [];
+        const givenItems = store.items;
+        store.items = [];
         givenItems.forEach(item => {
           if (item.quantity && item.quantity.material) {
-            store['items'].push({
-              weight: item['weight'],
-              volume: item['volume'],
-              MaterialTicker: item['quantity']['material']['ticker'],
-              Amount: item['quantity']['amount'],
+            store.items.push({
+              weight: item.weight,
+              volume: item.volume,
+              MaterialTicker: item.quantity.material.ticker,
+              Amount: item.quantity.amount,
             });
           }
         });
 
         if (duplicateStoreIndex != -1) {
-          result['PMMG-User-Info']['storage'][duplicateStoreIndex] = store;
+          result['PMMG-User-Info'].storage[duplicateStoreIndex] = store;
         } else {
-          result['PMMG-User-Info']['storage'].push(store);
+          result['PMMG-User-Info'].storage.push(store);
         }
       });
 
       // Assign planet names
 
-      if (result['PMMG-User-Info']['sites']) {
+      if (result['PMMG-User-Info'].sites) {
         const planets = {};
-        result['PMMG-User-Info']['sites'].forEach(site => {
+        result['PMMG-User-Info'].sites.forEach(site => {
           planets[site.siteId] = [site.PlanetName, site.PlanetNaturalId];
         });
-        result['PMMG-User-Info']['storage'].forEach(store => {
+        result['PMMG-User-Info'].storage.forEach(store => {
           if (planets[store.addressableId]) {
             store.PlanetName = planets[store.addressableId][0];
             store.PlanetNaturalId = planets[store.addressableId][1];
@@ -290,22 +288,22 @@ async function logEvent(result, eventdata) {
       break;
     case 'STORAGE_CHANGE':
       eventdata.payload.stores.forEach(store => {
-        const matchingStore = result['PMMG-User-Info']['sites'].find(item => item.siteId === store['addressableId']);
+        const matchingStore = result['PMMG-User-Info'].sites.find(item => item.siteId === store.addressableId);
 
-        const index = result['PMMG-User-Info']['storage'].findIndex(item => item.addressableId === store.addressableId);
+        const index = result['PMMG-User-Info'].storage.findIndex(item => item.addressableId === store.addressableId);
 
         if (matchingStore) {
-          store['PlanetNaturalId'] = matchingStore['PlanetNaturalId'];
-          store['PlanetName'] = matchingStore['PlanetName'];
-          const givenItems = store['items'];
-          store['items'] = [];
+          store.PlanetNaturalId = matchingStore.PlanetNaturalId;
+          store.PlanetName = matchingStore.PlanetName;
+          const givenItems = store.items;
+          store.items = [];
           givenItems.forEach(item => {
             if (item.quantity && item.quantity.material) {
-              store['items'].push({
-                weight: item['weight'],
-                volume: item['volume'],
-                MaterialTicker: item['quantity']['material']['ticker'],
-                Amount: item['quantity']['amount'],
+              store.items.push({
+                weight: item.weight,
+                volume: item.volume,
+                MaterialTicker: item.quantity.material.ticker,
+                Amount: item.quantity.amount,
               });
             } else {
               //console.log(item); // Debug line. Some items seem to not have a quantity. This should help figure out what those are.
@@ -313,25 +311,25 @@ async function logEvent(result, eventdata) {
           });
 
           if (index != -1) {
-            result['PMMG-User-Info']['storage'][index] = store;
+            result['PMMG-User-Info'].storage[index] = store;
           } else {
-            result['PMMG-User-Info']['storage'].push(store);
+            result['PMMG-User-Info'].storage.push(store);
           }
-        } else if (store['name']) {
+        } else if (store.name) {
           // Ship store
-          const matchingShipStoreIndex = result['PMMG-User-Info']['storage'].findIndex(
-            item => item.addressableId === store['addressableId'],
+          const matchingShipStoreIndex = result['PMMG-User-Info'].storage.findIndex(
+            item => item.addressableId === store.addressableId,
           );
 
-          const givenItems = store['items'];
-          store['items'] = [];
+          const givenItems = store.items;
+          store.items = [];
           givenItems.forEach(item => {
             if (item.quantity && item.quantity.material) {
-              store['items'].push({
-                weight: item['weight'],
-                volume: item['volume'],
-                MaterialTicker: item['quantity']['material']['ticker'],
-                Amount: item['quantity']['amount'],
+              store.items.push({
+                weight: item.weight,
+                volume: item.volume,
+                MaterialTicker: item.quantity.material.ticker,
+                Amount: item.quantity.amount,
               });
             } else {
               //console.log(item); // Debug line. Some items seem to not have a quantity. This should help figure out what those are.
@@ -339,49 +337,47 @@ async function logEvent(result, eventdata) {
           });
 
           if (matchingShipStoreIndex != -1) {
-            result['PMMG-User-Info']['storage'][matchingShipStoreIndex] = store;
+            result['PMMG-User-Info'].storage[matchingShipStoreIndex] = store;
           } else {
-            result['PMMG-User-Info']['storage'].push(store);
+            result['PMMG-User-Info'].storage.push(store);
           }
         }
       });
       break;
     case 'WAREHOUSE_STORAGES':
-      result['PMMG-User-Info']['sites'] = result['PMMG-User-Info']['sites'].filter(item => item.type !== 'WAREHOUSE');
+      result['PMMG-User-Info'].sites = result['PMMG-User-Info'].sites.filter(item => item.type !== 'WAREHOUSE');
 
-      eventdata['payload']['storages'].forEach(warehouse => {
-        const planetId = warehouse['address']['lines'][1]['entity']['naturalId'];
-        const planetName = warehouse['address']['lines'][1]['entity']['name'];
+      eventdata.payload.storages.forEach(warehouse => {
+        const planetId = warehouse.address.lines[1].entity.naturalId;
+        const planetName = warehouse.address.lines[1].entity.name;
 
         const siteData = {
           PlanetNaturalId: planetId,
           PlanetName: planetName,
           type: 'WAREHOUSE',
-          units: warehouse['units'],
-          siteId: warehouse['warehouseId'],
+          units: warehouse.units,
+          siteId: warehouse.warehouseId,
         };
 
-        result['PMMG-User-Info']['sites'].push(siteData);
+        result['PMMG-User-Info'].sites.push(siteData);
       });
       break;
     case 'WORKFORCE_WORKFORCES':
-      matchIndex = result['PMMG-User-Info']['workforce'].findIndex(
-        item => item.siteId === eventdata['payload']['siteId'],
-      );
-      planetId = eventdata['payload']['address']['lines'][1]['entity']['naturalId'];
-      planetName = eventdata['payload']['address']['lines'][1]['entity']['name'];
+      matchIndex = result['PMMG-User-Info'].workforce.findIndex(item => item.siteId === eventdata.payload.siteId);
+      planetId = eventdata.payload.address.lines[1].entity.naturalId;
+      planetName = eventdata.payload.address.lines[1].entity.name;
 
       workforceArray = {
         PlanetName: planetName,
         PlanetNaturalId: planetId,
-        workforce: eventdata['payload']['workforces'],
-        siteId: eventdata['payload']['siteId'],
+        workforce: eventdata.payload.workforces,
+        siteId: eventdata.payload.siteId,
       };
 
       if (matchIndex != -1) {
-        result['PMMG-User-Info']['workforce'][matchIndex] = workforceArray;
+        result['PMMG-User-Info'].workforce[matchIndex] = workforceArray;
       } else {
-        result['PMMG-User-Info']['workforce'].push(workforceArray);
+        result['PMMG-User-Info'].workforce.push(workforceArray);
       }
 
       break;
@@ -394,16 +390,16 @@ async function logEvent(result, eventdata) {
         'terminationReceived',
         'terminationSent',
       ];
-      eventdata['payload']['contracts'].forEach(contract => {
+      eventdata.payload.contracts.forEach(contract => {
         badParams.forEach(param => {
           delete contract[param];
         });
-        contract['conditions'].forEach(condition => {
-          delete condition['id'];
+        contract.conditions.forEach(condition => {
+          delete condition.id;
         });
       });
 
-      result['PMMG-User-Info']['contracts'] = eventdata['payload']['contracts'];
+      result['PMMG-User-Info'].contracts = eventdata.payload.contracts;
       break;
     case 'CONTRACTS_CONTRACT':
       badKeys = [
@@ -414,49 +410,45 @@ async function logEvent(result, eventdata) {
         'terminationReceived',
         'terminationSent',
       ];
-      matchingContract = result['PMMG-User-Info']['contracts'].find(
-        obj => obj.localId === eventdata['payload']['localId'],
-      );
+      matchingContract = result['PMMG-User-Info'].contracts.find(obj => obj.localId === eventdata.payload.localId);
       if (matchingContract) {
         // Copy new object into old
         const oldKeys = Object.keys(matchingContract);
         oldKeys.forEach(key => {
           delete matchingContract[key];
         });
-        const newKeys = Object.keys(eventdata['payload']);
+        const newKeys = Object.keys(eventdata.payload);
         newKeys.forEach(key => {
           if (!badKeys.includes(key)) {
-            matchingContract[key] = eventdata['payload'][key];
+            matchingContract[key] = eventdata.payload[key];
           }
         });
       } // Otherwise push it in its entirety. Doesn't get rid of uneccessary params, but that's fine. They'll be wiped on the next full reload.
       else {
-        result['PMMG-User-Info']['contracts'].push(eventdata['payload']);
+        result['PMMG-User-Info'].contracts.push(eventdata.payload);
       }
       break;
     case 'PRODUCTION_SITE_PRODUCTION_LINES':
       //console.log(eventdata["payload"]);
-      matchIndex = result['PMMG-User-Info']['production'].findIndex(
-        item => item.siteId === eventdata['payload']['siteId'],
-      );
+      matchIndex = result['PMMG-User-Info'].production.findIndex(item => item.siteId === eventdata.payload.siteId);
 
-      siteInfo = { lines: [], siteId: eventdata['payload']['siteId'] };
-      eventdata['payload']['productionLines'].forEach(line => {
-        const planetId = line['address']['lines'][1]['entity']['naturalId'];
-        const planetName = line['address']['lines'][1]['entity']['name'];
+      siteInfo = { lines: [], siteId: eventdata.payload.siteId };
+      eventdata.payload.productionLines.forEach(line => {
+        const planetId = line.address.lines[1].entity.naturalId;
+        const planetName = line.address.lines[1].entity.name;
 
         const prodLine = {
           PlanetName: planetName,
           PlanetNaturalId: planetId,
-          capacity: line['capacity'],
-          condition: line['condition'],
-          efficiency: line['efficiency'],
-          efficiencyFactors: line['efficiencyFactors'],
-          type: line['type'],
+          capacity: line.capacity,
+          condition: line.condition,
+          efficiency: line.efficiency,
+          efficiencyFactors: line.efficiencyFactors,
+          type: line.type,
           orders: <any[]>[],
         };
 
-        line['orders'].forEach(order => {
+        line.orders.forEach(order => {
           const orderInfo: any = {};
           orderInfo.completed = order.completed;
           orderInfo.started = order.started ? order.started.timestamp : order.started;
@@ -487,9 +479,9 @@ async function logEvent(result, eventdata) {
       }
 
       if (matchIndex != -1) {
-        result['PMMG-User-Info']['production'][matchIndex] = siteInfo;
+        result['PMMG-User-Info'].production[matchIndex] = siteInfo;
       } else {
-        result['PMMG-User-Info']['production'].push(siteInfo);
+        result['PMMG-User-Info'].production.push(siteInfo);
       }
       break;
     case 'COMPANY_DATA': // Company info
@@ -503,13 +495,13 @@ async function logEvent(result, eventdata) {
       }
       break;
     case 'ACCOUNTING_CASH_BALANCES':
-      result['PMMG-User-Info']['currency'] = [];
+      result['PMMG-User-Info'].currency = [];
 
       console.log(eventdata.payload);
 
       if (eventdata.payload.currencyAccounts) {
         eventdata.payload.currencyAccounts.forEach(account => {
-          result['PMMG-User-Info']['currency'].push(account.currencyBalance);
+          result['PMMG-User-Info'].currency.push(account.currencyBalance);
         });
       }
       break;
@@ -518,7 +510,7 @@ async function logEvent(result, eventdata) {
       console.log(userData.fxos);
       break;
     case 'COMEX_TRADER_ORDERS': // CX Orders
-      result['PMMG-User-Info']['cxos'] = eventdata.payload.orders;
+      result['PMMG-User-Info'].cxos = eventdata.payload.orders;
       break;
     case 'COMEX_BROKER_DATA': // CXOB/CXPO Data
       eventdata.payload.timestamp = Date.now();
@@ -531,7 +523,7 @@ async function logEvent(result, eventdata) {
       });
       break;
     case 'SHIP_SHIPS': // ships
-      result['PMMG-User-Info']['ships'] = eventdata.payload.ships;
+      result['PMMG-User-Info'].ships = eventdata.payload.ships;
       break;
   }
 
