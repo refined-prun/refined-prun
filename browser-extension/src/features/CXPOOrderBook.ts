@@ -3,6 +3,7 @@ import { getBuffersFromList, createTextSpan } from '../util';
 import { Exchanges, ExchangeTickers, Materials } from '../GameProperties';
 import { Selector } from '../Selector';
 import { Style } from '../Style';
+import { userData } from '@src/prun-api/user-data';
 
 export class CXPOOrderBook implements Module {
   private tag = 'pb-cxpo-ob';
@@ -65,14 +66,14 @@ function addOrderBook(buffer, userInfo, tag) {
 
   const ticker = Materials[material.textContent][0] + '.' + exchangeTicker;
 
-  if (!userInfo['PMMG-User-Info']['cxob'][ticker] || !form.parentElement) {
+  if (!userData.cxob[ticker] || !form.parentElement) {
     return;
   }
 
-  if (form.classList.contains(userInfo['PMMG-User-Info']['cxob'][ticker]['timestamp'].toString())) {
+  if (form.classList.contains(userData.cxob[ticker].timestamp.toString())) {
     return;
   }
-  form.classList.add(userInfo['PMMG-User-Info']['cxob'][ticker]['timestamp']);
+  form.classList.add(userData.cxob[ticker].timestamp);
 
   if (form.parentElement.children[1]) {
     form.parentElement.children[1].remove();
@@ -123,7 +124,7 @@ function addOrderBook(buffer, userInfo, tag) {
   offerRowHeader.colSpan = 2;
   offerRow.appendChild(offerRowHeader);
 
-  const orderInfo = userInfo['PMMG-User-Info']['cxob'][ticker];
+  const orderInfo = userData.cxob[ticker];
   if (orderInfo.sellingOrders.length > 0) {
     // Build ask table. Add own name highlighting at some point
     const sortedOrders = orderInfo.sellingOrders.slice().reverse();

@@ -20,6 +20,7 @@ import {
 import { Style, TextColors } from '../Style';
 import { CurrencySymbols, Consumption } from '../GameProperties';
 import { generateLineGraph, generatePieChart } from '../PlotlyHandler';
+import { userData } from '@src/prun-api/user-data';
 
 export class Finances {
   private tile: HTMLElement;
@@ -1363,19 +1364,17 @@ export function calculateFinancials(webData, userInfo, result, loop) {
   // Handle FXOS
   let fxBuyValue = 0;
   let fxSellValue = 0;
-  if (userInfo['PMMG-User-Info']['fxos']) {
-    userInfo['PMMG-User-Info']['fxos'].forEach(order => {
-      if (order['status'] == 'FILLED') {
-        return;
-      }
+  userData.fxos.forEach(order => {
+    if (order['status'] == 'FILLED') {
+      return;
+    }
 
-      if (order['type'] == 'SELLING') {
-        fxSellValue += order.initialAmount.amount;
-      } else {
-        fxBuyValue += order.limit.rate * order.initialAmount.amount;
-      }
-    });
-  }
+    if (order['type'] == 'SELLING') {
+      fxSellValue += order.initialAmount.amount;
+    } else {
+      fxBuyValue += order.limit.rate * order.initialAmount.amount;
+    }
+  });
 
   finSnapshot['CXBuy'] = Math.round(cxBuyValue * 100) / 100;
   finSnapshot['CXSell'] = Math.round(cxSellValue * 100) / 100;

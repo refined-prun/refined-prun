@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { transmitted_events } from '@src/prun-api/default-event-payload';
+import { userData } from '@src/prun-api/user-data';
 
 interface ApiEvent {
   payload: any;
@@ -221,12 +222,6 @@ async function logEvent(result, eventdata) {
   }
   if (!result['PMMG-User-Info']['cxos']) {
     result['PMMG-User-Info']['cxos'] = [];
-  }
-  if (!result['PMMG-User-Info']['fxos']) {
-    result['PMMG-User-Info']['fxos'] = [];
-  }
-  if (!result['PMMG-User-Info']['cxob']) {
-    result['PMMG-User-Info']['cxob'] = {};
   }
   if (!result['PMMG-User-Info']['ships']) {
     result['PMMG-User-Info']['ships'] = {};
@@ -554,19 +549,20 @@ async function logEvent(result, eventdata) {
         });
       }
       break;
-    case 'FOREX_TRADER_ORDERS': // FX Orders
-      result['PMMG-User-Info']['fxos'] = eventdata.payload.orders;
+    case 'FOREX_TRADER_ORDERS': // FX Orders'
+      userData.fxos = eventdata.payload.orders;
+      console.log(userData.fxos);
       break;
     case 'COMEX_TRADER_ORDERS': // CX Orders
       result['PMMG-User-Info']['cxos'] = eventdata.payload.orders;
       break;
     case 'COMEX_BROKER_DATA': // CXOB/CXPO Data
-      result['PMMG-User-Info']['cxob'][eventdata.payload.ticker] = eventdata.payload;
-      result['PMMG-User-Info']['cxob'][eventdata.payload.ticker]['timestamp'] = Date.now();
+      eventdata.payload.timestamp = Date.now();
+      userData.cxob[eventdata.payload.ticker] = eventdata.payload;
 
-      Object.keys(result['PMMG-User-Info']['cxob']).forEach(ticker => {
-        if (Date.now() - result['PMMG-User-Info']['cxob'][ticker]['timestamp'] > 900000) {
-          delete result['PMMG-User-Info']['cxob'][ticker];
+      Object.keys(userData.cxob).forEach(ticker => {
+        if (Date.now() - userData.cxob[ticker].timestamp > 900000) {
+          delete userData.cxob[ticker];
         }
       });
       break;
