@@ -2,6 +2,7 @@
 import { Selector } from './Selector';
 import { MaterialNames, PlanetNames, SystemNames, Stations } from './GameProperties';
 import { Style, CategoryColors, WithStyles, DefaultColors } from './Style';
+import { system } from '@src/system';
 
 export const hourFormatter = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
 
@@ -391,16 +392,9 @@ export function parsePlanetName(text) {
 // Get the data in local storage for a given storageName. Then call the callback function.
 // Also pass the params through to the callback function
 export function getLocalStorage(storageName, callbackFunction, params?) {
-  try {
-    browser.storage.local.get(storageName).then(function (result) {
-      callbackFunction(result, params);
-    }); // For FireFox, throws an error in Chrome
-  } catch (err) {
-    chrome.storage.local.get([storageName], function (result) {
-      // For Chrome, doesn't work in FireFox
-      callbackFunction(result, params);
-    });
-  }
+  system.storage.local.get(storageName).then(function (result) {
+    callbackFunction(result, params);
+  });
 }
 
 // Remove all the children of a given element
@@ -414,15 +408,7 @@ export function clearChildren(elem) {
 
 // Set the data in local storage. Pass it the result of a getLocalStorage call
 export function setSettings(result) {
-  try {
-    browser.storage.local.set(result); // For FireFox, throws an error in Chrome
-  } catch (err) {
-    chrome.storage.local.set(result, function () {
-      // For Chrome, doesn't work in FireFox
-      //console.log("PMMG: Configuration Saved.");
-    });
-  }
-  return;
+  system.storage.local.set(result);
 }
 
 /**
@@ -1276,11 +1262,7 @@ export function drawPieChart(data, size, text?, colors?) {
  * @returns A Promise that resolves with an object containing items
  */
 export function getLocalStoragePromise(keys: string | string[]) {
-  try {
-    return browser.storage.local.get(keys);
-  } catch (err) {
-    return chrome.storage.local.get(keys);
-  }
+  return system.storage.local.get(keys);
 }
 
 /**
@@ -1289,15 +1271,7 @@ export function getLocalStoragePromise(keys: string | string[]) {
  * @returns A void Promise
  */
 export function setLocalStoragePromise(items: { [p: string]: any }) {
-  let promise;
-
-  try {
-    promise = browser.storage.local.set(items);
-  } catch (err) {
-    promise = chrome.storage.local.set(items);
-  }
-
-  return promise;
+  return system.storage.local.set(items);
 }
 
 export class Popup {
@@ -1499,13 +1473,5 @@ class PopupRow {
         });
       }
     }
-  }
-}
-
-export function getExtensionResource(path: string): string {
-  if (chrome !== undefined) {
-    return chrome.runtime.getURL(path);
-  } else {
-    return browser.runtime.getURL(path);
   }
 }

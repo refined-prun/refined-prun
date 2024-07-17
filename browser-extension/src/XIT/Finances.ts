@@ -21,6 +21,7 @@ import { Style, TextColors } from '../Style';
 import { CurrencySymbols, Consumption } from '../GameProperties';
 import { generateLineGraph, generatePieChart } from '../PlotlyHandler';
 import { userData } from '@src/prun-api/user-data';
+import { system } from '@src/system';
 
 export class Finances {
   private tile: HTMLElement;
@@ -1104,12 +1105,7 @@ function clearData(result) {
     result['PMMGExtended']['last_fin_recording'] = undefined;
     setSettings(result);
   }
-  try {
-    browser.storage.local.remove('PMMG-Finance');
-  } catch (err) {
-    chrome.storage.local.remove('PMMG-Finance');
-  }
-  return;
+  system.storage.local.remove('PMMG-Finance');
 }
 
 function getPrice(cxPrices, customPrices, priceScheme, ticker, userInfo, priceBasket) {

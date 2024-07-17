@@ -1,6 +1,7 @@
 import { clearChildren, createTextSpan, createTable } from '../util';
 import { TextColors, Style } from '../Style';
 import { userData } from '@src/prun-api/user-data';
+import { system } from '@src/system';
 
 export class DataHealth {
   private tile: HTMLElement;
@@ -142,11 +143,7 @@ export class DataHealth {
     clearButton.style.margin = '4px';
     clearButton.style.display = 'block';
     clearButton.addEventListener('click', function () {
-      try {
-        browser.storage.local.remove('PMMG-User-Info');
-      } catch (err) {
-        chrome.storage.local.remove('PMMG-User-Info');
-      }
+      system.storage.local.remove('PMMG-User-Info');
     });
     this.tile.appendChild(clearButton);
   }

@@ -1,4 +1,4 @@
-import { CHROME } from './env';
+import { system } from '@src/system';
 
 const defaultSettings = {
   PMMGExtended: {
@@ -29,17 +29,9 @@ function migrate(data: any) {
 }
 
 export async function saveSettings(settings: Settings) {
-  if (CHROME) {
-    return await chrome.storage.local.set(settings);
-  } else {
-    return await browser.storage.local.set(settings);
-  }
+  await system.storage.local.set(settings);
 }
 
 async function loadDataFromStorage() {
-  if (CHROME) {
-    return await chrome.storage.local.get(settingsKey);
-  } else {
-    return await browser.storage.local.get(settingsKey);
-  }
+  return await system.storage.local.get(settingsKey);
 }

@@ -2,6 +2,7 @@
 import { transmitted_events } from './default-event-payload';
 import { userData } from './user-data';
 import { socketIOMiddleware } from './socket-io-middleware';
+import { system } from '@src/system';
 
 interface ApiEvent {
   payload: any;
@@ -9,12 +10,10 @@ interface ApiEvent {
 }
 
 export async function listenPrUnApi() {
-  await getLocalStorage('PMMGContext', result => {
-    if (result['PMMGContext']) {
-      companyContext = result['PMMGContext'];
-    }
-  });
-
+  const contextStorage = await system.storage.local.get('PMMGContext');
+  if (contextStorage['PMMGContext']) {
+    companyContext = contextStorage['PMMGContext'];
+  }
   socketIOMiddleware((context, payload) => {
     QueueEvent({ context, payload });
     return false;
@@ -84,7 +83,7 @@ async function ProcessEvent(apiEvent: ApiEvent, event_list, full_event?) {
     for (const context in eventData.payload.message.payload.contexts) {
       if (eventData.payload.message.payload.contexts[context].type == 'COMPANY') {
         companyContext = eventData.payload.message.payload.contexts[context].id;
-        setSettings({ PMMGContext: companyContext });
+        await system.storage.local.set({ PMMGContext: companyContext });
         console.log('Found company context: ' + companyContext);
         break;
       }
@@ -96,7 +95,8 @@ async function ProcessEvent(apiEvent: ApiEvent, event_list, full_event?) {
   // Log Events into Storage
   if (eventData && eventData.messageType && loggedMessageTypes.includes(eventData.messageType)) {
     //console.log("Logging Event into Storage");
-    await getLocalStorage('PMMG-User-Info', logEvent, eventData);
+    const userInfo = await system.storage.local.get('PMMG-User-Info');
+    await logEvent(userInfo, eventData);
     await sleep(50);
     return;
   }
@@ -537,51 +537,5 @@ async function logEvent(result, eventdata) {
 
   console.log(result);
   //console.log("Finished Logging Event, now Setting...");
-  await setSettings(result);
-}
-
-// UTIL FUNCTIONS, REMOVE WHEN INTEGRATED INTO PMMG
-// Set the data in local storage. Pass it the result of a getLocalStorage call
-async function setSettings(result) {
-  //console.log("Trying to Set Data");
-  let isSet = false;
-  try {
-    browser.storage.local.set(result).then(function () {
-      isSet = true;
-    }); // For FireFox, throws an error in Chrome
-  } catch (err) {
-    chrome.storage.local.set(result, function () {
-      // For Chrome, doesn't work in FireFox
-      //console.log("PMMG: Configuration Saved.");
-      isSet = true;
-    });
-  }
-
-  while (!isSet) {
-    await sleep(10);
-  }
-  return;
-}
-
-// Get the data in local storage for a given storageName. Then call the callback function.
-// Also pass the params through to the callback function
-async function getLocalStorage(storageName, callbackFunction, params?) {
-  let isRetrieved = false;
-  if (__CHROME__) {
-    chrome.storage.local.get([storageName], function (result) {
-      // For Chrome, doesn't work in FireFox
-      isRetrieved = true;
-      callbackFunction(result, params);
-    });
-  } else {
-    browser.storage.local.get(storageName).then(function (result) {
-      //console.log("Successfully Got Data");
-      isRetrieved = true;
-      callbackFunction(result, params);
-    });
-  }
-
-  while (!isRetrieved) {
-    await sleep(10);
-  }
+  await system.storage.local.set(result);
 }

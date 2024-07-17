@@ -1,5 +1,5 @@
 // A list of PrUN class names that can be applied to style elements
-import { getExtensionResource } from './util';
+import { system } from '@src/system';
 
 export const Style = {
   // Styles coloring buttons
@@ -233,7 +233,7 @@ export function appendStyle(stylesheet: PmmgStylesheet) {
     return;
   }
   const link = document.createElement('link');
-  link.href = getExtensionResource(`${stylesheet}.css`);
+  link.href = system.runtime.getURL(`${stylesheet}.css`);
   link.id = stylesheet;
   link.rel = 'stylesheet';
   document.documentElement.appendChild(link);
