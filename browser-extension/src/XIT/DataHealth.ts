@@ -1,7 +1,7 @@
 import { clearChildren, createTextSpan, createTable } from '../util';
 import { TextColors, Style } from '../Style';
 import { userData } from '@src/prun-api/user-data';
-import { system } from '@src/system';
+import system from '@src/system';
 
 export class DataHealth {
   private tile: HTMLElement;

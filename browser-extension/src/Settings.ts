@@ -1,4 +1,4 @@
-import { system } from '@src/system';
+import system from '@src/system';
 
 const defaultSettings = {
   PMMGExtended: {

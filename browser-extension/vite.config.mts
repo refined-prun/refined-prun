@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import libAssetsPlugin from '@laynezh/vite-plugin-lib-assets';
 import makeManifestPlugin from './dev-tools/make-manifest-plugin';
 import { watchPublicPlugin, watchRebuildPlugin } from '@refined-prun/hmr';
+import { disableChunksPlugin } from './dev-tools/disable-chunks-plugin';
 
 const rootDir = resolve(__dirname);
 const srcDir = resolve(rootDir, 'src');
@@ -21,6 +22,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    disableChunksPlugin(['src/system.ts']),
     libAssetsPlugin({
       outputPath: outDir,
     }),

@@ -13,4 +13,5 @@ interface SystemApi {
   };
 }
 
-export const system: SystemApi = __CHROME__ ? chrome : browser;
+const system: SystemApi = __CHROME__ ? chrome : browser;
+export default system;

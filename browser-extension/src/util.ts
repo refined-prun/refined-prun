@@ -2,7 +2,7 @@
 import { Selector } from './Selector';
 import { MaterialNames, PlanetNames, SystemNames, Stations } from './GameProperties';
 import { Style, CategoryColors, WithStyles, DefaultColors } from './Style';
-import { system } from '@src/system';
+import system from '@src/system';
 
 export const hourFormatter = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
 

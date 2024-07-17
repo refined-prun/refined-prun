@@ -21,7 +21,7 @@ import { Style, TextColors } from '../Style';
 import { CurrencySymbols, Consumption } from '../GameProperties';
 import { generateLineGraph, generatePieChart } from '../PlotlyHandler';
 import { userData } from '@src/prun-api/user-data';
-import { system } from '@src/system';
+import system from '@src/system';
 
 export class Finances {
   private tile: HTMLElement;

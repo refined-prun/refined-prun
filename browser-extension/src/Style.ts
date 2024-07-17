@@ -1,5 +1,5 @@
 // A list of PrUN class names that can be applied to style elements
-import { system } from '@src/system';
+import system from '@src/system';
 
 export const Style = {
   // Styles coloring buttons

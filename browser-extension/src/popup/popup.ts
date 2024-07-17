@@ -1,5 +1,5 @@
 import './popup.css';
-import { system } from '@src/system';
+import system from '@src/system';
 
 const clearButton = document.getElementById('clearbutton')!;
 

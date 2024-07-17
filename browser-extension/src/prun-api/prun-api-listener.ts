@@ -2,7 +2,7 @@
 import { transmitted_events } from './default-event-payload';
 import { userData } from './user-data';
 import { socketIOMiddleware } from './socket-io-middleware';
-import { system } from '@src/system';
+import system from '@src/system';
 
 interface ApiEvent {
   payload: any;
