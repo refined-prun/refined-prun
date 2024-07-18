@@ -21,8 +21,6 @@ import { CXOBHighlighter } from '@src/features/CXOBHighlighter';
 import { CXPOOrderBook } from '@src/features/CXPOOrderBook';
 import { ChatDeleteButton } from '@src/features/ChatDeleteButton';
 import { IconMarkers } from '@src/features/IconMarkers';
-import { LocalMarketAds } from '@src/features/LocalMarketAds';
-import { ConsumableTimers } from '@src/features/ConsumableTimers';
 import { ShippingAds } from '@src/features/ShippingAds';
 import { PostLM } from '@src/features/PostLM';
 import { ProdBurnLink } from '@src/features/ProdBurnLink';
@@ -130,9 +128,7 @@ async function mainRun() {
       new IconMarkers(),
       //new InsetFixer(),	// Remove when this PrUN bug is fixed for real
       new ShippingAds(),
-      new LocalMarketAds(),
-      new PostLM(webData),
-      new ConsumableTimers(result['PMMGExtended']['burn_thresholds'], userInfo),
+      new PostLM(),
       new ProdBurnLink(),
     ],
     result,

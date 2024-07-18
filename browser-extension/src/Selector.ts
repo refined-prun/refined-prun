@@ -5,7 +5,6 @@
  */
 export const Selector = {
   LMCommodityAdText: "div[class~='CommodityAd__text___xJQmJNa']",
-  LMCommodityAdPriceSpan: "div[class~='CommodityAd__text___xJQmJNa'] > span",
   ProdQueueTable: "table[class~='ProductionQueue__table___jHQGyUI']",
   BufferHeaderClass: 'TileFrame__cmd___ScBYW0n type__type-very-small___HaVMqrE',
   BufferHeader: "div[class~='TileFrame__cmd___ScBYW0n']",

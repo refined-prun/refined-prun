@@ -313,31 +313,6 @@ export function findCorrespondingPlanet(planet, data, needBase?) {
   return undefined;
 }
 
-// Parse the base name on WF buffers
-export function parseBaseName(text) {
-  try {
-    let match = text.match(/@ ([A-Z]{2}-[0-9]{3} [a-z]) Base/); // Unnamed system unnamed planet
-    if (match && match[1]) {
-      return match[1].replace(' ', '');
-    }
-    match = text.match(/@ ([A-z ]*) - ([A-z ]*) Base/); // Named system named planet
-    if (match && match[1] && match[2]) {
-      return match[2];
-    }
-    match = text.match(/@ ([A-z ]*) ([A-z]) Base/); // Named system unnamed planet
-    if (match && match[1] && match[2] && SystemNames[match[1].toUpperCase()]) {
-      return SystemNames[match[1].toUpperCase()] + match[2].toLowerCase();
-    }
-    match = text.match(/@ [A-Z]{2}-[0-9]{3} - ([A-z ]*) Base/); // Unnamed system named planet
-    if (match && match[1]) {
-      return match[1];
-    }
-    return null;
-  } catch (TypeError) {
-    return text;
-  }
-}
-
 // Parse the base name on PROD buffers
 export function parseProdName(text) {
   try {
