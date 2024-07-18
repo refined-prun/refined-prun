@@ -1,7 +1,7 @@
 import { Module } from '../ModuleRunner';
 import { Selector } from '../Selector';
 import { genericCleanup } from '../util';
-import { Materials } from '../GameProperties';
+import { MaterialNameToTicker } from '@src/GameProperties';
 
 export class Notifications implements Module {
   private tag = 'pb-nots';
@@ -63,29 +63,35 @@ export class Notifications implements Module {
 
           notText = notText.replace(/Chamber of Global Commerce/, 'COGC');
           switch (search[0]) {
-            case 'produced':
+            case 'produced': {
               notText = notText.replace(/at your base /, '');
               notText = notText.replace(/One /, '1 ');
               notText = notText.replace(/ have been/, '');
               notText = notText.replace(/ unit[s]? of/, '');
               matches = notText.match(/ ([A-z -]+) produced/);
-              if (matches != null && matches[1] != undefined && Materials[matches[1]] != undefined) {
-                notText = notText.replace(new RegExp(matches[1]), Materials[matches[1]][0]);
+              const ticker = MaterialNameToTicker[matches?.[1]];
+              if (ticker !== undefined) {
+                notText = notText.replace(new RegExp(matches[1]), ticker);
               }
               break;
-            case 'trade':
+            }
+            case 'trade': {
               matches = notText.match(/your ([A-z -]+) order/);
-              if (matches != null && matches[1] != undefined && Materials[matches[1]] != undefined) {
-                notText = notText.replace(new RegExp(matches[1]), Materials[matches[1]][0]);
+              const ticker = MaterialNameToTicker[matches?.[1]];
+              if (ticker !== undefined) {
+                notText = notText.replace(new RegExp(matches[1]), ticker);
               }
               break;
-            case 'order filled':
+            }
+            case 'order filled': {
               notText = notText.replace(/ Commodity Exchange/, '');
               matches = notText.match(/([A-z -]+) order/);
-              if (matches != null && matches[1] != undefined && Materials[matches[1]] != undefined) {
-                notText = notText.replace(new RegExp(matches[1]), Materials[matches[1]][0]);
+              const ticker = MaterialNameToTicker[matches?.[1]];
+              if (ticker !== undefined) {
+                notText = notText.replace(new RegExp(matches[1]), ticker);
               }
               break;
+            }
             case 'accepted':
               notText = notText.replace(/ the/, '');
               notText = notText.replace(/ local market/, '');

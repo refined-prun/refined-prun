@@ -1,6 +1,6 @@
 import { Module } from '../ModuleRunner';
 import { getBuffersFromList, createTextSpan } from '../util';
-import { Exchanges, ExchangeTickers, Materials } from '../GameProperties';
+import { Exchanges, ExchangeTickers, MaterialNameToTicker } from '../GameProperties';
 import { Selector } from '../Selector';
 import { Style } from '../Style';
 import { userData } from '@src/prun-api/user-data';
@@ -60,11 +60,11 @@ function addOrderBook(buffer, userInfo, tag) {
     XPathResult.FIRST_ORDERED_NODE_TYPE,
     null,
   ).singleNodeValue as HTMLDivElement;
-  if (!material || !material.textContent || !Materials[material.textContent]) {
+  if (!material || !material.textContent || !MaterialNameToTicker[material.textContent]) {
     return;
   }
 
-  const ticker = Materials[material.textContent][0] + '.' + exchangeTicker;
+  const ticker = MaterialNameToTicker[material.textContent] + '.' + exchangeTicker;
 
   if (!userData.cxob[ticker] || !form.parentElement) {
     return;

@@ -3,6 +3,7 @@ import { transmitted_events } from './default-event-payload';
 import { userData } from './user-data';
 import { socketIOMiddleware } from './socket-io-middleware';
 import system from '@src/system';
+import materials from '@src/prun-api/materials';
 
 interface ApiEvent {
   payload: any;
@@ -40,6 +41,7 @@ const loggedMessageTypes = [
   'STORAGE_CHANGE',
   'COMPANY_DATA',
   'SHIP_SHIPS',
+  'WORLD_MATERIAL_CATEGORIES',
   'ACCOUNTING_CASH_BALANCES',
 ];
 
@@ -114,6 +116,7 @@ async function ProcessEvent(apiEvent: ApiEvent, event_list, full_event?) {
 
     if (match_event.action == 'subprocess_payload') {
       //console.log("Processing Subevent")
+      console.log(eventData.payload.message);
       await ProcessEvent(
         {
           payload: eventData.payload.message,
@@ -521,6 +524,9 @@ async function logEvent(result, eventdata) {
       break;
     case 'SHIP_SHIPS':
       userData.ships = eventdata.payload.ships;
+      break;
+    case 'WORLD_MATERIAL_CATEGORIES':
+      materials.load(eventdata.payload);
       break;
   }
 

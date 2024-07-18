@@ -1,6 +1,6 @@
 import { Module } from '../ModuleRunner';
 import { getBuffersFromList, changeValue } from '../util';
-import { MaterialNames, Materials } from '../GameProperties';
+import materials from '@src/prun-api/materials';
 
 export class FormulaReplacer implements Module {
   private tag = 'pb-formulas';
@@ -80,10 +80,11 @@ function addListeners(buffer, tag) {
         if (matches) {
           matches.forEach(match => {
             const ticker = match.split('.')[0].toUpperCase();
-            if (MaterialNames[ticker]) {
+            const material = materials.get(ticker);
+            if (material !== undefined) {
               expression = expression.replace(
                 match,
-                Materials[MaterialNames[ticker][0]][1].toLocaleString(undefined, { maximumFractionDigits: 3 }),
+                material.weight.toLocaleString(undefined, { maximumFractionDigits: 3 }),
               );
             }
           });
@@ -93,10 +94,11 @@ function addListeners(buffer, tag) {
         if (matches) {
           matches.forEach(match => {
             const ticker = match.split('.')[0].toUpperCase();
-            if (MaterialNames[ticker]) {
+            const material = materials.get(ticker);
+            if (material !== undefined) {
               expression = expression.replace(
                 match,
-                Materials[MaterialNames[ticker][0]][2].toLocaleString(undefined, { maximumFractionDigits: 3 }),
+                material.volume.toLocaleString(undefined, { maximumFractionDigits: 3 }),
               );
             }
           });
@@ -106,13 +108,11 @@ function addListeners(buffer, tag) {
         if (matches) {
           matches.forEach(match => {
             const ticker = match.split('.')[0].toUpperCase();
-            if (MaterialNames[ticker]) {
+            const material = materials.get(ticker);
+            if (material !== undefined) {
               expression = expression.replace(
                 match,
-                Math.max(Materials[MaterialNames[ticker][0]][1], Materials[MaterialNames[ticker][0]][2]).toLocaleString(
-                  undefined,
-                  { maximumFractionDigits: 3 },
-                ),
+                Math.max(material.weight, material.volume).toLocaleString(undefined, { maximumFractionDigits: 3 }),
               );
             }
           });

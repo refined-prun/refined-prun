@@ -1,7 +1,8 @@
 import { Module } from '../ModuleRunner';
 import { Selector } from '../Selector';
-import { Materials, CurrencySymbols } from '../GameProperties';
+import { CurrencySymbols, MaterialNameToTicker } from '../GameProperties';
 import { createTextSpan, genericCleanup } from '../util';
+import materials from '@src/prun-api/materials';
 
 export class PostLM implements Module {
   private cleanups: Array<() => void> = [];
@@ -66,7 +67,14 @@ export class PostLM implements Module {
         const calculatePricePerUnit = () => {
           const amount = parseInt(amountInput.value);
           const total = parseFloat(totalPriceInput.value);
-          const matInfo = Materials[commodity.value];
+          const ticker = MaterialNameToTicker[commodity.value];
+          if (ticker === undefined) {
+            return;
+          }
+          const matInfo = materials.get(ticker);
+          if (matInfo === undefined) {
+            return;
+          }
           const currency = currencyInput.value;
           let currencySymbol;
           if (currency != undefined) {
@@ -77,11 +85,8 @@ export class PostLM implements Module {
           if (currencySymbol == undefined) {
             currencySymbol = '';
           }
-          if (matInfo == undefined || matInfo == null) {
-            return;
-          }
-          const unit = matInfo[1] >= matInfo[2] ? 't' : 'm³';
-          const weightvolume = Math.max(matInfo[1], matInfo[2]);
+          const unit = matInfo.weight >= matInfo.volume ? 't' : 'm³';
+          const weightvolume = Math.max(matInfo.weight, matInfo.volume);
 
           if (isNaN(weightvolume) || isNaN(total)) {
             displayElement.textContent = '-- t | ' + currencySymbol + '-- / t';
