@@ -9,11 +9,14 @@ async function onAppLoaded() {
   appLoaded = true;
 }
 
-async function onLoadingAppeared() {
+async function onLoadingAppeared(element: HTMLElement) {
   if (!appLoaded) {
     return;
   }
   await timeout(1000);
+  if (!element.isConnected) {
+    return;
+  }
   if (document.getElementsByClassName(PrunCss.App.container).length === 0) {
     location.reload();
   }
