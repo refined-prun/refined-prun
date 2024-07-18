@@ -1,6 +1,7 @@
 import observe from '@src/utils/selector-observer';
 import getMapArray from '@src/utils/get-map-array';
 import PrUnCss from '@src/prun-ui/prun-css';
+import { dot } from '@src/utils/dot';
 
 interface PrUnBufferObserver {
   (buffer: PrUnBuffer): void;
@@ -11,7 +12,7 @@ const commandBuffers: Map<string, PrUnBuffer[]> = new Map();
 const commandObservers: Map<string, PrUnBufferObserver[]> = new Map();
 
 function track() {
-  observe(`.${PrUnCss.TileFrame.frame}`, onFrameAdded);
+  observe(dot(PrUnCss.TileFrame.frame), onFrameAdded);
   const observer = new MutationObserver(validateActiveBuffers);
   observer.observe(document.body, { childList: true, subtree: true });
 }

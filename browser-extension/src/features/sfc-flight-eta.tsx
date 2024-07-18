@@ -3,6 +3,7 @@ import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
 import { h } from 'dom-chef';
 import { $$ } from 'select-dom';
+import { dot } from '@src/utils/dot';
 
 const tag = 'rprun-sfc-eta';
 
@@ -10,7 +11,7 @@ function updateBuffer(buffer: PrUnBuffer) {
   if (!buffer.frame.isConnected) {
     return;
   }
-  const cleanupList = $$(`.${tag}`, buffer.frame);
+  const cleanupList = $$(dot(tag), buffer.frame);
   for (const element of cleanupList) {
     element.remove();
   }

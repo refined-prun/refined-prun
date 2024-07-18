@@ -4,6 +4,7 @@ import observe from '@src/utils/selector-observer';
 import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import { $ } from 'select-dom';
+import { dot } from '@src/utils/dot';
 
 const correctableCommands = new Set([
   'ADM',
@@ -28,7 +29,7 @@ const correctableCommands = new Set([
 
 export function onSelectorCreated(selector: HTMLDivElement) {
   const form = selector.children[0] as HTMLFormElement;
-  const input = $(`.${PrunCss.PanelSelector.input}`, form) as HTMLInputElement;
+  const input = $(dot(PrunCss.PanelSelector.input), form) as HTMLInputElement;
   form.onsubmit = ev => {
     const commandParts = input.value.split(' ');
     if (!correctableCommands.has(commandParts[0].toUpperCase())) {
@@ -48,7 +49,7 @@ export function onSelectorCreated(selector: HTMLDivElement) {
 }
 
 export function init() {
-  observe(`.${PrunCss.Tile.selector}`, onSelectorCreated);
+  observe(dot(PrunCss.Tile.selector), onSelectorCreated);
 }
 
 void features.add({
