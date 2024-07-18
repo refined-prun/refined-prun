@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Selector } from './Selector';
-import { MaterialNames, PlanetNames, SystemNames, Stations } from './GameProperties';
+import { PlanetNames, SystemNames, Stations } from './GameProperties';
 import { Style, CategoryColors, WithStyles, DefaultColors } from './Style';
 import system from '@src/system';
+import materials from '@src/prun-api/materials';
 
 export const hourFormatter = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
 
@@ -270,11 +271,13 @@ export function findBurnAmount(ticker, inventory) {
 }
 
 // Sort tickers by their material category
-export function CategorySort(a, b) {
-  if (!MaterialNames[a] || !MaterialNames[b]) {
+export function CategorySort(tickerA: string, tickerB: string) {
+  const categoryA = materials.get(tickerA)?.category.name;
+  const categoryB = materials.get(tickerB)?.category.name;
+  if (!categoryA || !categoryB) {
     return 0;
   }
-  return MaterialNames[a][1].localeCompare(MaterialNames[b][1]);
+  return categoryA.localeCompare(categoryB);
 }
 
 // Find the data corresponding to a planet in an array of FIO inventory/burn data
@@ -442,18 +445,19 @@ export function getSpecial() {
  * @param building - Indicates whether the material is a building ticker
  */
 export function createMaterialElement(
-  ticker,
+  ticker: string,
   className: string = 'prun-remove-js',
   amount: string = 'none',
   text: boolean = false,
   small: boolean = false,
   building?,
 ) {
-  if (!MaterialNames[ticker] && ticker != 'SHPT' && !building) {
+  const material = materials.get(ticker);
+  if (!material && ticker != 'SHPT' && !building) {
     return null;
   } // Return nothing if the material isn't recognized
-  const name = (MaterialNames[ticker] || ['Shipment'])[0]; // The full name of the material (Basic Bulkhead)
-  const category = (MaterialNames[ticker] || [undefined, 'shipment'])[1]; // The category of the material
+  const name = material?.displayName || 'Shipment'; // The full name of the material (Basic Bulkhead)
+  const category = material?.category.name || 'shipment'; // The category of the material
 
   const matText = createTextSpan(ticker, className); // The ticker text in the middle
   matText.classList.add(...WithStyles(Style.MatText)); // Apply styles
@@ -462,25 +466,25 @@ export function createMaterialElement(
   matTextWrapper.classList.add(...WithStyles(Style.MatTextWrapper)); // Apply styles
   matTextWrapper.appendChild(matText);
 
-  const material = document.createElement('div'); // The colored material square
-  material.classList.add(...WithStyles(Style.MaterialElement)); // Apply styles
-  material.appendChild(matTextWrapper);
+  const materialDiv = document.createElement('div'); // The colored material square
+  materialDiv.classList.add(...WithStyles(Style.MaterialElement)); // Apply styles
+  materialDiv.appendChild(matTextWrapper);
   if (building) {
-    material.style.background = 'linear-gradient(135deg, rgb(52, 140, 160), rgb(77, 165, 185))'; // Apply colors
-    material.style.color = 'rgb(179, 255, 255)';
+    materialDiv.style.background = 'linear-gradient(135deg, rgb(52, 140, 160), rgb(77, 165, 185))'; // Apply colors
+    materialDiv.style.color = 'rgb(179, 255, 255)';
   } else {
-    material.style.background = CategoryColors[category][0]; // Apply colors
-    material.style.color = CategoryColors[category][1];
-    material.title = name; // Provide the material with a title when hovered over
+    materialDiv.style.background = CategoryColors[category][0]; // Apply colors
+    materialDiv.style.color = CategoryColors[category][1];
+    materialDiv.title = name; // Provide the material with a title when hovered over
   } // Provide the material with a title when hovered over
-  material.addEventListener('click', function () {
+  materialDiv.addEventListener('click', function () {
     // Show MAT buffer when clicked
     showBuffer('MAT ' + ticker.toUpperCase());
   });
 
   const materialWrapper = document.createElement('div'); // First wrapper around material square
   materialWrapper.classList.add(...WithStyles(Style.MaterialWrapper)); // Apply styles
-  materialWrapper.appendChild(material);
+  materialWrapper.appendChild(materialDiv);
 
   const materialWrapperWrapper = document.createElement('div'); // Second wrapper around material square
   materialWrapperWrapper.classList.add(...WithStyles(Style.MaterialWrapperWrapper)); // Apply styles
@@ -1449,4 +1453,17 @@ class PopupRow {
       }
     }
   }
+}
+
+// Sorts materials by element category then by ticker. Works with Array.sort
+export function materialSort(tickerA?: string | null, tickerB?: string | null): number {
+  const materialA = materials.get(tickerA);
+  const materialB = materials.get(tickerB);
+  if (!materialA || !materialB) {
+    return 0;
+  }
+
+  const categoryA = materialA.category.name;
+  const categoryB = materialB.category.name;
+  return categoryA == categoryB ? materialA.ticker.localeCompare(materialB.ticker) : categoryA.localeCompare(categoryB);
 }

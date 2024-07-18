@@ -1,6 +1,6 @@
 import { Module } from '../ModuleRunner';
 import { Selector } from '../Selector';
-import { CurrencySymbols, MaterialNameToTicker } from '../GameProperties';
+import { CurrencySymbols } from '../GameProperties';
 import { createTextSpan, genericCleanup } from '../util';
 import materials from '@src/prun-api/materials';
 
@@ -67,7 +67,7 @@ export class PostLM implements Module {
         const calculatePricePerUnit = () => {
           const amount = parseInt(amountInput.value);
           const total = parseFloat(totalPriceInput.value);
-          const ticker = MaterialNameToTicker[commodity.value];
+          const ticker = materials.getTickerByName(commodity.value);
           if (ticker === undefined) {
             return;
           }

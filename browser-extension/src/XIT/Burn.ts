@@ -9,7 +9,7 @@ import {
   createSettingsButton,
 } from '../util';
 import { Selector } from '../Selector';
-import { MaterialNames } from '../GameProperties';
+import materials from '@src/prun-api/materials';
 
 export class Burn {
   private tile: HTMLElement;
@@ -275,19 +275,19 @@ export class Burn {
       const burnMaterials = Object.keys(burn.burn);
       burnMaterials.sort(CategorySort);
 
-      for (const material of burnMaterials) {
+      for (const ticker of burnMaterials) {
         const row = document.createElement('tr');
         body.appendChild(row);
         const materialColumn = document.createElement('td');
         materialColumn.style.width = '32px';
         materialColumn.style.paddingRight = '0px';
         materialColumn.style.paddingLeft = isMultiplanet ? '32px' : '0px';
-        const matElem = createMaterialElement(material, 'prun-remove-js', 'none', false, true);
+        const matElem = createMaterialElement(ticker, 'prun-remove-js', 'none', false, true);
         if (matElem) {
           materialColumn.appendChild(matElem);
         }
         row.appendChild(materialColumn);
-        const nameSpan = createTextSpan(MaterialNames[material][0]);
+        const nameSpan = createTextSpan(materials.get(ticker)?.displayName);
         nameSpan.style.fontWeight = 'bold';
         const nameColumn = document.createElement('td');
         nameColumn.appendChild(nameSpan);
@@ -296,29 +296,29 @@ export class Burn {
         const consColumn = document.createElement('td');
         consColumn.appendChild(
           createTextSpan(
-            burn.burn[material]['DailyAmount'].toLocaleString(undefined, {
-              maximumFractionDigits: Math.abs(burn.burn[material]['DailyAmount']) < 1 ? 2 : 1,
-              minimumFractionDigits: Math.abs(burn.burn[material]['DailyAmount']) < 1 ? 2 : undefined,
+            burn.burn[ticker]['DailyAmount'].toLocaleString(undefined, {
+              maximumFractionDigits: Math.abs(burn.burn[ticker]['DailyAmount']) < 1 ? 2 : 1,
+              minimumFractionDigits: Math.abs(burn.burn[ticker]['DailyAmount']) < 1 ? 2 : undefined,
             }) + ' / Day',
           ),
         );
         row.appendChild(consColumn);
 
         const invColumn = document.createElement('td');
-        const invAmount = burn.burn[material]['Inventory'] == undefined ? 0 : burn.burn[material]['Inventory'];
+        const invAmount = burn.burn[ticker]['Inventory'] == undefined ? 0 : burn.burn[ticker]['Inventory'];
         invColumn.appendChild(createTextSpan(invAmount.toLocaleString(undefined)));
         row.appendChild(invColumn);
 
-        const burnDays = burn.burn[material]['DaysLeft'];
+        const burnDays = burn.burn[ticker]['DaysLeft'];
         const burnColumn = document.createElement('td');
         burnColumn.appendChild(
           createTextSpan(
-            (burnDays != '∞' && burnDays < 500 && burn.burn[material]['DailyAmount'] < 0
+            (burnDays != '∞' && burnDays < 500 && burn.burn[ticker]['DailyAmount'] < 0
               ? Math.floor(burnDays).toLocaleString(undefined, { maximumFractionDigits: 0 })
               : '∞') + ' Days',
           ),
         );
-        if (burn.burn[material]['DailyAmount'] >= 0) {
+        if (burn.burn[ticker]['DailyAmount'] >= 0) {
           burnColumn.classList.add('burn-green');
           burnColumn.classList.add('burn-infinite');
         } else if (burnDays <= (this.pmmgSettings['PMMGExtended']['burn_thresholds'] || [3, 7])[0]) {
@@ -333,12 +333,12 @@ export class Burn {
         const needAmt =
           burnDays >
             (this.pmmgSettings['PMMGExtended']['burn_thresholds'] || [3, 7])[1] +
-              (this.pmmgSettings['PMMGExtended']['burn_green_buffer'] || 7) || burn.burn[material]['DailyAmount'] > 0
+              (this.pmmgSettings['PMMGExtended']['burn_green_buffer'] || 7) || burn.burn[ticker]['DailyAmount'] > 0
             ? 0
             : (burnDays -
                 (this.pmmgSettings['PMMGExtended']['burn_thresholds'] || [3, 7])[1] -
                 (this.pmmgSettings['PMMGExtended']['burn_green_buffer'] || 7)) *
-              burn.burn[material]['DailyAmount'];
+              burn.burn[ticker]['DailyAmount'];
         needColumn.appendChild(
           createTextSpan(isNaN(needAmt) ? '0' : needAmt.toLocaleString(undefined, { maximumFractionDigits: 0 })),
         );

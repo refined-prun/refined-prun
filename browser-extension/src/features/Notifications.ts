@@ -1,7 +1,7 @@
 import { Module } from '../ModuleRunner';
 import { Selector } from '../Selector';
 import { genericCleanup } from '../util';
-import { MaterialNameToTicker } from '@src/GameProperties';
+import materials from '@src/prun-api/materials';
 
 export class Notifications implements Module {
   private tag = 'pb-nots';
@@ -69,7 +69,7 @@ export class Notifications implements Module {
               notText = notText.replace(/ have been/, '');
               notText = notText.replace(/ unit[s]? of/, '');
               matches = notText.match(/ ([A-z -]+) produced/);
-              const ticker = MaterialNameToTicker[matches?.[1]];
+              const ticker = materials.getTickerByName(matches?.[1]);
               if (ticker !== undefined) {
                 notText = notText.replace(new RegExp(matches[1]), ticker);
               }
@@ -77,7 +77,7 @@ export class Notifications implements Module {
             }
             case 'trade': {
               matches = notText.match(/your ([A-z -]+) order/);
-              const ticker = MaterialNameToTicker[matches?.[1]];
+              const ticker = materials.getTickerByName(matches?.[1]);
               if (ticker !== undefined) {
                 notText = notText.replace(new RegExp(matches[1]), ticker);
               }
@@ -86,7 +86,7 @@ export class Notifications implements Module {
             case 'order filled': {
               notText = notText.replace(/ Commodity Exchange/, '');
               matches = notText.match(/([A-z -]+) order/);
-              const ticker = MaterialNameToTicker[matches?.[1]];
+              const ticker = materials.getTickerByName(matches?.[1]);
               if (ticker !== undefined) {
                 notText = notText.replace(new RegExp(matches[1]), ticker);
               }

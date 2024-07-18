@@ -1,5 +1,4 @@
-import { clearChildren, createTextSpan, createMaterialElement, createLink, XITWebRequest } from '../util';
-import { MaterialNames } from '../GameProperties';
+import { clearChildren, createTextSpan, createMaterialElement, createLink, XITWebRequest, materialSort } from '../util';
 
 export class FIOInventory {
   private tile: HTMLElement;
@@ -243,19 +242,9 @@ function FIOInv_allDisplay(tile, parameters, jsondata) {
   return;
 }
 
-function fioMatsAlphabetSort(a, b) {
-  if (
-    !a['MaterialTicker'] ||
-    !b['MaterialTicker'] ||
-    !MaterialNames[a['MaterialTicker']] ||
-    !MaterialNames[b['MaterialTicker']]
-  ) {
-    return 0;
-  }
-
-  if (MaterialNames[a['MaterialTicker']][1] == MaterialNames[b['MaterialTicker']][1]) {
-    return a['MaterialTicker'].localeCompare(b['MaterialTicker']);
-  }
-
-  return MaterialNames[a['MaterialTicker']][1].localeCompare(MaterialNames[b['MaterialTicker']][1]);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function fioMatsAlphabetSort(itemA: any, itemB: any) {
+  const tickerA = itemA['MaterialTicker'];
+  const tickerB = itemB['MaterialTicker'];
+  return materialSort(tickerA, tickerB);
 }

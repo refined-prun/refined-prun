@@ -1,21 +1,20 @@
-interface ApiResponse {
-  categories: Category[];
-}
-
-interface Category {
-  name: string;
-  id: string;
-  materials: Material[];
-}
+import materialNames from './material-names.json';
 
 interface Material {
   name: string;
   id: string;
   ticker: string;
-  category: string;
+  category: MaterialCategory;
+  displayName: string;
   weight: number;
   volume: number;
   resource: boolean;
+}
+
+interface MaterialCategory {
+  name: string;
+  id: string;
+  materials: Material[];
 }
 
 let loaded = false;
@@ -23,17 +22,41 @@ let onLoaded = () => {};
 
 const materialsById: Map<string, Material> = new Map();
 const materialsByTicker: Map<string, Material> = new Map();
-const categoriesById: Map<string, Category> = new Map();
+const materialsByName: Map<string, Material> = new Map();
+const categoriesById: Map<string, MaterialCategory> = new Map();
 
-function load(apiResponse: ApiResponse) {
+function getDisplayName(material: Material) {
+  return materialNames[material.ticker] ?? material.name;
+}
+
+function load(payload: PrUnApi.WORLD_MATERIAL_CATEGORIES.Payload) {
   if (loaded) {
     return;
   }
-  for (const category of apiResponse.categories) {
+  for (const apiCategory of payload.categories) {
+    const category: MaterialCategory = {
+      id: apiCategory.id,
+      name: apiCategory.name,
+      materials: [],
+    };
     categoriesById.set(category.id, category);
-    for (const material of category.materials) {
+    for (const apiMaterial of apiCategory.materials) {
+      const material: Material = {
+        name: apiMaterial.name,
+        id: apiMaterial.id,
+        ticker: apiMaterial.ticker,
+        category: category,
+        get displayName() {
+          return getDisplayName(this);
+        },
+        weight: apiMaterial.weight,
+        volume: apiMaterial.volume,
+        resource: apiMaterial.resource,
+      };
+      category.materials.push(material);
       materialsById.set(material.id, material);
       materialsByTicker.set(material.ticker, material);
+      materialsByName.set(material.displayName, material);
     }
   }
   loaded = true;
@@ -51,7 +74,9 @@ async function waitForLoaded() {
 const materials = {
   load,
   waitForLoaded,
-  get: (ticker: string) => materialsByTicker.get(ticker),
+  get: (ticker?: string | null) => (ticker ? materialsByTicker.get(ticker) : undefined),
+  getByName: (name?: string | null) => (name ? materialsByName.get(name) : undefined),
+  getTickerByName: (name?: string | null) => (name ? materialsByName.get(name)?.ticker : undefined),
 };
 
 export default materials;

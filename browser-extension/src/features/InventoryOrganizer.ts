@@ -1,18 +1,19 @@
 import { Module } from '../ModuleRunner';
 import {
+  calculateBurn,
+  createMaterialElement,
+  findCorrespondingPlanet,
   getBuffersFromList,
+  materialSort,
   parseInvName,
   parsePlanetName,
-  findCorrespondingPlanet,
-  targetedCleanup,
   setSettings,
   showBuffer,
-  createMaterialElement,
-  calculateBurn,
+  targetedCleanup,
 } from '../util';
 import { Selector } from '../Selector';
 import { Style } from '../Style';
-import { MaterialNames, SortingTriangleHTML } from '../GameProperties';
+import { SortingTriangleHTML } from '../GameProperties';
 
 /**
  * Sort inventory into custom categories
@@ -306,7 +307,7 @@ function sortInventory(inventory, sortOptions, result, tag, screenName, planetNa
   } // No sorting to do, stock option selected
 
   const materials = Array.from(inventory.querySelectorAll(Selector.FullMaterialIcon)) as HTMLElement[]; // Get all the material elements
-  materials.sort(materialSort); // Sort the material elements by category primarily, then by ticker secondarily
+  materials.sort(materialDivSort); // Sort the material elements by category primarily, then by ticker secondarily
 
   let sorted = [] as string[]; // A list of all the material tickers already sorted into categories
   let sortingDetails = []; // The details of which materials to put in which category [[catName, [MAT1, MAT2]], [catName2, [MAT3, MAT4]]]
@@ -347,7 +348,7 @@ function sortInventory(inventory, sortOptions, result, tag, screenName, planetNa
           materials.push(matElement);
         }
       });
-      materials.sort(materialSort);
+      materials.sort(materialDivSort);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -628,26 +629,8 @@ function extractMaterials(burn, typeValue) {
 }
 
 // Sorts materials by element category then by ticker. Works with Array.sort
-function materialSort(a, b) {
-  const tickerElemA = a.querySelector(Selector.MaterialText);
-  if (!tickerElemA) {
-    return;
-  }
-  const tickerA = tickerElemA.textContent;
-
-  const tickerElemB = b.querySelector(Selector.MaterialText);
-  if (!tickerElemB) {
-    return;
-  }
-  const tickerB = tickerElemB.textContent;
-
-  if (!MaterialNames[tickerA] || !MaterialNames[tickerB]) {
-    return 0;
-  }
-
-  if (MaterialNames[tickerA][1] == MaterialNames[tickerB][1]) {
-    return tickerA.localeCompare(tickerB);
-  }
-
-  return MaterialNames[tickerA][1].localeCompare(MaterialNames[tickerB][1]);
+function materialDivSort(elementA: HTMLElement, elementB: HTMLElement) {
+  const tickerA = elementA.querySelector(Selector.MaterialText)?.textContent;
+  const tickerB = elementB.querySelector(Selector.MaterialText)?.textContent;
+  return materialSort(tickerA, tickerB);
 }
