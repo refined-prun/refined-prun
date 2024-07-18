@@ -28,6 +28,7 @@ import { loadSettings, Settings } from './Settings';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
 import { initializePrUnApi, loadGameData } from '@src/prun-api';
+import { loadPrUnCss } from '@src/prun-ui/prun-css';
 
 // The main function that initializes everything
 async function mainRun() {
@@ -41,7 +42,7 @@ async function mainRun() {
     throw e;
   }
 
-  await Promise.allSettled([loadGameData(), waitUntilPrUnLoaded()]);
+  await Promise.allSettled([loadPrUnCss(), loadGameData(), waitUntilPrUnLoaded()]);
 
   // Detect what date it is for... no reason.
   const specialTime = getSpecial() && !result['PMMGExtended']['surprises_opt_out'];

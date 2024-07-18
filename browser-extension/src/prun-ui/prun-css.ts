@@ -1,6 +1,11 @@
-import PrUnCssJson from './prun-css-classes.json';
+import { loadLocalJson } from '@src/util';
 
-// TODO: Load json from resources instead of import, add server overrides.
-const PrUnCss = PrUnCssJson;
+// @ts-expect-error This object will be loaded via loadCss()
+const PrUnCss: PrUnUI.CssClasses = {};
+
+export async function loadPrUnCss() {
+  const json = await loadLocalJson('prun-css-classes.json');
+  Object.assign(PrUnCss, json);
+}
 
 export default PrUnCss;
