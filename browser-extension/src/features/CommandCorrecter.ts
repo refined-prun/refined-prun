@@ -1,7 +1,8 @@
 import { Module } from '../ModuleRunner';
 import { changeValue } from '../util';
 import { Selector } from '../Selector';
-import { PlanetCommands, PlanetNames } from '../GameProperties';
+import { PlanetCommands } from '../GameProperties';
+import planets from '@src/prun-api/planets';
 
 export class CommandCorrecter implements Module {
   cleanup() {
@@ -16,20 +17,14 @@ export class CommandCorrecter implements Module {
         if (bufferField == null) {
           return;
         }
-        let bufferText = bufferField.value.toUpperCase() || '';
-
-        if (PlanetCommands.includes(bufferText.split(' ')[0])) {
-          let replaced = false;
-          Object.keys(PlanetNames).forEach(name => {
-            if (bufferText.includes(' ' + name)) {
-              bufferText = bufferText.replace(' ' + name, ' ' + PlanetNames[name]);
-              replaced = true;
-            }
-          });
-
-          if (replaced) {
+        const commandParts = bufferField.value.split(' ');
+        if (PlanetCommands.includes(commandParts[0])) {
+          const planet = planets.getByName(commandParts[1]);
+          if (planet !== undefined) {
+            commandParts[1] = planet.naturalId;
+            const newCommand = commandParts.join(' ');
             bufferField.value = '';
-            changeValue(bufferField, bufferText);
+            changeValue(bufferField, newCommand);
             if (bufferField.parentElement == null || bufferField.parentElement.parentElement == null) {
               return;
             }

@@ -1,4 +1,4 @@
-import { loadFallbackPacket } from '@src/prun-api/fallback-packets';
+import { loadFallbackPacket } from '@src/prun-api/fallback-files';
 import ApiPayload = PrUnApi.SYSTEM_STARS_DATA.Payload;
 
 interface System {
@@ -26,9 +26,9 @@ function applyApiPayload(payload: ApiPayload) {
       name: apiStar.name,
       connections: [],
     };
-    systemsById.set(system.id, system);
-    systemsByNaturalId.set(system.naturalId, system);
-    systemsByName.set(system.name, system);
+    systemsById.set(system.id.toLowerCase(), system);
+    systemsByNaturalId.set(system.naturalId.toLowerCase(), system);
+    systemsByName.set(system.name.toLowerCase(), system);
   }
 
   for (const apiStar of payload.stars) {
@@ -57,8 +57,8 @@ async function load() {
 const systems = {
   applyApiPayload,
   load,
-  get: (naturalId?: string | null) => (naturalId ? systemsByNaturalId.get(naturalId) : naturalId),
-  getByName: (name?: string | null) => (name ? systemsByName.get(name) : undefined),
+  get: (naturalId?: string | null) => (naturalId ? systemsByNaturalId.get(naturalId.toLowerCase()) : undefined),
+  getByName: (name?: string | null) => (name ? systemsByName.get(name.toLowerCase()) : undefined),
 };
 
 export default systems;

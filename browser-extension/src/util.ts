@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Selector } from './Selector';
-import { PlanetNames, Stations } from './GameProperties';
+import { Stations } from './GameProperties';
 import { Style, CategoryColors, WithStyles, DefaultColors } from './Style';
 import system from '@src/system';
 import materials from '@src/prun-api/materials';
+import planets from '@src/prun-api/planets';
 
 export const hourFormatter = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
 
@@ -305,8 +306,8 @@ export function findCorrespondingPlanet(planet, data, needBase?) {
     } else if (
       planet &&
       data[i]['PlanetNaturalId'] &&
-      PlanetNames[planet] &&
-      PlanetNames[planet].toLowerCase() == data[i]['PlanetNaturalId'].toLowerCase() &&
+      planets.getByName(planet) &&
+      planets.getByName(planet) === planets.getByName(data[i]['PlanetNaturalId']) &&
       (!needBase || data[i]['type'] == 'STORE' || data[i]['type'] == 'BASE')
     ) {
       // When planet name isn't in the payload, convert it to natural ID

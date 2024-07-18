@@ -1,5 +1,5 @@
 import materialNames from './material-names.json';
-import { loadFallbackPacket } from '@src/prun-api/fallback-packets';
+import { loadFallbackPacket } from '@src/prun-api/fallback-files';
 
 import ApiPayload = PrUnApi.WORLD_MATERIAL_CATEGORIES.Payload;
 
@@ -43,7 +43,7 @@ function applyApiPayload(payload: ApiPayload) {
       name: apiCategory.name,
       materials: [],
     };
-    categoriesById.set(category.id, category);
+    categoriesById.set(category.id.toLowerCase(), category);
     for (const apiMaterial of apiCategory.materials) {
       const material: Material = {
         name: apiMaterial.name,
@@ -58,9 +58,9 @@ function applyApiPayload(payload: ApiPayload) {
         resource: apiMaterial.resource,
       };
       category.materials.push(material);
-      materialsById.set(material.id, material);
-      materialsByTicker.set(material.ticker, material);
-      materialsByName.set(material.displayName, material);
+      materialsById.set(material.id.toLowerCase(), material);
+      materialsByTicker.set(material.ticker.toLowerCase(), material);
+      materialsByName.set(material.displayName.toLowerCase(), material);
     }
   }
 
@@ -83,9 +83,9 @@ async function load() {
 const materials = {
   applyApiPayload,
   load,
-  get: (ticker?: string | null) => (ticker ? materialsByTicker.get(ticker) : undefined),
-  getByName: (name?: string | null) => (name ? materialsByName.get(name) : undefined),
-  getTickerByName: (name?: string | null) => (name ? materialsByName.get(name)?.ticker : undefined),
+  get: (ticker?: string | null) => (ticker ? materialsByTicker.get(ticker.toLowerCase()) : undefined),
+  getByName: (name?: string | null) => (name ? materialsByName.get(name.toLowerCase()) : undefined),
+  getTickerByName: (name?: string | null) => (name ? materialsByName.get(name.toLowerCase())?.ticker : undefined),
 };
 
 export default materials;

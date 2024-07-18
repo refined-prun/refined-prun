@@ -22,10 +22,6 @@ export async function listenPrUnApi() {
   });
 }
 
-export async function loadGameData() {
-  await Promise.allSettled([materials.load(), systems.load()]);
-}
-
 const eventQueue: ApiEvent[] = [];
 let processingQueue = false;
 

@@ -27,11 +27,11 @@ import { ProdBurnLink } from '@src/features/ProdBurnLink';
 import { loadSettings, Settings } from './Settings';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
-import { listenPrUnApi, loadGameData } from '@src/prun-api/prun-api-listener';
+import { initializePrUnApi, loadGameData } from '@src/prun-api';
 
 // The main function that initializes everything
 async function mainRun() {
-  listenPrUnApi();
+  initializePrUnApi();
 
   let result: Settings;
   try {
@@ -41,8 +41,7 @@ async function mainRun() {
     throw e;
   }
 
-  await loadGameData();
-  await waitUntilPrUnLoaded();
+  await Promise.allSettled([loadGameData(), waitUntilPrUnLoaded()]);
 
   // Detect what date it is for... no reason.
   const specialTime = getSpecial() && !result['PMMGExtended']['surprises_opt_out'];
@@ -144,8 +143,8 @@ async function mainRun() {
   })();
 }
 
-function waitUntilPrUnLoaded() {
-  return new Promise<void>(resolve => {
+async function waitUntilPrUnLoaded() {
+  await new Promise<void>(resolve => {
     function checkContainer() {
       const container = document.getElementById('container');
       if (container !== null && container.children.length > 0) {
