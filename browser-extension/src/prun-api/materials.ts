@@ -1,4 +1,7 @@
 import materialNames from './material-names.json';
+import { loadFallbackPacket } from '@src/prun-api/fallback-packets';
+
+import ApiPayload = PrUnApi.WORLD_MATERIAL_CATEGORIES.Payload;
 
 interface Material {
   name: string;
@@ -18,7 +21,6 @@ interface MaterialCategory {
 }
 
 let loaded = false;
-let onLoaded = () => {};
 
 const materialsById: Map<string, Material> = new Map();
 const materialsByTicker: Map<string, Material> = new Map();
@@ -29,10 +31,12 @@ function getDisplayName(material: Material) {
   return materialNames[material.ticker] ?? material.name;
 }
 
-function load(payload: PrUnApi.WORLD_MATERIAL_CATEGORIES.Payload) {
-  if (loaded) {
-    return;
-  }
+function load(payload: ApiPayload) {
+  materialsById.clear();
+  materialsByTicker.clear();
+  materialsByName.clear();
+  categoriesById.clear();
+
   for (const apiCategory of payload.categories) {
     const category: MaterialCategory = {
       id: apiCategory.id,
@@ -59,8 +63,8 @@ function load(payload: PrUnApi.WORLD_MATERIAL_CATEGORIES.Payload) {
       materialsByName.set(material.displayName, material);
     }
   }
+
   loaded = true;
-  setTimeout(onLoaded, 0);
 }
 
 async function waitForLoaded() {
@@ -68,7 +72,12 @@ async function waitForLoaded() {
     return;
   }
 
-  await new Promise<void>(resolve => (onLoaded = resolve));
+  const fallbackPacket = await loadFallbackPacket<ApiPayload>('WORLD_MATERIAL_CATEGORIES');
+  if (loaded) {
+    return;
+  }
+
+  load(fallbackPacket);
 }
 
 const materials = {

@@ -1467,3 +1467,12 @@ export function materialSort(tickerA?: string | null, tickerB?: string | null): 
   const categoryB = materialB.category.name;
   return categoryA == categoryB ? materialA.ticker.localeCompare(materialB.ticker) : categoryA.localeCompare(categoryB);
 }
+
+export async function loadLocalFile(path: string) {
+  return await fetch(system.runtime.getURL(path));
+}
+
+export async function loadLocalJson(path: string) {
+  const file = await loadLocalFile(path);
+  return await file.json();
+}
