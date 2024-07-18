@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Selector } from './Selector';
-import { PlanetNames, SystemNames, Stations } from './GameProperties';
+import { PlanetNames, Stations } from './GameProperties';
 import { Style, CategoryColors, WithStyles, DefaultColors } from './Style';
 import system from '@src/system';
 import materials from '@src/prun-api/materials';
@@ -314,31 +314,6 @@ export function findCorrespondingPlanet(planet, data, needBase?) {
     }
   }
   return undefined;
-}
-
-// Parse the base name on PROD buffers
-export function parseProdName(text) {
-  try {
-    let match = text.match(/([A-Z]{2}-[0-9]{3} [a-z]) Production/); // Unnamed system unnamed planet
-    if (match && match[1]) {
-      return match[1].replace(' ', '');
-    }
-    match = text.match(/([A-z ]*) - ([A-z ]*) Production/); // Named system named planet
-    if (match && match[1] && match[2]) {
-      return match[2];
-    }
-    match = text.match(/([A-z ]*) ([A-z]) Production/); // Named system unnamed planet
-    if (match && match[1] && match[2] && SystemNames[match[1].toUpperCase()]) {
-      return SystemNames[match[1].toUpperCase()] + match[2].toLowerCase();
-    }
-    match = text.match(/[A-Z]{2}-[0-9]{3} - ([A-z ]*) Production/); // Unnamed system named planet
-    if (match && match[1]) {
-      return match[1];
-    }
-    return null;
-  } catch (TypeError) {
-    return text;
-  }
 }
 
 // Parse the inventory name on inventory buffers

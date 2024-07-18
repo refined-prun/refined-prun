@@ -27,8 +27,7 @@ import { ProdBurnLink } from '@src/features/ProdBurnLink';
 import { loadSettings, Settings } from './Settings';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
-import { listenPrUnApi } from '@src/prun-api/prun-api-listener';
-import materials from '@src/prun-api/materials';
+import { listenPrUnApi, loadGameData } from '@src/prun-api/prun-api-listener';
 
 // The main function that initializes everything
 async function mainRun() {
@@ -42,7 +41,7 @@ async function mainRun() {
     throw e;
   }
 
-  await materials.waitForLoaded();
+  await loadGameData();
   await waitUntilPrUnLoaded();
 
   // Detect what date it is for... no reason.

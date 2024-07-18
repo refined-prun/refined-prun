@@ -4,6 +4,7 @@ import { userData } from './user-data';
 import { socketIOMiddleware } from './socket-io-middleware';
 import system from '@src/system';
 import materials from '@src/prun-api/materials';
+import systems from '@src/prun-api/systems';
 
 interface ApiEvent {
   payload: any;
@@ -19,6 +20,10 @@ export async function listenPrUnApi() {
     QueueEvent({ context, payload });
     return false;
   });
+}
+
+export async function loadGameData() {
+  await Promise.allSettled([materials.load(), systems.load()]);
 }
 
 const eventQueue: ApiEvent[] = [];
@@ -43,6 +48,7 @@ const loggedMessageTypes = [
   'SHIP_SHIPS',
   'WORLD_MATERIAL_CATEGORIES',
   'ACCOUNTING_CASH_BALANCES',
+  'SYSTEM_STARS_DATA',
 ];
 
 async function ProcessEvent(apiEvent: ApiEvent, event_list, full_event?) {
@@ -526,7 +532,10 @@ async function logEvent(result, eventdata) {
       userData.ships = eventdata.payload.ships;
       break;
     case 'WORLD_MATERIAL_CATEGORIES':
-      materials.load(eventdata.payload);
+      materials.applyApiPayload(eventdata.payload);
+      break;
+    case 'SYSTEM_STARS_DATA':
+      systems.applyApiPayload(eventdata.payload);
       break;
   }
 

@@ -1,6 +1,7 @@
 import { Module } from '@src/ModuleRunner';
-import { createContextButton, getBuffersFromList, parseProdName } from '@src/util';
+import { createContextButton, getBuffersFromList } from '@src/util';
 import { Selector } from '@src/Selector';
+import systems from '@src/prun-api/systems';
 
 /**
  * Add link to burn to PROD buffers
@@ -46,5 +47,30 @@ export class ProdBurnLink implements Module {
     });
 
     return;
+  }
+}
+
+export function parseProdName(text) {
+  try {
+    let match = text.match(/([A-Z]{2}-[0-9]{3} [a-z]) Production/); // Unnamed system unnamed planet
+    if (match && match[1]) {
+      return match[1].replace(' ', '');
+    }
+    match = text.match(/([A-z ]*) - ([A-z ]*) Production/); // Named system named planet
+    if (match && match[1] && match[2]) {
+      return match[2];
+    }
+    match = text.match(/([A-z ]*) ([A-z]) Production/); // Named system unnamed planet
+    const system = systems.getByName(match?.[1]);
+    if (system) {
+      return system.naturalId + match[2].toLowerCase();
+    }
+    match = text.match(/[A-Z]{2}-[0-9]{3} - ([A-z ]*) Production/); // Unnamed system named planet
+    if (match && match[1]) {
+      return match[1];
+    }
+    return null;
+  } catch (TypeError) {
+    return text;
   }
 }

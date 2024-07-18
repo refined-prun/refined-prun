@@ -151,38 +151,6 @@ export const PlanetCommands = [
   'GOV',
 ];
 
-export const SystemNames = {
-  ARCLIGHT: 'AM-783',
-  'FORGE-KEEP': 'FK-371',
-  'WET WATER': 'FK-794',
-  'CAYMAN PLANETS': 'GC-645',
-  'MOUNT OLYMPUS': 'HM-049',
-  GATEWAY: 'HM-223',
-  'NEO EDEN': 'JS-299',
-  EBISU: 'JS-952',
-  BASTABLON: 'KW-020',
-  DOLZENA: 'LG-418',
-  'ANTARES V': 'LS-300',
-  TRINITY: 'OF-259',
-  GUNDABAD: 'OT-442',
-  MORIA: 'OT-580',
-  'OUTER HEAVEN': 'PG-899',
-  AURUM: 'QJ-650',
-  ACETARES: 'QJ-684',
-  HUBUR: 'TD-203',
-  HOTEI: 'UV-135',
-  BENTEN: 'UV-351',
-  DAIKOKU: 'UV-796',
-  RATHAR: 'VH-043',
-  HORTUS: 'VH-331',
-  MIDWAY: 'WB-675',
-  BASTION: 'XG-326',
-  'ANTARES III': 'ZV-194',
-  'ANTARES I': 'ZV-307',
-  'ANTARES II': 'ZV-759',
-  'ANTARES IV': 'ZV-896',
-};
-
 export const PlanetNames = {
   LEMURIA: 'AJ-768a',
   GALLUS: 'AM-783b',

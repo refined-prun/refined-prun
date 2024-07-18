@@ -31,7 +31,7 @@ function getDisplayName(material: Material) {
   return materialNames[material.ticker] ?? material.name;
 }
 
-function load(payload: ApiPayload) {
+function applyApiPayload(payload: ApiPayload) {
   materialsById.clear();
   materialsByTicker.clear();
   materialsByName.clear();
@@ -67,7 +67,7 @@ function load(payload: ApiPayload) {
   loaded = true;
 }
 
-async function waitForLoaded() {
+async function load() {
   if (loaded) {
     return;
   }
@@ -77,12 +77,12 @@ async function waitForLoaded() {
     return;
   }
 
-  load(fallbackPacket);
+  applyApiPayload(fallbackPacket);
 }
 
 const materials = {
+  applyApiPayload,
   load,
-  waitForLoaded,
   get: (ticker?: string | null) => (ticker ? materialsByTicker.get(ticker) : undefined),
   getByName: (name?: string | null) => (name ? materialsByName.get(name) : undefined),
   getTickerByName: (name?: string | null) => (name ? materialsByName.get(name)?.ticker : undefined),
