@@ -1,5 +1,5 @@
-import materialNames from './material-names.json';
 import { loadFallbackPacket } from '@src/prun-api/fallback-files';
+import { loadLocalJson } from '@src/util';
 
 import ApiPayload = PrUnApi.WORLD_MATERIAL_CATEGORIES.Payload;
 
@@ -26,6 +26,8 @@ const materialsById: Map<string, Material> = new Map();
 const materialsByTicker: Map<string, Material> = new Map();
 const materialsByName: Map<string, Material> = new Map();
 const categoriesById: Map<string, MaterialCategory> = new Map();
+
+let materialNames: { [ticker: string]: string };
 
 function getDisplayName(material: Material) {
   return materialNames[material.ticker] ?? material.name;
@@ -68,6 +70,8 @@ function applyApiPayload(payload: ApiPayload) {
 }
 
 async function load() {
+  materialNames = await loadLocalJson('material-names.json');
+
   if (loaded) {
     return;
   }
@@ -84,7 +88,6 @@ const materials = {
   applyApiPayload,
   load,
   get: (ticker?: string | null) => (ticker ? materialsByTicker.get(ticker.toLowerCase()) : undefined),
-  getByName: (name?: string | null) => (name ? materialsByName.get(name.toLowerCase()) : undefined),
   getTickerByName: (name?: string | null) => (name ? materialsByName.get(name.toLowerCase())?.ticker : undefined),
 };
 
