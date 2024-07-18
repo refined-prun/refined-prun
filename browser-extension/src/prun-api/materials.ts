@@ -1,7 +1,7 @@
 import { loadFallbackPacket } from '@src/prun-api/fallback-files';
 import { loadLocalJson } from '@src/util';
 
-import ApiPayload = PrUnApi.WORLD_MATERIAL_CATEGORIES.Payload;
+import ApiPayload = PrunApi.WORLD_MATERIAL_CATEGORIES.Payload;
 
 interface Material {
   name: string;

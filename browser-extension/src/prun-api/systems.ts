@@ -1,5 +1,5 @@
 import { loadFallbackPacket } from '@src/prun-api/fallback-files';
-import ApiPayload = PrUnApi.SYSTEM_STARS_DATA.Payload;
+import ApiPayload = PrunApi.SYSTEM_STARS_DATA.Payload;
 
 interface System {
   id: string;

@@ -1,4 +1,4 @@
-declare module PrUnApi {
+declare module PrunApi {
   declare module WORLD_MATERIAL_CATEGORIES {
     export interface Payload {
       categories: MaterialCategory[];

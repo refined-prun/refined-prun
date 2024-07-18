@@ -65,7 +65,7 @@ function setEta(durationSpan: Element, etaSpan: Element) {
   etaSpan.textContent = ` (${eta})`;
 }
 
-function onBufferCreated(buffer: PrUnBuffer) {
+function onBufferCreated(buffer: PrunBuffer) {
   observeBuffer(buffer.frame);
 }
 

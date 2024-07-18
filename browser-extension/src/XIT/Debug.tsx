@@ -2,7 +2,7 @@ import { downloadFile, clearChildren, XITWebRequest } from '../util';
 import { Style } from '../Style';
 import { h } from 'dom-chef';
 import { $$ } from 'select-dom';
-import PrUnCss from '@src/prun-ui/prun-css';
+import PrunCss from '@src/prun-ui/prun-css';
 
 export class Debug {
   private tile: HTMLElement;
@@ -47,7 +47,7 @@ export class Debug {
         'pmmg-user-info' + Date.now().toString() + '.json',
       ),
     );
-    downloadButtons.appendChild(createDownloadPrUnCssClassesButton());
+    downloadButtons.appendChild(createDownloadPrunCssClassesButton());
     const endpointLabel = document.createElement('div');
     endpointLabel.textContent = 'Get FIO Endpoint (ex: /infrastructure/Proxion)';
     endpointLabel.style.display = 'block';
@@ -115,8 +115,8 @@ function createDownloadButton(data, buttonName, fileName) {
   return downloadButton;
 }
 
-function createDownloadPrUnCssClassesButton() {
-  const classes = [PrUnCss.Button.btn, PrUnCss.Button.primary].join(' ');
+function createDownloadPrunCssClassesButton() {
+  const classes = [PrunCss.Button.btn, PrunCss.Button.primary].join(' ');
   return (
     <button
       className={classes}
@@ -125,13 +125,13 @@ function createDownloadPrUnCssClassesButton() {
         marginLeft: '4px',
         marginBottom: '4px',
       }}
-      onClick={downloadPrUnCssClasses}>
+      onClick={downloadPrunCssClasses}>
       Export CSS classes
     </button>
   );
 }
 
-function downloadPrUnCssClasses() {
+function downloadPrunCssClasses() {
   const classes: string[] = [];
   const styles = $$('style', document.head);
   for (const style of styles) {

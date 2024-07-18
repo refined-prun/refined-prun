@@ -7,7 +7,7 @@ import { dot } from '@src/utils/dot';
 
 const tag = 'rprun-sfc-eta';
 
-function updateBuffer(buffer: PrUnBuffer) {
+function updateBuffer(buffer: PrunBuffer) {
   if (!buffer.frame.isConnected) {
     return;
   }

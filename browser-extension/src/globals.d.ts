@@ -4,7 +4,7 @@ interface SignalAsOptions {
   signal?: AbortSignal;
 }
 
-interface PrUnBuffer {
+interface PrunBuffer {
   frame: HTMLDivElement;
   command: string;
   parameter: string;

@@ -11,7 +11,7 @@ interface ApiEvent {
   context: string | undefined;
 }
 
-export async function listenPrUnApi() {
+export async function listenPrunApi() {
   const contextStorage = await system.storage.local.get('PMMGContext');
   if (contextStorage['PMMGContext']) {
     companyContext = contextStorage['PMMGContext'];

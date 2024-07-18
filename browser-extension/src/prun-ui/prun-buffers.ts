@@ -1,18 +1,18 @@
 import observe from '@src/utils/selector-observer';
 import getMapArray from '@src/utils/get-map-array';
-import PrUnCss from '@src/prun-ui/prun-css';
+import PrunCss from '@src/prun-ui/prun-css';
 import { dot } from '@src/utils/dot';
 
-interface PrUnBufferObserver {
-  (buffer: PrUnBuffer): void;
+interface PrunBufferObserver {
+  (buffer: PrunBuffer): void;
 }
 
-const activeBuffers: PrUnBuffer[] = [];
-const commandBuffers: Map<string, PrUnBuffer[]> = new Map();
-const commandObservers: Map<string, PrUnBufferObserver[]> = new Map();
+const activeBuffers: PrunBuffer[] = [];
+const commandBuffers: Map<string, PrunBuffer[]> = new Map();
+const commandObservers: Map<string, PrunBufferObserver[]> = new Map();
 
 function track() {
-  observe(dot(PrUnCss.TileFrame.frame), onFrameAdded);
+  observe(dot(PrunCss.TileFrame.frame), onFrameAdded);
   const observer = new MutationObserver(validateActiveBuffers);
   observer.observe(document.body, { childList: true, subtree: true });
 }
@@ -25,7 +25,7 @@ function validateActiveBuffers() {
   }
 }
 
-function removeBuffer(buffer: PrUnBuffer) {
+function removeBuffer(buffer: PrunBuffer) {
   const buffers = getMapArray(commandBuffers, buffer.command);
   let index = buffers.indexOf(buffer);
   buffers.splice(index, 1);
@@ -35,9 +35,9 @@ function removeBuffer(buffer: PrUnBuffer) {
 
 async function onFrameAdded(frame: HTMLDivElement) {
   await waitUntilLoaded(frame);
-  const commandElement = frame.getElementsByClassName(PrUnCss.TileFrame.cmd)[0];
+  const commandElement = frame.getElementsByClassName(PrunCss.TileFrame.cmd)[0];
   const commandParts = commandElement.textContent!.split(' ');
-  const buffer: PrUnBuffer = {
+  const buffer: PrunBuffer = {
     frame,
     command: commandParts[0].toUpperCase(),
     parameter: commandParts[1],
@@ -52,10 +52,10 @@ async function onFrameAdded(frame: HTMLDivElement) {
 }
 
 async function waitUntilLoaded(frame: HTMLDivElement) {
-  const scrollView = frame.getElementsByClassName(PrUnCss.ScrollView.view)[0];
+  const scrollView = frame.getElementsByClassName(PrunCss.ScrollView.view)[0];
   await waitUntilScrollViewNotEmpty(scrollView);
   await new Promise<void>(resolve => {
-    const elements = scrollView.getElementsByClassName(PrUnCss.Loading.loader);
+    const elements = scrollView.getElementsByClassName(PrunCss.Loading.loader);
     if (elements.length === 0) {
       resolve();
       return;
@@ -96,7 +96,7 @@ async function waitUntilScrollViewNotEmpty(scrollView: Element) {
   });
 }
 
-function observeBuffers(command: string, observer: PrUnBufferObserver) {
+function observeBuffers(command: string, observer: PrunBufferObserver) {
   command = command.toUpperCase();
   const observers = getMapArray(commandObservers, command);
   observers.push(observer);
