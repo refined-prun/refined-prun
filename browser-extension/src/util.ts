@@ -1449,6 +1449,6 @@ export async function loadLocalFile(path: string) {
 }
 
 export async function loadLocalJson(path: string) {
-  const file = await loadLocalFile(path);
+  const file = await loadLocalFile(`json/${path}`);
   return await file.json();
 }
