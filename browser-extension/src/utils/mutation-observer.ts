@@ -12,9 +12,9 @@ export function observeChildAdded(target: Node, callback: (node: Node) => void) 
   observer.observe(target, { childList: true });
 }
 
-export function observeChildListChanged(target: Node, callback: () => void) {
-  callback();
-  const observer = new MutationObserver(callback);
+export function observeChildListChanged<T extends Node>(target: T, callback: (target: T) => void) {
+  callback(target);
+  const observer = new MutationObserver(() => callback(target));
   observer.observe(target, { childList: true });
 }
 
