@@ -84,10 +84,22 @@ async function load() {
   applyApiPayload(fallbackPacket);
 }
 
+function get(ticker?: string | null) {
+  if (!ticker) {
+    return undefined;
+  }
+  // Extract ticker from H2O.AI1
+  const dotIndex = ticker.indexOf('.');
+  if (dotIndex >= 0) {
+    ticker = ticker.substring(0, dotIndex);
+  }
+  return materialsByTicker.get(ticker.toLowerCase());
+}
+
 const materials = {
   applyApiPayload,
   load,
-  get: (ticker?: string | null) => (ticker ? materialsByTicker.get(ticker.toLowerCase()) : undefined),
+  get,
   getTickerByName: (name?: string | null) => (name ? materialsByName.get(name.toLowerCase())?.ticker : undefined),
 };
 
