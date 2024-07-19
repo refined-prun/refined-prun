@@ -73,6 +73,6 @@ export function init() {
 }
 
 void features.add({
-  id: 'evaluate-input-formulas',
+  id: 'evaluate-input-formula',
   init,
 });

@@ -53,6 +53,6 @@ export function init() {
 }
 
 void features.add({
-  id: 'correct-planet-commands',
+  id: 'correct-planet-command',
   init,
 });
