@@ -40,7 +40,7 @@ async function onFrameAdded(frame: HTMLDivElement) {
   const indexOfSpace = fullCommand.indexOf(' ');
   const buffer: PrunBuffer = {
     frame,
-    command: indexOfSpace > 0 ? fullCommand.slice(0, indexOfSpace) : fullCommand,
+    command: (indexOfSpace > 0 ? fullCommand.slice(0, indexOfSpace) : fullCommand).toUpperCase(),
     parameter: indexOfSpace > 0 ? fullCommand.slice(indexOfSpace + 1) : undefined,
   };
   const buffers = getMapArray(commandBuffers, buffer.command);
