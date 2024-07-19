@@ -7,5 +7,5 @@ interface SignalAsOptions {
 interface PrunBuffer {
   frame: HTMLDivElement;
   command: string;
-  parameter: string;
+  parameter: string | undefined;
 }

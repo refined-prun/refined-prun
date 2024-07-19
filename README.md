@@ -76,7 +76,7 @@ The module runner loops through each module calling it's `run(allBuffers)` funct
 buffers which can be easily parsed using the `getBuffersFromList` function in util.
 The module runner also calls XITHandler allowing XIT buffers to be created
 
-Inside of XITHandler a list of all of the XIT buffers is in `XITHandler.ts`. Any new buffers should be added here.
+Inside of XITHandler a list of all of the XIT buffers is in `xit-commands.tsx`. Any new buffers should be added here.
 
 ## General Tips
 

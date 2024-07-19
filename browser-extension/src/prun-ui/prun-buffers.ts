@@ -36,11 +36,12 @@ function removeBuffer(buffer: PrunBuffer) {
 async function onFrameAdded(frame: HTMLDivElement) {
   await waitUntilLoaded(frame);
   const commandElement = frame.getElementsByClassName(PrunCss.TileFrame.cmd)[0];
-  const commandParts = commandElement.textContent!.split(' ');
+  const fullCommand = commandElement.textContent!;
+  const indexOfSpace = fullCommand.indexOf(' ');
   const buffer: PrunBuffer = {
     frame,
-    command: commandParts[0].toUpperCase(),
-    parameter: commandParts[1],
+    command: indexOfSpace > 0 ? fullCommand.slice(0, indexOfSpace) : fullCommand,
+    parameter: indexOfSpace > 0 ? fullCommand.slice(indexOfSpace + 1) : undefined,
   };
   const buffers = getMapArray(commandBuffers, buffer.command);
   buffers.push(buffer);

@@ -27,6 +27,7 @@ import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
 import { initializePrunApi, loadGameData } from '@src/prun-api';
 import { loadPrunCss } from '@src/prun-ui/prun-css';
+import { applyXITParameters } from '@src/features/xit-commands';
 
 // The main function that initializes everything
 async function mainRun() {
@@ -103,35 +104,30 @@ async function mainRun() {
     window.setTimeout(() => calculateFinancials(webData, userInfo, result, true), 1000);
   }
   buffers.track();
+  const modules = [
+    new OrderETAs(),
+    new QueueLoad(),
+    new InventoryOrganizer(userInfo, result),
+    new Notifications(userInfo),
+    new ImageCreator(),
+    new ScreenUnpack(result['PMMGExtended']['unpack_exceptions']),
+    new HeaderMinimizer(result['PMMGExtended']['minimize_by_default']),
+    new AdvancedMode(result['PMMGExtended']['advanced_mode']),
+    new TopRightButtons(),
+    new Sidebar(result['PMMGExtended']['sidebar']),
+    new PendingContracts(userInfo),
+    new CompactUI(result),
+    new CXOBHighlighter(userInfo),
+    new CXPOOrderBook(userInfo),
+    new ChatDeleteButton(result),
+    new IconMarkers(),
+    new ShippingAds(),
+    new PostLM(),
+    new ProdBurnLink(),
+  ];
+  applyXITParameters(result, userInfo, webData, modules);
   await features.init();
-  // Create the object that will run all the features in a loop
-  const runner = new ModuleRunner(
-    [
-      new OrderETAs(),
-      new QueueLoad(),
-      new InventoryOrganizer(userInfo, result),
-      new Notifications(userInfo),
-      new ImageCreator(),
-      new ScreenUnpack(result['PMMGExtended']['unpack_exceptions']),
-      new HeaderMinimizer(result['PMMGExtended']['minimize_by_default']),
-      new AdvancedMode(result['PMMGExtended']['advanced_mode']),
-      new TopRightButtons(),
-      new Sidebar(result['PMMGExtended']['sidebar']),
-      new PendingContracts(userInfo),
-      new CompactUI(result),
-      new CXOBHighlighter(userInfo),
-      new CXPOOrderBook(userInfo),
-      new ChatDeleteButton(result),
-      new IconMarkers(),
-      //new InsetFixer(),	// Remove when this PrUN bug is fixed for real
-      new ShippingAds(),
-      new PostLM(),
-      new ProdBurnLink(),
-    ],
-    result,
-    webData,
-    userInfo,
-  );
+  const runner = new ModuleRunner(modules, result, webData, userInfo);
 
   // Start the loop
   (function () {

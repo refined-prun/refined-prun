@@ -1,4 +1,3 @@
-import { XITHandler } from './XITHandler';
 import { showBuffer, getLocalStorage, getBuffers } from './util';
 import { FriendlyNames } from './GameProperties';
 import { Selector } from './Selector';
@@ -25,7 +24,6 @@ interface ModuleEntry {
 
 export class ModuleRunner {
   private readonly modules: ModuleEntry[]; // The list of features run by the extension
-  private readonly xit: XITHandler; // The XIT module, run separately
   private userInfo;
   private result: Settings; // The stored settings
   private iteration;
@@ -34,7 +32,6 @@ export class ModuleRunner {
     // Construct global variables
     this.iteration = 0;
     this.modules = modules.map(m => this.moduleToME(m));
-    this.xit = new XITHandler(result, userInfo, webData, this.modules);
     this.result = result;
     this.userInfo = userInfo;
 
@@ -93,9 +90,6 @@ export class ModuleRunner {
               x.children[0].click();
           }
       }*/
-
-    // Render all XIT buffers
-    this.xit.run(buffers);
 
     // Run intro if it hasn't run already
     if (!this.result.PMMGExtended.loaded_before) {

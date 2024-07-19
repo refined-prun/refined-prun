@@ -1,3 +1,4 @@
+import './features/xit-commands';
 import './features/flt-arrival-eta';
 import './features/sfc-flight-eta';
 import './features/correct-planet-commands';
