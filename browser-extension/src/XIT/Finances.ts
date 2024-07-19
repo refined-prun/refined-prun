@@ -1335,37 +1335,36 @@ export function calculateFinancials(webData, userInfo, result, loop) {
   // Handle CXOS
   let cxBuyValue = 0;
   let cxSellValue = 0;
-  if (userInfo['PMMG-User-Info']['cxos']) {
-    userInfo['PMMG-User-Info']['cxos'].forEach(order => {
-      if (order['status'] == 'FILLED') {
-        return;
-      }
 
-      if (order['type'] == 'SELLING') {
-        cxSellValue +=
-          getPrice(
-            cxPrices,
-            webData['custom_prices'],
-            result['PMMGExtended']['pricing_scheme'],
-            order.material.ticker,
-            userInfo,
-            priceBasket,
-          ) * order.amount;
-      } else {
-        cxBuyValue += order.limit.amount * order.amount;
-      }
-    });
-  }
+  userData.cxos.forEach(order => {
+    if (order.status == 'FILLED') {
+      return;
+    }
+
+    if (order.type == 'SELLING') {
+      cxSellValue +=
+        getPrice(
+          cxPrices,
+          webData['custom_prices'],
+          result['PMMGExtended']['pricing_scheme'],
+          order.material.ticker,
+          userInfo,
+          priceBasket,
+        ) * order.amount;
+    } else {
+      cxBuyValue += order.limit.amount * order.amount;
+    }
+  });
 
   // Handle FXOS
   let fxBuyValue = 0;
   let fxSellValue = 0;
   userData.fxos.forEach(order => {
-    if (order['status'] == 'FILLED') {
+    if (order.status == 'FILLED') {
       return;
     }
 
-    if (order['type'] == 'SELLING') {
+    if (order.type == 'SELLING') {
       fxSellValue += order.initialAmount.amount;
     } else {
       fxBuyValue += order.limit.rate * order.initialAmount.amount;

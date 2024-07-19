@@ -189,9 +189,6 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
   if (!result['PMMG-User-Info']['currency']) {
     result['PMMG-User-Info']['currency'] = [];
   }
-  if (!result['PMMG-User-Info']['cxos']) {
-    result['PMMG-User-Info']['cxos'] = [];
-  }
 
   let matchIndex: any;
   let planetId: any;
@@ -511,7 +508,7 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
       console.log(userData.fxos);
       break;
     case 'COMEX_TRADER_ORDERS':
-      result['PMMG-User-Info'].cxos = eventdata.payload.orders;
+      userData.cxos = eventdata.payload.orders;
       break;
     case 'COMEX_BROKER_DATA':
       userData.cxob[eventdata.payload.ticker] = {

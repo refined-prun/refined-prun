@@ -115,7 +115,7 @@ export class DataHealth {
     const contracts = (this.userInfo['PMMG-User-Info']['contracts'] || []).length;
     otherTable.appendChild(createTableRow('Contracts', contracts));
 
-    const cxos = (this.userInfo['PMMG-User-Info']['cxos'] || []).length;
+    const cxos = userData.cxos.length;
     otherTable.appendChild(createTableRow('CXOS', cxos));
 
     const fxos = userData.fxos.length;
