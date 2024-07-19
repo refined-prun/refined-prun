@@ -1,6 +1,7 @@
 import { Promisable } from 'type-fest';
 import asyncForEach from '@src/utils/async-foreach';
 import getBrowserVersion from '@src/utils/browser-version';
+import { castArray } from '@src/utils/cast-array';
 
 type FeatureInitResult = void | false;
 type FeatureInit = (signal: AbortSignal) => Promisable<FeatureInitResult>;
@@ -46,10 +47,6 @@ function logError(id: string, error: unknown): void {
 
 function add(descriptor: FeatureDescriptor) {
   registry.push(descriptor);
-}
-
-function castArray<Item>(value: Item | Item[]): Item[] {
-  return Array.isArray(value) ? value : [value];
 }
 
 async function init() {

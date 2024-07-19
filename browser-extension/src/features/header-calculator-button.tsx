@@ -57,9 +57,7 @@ function onBufferCreated(buffer: PrunBuffer) {
 }
 
 export function init() {
-  buffers.observe('LM', onBufferCreated);
-  buffers.observe('CX', onBufferCreated);
-  buffers.observe('XIT', onBufferCreated);
+  buffers.observe(['LM', 'CX', 'XIT'], onBufferCreated);
 }
 
 void features.add({

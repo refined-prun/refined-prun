@@ -2,6 +2,7 @@ import observe from '@src/utils/selector-observer';
 import getMapArray from '@src/utils/get-map-array';
 import PrunCss from '@src/prun-ui/prun-css';
 import { dot } from '@src/utils/dot';
+import { castArray } from '@src/utils/cast-array';
 
 interface PrunBufferObserver {
   (buffer: PrunBuffer): void;
@@ -97,13 +98,15 @@ async function waitUntilScrollViewNotEmpty(scrollView: Element) {
   });
 }
 
-function observeBuffers(command: string, observer: PrunBufferObserver) {
-  command = command.toUpperCase();
-  const observers = getMapArray(commandObservers, command);
-  observers.push(observer);
-  const buffers = getMapArray(commandBuffers, command);
-  for (const buffer of buffers) {
-    observer(buffer);
+function observeBuffers(commands: Arrayable<string>, observer: PrunBufferObserver) {
+  for (let command of castArray(commands)) {
+    command = command.toUpperCase();
+    const observers = getMapArray(commandObservers, command);
+    observers.push(observer);
+    const buffers = getMapArray(commandBuffers, command);
+    for (const buffer of buffers) {
+      observer(buffer);
+    }
   }
 }
 
