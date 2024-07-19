@@ -161,7 +161,7 @@ function sleep(ms) {
 // Turn the eventdata received by PrUN into a form stored and readable by PMMG
 // result: Dictionary with the key "PMMG-User-Info" that contains all the user's stored game data info
 // eventdata: The message sent from the server containing updated game data info
-async function logEvent(result, eventdata) {
+async function logEvent(result, eventdata: PrunApi.Packet) {
   console.log(eventdata.messageType);
   // Reset it every time for testing
   //result["PMMG-User-Info"] = {};
@@ -221,7 +221,7 @@ async function logEvent(result, eventdata) {
         site.platforms.forEach(building => {
           const buildingTicker = building.module.reactorTicker;
 
-          const lastRepair = building.lastRepair ? building.lastRepair.timestamp : building.creationTime.timestamp;
+          const lastRepair = building.lastRepair?.timestamp ?? building.creationTime.timestamp;
 
           siteData.buildings.push({
             buildingTicker: buildingTicker,
@@ -249,22 +249,20 @@ async function logEvent(result, eventdata) {
       }
       break;
     case 'STORAGE_STORAGES':
-      //console.log(eventdata.payload.stores);
       eventdata.payload.stores.forEach(store => {
         const duplicateStoreIndex = result['PMMG-User-Info'].storage.findIndex(item => item.id === store.id);
 
-        const givenItems = store.items;
-        store.items = [];
-        givenItems.forEach(item => {
-          if (item.quantity && item.quantity.material) {
-            store.items.push({
-              weight: item.weight,
-              volume: item.volume,
-              MaterialTicker: item.quantity.material.ticker,
-              Amount: item.quantity.amount,
-            });
-          }
-        });
+        store.items = store.items
+          .filter(x => x.quantity && x.quantity.material)
+          .map(
+            x =>
+              <any>{
+                weight: x.weight,
+                volume: x.volume,
+                MaterialTicker: x.quantity.material.ticker,
+                Amount: x.quantity.amount,
+              },
+          );
 
         if (duplicateStoreIndex != -1) {
           result['PMMG-User-Info'].storage[duplicateStoreIndex] = store;
@@ -289,7 +287,7 @@ async function logEvent(result, eventdata) {
       }
       break;
     case 'STORAGE_CHANGE':
-      eventdata.payload.stores.forEach(store => {
+      eventdata.payload.stores.forEach((store: any) => {
         const matchingStore = result['PMMG-User-Info'].sites.find(item => item.siteId === store.addressableId);
 
         const index = result['PMMG-User-Info'].storage.findIndex(item => item.addressableId === store.addressableId);
@@ -397,6 +395,7 @@ async function logEvent(result, eventdata) {
           delete contract[param];
         });
         contract.conditions.forEach(condition => {
+          // @ts-expect-error TODO: Why do you even delete this
           delete condition.id;
         });
       });
@@ -507,16 +506,18 @@ async function logEvent(result, eventdata) {
         });
       }
       break;
-    case 'FOREX_TRADER_ORDERS': // FX Orders'
+    case 'FOREX_TRADER_ORDERS':
       userData.fxos = eventdata.payload.orders;
       console.log(userData.fxos);
       break;
-    case 'COMEX_TRADER_ORDERS': // CX Orders
+    case 'COMEX_TRADER_ORDERS':
       result['PMMG-User-Info'].cxos = eventdata.payload.orders;
       break;
-    case 'COMEX_BROKER_DATA': // CXOB/CXPO Data
-      eventdata.payload.timestamp = Date.now();
-      userData.cxob[eventdata.payload.ticker] = eventdata.payload;
+    case 'COMEX_BROKER_DATA':
+      userData.cxob[eventdata.payload.ticker] = {
+        ...eventdata.payload,
+        timestamp: Date.now(),
+      };
 
       Object.keys(userData.cxob).forEach(ticker => {
         if (Date.now() - userData.cxob[ticker].timestamp > 900000) {
@@ -524,15 +525,18 @@ async function logEvent(result, eventdata) {
         }
       });
       break;
-    case 'SHIP_SHIPS':
+    case 'SHIP_SHIPS': {
       userData.ships = eventdata.payload.ships;
       break;
-    case 'WORLD_MATERIAL_CATEGORIES':
+    }
+    case 'WORLD_MATERIAL_CATEGORIES': {
       materials.applyApiPayload(eventdata.payload);
       break;
-    case 'SYSTEM_STARS_DATA':
+    }
+    case 'SYSTEM_STARS_DATA': {
       systems.applyApiPayload(eventdata.payload);
       break;
+    }
   }
 
   console.log(result);
