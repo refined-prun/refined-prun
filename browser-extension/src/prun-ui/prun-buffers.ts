@@ -8,30 +8,11 @@ interface PrunBufferObserver {
   (buffer: PrunBuffer): void;
 }
 
-const activeBuffers: PrunBuffer[] = [];
 const commandBuffers: Map<string, PrunBuffer[]> = new Map();
 const commandObservers: Map<string, PrunBufferObserver[]> = new Map();
 
 function track() {
   observe(dot(PrunCss.TileFrame.frame), onFrameAdded);
-  const observer = new MutationObserver(validateActiveBuffers);
-  observer.observe(document.body, { childList: true, subtree: true });
-}
-
-function validateActiveBuffers() {
-  for (const buffer of activeBuffers) {
-    if (!buffer.frame.isConnected) {
-      removeBuffer(buffer);
-    }
-  }
-}
-
-function removeBuffer(buffer: PrunBuffer) {
-  const buffers = getMapArray(commandBuffers, buffer.command);
-  let index = buffers.indexOf(buffer);
-  buffers.splice(index, 1);
-  index = activeBuffers.indexOf(buffer);
-  activeBuffers.splice(index, 1);
 }
 
 async function onFrameAdded(frame: HTMLDivElement) {
@@ -46,7 +27,6 @@ async function onFrameAdded(frame: HTMLDivElement) {
   };
   const buffers = getMapArray(commandBuffers, buffer.command);
   buffers.push(buffer);
-  activeBuffers.push(buffer);
   const observers = getMapArray(commandObservers, buffer.command);
   for (const observer of observers) {
     observer(buffer);
