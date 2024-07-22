@@ -1,4 +1,4 @@
-import observe from '@src/utils/selector-observer';
+import observeReadyElements from '@src/utils/selector-observer';
 import features from '@src/feature-registry';
 import PrunCss from '@src/prun-ui/prun-css';
 import { dot } from '@src/utils/dot';
@@ -27,8 +27,8 @@ function timeout(ms: number) {
 }
 
 export function init() {
-  observe(dot(PrunCss.App.container), onAppLoaded);
-  observe(dot(PrunCss.Loading.loader), onLoadingAppeared);
+  observeReadyElements(dot(PrunCss.App.container), onAppLoaded);
+  observeReadyElements(dot(PrunCss.Loading.loader), onLoadingAppeared);
 }
 
 void features.add({

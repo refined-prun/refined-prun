@@ -1,6 +1,6 @@
 import { changeValue } from '../util';
 import planets from '@src/prun-api/planets';
-import observe from '@src/utils/selector-observer';
+import observeReadyElements from '@src/utils/selector-observer';
 import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import { $ } from 'select-dom';
@@ -27,7 +27,7 @@ const correctableCommands = new Set([
   'GOV',
 ]);
 
-export function onSelectorCreated(selector: HTMLDivElement) {
+export function onSelectorReady(selector: HTMLDivElement) {
   const form = selector.children[0] as HTMLFormElement;
   const input = $(dot(PrunCss.PanelSelector.input), form) as HTMLInputElement;
   form.onsubmit = ev => {
@@ -49,7 +49,7 @@ export function onSelectorCreated(selector: HTMLDivElement) {
 }
 
 export function init() {
-  observe(dot(PrunCss.Tile.selector), onSelectorCreated);
+  observeReadyElements(dot(PrunCss.Tile.selector), onSelectorReady);
 }
 
 void features.add({

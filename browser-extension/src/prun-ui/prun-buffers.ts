@@ -1,4 +1,4 @@
-import observe from '@src/utils/selector-observer';
+import observeReadyElements from '@src/utils/selector-observer';
 import getMapArray from '@src/utils/get-map-array';
 import PrunCss from '@src/prun-ui/prun-css';
 import { dot } from '@src/utils/dot';
@@ -14,7 +14,7 @@ const commandBuffers: Map<string, PrunBuffer[]> = new Map();
 const commandObservers: Map<string, PrunBufferObserver[]> = new Map();
 
 function track() {
-  observe(dot(PrunCss.TileFrame.frame), onFrameAdded);
+  observeReadyElements(dot(PrunCss.TileFrame.frame), onFrameAdded);
 }
 
 async function onFrameAdded(frame: HTMLDivElement) {

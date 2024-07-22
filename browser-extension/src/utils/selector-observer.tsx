@@ -33,7 +33,10 @@ const registerAnimation = onetime((): void => {
   document.head.append(<style>{`@keyframes ${animation} {}`}</style>);
 });
 
-export default function observe<Selector extends string, ExpectedElement extends ParseSelector<Selector, HTMLElement>>(
+export default function observeReadyElements<
+  Selector extends string,
+  ExpectedElement extends ParseSelector<Selector, HTMLElement>,
+>(
   selectors: Selector | readonly Selector[],
   callback: ObserverListener<ExpectedElement>,
   { signal }: SignalAsOptions = {},
