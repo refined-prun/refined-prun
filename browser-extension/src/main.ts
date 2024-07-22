@@ -7,7 +7,6 @@ import { getSpecial } from './util';
 import { appendStyle, PmmgStylesheet } from './Style';
 import { ScreenUnpack } from '@src/features/ScreenUnpack';
 import { Sidebar } from '@src/features/Sidebar';
-import { TopRightButtons } from '@src/features/TopRightButtons';
 import { ImageCreator } from '@src/features/ImageCreator';
 import { InventoryOrganizer } from '@src/features/InventoryOrganizer';
 import { HeaderMinimizer } from '@src/features/HeaderMinimizer';
@@ -113,7 +112,6 @@ async function mainRun() {
     new ScreenUnpack(result['PMMGExtended']['unpack_exceptions']),
     new HeaderMinimizer(result['PMMGExtended']['minimize_by_default']),
     new AdvancedMode(result['PMMGExtended']['advanced_mode']),
-    new TopRightButtons(),
     new Sidebar(result['PMMGExtended']['sidebar']),
     new PendingContracts(userInfo),
     new CompactUI(result),

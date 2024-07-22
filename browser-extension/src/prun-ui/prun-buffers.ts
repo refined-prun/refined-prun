@@ -12,6 +12,7 @@ interface PrunBufferObserver {
 
 const commandBuffers: Map<string, PrunBuffer[]> = new Map();
 const commandObservers: Map<string, PrunBufferObserver[]> = new Map();
+const anyCommandObservers: PrunBufferObserver[] = [];
 
 function track() {
   observeReadyElements(dot(PrunCss.TileFrame.frame), onFrameAdded);
@@ -24,13 +25,16 @@ async function onFrameAdded(frame: HTMLDivElement) {
   const indexOfSpace = fullCommand.indexOf(' ');
   const buffer: PrunBuffer = {
     frame,
+    fullCommand,
     command: (indexOfSpace > 0 ? fullCommand.slice(0, indexOfSpace) : fullCommand).toUpperCase(),
     parameter: indexOfSpace > 0 ? fullCommand.slice(indexOfSpace + 1) : undefined,
   };
   const buffers = getMapArray(commandBuffers, buffer.command);
   buffers.push(buffer);
-  const observers = getMapArray(commandObservers, buffer.command);
-  for (const observer of observers) {
+  for (const observer of getMapArray(commandObservers, buffer.command)) {
+    observer(buffer);
+  }
+  for (const observer of anyCommandObservers) {
     observer(buffer);
   }
 }
@@ -63,9 +67,19 @@ function observeBuffers(commands: Arrayable<string>, observer: PrunBufferObserve
   }
 }
 
+function obseveAllBuffers(observer: PrunBufferObserver) {
+  anyCommandObservers.push(observer);
+  for (const buffers of commandBuffers.values()) {
+    for (const buffer of buffers) {
+      observer(buffer);
+    }
+  }
+}
+
 const buffers = {
   track,
   observe: observeBuffers,
+  observeAll: obseveAllBuffers,
 };
 
 export default buffers;

@@ -2,17 +2,13 @@ import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
 import { showBuffer } from '@src/util';
 import { h } from 'dom-chef';
-import { $ } from 'select-dom';
 import PrunCss from '@src/prun-ui/prun-css';
-import { dot } from '@src/utils/dot';
+import childElementPresent from '@src/utils/child-element-present';
 
-function onBufferCreated(buffer: PrunBuffer) {
-  const tileControls = $(dot(PrunCss.TileFrame.controls), buffer.frame);
-  if (!tileControls) {
-    return;
-  }
+async function onBufferCreated(buffer: PrunBuffer) {
+  const tileControls = await childElementPresent(buffer.frame, PrunCss.TileFrame.controls);
 
-  const calcDiv = (
+  const button = (
     <div
       className="button-upper-right"
       style={{ marginTop: __CHROME__ ? '-3px' : '-4px' }}
@@ -53,7 +49,7 @@ function onBufferCreated(buffer: PrunBuffer) {
       </div>
     </div>
   );
-  tileControls.insertBefore(calcDiv, tileControls.children[0]);
+  tileControls.insertBefore(button, tileControls.children[0]);
 }
 
 export function init() {
