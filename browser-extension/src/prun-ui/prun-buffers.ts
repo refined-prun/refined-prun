@@ -3,6 +3,8 @@ import getMapArray from '@src/utils/get-map-array';
 import PrunCss from '@src/prun-ui/prun-css';
 import { dot } from '@src/utils/dot';
 import { castArray } from '@src/utils/cast-array';
+import oneMutation from 'one-mutation';
+import childElementPresent from '@src/utils/child-element-present';
 
 interface PrunBufferObserver {
   (buffer: PrunBuffer): void;
@@ -34,47 +36,18 @@ async function onFrameAdded(frame: HTMLDivElement) {
 }
 
 async function waitUntilLoaded(frame: HTMLDivElement) {
-  const scrollView = frame.getElementsByClassName(PrunCss.ScrollView.view)[0];
-  await waitUntilScrollViewNotEmpty(scrollView);
-  await new Promise<void>(resolve => {
-    const elements = scrollView.getElementsByClassName(PrunCss.Loading.loader);
-    if (elements.length === 0) {
-      resolve();
-      return;
-    }
+  const scrollView = await childElementPresent(frame, PrunCss.ScrollView.view);
+  const loaders = scrollView.getElementsByClassName(PrunCss.Loading.loader);
 
-    const loader = elements[0];
-    const observer = new MutationObserver(mutations => {
-      for (const mutation of mutations) {
-        mutation.removedNodes.forEach(node => {
-          if (loader === node) {
-            resolve();
-          }
-        });
-      }
-    });
+  const isLoaded = () => Array.from(loaders).every(x => x.parentElement !== scrollView);
 
-    observer.observe(scrollView, { childList: true });
-  });
-}
+  if (isLoaded()) {
+    return;
+  }
 
-async function waitUntilScrollViewNotEmpty(scrollView: Element) {
-  await new Promise<void>(resolve => {
-    if (scrollView.childNodes.length > 0) {
-      resolve();
-      return;
-    }
-
-    const observer = new MutationObserver(mutations => {
-      for (const mutation of mutations) {
-        if (mutation.addedNodes.length > 0) {
-          resolve();
-          observer.disconnect();
-        }
-      }
-    });
-
-    observer.observe(scrollView, { childList: true });
+  await oneMutation(scrollView, {
+    childList: true,
+    filter: isLoaded,
   });
 }
 
