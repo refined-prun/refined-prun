@@ -7,7 +7,7 @@ import { h } from 'dom-chef';
 async function onBufferCreated(buffer: PrunBuffer) {
   const chatArea = await childElementPresent(buffer.frame, PrunCss.Channel.messageAndUserList);
   const chatLinks = chatArea.getElementsByClassName(PrunCss.Link.link);
-  const processedLinks = new WeakSet();
+  const processedLinks: WeakSet<Element> = new WeakSet();
   runUpdate();
 
   function runUpdate() {

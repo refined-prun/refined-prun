@@ -9,7 +9,7 @@ import Mexp from 'math-expression-evaluator';
 const mexp = new Mexp();
 
 function onBufferCreated(buffer: PrunBuffer) {
-  const appliedInputs: Set<HTMLInputElement> = new Set();
+  const appliedInputs: WeakSet<HTMLInputElement> = new WeakSet();
   observeDescendantListChanged(buffer.frame, () => {
     const inputs = $$('input', buffer.frame).filter(x => !appliedInputs.has(x));
     for (const input of inputs) {
