@@ -3,8 +3,6 @@ import getMapArray from '@src/utils/get-map-array';
 import PrunCss from '@src/prun-ui/prun-css';
 import { dot } from '@src/utils/dot';
 import { castArray } from '@src/utils/cast-array';
-import oneMutation from 'one-mutation';
-import childElementPresent from '@src/utils/child-element-present';
 
 interface PrunBufferObserver {
   (buffer: PrunBuffer): void;
@@ -19,7 +17,6 @@ function track() {
 }
 
 async function onFrameAdded(frame: HTMLDivElement) {
-  await waitUntilLoaded(frame);
   const commandElement = frame.getElementsByClassName(PrunCss.TileFrame.cmd)[0];
   const fullCommand = commandElement.textContent!;
   const indexOfSpace = fullCommand.indexOf(' ');
@@ -39,22 +36,6 @@ async function onFrameAdded(frame: HTMLDivElement) {
   }
 }
 
-async function waitUntilLoaded(frame: HTMLDivElement) {
-  const scrollView = await childElementPresent(frame, PrunCss.ScrollView.view);
-  const loaders = scrollView.getElementsByClassName(PrunCss.Loading.loader);
-
-  const isLoaded = () => Array.from(loaders).every(x => x.parentElement !== scrollView);
-
-  if (isLoaded()) {
-    return;
-  }
-
-  await oneMutation(scrollView, {
-    childList: true,
-    filter: isLoaded,
-  });
-}
-
 function observeBuffers(commands: Arrayable<string>, observer: PrunBufferObserver) {
   for (let command of castArray(commands)) {
     command = command.toUpperCase();
@@ -67,7 +48,7 @@ function observeBuffers(commands: Arrayable<string>, observer: PrunBufferObserve
   }
 }
 
-function obseveAllBuffers(observer: PrunBufferObserver) {
+function observeAllBuffers(observer: PrunBufferObserver) {
   anyCommandObservers.push(observer);
   for (const buffers of commandBuffers.values()) {
     for (const buffer of buffers) {
@@ -79,7 +60,7 @@ function obseveAllBuffers(observer: PrunBufferObserver) {
 const buffers = {
   track,
   observe: observeBuffers,
-  observeAll: obseveAllBuffers,
+  observeAll: observeAllBuffers,
 };
 
 export default buffers;

@@ -25,6 +25,7 @@
     "one-mutation": "^3.0.0",
     "onetime": "^7.0.0",
     "plotly.js-dist-min": "^2.30.1",
+    "request-animation-frames": "^1.0.0",
     "select-dom": "^9.0.0",
     "socket.io-parser": "^4.2.4",
     "type-fest": "^4.21.0",

@@ -83,6 +83,9 @@ importers:
       plotly.js-dist-min:
         specifier: ^2.30.1
         version: 2.30.1
+      request-animation-frames:
+        specifier: ^1.0.0
+        version: 1.0.0
       select-dom:
         specifier: ^9.0.0
         version: 9.0.0
@@ -1555,6 +1558,10 @@ packages:
   regexp.prototype.flags@1.5.2:
     resolution: {integrity: sha512-NcDiDkTLuPR+++OCKB0nWafEmhg/Da8aUPLPMQbK+bxKKCm1/S5he+AqYa4PlMCVBalb4/yxIRub6qkEx5yJbw==}
     engines: {node: '>= 0.4'}
+
+  request-animation-frames@1.0.0:
+    resolution: {integrity: sha512-THOhYcI5OUY9M6IsmxW24/IItGwEUncfujiqwVF3DYxSxuEfrv1Z74KQfwAcH0zcGgzI5hgHtJEslPPhdRrJ5w==}
+    engines: {node: '>=18'}
 
   resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
@@ -3371,6 +3378,8 @@ snapshots:
       define-properties: 1.2.1
       es-errors: 1.3.0
       set-function-name: 2.0.2
+
+  request-animation-frames@1.0.0: {}
 
   resolve-from@4.0.0: {}
 

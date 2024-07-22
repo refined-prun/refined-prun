@@ -7,7 +7,6 @@ import { getSpecial } from './util';
 import { appendStyle, PmmgStylesheet } from './Style';
 import { ScreenUnpack } from '@src/features/ScreenUnpack';
 import { Sidebar } from '@src/features/Sidebar';
-import { ImageCreator } from '@src/features/ImageCreator';
 import { InventoryOrganizer } from '@src/features/InventoryOrganizer';
 import { HeaderMinimizer } from '@src/features/HeaderMinimizer';
 import { PendingContracts } from '@src/features/PendingContracts';
@@ -107,7 +106,6 @@ async function mainRun() {
     new QueueLoad(),
     new InventoryOrganizer(userInfo, result),
     new Notifications(userInfo),
-    new ImageCreator(),
     new ScreenUnpack(result['PMMGExtended']['unpack_exceptions']),
     new HeaderMinimizer(result['PMMGExtended']['minimize_by_default']),
     new AdvancedMode(result['PMMGExtended']['advanced_mode']),
