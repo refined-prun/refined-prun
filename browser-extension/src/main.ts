@@ -18,7 +18,6 @@ import { CXOBHighlighter } from '@src/features/CXOBHighlighter';
 import { CXPOOrderBook } from '@src/features/CXPOOrderBook';
 import { ChatDeleteButton } from '@src/features/ChatDeleteButton';
 import { IconMarkers } from '@src/features/IconMarkers';
-import { ShippingAds } from '@src/features/ShippingAds';
 import { PostLM } from '@src/features/PostLM';
 import { ProdBurnLink } from '@src/features/ProdBurnLink';
 import { loadSettings, Settings } from './Settings';
@@ -119,7 +118,6 @@ async function mainRun() {
     new CXPOOrderBook(userInfo),
     new ChatDeleteButton(result),
     new IconMarkers(),
-    new ShippingAds(),
     new PostLM(),
     new ProdBurnLink(),
   ];
