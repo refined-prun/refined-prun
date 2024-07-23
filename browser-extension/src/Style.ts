@@ -214,7 +214,8 @@ export const CategoryColors = {
   shipment: ['linear-gradient(135deg, #030303, #181818)', '#7f7f7f'],
 };
 
-export enum PmmgStylesheet {
+export enum RPrunStylesheet {
+  refinedPrun = 'refined-prun',
   advanced = 'pmmg-advanced',
   hideChatDelete = 'pmmg-hide-chat-delete',
   hideChatJoinLeave = 'pmmg-hide-chat-join-leave',
@@ -223,7 +224,7 @@ export enum PmmgStylesheet {
   oldColors = 'pmmg-old-colors',
 }
 
-export function appendStyle(stylesheet: PmmgStylesheet) {
+export function appendStyle(stylesheet: RPrunStylesheet) {
   if (document.getElementById(stylesheet) !== null) {
     return;
   }

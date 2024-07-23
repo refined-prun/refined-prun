@@ -1,7 +1,7 @@
 import { Module } from '../ModuleRunner';
 import { getBuffersFromList, setSettings } from '../util';
 import { Selector } from '../Selector';
-import { appendStyle, PmmgStylesheet, Style } from '../Style';
+import { appendStyle, RPrunStylesheet, Style } from '../Style';
 
 export class ChatDeleteButton implements Module {
   private tag = 'pb-chat-delete';
@@ -88,7 +88,7 @@ function addChatDeleteToggle(buffer, pmmgSettings, tag) {
     if (pmmgSettings['PMMGExtended']['chat_delete_hidden']) {
       chatIndicator.classList.remove(...Style.RadioButtonUnToggled);
       chatIndicator.classList.add(...Style.RadioButtonToggled);
-      appendStyle(PmmgStylesheet.hideChatDelete);
+      appendStyle(RPrunStylesheet.hideChatDelete);
     } else {
       chatIndicator.classList.remove(...Style.RadioButtonToggled);
       chatIndicator.classList.add(...Style.RadioButtonUnToggled);
@@ -113,7 +113,7 @@ function addChatDeleteToggle(buffer, pmmgSettings, tag) {
     if (pmmgSettings['PMMGExtended']['join_leave_hidden']) {
       chatIndicator.classList.remove(...Style.RadioButtonUnToggled);
       chatIndicator.classList.add(...Style.RadioButtonToggled);
-      appendStyle(PmmgStylesheet.hideChatJoinLeave);
+      appendStyle(RPrunStylesheet.hideChatJoinLeave);
     } else {
       chatIndicator.classList.remove(...Style.RadioButtonToggled);
       chatIndicator.classList.add(...Style.RadioButtonUnToggled);

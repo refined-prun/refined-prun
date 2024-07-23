@@ -522,6 +522,10 @@ div.TileControls__splitControls___fcU57en {
   display: inline-flex;
 }
 
+.ScrollView__view___ovf59Tk > div[style*="background: rgb(0, 255, 0)"] {
+  display: none;
+}
+
 /*
   Fix PrUN Bugs
   This one no longer works but needs to be done

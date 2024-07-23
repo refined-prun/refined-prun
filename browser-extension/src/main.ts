@@ -4,7 +4,7 @@ import { QueueLoad } from '@src/features/QueueLoad';
 import { Notifications } from '@src/features/Notifications';
 import { getCXPrices, getPrices } from './BackgroundRunner';
 import { getSpecial } from './util';
-import { appendStyle, PmmgStylesheet } from './Style';
+import { appendStyle, RPrunStylesheet } from './Style';
 import { ScreenUnpack } from '@src/features/ScreenUnpack';
 import { Sidebar } from '@src/features/Sidebar';
 import { InventoryOrganizer } from '@src/features/InventoryOrganizer';
@@ -28,6 +28,8 @@ import { applyXITParameters } from '@src/features/xit-commands';
 
 // The main function that initializes everything
 async function mainRun() {
+  appendStyle(RPrunStylesheet.refinedPrun);
+
   initializePrunApi();
 
   let result: Settings;
@@ -54,26 +56,26 @@ async function mainRun() {
 
   // If enhanced color scheme is selected or no color scheme is selected, appy the enhanced color scheme
   if (result['PMMGExtended']['color_scheme'] == 'enhanced' || !result['PMMGExtended']['color_scheme']) {
-    appendStyle(specialTime ? PmmgStylesheet.oldColors : PmmgStylesheet.enhancedColors);
+    appendStyle(specialTime ? RPrunStylesheet.oldColors : RPrunStylesheet.enhancedColors);
   }
   // If the icons color scheme is selected, apply it
   else if (result['PMMGExtended']['color_scheme'] == 'icons') {
     // Use allocater's icons
-    appendStyle(specialTime ? PmmgStylesheet.oldColors : PmmgStylesheet.icons);
+    appendStyle(specialTime ? RPrunStylesheet.oldColors : RPrunStylesheet.icons);
   }
 
   if (result['PMMGExtended']['advanced_mode'] && doc) {
-    appendStyle(PmmgStylesheet.advanced);
+    appendStyle(RPrunStylesheet.advanced);
   }
 
   // Apply hiding chat delete button if enabled
   if (result['PMMGExtended']['chat_delete_hidden']) {
-    appendStyle(PmmgStylesheet.hideChatDelete);
+    appendStyle(RPrunStylesheet.hideChatDelete);
   }
 
   // Apply hiding join/leave messages if enabled
   if (result['PMMGExtended']['join_leave_hidden']) {
-    appendStyle(PmmgStylesheet.hideChatJoinLeave);
+    appendStyle(RPrunStylesheet.hideChatJoinLeave);
   }
 
   // Introduce an object that will hold and be periodically updated with latest info harvested from server traffic

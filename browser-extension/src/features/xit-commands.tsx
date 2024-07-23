@@ -5,6 +5,7 @@ import { dot } from '@src/utils/dot';
 import { $ } from 'select-dom';
 import PrunCss from '@src/prun-ui/prun-css';
 import { h } from 'dom-chef';
+import childElementPresent from '@src/utils/child-element-present';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let xitArgs: any;
@@ -18,10 +19,11 @@ export function applyXITParameters(pmmgSettings, userInfo, webData, modules) {
   };
 }
 
-function onBufferCreated(buffer: PrunBuffer) {
+async function onBufferCreated(buffer: PrunBuffer) {
   const frame = buffer.frame;
-  const tile = $(dot(PrunCss.ScrollView.view), frame)?.children[0];
-  if (!tile) {
+  const scrollView = await childElementPresent(frame, PrunCss.ScrollView.view);
+  const body = scrollView.children[0] as HTMLDivElement;
+  if (!body) {
     return;
   }
 
@@ -47,19 +49,21 @@ function onBufferCreated(buffer: PrunBuffer) {
     return;
   }
 
-  tile.classList.add('xit-tile');
-  if (tile.firstChild) {
-    (tile.firstChild as HTMLElement).style.backgroundColor = '#222222';
+  body.classList.add('xit-tile');
+  // Green screen
+  body.style.background = '';
+  if (body.firstChild) {
+    (body.firstChild as HTMLElement).style.backgroundColor = '#222222';
   }
 
   const xitClass = XITClasses[command.toUpperCase()];
   if (!xitClass) {
-    tile.textContent = 'Error! No Matching Function!';
+    body.textContent = 'Error! No Matching Function!';
     return;
   }
 
   const contentDiv = <div style={{ height: '100%', flexGrow: 1 }} />;
-  tile.appendChild(contentDiv);
+  body.appendChild(contentDiv);
 
   const xitObject = new xitClass(
     contentDiv,
