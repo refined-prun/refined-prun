@@ -3,6 +3,7 @@ import './features/com-add-images';
 import './features/flt-arrival-eta';
 import './features/sfc-flight-eta';
 import './features/prod-burn-link';
+import './features/prodq-queue-load';
 import './features/header-calculator-button';
 import './features/header-duplicate-button';
 import './features/correct-planet-command';

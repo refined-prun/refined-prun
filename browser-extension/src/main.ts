@@ -1,6 +1,5 @@
 import { ModuleRunner } from './ModuleRunner';
 import { OrderETAs } from '@src/features/OrderETAs';
-import { QueueLoad } from '@src/features/QueueLoad';
 import { Notifications } from '@src/features/Notifications';
 import { getCXPrices, getPrices } from './BackgroundRunner';
 import { getSpecial } from './util';
@@ -104,7 +103,6 @@ async function mainRun() {
   buffers.track();
   const modules = [
     new OrderETAs(),
-    new QueueLoad(),
     new InventoryOrganizer(userInfo, result),
     new Notifications(userInfo),
     new ScreenUnpack(result['PMMGExtended']['unpack_exceptions']),
