@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Selector } from './Selector';
 import { Stations } from './GameProperties';
-import { Style, CategoryColors, WithStyles, DefaultColors } from './Style';
+import { CategoryColors, DefaultColors, Style, WithStyles } from './Style';
 import system from '@src/system';
 import materials from '@src/prun-api/materials';
 import planets from '@src/prun-api/planets';
+import systems from '@src/prun-api/systems';
 
 export const hourFormatter = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
 
@@ -1451,4 +1452,61 @@ export async function loadLocalFile(path: string) {
 export async function loadLocalJson(path: string) {
   const file = await loadLocalFile(`json/${path}`);
   return await file.json();
+}
+
+// A function to compare two planets (to be used in .sort() functions)
+export function comparePlanets(planetNameA: string, planetNameB: string) {
+  const planetA = planets.get(planetNameA) ?? planets.getByName(planetNameA);
+  const planetB = planets.get(planetNameB) ?? planets.getByName(planetNameB);
+  if (!planetA) {
+    return 1;
+  }
+  if (!planetB) {
+    return -1;
+  }
+  if (planetA === planetB) {
+    return 0;
+  }
+
+  const systemA = systems.getByPlanet(planetA);
+  const systemB = systems.getByPlanet(planetB);
+  if (!systemA) {
+    return 1;
+  }
+  if (!systemB) {
+    return -1;
+  }
+
+  if (systemA !== systemB) {
+    const isSystemANamed = systemA.name !== systemA.naturalId;
+    const isSystemBNamed = systemB.name !== systemB.naturalId;
+
+    if (isSystemANamed && !isSystemBNamed) {
+      return -1;
+    }
+    if (isSystemBNamed && !isSystemANamed) {
+      return 1;
+    }
+    if (isSystemANamed && isSystemBNamed && systemA !== systemB) {
+      return systemA.name > systemB.name ? 1 : -1;
+    }
+  }
+
+  const isPlanetANamed = planetA.name !== planetA.naturalId;
+  const isPlanetBNamed = planetB.name !== planetB.naturalId;
+
+  if (isPlanetANamed && !isPlanetBNamed) {
+    return -1;
+  }
+  if (isPlanetANamed && !isPlanetBNamed) {
+    return 1;
+  }
+
+  return isPlanetANamed && isPlanetBNamed
+    ? planetA.name > planetB.name
+      ? 1
+      : -1
+    : planetA.naturalId > planetB.naturalId
+      ? 1
+      : -1;
 }

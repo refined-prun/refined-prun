@@ -7,6 +7,7 @@ import {
   createMaterialElement,
   calculateBurn,
   createSettingsButton,
+  comparePlanets,
 } from '../util';
 import { Selector } from '../Selector';
 import materials from '@src/prun-api/materials';
@@ -18,6 +19,7 @@ export class Burn {
   private userInfo;
   private alive;
   public name: string;
+  private planetBurn;
 
   constructor(tile, parameters, pmmgSettings, userInfo) {
     this.tile = tile;
@@ -38,85 +40,45 @@ export class Burn {
     const parameters = this.parameters;
     const pmmgSettings = this.pmmgSettings;
 
-    clearChildren(this.tile);
-
     if (!this.userInfo['PMMG-User-Info'] || !this.userInfo['PMMG-User-Info']['workforce']) {
+      clearChildren(this.tile);
       this.tile.textContent = 'Loading Burn Data...';
       this.tile.id = 'pmmg-reload';
       return;
     }
 
-    // Burn data is non-empty
-    this.tile.id = 'pmmg-load-success';
+    const planetBurn = internalCalculateBurn(this.parameters, this.userInfo);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const planetBurn = [] as any[];
+    if (this.planetBurn && this.planetBurn.length == planetBurn.length) {
+      // Has been calculated, no update in length
+      let mismatchFound = false;
 
-    // To do multiple planets, multiple planetBurns need to be created
-
-    if (!this.parameters[1] || this.parameters[1].toLowerCase() == 'all') {
-      this.userInfo['PMMG-User-Info']['workforce'].forEach(planetWorkforce => {
-        if (!planetWorkforce.PlanetName) {
-          return;
-        }
-
-        // Calculate burn for each planet
-        const production = findCorrespondingPlanet(
-          planetWorkforce.PlanetName,
-          this.userInfo['PMMG-User-Info']['production'],
-        );
-        const workforce = findCorrespondingPlanet(
-          planetWorkforce.PlanetName,
-          this.userInfo['PMMG-User-Info']['workforce'],
-        );
-        const inv = findCorrespondingPlanet(
-          planetWorkforce.PlanetName,
-          this.userInfo['PMMG-User-Info']['storage'],
-          true,
-        );
-
-        planetBurn.push({
-          burn: calculateBurn(production, workforce, inv),
-          planetName: planetWorkforce.PlanetName,
+      for (let i = 0; i < planetBurn.length; i++) {
+        Object.keys(planetBurn[i].burn).forEach(mat => {
+          if (
+            !this.planetBurn[i].burn[mat] ||
+            this.planetBurn[i].burn[mat].DaysLeft != planetBurn[i].burn[mat].DaysLeft
+          ) {
+            mismatchFound = true;
+          }
         });
-      });
-    } else {
-      for (let i = 1; i < this.parameters.length; i++) {
-        // Calculate burn for each planet
-        const production = findCorrespondingPlanet(this.parameters[i], this.userInfo['PMMG-User-Info']['production']);
-        const workforce = findCorrespondingPlanet(this.parameters[i], this.userInfo['PMMG-User-Info']['workforce']);
-        const inv = findCorrespondingPlanet(this.parameters[i], this.userInfo['PMMG-User-Info']['storage'], true);
-
-        planetBurn.push({ burn: calculateBurn(production, workforce, inv), planetName: this.parameters[i] });
+        if (mismatchFound) {
+          break;
+        }
+      }
+      if (!mismatchFound) {
+        // If nothing is different, don't update
+        this.update_buffer();
+        return;
       }
     }
 
-    // If more than 1 planet, make "overall" category
-    if (planetBurn.length > 1) {
-      const overallBurn = {};
-      planetBurn.forEach(burn => {
-        Object.keys(burn.burn).forEach(mat => {
-          if (overallBurn[mat]) {
-            overallBurn[mat].DailyAmount += burn.burn[mat].DailyAmount;
-            overallBurn[mat].Inventory += burn.burn[mat].Inventory;
-          } else {
-            overallBurn[mat] = {};
-            overallBurn[mat].DailyAmount = burn.burn[mat].DailyAmount;
-            overallBurn[mat].Inventory = burn.burn[mat].Inventory;
-          }
-        });
-      });
+    this.planetBurn = planetBurn;
 
-      Object.keys(overallBurn).forEach(mat => {
-        if (overallBurn[mat].DailyAmount >= 0) {
-          overallBurn[mat].DaysLeft = 1000;
-        } else {
-          overallBurn[mat].DaysLeft = -overallBurn[mat].Inventory / overallBurn[mat].DailyAmount;
-        }
-      });
+    clearChildren(this.tile);
 
-      planetBurn.push({ burn: overallBurn, planetName: 'Overall' });
-    }
+    // Burn data is non-empty
+    this.tile.id = 'pmmg-load-success';
 
     // Start creating burn buffer
 
@@ -148,7 +110,7 @@ export class Burn {
     settingsDiv.appendChild(
       createSettingsButton('RED', 22.025, dispSettings.red, function () {
         dispSettings.red = !dispSettings.red;
-        UpdateBurn(table, dispSettings);
+        updateBurn(table, dispSettings);
         pmmgSettings['PMMGExtended']['burn_settings'][bufferName] = dispSettings;
 
         setSettings(pmmgSettings);
@@ -157,7 +119,7 @@ export class Burn {
     settingsDiv.appendChild(
       createSettingsButton('YELLOW', 40.483, dispSettings.yellow, function () {
         dispSettings.yellow = !dispSettings.yellow;
-        UpdateBurn(table, dispSettings);
+        updateBurn(table, dispSettings);
         pmmgSettings['PMMGExtended']['burn_settings'][bufferName] = dispSettings;
 
         setSettings(pmmgSettings);
@@ -166,7 +128,7 @@ export class Burn {
     settingsDiv.appendChild(
       createSettingsButton('GREEN', 34.65, dispSettings.green, function () {
         dispSettings.green = !dispSettings.green;
-        UpdateBurn(table, dispSettings);
+        updateBurn(table, dispSettings);
         pmmgSettings['PMMGExtended']['burn_settings'][bufferName] = dispSettings;
 
         setSettings(pmmgSettings);
@@ -175,7 +137,7 @@ export class Burn {
     settingsDiv.appendChild(
       createSettingsButton('INF', 19.6, dispSettings.inf, function () {
         dispSettings.inf = !dispSettings.inf;
-        UpdateBurn(table, dispSettings);
+        updateBurn(table, dispSettings);
         pmmgSettings['PMMGExtended']['burn_settings'][bufferName] = dispSettings;
 
         setSettings(pmmgSettings);
@@ -223,7 +185,7 @@ export class Burn {
             dispSettings.minimized[burn.planetName] = true;
             minimizeButton.textContent = '+';
           }
-          UpdateBurn(table, dispSettings);
+          updateBurn(table, dispSettings);
           pmmgSettings['PMMGExtended']['burn_settings'][bufferName] = dispSettings;
 
           setSettings(pmmgSettings);
@@ -348,7 +310,7 @@ export class Burn {
       }
     });
 
-    UpdateBurn(table, dispSettings);
+    updateBurn(table, dispSettings);
     this.tile.appendChild(table);
 
     this.update_buffer();
@@ -367,7 +329,79 @@ export class Burn {
   }
 }
 
-function UpdateBurn(table, dispSettings) {
+function internalCalculateBurn(parameters, userInfo) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const planetBurn = [] as any[];
+
+  if (!parameters[1] || parameters[1].toLowerCase() == 'all') {
+    userInfo['PMMG-User-Info']['workforce'].forEach(planetWorkforce => {
+      if (!planetWorkforce.PlanetName) {
+        return;
+      }
+
+      // Calculate burn for each planet
+      const production = findCorrespondingPlanet(planetWorkforce.PlanetName, userInfo['PMMG-User-Info']['production']);
+      const workforce = findCorrespondingPlanet(planetWorkforce.PlanetName, userInfo['PMMG-User-Info']['workforce']);
+      const inv = findCorrespondingPlanet(planetWorkforce.PlanetName, userInfo['PMMG-User-Info']['storage'], true);
+
+      planetBurn.push({ burn: calculateBurn(production, workforce, inv), planetName: planetWorkforce.PlanetName });
+    });
+  } else {
+    for (let i = 1; i < parameters.length; i++) {
+      // Calculate burn for each planet
+      const production = findCorrespondingPlanet(parameters[i], userInfo['PMMG-User-Info']['production']);
+      const workforce = findCorrespondingPlanet(parameters[i], userInfo['PMMG-User-Info']['workforce']);
+      const inv = findCorrespondingPlanet(parameters[i], userInfo['PMMG-User-Info']['storage'], true);
+
+      planetBurn.push({ burn: calculateBurn(production, workforce, inv), planetName: parameters[i] });
+    }
+  }
+
+  // If more than 1 planet, make "overall" category
+  if (planetBurn.length > 1) {
+    const overallBurn = {};
+    planetBurn.forEach(burn => {
+      Object.keys(burn.burn).forEach(mat => {
+        if (overallBurn[mat]) {
+          overallBurn[mat].DailyAmount += burn.burn[mat].DailyAmount;
+          overallBurn[mat].Inventory += burn.burn[mat].Inventory;
+        } else {
+          overallBurn[mat] = {};
+          overallBurn[mat].DailyAmount = burn.burn[mat].DailyAmount;
+          overallBurn[mat].Inventory = burn.burn[mat].Inventory;
+        }
+      });
+    });
+
+    Object.keys(overallBurn).forEach(mat => {
+      if (overallBurn[mat].DailyAmount >= 0) {
+        overallBurn[mat].DaysLeft = 1000;
+      } else {
+        overallBurn[mat].DaysLeft = -overallBurn[mat].Inventory / overallBurn[mat].DailyAmount;
+      }
+    });
+
+    planetBurn.push({ burn: overallBurn, planetName: 'Overall' });
+  }
+
+  planetBurn.sort(burnPlanetSort);
+
+  return planetBurn;
+}
+
+// Sort entries in planetBurn like the game does it
+function burnPlanetSort(a, b) {
+  if (a.planetName == 'Overall') {
+    return 1;
+  }
+  if (b.planetName == 'Overall') {
+    return -1;
+  }
+
+  return comparePlanets(a.planetName, b.planetName);
+}
+
+function updateBurn(table, dispSettings) {
   (Array.from(table.children) as HTMLElement[]).forEach(child => {
     if (!child.children) {
       return;

@@ -16,6 +16,7 @@ import {
   Popup,
   showBuffer,
   createLink,
+  comparePlanets,
 } from '../util';
 import { Style } from '../Style';
 import { Selector } from '../Selector';
@@ -538,6 +539,8 @@ class GenerateScreen {
           }
         });
 
+        possiblePlanets.sort(comparePlanets);
+
         // Add index of selected option to end of list because of poor design decisions in popup class
         if (group.planet && possiblePlanets.indexOf(group.planet)) {
           possiblePlanets.push(possiblePlanets.indexOf(group.planet));
@@ -577,6 +580,8 @@ class GenerateScreen {
             possiblePlanets.push(planet.PlanetName);
           }
         });
+
+        possiblePlanets.sort(comparePlanets);
 
         // Add index of selected option to end of list because of poor design decisions in popup class
         if (group.planet && possiblePlanets.indexOf(group.planet)) {

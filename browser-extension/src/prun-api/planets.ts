@@ -1,6 +1,6 @@
 import { loadFallbackFioResponse } from '@src/prun-api/fallback-files';
 
-interface Planet {
+export interface Planet {
   naturalId: string;
   name: string;
 }
@@ -43,11 +43,19 @@ async function load() {
   applyFioResponse(fallbackPacket);
 }
 
+function getByNaturalId(naturalId?: string | null) {
+  return naturalId ? planetsByNaturalId.get(naturalId.toLowerCase()) : undefined;
+}
+
+function getByName(name?: string | null) {
+  return name ? planetsByName.get(name.toLowerCase()) : undefined;
+}
+
 const planets = {
   applyFioResponse,
   load,
-  get: (naturalId?: string | null) => (naturalId ? planetsByNaturalId.get(naturalId.toLowerCase()) : undefined),
-  getByName: (name?: string | null) => (name ? planetsByName.get(name.toLowerCase()) : undefined),
+  get: getByNaturalId,
+  getByName,
 };
 
 export default planets;

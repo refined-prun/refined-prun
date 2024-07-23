@@ -1,5 +1,6 @@
 import { loadFallbackPacket } from '@src/prun-api/fallback-files';
 import ApiPayload = PrunApi.SYSTEM_STARS_DATA.Payload;
+import { Planet } from '@src/prun-api/planets';
 
 interface System {
   id: string;
@@ -54,11 +55,24 @@ async function load() {
   applyApiPayload(fallbackPacket);
 }
 
+function getByNaturalId(naturalId?: string | null) {
+  return naturalId ? systemsByNaturalId.get(naturalId.toLowerCase()) : undefined;
+}
+
+function getByName(name?: string | null) {
+  return name ? systemsByName.get(name.toLowerCase()) : undefined;
+}
+
+function getByPlanet(planet?: Planet | null) {
+  return getByNaturalId(planet?.naturalId.slice(0, -1));
+}
+
 const systems = {
   applyApiPayload,
   load,
-  get: (naturalId?: string | null) => (naturalId ? systemsByNaturalId.get(naturalId.toLowerCase()) : undefined),
-  getByName: (name?: string | null) => (name ? systemsByName.get(name.toLowerCase()) : undefined),
+  get: getByNaturalId,
+  getByName,
+  getByPlanet,
 };
 
 export default systems;

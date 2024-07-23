@@ -65,7 +65,7 @@ function replaceMaterialProperties(expression: string) {
 }
 
 export function init() {
-  buffers.observe(['CXPO', 'FXPO', 'LMP', 'CONTD', 'MTRA'], onBufferCreated);
+  buffers.observe(['CXPO', 'FXPO', 'LMP', 'CONTD', 'MTRA', 'MOTS'], onBufferCreated);
 }
 
 void features.add({
