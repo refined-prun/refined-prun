@@ -55,6 +55,10 @@ async function load() {
   applyApiPayload(fallbackPacket);
 }
 
+function get(naturalIdOrName?: string | null) {
+  return getByNaturalId(naturalIdOrName) ?? getByName(naturalIdOrName);
+}
+
 function getByNaturalId(naturalId?: string | null) {
   return naturalId ? systemsByNaturalId.get(naturalId.toLowerCase()) : undefined;
 }
@@ -70,7 +74,8 @@ function getByPlanet(planet?: Planet | null) {
 const systems = {
   applyApiPayload,
   load,
-  get: getByNaturalId,
+  get,
+  getByNaturalId,
   getByName,
   getByPlanet,
 };

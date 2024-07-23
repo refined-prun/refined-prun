@@ -43,6 +43,10 @@ async function load() {
   applyFioResponse(fallbackPacket);
 }
 
+function get(naturalIdOrName?: string | null) {
+  return getByNaturalId(naturalIdOrName) ?? getByName(naturalIdOrName);
+}
+
 function getByNaturalId(naturalId?: string | null) {
   return naturalId ? planetsByNaturalId.get(naturalId.toLowerCase()) : undefined;
 }
@@ -54,7 +58,8 @@ function getByName(name?: string | null) {
 const planets = {
   applyFioResponse,
   load,
-  get: getByNaturalId,
+  get,
+  getByNaturalId,
   getByName,
 };
 

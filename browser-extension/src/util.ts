@@ -307,8 +307,8 @@ export function findCorrespondingPlanet(planet, data, needBase?) {
     } else if (
       planet &&
       data[i]['PlanetNaturalId'] &&
-      planets.getByName(planet) &&
-      planets.getByName(planet) === planets.getByName(data[i]['PlanetNaturalId']) &&
+      planets.get(planet) &&
+      planets.get(planet) === planets.get(data[i]['PlanetNaturalId']) &&
       (!needBase || data[i]['type'] == 'STORE' || data[i]['type'] == 'BASE')
     ) {
       // When planet name isn't in the payload, convert it to natural ID
@@ -1455,9 +1455,9 @@ export async function loadLocalJson(path: string) {
 }
 
 // A function to compare two planets (to be used in .sort() functions)
-export function comparePlanets(planetNameA: string, planetNameB: string) {
-  const planetA = planets.get(planetNameA) ?? planets.getByName(planetNameA);
-  const planetB = planets.get(planetNameB) ?? planets.getByName(planetNameB);
+export function comparePlanets(idOrNameA: string, idOrNameB: string) {
+  const planetA = planets.get(idOrNameA);
+  const planetB = planets.get(idOrNameB);
   if (!planetA) {
     return 1;
   }
