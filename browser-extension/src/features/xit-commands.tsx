@@ -72,9 +72,14 @@ function onBufferCreated(buffer: PrunBuffer) {
   $(dot(PrunCss.TileFrame.title), frame)!.textContent = xitObject.name;
   xitObject.create_buffer();
 
+  const header = frame.children[3] || frame.children[2];
+  const className = 'prun-xit-refresh';
+  for (const element of Array.from(header.getElementsByClassName(className))) {
+    element.remove();
+  }
   const refreshButton = (
     <div
-      className="button-upper-right"
+      className={className + ' button-upper-right'}
       style={{
         fontSize: __CHROME__ ? '16px' : '18px',
         paddingTop: __CHROME__ ? '12px' : '7px',
@@ -83,7 +88,6 @@ function onBufferCreated(buffer: PrunBuffer) {
       ⟳
     </div>
   );
-  const header = frame.children[3] || frame.children[2];
   header.insertBefore(refreshButton, header.firstChild);
 }
 

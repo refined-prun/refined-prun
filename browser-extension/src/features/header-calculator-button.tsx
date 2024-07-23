@@ -6,6 +6,9 @@ import PrunCss from '@src/prun-ui/prun-css';
 import childElementPresent from '@src/utils/child-element-present';
 
 async function onBufferCreated(buffer: PrunBuffer) {
+  if (!buffer.firstActivation) {
+    return;
+  }
   const tileControls = await childElementPresent(buffer.frame, PrunCss.TileFrame.controls);
 
   const button = (

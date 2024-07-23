@@ -9,4 +9,5 @@ interface PrunBuffer {
   fullCommand: string;
   command: string;
   parameter: string | undefined;
+  firstActivation: boolean;
 }
