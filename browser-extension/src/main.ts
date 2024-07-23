@@ -18,7 +18,6 @@ import { CXPOOrderBook } from '@src/features/CXPOOrderBook';
 import { ChatDeleteButton } from '@src/features/ChatDeleteButton';
 import { IconMarkers } from '@src/features/IconMarkers';
 import { PostLM } from '@src/features/PostLM';
-import { ProdBurnLink } from '@src/features/ProdBurnLink';
 import { loadSettings, Settings } from './Settings';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
@@ -119,7 +118,6 @@ async function mainRun() {
     new ChatDeleteButton(result),
     new IconMarkers(),
     new PostLM(),
-    new ProdBurnLink(),
   ];
   applyXITParameters(result, userInfo, webData, modules);
   await features.init();
