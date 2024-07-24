@@ -1,9 +1,9 @@
 import { createContextButton } from '@src/util';
-import systems from '@src/prun-api/systems';
 import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
 import childElementPresent from '@src/utils/child-element-present';
 import PrunCss from '@src/prun-ui/prun-css';
+import prun from '@src/prun-api/prun';
 
 async function onBufferCreated(buffer: PrunBuffer) {
   if (!buffer.firstActivation) {
@@ -43,7 +43,7 @@ export function parseBurnName(text: string) {
     }
     // Named system unnamed planet
     match = text.match(/([A-z ]*) ([A-z]) Production/);
-    const system = systems.getByName(match?.[1]);
+    const system = prun.systems.getByName(match?.[1]);
     if (system) {
       return system.naturalId + match![2].toLowerCase();
     }

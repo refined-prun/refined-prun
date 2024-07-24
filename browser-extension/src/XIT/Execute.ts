@@ -1,27 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-this-alias */
 import {
+  calculateBurn,
+  changeValue,
   clearChildren,
+  comparePlanets,
+  createEmptyTableRow,
+  createLink,
+  createTable,
   createTextSpan,
-  getLocalStoragePromise,
+  findCorrespondingPlanet,
   getBuffers,
   getBuffersFromList,
-  changeValue,
-  setSettings,
-  showSuccessDialog,
-  findCorrespondingPlanet,
-  calculateBurn,
-  createTable,
-  createEmptyTableRow,
-  showWarningDialog,
+  getLocalStoragePromise,
   Popup,
+  setSettings,
   showBuffer,
-  createLink,
-  comparePlanets,
+  showSuccessDialog,
+  showWarningDialog,
 } from '../util';
 import { Style } from '../Style';
 import { Selector } from '../Selector';
 import { ExchangeTickersReverse, NonProductionBuildings } from '../GameProperties';
-import { userData } from '@src/prun-api/user-data';
+import user from '@src/prun-api/user';
 
 export class Execute {
   private tile: HTMLElement;
@@ -1220,9 +1220,9 @@ function parseActionPackage(rawActionPackage, userInfo, messageBox) {
         const cxTicker = mat + '.' + action.exchange;
         let amount = parsedGroup[mat];
 
-        if (userData.cxob[cxTicker] && Date.now() - userData.cxob[cxTicker].timestamp < 900000) {
+        if (user.cxob[cxTicker] && Date.now() - user.cxob[cxTicker].timestamp < 900000) {
           // Check for existance and timestamp of data
-          if (userData.cxob[cxTicker].sellingOrders.length == 0) {
+          if (user.cxob[cxTicker].sellingOrders.length == 0) {
             // No orders
             if (action.buyPartial) {
               return; // Just ignore this one if we're fine with buying partial
@@ -1236,28 +1236,28 @@ function parseActionPackage(rawActionPackage, userInfo, messageBox) {
           let remaining = parsedGroup[mat];
           let price;
           // Iterate through the orders to find the price to set to to buy it all
-          for (let i = 0; i < userData.cxob[cxTicker].sellingOrders.length; i++) {
+          for (let i = 0; i < user.cxob[cxTicker].sellingOrders.length; i++) {
             if (
               (!action.priceLimits ||
                 !action.priceLimits[mat] ||
-                action.priceLimits[mat] > userData.cxob[cxTicker].sellingOrders[i].limit.amount) &&
-              userData.cxob[cxTicker].sellingOrders[i].amount > remaining
+                action.priceLimits[mat] > user.cxob[cxTicker].sellingOrders[i].limit.amount) &&
+              user.cxob[cxTicker].sellingOrders[i].amount > remaining
             ) {
               // This order will be the filling one
-              price = userData.cxob[cxTicker].sellingOrders[i].limit.amount;
+              price = user.cxob[cxTicker].sellingOrders[i].limit.amount;
               break;
             } else {
               if (
                 (!action.priceLimits ||
                   !action.priceLimits[mat] ||
-                  action.priceLimits[mat] > userData.cxob[cxTicker].sellingOrders[i].limit.amount) &&
-                !userData.cxob[cxTicker].sellingOrders[i].amount
+                  action.priceLimits[mat] > user.cxob[cxTicker].sellingOrders[i].limit.amount) &&
+                !user.cxob[cxTicker].sellingOrders[i].amount
               ) {
                 // Only MMs will not have an amount attached
-                price = userData.cxob[cxTicker].sellingOrders[i].limit.amount;
+                price = user.cxob[cxTicker].sellingOrders[i].limit.amount;
                 break;
               }
-              remaining -= userData.cxob[cxTicker].sellingOrders[i].amount; // Otherwise subtract the amount of that order from the amount remaining and continue
+              remaining -= user.cxob[cxTicker].sellingOrders[i].amount; // Otherwise subtract the amount of that order from the amount remaining and continue
             }
           }
 
@@ -1278,15 +1278,10 @@ function parseActionPackage(rawActionPackage, userInfo, messageBox) {
             addMessage(messageBox, 'Error: Not enough materials on ' + cxTicker);
             error = true;
             return;
-          } else if (
-            !price &&
-            (!action.priceLimits || !action.priceLimits[mat]) &&
-            userData.cxob[cxTicker].supply > 0
-          ) {
+          } else if (!price && (!action.priceLimits || !action.priceLimits[mat]) && user.cxob[cxTicker].supply > 0) {
             // If fine with buying partial, buy the entire stock
-            price =
-              userData.cxob[cxTicker].sellingOrders[userData.cxob[cxTicker].sellingOrders.length - 1].limit.amount;
-            amount = userData.cxob[cxTicker].supply;
+            price = user.cxob[cxTicker].sellingOrders[user.cxob[cxTicker].sellingOrders.length - 1].limit.amount;
+            amount = user.cxob[cxTicker].supply;
           } else if (!price && action.priceLimits && action.priceLimits[mat]) {
             return; // If there is no price, but buying partial, don't care and exit
           }

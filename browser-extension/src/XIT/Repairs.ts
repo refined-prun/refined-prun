@@ -1,6 +1,6 @@
-import { createTextSpan, clearChildren, setSettings } from '../util';
+import { clearChildren, createTextSpan, setSettings } from '../util';
 import { NonProductionBuildings } from '../GameProperties';
-import { userData } from '@src/prun-api/user-data';
+import user from '@src/prun-api/user';
 
 // This entire module is really, really messy and needs to be rewritten.
 export class Repairs {
@@ -28,7 +28,7 @@ export class Repairs {
       return;
     }
 
-    const ships = userData.ships;
+    const ships = user.ships;
 
     // Generate repairs screen for all things
     if (this.parameters.length < 2) {

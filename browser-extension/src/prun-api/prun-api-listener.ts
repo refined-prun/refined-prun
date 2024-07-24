@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { transmitted_events } from './default-event-payload';
-import { userData } from './user-data';
 import { socketIOMiddleware } from './socket-io-middleware';
 import system from '@src/system';
-import materials from '@src/prun-api/materials';
-import systems from '@src/prun-api/systems';
+import prun from '@src/prun-api/prun';
+import user from '@src/prun-api/user';
 
 interface ApiEvent {
   payload: any;
@@ -504,34 +503,34 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
       }
       break;
     case 'FOREX_TRADER_ORDERS':
-      userData.fxos = eventdata.payload.orders;
-      console.log(userData.fxos);
+      user.fxos = eventdata.payload.orders;
+      console.log(user.fxos);
       break;
     case 'COMEX_TRADER_ORDERS':
-      userData.cxos = eventdata.payload.orders;
+      user.cxos = eventdata.payload.orders;
       break;
     case 'COMEX_BROKER_DATA':
-      userData.cxob[eventdata.payload.ticker] = {
+      user.cxob[eventdata.payload.ticker] = {
         ...eventdata.payload,
         timestamp: Date.now(),
       };
 
-      Object.keys(userData.cxob).forEach(ticker => {
-        if (Date.now() - userData.cxob[ticker].timestamp > 900000) {
-          delete userData.cxob[ticker];
+      Object.keys(user.cxob).forEach(ticker => {
+        if (Date.now() - user.cxob[ticker].timestamp > 900000) {
+          delete user.cxob[ticker];
         }
       });
       break;
     case 'SHIP_SHIPS': {
-      userData.ships = eventdata.payload.ships;
+      user.ships = eventdata.payload.ships;
       break;
     }
     case 'WORLD_MATERIAL_CATEGORIES': {
-      materials.applyApiPayload(eventdata.payload);
+      prun.materials.applyApiPayload(eventdata.payload);
       break;
     }
     case 'SYSTEM_STARS_DATA': {
-      systems.applyApiPayload(eventdata.payload);
+      prun.systems.applyApiPayload(eventdata.payload);
       break;
     }
   }

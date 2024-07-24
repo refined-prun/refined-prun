@@ -3,9 +3,7 @@ import { Selector } from './Selector';
 import { Stations } from './GameProperties';
 import { CategoryColors, DefaultColors, Style, WithStyles } from './Style';
 import system from '@src/system';
-import materials from '@src/prun-api/materials';
-import planets from '@src/prun-api/planets';
-import systems from '@src/prun-api/systems';
+import prun from '@src/prun-api/prun';
 
 export const hourFormatter = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
 
@@ -274,8 +272,8 @@ export function findBurnAmount(ticker, inventory) {
 
 // Sort tickers by their material category
 export function CategorySort(tickerA: string, tickerB: string) {
-  const categoryA = materials.get(tickerA)?.category.name;
-  const categoryB = materials.get(tickerB)?.category.name;
+  const categoryA = prun.materials.get(tickerA)?.category.name;
+  const categoryB = prun.materials.get(tickerB)?.category.name;
   if (!categoryA || !categoryB) {
     return 0;
   }
@@ -307,8 +305,8 @@ export function findCorrespondingPlanet(planet, data, needBase?) {
     } else if (
       planet &&
       data[i]['PlanetNaturalId'] &&
-      planets.get(planet) &&
-      planets.get(planet) === planets.get(data[i]['PlanetNaturalId']) &&
+      prun.planets.get(planet) &&
+      prun.planets.get(planet) === prun.planets.get(data[i]['PlanetNaturalId']) &&
       (!needBase || data[i]['type'] == 'STORE' || data[i]['type'] == 'BASE')
     ) {
       // When planet name isn't in the payload, convert it to natural ID
@@ -429,7 +427,7 @@ export function createMaterialElement(
   small: boolean = false,
   building?,
 ) {
-  const material = materials.get(ticker);
+  const material = prun.materials.get(ticker);
   if (!material && ticker != 'SHPT' && !building) {
     return null;
   } // Return nothing if the material isn't recognized
@@ -1434,8 +1432,8 @@ class PopupRow {
 
 // Sorts materials by element category then by ticker. Works with Array.sort
 export function materialSort(tickerA?: string | null, tickerB?: string | null): number {
-  const materialA = materials.get(tickerA);
-  const materialB = materials.get(tickerB);
+  const materialA = prun.materials.get(tickerA);
+  const materialB = prun.materials.get(tickerB);
   if (!materialA || !materialB) {
     return 0;
   }
@@ -1456,8 +1454,8 @@ export async function loadLocalJson(path: string) {
 
 // A function to compare two planets (to be used in .sort() functions)
 export function comparePlanets(idOrNameA: string, idOrNameB: string) {
-  const planetA = planets.get(idOrNameA);
-  const planetB = planets.get(idOrNameB);
+  const planetA = prun.planets.get(idOrNameA);
+  const planetB = prun.planets.get(idOrNameB);
   if (!planetA) {
     return 1;
   }
@@ -1468,8 +1466,8 @@ export function comparePlanets(idOrNameA: string, idOrNameB: string) {
     return 0;
   }
 
-  const systemA = systems.getByPlanet(planetA);
-  const systemB = systems.getByPlanet(planetB);
+  const systemA = prun.systems.getByPlanet(planetA);
+  const systemB = prun.systems.getByPlanet(planetB);
   if (!systemA) {
     return 1;
   }

@@ -10,7 +10,7 @@ import {
   comparePlanets,
 } from '../util';
 import { Selector } from '../Selector';
-import materials from '@src/prun-api/materials';
+import prun from '@src/prun-api/prun';
 
 export class Burn {
   private tile: HTMLElement;
@@ -249,7 +249,7 @@ export class Burn {
           materialColumn.appendChild(matElem);
         }
         row.appendChild(materialColumn);
-        const nameSpan = createTextSpan(materials.get(ticker)?.displayName);
+        const nameSpan = createTextSpan(prun.materials.get(ticker)?.displayName);
         nameSpan.style.fontWeight = 'bold';
         const nameColumn = document.createElement('td');
         nameColumn.appendChild(nameSpan);

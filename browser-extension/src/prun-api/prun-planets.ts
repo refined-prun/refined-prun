@@ -55,7 +55,7 @@ function getByName(name?: string | null) {
   return name ? planetsByName.get(name.toLowerCase()) : undefined;
 }
 
-const planets = {
+const prunPlanets = {
   applyFioResponse,
   load,
   get,
@@ -63,4 +63,4 @@ const planets = {
   getByName,
 };
 
-export default planets;
+export default prunPlanets;

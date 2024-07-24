@@ -1,6 +1,6 @@
 import { loadFallbackPacket } from '@src/prun-api/fallback-files';
 import ApiPayload = PrunApi.SYSTEM_STARS_DATA.Payload;
-import { Planet } from '@src/prun-api/planets';
+import { Planet } from '@src/prun-api/prun-planets';
 
 interface System {
   id: string;
@@ -71,7 +71,7 @@ function getByPlanet(planet?: Planet | null) {
   return getByNaturalId(planet?.naturalId.slice(0, -1));
 }
 
-const systems = {
+const prunSystems = {
   applyApiPayload,
   load,
   get,
@@ -80,4 +80,4 @@ const systems = {
   getByPlanet,
 };
 
-export default systems;
+export default prunSystems;

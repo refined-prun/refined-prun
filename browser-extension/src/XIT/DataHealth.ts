@@ -1,7 +1,7 @@
-import { clearChildren, createTextSpan, createTable } from '../util';
-import { TextColors, Style } from '../Style';
-import { userData } from '@src/prun-api/user-data';
+import { clearChildren, createTable, createTextSpan } from '../util';
+import { Style, TextColors } from '../Style';
 import system from '@src/system';
+import user from '@src/prun-api/user';
 
 export class DataHealth {
   private tile: HTMLElement;
@@ -115,10 +115,10 @@ export class DataHealth {
     const contracts = (this.userInfo['PMMG-User-Info']['contracts'] || []).length;
     otherTable.appendChild(createTableRow('Contracts', contracts));
 
-    const cxos = userData.cxos.length;
+    const cxos = user.cxos.length;
     otherTable.appendChild(createTableRow('CXOS', cxos));
 
-    const fxos = userData.fxos.length;
+    const fxos = user.fxos.length;
     otherTable.appendChild(createTableRow('FXOS', fxos));
 
     otherTable.appendChild(

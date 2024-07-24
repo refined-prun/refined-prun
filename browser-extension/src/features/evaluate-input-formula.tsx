@@ -1,10 +1,10 @@
 import { changeValue } from '../util';
-import materials from '@src/prun-api/materials';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
 import { $$ } from 'select-dom';
 import Mexp from 'math-expression-evaluator';
+import prun from '@src/prun-api/prun';
 
 const mexp = new Mexp();
 
@@ -38,7 +38,7 @@ function replaceMaterialProperties(expression: string) {
   const matches = expression.match(/\b([a-zA-Z0-9]{1,3})\.(?:w|t|v|m|m3|max)\b/gi) ?? [];
   for (const match of matches) {
     const parts = match.split('.');
-    const material = materials.get(parts[0]);
+    const material = prun.materials.get(parts[0]);
     if (material === undefined) {
       continue;
     }

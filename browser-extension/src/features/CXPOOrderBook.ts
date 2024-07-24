@@ -1,10 +1,10 @@
 import { Module } from '../ModuleRunner';
-import { getBuffersFromList, createTextSpan } from '../util';
+import { createTextSpan, getBuffersFromList } from '../util';
 import { Exchanges, ExchangeTickers } from '../GameProperties';
 import { Selector } from '../Selector';
 import { Style } from '../Style';
-import { userData } from '@src/prun-api/user-data';
-import materials from '@src/prun-api/materials';
+import prun from '@src/prun-api/prun';
+import user from '@src/prun-api/user';
 
 export class CXPOOrderBook implements Module {
   private tag = 'pb-cxpo-ob';
@@ -61,21 +61,21 @@ function addOrderBook(buffer, userInfo, tag) {
     XPathResult.FIRST_ORDERED_NODE_TYPE,
     null,
   ).singleNodeValue as HTMLDivElement;
-  const ticker = materials.getTickerByName(material?.textContent);
+  const ticker = prun.materials.getTickerByName(material?.textContent);
   if (ticker === undefined) {
     return;
   }
 
   const fullTicker = `${ticker}.${exchangeTicker}`;
 
-  if (!userData.cxob[fullTicker] || !form.parentElement) {
+  if (!user.cxob[fullTicker] || !form.parentElement) {
     return;
   }
 
-  if (form.classList.contains(userData.cxob[fullTicker].timestamp.toString())) {
+  if (form.classList.contains(user.cxob[fullTicker].timestamp.toString())) {
     return;
   }
-  form.classList.add(userData.cxob[fullTicker].timestamp);
+  form.classList.add(user.cxob[fullTicker].timestamp);
 
   if (form.parentElement.children[1]) {
     form.parentElement.children[1].remove();
@@ -126,7 +126,7 @@ function addOrderBook(buffer, userInfo, tag) {
   offerRowHeader.colSpan = 2;
   offerRow.appendChild(offerRowHeader);
 
-  const orderInfo = userData.cxob[fullTicker];
+  const orderInfo = user.cxob[fullTicker];
   if (orderInfo.sellingOrders.length > 0) {
     // Build ask table. Add own name highlighting at some point
     const sortedOrders = orderInfo.sellingOrders.slice().reverse();

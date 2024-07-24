@@ -1,8 +1,6 @@
 import { listenPrunApi } from '@src/prun-api/prun-api-listener';
 import { preloadFioResponses } from '@src/prun-api/fio-api';
-import materials from '@src/prun-api/materials';
-import systems from '@src/prun-api/systems';
-import planets from '@src/prun-api/planets';
+import prun from '@src/prun-api/prun';
 
 export async function initializePrunApi() {
   preloadFioResponses();
@@ -10,5 +8,5 @@ export async function initializePrunApi() {
 }
 
 export async function loadGameData() {
-  await Promise.allSettled([materials.load(), systems.load(), planets.load()]);
+  await Promise.allSettled([prun.materials.load(), prun.systems.load(), prun.planets.load()]);
 }

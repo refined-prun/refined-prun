@@ -96,11 +96,11 @@ function get(ticker?: string | null) {
   return materialsByTicker.get(ticker.toLowerCase());
 }
 
-const materials = {
+const prunMaterials = {
   applyApiPayload,
   load,
   get,
   getTickerByName: (name?: string | null) => (name ? materialsByName.get(name.toLowerCase())?.ticker : undefined),
 };
 
-export default materials;
+export default prunMaterials;

@@ -2,26 +2,26 @@
 import {
   clearChildren,
   createFinancialTextBox,
-  createTextSpan,
-  setSettings,
-  getLocalStorage,
-  createToolTip,
   createSelectOption,
-  showWarningDialog,
+  createSmallButton,
   createTable,
-  showBuffer,
+  createTextSpan,
+  createToolTip,
+  dateYearFormatter,
+  dateYearFormatter2,
   downloadFile,
   findCorrespondingPlanet,
-  createSmallButton,
-  dateYearFormatter,
+  getLocalStorage,
   hourFormatter,
-  dateYearFormatter2,
+  setSettings,
+  showBuffer,
+  showWarningDialog,
 } from '../util';
 import { Style, TextColors } from '../Style';
-import { CurrencySymbols, Consumption } from '../GameProperties';
+import { Consumption, CurrencySymbols } from '../GameProperties';
 import { generateLineGraph, generatePieChart } from '../PlotlyHandler';
-import { userData } from '@src/prun-api/user-data';
 import system from '@src/system';
+import user from '@src/prun-api/user';
 
 export class Finances {
   private tile: HTMLElement;
@@ -1336,7 +1336,7 @@ export function calculateFinancials(webData, userInfo, result, loop) {
   let cxBuyValue = 0;
   let cxSellValue = 0;
 
-  userData.cxos.forEach(order => {
+  user.cxos.forEach(order => {
     if (order.status == 'FILLED') {
       return;
     }
@@ -1359,7 +1359,7 @@ export function calculateFinancials(webData, userInfo, result, loop) {
   // Handle FXOS
   let fxBuyValue = 0;
   let fxSellValue = 0;
-  userData.fxos.forEach(order => {
+  user.fxos.forEach(order => {
     if (order.status == 'FILLED') {
       return;
     }

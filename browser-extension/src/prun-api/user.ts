@@ -1,4 +1,6 @@
-export const userData = {
+import { reactive } from '@vue/reactivity';
+
+const user = reactive({
   sites: [],
   storage: [],
   workforce: [],
@@ -9,4 +11,6 @@ export const userData = {
   fxos: [] as PrunApi.FOREX_TRADER_ORDERS.Order[],
   cxob: {} as { [key: string]: PrunApi.COMEX_BROKER_DATA.Payload & { timestamp: number } },
   ships: [] as PrunApi.SHIP_SHIPS.Ship[],
-};
+});
+
+export default user;
