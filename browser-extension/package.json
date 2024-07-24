@@ -19,13 +19,16 @@
   "type": "module",
   "dependencies": {
     "@vue/reactivity": "^3.4.33",
+    "chart.js": "^4.4.3",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "code-tag": "^1.2.0",
+    "date-fns": "^3.6.0",
     "dom-chef": "^5.1.1",
     "engine.io-parser": "^5.2.3",
     "math-expression-evaluator": "^2.0.5",
     "one-mutation": "^3.0.0",
     "onetime": "^7.0.0",
-    "plotly.js-dist-min": "^2.30.1",
     "request-animation-frames": "^1.0.0",
     "select-dom": "^9.0.0",
     "socket.io-parser": "^4.2.4",
@@ -39,7 +42,6 @@
     "@refined-prun/tsconfig": "workspace:*",
     "@types/chrome": "^0.0.268",
     "@types/firefox-webext-browser": "^120.0.4",
-    "@types/plotly.js-dist-min": "^2.3.4",
     "@types/socket.io-parser": "^3.0.0"
   }
 }

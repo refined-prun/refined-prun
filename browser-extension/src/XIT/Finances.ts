@@ -8,7 +8,6 @@ import {
   createTextSpan,
   createToolTip,
   dateYearFormatter,
-  dateYearFormatter2,
   downloadFile,
   findCorrespondingPlanet,
   getLocalStorage,
@@ -19,7 +18,7 @@ import {
 } from '../util';
 import { Style, TextColors } from '../Style';
 import { Consumption, CurrencySymbols } from '../GameProperties';
-import { generateLineGraph, generatePieChart } from '../PlotlyHandler';
+import { generateLineGraph, generatePieChart } from '../charts';
 import system from '@src/system';
 import user from '@src/prun-api/user';
 
@@ -1058,32 +1057,28 @@ function generateGraph(graphType, finResult, locationsArray, currency, width = 4
         dateData.push(new Date(entry[0]).toISOString());
         finData.push(Number((entry[1] + entry[2] + entry[3] - entry[4]).toPrecision(4)));
       });
-      let formattedDate = dateYearFormatter2.format(1729566792000);
-      formattedDate = formattedDate.replace('10', '%m').replace('21', '%d').replace('22', '%d').replace('24', '%y');
-      const linePlot = generateLineGraph(
+      return generateLineGraph(
         dateData,
         finData,
         'Date',
         'Equity',
         width,
         height,
-        'date',
+        'time',
         'linear',
         '',
         currency,
-        formattedDate,
+        'dd/MM',
       );
-      return linePlot;
     }
     case 'assetpie': {
       const latestReport = finResult['History'][finResult['History'].length - 1];
-      const pieCanvas = generatePieChart(
+      return generatePieChart(
         ['Fixed', 'Current', 'Liquid'],
         [latestReport[1], latestReport[2], latestReport[3]],
         width,
         height,
       );
-      return pieCanvas;
     }
     case 'locationspie': {
       const locationNames = [] as any[];
@@ -1093,8 +1088,7 @@ function generateGraph(graphType, finResult, locationsArray, currency, width = 4
         locationValue.push(location[1] + location[2] + location[3]);
       });
 
-      const locPieCanvas = generatePieChart(locationNames, locationValue, width, height);
-      return locPieCanvas;
+      return generatePieChart(locationNames, locationValue, width, height);
     }
   }
   return null;

@@ -15,12 +15,6 @@ export const dateYearFormatter = new Intl.DateTimeFormat(undefined, {
   year: 'numeric',
 });
 
-export const dateYearFormatter2 = new Intl.DateTimeFormat(undefined, {
-  month: '2-digit',
-  day: '2-digit',
-  year: '2-digit',
-});
-
 // Add context buttons. (Append returned object to empty tile)
 export function createContextButtonRow(buttonAbbreviations, buttonLabels, buttonLinks) {
   const contextBar = document.createElement('div');
