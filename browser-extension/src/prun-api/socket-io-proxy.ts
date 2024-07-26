@@ -99,6 +99,7 @@
     }
   }
 
+  const addEventListener = WebSocket.prototype.addEventListener;
   window.WebSocket = new Proxy(WebSocket, {
     construct(target: typeof WebSocket, args: [string, (string | string[])?]) {
       const ws = new target(...args);
@@ -121,6 +122,9 @@
           return Reflect.set(target, prop, value);
         },
         get(target, prop) {
+          if (prop === 'addEventListener') {
+            return addEventListener.bind(target);
+          }
           const value = Reflect.get(target, prop);
           if (typeof value === 'function') {
             return value.bind(target);
@@ -130,6 +134,10 @@
       });
     },
   });
+
+  WebSocket.prototype.addEventListener = function (type: any, listener: any, options: any) {
+    return this.addEventListener(type, listener, options);
+  };
 
   window.XMLHttpRequest = new Proxy(XMLHttpRequest, {
     construct(target: typeof XMLHttpRequest) {
