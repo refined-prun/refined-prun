@@ -42,7 +42,7 @@ export class Prosperity {
     clearChildren(this.tile);
     let url = 'https://prosperity-prun.netlify.app/';
     if (this.parameters.length == 3) {
-      url += '?from=' + this.parameters[1] + '&to=' + this.parameters[2];
+      url += `?from=${this.parameters[1]}&to=${this.parameters[2]}`;
     }
 
     const prosp = document.createElement('iframe');
@@ -80,10 +80,10 @@ export class Sheets {
       return;
     }
     for (let i = 2; i < this.parameters.length; i++) {
-      this.parameters[1] += '_' + this.parameters[i];
+      this.parameters[1] += `_${this.parameters[i]}`;
     }
     const sheet = document.createElement('iframe');
-    sheet.src = 'https://docs.google.com/spreadsheets/d/' + this.parameters[1] + '/edit?usp=sharing';
+    sheet.src = `https://docs.google.com/spreadsheets/d/${this.parameters[1]}/edit?usp=sharing`;
     sheet.style.borderWidth = '0';
     sheet.style.height = '100%';
     sheet.style.width = '100%';
@@ -195,7 +195,7 @@ export class PrunPlanner {
     clearChildren(this.tile);
     let link = 'https://prunplanner.org';
     for (let i = 1; i < this.parameters.length; i++) {
-      link += '/' + this.parameters[i];
+      link += `/${this.parameters[i]}`;
     }
 
     const frame = document.createElement('iframe');

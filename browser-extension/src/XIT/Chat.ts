@@ -21,7 +21,7 @@ export class FIOChat {
       this.tile,
       this.parameters,
       Chat_post,
-      'https://rest.fnar.net/chat/display/' + this.parameters[1],
+      `https://rest.fnar.net/chat/display/${this.parameters[1]}`,
       'GET',
       undefined,
       undefined,
@@ -50,7 +50,7 @@ function Chat_post(chatDiv, parameters, jsondata) {
     return;
   }
   const titleDiv = document.createElement('div');
-  titleDiv.textContent = parameters[1] + ' Global Site Owners';
+  titleDiv.textContent = `${parameters[1]} Global Site Owners`;
   titleDiv.classList.add('title');
   chatDiv.appendChild(titleDiv);
 
@@ -88,11 +88,11 @@ function Chat_post(chatDiv, parameters, jsondata) {
         messageDiv.textContent = chat['MessageText'];
         break;
       case 'JOINED':
-        messageDiv.textContent = chat['UserName'] + ' joined.';
+        messageDiv.textContent = `${chat['UserName']} joined.`;
         messageDiv.style.fontStyle = 'italic';
         break;
       case 'LEFT':
-        messageDiv.textContent = chat['UserName'] + ' left.';
+        messageDiv.textContent = `${chat['UserName']} left.`;
         messageDiv.style.fontStyle = 'italic';
         break;
     }

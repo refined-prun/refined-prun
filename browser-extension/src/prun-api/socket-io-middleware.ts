@@ -16,7 +16,7 @@ export function socketIOMiddleware(middleware: Middleware) {
         <SocketIOProxyMessage>{
           type: 'rprun-socket-io-message-apply',
           id: message.id,
-          data: data,
+          data,
         },
         '*',
       );
@@ -40,7 +40,7 @@ function processMessage(message: SocketIOProxyMessage, middleware: Middleware) {
       continue;
     }
     const decoder = new Decoder();
-    decoder.on('decoded', function (decodedPacket) {
+    decoder.on('decoded', decodedPacket => {
       const data = decodedPacket.data;
       const payload = data[1];
       if (data[0] !== 'event' || payload === undefined) {

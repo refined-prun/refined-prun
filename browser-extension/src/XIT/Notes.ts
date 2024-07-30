@@ -140,7 +140,7 @@ function generateNotesTable(notesStorage: { [p: string]: any }, tile: HTMLDivEle
 
     row.append(nameColumn, lengthColumn, buttonsColumn);
 
-    const openNoteLink = createLink(noteName, 'XIT NOTES_' + noteName);
+    const openNoteLink = createLink(noteName, `XIT NOTES_${noteName}`);
     nameColumn.append(openNoteLink);
 
     const noteCounter = document.createElement('div');
@@ -154,8 +154,8 @@ function generateNotesTable(notesStorage: { [p: string]: any }, tile: HTMLDivEle
     deleteButton.classList.add('delete-button');
     deleteButton.textContent = 'DELETE';
 
-    deleteButton.addEventListener('click', function () {
-      showWarningDialog(tile, `Are you sure you want to delete the note "${noteName}"?`, 'Confirm', function () {
+    deleteButton.addEventListener('click', () => {
+      showWarningDialog(tile, `Are you sure you want to delete the note "${noteName}"?`, 'Confirm', () => {
         saveNote(noteName, null).then(() => {
           row.remove();
         });
@@ -172,21 +172,21 @@ function generateNotesTable(notesStorage: { [p: string]: any }, tile: HTMLDivEle
   newButton.style.margin = '5px';
 
   newButton.textContent = 'NEW NOTE';
-  newButton.addEventListener('click', function () {
+  newButton.addEventListener('click', () => {
     const popup = new Popup(tile, 'New Note');
     popup.addPopupRow(
       'text',
       'Note Name',
       '',
       'The name of the note. The command to access will be XIT NOTE_{name}',
-      function () {},
+      () => {},
     );
-    popup.addPopupRow('button', 'CMD', 'Create', undefined, function () {
+    popup.addPopupRow('button', 'CMD', 'Create', undefined, () => {
       const nameRow = popup.getRowByName('Note Name');
       if (!nameRow || !nameRow.rowInput) {
         return;
       }
-      showBuffer('XIT NOTE_' + (nameRow.rowInput.value || ''));
+      showBuffer(`XIT NOTE_${nameRow.rowInput.value || ''}`);
       popup.destroy();
     });
   });
@@ -235,7 +235,7 @@ async function displayStoredNote(note: NoteStructure, noteName: string) {
     renderNoteText(note, noteText);
   });
 
-  note.textbox.addEventListener('scroll', function () {
+  note.textbox.addEventListener('scroll', () => {
     note.overlay.scrollTop = note.textbox.scrollTop;
     note.overlay.scrollLeft = note.textbox.scrollLeft;
   });
@@ -260,7 +260,7 @@ function renderNoteText(note: NoteStructure, noteText: string): void {
       break;
     }
 
-    noteText = noteText.replace(regexp, '<span class="pb-note-link">' + matches[0] + '</span>');
+    noteText = noteText.replace(regexp, `<span class="pb-note-link">${matches[0]}</span>`);
 
     counter++;
     if (counter > 100) {
@@ -272,8 +272,8 @@ function renderNoteText(note: NoteStructure, noteText: string): void {
 
   const links = note.overlay.getElementsByClassName('pb-note-link');
   Array.from(links).forEach(link => {
-    link.addEventListener('click', function () {
-      showBuffer('CXP ' + link.textContent);
+    link.addEventListener('click', () => {
+      showBuffer(`CXP ${link.textContent}`);
     });
   });
 }

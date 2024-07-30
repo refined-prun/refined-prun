@@ -24,8 +24,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
           id="Layer_1"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 460 460"
-          // @ts-expect-error I have no idea
-          xml:space="preserve">
+          xmlSpace="preserve">
           <g id="XMLID_241_">
             <g>
               <path

@@ -79,15 +79,15 @@ function generateListTable(result, tile) {
 
     body.appendChild(row);
 
-    nameColumn.appendChild(createLink(name, 'XIT LIST_' + name));
+    nameColumn.appendChild(createLink(name, `XIT LIST_${name}`));
     lengthColumn.appendChild(createTextSpan(result['PMMG-Lists'][name].length.toLocaleString()));
 
     const deleteButton = document.createElement('button');
     deleteButton.classList.add('delete-button');
     deleteButton.textContent = 'DELETE';
     deleteColumn.appendChild(deleteButton);
-    deleteButton.addEventListener('click', function () {
-      showWarningDialog(tile, 'Are you sure you want to delete ' + name + '?', 'Confirm', function () {
+    deleteButton.addEventListener('click', () => {
+      showWarningDialog(tile, `Are you sure you want to delete ${name}?`, 'Confirm', () => {
         getLocalStorage('PMMG-Lists', updateThenStoreList, [name, '']);
         row.style.display = 'none';
         return;
@@ -111,21 +111,21 @@ function generateListTable(result, tile) {
   newButton.style.margin = '5px';
 
   newButton.textContent = 'NEW COMMAND LIST';
-  newButton.addEventListener('click', function () {
+  newButton.addEventListener('click', () => {
     const popup = new Popup(tile, 'New Command List');
     popup.addPopupRow(
       'text',
       'List Name',
       '',
       'The name of the command list. The command to access will be XIT LIST_{name}',
-      function () {},
+      () => {},
     );
-    popup.addPopupRow('button', 'CMD', 'Create', undefined, function () {
+    popup.addPopupRow('button', 'CMD', 'Create', undefined, () => {
       const nameRow = popup.getRowByName('List Name');
       if (!nameRow || !nameRow.rowInput) {
         return;
       }
-      showBuffer('XIT LIST_' + (nameRow.rowInput.value || ''));
+      showBuffer(`XIT LIST_${nameRow.rowInput.value || ''}`);
       popup.destroy();
     });
   });
@@ -208,7 +208,7 @@ function dispStoredList(result, param) {
   addButton.classList.add(...Style.Button);
   addButton.classList.add(...Style.ButtonPrimary);
 
-  addButton.addEventListener('click', function () {
+  addButton.addEventListener('click', () => {
     createEditInterface(tile, result, parameters, result['PMMG-Lists'][listName] || [], listObj);
     return;
   });
@@ -246,11 +246,11 @@ function createEditInterface(tile, result, parameters, settings: any[] = [], lis
   if (prefilled) {
     for (let i = 0; i < settings.length; i++) {
       form.appendChild(
-        createPopupInputRow('Link ' + (i + 1) + ' Label', settings[i][0], i == 0 ? 'The label of the first link.' : ''),
+        createPopupInputRow(`Link ${i + 1} Label`, settings[i][0], i == 0 ? 'The label of the first link.' : ''),
       );
       form.appendChild(
         createPopupInputRow(
-          'Link ' + (i + 1) + ' Command',
+          `Link ${i + 1} Command`,
           settings[i][1],
           i == 0 ? 'The command opened by the first link (ex: CX NC1)' : '',
         ),
@@ -277,10 +277,10 @@ function createEditInterface(tile, result, parameters, settings: any[] = [], lis
   addButton.classList.add(...Style.ButtonPrimary);
   addInputDiv.appendChild(addButton);
 
-  addButton.addEventListener('click', function () {
+  addButton.addEventListener('click', () => {
     const catNumber = form.children.length / 2;
-    form.insertBefore(createPopupInputRow('Link ' + catNumber + ' Label'), form.children[form.children.length - 2]);
-    form.insertBefore(createPopupInputRow('Link ' + catNumber + ' Command'), form.children[form.children.length - 2]);
+    form.insertBefore(createPopupInputRow(`Link ${catNumber} Label`), form.children[form.children.length - 2]);
+    form.insertBefore(createPopupInputRow(`Link ${catNumber} Command`), form.children[form.children.length - 2]);
   });
 
   const saveRow = document.createElement('div');
@@ -299,7 +299,7 @@ function createEditInterface(tile, result, parameters, settings: any[] = [], lis
   saveButton.classList.add(...Style.ButtonPrimary);
   saveInputDiv.appendChild(saveButton);
 
-  saveButton.addEventListener('click', function () {
+  saveButton.addEventListener('click', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const commandInfo = [] as any[];
     for (let i = 0; i < form.children.length - 2; i += 2) {

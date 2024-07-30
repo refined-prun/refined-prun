@@ -1,2 +1,3 @@
-dist
+watch.js
+dist/**
 node_modules

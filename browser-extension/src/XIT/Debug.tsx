@@ -34,18 +34,14 @@ export class Debug {
       createDownloadButton(
         this.pmmgSettings['PMMGExtended'],
         'Download Full Settings',
-        'pmmg-settings' + Date.now().toString() + '.json',
+        `pmmg-settings${Date.now().toString()}.json`,
       ),
     );
     downloadButtons.appendChild(
-      createDownloadButton(this.webData, 'Download All Web Data', 'pmmg-web-data' + Date.now().toString() + '.json'),
+      createDownloadButton(this.webData, 'Download All Web Data', `pmmg-web-data${Date.now().toString()}.json`),
     );
     downloadButtons.appendChild(
-      createDownloadButton(
-        this.userInfo,
-        'Download All Collected Data',
-        'pmmg-user-info' + Date.now().toString() + '.json',
-      ),
+      createDownloadButton(this.userInfo, 'Download All Collected Data', `pmmg-user-info${Date.now().toString()}.json`),
     );
     downloadButtons.appendChild(createDownloadPrunCssClassesButton());
     const endpointLabel = document.createElement('div');
@@ -64,8 +60,8 @@ export class Debug {
     endpointButton.style.marginLeft = '4px';
     endpointButton.style.marginBottom = '4px';
     endpointButton.style.display = 'block';
-    endpointButton.addEventListener('click', function () {
-      const url = 'https://rest.fnar.net' + (endpointInput.value.charAt(0) == '/' ? '' : '/') + endpointInput.value;
+    endpointButton.addEventListener('click', () => {
+      const url = `https://rest.fnar.net${endpointInput.value.charAt(0) == '/' ? '' : '/'}${endpointInput.value}`;
       XITWebRequest(
         tile,
         parameters,
@@ -96,7 +92,7 @@ function Debug_post(tile, parameters, jsondata) {
   } catch (ex) {
     /* empty */
   }
-  downloadFile(jsondata, 'fio-endpoint' + Date.now().toString() + '.json', false);
+  downloadFile(jsondata, `fio-endpoint${Date.now().toString()}.json`, false);
   return [tile, parameters];
 }
 
@@ -108,7 +104,7 @@ function createDownloadButton(data, buttonName, fileName) {
   downloadButton.style.marginLeft = '4px';
   downloadButton.style.marginBottom = '4px';
   downloadButton.style.display = 'block';
-  downloadButton.addEventListener('click', function () {
+  downloadButton.addEventListener('click', () => {
     console.log(data);
     downloadFile(data, fileName);
   });

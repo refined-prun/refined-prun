@@ -19,7 +19,7 @@ function onAdTextReady(element: HTMLDivElement) {
   const totalCost = matches[3];
   const unit = weight > volume ? 't' : 'm³';
   const amount = weight > volume ? weight : volume;
-  const totalCents = parseInt(totalCost.replace(/[,.]/g, ''));
+  const totalCents = parseInt(totalCost.replace(/[,.]/g, ''), 10);
   const perItem = (totalCents / amount / 100).toFixed(2);
   for (const child of Array.from(element.childNodes)) {
     if (child.nodeValue && child.nodeValue.slice(1) in CurrencySymbols) {

@@ -77,7 +77,7 @@ function addChatDeleteToggle(buffer, pmmgSettings, tag) {
     chatIndicator.classList.add(...Style.RadioButtonToggled);
   }
 
-  chatToggle.addEventListener('click', function () {
+  chatToggle.addEventListener('click', () => {
     pmmgSettings['PMMGExtended']['chat_delete_hidden'] = !pmmgSettings['PMMGExtended']['chat_delete_hidden'];
 
     const chatIndicator = chatToggle.querySelector(Selector.RadioIndicator) as HTMLElement;
@@ -102,7 +102,7 @@ function addChatDeleteToggle(buffer, pmmgSettings, tag) {
     setSettings(pmmgSettings);
   });
 
-  joinToggle.addEventListener('click', function () {
+  joinToggle.addEventListener('click', () => {
     pmmgSettings['PMMGExtended']['join_leave_hidden'] = !pmmgSettings['PMMGExtended']['join_leave_hidden'];
 
     const chatIndicator = joinToggle.querySelector(Selector.RadioIndicator) as HTMLElement;

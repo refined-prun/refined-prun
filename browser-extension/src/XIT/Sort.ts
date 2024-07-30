@@ -69,7 +69,7 @@ export class Sort {
     addButton.classList.add(...Style.Button);
     addButton.classList.add(...Style.ButtonSuccess);
 
-    addButton.addEventListener('click', function () {
+    addButton.addEventListener('click', () => {
       // On click, create the interface for adding a new sorting configuration
       createAddInterface(sortObj, tile, pmmgSettings, parameters);
     });
@@ -100,7 +100,7 @@ export class Sort {
         if (!category[0]) {
           return;
         }
-        categories += category[0] + ', ';
+        categories += `${category[0]}, `;
         return;
       });
       categories = categories.slice(0, -2); // Remove the last ", "
@@ -112,7 +112,7 @@ export class Sort {
       modifyColumn.appendChild(
         createSmallButton(
           'delete',
-          function (pmmgSettings, row, settings) {
+          (pmmgSettings, row, settings) => {
             // Create the delete button
 
             for (
@@ -195,14 +195,14 @@ function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: a
     for (let i = 0; i < settings[2].length; i++) {
       form.appendChild(
         createPopupInputRow(
-          'Category ' + (i + 1) + ' Name',
+          `Category ${i + 1} Name`,
           prefilled ? settings[2][i][0] : '',
           i == 0 ? 'The name of the first category for materials' : '',
         ),
       );
       form.appendChild(
         createPopupInputRow(
-          'Category ' + (i + 1) + ' MATs',
+          `Category ${i + 1} MATs`,
           prefilled ? settings[2][i][1].join(', ') : '',
           i == 0 ? 'A list of materials in the first category. Separate tickers by a comma. (RAT, DW, etc.)' : '',
         ),
@@ -234,10 +234,10 @@ function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: a
   addButton.classList.add(...Style.ButtonPrimary);
   addInputDiv.appendChild(addButton);
 
-  addButton.addEventListener('click', function () {
+  addButton.addEventListener('click', () => {
     const catNumber = (form.children.length - 3) / 2;
-    form.insertBefore(createPopupInputRow('Category ' + catNumber + ' Name'), form.children[form.children.length - 4]);
-    form.insertBefore(createPopupInputRow('Category ' + catNumber + ' MATs'), form.children[form.children.length - 4]);
+    form.insertBefore(createPopupInputRow(`Category ${catNumber} Name`), form.children[form.children.length - 4]);
+    form.insertBefore(createPopupInputRow(`Category ${catNumber} MATs`), form.children[form.children.length - 4]);
   });
 
   //Create the burn row
@@ -271,7 +271,7 @@ function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: a
   saveButton.classList.add(...Style.ButtonPrimary);
   saveInputDiv.appendChild(saveButton);
 
-  saveButton.addEventListener('click', function () {
+  saveButton.addEventListener('click', () => {
     let i;
     const itemAbbreviation = getValueOfPopupRow(form.firstChild);
 

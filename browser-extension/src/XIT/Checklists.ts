@@ -91,7 +91,7 @@ function generateCheckTable(result, tile) {
 
     // Make a name element that links to the checklist
     const nameElem = document.createElement('td');
-    nameElem.appendChild(createLink(listName, 'XIT CHECKLIST_' + listName.replace(/ /, '_')));
+    nameElem.appendChild(createLink(listName, `XIT CHECKLIST_${listName.replace(/ /, '_')}`));
     row.appendChild(nameElem);
 
     // Count incomplete and find most recent duedate
@@ -130,8 +130,8 @@ function generateCheckTable(result, tile) {
     modifyElem.appendChild(deleteButton);
     deleteButton.textContent = 'delete';
 
-    deleteButton.addEventListener('click', function () {
-      showWarningDialog(tile, 'Are you sure you want to delete this checklist?', 'Confirm', function () {
+    deleteButton.addEventListener('click', () => {
+      showWarningDialog(tile, 'Are you sure you want to delete this checklist?', 'Confirm', () => {
         getLocalStorage('PMMG-Checklists', deleteChecklist, [listName, tile]);
       });
     });
@@ -145,21 +145,21 @@ function generateCheckTable(result, tile) {
   newButton.style.margin = '5px';
 
   newButton.textContent = 'NEW CHECKLIST';
-  newButton.addEventListener('click', function () {
+  newButton.addEventListener('click', () => {
     const popup = new Popup(tile, 'New Checklist');
     popup.addPopupRow(
       'text',
       'Checklist Name',
       '',
       'The name of the checklist. The command to access will be XIT CHECK_{name}',
-      function () {},
+      () => {},
     );
-    popup.addPopupRow('button', 'CMD', 'Create', undefined, function () {
+    popup.addPopupRow('button', 'CMD', 'Create', undefined, () => {
       const nameRow = popup.getRowByName('Checklist Name');
       if (!nameRow || !nameRow.rowInput) {
         return;
       }
-      showBuffer('XIT CHECK_' + (nameRow.rowInput.value || ''));
+      showBuffer(`XIT CHECK_${nameRow.rowInput.value || ''}`);
       popup.destroy();
     });
   });
@@ -176,9 +176,8 @@ function checklistDuedateSort(a, b) {
     return aDuedate > bDuedate ? 1 : -1;
   } else if (aDuedate && !bDuedate) {
     return -1;
-  } else {
-    return 1;
   }
+  return 1;
 }
 
 function calculateDuedate(checklist) {
@@ -234,7 +233,7 @@ function displayChecklist(tile, userInfo, checkName) {
   addButton.style.margin = '5px';
   addButton.textContent = 'ADD ITEM';
 
-  addButton.addEventListener('click', function () {
+  addButton.addEventListener('click', () => {
     generateEditPopup(tile, checklist, userInfo);
   });
 
@@ -463,14 +462,9 @@ function addChecklistItem(params) {
   // Do some post-processing of the info
   switch (info.type) {
     case 'Resupply': {
-      info.name =
-        'Supply [[p:' +
-        info['planet'] +
-        ']] with ' +
-        info['days'] +
-        ' ' +
-        (info['days'] == '1' ? 'day' : 'days') +
-        ' of consumables.';
+      info.name = `Supply [[p:${info['planet']}]] with ${info['days']} ${
+        info['days'] == '1' ? 'day' : 'days'
+      } of consumables.`;
 
       const planetWorkforce = findCorrespondingPlanet(info['planet'], userInfo['PMMG-User-Info']['workforce']);
       const planetProduction = findCorrespondingPlanet(info['planet'], userInfo['PMMG-User-Info']['production']);
@@ -485,19 +479,16 @@ function addChecklistItem(params) {
           child.id = generateRandomHexSequence(8);
           child.isChild = true;
 
-          child.name = amt.toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' [[m:' + mat + ']]';
+          child.name = `${amt.toLocaleString(undefined, { maximumFractionDigits: 0 })} [[m:${mat}]]`;
           info['children'].push(child);
         }
       });
       break;
     }
     case 'Repair': {
-      info.name =
-        'Repair buildings on [[p:' +
-        info['planet'] +
-        ']] older than ' +
-        info['days'] +
-        (info['days'] == '1' ? ' day' : ' days');
+      info.name = `Repair buildings on [[p:${info['planet']}]] older than ${
+        info['days']
+      }${info['days'] == '1' ? ' day' : ' days'}`;
 
       const mats = {};
 
@@ -526,7 +517,7 @@ function addChecklistItem(params) {
         child.id = generateRandomHexSequence(8);
         child.isChild = true;
 
-        child.name = mats[mat].toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' [[m:' + mat + ']]';
+        child.name = `${mats[mat].toLocaleString(undefined, { maximumFractionDigits: 0 })} [[m:${mat}]]`;
         info['children'].push(child);
       });
       break;
@@ -619,10 +610,10 @@ function createName(name) {
     let command;
     switch (match[1]) {
       case 'm':
-        command = 'MAT ' + match[2];
+        command = `MAT ${match[2]}`;
         break;
       case 'p':
-        command = 'PLI ' + match[2];
+        command = `PLI ${match[2]}`;
         break;
       default:
         nameElem.appendChild(createTextSpan(match[0]));
@@ -670,7 +661,7 @@ class Checklist {
 
     // Keep the same height to avoid jumping as the buffer is updated
     const prevHeight = thisObject.checkDiv.getBoundingClientRect().height;
-    thisObject.checkDiv.style.minHeight = prevHeight.toString() + 'px';
+    thisObject.checkDiv.style.minHeight = `${prevHeight.toString()}px`;
     clearChildren(thisObject.checkDiv);
 
     const checklistItems = [] as CheckItem[];
@@ -746,11 +737,9 @@ class CheckItem {
       // The due date under the name
       let dateText = dateYearFormatter.format(new Date(checkInfo.duedate));
       if (checkInfo.recurring) {
-        dateText +=
-          ' (every ' +
-          checkInfo.recurring.toLocaleString(undefined, { maximumFractionDigits: 1 }) +
-          ' day' +
-          (checkInfo.recurring == 1 ? ')' : 's)');
+        dateText += ` (every ${checkInfo.recurring.toLocaleString(undefined, { maximumFractionDigits: 1 })} day${
+          checkInfo.recurring == 1 ? ')' : 's)'
+        }`;
       }
       this.dateElem = createTextSpan(dateText);
       this.dateElem.style.color =
@@ -775,13 +764,13 @@ class CheckItem {
       this.item.appendChild(this.editButton);
 
       // Handle action listener for modify button
-      this.editButton.addEventListener('click', function () {
+      this.editButton.addEventListener('click', () => {
         generateEditPopup(checklist.tile, checklist, checklist.userInfo, thisObject.checkInfo);
       });
     }
 
     // Handle the action listener for the checklist item
-    this.checkCircle.addEventListener('click', function () {
+    this.checkCircle.addEventListener('click', () => {
       thisObject.changeCheckedState();
     });
 
@@ -806,9 +795,9 @@ class CheckItem {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const thisObject = this;
 
-    setTimeout(function () {
+    setTimeout(() => {
       // Wait a few seconds before deleting
-      getLocalStorage('PMMG-Checklists', function (result) {
+      getLocalStorage('PMMG-Checklists', result => {
         // First, check whether the object is still completed (in local storage)
         if (!result['PMMG-Checklists'] || !result['PMMG-Checklists'][thisObject.checklist.name]) {
           return;
@@ -886,7 +875,6 @@ function checkSort(a, b) {
     // b has duedate
     return 1;
   } // Neither has duedate
-  else {
-    return a.checkInfo.created > b.checkInfo.created ? 1 : -1;
-  }
+
+  return a.checkInfo.created > b.checkInfo.created ? 1 : -1;
 }

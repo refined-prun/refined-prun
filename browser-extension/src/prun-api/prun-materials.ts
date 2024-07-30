@@ -51,7 +51,7 @@ function applyApiPayload(payload: ApiPayload) {
         name: apiMaterial.name,
         id: apiMaterial.id,
         ticker: apiMaterial.ticker,
-        category: category,
+        category,
         get displayName() {
           return getDisplayName(this);
         },

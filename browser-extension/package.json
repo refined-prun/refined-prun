@@ -11,7 +11,7 @@
     "dev": "pnpm build:watch",
     "dev:firefox": "pnpm build:firefox:watch",
     "test": "vitest run",
-    "lint": "eslint ./ --ext .ts,.js,.tsx,.jsx",
+    "lint": "eslint ./",
     "lint:fix": "pnpm lint --fix",
     "prettier": "prettier . --write --ignore-path ../.prettierignore",
     "type-check": "tsc --noEmit"
@@ -29,6 +29,7 @@
     "math-expression-evaluator": "^2.0.5",
     "one-mutation": "^3.0.0",
     "onetime": "^7.0.0",
+    "preact": "^10.23.1",
     "request-animation-frames": "^1.0.0",
     "select-dom": "^9.0.0",
     "socket.io-parser": "^4.2.4",

@@ -65,7 +65,7 @@ export class PostLM implements Module {
       if (shipping && commodity.value != '') {
         totalPriceInput.parentNode!.insertBefore(displayElement, totalPriceInput);
         const calculatePricePerUnit = () => {
-          const amount = parseInt(amountInput.value);
+          const amount = parseInt(amountInput.value, 10);
           const total = parseFloat(totalPriceInput.value);
           const ticker = prun.materials.getTickerByName(commodity.value);
           if (ticker === undefined) {
@@ -89,23 +89,15 @@ export class PostLM implements Module {
           const weightvolume = Math.max(matInfo.weight, matInfo.volume);
 
           if (isNaN(weightvolume) || isNaN(total)) {
-            displayElement.textContent = '-- t | ' + currencySymbol + '-- / t';
+            displayElement.textContent = `-- t | ${currencySymbol}-- / t`;
           } else {
-            displayElement.textContent =
-              (amount * weightvolume).toLocaleString(undefined, {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              }) +
-              ' ' +
-              unit +
-              ' | ' +
-              currencySymbol +
-              (total / (amount * weightvolume)).toLocaleString(undefined, {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              }) +
-              ' / ' +
-              unit;
+            displayElement.textContent = `${(amount * weightvolume).toLocaleString(undefined, {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })} ${unit} | ${currencySymbol}${(total / (amount * weightvolume)).toLocaleString(undefined, {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })} / ${unit}`;
           }
         };
         calculatePricePerUnit();

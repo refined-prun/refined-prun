@@ -44,14 +44,14 @@ export function createContextButton(buttonAbbreviation, buttonLabel, buttonLink)
   contextSpan1.appendChild(contextSpan2);
   contextButton.appendChild(contextSpan1);
 
-  const contextLabel = createTextSpan(': ' + buttonLabel);
+  const contextLabel = createTextSpan(`: ${buttonLabel}`);
   contextLabel.classList.add(...Style.ContextLabel);
 
   contextButton.appendChild(contextLabel);
 
   const link = buttonLink;
 
-  contextButton.addEventListener('click', function () {
+  contextButton.addEventListener('click', () => {
     showBuffer(link);
   });
 
@@ -70,12 +70,12 @@ export function createSettingsButton(text, width, toggled, f) {
   textBox.classList.add(...Style.SettingsText);
   textBox.textContent = text;
   button.classList.add(...Style.SettingsButton);
-  bar.style.width = width + 'px';
-  bar.style.maxWidth = width + 'px';
+  bar.style.width = `${width}px`;
+  bar.style.maxWidth = `${width}px`;
   bar.style.height = '2px';
   button.appendChild(bar);
   button.appendChild(textBox);
-  button.addEventListener('click', function () {
+  button.addEventListener('click', () => {
     if (toggled) {
       bar.classList.remove(...Style.SettingsBarToggled);
       bar.classList.add(...Style.SettingsBarUntoggled);
@@ -153,16 +153,16 @@ export function parseDuration(duration) {
 
   let parsedSeconds = 0;
   if (days) {
-    parsedSeconds += parseInt(days[1]) * 86400;
+    parsedSeconds += parseInt(days[1], 10) * 86400;
   }
   if (hours) {
-    parsedSeconds += parseInt(hours[1]) * 3600;
+    parsedSeconds += parseInt(hours[1], 10) * 3600;
   }
   if (minutes) {
-    parsedSeconds += parseInt(minutes[1]) * 60;
+    parsedSeconds += parseInt(minutes[1], 10) * 60;
   }
   if (seconds) {
-    parsedSeconds += parseInt(seconds[1]);
+    parsedSeconds += parseInt(seconds[1], 10);
   }
   return parsedSeconds;
 }
@@ -339,7 +339,7 @@ export function parsePlanetName(text) {
 // Get the data in local storage for a given storageName. Then call the callback function.
 // Also pass the params through to the callback function
 export function getLocalStorage(storageName, callbackFunction, params?) {
-  system.storage.local.get(storageName).then(function (result) {
+  system.storage.local.get(storageName).then(result => {
     callbackFunction(result, params);
   });
 }
@@ -446,9 +446,9 @@ export function createMaterialElement(
     materialDiv.style.color = CategoryColors[category][1];
     materialDiv.title = name; // Provide the material with a title when hovered over
   } // Provide the material with a title when hovered over
-  materialDiv.addEventListener('click', function () {
+  materialDiv.addEventListener('click', () => {
     // Show MAT buffer when clicked
-    showBuffer('MAT ' + ticker.toUpperCase());
+    showBuffer(`MAT ${ticker.toUpperCase()}`);
   });
 
   const materialWrapper = document.createElement('div'); // First wrapper around material square
@@ -489,9 +489,9 @@ export function createMaterialElement(
   if (small) {
     materialWrapper.classList.add('mat-element-small'); // Apply small size
     return materialWrapper; // Small material elements don't need all the wrapping
-  } else {
-    materialWrapper.classList.add('mat-element-large'); // Apply large size
   }
+  materialWrapper.classList.add('mat-element-large'); // Apply large size
+
   return outerLayer;
 }
 
@@ -499,7 +499,7 @@ export function createMaterialElement(
 export function createLink(text, command, autoSubmit = true) {
   const link = document.createElement('span');
   link.textContent = text;
-  link.addEventListener('click', function () {
+  link.addEventListener('click', () => {
     showBuffer(command, autoSubmit);
   });
 
@@ -590,7 +590,7 @@ export function monitorOnElementCreated(selector, callback, onlyOnce = true) {
       )
       .filter(item => item !== null);
   const onMutationsObserved = function (mutations) {
-    mutations.forEach(function (mutation) {
+    mutations.forEach(mutation => {
       if (mutation.addedNodes.length) {
         const elements = getElementsFromNodes(mutation.addedNodes);
         for (let i = 0, len = elements.length; i < len; i++) {
@@ -623,9 +623,9 @@ export function genericCleanup(className: string = 'prun-remove-js') {
 }
 
 export function genericUnhide(className: string = 'prun-remove-js') {
-  (<HTMLElement[]>Array.from(document.getElementsByClassName(className + '-hidden'))).forEach((elem: HTMLElement) => {
+  (<HTMLElement[]>Array.from(document.getElementsByClassName(`${className}-hidden`))).forEach((elem: HTMLElement) => {
     elem.style.display = '';
-    elem.classList.remove(className + '-hidden');
+    elem.classList.remove(`${className}-hidden`);
     return;
   });
   return;
@@ -766,7 +766,7 @@ export function createToolTip(text: string, position: string) {
 export function makePopupSpacer(tile, toRemove) {
   const spacer = document.createElement('div');
   spacer.classList.add(...Style.Spacer);
-  spacer.addEventListener('click', function () {
+  spacer.addEventListener('click', () => {
     tile.removeChild(toRemove);
     return;
   });
@@ -819,18 +819,16 @@ export function createPopupCheckboxRow(label, enabled: boolean = false, tooltip:
 export function getValueOfPopupRow(row) {
   if (!row || !row.children[1] || !row.children[1].firstChild) {
     return '';
-  } else {
-    return row.children[1].firstChild.value || '';
   }
+  return row.children[1].firstChild.value || '';
 }
 
 // Gets the checked status of a check box in a row in the add interface (should move to util)
 export function getCheckOfPopupRow(row) {
   if (!row || !row.children[1] || !row.children[1].firstChild) {
     return false;
-  } else {
-    return (row.children[1].firstChild as HTMLInputElement).checked || false;
   }
+  return (row.children[1].firstChild as HTMLInputElement).checked || false;
 }
 
 // Creates a small button as in LMOS and CXOS view/delete buttons
@@ -838,7 +836,7 @@ export function createSmallButton(label, clickFunction, parameters) {
   const button = document.createElement('button');
   button.textContent = label;
   button.classList.add(...Style.SmallButton);
-  button.addEventListener('click', function () {
+  button.addEventListener('click', () => {
     clickFunction(...parameters);
   });
   return button;
@@ -993,13 +991,13 @@ export function showWarningDialog(
   confirmButton.textContent = confirmButtonText;
   buttonDiv.appendChild(confirmButton);
 
-  cancelButton.addEventListener('click', function () {
+  cancelButton.addEventListener('click', () => {
     // Just remove the overlay to cancel
     displayTile.removeChild(overlay);
     return;
   });
 
-  confirmButton.addEventListener('click', function () {
+  confirmButton.addEventListener('click', () => {
     // Remove the overlay and call the callback function
     displayTile.removeChild(overlay);
     if (parameters) {
@@ -1030,7 +1028,7 @@ export function showSuccessDialog(tile, message: string = 'Action succeeded!') {
   dismissMessage.textContent = '(click to dismiss)';
   dismissMessage.classList.add(...Style.ActionDismiss);
 
-  overlay.addEventListener('click', function () {
+  overlay.addEventListener('click', () => {
     // Just remove the overlay to dismiss
     displayTile.removeChild(overlay);
     return;
@@ -1172,7 +1170,7 @@ export function drawPieChart(data, size, text?, colors?) {
   let maxX = centerX + pieSize;
   for (i = 0; i < data.length; i++) {
     const pieAngle = (data[i] / sum) * 2 * Math.PI;
-    const percent = ' - ' + ((data[i] / sum) * 100).toLocaleString(undefined, { maximumFractionDigits: 0 }) + '%';
+    const percent = ` - ${((data[i] / sum) * 100).toLocaleString(undefined, { maximumFractionDigits: 0 })}%`;
     const textInfo = context.measureText(text[i] + percent);
 
     if (pieAngle < 0.3 && data.length > 5) {
@@ -1199,8 +1197,8 @@ export function drawPieChart(data, size, text?, colors?) {
     angle += pieAngle;
   }
 
-  canvas.style.marginLeft = (minX > 0 ? -minX + 5 : 5).toString() + 'px';
-  canvas.style.marginRight = (maxX - 2 * size + 5).toString() + 'px';
+  canvas.style.marginLeft = `${(minX > 0 ? -minX + 5 : 5).toString()}px`;
+  canvas.style.marginRight = `${(maxX - 2 * size + 5).toString()}px`;
   return canvas;
 }
 
@@ -1353,7 +1351,7 @@ class PopupRow {
 
       if (callback) {
         const rowInput = this.rowInput;
-        this.rowInput.addEventListener('input', function () {
+        this.rowInput.addEventListener('input', () => {
           callback(rowInput.value, params);
         });
       }
@@ -1375,8 +1373,8 @@ class PopupRow {
       this.rowInput.style.width = '80%';
       this.rowInput.style.textAlignLast = 'left';
 
-      this.rowInput.name = 'popup-dropdown' + Math.floor(Math.random() * 10000).toString();
-      this.rowInput.id = 'popup-dropdown' + Math.floor(Math.random() * 10000).toString();
+      this.rowInput.name = `popup-dropdown${Math.floor(Math.random() * 10000).toString()}`;
+      this.rowInput.id = `popup-dropdown${Math.floor(Math.random() * 10000).toString()}`;
 
       const selectedIndex = inputText[inputText.length - 1];
       inputText = inputText.slice(0, -1);
@@ -1394,7 +1392,7 @@ class PopupRow {
 
       if (callback) {
         const rowInput = this.rowInput;
-        this.rowInput.addEventListener('change', function () {
+        this.rowInput.addEventListener('change', () => {
           callback(rowInput.selectedOptions[0].value, params);
         });
       }
@@ -1416,7 +1414,7 @@ class PopupRow {
       inputDiv.appendChild(this.rowInput);
 
       if (callback) {
-        this.rowInput.addEventListener('click', function () {
+        this.rowInput.addEventListener('click', () => {
           callback(params);
         });
       }

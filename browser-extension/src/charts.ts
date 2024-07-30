@@ -70,7 +70,7 @@ export function generateLineGraph(
           },
           ticks: {
             color: '#999',
-            callback: function (value: string | number) {
+            callback(value: string | number) {
               if (xtype === 'time') {
                 const dateValue = new Date(value);
                 return xprefix + format(dateValue, xformat || 'dd/MM/yyyy');
@@ -94,9 +94,9 @@ export function generateLineGraph(
           },
           ticks: {
             color: '#999',
-            callback: function (value: string | number) {
+            callback(value: string | number) {
               if (typeof value === 'number') {
-                return yprefix + (value / 1_000_000).toFixed(0) + 'M';
+                return `${yprefix + (value / 1_000_000).toFixed(0)}M`;
               }
               return yprefix + value;
             },
@@ -174,11 +174,11 @@ export function generatePieChart(
         },
         tooltip: {
           callbacks: {
-            label: function (context) {
+            label(context) {
               const label = context.label || '';
               const value = context.raw as number;
               const total = numericalData.reduce((a, b) => a + b, 0);
-              const percentage = ((value / total) * 100).toFixed(2) + '%';
+              const percentage = `${((value / total) * 100).toFixed(2)}%`;
               return `${label}: ${percentage}`;
             },
           },
@@ -186,7 +186,7 @@ export function generatePieChart(
         datalabels: {
           color: '#cccccc',
           display: 'auto',
-          formatter: function (value, context) {
+          formatter(value, context) {
             return context.chart.data.labels![context.dataIndex];
           },
           anchor: 'end',

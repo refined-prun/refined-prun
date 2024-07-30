@@ -46,7 +46,7 @@ export default function observeReadyElements<
   }
 
   const selector = String(selectors); // Array#toString() creates a comma-separated string
-  const seenMark = 'rprun-seen-' + getCallerID();
+  const seenMark = `rprun-seen-${getCallerID()}`;
 
   registerAnimation();
 

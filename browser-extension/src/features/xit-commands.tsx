@@ -83,7 +83,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
   }
   const refreshButton = (
     <div
-      className={className + ' button-upper-right'}
+      className={`${className} button-upper-right`}
       style={{
         fontSize: __CHROME__ ? '16px' : '18px',
         paddingTop: __CHROME__ ? '12px' : '7px',

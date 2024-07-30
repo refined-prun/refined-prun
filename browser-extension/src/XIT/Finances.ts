@@ -82,7 +82,7 @@ export class Finances {
       const pmmgSettings = this.pmmgSettings;
 
       // Flip the settings when checkbox is checked
-      checkbox.addEventListener('click', function () {
+      checkbox.addEventListener('click', () => {
         pmmgSettings['PMMGExtended']['recording_financials'] = checkbox.checked;
         setSettings(pmmgSettings);
       });
@@ -233,7 +233,7 @@ function chooseScreen(finResult, params) {
     }
 
     // Detect if changed to custom spreadsheet. Show or hide div accordingly
-    priceSelect.addEventListener('change', function () {
+    priceSelect.addEventListener('change', () => {
       pmmgSettings['PMMGExtended']['pricing_scheme'] = priceSelect.selectedOptions[0].value;
       setSettings(pmmgSettings);
       switch (priceSelect.selectedOptions[0].value) {
@@ -287,7 +287,7 @@ function chooseScreen(finResult, params) {
     backupPriceSelect.classList.add('select');
     backupPriceSelect.style.marginLeft = '4px';
     // Listen for change to pricing scheme, update settings accordingly
-    backupPriceSelect.addEventListener('change', function () {
+    backupPriceSelect.addEventListener('change', () => {
       pmmgSettings['PMMGExtended']['backup_pricing_scheme'] = backupPriceSelect.selectedOptions[0].value;
       setSettings(pmmgSettings);
     });
@@ -307,7 +307,7 @@ function chooseScreen(finResult, params) {
     if (pmmgSettings['PMMGExtended']['fin_spreadsheet']) {
       urlInput.value = pmmgSettings['PMMGExtended']['fin_spreadsheet'];
     }
-    urlInput.addEventListener('input', function () {
+    urlInput.addEventListener('input', () => {
       pmmgSettings['PMMGExtended']['fin_spreadsheet'] = urlInput.value == '' ? undefined : urlInput.value;
       setSettings(pmmgSettings);
     });
@@ -326,7 +326,7 @@ function chooseScreen(finResult, params) {
     if (pmmgSettings['PMMGExtended']['fin_sheet_name']) {
       sheetInput.value = pmmgSettings['PMMGExtended']['fin_sheet_name'];
     }
-    sheetInput.addEventListener('input', function () {
+    sheetInput.addEventListener('input', () => {
       pmmgSettings['PMMGExtended']['fin_sheet_name'] = sheetInput.value == '' ? undefined : sheetInput.value;
       setSettings(pmmgSettings);
     });
@@ -370,7 +370,7 @@ function chooseScreen(finResult, params) {
     importDiv.appendChild(errorTextBox);
 
     // When import button is clicked, click invisible file object
-    importButton.addEventListener('click', function () {
+    importButton.addEventListener('click', () => {
       importFile.click();
       return;
     });
@@ -416,13 +416,13 @@ function chooseScreen(finResult, params) {
     importDiv.appendChild(exportButton);
 
     // When export button is pressed, download data
-    exportButton.addEventListener('click', function () {
+    exportButton.addEventListener('click', () => {
       const output = {};
       Object.keys(finResult).forEach(key => {
         output[key] = finResult[key];
       });
 
-      downloadFile(output, 'pmmg-finance' + Date.now().toString() + '.json');
+      downloadFile(output, `pmmg-finance${Date.now().toString()}.json`);
     });
 
     // Create option to manually trigger collection
@@ -440,7 +440,7 @@ function chooseScreen(finResult, params) {
     addButton.style.marginBottom = '4px';
     tile.appendChild(addButton);
 
-    addButton.addEventListener('click', function () {
+    addButton.addEventListener('click', () => {
       calculateFinancials(webData, userInfo, pmmgSettings, true);
       finObj.create_buffer();
     });
@@ -461,9 +461,9 @@ function chooseScreen(finResult, params) {
       const dateColumn = document.createElement('td');
       dateColumn.appendChild(
         createTextSpan(
-          hourFormatter.format(new Date(finResult['History'][i][0])) +
-            ' on ' +
-            dateYearFormatter.format(new Date(finResult['History'][i][0])),
+          `${hourFormatter.format(new Date(finResult['History'][i][0]))} on ${dateYearFormatter.format(
+            new Date(finResult['History'][i][0]),
+          )}`,
         ),
       );
       row.appendChild(dateColumn);
@@ -481,8 +481,8 @@ function chooseScreen(finResult, params) {
       deleteColumn.appendChild(
         createSmallButton(
           'delete',
-          function (index) {
-            showWarningDialog(tile, 'Are you sure you want to delete this datapoint?', 'Confirm', function () {
+          index => {
+            showWarningDialog(tile, 'Are you sure you want to delete this datapoint?', 'Confirm', () => {
               // That's a lot of nested stuff...
 
               finResult['History'].splice(index, 1);
@@ -511,7 +511,7 @@ function chooseScreen(finResult, params) {
     clearButton.style.marginBottom = '4px';
     tile.appendChild(clearButton);
 
-    clearButton.addEventListener('click', function () {
+    clearButton.addEventListener('click', () => {
       showWarningDialog(
         tile,
         'You are about to clear all current and historical financial data. Do you want to continue?',
@@ -583,8 +583,8 @@ function chooseScreen(finResult, params) {
       button.style.marginBottom = '5px';
       button.textContent = label[0];
       quickDiv.appendChild(button);
-      button.addEventListener('click', function () {
-        showBuffer('XIT FIN_' + label[1]);
+      button.addEventListener('click', () => {
+        showBuffer(`XIT FIN_${label[1]}`);
       });
     });
 
@@ -609,8 +609,8 @@ function chooseScreen(finResult, params) {
       button.style.marginBottom = '5px';
       button.textContent = label[0];
       chartsDiv.appendChild(button);
-      button.addEventListener('click', function () {
-        showBuffer('XIT FIN_CHART_' + label[1]);
+      button.addEventListener('click', () => {
+        showBuffer(`XIT FIN_CHART_${label[1]}`);
       });
     });
 
@@ -623,20 +623,20 @@ function chooseScreen(finResult, params) {
     tile.appendChild(infoDiv);
     infoDiv.style.margin = '5px';
     const dataPoints = createTextSpan(
-      (finResult['History'] ? finResult['History'].length : 0).toLocaleString() + ' data points recorded',
+      `${(finResult['History'] ? finResult['History'].length : 0).toLocaleString()} data points recorded`,
     );
     infoDiv.appendChild(dataPoints);
     dataPoints.style.display = 'block';
     if (finResult['History']) {
       const oldestDate = new Date(finResult['History'][0][0]);
-      const oldestDateElem = createTextSpan('Oldest data recorded on ' + dateYearFormatter.format(oldestDate));
+      const oldestDateElem = createTextSpan(`Oldest data recorded on ${dateYearFormatter.format(oldestDate)}`);
       infoDiv.appendChild(oldestDateElem);
       oldestDateElem.style.marginTop = '5px';
       oldestDateElem.style.display = 'block';
 
       const newestDate = new Date(finResult['History'][finResult['History'].length - 1][0]);
       const newestDateElem = createTextSpan(
-        'Latest data recorded at ' + hourFormatter.format(newestDate) + ' on ' + dateYearFormatter.format(newestDate),
+        `Latest data recorded at ${hourFormatter.format(newestDate)} on ${dateYearFormatter.format(newestDate)}`,
       );
       infoDiv.appendChild(newestDateElem);
       newestDateElem.style.marginTop = '5px';
@@ -769,7 +769,7 @@ function chooseScreen(finResult, params) {
       return;
     }
     linePlot.style.cursor = 'pointer';
-    linePlot.addEventListener('click', function () {
+    linePlot.addEventListener('click', () => {
       showBuffer('XIT FIN_CHART_HISTORY');
     });
 
@@ -791,7 +791,7 @@ function chooseScreen(finResult, params) {
     }
     pieCanvas.style.cursor = 'pointer';
     pieCanvas.style.marginRight = '-25px';
-    pieCanvas.addEventListener('click', function () {
+    pieCanvas.addEventListener('click', () => {
       showBuffer('XIT FIN_CHART_ASSETPIE');
     });
     pieDiv.appendChild(pieCanvas);
@@ -802,7 +802,7 @@ function chooseScreen(finResult, params) {
       return;
     }
     locPieCanvas.style.cursor = 'pointer';
-    locPieCanvas.addEventListener('click', function () {
+    locPieCanvas.addEventListener('click', () => {
       showBuffer('XIT FIN_CHART_LOCATIONSPIE');
     });
     pieDiv.appendChild(locPieCanvas);
@@ -811,10 +811,9 @@ function chooseScreen(finResult, params) {
     if (!userInfo['PMMG-User-Info'] || !userInfo['PMMG-User-Info']['workforce']) {
       tile.id = 'pmmg-reload';
       return;
-    } else {
-      tile.textContent = '';
-      tile.id = 'pmmg-load-success';
     }
+    tile.textContent = '';
+    tile.id = 'pmmg-load-success';
 
     // Calculate the player burn from userInfo
     const planets = [] as string[];
@@ -1146,10 +1145,9 @@ export function calculateFinancials(webData, userInfo, result, loop) {
     if (userInfo['PMMG-User-Info'] && userInfo['PMMG-User-Info']['cx_prices']) {
       window.setTimeout(() => calculateFinancials(webData, userInfo, result, false), 100);
       return;
-    } else {
-      window.setTimeout(() => calculateFinancials(webData, userInfo, result, true), 50);
-      return;
     }
+    window.setTimeout(() => calculateFinancials(webData, userInfo, result, true), 50);
+    return;
   }
 
   result['PMMGExtended']['last_fin_recording'] = Date.now();

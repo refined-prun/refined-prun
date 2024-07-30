@@ -180,7 +180,7 @@ function sortInventory(inventory, sortOptions, result, tag, screenName, planetNa
       // For each of the stock options...
       if (option != sortOptions.firstChild && !option.classList.contains('pb-toggle')) {
         // Except the first one, excluding any ones created
-        option.addEventListener('click', function () {
+        option.addEventListener('click', () => {
           // Add a function on click to disable custom sort and revert to stock sort
           if (option.children[1]) {
             // Reveal the arrow if it was hidden
@@ -257,8 +257,8 @@ function sortInventory(inventory, sortOptions, result, tag, screenName, planetNa
     const addLabel = document.createElement('div');
     addLabel.textContent = '+';
     addButton.appendChild(addLabel);
-    addButton.addEventListener('click', function () {
-      showBuffer('XIT SORT_' + planetName);
+    addButton.addEventListener('click', () => {
+      showBuffer(`XIT SORT_${planetName}`);
       return;
     });
   }
@@ -577,7 +577,7 @@ function createToggle(result, sortOptions, abbreviation, selected, combinedName,
     customSortButton.appendChild(toggleIndicator);
   }
 
-  customSortButton.addEventListener('click', function () {
+  customSortButton.addEventListener('click', () => {
     // When clicked, clear away the carrot or circle from each option
     (Array.from(sortOptions.children) as HTMLElement[]).forEach(option => {
       if (option.children[1]) {

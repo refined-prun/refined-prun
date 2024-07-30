@@ -92,14 +92,14 @@ async function createSummaryScreen(tile, parentBuffer) {
   createButtonContainer.appendChild(createButton);
 
   // Generate popup asking for name of package
-  createButton.addEventListener('click', function () {
+  createButton.addEventListener('click', () => {
     const popup = new Popup(tile, 'Create Action Package');
     popup.addPopupRow('text', 'Name', undefined, undefined, undefined);
 
-    popup.addPopupRow('button', 'CMD', 'OPEN', undefined, function () {
+    popup.addPopupRow('button', 'CMD', 'OPEN', undefined, () => {
       const nameRow = popup.getRowByName('Name');
       if (nameRow.rowInput.value && nameRow.rowInput.value != '') {
-        showBuffer('XIT ACTION_GEN_' + nameRow.rowInput.value.split(' ').join('_'));
+        showBuffer(`XIT ACTION_GEN_${nameRow.rowInput.value.split(' ').join('_')}`);
         popup.destroy();
       } else {
         nameRow.row.classList.add(...Style.FormError);
@@ -119,14 +119,14 @@ async function createSummaryScreen(tile, parentBuffer) {
   importButtonContainer.appendChild(importButton);
 
   // Generate popup to deal with import
-  importButton.addEventListener('click', function () {
+  importButton.addEventListener('click', () => {
     const popup = new Popup(tile, 'Import Action Package');
     popup.addPopupRow(
       'dropdown',
       'Type',
       ['Paste JSON', 'Upload JSON', 0],
       'Which style of import to use. Ping Pi314 on Discord for format specifics. Official documentation coming soon.',
-      function () {
+      () => {
         // Change the next row to the correct type of import row
         popup.removePopupRow(1);
 
@@ -141,7 +141,7 @@ async function createSummaryScreen(tile, parentBuffer) {
             popup.addPopupRow('text', 'Import', undefined, undefined, undefined);
             break;
           case 'Upload JSON': {
-            popup.addPopupRow('button', 'Import', 'UPLOAD', undefined, function () {
+            popup.addPopupRow('button', 'Import', 'UPLOAD', undefined, () => {
               // Trigger file import
               fileInput.click();
             });
@@ -165,7 +165,7 @@ async function createSummaryScreen(tile, parentBuffer) {
     popup.addPopupRow('text', 'Import', undefined, undefined, undefined);
 
     // Save row
-    popup.addPopupRow('button', 'CMD', 'IMPORT', undefined, async function () {
+    popup.addPopupRow('button', 'CMD', 'IMPORT', undefined, async () => {
       // Parse then save the imported data
       const typeRow = popup.getRowByName('Type');
       const importType = typeRow.rowInput.value;
@@ -217,14 +217,12 @@ async function createSummaryScreen(tile, parentBuffer) {
               };
               reader.readAsText(file);
               return;
-            } else {
-              importRow.row.classList.add(...Style.FormError);
-              return;
             }
-          } else {
             importRow.row.classList.add(...Style.FormError);
             return;
           }
+          importRow.row.classList.add(...Style.FormError);
+          return;
         }
       }
 
@@ -255,7 +253,7 @@ async function createSummaryScreen(tile, parentBuffer) {
 
     // Name column
     const nameColumn = document.createElement('td');
-    nameColumn.appendChild(createLink(friendlyName, 'XIT ACTION_' + paramName));
+    nameColumn.appendChild(createLink(friendlyName, `XIT ACTION_${paramName}`));
     row.appendChild(nameColumn);
 
     // Execute column (pulls up execution screen)
@@ -266,8 +264,8 @@ async function createSummaryScreen(tile, parentBuffer) {
     execButton.classList.add(...Style.ButtonPrimary);
     execColumn.appendChild(execButton);
     row.appendChild(execColumn);
-    execButton.addEventListener('click', function () {
-      showBuffer('XIT ACTION_' + paramName);
+    execButton.addEventListener('click', () => {
+      showBuffer(`XIT ACTION_${paramName}`);
     });
 
     // Edit column (pulls up GEN screen)
@@ -278,8 +276,8 @@ async function createSummaryScreen(tile, parentBuffer) {
     editButton.classList.add(...Style.ButtonPrimary);
     editColumn.appendChild(editButton);
     row.appendChild(editColumn);
-    editButton.addEventListener('click', function () {
-      showBuffer('XIT ACTION_GEN_' + paramName);
+    editButton.addEventListener('click', () => {
+      showBuffer(`XIT ACTION_GEN_${paramName}`);
     });
 
     // Other commands (delete, copy in the future?)
@@ -289,8 +287,8 @@ async function createSummaryScreen(tile, parentBuffer) {
     deleteButton.classList.add(...Style.SmallButton);
     cmdColumn.appendChild(deleteButton);
     row.appendChild(cmdColumn);
-    deleteButton.addEventListener('click', function () {
-      showWarningDialog(tile, 'Are you sure you want to delete this action package?', 'Confirm', async function () {
+    deleteButton.addEventListener('click', () => {
+      showWarningDialog(tile, 'Are you sure you want to delete this action package?', 'Confirm', async () => {
         storageValue = await getLocalStoragePromise('PMMG-Action');
         storedActions = storageValue['PMMG-Action'] || {};
 
@@ -427,8 +425,7 @@ class GenerateScreen {
           if (group.materials) {
             contentText = '';
             Object.keys(group.materials).forEach(mat => {
-              contentText +=
-                group.materials[mat].toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' ' + mat + ', ';
+              contentText += `${group.materials[mat].toLocaleString(undefined, { maximumFractionDigits: 0 })} ${mat}, `;
             });
             contentText = contentText.slice(0, -2); // Remove last comma and space
             contentColumn.appendChild(createTextSpan(contentText));
@@ -438,14 +435,7 @@ class GenerateScreen {
           break;
         case 'Resupply':
           if (group.planet && group.days) {
-            contentText =
-              'Resupply ' +
-              group.planet +
-              ' with ' +
-              group.days +
-              ' day' +
-              (group.days == 1 ? '' : 's') +
-              ' of supplies';
+            contentText = `Resupply ${group.planet} with ${group.days} day${group.days == 1 ? '' : 's'} of supplies`;
             contentColumn.appendChild(createTextSpan(contentText));
           } else {
             contentColumn.appendChild(createTextSpan('--'));
@@ -453,16 +443,11 @@ class GenerateScreen {
           break;
         case 'Repair':
           if (group.planet) {
-            contentText =
-              'Repair buildings on ' +
-              group.planet +
-              (group.days && group.days != 0 && group.days != ''
-                ? ' older than ' + group.days + ' day' + (group.days == 1 ? ' ' : 's ')
-                : '') +
-              ' in ' +
-              (group.advanceDays || 0) +
-              ' day' +
-              ((group.advanceDays || 0) == 1 ? '' : 's');
+            contentText = `Repair buildings on ${group.planet}${
+              group.days && group.days != 0 && group.days != ''
+                ? ` older than ${group.days} day${group.days == 1 ? ' ' : 's '}`
+                : ''
+            } in ${group.advanceDays || 0} day${(group.advanceDays || 0) == 1 ? '' : 's'}`;
             contentColumn.appendChild(createTextSpan(contentText));
           } else {
             contentColumn.appendChild(createTextSpan('--'));
@@ -484,15 +469,15 @@ class GenerateScreen {
       commandColumn.appendChild(deleteButton);
 
       // Add delete button functionality
-      deleteButton.addEventListener('click', function () {
-        showWarningDialog(thisObj.tile, 'Are you sure you want to delete this group?', 'Confirm', function () {
+      deleteButton.addEventListener('click', () => {
+        showWarningDialog(thisObj.tile, 'Are you sure you want to delete this group?', 'Confirm', () => {
           thisObj.groups.splice(groupIndex, 1);
           thisObj.generateGroupForm();
         });
       });
 
       // Add edit button functionality
-      editButton.addEventListener('click', function () {
+      editButton.addEventListener('click', () => {
         thisObj.createGroupPopup(groupIndex);
       });
 
@@ -512,7 +497,7 @@ class GenerateScreen {
     const newGroupAdd = this.createFormRow(this.groupSection, 'button', 'command', 'Add Group', 'addGroup', 'ADD');
 
     // Add method for adding a new group with default values
-    newGroupAdd.addEventListener('click', function () {
+    newGroupAdd.addEventListener('click', () => {
       thisObj.groups.push({ type: newGroupDropdown.value });
       thisObj.generateGroupForm();
     });
@@ -613,14 +598,14 @@ class GenerateScreen {
           Object.keys(group.materials).forEach(mat => {
             popup.addPopupRow(
               'text',
-              'Material Ticker #' + (numMaterials + 1).toLocaleString(),
+              `Material Ticker #${(numMaterials + 1).toLocaleString()}`,
               mat,
               undefined,
               undefined,
             );
             popup.addPopupRow(
               'number',
-              'Material Amount #' + (numMaterials + 1).toLocaleString(),
+              `Material Amount #${(numMaterials + 1).toLocaleString()}`,
               group.materials[mat],
               undefined,
               undefined,
@@ -630,17 +615,17 @@ class GenerateScreen {
         }
 
         // Row for adding more material rows above
-        popup.addPopupRow('button', 'Add Material', 'ADD', 'Add a new material to the group.', function () {
+        popup.addPopupRow('button', 'Add Material', 'ADD', 'Add a new material to the group.', () => {
           const newMatRow = popup.addPopupRow(
             'text',
-            'Material Ticker #' + (numMaterials + 1).toLocaleString(),
+            `Material Ticker #${(numMaterials + 1).toLocaleString()}`,
             undefined,
             undefined,
             undefined,
           );
           const newAmtRow = popup.addPopupRow(
             'number',
-            'Material Amount #' + (numMaterials + 1).toLocaleString(),
+            `Material Amount #${(numMaterials + 1).toLocaleString()}`,
             undefined,
             undefined,
             undefined,
@@ -657,7 +642,7 @@ class GenerateScreen {
 
     // Add row to save and corresponding function
     const thisObj = this;
-    popup.addPopupRow('button', 'CMD', 'SAVE', undefined, function () {
+    popup.addPopupRow('button', 'CMD', 'SAVE', undefined, () => {
       const nameRow = popup.getRowByName('Name');
       const name = nameRow.rowInput.value;
 
@@ -689,10 +674,10 @@ class GenerateScreen {
             const numMaterials = (popup.rows.length - 3) / 2;
             // Loop through the rows and extract the materials and amounts
             for (let i = 1; i <= numMaterials; i++) {
-              const matRow = popup.getRowByName('Material Ticker #' + i.toLocaleString());
-              const amtRow = popup.getRowByName('Material Amount #' + i.toLocaleString());
+              const matRow = popup.getRowByName(`Material Ticker #${i.toLocaleString()}`);
+              const amtRow = popup.getRowByName(`Material Amount #${i.toLocaleString()}`);
               const mat = matRow.rowInput.value;
-              const matAmt = parseInt(amtRow.rowInput.value);
+              const matAmt = parseInt(amtRow.rowInput.value, 10);
 
               if (mat && mat != '' && matAmt && !isNaN(matAmt) && matAmt > 0) {
                 group.materials[mat] = matAmt;
@@ -761,7 +746,7 @@ class GenerateScreen {
       switch (action.type) {
         case 'CX Buy':
           if (action.group && action.exchange) {
-            contentColumn.appendChild(createTextSpan('Buying group ' + action.group + ' from ' + action.exchange));
+            contentColumn.appendChild(createTextSpan(`Buying group ${action.group} from ${action.exchange}`));
           } else {
             contentColumn.appendChild(createTextSpan('--'));
           }
@@ -783,15 +768,15 @@ class GenerateScreen {
       commandColumn.appendChild(deleteButton);
 
       // Add delete button functionality
-      deleteButton.addEventListener('click', function () {
-        showWarningDialog(thisObj.tile, 'Are you sure you want to delete this action?', 'Confirm', function () {
+      deleteButton.addEventListener('click', () => {
+        showWarningDialog(thisObj.tile, 'Are you sure you want to delete this action?', 'Confirm', () => {
           thisObj.actions.splice(actionIndex, 1);
           thisObj.generateActionForm();
         });
       });
 
       // Add edit button functionality
-      editButton.addEventListener('click', function () {
+      editButton.addEventListener('click', () => {
         thisObj.createActionPopup(actionIndex);
       });
 
@@ -811,7 +796,7 @@ class GenerateScreen {
     const newActionAdd = this.createFormRow(this.actionSection, 'button', 'command', 'Add Action', 'addAction', 'ADD');
 
     // Add method for adding a new group with default values
-    newActionAdd.addEventListener('click', function () {
+    newActionAdd.addEventListener('click', () => {
       thisObj.actions.push({ type: newActionDropdown.value });
       thisObj.generateActionForm();
     });
@@ -854,7 +839,7 @@ class GenerateScreen {
         popup.addPopupRow('dropdown', 'Exchange', exchanges, undefined, undefined);
 
         // Add row for editing price limits (will generate a popup on top of the other popup)
-        popup.addPopupRow('button', 'Price Limits', 'EDIT', undefined, function () {
+        popup.addPopupRow('button', 'Price Limits', 'EDIT', undefined, () => {
           const pricePopup = new Popup(thisObj.tile, 'Price Limit Editor', 51);
 
           // Create rows corresponding to current materials stored in action price limit
@@ -863,14 +848,14 @@ class GenerateScreen {
             Object.keys(action.priceLimits).forEach(mat => {
               pricePopup.addPopupRow(
                 'text',
-                'Material Ticker #' + (numMaterials + 1).toLocaleString(),
+                `Material Ticker #${(numMaterials + 1).toLocaleString()}`,
                 mat,
                 undefined,
                 undefined,
               );
               pricePopup.addPopupRow(
                 'number',
-                'Price Limit #' + (numMaterials + 1).toLocaleString(),
+                `Price Limit #${(numMaterials + 1).toLocaleString()}`,
                 action.priceLimits[mat],
                 undefined,
                 undefined,
@@ -885,17 +870,17 @@ class GenerateScreen {
             'Add Material',
             'ADD',
             'Add a new material to enter a price limit for.',
-            function () {
+            () => {
               const newMatRow = pricePopup.addPopupRow(
                 'text',
-                'Material Ticker #' + (numMaterials + 1).toLocaleString(),
+                `Material Ticker #${(numMaterials + 1).toLocaleString()}`,
                 undefined,
                 undefined,
                 undefined,
               );
               const newAmtRow = pricePopup.addPopupRow(
                 'number',
-                'Price Limit #' + (numMaterials + 1).toLocaleString(),
+                `Price Limit #${(numMaterials + 1).toLocaleString()}`,
                 undefined,
                 undefined,
                 undefined,
@@ -915,14 +900,14 @@ class GenerateScreen {
           );
 
           // Add save row
-          pricePopup.addPopupRow('button', 'CMD', 'SAVE', undefined, function () {
+          pricePopup.addPopupRow('button', 'CMD', 'SAVE', undefined, () => {
             action.priceLimits = {};
 
             const numMaterials = (pricePopup.rows.length - 2) / 2;
             // Loop through the rows and extract the materials and amounts
             for (let i = 1; i <= numMaterials; i++) {
-              const matRow = pricePopup.getRowByName('Material Ticker #' + i.toLocaleString());
-              const amtRow = pricePopup.getRowByName('Price Limit #' + i.toLocaleString());
+              const matRow = pricePopup.getRowByName(`Material Ticker #${i.toLocaleString()}`);
+              const amtRow = pricePopup.getRowByName(`Price Limit #${i.toLocaleString()}`);
               const mat = matRow.rowInput.value;
               const priceLim = parseFloat(amtRow.rowInput.value);
 
@@ -957,7 +942,7 @@ class GenerateScreen {
     }
 
     // Add row to save and corresponding function
-    popup.addPopupRow('button', 'CMD', 'SAVE', undefined, function () {
+    popup.addPopupRow('button', 'CMD', 'SAVE', undefined, () => {
       const nameRow = popup.getRowByName('Name');
       const name = nameRow.rowInput.value;
 
@@ -1000,7 +985,7 @@ class GenerateScreen {
     const saveButton = this.createFormRow(this.saveSection, 'button', 'command', 'Save', 'saveButton', 'SAVE');
 
     // Add action listener to save button
-    saveButton.addEventListener('click', async function () {
+    saveButton.addEventListener('click', async () => {
       // Get stored values
       const storageValue = await getLocalStoragePromise('PMMG-Action');
       const storedActions = storageValue['PMMG-Action'] || {};
@@ -1021,13 +1006,13 @@ class GenerateScreen {
 
     // Add open button
     const openButton = this.createFormRow(this.saveSection, 'button', 'command', 'Open', 'openButton', 'OPEN');
-    openButton.addEventListener('click', function () {
-      showBuffer('XIT ACTION_' + thisObj.globalAttributes.name.split(' ').join('_'));
+    openButton.addEventListener('click', () => {
+      showBuffer(`XIT ACTION_${thisObj.globalAttributes.name.split(' ').join('_')}`);
     });
 
     // Add help button
     const helpButton = this.createFormRow(this.saveSection, 'button', 'command', 'Help', 'helpButton', 'HELP');
-    helpButton.addEventListener('click', function () {
+    helpButton.addEventListener('click', () => {
       showBuffer('XIT HELP_ACTION');
     });
   }
@@ -1217,7 +1202,7 @@ function parseActionPackage(rawActionPackage, userInfo, messageBox) {
       // Now turn into buying commands
       error = error || errorFlag[0];
       Object.keys(parsedGroup).forEach(mat => {
-        const cxTicker = mat + '.' + action.exchange;
+        const cxTicker = `${mat}.${action.exchange}`;
         let amount = parsedGroup[mat];
 
         if (user.cxob[cxTicker] && Date.now() - user.cxob[cxTicker].timestamp < 900000) {
@@ -1226,11 +1211,10 @@ function parseActionPackage(rawActionPackage, userInfo, messageBox) {
             // No orders
             if (action.buyPartial) {
               return; // Just ignore this one if we're fine with buying partial
-            } else {
-              addMessage(messageBox, 'Error: No orders on ' + cxTicker);
-              error = true;
-              return;
             }
+            addMessage(messageBox, `Error: No orders on ${cxTicker}`);
+            error = true;
+            return;
           }
 
           let remaining = parsedGroup[mat];
@@ -1263,19 +1247,19 @@ function parseActionPackage(rawActionPackage, userInfo, messageBox) {
 
           // Check against price limit
           if (action.priceLimits && action.priceLimits[mat] && price > action.priceLimits[mat] && !action.buyPartial) {
-            addMessage(messageBox, 'Error: Price above limit on ' + cxTicker);
+            addMessage(messageBox, `Error: Price above limit on ${cxTicker}`);
             error = true;
             return;
           }
           if (action.priceLimits && action.priceLimits[mat] && isNaN(action.priceLimits[mat])) {
-            addMessage(messageBox, 'Error: Non-numerical price limit on ' + cxTicker);
+            addMessage(messageBox, `Error: Non-numerical price limit on ${cxTicker}`);
             error = true;
             return;
           }
 
           if (!price && !action.buyPartial) {
             // Not enough to buy it all
-            addMessage(messageBox, 'Error: Not enough materials on ' + cxTicker);
+            addMessage(messageBox, `Error: Not enough materials on ${cxTicker}`);
             error = true;
             return;
           } else if (!price && (!action.priceLimits || !action.priceLimits[mat]) && user.cxob[cxTicker].supply > 0) {
@@ -1289,15 +1273,15 @@ function parseActionPackage(rawActionPackage, userInfo, messageBox) {
           // Now create action item
           const actionItem = {
             type: 'CXBuy',
-            buffer: 'CXPO ' + cxTicker,
+            buffer: `CXPO ${cxTicker}`,
             parameters: {
-              amount: amount,
+              amount,
               priceLimit: price,
             },
           };
           actionPackage.push(actionItem);
         } else {
-          addMessage(messageBox, 'Error: Stale/missing data on ' + cxTicker);
+          addMessage(messageBox, `Error: Stale/missing data on ${cxTicker}`);
           error = true;
         }
       });
@@ -1458,7 +1442,7 @@ async function createExecuteScreen(tile, packageName, userInfo) {
   if (!rawActionPackage) {
     addMessage(
       messageBox,
-      'Error: No action package detected. Open XIT ACTION_GEN_' + packageName.split(' ').join('_') + ' to create one',
+      `Error: No action package detected. Open XIT ACTION_GEN_${packageName.split(' ').join('_')} to create one`,
     );
     return;
   }
@@ -1489,7 +1473,7 @@ async function createExecuteScreen(tile, packageName, userInfo) {
   let executionIndex = 0; // Index of which action is being executed
 
   // Add action listener for viewing
-  viewButton.addEventListener('click', function () {
+  viewButton.addEventListener('click', () => {
     addMessage(messageBox, '', true);
     const actionPackage = parseActionPackage(rawActionPackage, userInfo, messageBox);
     actionPackage.forEach(action => {
@@ -1502,14 +1486,14 @@ async function createExecuteScreen(tile, packageName, userInfo) {
   });
 
   // Add action listener for validation
-  validateButton.addEventListener('click', function () {
+  validateButton.addEventListener('click', () => {
     addMessage(messageBox, '', true);
     const actionPackage = parseActionPackage(rawActionPackage, userInfo, messageBox);
     actionPackage.valid && validateAction(actionPackage, messageBox);
   });
 
   // Execute the action!
-  executeButton.addEventListener('click', async function () {
+  executeButton.addEventListener('click', async () => {
     addMessage(messageBox, '', true);
     // Check validation
     const actionPackage = parseActionPackage(rawActionPackage, userInfo, messageBox);
@@ -1602,7 +1586,7 @@ function validateAction(actionPackage, messageBox) {
       const matchingBuffers = getBuffersFromList(action.buffer, buffers);
       if (matchingBuffers.length == 0) {
         valid = false;
-        addMessage(messageBox, 'Error: Missing Buffer ' + action.buffer);
+        addMessage(messageBox, `Error: Missing Buffer ${action.buffer}`);
       }
     }
 
@@ -1610,7 +1594,7 @@ function validateAction(actionPackage, messageBox) {
       case 'CXBuy':
         if (!action.parameters || !action.parameters.amount || !action.parameters.priceLimit) {
           valid = false;
-          addMessage(messageBox, 'Error: Missing parameters on ' + action.buffer);
+          addMessage(messageBox, `Error: Missing parameters on ${action.buffer}`);
         }
         break;
       default:
@@ -1651,7 +1635,7 @@ function executeAction(
 
   // Check buffer exists
   if (!relevantBuffers[0]) {
-    addMessage(messageBox, 'Error: No buffer found executing: ' + actionName);
+    addMessage(messageBox, `Error: No buffer found executing: ${actionName}`);
     tile.removeChild(executionInfo);
     return;
   }
@@ -1679,7 +1663,7 @@ function executeAction(
   }
 
   if (!button) {
-    addMessage(messageBox, 'Error: No button found executing: ' + actionName);
+    addMessage(messageBox, `Error: No button found executing: ${actionName}`);
     tile.removeChild(executionInfo);
     return;
   }
@@ -1689,8 +1673,8 @@ function executeAction(
   button.style.zIndex = '12000';
   buffer.style.isolation = 'auto';
   const rect = cancelButton.getBoundingClientRect();
-  button.style.left = (rect.left + window.scrollX + button.offsetWidth + buttonOffset).toString() + 'px';
-  button.style.top = (rect.top + window.scrollY).toString() + 'px';
+  button.style.left = `${(rect.left + window.scrollX + button.offsetWidth + buttonOffset).toString()}px`;
+  button.style.top = `${(rect.top + window.scrollY).toString()}px`;
 
   // Fill in fields/modify buffer
   switch (action.type) {
@@ -1702,13 +1686,13 @@ function executeAction(
 
       if (!quantityInput || !priceInput) {
         undoButtonMove(button, resetStyles);
-        addMessage(messageBox, 'Error: Missing fields executing: ' + actionName);
+        addMessage(messageBox, `Error: Missing fields executing: ${actionName}`);
         tile.removeChild(executionInfo);
         return;
       }
       if (!action.parameters.amount || !action.parameters.priceLimit) {
         undoButtonMove(button, resetStyles);
-        addMessage(messageBox, 'Error: Missing parameters executing: ' + actionName);
+        addMessage(messageBox, `Error: Missing parameters executing: ${actionName}`);
         tile.removeChild(executionInfo);
         return;
       }
@@ -1722,13 +1706,13 @@ function executeAction(
 
       if (!sourceSelect) {
         undoButtonMove(button, resetStyles);
-        addMessage(messageBox, 'Error: Missing fields executing: ' + actionName);
+        addMessage(messageBox, `Error: Missing fields executing: ${actionName}`);
         tile.removeChild(executionInfo);
         return;
       }
       if (!action.parameters.source || !action.parameters.target) {
         undoButtonMove(button, resetStyles);
-        addMessage(messageBox, 'Error: Missing parameters executing: ' + actionName);
+        addMessage(messageBox, `Error: Missing parameters executing: ${actionName}`);
         tile.removeChild(executionInfo);
         return;
       }
@@ -1746,7 +1730,7 @@ function executeAction(
       if (!sourceID) {
         // Source not found
         undoButtonMove(button, resetStyles);
-        addMessage(messageBox, 'Error: Source inventory not found executing: ' + actionName);
+        addMessage(messageBox, `Error: Source inventory not found executing: ${actionName}`);
         tile.removeChild(executionInfo);
         return;
       }
@@ -1768,7 +1752,7 @@ function executeAction(
     button.style.cursor = 'not-allowed';
 
     // Add mutation listener to wait
-    monitorStatus(buffer, function (dismissButton) {
+    monitorStatus(buffer, dismissButton => {
       // Detect success
       const success = buffer.querySelector(Selector.ActionSuccess);
       button.disabled = false; // Reenable the button regardless of what happens
@@ -1782,7 +1766,7 @@ function executeAction(
         cancelButton.removeEventListener('click', cancelButtonListener);
         undoButtonMove(button, resetStyles);
         dismissButton.click();
-        addMessage(messageBox, 'Successfully executed: ' + actionName);
+        addMessage(messageBox, `Successfully executed: ${actionName}`);
 
         // If at end of list, don't repeat
         if (executionIndex + 1 >= actionPackage.length) {
@@ -1809,7 +1793,7 @@ function executeAction(
         if (!feedback || !feedback.textContent) {
           addMessage(messageBox, 'Error: An error was encountered but could not be read');
         } else {
-          addMessage(messageBox, 'Error: ' + feedback.textContent);
+          addMessage(messageBox, `Error: ${feedback.textContent}`);
         }
       }
     });
@@ -1824,7 +1808,7 @@ function executeAction(
     skipButton.removeEventListener('click', skipButtonListener);
     cancelButton.removeEventListener('click', cancelButtonListener);
     undoButtonMove(button, resetStyles);
-    addMessage(messageBox, 'Skipped: ' + actionName);
+    addMessage(messageBox, `Skipped: ${actionName}`);
 
     // If at end of list, don't repeat
     if (executionIndex + 1 >= actionPackage.length) {
@@ -1897,16 +1881,11 @@ function generatePrettyName(action) {
     case 'CXBuy': {
       const matches = action.buffer.match(/CXPO ([A-Za-z0-9]{1,3})\.([A-Za-z0-9]{3})/);
       if (matches && matches[1] && matches[2]) {
-        name =
-          'Buy ' +
-          action.parameters.amount.toLocaleString(undefined, { maximumFractionDigits: 0 }) +
-          ' ' +
-          matches[1] +
-          ' from ' +
-          matches[2] +
-          ' for ' +
-          action.parameters.priceLimit.toLocaleString(undefined, { maximumFractionDigits: 2 }) +
-          '/u';
+        name = `Buy ${action.parameters.amount.toLocaleString(undefined, { maximumFractionDigits: 0 })} ${
+          matches[1]
+        } from ${matches[2]} for ${action.parameters.priceLimit.toLocaleString(undefined, {
+          maximumFractionDigits: 2,
+        })}/u`;
       }
       break;
     }

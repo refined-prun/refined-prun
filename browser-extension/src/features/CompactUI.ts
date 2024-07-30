@@ -64,12 +64,12 @@ function ShortenNames(buffer) {
 
 export function HideElement(element, tag) {
   element.style.display = 'none';
-  element.classList.add(tag + '-hidden');
+  element.classList.add(`${tag}-hidden`);
 }
 
 export function UnHideElement(element, tag) {
   element.style.display = '';
-  element.classList.remove(tag + '-hidden');
+  element.classList.remove(`${tag}-hidden`);
 }
 
 export function ClearBuildingLists(buffer, pmmgSettings, tag) {
@@ -90,7 +90,7 @@ export function ClearBuildingLists(buffer, pmmgSettings, tag) {
       row.appendChild(newmenu);
       newmenu.appendChild(indicator);
       newmenu.appendChild(value);
-      newmenu.addEventListener('click', function () {
+      newmenu.addEventListener('click', () => {
         if (indicator.classList.contains(Style.RadioButtonToggled[1])) {
           if (row.nextElementSibling) HideElement(row.nextElementSibling as HTMLElement, tag);
           indicator.classList.remove(...WithStyles(Style.RadioButtonToggled));

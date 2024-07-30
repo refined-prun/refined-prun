@@ -24,7 +24,7 @@ export function getPrices(webData, sheetURL, sheetName) {
         // Try to parse data received into prices
         const priceData = JSON.parse(xhr.responseText);
         if (priceData.error) {
-          console.log('PMMG: Custom Prices ' + priceData.error);
+          console.log(`PMMG: Custom Prices ${priceData.error}`);
           return;
         } else if (!priceData.prices) {
           console.log('PMMG: No Data from Custom Prices');
@@ -50,11 +50,9 @@ export function getPrices(webData, sheetURL, sheetName) {
   }
 
   // Make the request
-  const address =
-    'https://script.google.com/macros/s/AKfycbwdxGx-OBVslFeXSSv-F_d55X_BTPs20vTMNiT8D9eIAkbcckXh9XAkX9fdBMIv1XrY/exec?id=' +
-    sheetID[1] +
-    '&sheet=' +
-    sheetName;
+  const address = `https://script.google.com/macros/s/AKfycbwdxGx-OBVslFeXSSv-F_d55X_BTPs20vTMNiT8D9eIAkbcckXh9XAkX9fdBMIv1XrY/exec?id=${
+    sheetID[1]
+  }&sheet=${sheetName}`;
   xhr.timeout = 10000;
 
   xhr.open('GET', address, true);
@@ -90,7 +88,7 @@ export function getCXPrices(userInfo) {
           wantedResults.forEach(wanted => {
             userInfo['PMMG-User-Info']['cx_prices'][CX][wanted] = {};
             priceData.forEach(mat => {
-              userInfo['PMMG-User-Info']['cx_prices'][CX][wanted][mat['Ticker']] = mat[CX + '-' + wanted];
+              userInfo['PMMG-User-Info']['cx_prices'][CX][wanted][mat['Ticker']] = mat[`${CX}-${wanted}`];
             });
           });
         });
@@ -108,7 +106,7 @@ export function getCXPrices(userInfo) {
 
   // Send the request
   xhr.timeout = 10000;
-  xhr.open('GET', 'https://rest.fnar.net' + '/rain/prices', true);
+  xhr.open('GET', 'https://rest.fnar.net/rain/prices', true);
   xhr.send(null);
 
   return;

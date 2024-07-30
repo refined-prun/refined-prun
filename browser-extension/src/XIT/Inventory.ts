@@ -26,7 +26,7 @@ export class FIOInventory {
         this.tile,
         this.parameters,
         FIOInv_getAllStorages,
-        'https://rest.fnar.net/auth/group/' + this.parameters[1],
+        `https://rest.fnar.net/auth/group/${this.parameters[1]}`,
         'GET',
         ['Authorization', apikey],
         undefined,
@@ -37,14 +37,14 @@ export class FIOInventory {
         i < this.parameters.length;
         i++ // Allow for spaces in planet names
       ) {
-        this.parameters[2] += ' ' + this.parameters[i];
+        this.parameters[2] += ` ${this.parameters[i]}`;
       }
 
       XITWebRequest(
         this.tile,
         this.parameters,
         FIOInv_post,
-        'https://rest.fnar.net/storage/' + this.parameters[1] + '/' + this.parameters[2],
+        `https://rest.fnar.net/storage/${this.parameters[1]}/${this.parameters[2]}`,
         'GET',
         ['Authorization', apikey],
         undefined,
@@ -114,16 +114,13 @@ function FIOInv_post(tile, parameters, jsondata) {
   volumeLine.appendChild(volumeBar);
   volumeLine.appendChild(
     createTextSpan(
-      volumeUsed.toLocaleString(undefined, {
+      `${volumeUsed.toLocaleString(undefined, {
         maximumFractionDigits: 2,
         minimumFractionDigits: 2,
-      }) +
-        ' / ' +
-        volumeTotal.toLocaleString(undefined, {
-          maximumFractionDigits: 0,
-          minimumFractionDigits: 0,
-        }) +
-        ' m³',
+      })} / ${volumeTotal.toLocaleString(undefined, {
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
+      })} m³`,
       tag,
     ),
   );
@@ -144,16 +141,13 @@ function FIOInv_post(tile, parameters, jsondata) {
   weightLine.appendChild(weightBar);
   weightLine.appendChild(
     createTextSpan(
-      weightUsed.toLocaleString(undefined, {
+      `${weightUsed.toLocaleString(undefined, {
         maximumFractionDigits: 2,
         minimumFractionDigits: 2,
-      }) +
-        ' / ' +
-        weightTotal.toLocaleString(undefined, {
-          maximumFractionDigits: 0,
-          minimumFractionDigits: 0,
-        }) +
-        ' t',
+      })} / ${weightTotal.toLocaleString(undefined, {
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
+      })} t`,
       tag,
     ),
   );
@@ -205,7 +199,7 @@ function FIOInv_allDisplay(tile, parameters, jsondata) {
   }
   const titleDiv = document.createElement('div');
   titleDiv.classList.add('title');
-  titleDiv.appendChild(createTextSpan(parameters[3] + ' Inventories'));
+  titleDiv.appendChild(createTextSpan(`${parameters[3]} Inventories`));
   tile.appendChild(titleDiv);
   const bodyDiv = document.createElement('div');
   tile.appendChild(bodyDiv);
@@ -228,7 +222,7 @@ function FIOInv_allDisplay(tile, parameters, jsondata) {
       playerDiv.appendChild(
         createLink(
           location['LocationName'],
-          'XIT INV_' + player['UserName'] + '_' + location['LocationName'].replace(/ /, '_'),
+          `XIT INV_${player['UserName']}_${location['LocationName'].replace(/ /, '_')}`,
         ),
       );
       return;

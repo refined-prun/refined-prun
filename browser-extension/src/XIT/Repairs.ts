@@ -115,7 +115,7 @@ export class Repairs {
       table.appendChild(body);
       generateGeneralRepairScreen(body, matDiv, buildings, ships, thresholdInput, offsetInput, true, false);
 
-      thresholdInput.addEventListener('input', function () {
+      thresholdInput.addEventListener('input', () => {
         clearChildren(body);
 
         generateGeneralRepairScreen(body, matDiv, buildings, ships, thresholdInput, offsetInput, true, false);
@@ -123,7 +123,7 @@ export class Repairs {
         setSettings(pmmgSettings);
       });
 
-      offsetInput.addEventListener('input', function () {
+      offsetInput.addEventListener('input', () => {
         clearChildren(body);
 
         generateGeneralRepairScreen(body, matDiv, buildings, ships, thresholdInput, offsetInput, true, false);
@@ -133,7 +133,7 @@ export class Repairs {
     } // Generate repairs screen for single base or ships
     else {
       const screenName = this.parameters[1].toUpperCase();
-      const title = createTextSpan(this.parameters[1] + ' Repairs');
+      const title = createTextSpan(`${this.parameters[1]} Repairs`);
       title.classList.add('title');
       this.tile.appendChild(title);
 
@@ -228,7 +228,7 @@ export class Repairs {
         screenName == 'SHIP' || screenName == 'SHIPS',
       );
 
-      thresholdInput.addEventListener('input', function () {
+      thresholdInput.addEventListener('input', () => {
         clearChildren(body);
 
         generateGeneralRepairScreen(
@@ -245,7 +245,7 @@ export class Repairs {
         setSettings(pmmgSettings);
       });
 
-      offsetInput.addEventListener('input', function () {
+      offsetInput.addEventListener('input', () => {
         clearChildren(body);
 
         generateGeneralRepairScreen(
@@ -307,13 +307,13 @@ function generateGeneralRepairScreen(body, matDiv, buildings, ships, thresholdIn
           building['buildingTicker'],
           planet,
           date.toLocaleString(undefined, { maximumFractionDigits: 1 }),
-          (building['condition'] * 100).toLocaleString(undefined, { maximumFractionDigits: 1 }) + '%',
+          `${(building['condition'] * 100).toLocaleString(undefined, { maximumFractionDigits: 1 })}%`,
         ];
       } else {
         rowData = [
           building['buildingTicker'],
           date.toLocaleString(undefined, { maximumFractionDigits: 1 }),
-          (building['condition'] * 100).toLocaleString(undefined, { maximumFractionDigits: 1 }) + '%',
+          `${(building['condition'] * 100).toLocaleString(undefined, { maximumFractionDigits: 1 })}%`,
         ];
       }
 
@@ -372,14 +372,14 @@ function generateGeneralRepairScreen(body, matDiv, buildings, ships, thresholdIn
         if (shipsOnly) {
           rowData = [
             ship.name || ship.registration,
-            (ship.condition * 100).toLocaleString(undefined, { maximumFractionDigits: 1 }) + '%',
+            `${(ship.condition * 100).toLocaleString(undefined, { maximumFractionDigits: 1 })}%`,
           ];
         } else {
           rowData = [
             ship.name || ship.registration,
             '-',
             '-',
-            (ship.condition * 100).toLocaleString(undefined, { maximumFractionDigits: 1 }) + '%',
+            `${(ship.condition * 100).toLocaleString(undefined, { maximumFractionDigits: 1 })}%`,
           ];
         }
 

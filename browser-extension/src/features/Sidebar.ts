@@ -79,7 +79,7 @@ export class Sidebar implements Module {
       button.appendChild(buttonText);
       button.appendChild(sliver);
       sidebar.appendChild(button);
-      button.addEventListener('click', function () {
+      button.addEventListener('click', () => {
         showBuffer(buttonInfo[1]);
       });
     });

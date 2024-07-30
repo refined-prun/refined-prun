@@ -93,10 +93,9 @@
     const url = window.location.href;
     const match = url.match(/.*context=(?<Context>[0-9a-fA-F]{32})/);
     if (match && match.groups && Object.hasOwn(match.groups, 'Context')) {
-      return '"' + match.groups['Context'] + '"';
-    } else {
-      return undefined;
+      return `"${match.groups['Context']}"`;
     }
+    return undefined;
   }
 
   const addEventListener = WebSocket.prototype.addEventListener;

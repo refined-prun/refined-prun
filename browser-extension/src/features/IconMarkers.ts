@@ -85,7 +85,7 @@ function constructIcon(mat, invName, storedData, tag) {
   }
 
   // Move the style forward to the next one
-  iconContainer.addEventListener('click', function (e) {
+  iconContainer.addEventListener('click', e => {
     e.preventDefault();
     if (!status) {
       status = 1;
@@ -108,7 +108,7 @@ function constructIcon(mat, invName, storedData, tag) {
   });
 
   // Move the style back to the last one
-  iconContainer.addEventListener('contextmenu', function (e) {
+  iconContainer.addEventListener('contextmenu', e => {
     e.preventDefault();
     if (!status) {
       status = icons.length;

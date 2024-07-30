@@ -68,7 +68,7 @@ export class Settings {
       specialCheckbox.checked = pmmgSettings['PMMGExtended']['surprises_opt_out'];
       specialDiv.appendChild(specialCheckbox);
       tile.appendChild(specialDiv);
-      specialCheckbox.addEventListener('click', function () {
+      specialCheckbox.addEventListener('click', () => {
         pmmgSettings['PMMGExtended']['surprises_opt_out'] = specialCheckbox.checked;
         setSettings(pmmgSettings);
       });
@@ -103,7 +103,7 @@ export class Settings {
       (colorSelect.children[2] as HTMLOptionElement).selected = true;
     }
     colorSelect.style.display = 'inline-block';
-    colorSelect.addEventListener('change', function () {
+    colorSelect.addEventListener('change', () => {
       pmmgSettings['PMMGExtended']['color_scheme'] = colorSelect.selectedOptions[0].value || undefined;
       setSettings(pmmgSettings);
     });
@@ -120,10 +120,10 @@ export class Settings {
 
     const finCheckbox = document.createElement('input');
     finCheckbox.type = 'checkbox';
-    finCheckbox.checked = pmmgSettings['PMMGExtended']['recording_financials'] == false ? false : true;
+    finCheckbox.checked = pmmgSettings['PMMGExtended']['recording_financials'] != false;
     finDiv.appendChild(finCheckbox);
     tile.appendChild(finDiv);
-    finCheckbox.addEventListener('click', function () {
+    finCheckbox.addEventListener('click', () => {
       pmmgSettings['PMMGExtended']['recording_financials'] = finCheckbox.checked;
       setSettings(pmmgSettings);
     });
@@ -141,7 +141,7 @@ export class Settings {
     minCheckbox.checked = pmmgSettings['PMMGExtended']['minimize_by_default'];
     minDiv.appendChild(minCheckbox);
     tile.appendChild(minDiv);
-    minCheckbox.addEventListener('click', function () {
+    minCheckbox.addEventListener('click', () => {
       pmmgSettings['PMMGExtended']['minimize_by_default'] = minCheckbox.checked;
       setSettings(pmmgSettings);
     });
@@ -164,7 +164,7 @@ export class Settings {
     advCheckbox.checked = pmmgSettings['PMMGExtended']['advanced_mode'];
     advDiv.appendChild(advCheckbox);
     tile.appendChild(advDiv);
-    advCheckbox.addEventListener('click', function () {
+    advCheckbox.addEventListener('click', () => {
       pmmgSettings['PMMGExtended']['advanced_mode'] = advCheckbox.checked;
       setSettings(pmmgSettings);
     });
@@ -199,7 +199,7 @@ export class Settings {
     redDiv.appendChild(redIn);
     redIn.classList.add('input-text');
     redIn.style.width = '50px';
-    redIn.addEventListener('input', function () {
+    redIn.addEventListener('input', () => {
       pmmgSettings['PMMGExtended']['burn_thresholds'][0] = parseFloat(redIn.value);
       setSettings(pmmgSettings);
     });
@@ -215,7 +215,7 @@ export class Settings {
     yelDiv.appendChild(yelIn);
     yelIn.classList.add('input-text');
     yelIn.style.width = '50px';
-    yelIn.addEventListener('input', function () {
+    yelIn.addEventListener('input', () => {
       pmmgSettings['PMMGExtended']['burn_thresholds'][1] = parseFloat(yelIn.value);
       setSettings(pmmgSettings);
     });
@@ -236,7 +236,7 @@ export class Settings {
     greenDiv.appendChild(greenIn);
     greenIn.classList.add('input-text');
     greenIn.style.width = '50px';
-    greenIn.addEventListener('input', function () {
+    greenIn.addEventListener('input', () => {
       pmmgSettings['PMMGExtended']['burn_green_buffer'] = parseFloat(greenIn.value);
       setSettings(pmmgSettings);
     });
@@ -281,7 +281,7 @@ export class Settings {
 
     const addButton = makePushButton(
       '+',
-      function () {
+      () => {
         const div = createInputPair([[], []], pmmgSettings, hotkeyInputDiv);
         if (div != null) {
           hotkeyInputDiv.appendChild(div);
@@ -302,7 +302,7 @@ export class Settings {
     const usernameLabel = createTextSpan('FIO Username: ');
     const usernameInput = document.createElement('input');
     usernameInput.value = pmmgSettings['PMMGExtended']['username'] || '';
-    usernameInput.addEventListener('input', function () {
+    usernameInput.addEventListener('input', () => {
       pmmgSettings['PMMGExtended']['username'] =
         !usernameInput.value || usernameInput.value == '' ? undefined : usernameInput.value;
       setSettings(pmmgSettings);
@@ -318,7 +318,7 @@ export class Settings {
     apiLabel.style.display = 'inline-block';
     const apiInput = document.createElement('input');
     apiInput.value = pmmgSettings['PMMGExtended']['apikey'] || '';
-    apiInput.addEventListener('input', function () {
+    apiInput.addEventListener('input', () => {
       pmmgSettings['PMMGExtended']['apikey'] = !apiInput.value || apiInput.value == '' ? undefined : apiInput.value;
       setSettings(pmmgSettings);
     });
@@ -344,7 +344,7 @@ export class Settings {
       pmmgSettings['PMMGExtended']['unpack_exceptions'] == undefined
         ? ''
         : pmmgSettings['PMMGExtended']['unpack_exceptions'].join(',');
-    exclusionInput.addEventListener('input', function () {
+    exclusionInput.addEventListener('input', () => {
       pmmgSettings['PMMGExtended']['unpack_exceptions'] = exclusionInput.value.split(',');
       setSettings(pmmgSettings);
     });
@@ -394,11 +394,9 @@ export class Settings {
                 }
               }
             } // Was just enabled, remove disabled label
-          } else {
-            if (!mp.enabled) {
-              pmmgSettings['PMMGExtended']['disabled'].push(mp.name);
-            } // Was just disabled, add disabled label
-          }
+          } else if (!mp.enabled) {
+            pmmgSettings['PMMGExtended']['disabled'].push(mp.name);
+          } // Was just disabled, add disabled label
           setSettings(pmmgSettings);
         },
         mp.enabled,
@@ -428,7 +426,7 @@ export class Settings {
     tile.appendChild(
       createImportExportButton(
         'Settings',
-        function (e, errorTextBox) {
+        (e, errorTextBox) => {
           if (!e || !e.target) {
             return;
           }
@@ -448,7 +446,7 @@ export class Settings {
             errorTextBox.style.display = 'inline-block';
           }
         },
-        function () {
+        () => {
           const output = {};
           const exclude = ['username', 'apikey', 'webappid']; // Don't export username, apikey, and webappid
           Object.keys(pmmgSettings['PMMGExtended']).forEach(key => {
@@ -457,7 +455,7 @@ export class Settings {
             }
           });
 
-          downloadFile(output, 'pmmg-settings' + Date.now().toString() + '.json');
+          downloadFile(output, `pmmg-settings${Date.now().toString()}.json`);
         },
       ),
     );
@@ -466,7 +464,7 @@ export class Settings {
     tile.appendChild(
       createImportExportButton(
         'Notes',
-        function (e, errorTextBox) {
+        (e, errorTextBox) => {
           if (!e || !e.target) {
             return;
           }
@@ -479,8 +477,8 @@ export class Settings {
             errorTextBox.style.display = 'inline-block';
           }
         },
-        function () {
-          getLocalStorage('PMMG-Notes', downloadFile, 'pmmg-notes' + Date.now().toString() + '.json');
+        () => {
+          getLocalStorage('PMMG-Notes', downloadFile, `pmmg-notes${Date.now().toString()}.json`);
         },
       ),
     );
@@ -489,7 +487,7 @@ export class Settings {
     tile.appendChild(
       createImportExportButton(
         'Lists',
-        function (e, errorTextBox) {
+        (e, errorTextBox) => {
           if (!e || !e.target) {
             return;
           }
@@ -502,8 +500,8 @@ export class Settings {
             errorTextBox.style.display = 'inline-block';
           }
         },
-        function () {
-          getLocalStorage('PMMG-Lists', downloadFile, 'pmmg-lists' + Date.now().toString() + '.json');
+        () => {
+          getLocalStorage('PMMG-Lists', downloadFile, `pmmg-lists${Date.now().toString()}.json`);
         },
       ),
     );
@@ -512,7 +510,7 @@ export class Settings {
     tile.appendChild(
       createImportExportButton(
         'Finances',
-        function (e, errorTextBox) {
+        (e, errorTextBox) => {
           if (!e || !e.target) {
             return;
           }
@@ -531,7 +529,7 @@ export class Settings {
             errorTextBox.style.display = 'inline-block';
           }
         },
-        function () {
+        () => {
           getLocalStorage('PMMG-Finance', parseFinThenDownload);
         },
       ),
@@ -541,7 +539,7 @@ export class Settings {
     tile.appendChild(
       createImportExportButton(
         'Actions',
-        function (e, errorTextBox) {
+        (e, errorTextBox) => {
           if (!e || !e.target) {
             return;
           }
@@ -554,8 +552,8 @@ export class Settings {
             errorTextBox.style.display = 'inline-block';
           }
         },
-        function () {
-          getLocalStorage('PMMG-Action', downloadFile, 'pmmg-action' + Date.now().toString() + '.json');
+        () => {
+          getLocalStorage('PMMG-Action', downloadFile, `pmmg-action${Date.now().toString()}.json`);
         },
       ),
     );
@@ -577,14 +575,14 @@ function parseFinThenDownload(pmmgSettings) {
   Object.keys(pmmgSettings['PMMG-Finance']).forEach(key => {
     output[key] = pmmgSettings['PMMG-Finance'][key];
   });
-  downloadFile(output, 'pmmg-finance' + Date.now().toString() + '.json');
+  downloadFile(output, `pmmg-finance${Date.now().toString()}.json`);
   return;
 }
 
 function createImportExportButton(label, importFunction, exportFunction) {
   const buttonDiv = document.createElement('div');
   const importButton = document.createElement('button');
-  importButton.textContent = 'Import ' + label;
+  importButton.textContent = `Import ${label}`;
   importButton.classList.add(...Style.Button);
   importButton.classList.add(...Style.ButtonPrimary);
   importButton.style.marginLeft = '4px';
@@ -595,7 +593,7 @@ function createImportExportButton(label, importFunction, exportFunction) {
   importFileInput.accept = '.json';
   importFileInput.style.display = 'none';
   buttonDiv.appendChild(importFileInput);
-  importButton.addEventListener('click', function () {
+  importButton.addEventListener('click', () => {
     importFileInput.click();
     return;
   });
@@ -619,14 +617,14 @@ function createImportExportButton(label, importFunction, exportFunction) {
   });
 
   const exportButton = document.createElement('button');
-  exportButton.textContent = 'Export ' + label;
+  exportButton.textContent = `Export ${label}`;
   exportButton.classList.add(...Style.Button);
   exportButton.classList.add(...Style.ButtonPrimary);
   exportButton.style.marginLeft = '4px';
   exportButton.style.marginBottom = '4px';
   buttonDiv.appendChild(exportButton);
 
-  exportButton.addEventListener('click', function () {
+  exportButton.addEventListener('click', () => {
     exportFunction();
   });
 
@@ -648,7 +646,7 @@ function createInputPair(hotkey, pmmgSettings, fullDiv) {
   div.appendChild(command);
   const remove = makePushButton(
     'X',
-    function () {
+    () => {
       displayedValue.value = '';
       command.value = '';
 
@@ -666,7 +664,7 @@ function createInputPair(hotkey, pmmgSettings, fullDiv) {
   displayedValue.value = hotkey[0];
   command.value = hotkey[1];
 
-  displayedValue.addEventListener('input', function () {
+  displayedValue.addEventListener('input', () => {
     const hotkeys = [] as string[][];
     (Array.from(fullDiv.children) as HTMLElement[]).forEach(option => {
       if (
@@ -688,7 +686,7 @@ function createInputPair(hotkey, pmmgSettings, fullDiv) {
     setSettings(pmmgSettings);
   });
 
-  command.addEventListener('input', function () {
+  command.addEventListener('input', () => {
     const hotkeys = [] as string[][];
     (Array.from(fullDiv.children) as HTMLElement[]).forEach(option => {
       if (

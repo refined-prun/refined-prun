@@ -20,7 +20,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
     return;
   }
 
-  const button = createContextButton('BURN', 'Enhanced Burn', 'XIT BURN ' + name);
+  const button = createContextButton('BURN', 'Enhanced Burn', `XIT BURN ${name}`);
   const contextBar = await childElementPresent(buffer.frame, PrunCss.ContextControls.container);
   if (contextBar.children[0]) {
     contextBar.insertBefore(button, contextBar.children[0]);

@@ -4,7 +4,7 @@ import { Selector } from './Selector';
 import { saveSettings, Settings } from './Settings';
 
 export interface Module {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any,no-unused-vars
   run(buffers: any[]);
 
   cleanup();

@@ -87,7 +87,7 @@ async function ProcessEvent(apiEvent: ApiEvent, event_list, full_event?) {
       if (eventData.payload.message.payload.contexts[context].type == 'COMPANY') {
         companyContext = eventData.payload.message.payload.contexts[context].id;
         await system.storage.local.set({ PMMGContext: companyContext });
-        console.log('Found company context: ' + companyContext);
+        console.log(`Found company context: ${companyContext}`);
         break;
       }
     }
@@ -106,7 +106,7 @@ async function ProcessEvent(apiEvent: ApiEvent, event_list, full_event?) {
 
   // Process Events
   if (eventData.messageType in event_list) {
-    console.debug('Event to process: ' + eventData.messageType);
+    console.debug(`Event to process: ${eventData.messageType}`);
     if (typeof full_event === 'undefined') {
       full_event = eventData;
     }
@@ -220,8 +220,8 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
           const lastRepair = building.lastRepair?.timestamp ?? building.creationTime.timestamp;
 
           siteData.buildings.push({
-            buildingTicker: buildingTicker,
-            lastRepair: lastRepair,
+            buildingTicker,
+            lastRepair,
             condition: building.condition,
             reclaimableMaterials: building.reclaimableMaterials,
             repairMaterials: building.repairMaterials,

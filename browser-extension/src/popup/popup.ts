@@ -3,7 +3,7 @@ import system from '@src/system';
 
 const clearButton = document.getElementById('clearbutton')!;
 
-clearButton.addEventListener('click', function () {
+clearButton.addEventListener('click', () => {
   OnClear_Click();
 });
 

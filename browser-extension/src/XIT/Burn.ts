@@ -29,7 +29,7 @@ export class Burn {
     this.alive = true;
 
     if (parameters[1] && !parameters[2]) {
-      this.name = 'ENHANCED BURN - ' + parameters[1].toUpperCase();
+      this.name = `ENHANCED BURN - ${parameters[1].toUpperCase()}`;
     } else {
       this.name = 'ENHANCED BURN';
     }
@@ -108,7 +108,7 @@ export class Burn {
 
     // Create settings behavior
     settingsDiv.appendChild(
-      createSettingsButton('RED', 22.025, dispSettings.red, function () {
+      createSettingsButton('RED', 22.025, dispSettings.red, () => {
         dispSettings.red = !dispSettings.red;
         updateBurn(table, dispSettings);
         pmmgSettings['PMMGExtended']['burn_settings'][bufferName] = dispSettings;
@@ -117,7 +117,7 @@ export class Burn {
       }),
     );
     settingsDiv.appendChild(
-      createSettingsButton('YELLOW', 40.483, dispSettings.yellow, function () {
+      createSettingsButton('YELLOW', 40.483, dispSettings.yellow, () => {
         dispSettings.yellow = !dispSettings.yellow;
         updateBurn(table, dispSettings);
         pmmgSettings['PMMGExtended']['burn_settings'][bufferName] = dispSettings;
@@ -126,7 +126,7 @@ export class Burn {
       }),
     );
     settingsDiv.appendChild(
-      createSettingsButton('GREEN', 34.65, dispSettings.green, function () {
+      createSettingsButton('GREEN', 34.65, dispSettings.green, () => {
         dispSettings.green = !dispSettings.green;
         updateBurn(table, dispSettings);
         pmmgSettings['PMMGExtended']['burn_settings'][bufferName] = dispSettings;
@@ -135,7 +135,7 @@ export class Burn {
       }),
     );
     settingsDiv.appendChild(
-      createSettingsButton('INF', 19.6, dispSettings.inf, function () {
+      createSettingsButton('INF', 19.6, dispSettings.inf, () => {
         dispSettings.inf = !dispSettings.inf;
         updateBurn(table, dispSettings);
         pmmgSettings['PMMGExtended']['burn_settings'][bufferName] = dispSettings;
@@ -173,7 +173,7 @@ export class Burn {
         minimizeButton.classList.add('pb-burn-minimize');
         nameRowColumn.appendChild(minimizeButton);
 
-        minimizeButton.addEventListener('click', function () {
+        minimizeButton.addEventListener('click', () => {
           if (!dispSettings.minimized) {
             dispSettings.minimized = {};
           }
@@ -214,9 +214,9 @@ export class Burn {
         const burnColumn = document.createElement('td');
         burnColumn.appendChild(
           createTextSpan(
-            (minDaysLeft < 500
-              ? Math.floor(minDaysLeft).toLocaleString(undefined, { maximumFractionDigits: 0 })
-              : '∞') + ' Days',
+            `${
+              minDaysLeft < 500 ? Math.floor(minDaysLeft).toLocaleString(undefined, { maximumFractionDigits: 0 }) : '∞'
+            } Days`,
           ),
         );
         if (minDaysLeft >= 500) {
@@ -258,10 +258,10 @@ export class Burn {
         const consColumn = document.createElement('td');
         consColumn.appendChild(
           createTextSpan(
-            burn.burn[ticker]['DailyAmount'].toLocaleString(undefined, {
+            `${burn.burn[ticker]['DailyAmount'].toLocaleString(undefined, {
               maximumFractionDigits: Math.abs(burn.burn[ticker]['DailyAmount']) < 1 ? 2 : 1,
               minimumFractionDigits: Math.abs(burn.burn[ticker]['DailyAmount']) < 1 ? 2 : undefined,
-            }) + ' / Day',
+            })} / Day`,
           ),
         );
         row.appendChild(consColumn);
@@ -275,9 +275,11 @@ export class Burn {
         const burnColumn = document.createElement('td');
         burnColumn.appendChild(
           createTextSpan(
-            (burnDays != '∞' && burnDays < 500 && burn.burn[ticker]['DailyAmount'] < 0
-              ? Math.floor(burnDays).toLocaleString(undefined, { maximumFractionDigits: 0 })
-              : '∞') + ' Days',
+            `${
+              burnDays != '∞' && burnDays < 500 && burn.burn[ticker]['DailyAmount'] < 0
+                ? Math.floor(burnDays).toLocaleString(undefined, { maximumFractionDigits: 0 })
+                : '∞'
+            } Days`,
           ),
         );
         if (burn.burn[ticker]['DailyAmount'] >= 0) {

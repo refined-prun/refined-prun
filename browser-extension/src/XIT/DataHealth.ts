@@ -129,9 +129,9 @@ export class DataHealth {
     );
 
     const cxPriceAge = this.userInfo['PMMG-User-Info']['cx_prices']
-      ? ((Date.now() - this.userInfo['PMMG-User-Info']['cx_prices']['Age']) / 3600000).toLocaleString(undefined, {
+      ? `${((Date.now() - this.userInfo['PMMG-User-Info']['cx_prices']['Age']) / 3600000).toLocaleString(undefined, {
           maximumFractionDigits: 0,
-        }) + 'h'
+        })}h`
       : // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (false as any);
     otherTable.appendChild(createTableRow('CX Price Age', cxPriceAge));
@@ -142,7 +142,7 @@ export class DataHealth {
     clearButton.classList.add(...Style.ButtonPrimary);
     clearButton.style.margin = '4px';
     clearButton.style.display = 'block';
-    clearButton.addEventListener('click', function () {
+    clearButton.addEventListener('click', () => {
       system.storage.local.remove('PMMG-User-Info');
     });
     this.tile.appendChild(clearButton);

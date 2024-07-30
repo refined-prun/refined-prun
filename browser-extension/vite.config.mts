@@ -66,10 +66,6 @@ export default defineConfig({
       },
     },
   },
-  esbuild: {
-    jsxFactory: 'h',
-    jsxFragment: 'DocumentFragment',
-  },
   define: {
     __FIREFOX__: process.env.__FIREFOX__ === 'true',
     __CHROME__: process.env.__FIREFOX__ !== 'true',

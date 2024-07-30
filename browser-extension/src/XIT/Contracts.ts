@@ -67,19 +67,17 @@ export class Contracts {
                   type: 'GROUPED_LOAN',
                 };
               }
-            } else {
-              if (partnerConditions.loanInstallment) {
-                partnerConditions.loanInstallment.total += 1;
-                if (condition.status == 'FULFILLED') {
-                  partnerConditions.loanInstallment.filled += 1;
-                }
-              } else {
-                partnerConditions.loanInstallment = {
-                  filled: condition.status == 'FULFILLED' ? 1 : 0,
-                  total: 1,
-                  type: 'GROUPED_LOAN',
-                };
+            } else if (partnerConditions.loanInstallment) {
+              partnerConditions.loanInstallment.total += 1;
+              if (condition.status == 'FULFILLED') {
+                partnerConditions.loanInstallment.filled += 1;
               }
+            } else {
+              partnerConditions.loanInstallment = {
+                filled: condition.status == 'FULFILLED' ? 1 : 0,
+                total: 1,
+                type: 'GROUPED_LOAN',
+              };
             }
             return;
           }
@@ -134,7 +132,7 @@ const invalidContractStatus = ['FULFILLED', 'BREACHED', 'TERMINATED', 'CANCELLED
 function createContractRow(contract) {
   const row = document.createElement('tr');
 
-  const contractLink = createLink(contract['name'] || contract['localId'], 'CONT ' + contract['localId']);
+  const contractLink = createLink(contract['name'] || contract['localId'], `CONT ${contract['localId']}`);
   const contractIdColumn = document.createElement('td');
 
   contractIdColumn.appendChild(contract['IsFaction'] ? factionContract(contractLink) : contractLink);
@@ -188,13 +186,13 @@ function createContractRow(contract) {
   if (!faction) {
     let partnerLink;
     if (contract.partner.code) {
-      partnerLink = createLink(contract.partner.name, 'CO ' + contract.partner.code);
+      partnerLink = createLink(contract.partner.name, `CO ${contract.partner.code}`);
     } else {
       partnerLink = createTextSpan(contract.preamble);
     }
     partnerColumn.appendChild(partnerLink);
   } else {
-    const partnerLink = createLink(contract.partner.name, 'FA ' + faction);
+    const partnerLink = createLink(contract.partner.name, `FA ${faction}`);
     partnerColumn.appendChild(partnerLink);
   }
 
@@ -263,9 +261,10 @@ function conditionStatus(condition) {
 
   if (condition.type == 'GROUPED_LOAN') {
     const marker = createTextSpan(
-      condition.filled.toLocaleString(undefined, { maximumFractionDigits: 0 }) +
-        '/' +
-        condition.total.toLocaleString(undefined, { maximumFractionDigits: 0 }),
+      `${condition.filled.toLocaleString(undefined, { maximumFractionDigits: 0 })}/${condition.total.toLocaleString(
+        undefined,
+        { maximumFractionDigits: 0 },
+      )}`,
     );
 
     marker.style.fontWeight = 'bold';
@@ -279,7 +278,7 @@ function conditionStatus(condition) {
   }
 
   const text = friendlyConditionText[condition.type] ? friendlyConditionText[condition.type] : condition.type;
-  const textSpan = createTextSpan(' ' + text);
+  const textSpan = createTextSpan(` ${text}`);
 
   conditionDiv.appendChild(textSpan);
 

@@ -33,13 +33,13 @@ export class OrderETAs implements Module {
               if (prodItem.children[0].children.length < 2) {
                 return;
               }
-              lineTimes.sort(function (a, b) {
+              lineTimes.sort((a, b) => {
                 return a - b;
               });
               const minTime = lineTimes[0];
               timeElapsed += minTime;
               lineTimes.shift();
-              lineTimes = lineTimes.map(function (value) {
+              lineTimes = lineTimes.map(value => {
                 return value - minTime;
               });
 

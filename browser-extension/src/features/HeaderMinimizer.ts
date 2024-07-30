@@ -90,7 +90,7 @@ function minimizeHeaders(buffer, minByDefault, tag) {
   minimizeButton.textContent = minByDefault ? '+' : '-';
   minimizeButton.classList.add('pb-minimize');
   minimizeButton.classList.add('pb-minimize-cx');
-  minimizeButton.addEventListener('click', function () {
+  minimizeButton.addEventListener('click', () => {
     const minimize = minimizeButton.textContent == '-';
     minimizeButton.textContent = minimize ? '+' : '-';
     (Array.from(headers) as HTMLElement[]).forEach(header => {
