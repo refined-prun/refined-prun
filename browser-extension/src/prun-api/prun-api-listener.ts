@@ -481,15 +481,9 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
         result['PMMG-User-Info'].production.push(siteInfo);
       }
       break;
-    case 'COMPANY_DATA': // Company info
-      result['PMMG-User-Info']['company-name'] = '';
-
-      if (eventdata.payload.name) {
-        result['PMMG-User-Info']['company-name'] = eventdata.payload.name;
-      }
-      if (eventdata.payload.id) {
-        result['PMMG-User-Info']['company-id'] = eventdata.payload.id;
-      }
+    case 'COMPANY_DATA':
+      user.company.name = eventdata.payload.name;
+      user.company.id = eventdata.payload.id;
       break;
     case 'ACCOUNTING_CASH_BALANCES':
       result['PMMG-User-Info'].currency = [];

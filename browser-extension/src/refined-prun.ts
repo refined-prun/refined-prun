@@ -1,5 +1,6 @@
 import './features/xit-commands';
 import './features/com-add-images';
+import './features/cxob-highlight-own-orders';
 import './features/flt-arrival-eta';
 import './features/sfc-flight-eta';
 import './features/prod-burn-link';

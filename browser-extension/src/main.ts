@@ -12,7 +12,6 @@ import { PendingContracts } from '@src/features/PendingContracts';
 import { CompactUI } from '@src/features/CompactUI';
 import { calculateFinancials } from './XIT/Finances';
 import { AdvancedMode } from '@src/features/AdvancedMode';
-import { CXOBHighlighter } from '@src/features/CXOBHighlighter';
 import { CXPOOrderBook } from '@src/features/CXPOOrderBook';
 import { ChatDeleteButton } from '@src/features/ChatDeleteButton';
 import { IconMarkers } from '@src/features/IconMarkers';
@@ -23,6 +22,8 @@ import buffers from '@src/prun-ui/prun-buffers';
 import { initializePrunApi, loadGameData } from '@src/prun-api';
 import { loadPrunCss } from '@src/prun-ui/prun-css';
 import { applyXITParameters } from '@src/features/xit-commands';
+
+import './refined-prun.css';
 
 // The main function that initializes everything
 async function mainRun() {
@@ -111,7 +112,6 @@ async function mainRun() {
     new Sidebar(result['PMMGExtended']['sidebar']),
     new PendingContracts(userInfo),
     new CompactUI(result),
-    new CXOBHighlighter(userInfo),
     new CXPOOrderBook(userInfo),
     new ChatDeleteButton(result),
     new IconMarkers(),

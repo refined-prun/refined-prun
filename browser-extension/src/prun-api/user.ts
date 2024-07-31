@@ -1,6 +1,10 @@
 import { reactive } from '@vue/reactivity';
 
 const user = reactive({
+  company: {
+    name: '',
+    id: '',
+  },
   sites: [],
   storage: [],
   workforce: [],
