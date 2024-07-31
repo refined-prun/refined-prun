@@ -18,7 +18,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@vue/reactivity": "^3.4.33",
+    "@vue/reactivity": "^3.4.34",
     "chart.js": "^4.4.3",
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-plugin-datalabels": "^2.2.0",
@@ -42,7 +42,6 @@
     "@refined-prun/hmr": "workspace:*",
     "@refined-prun/tsconfig": "workspace:*",
     "@types/chrome": "^0.0.268",
-    "@types/firefox-webext-browser": "^120.0.4",
-    "@types/socket.io-parser": "^3.0.0"
+    "@types/firefox-webext-browser": "^120.0.4"
   }
 }

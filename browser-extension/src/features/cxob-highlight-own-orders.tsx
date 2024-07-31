@@ -24,6 +24,6 @@ export function init() {
 }
 
 void features.add({
-  id: 'evaluate-input-formula',
+  id: 'cxob-highlight-own-orders',
   init,
 });
