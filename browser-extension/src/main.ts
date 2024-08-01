@@ -18,7 +18,6 @@ import { IconMarkers } from '@src/features/IconMarkers';
 import { PostLM } from '@src/features/PostLM';
 import { loadSettings, Settings } from './Settings';
 import features from '@src/feature-registry';
-import buffers from '@src/prun-ui/prun-buffers';
 import { initializePrunApi, loadGameData } from '@src/prun-api';
 import { loadPrunCss } from '@src/prun-ui/prun-css';
 import { applyXITParameters } from '@src/features/xit-commands';
@@ -101,7 +100,6 @@ async function mainRun() {
     // 72000000
     window.setTimeout(() => calculateFinancials(webData, userInfo, result, true), 1000);
   }
-  buffers.track();
   const modules = [
     new OrderETAs(),
     new InventoryOrganizer(userInfo, result),

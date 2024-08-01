@@ -1,27 +1,55 @@
-import observeReadyElements from '@src/utils/selector-observer';
 import getMapArray from '@src/utils/get-map-array';
 import PrunCss from '@src/prun-ui/prun-css';
-import { dot } from '@src/utils/dot';
 import { castArray } from '@src/utils/cast-array';
-import childElementPresent from '@src/utils/child-element-present';
 import { observeChildListChanged } from '@src/utils/mutation-observer';
-import { onElementDisconnected } from '@src/utils/on-element-disconnected';
+import onetime from 'onetime';
+import observeDocumentMutations from '@src/utils/document-mutation-observer';
+import removeArrayElement from '@src/utils/remove-array-element';
 
 interface PrunBufferObserver {
   (buffer: PrunBuffer): void;
 }
 
-const activeBuffers: Set<PrunBuffer> = new Set();
-const commandBuffers: Map<string, PrunBuffer[]> = new Map();
+const activeBuffers: PrunBuffer[] = [];
 const commandObservers: Map<string, PrunBufferObserver[]> = new Map();
 const anyCommandObservers: PrunBufferObserver[] = [];
 
-function track() {
-  observeReadyElements(dot(PrunCss.TileFrame.frame), onFrameReady);
+const setupObserver = onetime(() => {
+  observeDocumentMutations(reconciliate);
+});
+
+function reconciliate() {
+  for (const buffer of activeBuffers) {
+    if (!buffer.frame.isConnected) {
+      deactivateBuffer(buffer);
+    }
+  }
+
+  const frameElements = document.getElementsByClassName(PrunCss.TileFrame.frame) as HTMLCollectionOf<HTMLDivElement>;
+  if (frameElements.length === activeBuffers.length) {
+    return;
+  }
+
+  const newFrames: Set<HTMLDivElement> = new Set();
+
+  for (let i = 0; i < frameElements.length; i++) {
+    newFrames.add(frameElements[i]);
+  }
+  for (const buffer of activeBuffers) {
+    newFrames.delete(buffer.frame);
+  }
+
+  for (const frame of newFrames) {
+    const anchor = frame.getElementsByClassName(PrunCss.TileFrame.anchor)[0];
+    if (anchor?.children.length === 0) {
+      continue;
+    }
+
+    activateFrame(frame, anchor);
+  }
 }
 
-async function onFrameReady(frame: HTMLDivElement) {
-  const anchor = await childElementPresent(frame, PrunCss.TileFrame.anchor);
+function activateFrame(frame: HTMLDivElement, anchor: Element) {
   const commandElement = frame.getElementsByClassName(PrunCss.TileFrame.cmd)[0];
   const fullCommand = commandElement.textContent!;
   const indexOfSpace = fullCommand.indexOf(' ');
@@ -32,24 +60,21 @@ async function onFrameReady(frame: HTMLDivElement) {
     parameter: indexOfSpace > 0 ? fullCommand.slice(indexOfSpace + 1) : undefined,
     firstActivation: true,
   };
-  onElementDisconnected(frame, () => deactivateBuffer(buffer));
+  activateBuffer(buffer);
 
   observeChildListChanged(anchor, () => {
     if (anchor.children.length === 0) {
       deactivateBuffer(buffer);
-    } else {
-      activateBuffer(buffer);
     }
   });
 }
 
 function activateBuffer(buffer: PrunBuffer) {
-  if (activeBuffers.has(buffer)) {
+  if (activeBuffers.includes(buffer)) {
     return;
   }
 
-  const buffers = getMapArray(commandBuffers, buffer.command);
-  buffers.push(buffer);
+  activeBuffers.push(buffer);
   for (const observer of getMapArray(commandObservers, buffer.command)) {
     observer(buffer);
   }
@@ -60,41 +85,36 @@ function activateBuffer(buffer: PrunBuffer) {
 }
 
 function deactivateBuffer(buffer: PrunBuffer) {
-  if (!activeBuffers.has(buffer)) {
+  if (!activeBuffers.includes(buffer)) {
     return;
   }
 
-  activeBuffers.delete(buffer);
-  const buffers = getMapArray(commandBuffers, buffer.command);
-  const index = buffers.indexOf(buffer);
-  if (index >= 0) {
-    buffers.splice(index, 1);
-  }
+  removeArrayElement(activeBuffers, buffer);
 }
 
 function observeBuffers(commands: Arrayable<string>, observer: PrunBufferObserver) {
+  setupObserver();
   for (let command of castArray(commands)) {
     command = command.toUpperCase();
     const observers = getMapArray(commandObservers, command);
     observers.push(observer);
-    const buffers = getMapArray(commandBuffers, command);
-    for (const buffer of buffers) {
-      observer(buffer);
+    for (const buffer of activeBuffers) {
+      if (buffer.command === command) {
+        observer(buffer);
+      }
     }
   }
 }
 
 function observeAllBuffers(observer: PrunBufferObserver) {
+  setupObserver();
   anyCommandObservers.push(observer);
-  for (const buffers of commandBuffers.values()) {
-    for (const buffer of buffers) {
-      observer(buffer);
-    }
+  for (const buffer of activeBuffers) {
+    observer(buffer);
   }
 }
 
 const buffers = {
-  track,
   observe: observeBuffers,
   observeAll: observeAllBuffers,
 };

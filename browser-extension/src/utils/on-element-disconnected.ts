@@ -1,23 +1,26 @@
 import onetime from 'onetime';
+import observeDocumentMutations from '@src/utils/document-mutation-observer';
 
 let elements: [Element, () => void][] = [];
 
-export function onElementDisconnected(element: Element, callback: () => void) {
+export default function onElementDisconnected(element: Element, callback: () => void) {
   if (!element.isConnected) {
     callback();
     return;
   }
 
-  onetime(setupObserver);
+  setupObserver();
   elements.push([element, callback]);
 }
 
-function setupObserver() {
-  const observer = new MutationObserver(checkConnected);
-  observer.observe(document, { childList: true, subtree: true });
-}
+const setupObserver = onetime(() => {
+  observeDocumentMutations(checkConnected);
+});
 
-function checkConnected() {
+function checkConnected(mutations: MutationRecord[]) {
+  if (mutations.every(x => x.removedNodes.length === 0)) {
+    return;
+  }
   const currentElements = elements;
   elements = [];
   for (const element of currentElements) {
@@ -28,7 +31,7 @@ function checkConnected() {
     try {
       element[1]();
     } catch (e) {
-      // Do nothing.
+      console.error(e);
     }
   }
 }
