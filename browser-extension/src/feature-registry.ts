@@ -46,6 +46,9 @@ function logError(id: string, error: unknown): void {
 }
 
 function add(descriptor: FeatureDescriptor) {
+  if (__DEV__ && registry.some(x => x.id === descriptor.id)) {
+    throw Error(`Duplicate feature id: ${descriptor.id}`);
+  }
   registry.push(descriptor);
 }
 

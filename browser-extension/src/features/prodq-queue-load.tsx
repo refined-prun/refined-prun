@@ -52,6 +52,6 @@ function init() {
 }
 
 void features.add({
-  id: 'sfc-arrival-eta',
+  id: 'prodq-queue-load',
   init,
 });

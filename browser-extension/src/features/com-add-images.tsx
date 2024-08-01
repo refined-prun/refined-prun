@@ -49,6 +49,6 @@ export function init() {
 }
 
 void features.add({
-  id: 'shipping-per-unit-price',
+  id: 'com-add-images',
   init,
 });
