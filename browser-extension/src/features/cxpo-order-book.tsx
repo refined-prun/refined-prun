@@ -3,61 +3,36 @@ import user from '@src/prun-api/user';
 import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
 import { appendRootFragment } from '@src/utils/create-root-fragment';
-import preact, { h, render } from 'preact';
+import { h, render } from 'preact';
 import PrunCss from '@src/prun-ui/prun-css';
 import { useLayoutEffect, useRef } from 'preact/compat';
 import classNames from 'classnames';
 import childElementPresent from '@src/utils/child-element-present';
+import useReactive from '@src/hooks/use-reactive';
 
 async function onBufferCreated(buffer: PrunBuffer) {
-  const form = await childElementPresent(buffer.frame, PrunCss.ComExPlaceOrderForm.form);
-
-  const fullTicker = buffer.parameter;
-  if (!fullTicker || !user.cxob[fullTicker]) {
+  if (!buffer.parameter) {
     return;
   }
 
+  const form = await childElementPresent(buffer.frame, PrunCss.ComExPlaceOrderForm.form);
   const formParent = form.parentElement!;
   formParent.style.display = 'flex';
   form.style.flex = '1';
   for (const label of Array.from(form.getElementsByClassName(PrunCss.FormComponent.label))) {
     (label as HTMLLabelElement).style.minWidth = '95px';
   }
-
   for (const span of Array.from(form.getElementsByClassName(PrunCss.Tooltip.container))) {
     span.setAttribute('data-tooltip-position', 'right');
   }
 
-  render(<OrderBook ticker={fullTicker} />, appendRootFragment(formParent, 'div'));
-}
-
-function OrderRow(props: { order: PrunApi.COMEX_BROKER_DATA.Order; type: 'offer' | 'request' }) {
-  const { order, type } = props;
-  const ownOrderClass = {
-    'rprun-cxpo-order-column--own-order': order.amount && order.trader.id === user.company.id,
-  };
-  const amount = order.amount ? order.amount.toFixed(0) : '∞';
-  const amountClass = classNames(PrunCss.ComExOrderBookPanel.amount, ownOrderClass);
-  const price = order.limit.amount.toFixed(2);
-  const priceClass = classNames(
-    type === 'request' ? PrunCss.ComExOrderBookPanel.requestPrice : PrunCss.ComExOrderBookPanel.offerPrice,
-    ownOrderClass,
-    'rprun-cxpo-order-column--price',
-  );
-  return (
-    <tr>
-      <td class={amountClass}>{amount}</td>
-      <td class={priceClass} style={{ padding: '2px' }}>
-        {price}
-      </td>
-    </tr>
-  );
+  render(<OrderBook ticker={buffer.parameter} />, appendRootFragment(formParent, 'div'));
 }
 
 function OrderBook(props: { ticker: string }) {
-  const orderInfo = user.cxob[props.ticker];
+  const orderInfo = useReactive(() => user.cxob[props.ticker]);
 
-  const offers: preact.JSX.Element[] = orderInfo.sellingOrders
+  const offers = (orderInfo?.sellingOrders ?? [])
     .slice()
     .reverse()
     .map(x => <OrderRow key={x.id} order={x} type="offer" />);
@@ -72,8 +47,8 @@ function OrderBook(props: { ticker: string }) {
     );
   }
 
-  const ask = orderInfo.ask?.price.amount;
-  const bid = orderInfo.bid?.price.amount;
+  const ask = orderInfo?.ask?.price.amount;
+  const bid = orderInfo?.bid?.price.amount;
   const spread = ask && bid ? (ask - bid).toFixed(2) : '--';
 
   const spreadBody = (
@@ -86,9 +61,7 @@ function OrderBook(props: { ticker: string }) {
     </tbody>
   );
 
-  const requests: preact.JSX.Element[] = orderInfo.buyingOrders.map(x => (
-    <OrderRow key={x.id} order={x} type="request" />
-  ));
+  const requests = (orderInfo?.buyingOrders ?? []).map(x => <OrderRow key={x.id} order={x} type="request" />);
 
   if (requests.length === 0) {
     requests.push(
@@ -104,7 +77,7 @@ function OrderBook(props: { ticker: string }) {
   const offerBody = useRef<HTMLTableSectionElement>(null);
   useLayoutEffect(() => {
     orderBook.current!.scrollTop = Math.max(offerBody.current!.offsetHeight - 90, 0);
-  });
+  }, []);
   return (
     <div class="rprun-cxpo-order-book" ref={orderBook}>
       <table>
@@ -129,6 +102,29 @@ function OrderBook(props: { ticker: string }) {
         </tbody>
       </table>
     </div>
+  );
+}
+
+function OrderRow(props: { order: PrunApi.COMEX_BROKER_DATA.Order; type: 'offer' | 'request' }) {
+  const { order, type } = props;
+  const ownOrderClass = {
+    'rprun-cxpo-order-column--own-order': order.amount && order.trader.id === user.company.id,
+  };
+  const amount = order.amount ? order.amount.toFixed(0) : '∞';
+  const amountClass = classNames(PrunCss.ComExOrderBookPanel.amount, ownOrderClass);
+  const price = order.limit.amount.toFixed(2);
+  const priceClass = classNames(
+    type === 'request' ? PrunCss.ComExOrderBookPanel.requestPrice : PrunCss.ComExOrderBookPanel.offerPrice,
+    ownOrderClass,
+    'rprun-cxpo-order-column--price',
+  );
+  return (
+    <tr>
+      <td class={amountClass}>{amount}</td>
+      <td class={priceClass} style={{ padding: '2px' }}>
+        {price}
+      </td>
+    </tr>
   );
 }
 
