@@ -1,5 +1,4 @@
 import './cxpo-order-book.css';
-import { Exchanges } from '../GameProperties';
 import user from '@src/prun-api/user';
 import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
@@ -13,27 +12,13 @@ import childElementPresent from '@src/utils/child-element-present';
 async function onBufferCreated(buffer: PrunBuffer) {
   const form = await childElementPresent(buffer.frame, PrunCss.ComExPlaceOrderForm.form);
 
-  const exchange = document.evaluate(
-    "div[label/span[text()='Exchange']]//div/div",
-    form,
-    null,
-    XPathResult.FIRST_ORDERED_NODE_TYPE,
-    null,
-  ).singleNodeValue as HTMLDivElement;
-  if (!exchange || !exchange.textContent) {
-    return;
-  }
-
   const fullTicker = buffer.parameter;
-  if (!fullTicker || !user.cxob[fullTicker] || !form.parentElement) {
+  if (!fullTicker || !user.cxob[fullTicker]) {
     return;
   }
 
-  if (Exchanges[exchange.textContent]) {
-    exchange.textContent = Exchanges[exchange.textContent];
-  }
-
-  form.parentElement.style.display = 'flex';
+  const formParent = form.parentElement!;
+  formParent.style.display = 'flex';
   form.style.flex = '1';
   for (const label of Array.from(form.getElementsByClassName(PrunCss.FormComponent.label))) {
     (label as HTMLLabelElement).style.minWidth = '95px';
@@ -43,7 +28,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
     span.setAttribute('data-tooltip-position', 'right');
   }
 
-  render(<OrderBook ticker={fullTicker} />, appendRootFragment(form.parentElement, 'div'));
+  render(<OrderBook ticker={fullTicker} />, appendRootFragment(formParent, 'div'));
 }
 
 function OrderRow(props: { order: PrunApi.COMEX_BROKER_DATA.Order; type: 'offer' | 'request' }) {
