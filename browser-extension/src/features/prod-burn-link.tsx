@@ -1,7 +1,7 @@
 import { createContextButton } from '@src/util';
 import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
-import childElementPresent from '@src/utils/child-element-present';
+import descendantPresent from '@src/utils/descendant-present';
 import PrunCss from '@src/prun-ui/prun-css';
 import prun from '@src/prun-api/prun';
 
@@ -10,7 +10,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
     return;
   }
 
-  const title = await childElementPresent(buffer.frame, PrunCss.TileFrame.title);
+  const title = await descendantPresent(buffer.frame, PrunCss.TileFrame.title);
   if (!title.textContent) {
     return;
   }
@@ -21,7 +21,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
   }
 
   const button = createContextButton('BURN', 'Enhanced Burn', `XIT BURN ${name}`);
-  const contextBar = await childElementPresent(buffer.frame, PrunCss.ContextControls.container);
+  const contextBar = await descendantPresent(buffer.frame, PrunCss.ContextControls.container);
   if (contextBar.children[0]) {
     contextBar.insertBefore(button, contextBar.children[0]);
   } else {

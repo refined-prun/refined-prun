@@ -1,6 +1,6 @@
 import oneMutation from 'one-mutation';
 
-export default async function childElementPresent(element: Element, className: string, signal?: AbortSignal) {
+export default async function descendantPresent(element: Element, className: string, signal?: AbortSignal) {
   signal?.throwIfAborted();
   const childElements = element.getElementsByClassName(className);
   if (childElements.length > 0) {
@@ -9,6 +9,7 @@ export default async function childElementPresent(element: Element, className: s
 
   await oneMutation(element, {
     childList: true,
+    subtree: true,
     filter: () => childElements.length > 0,
   });
 

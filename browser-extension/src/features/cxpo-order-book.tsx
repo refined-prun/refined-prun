@@ -7,7 +7,7 @@ import { h, render } from 'preact';
 import PrunCss from '@src/prun-ui/prun-css';
 import { useLayoutEffect, useRef } from 'preact/compat';
 import classNames from 'classnames';
-import childElementPresent from '@src/utils/child-element-present';
+import descendantPresent from '@src/utils/descendant-present';
 import useReactive from '@src/hooks/use-reactive';
 
 async function onBufferCreated(buffer: PrunBuffer) {
@@ -15,7 +15,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
     return;
   }
 
-  const form = await childElementPresent(buffer.frame, PrunCss.ComExPlaceOrderForm.form);
+  const form = await descendantPresent(buffer.frame, PrunCss.ComExPlaceOrderForm.form);
   const formParent = form.parentElement!;
   formParent.style.display = 'flex';
   form.style.flex = '1';

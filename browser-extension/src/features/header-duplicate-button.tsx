@@ -3,14 +3,14 @@ import features from '@src/feature-registry';
 import { showBuffer } from '@src/util';
 import { h } from 'dom-chef';
 import PrunCss from '@src/prun-ui/prun-css';
-import childElementPresent from '@src/utils/child-element-present';
+import descendantPresent from '@src/utils/descendant-present';
 
 async function onBufferCreated(buffer: PrunBuffer) {
   if (!buffer.firstActivation) {
     return;
   }
-  const tileControls = await childElementPresent(buffer.frame, PrunCss.TileFrame.controls);
-  const hiddenControls = await childElementPresent(tileControls, PrunCss.TileControls.controls);
+  const tileControls = await descendantPresent(buffer.frame, PrunCss.TileFrame.controls);
+  const hiddenControls = await descendantPresent(tileControls, PrunCss.TileControls.controls);
 
   const button = (
     <div

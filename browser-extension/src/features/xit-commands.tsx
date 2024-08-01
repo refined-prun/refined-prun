@@ -5,7 +5,7 @@ import { dot } from '@src/utils/dot';
 import { $ } from 'select-dom';
 import PrunCss from '@src/prun-ui/prun-css';
 import { h } from 'dom-chef';
-import childElementPresent from '@src/utils/child-element-present';
+import descendantPresent from '@src/utils/descendant-present';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let xitArgs: any;
@@ -21,7 +21,7 @@ export function applyXITParameters(pmmgSettings, userInfo, webData, modules) {
 
 async function onBufferCreated(buffer: PrunBuffer) {
   const frame = buffer.frame;
-  const scrollView = await childElementPresent(frame, PrunCss.ScrollView.view);
+  const scrollView = await descendantPresent(frame, PrunCss.ScrollView.view);
   const body = scrollView.children[0] as HTMLDivElement;
   if (!body) {
     return;

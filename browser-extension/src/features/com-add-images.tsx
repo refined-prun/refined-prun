@@ -1,11 +1,11 @@
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
 import PrunCss from '@src/prun-ui/prun-css';
-import childElementPresent from '@src/utils/child-element-present';
+import descendantPresent from '@src/utils/descendant-present';
 import { h } from 'dom-chef';
 
 async function onBufferCreated(buffer: PrunBuffer) {
-  const chatArea = await childElementPresent(buffer.frame, PrunCss.Channel.messageAndUserList);
+  const chatArea = await descendantPresent(buffer.frame, PrunCss.Channel.messageAndUserList);
   const chatLinks = chatArea.getElementsByClassName(PrunCss.Link.link);
   const processedLinks: WeakSet<Element> = new WeakSet();
   runUpdate();
