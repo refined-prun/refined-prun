@@ -22,6 +22,7 @@
     "chart.js": "^4.4.3",
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-plugin-datalabels": "^2.2.0",
+    "classnames": "^2.5.1",
     "code-tag": "^1.2.0",
     "date-fns": "^3.6.0",
     "dom-chef": "^5.1.1",

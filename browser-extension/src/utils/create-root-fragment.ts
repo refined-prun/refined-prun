@@ -23,3 +23,9 @@ export function createRootFragment(parent: Element, replaceNode: Arrayable<Node>
     contains: (c: Node | null) => parent.contains(c),
   });
 }
+
+export function appendRootFragment<K extends keyof HTMLElementTagNameMap>(parent: Element, tagName: K): ContainerNode {
+  const fragment = document.createElement(tagName);
+  parent.appendChild(fragment);
+  return createRootFragment(parent, fragment);
+}

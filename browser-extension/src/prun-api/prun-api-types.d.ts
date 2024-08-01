@@ -249,8 +249,8 @@ declare module PrunApi {
       allTimeHigh: CurrencyAmount;
       low: CurrencyAmount;
       allTimeLow: CurrencyAmount;
-      ask: PriceAmount;
-      bid: PriceAmount;
+      ask: PriceAmount | null;
+      bid: PriceAmount | null;
       supply: number;
       demand: number;
       traded: number;

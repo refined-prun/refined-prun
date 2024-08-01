@@ -4,7 +4,7 @@ export default async function childElementPresent(element: Element, className: s
   signal?.throwIfAborted();
   const childElements = element.getElementsByClassName(className);
   if (childElements.length > 0) {
-    return childElements[0];
+    return childElements[0] as HTMLElement;
   }
 
   await oneMutation(element, {
@@ -13,5 +13,5 @@ export default async function childElementPresent(element: Element, className: s
   });
 
   signal?.throwIfAborted();
-  return childElements[0];
+  return childElements[0] as HTMLElement;
 }

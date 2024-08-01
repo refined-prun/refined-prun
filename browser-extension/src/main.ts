@@ -12,7 +12,6 @@ import { PendingContracts } from '@src/features/PendingContracts';
 import { CompactUI } from '@src/features/CompactUI';
 import { calculateFinancials } from './XIT/Finances';
 import { AdvancedMode } from '@src/features/AdvancedMode';
-import { CXPOOrderBook } from '@src/features/CXPOOrderBook';
 import { ChatDeleteButton } from '@src/features/ChatDeleteButton';
 import { IconMarkers } from '@src/features/IconMarkers';
 import { PostLM } from '@src/features/PostLM';
@@ -110,7 +109,6 @@ async function mainRun() {
     new Sidebar(result['PMMGExtended']['sidebar']),
     new PendingContracts(userInfo),
     new CompactUI(result),
-    new CXPOOrderBook(userInfo),
     new ChatDeleteButton(result),
     new IconMarkers(),
     new PostLM(),

@@ -1,0 +1,19 @@
+.rprun-cxpo-order-book {
+  overflow-y: scroll;
+  flex: 1;
+  width: 120px;
+  height: 248px;
+  vertical-align: top;
+  scrollbar-width: none;
+}
+
+table tbody td.rprun-cxpo-order-column--own-order {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/*
+  Override left/right padding from vanilla class
+*/
+table tbody td.rprun-cxpo-order-column--price {
+  padding: 2px;
+}
