@@ -1,9 +1,8 @@
 import { CurrencySymbols } from '@src/GameProperties';
-import observeReadyElements from '@src/utils/selector-observer';
-import { dot } from '@src/utils/dot';
 import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import { h } from 'dom-chef';
+import observeReadyElementsByClassName from '@src/utils/mutation-observer';
 
 function onAdTextReady(element: HTMLDivElement) {
   // Test if the text matches that of a shipping ad
@@ -34,7 +33,7 @@ function onAdTextReady(element: HTMLDivElement) {
 }
 
 export function init() {
-  observeReadyElements(dot(PrunCss.CommodityAd.text), onAdTextReady);
+  observeReadyElementsByClassName(PrunCss.CommodityAd.text, onAdTextReady);
 }
 
 void features.add({

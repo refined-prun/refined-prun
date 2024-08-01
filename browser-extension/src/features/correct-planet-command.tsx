@@ -1,10 +1,10 @@
 import { changeValue } from '../util';
-import observeReadyElements from '@src/utils/selector-observer';
 import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import { $ } from 'select-dom';
 import { dot } from '@src/utils/dot';
 import prun from '@src/prun-api/prun';
+import observeReadyElementsByClassName from '@src/utils/mutation-observer';
 
 const correctableCommands = new Set([
   'ADM',
@@ -49,7 +49,7 @@ export function onSelectorReady(selector: HTMLDivElement) {
 }
 
 export function init() {
-  observeReadyElements(dot(PrunCss.Tile.selector), onSelectorReady);
+  observeReadyElementsByClassName(PrunCss.Tile.selector, onSelectorReady);
 }
 
 void features.add({
