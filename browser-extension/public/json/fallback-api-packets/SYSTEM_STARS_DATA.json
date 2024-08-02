@@ -25,9 +25,7 @@
       },
       "sectorId": "sector-81",
       "subSectorId": "subsector-81-1",
-      "connections": [
-        "9d3efdf3eb5350606785ddf45e41b3aa"
-      ]
+      "connections": ["9d3efdf3eb5350606785ddf45e41b3aa"]
     },
     {
       "systemId": "7aff79bdf54540405ecc72fd7a057c72",
@@ -180,9 +178,7 @@
       },
       "sectorId": "sector-27",
       "subSectorId": "subsector-27-3",
-      "connections": [
-        "e636004bf63f401fe5f38aade206f70e"
-      ]
+      "connections": ["e636004bf63f401fe5f38aade206f70e"]
     },
     {
       "systemId": "48ca1cba0a51ed8ebd1861a6fde91aff",
@@ -209,10 +205,7 @@
       },
       "sectorId": "sector-86",
       "subSectorId": "subsector-86-5",
-      "connections": [
-        "6f7fee15dc26912db4d04737aae795de",
-        "9d5761f8dab3e7f1e6365bfc290c1dae"
-      ]
+      "connections": ["6f7fee15dc26912db4d04737aae795de", "9d5761f8dab3e7f1e6365bfc290c1dae"]
     },
     {
       "systemId": "5363233d5a37aa1b8163ba8592b1b12d",
@@ -239,10 +232,7 @@
       },
       "sectorId": "sector-19",
       "subSectorId": "subsector-19-0",
-      "connections": [
-        "acaf72de364a9d4c1400c6dfeb7cfbda",
-        "b6e72b9ff587cbac6ace1db3701e6443"
-      ]
+      "connections": ["acaf72de364a9d4c1400c6dfeb7cfbda", "b6e72b9ff587cbac6ace1db3701e6443"]
     },
     {
       "systemId": "50f455fa4d2ef6e55652521ae3eb516f",
@@ -269,10 +259,7 @@
       },
       "sectorId": "sector-29",
       "subSectorId": "subsector-29-18",
-      "connections": [
-        "e41dc48f629aa60577c3d328aa4b5c09",
-        "c7b0aacb6fa92e28beff459d93a0f058"
-      ]
+      "connections": ["e41dc48f629aa60577c3d328aa4b5c09", "c7b0aacb6fa92e28beff459d93a0f058"]
     },
     {
       "systemId": "7538543e50ac2c4ac1ced350c2407134",
@@ -362,10 +349,7 @@
       },
       "sectorId": "sector-23",
       "subSectorId": "subsector-23-12",
-      "connections": [
-        "599051a7245aec9dbc8b053bc6d10eac",
-        "5d667532d68e7eac36afeb31f681b914"
-      ]
+      "connections": ["599051a7245aec9dbc8b053bc6d10eac", "5d667532d68e7eac36afeb31f681b914"]
     },
     {
       "systemId": "5e186a413963f7bc5f6d0ab9cf12844d",
@@ -423,10 +407,7 @@
       },
       "sectorId": "sector-6",
       "subSectorId": "subsector-6-23",
-      "connections": [
-        "104cda4aabe700021a97a495fd4d44d3",
-        "3ccf1ec43745f90d7f4ecc374304fe18"
-      ]
+      "connections": ["104cda4aabe700021a97a495fd4d44d3", "3ccf1ec43745f90d7f4ecc374304fe18"]
     },
     {
       "systemId": "866f64498621b0aad1ee567c1d51d277",
@@ -484,10 +465,7 @@
       },
       "sectorId": "sector-69",
       "subSectorId": "subsector-69-10",
-      "connections": [
-        "4364696ca1584f94757ab61df4b61518",
-        "bf5f80e54efb0804545822b4ff9cbd44"
-      ]
+      "connections": ["4364696ca1584f94757ab61df4b61518", "bf5f80e54efb0804545822b4ff9cbd44"]
     },
     {
       "systemId": "e0c68a900c0571547aaf4a64d6286dfd",
@@ -576,9 +554,7 @@
       },
       "sectorId": "sector-13",
       "subSectorId": "subsector-13-16",
-      "connections": [
-        "462b5e4ff151b8bac30d9349070fd3a0"
-      ]
+      "connections": ["462b5e4ff151b8bac30d9349070fd3a0"]
     },
     {
       "systemId": "5ef0aecc3459e08e653b42472bc3144f",
@@ -638,10 +614,7 @@
       },
       "sectorId": "sector-98",
       "subSectorId": "subsector-98-22",
-      "connections": [
-        "ba8b60b1bbed1a6f4b0059e83c6c6001",
-        "8912980ab277454eea35df621704f574"
-      ]
+      "connections": ["ba8b60b1bbed1a6f4b0059e83c6c6001", "8912980ab277454eea35df621704f574"]
     },
     {
       "systemId": "ad9a961b3b5bf5559842cafaab11383a",
@@ -668,10 +641,7 @@
       },
       "sectorId": "sector-69",
       "subSectorId": "subsector-69-20",
-      "connections": [
-        "bf5f80e54efb0804545822b4ff9cbd44",
-        "66de7936e45f6c10084b2f4e3800dfc6"
-      ]
+      "connections": ["bf5f80e54efb0804545822b4ff9cbd44", "66de7936e45f6c10084b2f4e3800dfc6"]
     },
     {
       "systemId": "81bd20e2a949f13a64377bf0fcaf1258",
@@ -698,10 +668,7 @@
       },
       "sectorId": "sector-77",
       "subSectorId": "subsector-77-19",
-      "connections": [
-        "4e1d8d58142c77cba78d054c66d68e11",
-        "4a704ef41ef359fa3377ee82b44e3287"
-      ]
+      "connections": ["4e1d8d58142c77cba78d054c66d68e11", "4a704ef41ef359fa3377ee82b44e3287"]
     },
     {
       "systemId": "e11904df650b36dc2fd6dc4783c81e55",
@@ -885,10 +852,7 @@
       },
       "sectorId": "sector-65",
       "subSectorId": "subsector-65-13",
-      "connections": [
-        "f33f712b7696977cc9bde9bcbd974461",
-        "6379b4472d9217783845bbf9fa760966"
-      ]
+      "connections": ["f33f712b7696977cc9bde9bcbd974461", "6379b4472d9217783845bbf9fa760966"]
     },
     {
       "systemId": "ceebe053ad4d2f05c5f4ab9302fbc445",
@@ -915,10 +879,7 @@
       },
       "sectorId": "sector-70",
       "subSectorId": "subsector-70-10",
-      "connections": [
-        "74dae175a253f5c30532f5e9ffc0e8de",
-        "7c71e78c812e14768dbe67355fc31243"
-      ]
+      "connections": ["74dae175a253f5c30532f5e9ffc0e8de", "7c71e78c812e14768dbe67355fc31243"]
     },
     {
       "systemId": "4d098f6138f3a6b550bb81f129e658ae",
@@ -977,9 +938,7 @@
       },
       "sectorId": "sector-94",
       "subSectorId": "subsector-94-12",
-      "connections": [
-        "4bb9440c013232ac13a0b6cfde3aa9fb"
-      ]
+      "connections": ["4bb9440c013232ac13a0b6cfde3aa9fb"]
     },
     {
       "systemId": "6bed6a221b4d480f2472aa486636fab0",
@@ -1164,10 +1123,7 @@
       },
       "sectorId": "sector-32",
       "subSectorId": "subsector-32-15",
-      "connections": [
-        "81e2dbefe9a05644066c7ff64c34375a",
-        "9f4047ff144ba7965dee6442843d7b2e"
-      ]
+      "connections": ["81e2dbefe9a05644066c7ff64c34375a", "9f4047ff144ba7965dee6442843d7b2e"]
     },
     {
       "systemId": "98eeecd0056f7034f93efff89319b083",
@@ -1225,10 +1181,7 @@
       },
       "sectorId": "sector-22",
       "subSectorId": "subsector-22-11",
-      "connections": [
-        "6fcfe8b4087a0b964ccc698e066416ec",
-        "eeab5dfa2503713a1ce167f9188baef6"
-      ]
+      "connections": ["6fcfe8b4087a0b964ccc698e066416ec", "eeab5dfa2503713a1ce167f9188baef6"]
     },
     {
       "systemId": "2b116d2ee9be2b27e15b728fd82f3361",
@@ -1255,10 +1208,7 @@
       },
       "sectorId": "sector-47",
       "subSectorId": "subsector-47-1",
-      "connections": [
-        "5138e00cb601babcd5859b26339ecf6e",
-        "7538543e50ac2c4ac1ced350c2407134"
-      ]
+      "connections": ["5138e00cb601babcd5859b26339ecf6e", "7538543e50ac2c4ac1ced350c2407134"]
     },
     {
       "systemId": "075d94e434c5d9f60b3fbff2b707b17e",
@@ -1347,10 +1297,7 @@
       },
       "sectorId": "sector-100",
       "subSectorId": "subsector-100-11",
-      "connections": [
-        "7cbbe6380e93dbaaa6b90f55f80097aa",
-        "c5d3791f9a475daa820afbf8c2c83ff2"
-      ]
+      "connections": ["7cbbe6380e93dbaaa6b90f55f80097aa", "c5d3791f9a475daa820afbf8c2c83ff2"]
     },
     {
       "systemId": "c3d18bc29e9daac072cf87fd58c6d5fa",
@@ -1377,10 +1324,7 @@
       },
       "sectorId": "sector-12",
       "subSectorId": "subsector-12-18",
-      "connections": [
-        "876c566844eb689a7d5be34f783c5483",
-        "35cb774e936ee22eb2badcb2f7fc9f53"
-      ]
+      "connections": ["876c566844eb689a7d5be34f783c5483", "35cb774e936ee22eb2badcb2f7fc9f53"]
     },
     {
       "systemId": "d40768ef9a357ac436dc534f08935d5a",
@@ -1438,10 +1382,7 @@
       },
       "sectorId": "sector-52",
       "subSectorId": "subsector-52-14",
-      "connections": [
-        "5ee62997d602ae6bd8a9a2f0676b90f6",
-        "71aa3aa60c2deb065ce0759a907d51cf"
-      ]
+      "connections": ["5ee62997d602ae6bd8a9a2f0676b90f6", "71aa3aa60c2deb065ce0759a907d51cf"]
     },
     {
       "systemId": "6d4253ee3a1d6f5729fe9b7e3a646b4a",
@@ -1468,9 +1409,7 @@
       },
       "sectorId": "sector-22",
       "subSectorId": "subsector-22-17",
-      "connections": [
-        "eeab5dfa2503713a1ce167f9188baef6"
-      ]
+      "connections": ["eeab5dfa2503713a1ce167f9188baef6"]
     },
     {
       "systemId": "783b4cf43432f079eae609b048997302",
@@ -1528,10 +1467,7 @@
       },
       "sectorId": "sector-33",
       "subSectorId": "subsector-33-17",
-      "connections": [
-        "deb2238ec18d6751b9077e2fef27d2d4",
-        "882c714b1f72466944d61af9d6326b2d"
-      ]
+      "connections": ["deb2238ec18d6751b9077e2fef27d2d4", "882c714b1f72466944d61af9d6326b2d"]
     },
     {
       "systemId": "f62f95be3f99bfa3cc0e2807bea2094b",
@@ -1558,10 +1494,7 @@
       },
       "sectorId": "sector-29",
       "subSectorId": "subsector-29-6",
-      "connections": [
-        "eff3637fe716bc3c5bbf7889554ae45c",
-        "389da879d610555be28d7459e5b518fa"
-      ]
+      "connections": ["eff3637fe716bc3c5bbf7889554ae45c", "389da879d610555be28d7459e5b518fa"]
     },
     {
       "systemId": "e07f40354cf71676fa9a8778ba838de4",
@@ -1650,10 +1583,7 @@
       },
       "sectorId": "sector-93",
       "subSectorId": "subsector-93-23",
-      "connections": [
-        "e4950bb9db75a1df4e90037f5722bcfa",
-        "5ac54d5c69ccf2281a836c3bf68e13d2"
-      ]
+      "connections": ["e4950bb9db75a1df4e90037f5722bcfa", "5ac54d5c69ccf2281a836c3bf68e13d2"]
     },
     {
       "systemId": "a198fce9e3c930b3a12ae81b481a7373",
@@ -1713,10 +1643,7 @@
       },
       "sectorId": "sector-68",
       "subSectorId": "subsector-68-6",
-      "connections": [
-        "4e670cdbefc53767cd834cdbc75187b6",
-        "173aee668621217c9cf442105f9993c8"
-      ]
+      "connections": ["4e670cdbefc53767cd834cdbc75187b6", "173aee668621217c9cf442105f9993c8"]
     },
     {
       "systemId": "4eee5b5b819c3a64bd710bc9b9a7350b",
@@ -1774,10 +1701,7 @@
       },
       "sectorId": "sector-83",
       "subSectorId": "subsector-83-22",
-      "connections": [
-        "5815a3e645f0781204d31e45966bf87b",
-        "5deb04e3bc3e1d7d05397ce9c6d6d968"
-      ]
+      "connections": ["5815a3e645f0781204d31e45966bf87b", "5deb04e3bc3e1d7d05397ce9c6d6d968"]
     },
     {
       "systemId": "2755912906f8eba1c925b9b8749e377f",
@@ -1835,10 +1759,7 @@
       },
       "sectorId": "sector-54",
       "subSectorId": "subsector-54-12",
-      "connections": [
-        "e92123538c66403bbc8edecb5fbed50a",
-        "866f64498621b0aad1ee567c1d51d277"
-      ]
+      "connections": ["e92123538c66403bbc8edecb5fbed50a", "866f64498621b0aad1ee567c1d51d277"]
     },
     {
       "systemId": "f6bf78e1309755b6dfdea606ac36bec8",
@@ -1928,10 +1849,7 @@
       },
       "sectorId": "sector-11",
       "subSectorId": "subsector-11-12",
-      "connections": [
-        "be6ecba3c3d42900499508e5b84946c2",
-        "10dccd8e4792a83f04571130c3cff08b"
-      ]
+      "connections": ["be6ecba3c3d42900499508e5b84946c2", "10dccd8e4792a83f04571130c3cff08b"]
     },
     {
       "systemId": "ba7cd5859833d6035d305fb691e08af3",
@@ -2052,9 +1970,7 @@
       },
       "sectorId": "sector-44",
       "subSectorId": "subsector-44-22",
-      "connections": [
-        "36800ca424af8b9fd8ca0e96b70e4647"
-      ]
+      "connections": ["36800ca424af8b9fd8ca0e96b70e4647"]
     },
     {
       "systemId": "c7b0aacb6fa92e28beff459d93a0f058",
@@ -2144,10 +2060,7 @@
       },
       "sectorId": "sector-53",
       "subSectorId": "subsector-53-20",
-      "connections": [
-        "b2d4653d9614c19daa2559cafafa0943",
-        "282560ed84a0d42aaa09f13f249596f8"
-      ]
+      "connections": ["b2d4653d9614c19daa2559cafafa0943", "282560ed84a0d42aaa09f13f249596f8"]
     },
     {
       "systemId": "9d3efdf3eb5350606785ddf45e41b3aa",
@@ -2272,10 +2185,7 @@
       },
       "sectorId": "sector-29",
       "subSectorId": "subsector-29-20",
-      "connections": [
-        "e41dc48f629aa60577c3d328aa4b5c09",
-        "b9981bb846e9e4a0161d27fdcf094901"
-      ]
+      "connections": ["e41dc48f629aa60577c3d328aa4b5c09", "b9981bb846e9e4a0161d27fdcf094901"]
     },
     {
       "systemId": "3a4813cfae1cc7d135ac1f4f8b2655e3",
@@ -2333,10 +2243,7 @@
       },
       "sectorId": "sector-49",
       "subSectorId": "subsector-49-14",
-      "connections": [
-        "1c6fc194c7f61c4092b037f2539dc1bc",
-        "f61a345bdc6d278a8a633148e02b6452"
-      ]
+      "connections": ["1c6fc194c7f61c4092b037f2539dc1bc", "f61a345bdc6d278a8a633148e02b6452"]
     },
     {
       "systemId": "d9348c764d53cd32dfe659bf07f570e1",
@@ -2395,10 +2302,7 @@
       },
       "sectorId": "sector-105",
       "subSectorId": "subsector-105-10",
-      "connections": [
-        "5d3c67f962931a38ee5c6b2ddf40bb04",
-        "c3cb5ec27fb4626036d86ea9503770f9"
-      ]
+      "connections": ["5d3c67f962931a38ee5c6b2ddf40bb04", "c3cb5ec27fb4626036d86ea9503770f9"]
     },
     {
       "systemId": "1886e0e01ed5ac9bcb9d0ad85ac719c5",
@@ -2519,10 +2423,7 @@
       },
       "sectorId": "sector-78",
       "subSectorId": "subsector-78-4",
-      "connections": [
-        "3405797d59e3f8eda8bfbb4106970a10",
-        "e11904df650b36dc2fd6dc4783c81e55"
-      ]
+      "connections": ["3405797d59e3f8eda8bfbb4106970a10", "e11904df650b36dc2fd6dc4783c81e55"]
     },
     {
       "systemId": "b6e72b9ff587cbac6ace1db3701e6443",
@@ -2673,10 +2574,7 @@
       },
       "sectorId": "sector-89",
       "subSectorId": "subsector-89-5",
-      "connections": [
-        "d1b961097ad5fa2e75e6a0bce4695f58",
-        "c0ba9e814a92231727f36a512f60d035"
-      ]
+      "connections": ["d1b961097ad5fa2e75e6a0bce4695f58", "c0ba9e814a92231727f36a512f60d035"]
     },
     {
       "systemId": "92817d551d2179dd21708b87184a81ea",
@@ -2703,10 +2601,7 @@
       },
       "sectorId": "sector-31",
       "subSectorId": "subsector-31-22",
-      "connections": [
-        "3fe433e3befe4e172cd638f776d6e317",
-        "3afeb62d02c61ce8e6a71008f76b04c2"
-      ]
+      "connections": ["3fe433e3befe4e172cd638f776d6e317", "3afeb62d02c61ce8e6a71008f76b04c2"]
     },
     {
       "systemId": "b9f56e8983af6494076a224811616485",
@@ -2795,10 +2690,7 @@
       },
       "sectorId": "sector-81",
       "subSectorId": "subsector-81-15",
-      "connections": [
-        "543a0a03ed0829f12e4cc98cbc5b09f9",
-        "48ca1cba0a51ed8ebd1861a6fde91aff"
-      ]
+      "connections": ["543a0a03ed0829f12e4cc98cbc5b09f9", "48ca1cba0a51ed8ebd1861a6fde91aff"]
     },
     {
       "systemId": "5eafe0ef9a78fb25f189cf43a834ad65",
@@ -2952,10 +2844,7 @@
       },
       "sectorId": "sector-29",
       "subSectorId": "subsector-29-15",
-      "connections": [
-        "e41dc48f629aa60577c3d328aa4b5c09",
-        "afeca3afe65bf3e04c5f1a7695ce3533"
-      ]
+      "connections": ["e41dc48f629aa60577c3d328aa4b5c09", "afeca3afe65bf3e04c5f1a7695ce3533"]
     },
     {
       "systemId": "85ba4421df060f1e1ec65014b9866e5c",
@@ -3013,10 +2902,7 @@
       },
       "sectorId": "sector-26",
       "subSectorId": "subsector-26-12",
-      "connections": [
-        "07d7528ed5df663a5769d40d8909dbf1",
-        "5a3a3e5c9011dffd226321b0acc1df2d"
-      ]
+      "connections": ["07d7528ed5df663a5769d40d8909dbf1", "5a3a3e5c9011dffd226321b0acc1df2d"]
     },
     {
       "systemId": "0d249fb50e1d69895ed1413425bb0fcb",
@@ -3043,10 +2929,7 @@
       },
       "sectorId": "sector-76",
       "subSectorId": "subsector-76-0",
-      "connections": [
-        "e011d63b490dd1e96890ac585620a632",
-        "c5089f856254d67bbe24fb425b6a4639"
-      ]
+      "connections": ["e011d63b490dd1e96890ac585620a632", "c5089f856254d67bbe24fb425b6a4639"]
     },
     {
       "systemId": "131fa736031851cb7cf392c40e7c9620",
@@ -3073,10 +2956,7 @@
       },
       "sectorId": "sector-25",
       "subSectorId": "subsector-25-21",
-      "connections": [
-        "bc7907aee8473b827e02b980711e88b9",
-        "5e186a413963f7bc5f6d0ab9cf12844d"
-      ]
+      "connections": ["bc7907aee8473b827e02b980711e88b9", "5e186a413963f7bc5f6d0ab9cf12844d"]
     },
     {
       "systemId": "f13e5a7656081d2a7254a4950fdffde7",
@@ -3134,10 +3014,7 @@
       },
       "sectorId": "sector-41",
       "subSectorId": "subsector-41-17",
-      "connections": [
-        "4c8534bc1ef9582105efbfcdd7c1f244",
-        "3da6d3c5bba62612ce723b5e80167cfa"
-      ]
+      "connections": ["4c8534bc1ef9582105efbfcdd7c1f244", "3da6d3c5bba62612ce723b5e80167cfa"]
     },
     {
       "systemId": "37759eb18de92f41748c2cc2ad1c4eab",
@@ -3164,10 +3041,7 @@
       },
       "sectorId": "sector-1",
       "subSectorId": "subsector-1-11",
-      "connections": [
-        "9172f08e5e490173b289f27e4f417365",
-        "25461e8060024ec9e31d97c07e073989"
-      ]
+      "connections": ["9172f08e5e490173b289f27e4f417365", "25461e8060024ec9e31d97c07e073989"]
     },
     {
       "systemId": "119a1552651c6cdbdbc6a63ccee64284",
@@ -3288,10 +3162,7 @@
       },
       "sectorId": "sector-81",
       "subSectorId": "subsector-81-11",
-      "connections": [
-        "9d3efdf3eb5350606785ddf45e41b3aa",
-        "9d5761f8dab3e7f1e6365bfc290c1dae"
-      ]
+      "connections": ["9d3efdf3eb5350606785ddf45e41b3aa", "9d5761f8dab3e7f1e6365bfc290c1dae"]
     },
     {
       "systemId": "bd3cc3c540f05b058a03f471aa6d75b1",
@@ -3318,10 +3189,7 @@
       },
       "sectorId": "sector-103",
       "subSectorId": "subsector-103-4",
-      "connections": [
-        "9348e317c3fb1baa09ca61290e71dd2d",
-        "759c71906cd2020510a038b70ba7d6fc"
-      ]
+      "connections": ["9348e317c3fb1baa09ca61290e71dd2d", "759c71906cd2020510a038b70ba7d6fc"]
     },
     {
       "systemId": "1de06682718a414259ed39507e0259b6",
@@ -3348,10 +3216,7 @@
       },
       "sectorId": "sector-30",
       "subSectorId": "subsector-30-6",
-      "connections": [
-        "6272e71a00c94ee3f6610b4aaf9553df",
-        "2c4de11ff78806af610ff9a2854396f2"
-      ]
+      "connections": ["6272e71a00c94ee3f6610b4aaf9553df", "2c4de11ff78806af610ff9a2854396f2"]
     },
     {
       "systemId": "586eebd77039a21649744c22605aac3c",
@@ -3378,10 +3243,7 @@
       },
       "sectorId": "sector-93",
       "subSectorId": "subsector-93-7",
-      "connections": [
-        "61cf1a78de04bb414e5410632856d378",
-        "0bcaf82789f8394e029cb2fd0f6113a2"
-      ]
+      "connections": ["61cf1a78de04bb414e5410632856d378", "0bcaf82789f8394e029cb2fd0f6113a2"]
     },
     {
       "systemId": "20981f589edbd8e9178dbfbf493d7055",
@@ -3471,9 +3333,7 @@
       },
       "sectorId": "sector-50",
       "subSectorId": "subsector-50-17",
-      "connections": [
-        "8742654d4f4102256216dc483e1c3198"
-      ]
+      "connections": ["8742654d4f4102256216dc483e1c3198"]
     },
     {
       "systemId": "9dd6be19e018ed3c2b5ebd0c5a2e723a",
@@ -3500,10 +3360,7 @@
       },
       "sectorId": "sector-40",
       "subSectorId": "subsector-40-23",
-      "connections": [
-        "2ef4ffc96fc1a257dfdd98f939ab5d5d",
-        "f5d14a10e87cdfee4a9515712add4a05"
-      ]
+      "connections": ["2ef4ffc96fc1a257dfdd98f939ab5d5d", "f5d14a10e87cdfee4a9515712add4a05"]
     },
     {
       "systemId": "c31542afe57817b1574b051661cbdc48",
@@ -3530,9 +3387,7 @@
       },
       "sectorId": "sector-6",
       "subSectorId": "subsector-6-9",
-      "connections": [
-        "84b30ff594e60c1a5ef064a7afa29126"
-      ]
+      "connections": ["84b30ff594e60c1a5ef064a7afa29126"]
     },
     {
       "systemId": "0f90f1671d7a7c525577b17223a868dd",
@@ -3559,10 +3414,7 @@
       },
       "sectorId": "sector-87",
       "subSectorId": "subsector-87-13",
-      "connections": [
-        "e79673f7f7fee114b89c3e4977cf7da8",
-        "27297988f401041f3cee284b72031a94"
-      ]
+      "connections": ["e79673f7f7fee114b89c3e4977cf7da8", "27297988f401041f3cee284b72031a94"]
     },
     {
       "systemId": "66570d92eaa25d9c67f6fc7ffa7dd9bf",
@@ -3620,10 +3472,7 @@
       },
       "sectorId": "sector-68",
       "subSectorId": "subsector-68-20",
-      "connections": [
-        "173aee668621217c9cf442105f9993c8",
-        "4e670cdbefc53767cd834cdbc75187b6"
-      ]
+      "connections": ["173aee668621217c9cf442105f9993c8", "4e670cdbefc53767cd834cdbc75187b6"]
     },
     {
       "systemId": "4a704ef41ef359fa3377ee82b44e3287",
@@ -3840,10 +3689,7 @@
       },
       "sectorId": "sector-77",
       "subSectorId": "subsector-77-1",
-      "connections": [
-        "4a704ef41ef359fa3377ee82b44e3287",
-        "57d5247b69e404a1934172e90835408a"
-      ]
+      "connections": ["4a704ef41ef359fa3377ee82b44e3287", "57d5247b69e404a1934172e90835408a"]
     },
     {
       "systemId": "40cf37534ed7cca6e852321c54e983f6",
@@ -3870,10 +3716,7 @@
       },
       "sectorId": "sector-75",
       "subSectorId": "subsector-75-21",
-      "connections": [
-        "57d5247b69e404a1934172e90835408a",
-        "1d72d754002e7c6063a91134350135d2"
-      ]
+      "connections": ["57d5247b69e404a1934172e90835408a", "1d72d754002e7c6063a91134350135d2"]
     },
     {
       "systemId": "fbcdadcfa55a641f56a928d7d0fe5d7b",
@@ -3900,10 +3743,7 @@
       },
       "sectorId": "sector-96",
       "subSectorId": "subsector-96-2",
-      "connections": [
-        "8c9d5a43e7d3f199f1af304904045c56",
-        "173aee668621217c9cf442105f9993c8"
-      ]
+      "connections": ["8c9d5a43e7d3f199f1af304904045c56", "173aee668621217c9cf442105f9993c8"]
     },
     {
       "systemId": "6f7fee15dc26912db4d04737aae795de",
@@ -3930,10 +3770,7 @@
       },
       "sectorId": "sector-86",
       "subSectorId": "subsector-86-2",
-      "connections": [
-        "48ca1cba0a51ed8ebd1861a6fde91aff",
-        "7279fb7ce06b822ade17356d6be445a2"
-      ]
+      "connections": ["48ca1cba0a51ed8ebd1861a6fde91aff", "7279fb7ce06b822ade17356d6be445a2"]
     },
     {
       "systemId": "1d2831fc636514f7a3c1f5f82cbaad7a",
@@ -3960,10 +3797,7 @@
       },
       "sectorId": "sector-15",
       "subSectorId": "subsector-15-19",
-      "connections": [
-        "f6bf78e1309755b6dfdea606ac36bec8",
-        "f007c5ffec59dab74f4dbfac12403e39"
-      ]
+      "connections": ["f6bf78e1309755b6dfdea606ac36bec8", "f007c5ffec59dab74f4dbfac12403e39"]
     },
     {
       "systemId": "336a6352e70511bb49ce96e9efa226c3",
@@ -4021,9 +3855,7 @@
       },
       "sectorId": "sector-53",
       "subSectorId": "subsector-53-13",
-      "connections": [
-        "282560ed84a0d42aaa09f13f249596f8"
-      ]
+      "connections": ["282560ed84a0d42aaa09f13f249596f8"]
     },
     {
       "systemId": "7b89c6941e490c9d726a3227c32fd46d",
@@ -4050,10 +3882,7 @@
       },
       "sectorId": "sector-24",
       "subSectorId": "subsector-24-3",
-      "connections": [
-        "1c89a86a615a350bb46748c9f68cafb0",
-        "1e0391a3fdf5a5990973a78ebfba1671"
-      ]
+      "connections": ["1c89a86a615a350bb46748c9f68cafb0", "1e0391a3fdf5a5990973a78ebfba1671"]
     },
     {
       "systemId": "ef8119413638ddcaf323c712d7454280",
@@ -4111,10 +3940,7 @@
       },
       "sectorId": "sector-37",
       "subSectorId": "subsector-37-13",
-      "connections": [
-        "077f812a1d7003fc0734190de1945a4f",
-        "53aaa838d80d3aba382f558e5ec50db5"
-      ]
+      "connections": ["077f812a1d7003fc0734190de1945a4f", "53aaa838d80d3aba382f558e5ec50db5"]
     },
     {
       "systemId": "4ed9467ac769aebc743752f69e8bfdf0",
@@ -4204,10 +4030,7 @@
       },
       "sectorId": "sector-91",
       "subSectorId": "subsector-91-1",
-      "connections": [
-        "6e7e2942cc0ed9af326b6301a01c0713",
-        "a198fce9e3c930b3a12ae81b481a7373"
-      ]
+      "connections": ["6e7e2942cc0ed9af326b6301a01c0713", "a198fce9e3c930b3a12ae81b481a7373"]
     },
     {
       "systemId": "58970d6c58ad84316a9936f70e8bb757",
@@ -4234,10 +4057,7 @@
       },
       "sectorId": "sector-57",
       "subSectorId": "subsector-57-6",
-      "connections": [
-        "a2cb7e0c51645470736d0822fecd96b3",
-        "835f10e219434edce7bd2a0364228603"
-      ]
+      "connections": ["a2cb7e0c51645470736d0822fecd96b3", "835f10e219434edce7bd2a0364228603"]
     },
     {
       "systemId": "714d987dfe8ef3664d6b2d2f084eb005",
@@ -4264,10 +4084,7 @@
       },
       "sectorId": "sector-1",
       "subSectorId": "subsector-1-13",
-      "connections": [
-        "3988610b6ce42f5098da348bffcb5a50",
-        "6d38c786e73c4c4cc5150ef79e9c1383"
-      ]
+      "connections": ["3988610b6ce42f5098da348bffcb5a50", "6d38c786e73c4c4cc5150ef79e9c1383"]
     },
     {
       "systemId": "ed82f150ae30b5f9ef7dcbdb01d226b4",
@@ -4358,10 +4175,7 @@
       },
       "sectorId": "sector-35",
       "subSectorId": "subsector-35-19",
-      "connections": [
-        "6eac2929d79762a832fc57f1dc5f6adb",
-        "6f6fe2f955e3dc80cecb8b49c2bfaa10"
-      ]
+      "connections": ["6eac2929d79762a832fc57f1dc5f6adb", "6f6fe2f955e3dc80cecb8b49c2bfaa10"]
     },
     {
       "systemId": "732e1240d6328e1e944dc5da379673a3",
@@ -4388,10 +4202,7 @@
       },
       "sectorId": "sector-84",
       "subSectorId": "subsector-84-21",
-      "connections": [
-        "3c9e6c290158117abf83b3cd078f15f1",
-        "94ec7d9f5525df324ff7583859209188"
-      ]
+      "connections": ["3c9e6c290158117abf83b3cd078f15f1", "94ec7d9f5525df324ff7583859209188"]
     },
     {
       "systemId": "be6ecba3c3d42900499508e5b84946c2",
@@ -4449,9 +4260,7 @@
       },
       "sectorId": "sector-66",
       "subSectorId": "subsector-66-2",
-      "connections": [
-        "aa0db74b00f7d66ade275b221edafd75"
-      ]
+      "connections": ["aa0db74b00f7d66ade275b221edafd75"]
     },
     {
       "systemId": "d8493b0df4be7f541eee3ed54eef4299",
@@ -4478,10 +4287,7 @@
       },
       "sectorId": "sector-38",
       "subSectorId": "subsector-38-14",
-      "connections": [
-        "99407a57f4ce8c0f21f40bf17f4bdd77",
-        "a4ba8b12739da65efc2b518703652ee1"
-      ]
+      "connections": ["99407a57f4ce8c0f21f40bf17f4bdd77", "a4ba8b12739da65efc2b518703652ee1"]
     },
     {
       "systemId": "11b228a60d615da57dac1d91dbce12c6",
@@ -4508,9 +4314,7 @@
       },
       "sectorId": "sector-54",
       "subSectorId": "subsector-54-15",
-      "connections": [
-        "346349786e9673abe0a4b2fcd7d3ca2f"
-      ]
+      "connections": ["346349786e9673abe0a4b2fcd7d3ca2f"]
     },
     {
       "systemId": "d421aca559b32c44b17be693b5ed7b90",
@@ -4537,10 +4341,7 @@
       },
       "sectorId": "sector-74",
       "subSectorId": "subsector-74-1",
-      "connections": [
-        "0473afb6b9f77db3653eb3233e7bf5a2",
-        "40334c81257c2dff4e1b571959e03366"
-      ]
+      "connections": ["0473afb6b9f77db3653eb3233e7bf5a2", "40334c81257c2dff4e1b571959e03366"]
     },
     {
       "systemId": "13c5855261c46cdb093f05ff68e30b42",
@@ -4629,9 +4430,7 @@
       },
       "sectorId": "sector-100",
       "subSectorId": "subsector-100-21",
-      "connections": [
-        "c5d3791f9a475daa820afbf8c2c83ff2"
-      ]
+      "connections": ["c5d3791f9a475daa820afbf8c2c83ff2"]
     },
     {
       "systemId": "5311d8eec14b179698ce9a58d7c4ec9f",
@@ -4658,9 +4457,7 @@
       },
       "sectorId": "sector-0",
       "subSectorId": "subsector-0-18",
-      "connections": [
-        "bb0450c417f7623f5bac4bd779b9a8b9"
-      ]
+      "connections": ["bb0450c417f7623f5bac4bd779b9a8b9"]
     },
     {
       "systemId": "19cd8a61c889cfdad4e9baa7cfaf65f1",
@@ -4781,10 +4578,7 @@
       },
       "sectorId": "sector-40",
       "subSectorId": "subsector-40-4",
-      "connections": [
-        "2ef4ffc96fc1a257dfdd98f939ab5d5d",
-        "01d637b2690bccfa60269f43f86a0328"
-      ]
+      "connections": ["2ef4ffc96fc1a257dfdd98f939ab5d5d", "01d637b2690bccfa60269f43f86a0328"]
     },
     {
       "systemId": "b1185d04ce5a679db274d4c9db5bf4cd",
@@ -4843,9 +4637,7 @@
       },
       "sectorId": "sector-73",
       "subSectorId": "subsector-73-12",
-      "connections": [
-        "d0f28d56748159fbe079414708bfd52d"
-      ]
+      "connections": ["d0f28d56748159fbe079414708bfd52d"]
     },
     {
       "systemId": "5c9bfdb44e45c88af9d7b8b972ac98d0",
@@ -4872,10 +4664,7 @@
       },
       "sectorId": "sector-62",
       "subSectorId": "subsector-62-21",
-      "connections": [
-        "8d4ec34bba8b86fb8bd086415b282331",
-        "6ad758d250ec14ee19032da1d0443d9b"
-      ]
+      "connections": ["8d4ec34bba8b86fb8bd086415b282331", "6ad758d250ec14ee19032da1d0443d9b"]
     },
     {
       "systemId": "76d510474a9d78920d5eacd864170df9",
@@ -4902,10 +4691,7 @@
       },
       "sectorId": "sector-64",
       "subSectorId": "subsector-64-11",
-      "connections": [
-        "8de3101e1865b4bb7edad269a4b0dda7",
-        "1b510c248767e5f252fd4b253b2061fd"
-      ]
+      "connections": ["8de3101e1865b4bb7edad269a4b0dda7", "1b510c248767e5f252fd4b253b2061fd"]
     },
     {
       "systemId": "01641262587c3474f5047f71b7e5c266",
@@ -4932,10 +4718,7 @@
       },
       "sectorId": "sector-102",
       "subSectorId": "subsector-102-4",
-      "connections": [
-        "4880f40b7a01458ef0768a72a574598c",
-        "9fcaae94376689a3b5cd787499a29040"
-      ]
+      "connections": ["4880f40b7a01458ef0768a72a574598c", "9fcaae94376689a3b5cd787499a29040"]
     },
     {
       "systemId": "6e7e2942cc0ed9af326b6301a01c0713",
@@ -4995,9 +4778,7 @@
       },
       "sectorId": "sector-24",
       "subSectorId": "subsector-24-1",
-      "connections": [
-        "1c89a86a615a350bb46748c9f68cafb0"
-      ]
+      "connections": ["1c89a86a615a350bb46748c9f68cafb0"]
     },
     {
       "systemId": "1e0391a3fdf5a5990973a78ebfba1671",
@@ -5024,10 +4805,7 @@
       },
       "sectorId": "sector-24",
       "subSectorId": "subsector-24-6",
-      "connections": [
-        "1c89a86a615a350bb46748c9f68cafb0",
-        "7b89c6941e490c9d726a3227c32fd46d"
-      ]
+      "connections": ["1c89a86a615a350bb46748c9f68cafb0", "7b89c6941e490c9d726a3227c32fd46d"]
     },
     {
       "systemId": "4e23607021b138482a1b1246c1950e9f",
@@ -5276,10 +5054,7 @@
       },
       "sectorId": "sector-65",
       "subSectorId": "subsector-65-1",
-      "connections": [
-        "6d38c786e73c4c4cc5150ef79e9c1383",
-        "1b510c248767e5f252fd4b253b2061fd"
-      ]
+      "connections": ["6d38c786e73c4c4cc5150ef79e9c1383", "1b510c248767e5f252fd4b253b2061fd"]
     },
     {
       "systemId": "3fe433e3befe4e172cd638f776d6e317",
@@ -5337,10 +5112,7 @@
       },
       "sectorId": "sector-41",
       "subSectorId": "subsector-41-5",
-      "connections": [
-        "fca4c801a1570aaafa39d8204778624b",
-        "53bf23a81c88a54089e7e9ac04465f1e"
-      ]
+      "connections": ["fca4c801a1570aaafa39d8204778624b", "53bf23a81c88a54089e7e9ac04465f1e"]
     },
     {
       "systemId": "1d4c980e0c378cc20e0f2c97a215342b",
@@ -5367,10 +5139,7 @@
       },
       "sectorId": "sector-6",
       "subSectorId": "subsector-6-22",
-      "connections": [
-        "23c6a405b00216d423c9ec46e65f7e25",
-        "11966178feb8bc3ff30426fbf527b8d0"
-      ]
+      "connections": ["23c6a405b00216d423c9ec46e65f7e25", "11966178feb8bc3ff30426fbf527b8d0"]
     },
     {
       "systemId": "461831ed66a976e0af1617a8846c027f",
@@ -5428,10 +5197,7 @@
       },
       "sectorId": "sector-56",
       "subSectorId": "subsector-56-1",
-      "connections": [
-        "f02f1292a7520f7bc96453010102f8c1",
-        "1ef59a64aa3e127f820a71be9b4d6716"
-      ]
+      "connections": ["f02f1292a7520f7bc96453010102f8c1", "1ef59a64aa3e127f820a71be9b4d6716"]
     },
     {
       "systemId": "d16e71e64c9b513fc0f98533c7c21e30",
@@ -5489,9 +5255,7 @@
       },
       "sectorId": "sector-103",
       "subSectorId": "subsector-103-17",
-      "connections": [
-        "22c51b31431d9654f47244a0ddcd5f1f"
-      ]
+      "connections": ["22c51b31431d9654f47244a0ddcd5f1f"]
     },
     {
       "systemId": "39bcfd3f3f4db2592f0f80e636e27d84",
@@ -5805,10 +5569,7 @@
       },
       "sectorId": "sector-52",
       "subSectorId": "subsector-52-4",
-      "connections": [
-        "57e2dbb7588c3cf2ecdbd531bc1ec0c6",
-        "e9765643b7f8cd3d9508900962edd1e8"
-      ]
+      "connections": ["57e2dbb7588c3cf2ecdbd531bc1ec0c6", "e9765643b7f8cd3d9508900962edd1e8"]
     },
     {
       "systemId": "071ca0461406d6c2a133a624ff05dcae",
@@ -5835,9 +5596,7 @@
       },
       "sectorId": "sector-65",
       "subSectorId": "subsector-65-2",
-      "connections": [
-        "db986e36b9069473006ba10b0dffb34c"
-      ]
+      "connections": ["db986e36b9069473006ba10b0dffb34c"]
     },
     {
       "systemId": "41ae6b68b9b39dc882bcf64fec0aeb66",
@@ -5864,10 +5623,7 @@
       },
       "sectorId": "sector-101",
       "subSectorId": "subsector-101-0",
-      "connections": [
-        "a554a4ded4fefa902ae7eb63374dfe87",
-        "336dc7c541cf4dd8000964303400ef3b"
-      ]
+      "connections": ["a554a4ded4fefa902ae7eb63374dfe87", "336dc7c541cf4dd8000964303400ef3b"]
     },
     {
       "systemId": "35ea90a22a12427cf9143d25b6d1d2e5",
@@ -5894,10 +5650,7 @@
       },
       "sectorId": "sector-3",
       "subSectorId": "subsector-3-7",
-      "connections": [
-        "835f10e219434edce7bd2a0364228603",
-        "66a9e561febf0198334ee2fa29299440"
-      ]
+      "connections": ["835f10e219434edce7bd2a0364228603", "66a9e561febf0198334ee2fa29299440"]
     },
     {
       "systemId": "791c692e011c9cd5211786df291c2e08",
@@ -5924,9 +5677,7 @@
       },
       "sectorId": "sector-93",
       "subSectorId": "subsector-93-18",
-      "connections": [
-        "cbb314fd5682e67aa1b9af1a417c52a8"
-      ]
+      "connections": ["cbb314fd5682e67aa1b9af1a417c52a8"]
     },
     {
       "systemId": "1c6fc194c7f61c4092b037f2539dc1bc",
@@ -5985,10 +5736,7 @@
       },
       "sectorId": "sector-2",
       "subSectorId": "subsector-2-22",
-      "connections": [
-        "ac3ccd5325b3912ec0fb1179a25f232c",
-        "6566b425797921543053a0d58f25f89f"
-      ]
+      "connections": ["ac3ccd5325b3912ec0fb1179a25f232c", "6566b425797921543053a0d58f25f89f"]
     },
     {
       "systemId": "ec2d3d49291ad6c449b552c034d49c2a",
@@ -6108,10 +5856,7 @@
       },
       "sectorId": "sector-76",
       "subSectorId": "subsector-76-21",
-      "connections": [
-        "4f0bc86b9c1477c7ad913df706a643e9",
-        "c5089f856254d67bbe24fb425b6a4639"
-      ]
+      "connections": ["4f0bc86b9c1477c7ad913df706a643e9", "c5089f856254d67bbe24fb425b6a4639"]
     },
     {
       "systemId": "6eac2929d79762a832fc57f1dc5f6adb",
@@ -6138,10 +5883,7 @@
       },
       "sectorId": "sector-35",
       "subSectorId": "subsector-35-12",
-      "connections": [
-        "d0f10af5bc8e324b6c5a170a4e46a537",
-        "7e8c5904a1b7adf88fa6e045b43e026b"
-      ]
+      "connections": ["d0f10af5bc8e324b6c5a170a4e46a537", "7e8c5904a1b7adf88fa6e045b43e026b"]
     },
     {
       "systemId": "a9a9231e5359f9d1291d232c2604c13f",
@@ -6168,9 +5910,7 @@
       },
       "sectorId": "sector-41",
       "subSectorId": "subsector-41-22",
-      "connections": [
-        "4c8534bc1ef9582105efbfcdd7c1f244"
-      ]
+      "connections": ["4c8534bc1ef9582105efbfcdd7c1f244"]
     },
     {
       "systemId": "f37d79a884c3b9340ec4b7fa6592d2b7",
@@ -6197,10 +5937,7 @@
       },
       "sectorId": "sector-98",
       "subSectorId": "subsector-98-10",
-      "connections": [
-        "8912980ab277454eea35df621704f574",
-        "2d4b639445d5d8e57129a93023034935"
-      ]
+      "connections": ["8912980ab277454eea35df621704f574", "2d4b639445d5d8e57129a93023034935"]
     },
     {
       "systemId": "115b254e6a6de7338e8b04eb64e4aef6",
@@ -6227,10 +5964,7 @@
       },
       "sectorId": "sector-17",
       "subSectorId": "subsector-17-10",
-      "connections": [
-        "3a4813cfae1cc7d135ac1f4f8b2655e3",
-        "04eed22afb10e93e2e9e97cce3952e72"
-      ]
+      "connections": ["3a4813cfae1cc7d135ac1f4f8b2655e3", "04eed22afb10e93e2e9e97cce3952e72"]
     },
     {
       "systemId": "125c6f06574cf0e43d622bd6c47ced01",
@@ -6444,10 +6178,7 @@
       },
       "sectorId": "sector-45",
       "subSectorId": "subsector-45-15",
-      "connections": [
-        "e11b5bbe11c629f3c100296520cd58b5",
-        "2755912906f8eba1c925b9b8749e377f"
-      ]
+      "connections": ["e11b5bbe11c629f3c100296520cd58b5", "2755912906f8eba1c925b9b8749e377f"]
     },
     {
       "systemId": "13df3c05a4388a62ac8524205b8fbfe9",
@@ -6505,10 +6236,7 @@
       },
       "sectorId": "sector-40",
       "subSectorId": "subsector-40-1",
-      "connections": [
-        "2ef4ffc96fc1a257dfdd98f939ab5d5d",
-        "01d637b2690bccfa60269f43f86a0328"
-      ]
+      "connections": ["2ef4ffc96fc1a257dfdd98f939ab5d5d", "01d637b2690bccfa60269f43f86a0328"]
     },
     {
       "systemId": "eba7099fee72c97d9956b6f1c60851dc",
@@ -6535,10 +6263,7 @@
       },
       "sectorId": "sector-78",
       "subSectorId": "subsector-78-10",
-      "connections": [
-        "e11904df650b36dc2fd6dc4783c81e55",
-        "a48b64d9619c88fd15f035b3449f48b9"
-      ]
+      "connections": ["e11904df650b36dc2fd6dc4783c81e55", "a48b64d9619c88fd15f035b3449f48b9"]
     },
     {
       "systemId": "8dd9ddc8fbbd63aab258621d38ade1ab",
@@ -6659,10 +6384,7 @@
       },
       "sectorId": "sector-57",
       "subSectorId": "subsector-57-8",
-      "connections": [
-        "83e9c4b6a545cd19d5517a6b5de7101f",
-        "76efb33ed2c068611e880b02ef2b700a"
-      ]
+      "connections": ["83e9c4b6a545cd19d5517a6b5de7101f", "76efb33ed2c068611e880b02ef2b700a"]
     },
     {
       "systemId": "c0ba9e814a92231727f36a512f60d035",
@@ -6751,10 +6473,7 @@
       },
       "sectorId": "sector-97",
       "subSectorId": "subsector-97-5",
-      "connections": [
-        "86e33cc095ff0747abf51a53cf09b90c",
-        "01616c4dc3d9d62eeb16bb863ccb3e0e"
-      ]
+      "connections": ["86e33cc095ff0747abf51a53cf09b90c", "01616c4dc3d9d62eeb16bb863ccb3e0e"]
     },
     {
       "systemId": "21bb0f82a26ece8dfee6194ca96f8552",
@@ -6843,9 +6562,7 @@
       },
       "sectorId": "sector-13",
       "subSectorId": "subsector-13-4",
-      "connections": [
-        "651bab1e33aa2679c8558b453360a5ac"
-      ]
+      "connections": ["651bab1e33aa2679c8558b453360a5ac"]
     },
     {
       "systemId": "a48b64d9619c88fd15f035b3449f48b9",
@@ -6904,10 +6621,7 @@
       },
       "sectorId": "sector-41",
       "subSectorId": "subsector-41-23",
-      "connections": [
-        "3da6d3c5bba62612ce723b5e80167cfa",
-        "4c8534bc1ef9582105efbfcdd7c1f244"
-      ]
+      "connections": ["3da6d3c5bba62612ce723b5e80167cfa", "4c8534bc1ef9582105efbfcdd7c1f244"]
     },
     {
       "systemId": "174e00c6214c142caa19ab041b21ed8c",
@@ -6934,9 +6648,7 @@
       },
       "sectorId": "sector-84",
       "subSectorId": "subsector-84-9",
-      "connections": [
-        "49a4800c3d324a16639e54ef4aa6c587"
-      ]
+      "connections": ["49a4800c3d324a16639e54ef4aa6c587"]
     },
     {
       "systemId": "6fcfe8b4087a0b964ccc698e066416ec",
@@ -7026,10 +6738,7 @@
       },
       "sectorId": "sector-81",
       "subSectorId": "subsector-81-5",
-      "connections": [
-        "9d3efdf3eb5350606785ddf45e41b3aa",
-        "4782685b43a9ebb83b5828f1e1e55480"
-      ]
+      "connections": ["9d3efdf3eb5350606785ddf45e41b3aa", "4782685b43a9ebb83b5828f1e1e55480"]
     },
     {
       "systemId": "462b5e4ff151b8bac30d9349070fd3a0",
@@ -7088,9 +6797,7 @@
       },
       "sectorId": "sector-80",
       "subSectorId": "subsector-80-15",
-      "connections": [
-        "1ad1f06de456ada0c48ebfcb10169b16"
-      ]
+      "connections": ["1ad1f06de456ada0c48ebfcb10169b16"]
     },
     {
       "systemId": "a97d2bd129004d631cf9881caec51584",
@@ -7117,10 +6824,7 @@
       },
       "sectorId": "sector-17",
       "subSectorId": "subsector-17-18",
-      "connections": [
-        "8f1c8159bc6e2e9de326c5b0693e4d56",
-        "04eed22afb10e93e2e9e97cce3952e72"
-      ]
+      "connections": ["8f1c8159bc6e2e9de326c5b0693e4d56", "04eed22afb10e93e2e9e97cce3952e72"]
     },
     {
       "systemId": "e2bb09f1bbcd2ca58a6543a798e7686b",
@@ -7147,10 +6851,7 @@
       },
       "sectorId": "sector-63",
       "subSectorId": "subsector-63-12",
-      "connections": [
-        "6f92f8c2bf420198c9c9f4d9a8d20b7b",
-        "d22073f35121a4ff4a368d91ebb75267"
-      ]
+      "connections": ["6f92f8c2bf420198c9c9f4d9a8d20b7b", "d22073f35121a4ff4a368d91ebb75267"]
     },
     {
       "systemId": "e399cf0eaba2c9448626a69ce63b299c",
@@ -7177,9 +6878,7 @@
       },
       "sectorId": "sector-86",
       "subSectorId": "subsector-86-16",
-      "connections": [
-        "767591f44b5d2228d8b89aa8ee7b45a9"
-      ]
+      "connections": ["767591f44b5d2228d8b89aa8ee7b45a9"]
     },
     {
       "systemId": "aa0db74b00f7d66ade275b221edafd75",
@@ -7269,10 +6968,7 @@
       },
       "sectorId": "sector-46",
       "subSectorId": "subsector-46-22",
-      "connections": [
-        "014421a50088da622befe22fe1b12e7e",
-        "783b4cf43432f079eae609b048997302"
-      ]
+      "connections": ["014421a50088da622befe22fe1b12e7e", "783b4cf43432f079eae609b048997302"]
     },
     {
       "systemId": "7fbe482c790a43aa506ee23325ddbfc5",
@@ -7299,10 +6995,7 @@
       },
       "sectorId": "sector-59",
       "subSectorId": "subsector-59-8",
-      "connections": [
-        "0d66b9b18bc986b0506caaa6f58a432e",
-        "b57e5fa08833422c1da36e6cfb992f27"
-      ]
+      "connections": ["0d66b9b18bc986b0506caaa6f58a432e", "b57e5fa08833422c1da36e6cfb992f27"]
     },
     {
       "systemId": "d1df54e07d561e33672cfabc260b64b6",
@@ -7329,9 +7022,7 @@
       },
       "sectorId": "sector-38",
       "subSectorId": "subsector-38-5",
-      "connections": [
-        "99407a57f4ce8c0f21f40bf17f4bdd77"
-      ]
+      "connections": ["99407a57f4ce8c0f21f40bf17f4bdd77"]
     },
     {
       "systemId": "730294132976aca068bc45c95e257cef",
@@ -7482,10 +7173,7 @@
       },
       "sectorId": "sector-61",
       "subSectorId": "subsector-61-3",
-      "connections": [
-        "2318bd4539e5a2119d81212478520b22",
-        "8d193b9600131b0ecd9da2aceb6c31e7"
-      ]
+      "connections": ["2318bd4539e5a2119d81212478520b22", "8d193b9600131b0ecd9da2aceb6c31e7"]
     },
     {
       "systemId": "eff3637fe716bc3c5bbf7889554ae45c",
@@ -7512,10 +7200,7 @@
       },
       "sectorId": "sector-29",
       "subSectorId": "subsector-29-5",
-      "connections": [
-        "85ba4421df060f1e1ec65014b9866e5c",
-        "f62f95be3f99bfa3cc0e2807bea2094b"
-      ]
+      "connections": ["85ba4421df060f1e1ec65014b9866e5c", "f62f95be3f99bfa3cc0e2807bea2094b"]
     },
     {
       "systemId": "a8ab50ad9f8199855717668185b543a9",
@@ -7542,10 +7227,7 @@
       },
       "sectorId": "sector-85",
       "subSectorId": "subsector-85-3",
-      "connections": [
-        "94ec7d9f5525df324ff7583859209188",
-        "7e0f023fbf90bc1594ba6c473bd2a3e7"
-      ]
+      "connections": ["94ec7d9f5525df324ff7583859209188", "7e0f023fbf90bc1594ba6c473bd2a3e7"]
     },
     {
       "systemId": "bd6cbe39ed9b8aec5bb2505b0036c274",
@@ -7572,10 +7254,7 @@
       },
       "sectorId": "sector-51",
       "subSectorId": "subsector-51-23",
-      "connections": [
-        "33314e7bd0bb0a3baccf818496fbfd9b",
-        "d349ef8a9054e9d09d6946cb4ac883ed"
-      ]
+      "connections": ["33314e7bd0bb0a3baccf818496fbfd9b", "d349ef8a9054e9d09d6946cb4ac883ed"]
     },
     {
       "systemId": "b861eeda9095b7c7608e54ffbe902e84",
@@ -7602,10 +7281,7 @@
       },
       "sectorId": "sector-0",
       "subSectorId": "subsector-0-17",
-      "connections": [
-        "bb0450c417f7623f5bac4bd779b9a8b9",
-        "9172f08e5e490173b289f27e4f417365"
-      ]
+      "connections": ["bb0450c417f7623f5bac4bd779b9a8b9", "9172f08e5e490173b289f27e4f417365"]
     },
     {
       "systemId": "9c37bb68c14bc03a118d6c22cd0ea701",
@@ -7632,10 +7308,7 @@
       },
       "sectorId": "sector-19",
       "subSectorId": "subsector-19-13",
-      "connections": [
-        "afda9bea7f948f4a066a8882cdfa9055",
-        "0a1ed8fa37de45d2844c3b6137266f3d"
-      ]
+      "connections": ["afda9bea7f948f4a066a8882cdfa9055", "0a1ed8fa37de45d2844c3b6137266f3d"]
     },
     {
       "systemId": "8fcd2841a6ee2d457340eca05b459513",
@@ -7725,10 +7398,7 @@
       },
       "sectorId": "sector-59",
       "subSectorId": "subsector-59-22",
-      "connections": [
-        "afcefe4dc7c2d3ea7d6b62e2d5c26dac",
-        "a4149e106dbaf1263bf4b940de4da80a"
-      ]
+      "connections": ["afcefe4dc7c2d3ea7d6b62e2d5c26dac", "a4149e106dbaf1263bf4b940de4da80a"]
     },
     {
       "systemId": "65b6e4fa473997ba358732d9ab818087",
@@ -7755,10 +7425,7 @@
       },
       "sectorId": "sector-97",
       "subSectorId": "subsector-97-16",
-      "connections": [
-        "e7b7b113e1ff4a587f8159b92018619e",
-        "eab674727e03973314f6157ae5250ee8"
-      ]
+      "connections": ["e7b7b113e1ff4a587f8159b92018619e", "eab674727e03973314f6157ae5250ee8"]
     },
     {
       "systemId": "aa49e45533fa0f30eec86f2bfdd92776",
@@ -7785,9 +7452,7 @@
       },
       "sectorId": "sector-43",
       "subSectorId": "subsector-43-2",
-      "connections": [
-        "f5d14a10e87cdfee4a9515712add4a05"
-      ]
+      "connections": ["f5d14a10e87cdfee4a9515712add4a05"]
     },
     {
       "systemId": "4f0bc86b9c1477c7ad913df706a643e9",
@@ -7814,9 +7479,7 @@
       },
       "sectorId": "sector-76",
       "subSectorId": "subsector-76-20",
-      "connections": [
-        "8b10a75db5649c29c9eda4cf21ef54fe"
-      ]
+      "connections": ["8b10a75db5649c29c9eda4cf21ef54fe"]
     },
     {
       "systemId": "a6c7bc6f46e625a9c49b86fdbfe999f4",
@@ -7843,10 +7506,7 @@
       },
       "sectorId": "sector-73",
       "subSectorId": "subsector-73-5",
-      "connections": [
-        "d0f28d56748159fbe079414708bfd52d",
-        "4364696ca1584f94757ab61df4b61518"
-      ]
+      "connections": ["d0f28d56748159fbe079414708bfd52d", "4364696ca1584f94757ab61df4b61518"]
     },
     {
       "systemId": "7eb87450fab38d5a2d8316ccb9175af9",
@@ -7873,10 +7533,7 @@
       },
       "sectorId": "sector-61",
       "subSectorId": "subsector-61-10",
-      "connections": [
-        "2318bd4539e5a2119d81212478520b22",
-        "f56e1f31ba3ac98d8f0875e91cbcc850"
-      ]
+      "connections": ["2318bd4539e5a2119d81212478520b22", "f56e1f31ba3ac98d8f0875e91cbcc850"]
     },
     {
       "systemId": "78a296e39ee33484beb38faa244cfcd2",
@@ -7903,10 +7560,7 @@
       },
       "sectorId": "sector-1",
       "subSectorId": "subsector-1-1",
-      "connections": [
-        "25461e8060024ec9e31d97c07e073989",
-        "ac3ccd5325b3912ec0fb1179a25f232c"
-      ]
+      "connections": ["25461e8060024ec9e31d97c07e073989", "ac3ccd5325b3912ec0fb1179a25f232c"]
     },
     {
       "systemId": "29d7644dc2362e5174a1f6de37eae9ca",
@@ -7933,10 +7587,7 @@
       },
       "sectorId": "sector-14",
       "subSectorId": "subsector-14-13",
-      "connections": [
-        "5eafe0ef9a78fb25f189cf43a834ad65",
-        "66de7936e45f6c10084b2f4e3800dfc6"
-      ]
+      "connections": ["5eafe0ef9a78fb25f189cf43a834ad65", "66de7936e45f6c10084b2f4e3800dfc6"]
     },
     {
       "systemId": "932e6dda43e01cdb023d8ac614c78458",
@@ -7963,10 +7614,7 @@
       },
       "sectorId": "sector-67",
       "subSectorId": "subsector-67-1",
-      "connections": [
-        "c27937cfd483159e8eb1e305361e70b4",
-        "84ac9b9490814c34b8e993cc1902c2a7"
-      ]
+      "connections": ["c27937cfd483159e8eb1e305361e70b4", "84ac9b9490814c34b8e993cc1902c2a7"]
     },
     {
       "systemId": "7c71e78c812e14768dbe67355fc31243",
@@ -7993,9 +7641,7 @@
       },
       "sectorId": "sector-70",
       "subSectorId": "subsector-70-11",
-      "connections": [
-        "ceebe053ad4d2f05c5f4ab9302fbc445"
-      ]
+      "connections": ["ceebe053ad4d2f05c5f4ab9302fbc445"]
     },
     {
       "systemId": "570632f5431a416f6de1bb4fa4af7c29",
@@ -8022,10 +7668,7 @@
       },
       "sectorId": "sector-51",
       "subSectorId": "subsector-51-14",
-      "connections": [
-        "511473671a70cf1f06afcaff85bec8a8",
-        "33314e7bd0bb0a3baccf818496fbfd9b"
-      ]
+      "connections": ["511473671a70cf1f06afcaff85bec8a8", "33314e7bd0bb0a3baccf818496fbfd9b"]
     },
     {
       "systemId": "5ee642e0f76a07fa9b38d77232adcbc1",
@@ -8083,10 +7726,7 @@
       },
       "sectorId": "sector-94",
       "subSectorId": "subsector-94-3",
-      "connections": [
-        "336dc7c541cf4dd8000964303400ef3b",
-        "1ab2d0bddb63cf5a98d72bf7312aa849"
-      ]
+      "connections": ["336dc7c541cf4dd8000964303400ef3b", "1ab2d0bddb63cf5a98d72bf7312aa849"]
     },
     {
       "systemId": "15be174b3a40b51252a4b3d117045664",
@@ -8113,10 +7753,7 @@
       },
       "sectorId": "sector-28",
       "subSectorId": "subsector-28-6",
-      "connections": [
-        "cb1ee6ffe4e56f8b98152a1febda694d",
-        "dbf181c6224eafefedec1ae7b9ff468e"
-      ]
+      "connections": ["cb1ee6ffe4e56f8b98152a1febda694d", "dbf181c6224eafefedec1ae7b9ff468e"]
     },
     {
       "systemId": "eff49657148aa1484c74edd998cf14b0",
@@ -8143,9 +7780,7 @@
       },
       "sectorId": "sector-43",
       "subSectorId": "subsector-43-6",
-      "connections": [
-        "de91d53931568bdc90d20ef409e3ce63"
-      ]
+      "connections": ["de91d53931568bdc90d20ef409e3ce63"]
     },
     {
       "systemId": "3371e0e67802ac410ce0f1b0c1340e04",
@@ -8204,9 +7839,7 @@
       },
       "sectorId": "sector-68",
       "subSectorId": "subsector-68-7",
-      "connections": [
-        "336a6352e70511bb49ce96e9efa226c3"
-      ]
+      "connections": ["336a6352e70511bb49ce96e9efa226c3"]
     },
     {
       "systemId": "eab674727e03973314f6157ae5250ee8",
@@ -8295,9 +7928,7 @@
       },
       "sectorId": "sector-70",
       "subSectorId": "subsector-70-21",
-      "connections": [
-        "1c6ff519b7ae7aecb2eaebadeac77010"
-      ]
+      "connections": ["1c6ff519b7ae7aecb2eaebadeac77010"]
     },
     {
       "systemId": "df5378430083e4a3da37e0444e4356b9",
@@ -8324,9 +7955,7 @@
       },
       "sectorId": "sector-3",
       "subSectorId": "subsector-3-16",
-      "connections": [
-        "8fcd2841a6ee2d457340eca05b459513"
-      ]
+      "connections": ["8fcd2841a6ee2d457340eca05b459513"]
     },
     {
       "systemId": "0a577d6f80404f51108c23aec84372f2",
@@ -8384,9 +8013,7 @@
       },
       "sectorId": "sector-12",
       "subSectorId": "subsector-12-1",
-      "connections": [
-        "10dccd8e4792a83f04571130c3cff08b"
-      ]
+      "connections": ["10dccd8e4792a83f04571130c3cff08b"]
     },
     {
       "systemId": "15448977003f7fd4dc15624c8f29bf13",
@@ -8413,10 +8040,7 @@
       },
       "sectorId": "sector-102",
       "subSectorId": "subsector-102-18",
-      "connections": [
-        "9fcaae94376689a3b5cd787499a29040",
-        "54d1a4867d0c5454e7af252613d07f3a"
-      ]
+      "connections": ["9fcaae94376689a3b5cd787499a29040", "54d1a4867d0c5454e7af252613d07f3a"]
     },
     {
       "systemId": "7b03b0333ffd148df1180792fe746d05",
@@ -8601,10 +8225,7 @@
       },
       "sectorId": "sector-57",
       "subSectorId": "subsector-57-19",
-      "connections": [
-        "a2cb7e0c51645470736d0822fecd96b3",
-        "a4f8152ef31be5e5ec7036d049c0dd0f"
-      ]
+      "connections": ["a2cb7e0c51645470736d0822fecd96b3", "a4f8152ef31be5e5ec7036d049c0dd0f"]
     },
     {
       "systemId": "582cd0502d397ca3fbabe9e88e60b804",
@@ -8662,10 +8283,7 @@
       },
       "sectorId": "sector-82",
       "subSectorId": "subsector-82-3",
-      "connections": [
-        "4782685b43a9ebb83b5828f1e1e55480",
-        "daab2a743ca8bab296fe3f6a6a5e3da4"
-      ]
+      "connections": ["4782685b43a9ebb83b5828f1e1e55480", "daab2a743ca8bab296fe3f6a6a5e3da4"]
     },
     {
       "systemId": "5c9e612ff4f761a18b23cfb3a708d6bb",
@@ -8755,10 +8373,7 @@
       },
       "sectorId": "sector-70",
       "subSectorId": "subsector-70-4",
-      "connections": [
-        "1c6ff519b7ae7aecb2eaebadeac77010",
-        "122ade5fb3faee53eda9b8a84504e46f"
-      ]
+      "connections": ["1c6ff519b7ae7aecb2eaebadeac77010", "122ade5fb3faee53eda9b8a84504e46f"]
     },
     {
       "systemId": "63d79cf57f7a0e0b96e3ad13af655f09",
@@ -8816,10 +8431,7 @@
       },
       "sectorId": "sector-86",
       "subSectorId": "subsector-86-12",
-      "connections": [
-        "973b391f3d7f52d1f3328a48e098d62f",
-        "58333f0566a10e489f19909384d20966"
-      ]
+      "connections": ["973b391f3d7f52d1f3328a48e098d62f", "58333f0566a10e489f19909384d20966"]
     },
     {
       "systemId": "b327eee7710ef5b77fb3656d1224ac52",
@@ -8909,9 +8521,7 @@
       },
       "sectorId": "sector-52",
       "subSectorId": "subsector-52-22",
-      "connections": [
-        "5ee62997d602ae6bd8a9a2f0676b90f6"
-      ]
+      "connections": ["5ee62997d602ae6bd8a9a2f0676b90f6"]
     },
     {
       "systemId": "d79224094f1c0ab5036659dc4d04845b",
@@ -8938,10 +8548,7 @@
       },
       "sectorId": "sector-46",
       "subSectorId": "subsector-46-4",
-      "connections": [
-        "58352be19029146f3fde30b40fb550eb",
-        "560a2c8a81925707a5197d8fa242b89e"
-      ]
+      "connections": ["58352be19029146f3fde30b40fb550eb", "560a2c8a81925707a5197d8fa242b89e"]
     },
     {
       "systemId": "6f6fe2f955e3dc80cecb8b49c2bfaa10",
@@ -8968,10 +8575,7 @@
       },
       "sectorId": "sector-35",
       "subSectorId": "subsector-35-22",
-      "connections": [
-        "d0f10af5bc8e324b6c5a170a4e46a537",
-        "7e8c5904a1b7adf88fa6e045b43e026b"
-      ]
+      "connections": ["d0f10af5bc8e324b6c5a170a4e46a537", "7e8c5904a1b7adf88fa6e045b43e026b"]
     },
     {
       "systemId": "53d65bd02643d9716dd08c465e9785ec",
@@ -8998,10 +8602,7 @@
       },
       "sectorId": "sector-13",
       "subSectorId": "subsector-13-1",
-      "connections": [
-        "462b5e4ff151b8bac30d9349070fd3a0",
-        "5eafe0ef9a78fb25f189cf43a834ad65"
-      ]
+      "connections": ["462b5e4ff151b8bac30d9349070fd3a0", "5eafe0ef9a78fb25f189cf43a834ad65"]
     },
     {
       "systemId": "28f36b1cd25cb5c680a097c12cf3f23c",
@@ -9028,9 +8629,7 @@
       },
       "sectorId": "sector-8",
       "subSectorId": "subsector-8-3",
-      "connections": [
-        "bce28c7b241954eddb9d5a6acf98d839"
-      ]
+      "connections": ["bce28c7b241954eddb9d5a6acf98d839"]
     },
     {
       "systemId": "76efb33ed2c068611e880b02ef2b700a",
@@ -9057,10 +8656,7 @@
       },
       "sectorId": "sector-56",
       "subSectorId": "subsector-56-14",
-      "connections": [
-        "8ecf9670ba070d78cfb5537e8d9f1b6c",
-        "a4f8152ef31be5e5ec7036d049c0dd0f"
-      ]
+      "connections": ["8ecf9670ba070d78cfb5537e8d9f1b6c", "a4f8152ef31be5e5ec7036d049c0dd0f"]
     },
     {
       "systemId": "9f4047ff144ba7965dee6442843d7b2e",
@@ -9087,10 +8683,7 @@
       },
       "sectorId": "sector-27",
       "subSectorId": "subsector-27-6",
-      "connections": [
-        "e636004bf63f401fe5f38aade206f70e",
-        "82c3ab676571329da3a0885b2247fbc3"
-      ]
+      "connections": ["e636004bf63f401fe5f38aade206f70e", "82c3ab676571329da3a0885b2247fbc3"]
     },
     {
       "systemId": "58333f0566a10e489f19909384d20966",
@@ -9180,10 +8773,7 @@
       },
       "sectorId": "sector-3",
       "subSectorId": "subsector-3-2",
-      "connections": [
-        "835f10e219434edce7bd2a0364228603",
-        "8fcd2841a6ee2d457340eca05b459513"
-      ]
+      "connections": ["835f10e219434edce7bd2a0364228603", "8fcd2841a6ee2d457340eca05b459513"]
     },
     {
       "systemId": "4cb7efffeb0c288b6bf4169a98cd7c8a",
@@ -9273,10 +8863,7 @@
       },
       "sectorId": "sector-98",
       "subSectorId": "subsector-98-17",
-      "connections": [
-        "1029dee5b1ac0fb0c18e7ad2a3366033",
-        "075d94e434c5d9f60b3fbff2b707b17e"
-      ]
+      "connections": ["1029dee5b1ac0fb0c18e7ad2a3366033", "075d94e434c5d9f60b3fbff2b707b17e"]
     },
     {
       "systemId": "214d402b04104bcac3e725118242c7e1",
@@ -9303,9 +8890,7 @@
       },
       "sectorId": "sector-36",
       "subSectorId": "subsector-36-15",
-      "connections": [
-        "4d098f6138f3a6b550bb81f129e658ae"
-      ]
+      "connections": ["4d098f6138f3a6b550bb81f129e658ae"]
     },
     {
       "systemId": "f9d70841e4971ccddc8fc9749d38e8e4",
@@ -9363,10 +8948,7 @@
       },
       "sectorId": "sector-20",
       "subSectorId": "subsector-20-18",
-      "connections": [
-        "d9348c764d53cd32dfe659bf07f570e1",
-        "b1185d04ce5a679db274d4c9db5bf4cd"
-      ]
+      "connections": ["d9348c764d53cd32dfe659bf07f570e1", "b1185d04ce5a679db274d4c9db5bf4cd"]
     },
     {
       "systemId": "33d1d61e0a856ffe6f6f021852ff6ac8",
@@ -9393,9 +8975,7 @@
       },
       "sectorId": "sector-51",
       "subSectorId": "subsector-51-20",
-      "connections": [
-        "d349ef8a9054e9d09d6946cb4ac883ed"
-      ]
+      "connections": ["d349ef8a9054e9d09d6946cb4ac883ed"]
     },
     {
       "systemId": "495629e97a3b93c09562869469bb5efc",
@@ -9422,10 +9002,7 @@
       },
       "sectorId": "sector-10",
       "subSectorId": "subsector-10-5",
-      "connections": [
-        "1deda51920bb43104faf5341e804fdc0",
-        "fdb4dd5b90c4259d580185b433d571aa"
-      ]
+      "connections": ["1deda51920bb43104faf5341e804fdc0", "fdb4dd5b90c4259d580185b433d571aa"]
     },
     {
       "systemId": "fa49d78e3ed6119c54513eb69313d68f",
@@ -9452,10 +9029,7 @@
       },
       "sectorId": "sector-11",
       "subSectorId": "subsector-11-19",
-      "connections": [
-        "afa1aeec8b765fac13cf9e55ecb9d7e5",
-        "be6ecba3c3d42900499508e5b84946c2"
-      ]
+      "connections": ["afa1aeec8b765fac13cf9e55ecb9d7e5", "be6ecba3c3d42900499508e5b84946c2"]
     },
     {
       "systemId": "49b6615d39ccba05752b3be77b2ebf36",
@@ -9513,10 +9087,7 @@
       },
       "sectorId": "sector-107",
       "subSectorId": "subsector-107-9",
-      "connections": [
-        "1bb6f7229da3d2b50b2facd808e4cda3",
-        "cce753ebafa314854f6e7478da4a4e00"
-      ]
+      "connections": ["1bb6f7229da3d2b50b2facd808e4cda3", "cce753ebafa314854f6e7478da4a4e00"]
     },
     {
       "systemId": "4880f40b7a01458ef0768a72a574598c",
@@ -9636,10 +9207,7 @@
       },
       "sectorId": "sector-81",
       "subSectorId": "subsector-81-22",
-      "connections": [
-        "9d3efdf3eb5350606785ddf45e41b3aa",
-        "b54d95c2018bc305717857063cdc2765"
-      ]
+      "connections": ["9d3efdf3eb5350606785ddf45e41b3aa", "b54d95c2018bc305717857063cdc2765"]
     },
     {
       "systemId": "74dae175a253f5c30532f5e9ffc0e8de",
@@ -9698,10 +9266,7 @@
       },
       "sectorId": "sector-17",
       "subSectorId": "subsector-17-5",
-      "connections": [
-        "3a4813cfae1cc7d135ac1f4f8b2655e3",
-        "49f9f863394e84be7300397d86a3d4d1"
-      ]
+      "connections": ["3a4813cfae1cc7d135ac1f4f8b2655e3", "49f9f863394e84be7300397d86a3d4d1"]
     },
     {
       "systemId": "334d3d0b29cbaf87644eab1e69222384",
@@ -9728,10 +9293,7 @@
       },
       "sectorId": "sector-16",
       "subSectorId": "subsector-16-8",
-      "connections": [
-        "ec13515710aebfbdf77580f6c9f0b3d1",
-        "119a1552651c6cdbdbc6a63ccee64284"
-      ]
+      "connections": ["ec13515710aebfbdf77580f6c9f0b3d1", "119a1552651c6cdbdbc6a63ccee64284"]
     },
     {
       "systemId": "7cbbe6380e93dbaaa6b90f55f80097aa",
@@ -9790,10 +9352,7 @@
       },
       "sectorId": "sector-67",
       "subSectorId": "subsector-67-14",
-      "connections": [
-        "52f6f00b7ebf6f2708000ae239ec7a1a",
-        "c27937cfd483159e8eb1e305361e70b4"
-      ]
+      "connections": ["52f6f00b7ebf6f2708000ae239ec7a1a", "c27937cfd483159e8eb1e305361e70b4"]
     },
     {
       "systemId": "d917caa4db0d36eb05318f9b18f87df8",
@@ -9820,10 +9379,7 @@
       },
       "sectorId": "sector-39",
       "subSectorId": "subsector-39-12",
-      "connections": [
-        "44b526d7f4dbc1196132346b03ca388d",
-        "e23a361585ef6ed4134dd7b62f5863da"
-      ]
+      "connections": ["44b526d7f4dbc1196132346b03ca388d", "e23a361585ef6ed4134dd7b62f5863da"]
     },
     {
       "systemId": "36800ca424af8b9fd8ca0e96b70e4647",
@@ -9881,10 +9437,7 @@
       },
       "sectorId": "sector-37",
       "subSectorId": "subsector-37-18",
-      "connections": [
-        "27f857282618298648d697188e1ee4ab",
-        "f01c75178bf1c3450bef2696d967b6bb"
-      ]
+      "connections": ["27f857282618298648d697188e1ee4ab", "f01c75178bf1c3450bef2696d967b6bb"]
     },
     {
       "systemId": "ae629ca342518ee8096c96c30359a48d",
@@ -10036,10 +9589,7 @@
       },
       "sectorId": "sector-60",
       "subSectorId": "subsector-60-16",
-      "connections": [
-        "a4a61946de1849fe1375a9ae3cde0bc0",
-        "2e32d596e6e583f24f9969a1bb2ed1a8"
-      ]
+      "connections": ["a4a61946de1849fe1375a9ae3cde0bc0", "2e32d596e6e583f24f9969a1bb2ed1a8"]
     },
     {
       "systemId": "651bab1e33aa2679c8558b453360a5ac",
@@ -10131,10 +9681,7 @@
       },
       "sectorId": "sector-50",
       "subSectorId": "subsector-50-3",
-      "connections": [
-        "e137247579cd17729ad492cc9ee8e715",
-        "b898ef122dc5326b7be03f0f14078f50"
-      ]
+      "connections": ["e137247579cd17729ad492cc9ee8e715", "b898ef122dc5326b7be03f0f14078f50"]
     },
     {
       "systemId": "2e32d596e6e583f24f9969a1bb2ed1a8",
@@ -10225,10 +9772,7 @@
       },
       "sectorId": "sector-5",
       "subSectorId": "subsector-5-20",
-      "connections": [
-        "e2e004d158202f9fa4a1cd4f3434e8bd",
-        "92029ff27c1abe932bd2c61ee4c492c7"
-      ]
+      "connections": ["e2e004d158202f9fa4a1cd4f3434e8bd", "92029ff27c1abe932bd2c61ee4c492c7"]
     },
     {
       "systemId": "eeab5dfa2503713a1ce167f9188baef6",
@@ -10319,10 +9863,7 @@
       },
       "sectorId": "sector-28",
       "subSectorId": "subsector-28-10",
-      "connections": [
-        "15be174b3a40b51252a4b3d117045664",
-        "72921acc206608a949e38eb0519af345"
-      ]
+      "connections": ["15be174b3a40b51252a4b3d117045664", "72921acc206608a949e38eb0519af345"]
     },
     {
       "systemId": "23b842ad9521e0849863c2a4b0157071",
@@ -10349,10 +9890,7 @@
       },
       "sectorId": "sector-75",
       "subSectorId": "subsector-75-9",
-      "connections": [
-        "57d5247b69e404a1934172e90835408a",
-        "4a704ef41ef359fa3377ee82b44e3287"
-      ]
+      "connections": ["57d5247b69e404a1934172e90835408a", "4a704ef41ef359fa3377ee82b44e3287"]
     },
     {
       "systemId": "e011d63b490dd1e96890ac585620a632",
@@ -10379,9 +9917,7 @@
       },
       "sectorId": "sector-76",
       "subSectorId": "subsector-76-15",
-      "connections": [
-        "0d249fb50e1d69895ed1413425bb0fcb"
-      ]
+      "connections": ["0d249fb50e1d69895ed1413425bb0fcb"]
     },
     {
       "systemId": "3726d8567388a6adc1b41a4a80ee5f51",
@@ -10408,10 +9944,7 @@
       },
       "sectorId": "sector-101",
       "subSectorId": "subsector-101-12",
-      "connections": [
-        "85f26581165a17192f9561093243032f",
-        "afe3770a501e73f5a2e17b3f0375e752"
-      ]
+      "connections": ["85f26581165a17192f9561093243032f", "afe3770a501e73f5a2e17b3f0375e752"]
     },
     {
       "systemId": "e39150b1e293f0fb12124c05f232cb79",
@@ -10438,10 +9971,7 @@
       },
       "sectorId": "sector-52",
       "subSectorId": "subsector-52-12",
-      "connections": [
-        "e9765643b7f8cd3d9508900962edd1e8",
-        "57e2dbb7588c3cf2ecdbd531bc1ec0c6"
-      ]
+      "connections": ["e9765643b7f8cd3d9508900962edd1e8", "57e2dbb7588c3cf2ecdbd531bc1ec0c6"]
     },
     {
       "systemId": "9172f08e5e490173b289f27e4f417365",
@@ -10499,10 +10029,7 @@
       },
       "sectorId": "sector-41",
       "subSectorId": "subsector-41-21",
-      "connections": [
-        "6c4ea16b6b4241b8be54d88a32769e20",
-        "093da045fefac5eebe07fcd086a65e88"
-      ]
+      "connections": ["6c4ea16b6b4241b8be54d88a32769e20", "093da045fefac5eebe07fcd086a65e88"]
     },
     {
       "systemId": "aa5f5966613f9bee0b020ef3f4ca3acb",
@@ -10529,10 +10056,7 @@
       },
       "sectorId": "sector-58",
       "subSectorId": "subsector-58-16",
-      "connections": [
-        "1e2b07e3ae55da0e7a38a519ff3385f9",
-        "4eb7d85b19c31a604618fd555ec4d120"
-      ]
+      "connections": ["1e2b07e3ae55da0e7a38a519ff3385f9", "4eb7d85b19c31a604618fd555ec4d120"]
     },
     {
       "systemId": "e137247579cd17729ad492cc9ee8e715",
@@ -10559,10 +10083,7 @@
       },
       "sectorId": "sector-50",
       "subSectorId": "subsector-50-23",
-      "connections": [
-        "8742654d4f4102256216dc483e1c3198",
-        "c88e0a10c983dc27d267baf24fca3a6e"
-      ]
+      "connections": ["8742654d4f4102256216dc483e1c3198", "c88e0a10c983dc27d267baf24fca3a6e"]
     },
     {
       "systemId": "57ffbd2278939dbb3b282e93eb893bdc",
@@ -10589,10 +10110,7 @@
       },
       "sectorId": "sector-16",
       "subSectorId": "subsector-16-11",
-      "connections": [
-        "125c6f06574cf0e43d622bd6c47ced01",
-        "119a1552651c6cdbdbc6a63ccee64284"
-      ]
+      "connections": ["125c6f06574cf0e43d622bd6c47ced01", "119a1552651c6cdbdbc6a63ccee64284"]
     },
     {
       "systemId": "79648e6cbd4e37c97d005bf5f7078a66",
@@ -10650,10 +10168,7 @@
       },
       "sectorId": "sector-97",
       "subSectorId": "subsector-97-10",
-      "connections": [
-        "eab674727e03973314f6157ae5250ee8",
-        "86e33cc095ff0747abf51a53cf09b90c"
-      ]
+      "connections": ["eab674727e03973314f6157ae5250ee8", "86e33cc095ff0747abf51a53cf09b90c"]
     },
     {
       "systemId": "bb191e3fe6a9b7ed95117d27e854121e",
@@ -10711,10 +10226,7 @@
       },
       "sectorId": "sector-79",
       "subSectorId": "subsector-79-2",
-      "connections": [
-        "ae629ca342518ee8096c96c30359a48d",
-        "29424e4ac691ac95ec5aa3477cc9b4a9"
-      ]
+      "connections": ["ae629ca342518ee8096c96c30359a48d", "29424e4ac691ac95ec5aa3477cc9b4a9"]
     },
     {
       "systemId": "d1b961097ad5fa2e75e6a0bce4695f58",
@@ -10773,9 +10285,7 @@
       },
       "sectorId": "sector-13",
       "subSectorId": "subsector-13-14",
-      "connections": [
-        "651bab1e33aa2679c8558b453360a5ac"
-      ]
+      "connections": ["651bab1e33aa2679c8558b453360a5ac"]
     },
     {
       "systemId": "a06b46d361d9d92b7600402f1702c546",
@@ -10802,9 +10312,7 @@
       },
       "sectorId": "sector-17",
       "subSectorId": "subsector-17-0",
-      "connections": [
-        "04eed22afb10e93e2e9e97cce3952e72"
-      ]
+      "connections": ["04eed22afb10e93e2e9e97cce3952e72"]
     },
     {
       "systemId": "6272e71a00c94ee3f6610b4aaf9553df",
@@ -10831,10 +10339,7 @@
       },
       "sectorId": "sector-30",
       "subSectorId": "subsector-30-7",
-      "connections": [
-        "1de06682718a414259ed39507e0259b6",
-        "389da879d610555be28d7459e5b518fa"
-      ]
+      "connections": ["1de06682718a414259ed39507e0259b6", "389da879d610555be28d7459e5b518fa"]
     },
     {
       "systemId": "5deb04e3bc3e1d7d05397ce9c6d6d968",
@@ -10923,10 +10428,7 @@
       },
       "sectorId": "sector-60",
       "subSectorId": "subsector-60-22",
-      "connections": [
-        "2e32d596e6e583f24f9969a1bb2ed1a8",
-        "a2cb7e0c51645470736d0822fecd96b3"
-      ]
+      "connections": ["2e32d596e6e583f24f9969a1bb2ed1a8", "a2cb7e0c51645470736d0822fecd96b3"]
     },
     {
       "systemId": "6066e2ab1e2b1576b6df6b7eaeaad0b4",
@@ -10984,9 +10486,7 @@
       },
       "sectorId": "sector-66",
       "subSectorId": "subsector-66-21",
-      "connections": [
-        "0a577d6f80404f51108c23aec84372f2"
-      ]
+      "connections": ["0a577d6f80404f51108c23aec84372f2"]
     },
     {
       "systemId": "27f857282618298648d697188e1ee4ab",
@@ -11013,9 +10513,7 @@
       },
       "sectorId": "sector-37",
       "subSectorId": "subsector-37-12",
-      "connections": [
-        "9bc14dee5ba5d1b92d14783d9fe29cf9"
-      ]
+      "connections": ["9bc14dee5ba5d1b92d14783d9fe29cf9"]
     },
     {
       "systemId": "1f87982f87b1988866cebffe3208019e",
@@ -11137,10 +10635,7 @@
       },
       "sectorId": "sector-8",
       "subSectorId": "subsector-8-5",
-      "connections": [
-        "28f36b1cd25cb5c680a097c12cf3f23c",
-        "2838e293e3e3e3b927134afd8a9eae08"
-      ]
+      "connections": ["28f36b1cd25cb5c680a097c12cf3f23c", "2838e293e3e3e3b927134afd8a9eae08"]
     },
     {
       "systemId": "c19d5e5bacd458aab0007be91abb60d7",
@@ -11167,9 +10662,7 @@
       },
       "sectorId": "sector-86",
       "subSectorId": "subsector-86-23",
-      "connections": [
-        "7279fb7ce06b822ade17356d6be445a2"
-      ]
+      "connections": ["7279fb7ce06b822ade17356d6be445a2"]
     },
     {
       "systemId": "4328f7d91b6f750d6667706d8247c4e3",
@@ -11196,10 +10689,7 @@
       },
       "sectorId": "sector-57",
       "subSectorId": "subsector-57-17",
-      "connections": [
-        "a2cb7e0c51645470736d0822fecd96b3",
-        "3df82dc88cd691771e105f85946db6dc"
-      ]
+      "connections": ["a2cb7e0c51645470736d0822fecd96b3", "3df82dc88cd691771e105f85946db6dc"]
     },
     {
       "systemId": "a1d813029df1e92f5eba42ac10accc80",
@@ -11226,10 +10716,7 @@
       },
       "sectorId": "sector-105",
       "subSectorId": "subsector-105-5",
-      "connections": [
-        "c3cb5ec27fb4626036d86ea9503770f9",
-        "ed9845fa6898abc6e41476a10c2c123c"
-      ]
+      "connections": ["c3cb5ec27fb4626036d86ea9503770f9", "ed9845fa6898abc6e41476a10c2c123c"]
     },
     {
       "systemId": "9e0f4a18381e14dcf7f525c027b62314",
@@ -11288,10 +10775,7 @@
       },
       "sectorId": "sector-44",
       "subSectorId": "subsector-44-11",
-      "connections": [
-        "36800ca424af8b9fd8ca0e96b70e4647",
-        "de91d53931568bdc90d20ef409e3ce63"
-      ]
+      "connections": ["36800ca424af8b9fd8ca0e96b70e4647", "de91d53931568bdc90d20ef409e3ce63"]
     },
     {
       "systemId": "a4ba8b12739da65efc2b518703652ee1",
@@ -11318,10 +10802,7 @@
       },
       "sectorId": "sector-39",
       "subSectorId": "subsector-39-10",
-      "connections": [
-        "493f74e48d774b3dba6e164b46b1a66c",
-        "d8493b0df4be7f541eee3ed54eef4299"
-      ]
+      "connections": ["493f74e48d774b3dba6e164b46b1a66c", "d8493b0df4be7f541eee3ed54eef4299"]
     },
     {
       "systemId": "e3dbe21629628363d05b04e3be16a327",
@@ -11348,10 +10829,7 @@
       },
       "sectorId": "sector-81",
       "subSectorId": "subsector-81-9",
-      "connections": [
-        "9d3efdf3eb5350606785ddf45e41b3aa",
-        "8efe0e581b1ad7ea575a56444d03134b"
-      ]
+      "connections": ["9d3efdf3eb5350606785ddf45e41b3aa", "8efe0e581b1ad7ea575a56444d03134b"]
     },
     {
       "systemId": "0473afb6b9f77db3653eb3233e7bf5a2",
@@ -11411,10 +10889,7 @@
       },
       "sectorId": "sector-88",
       "subSectorId": "subsector-88-2",
-      "connections": [
-        "ed9845fa6898abc6e41476a10c2c123c",
-        "be0ed7c9e2f74a32e9bdd6a8d9124191"
-      ]
+      "connections": ["ed9845fa6898abc6e41476a10c2c123c", "be0ed7c9e2f74a32e9bdd6a8d9124191"]
     },
     {
       "systemId": "95d4975f992a70a802bd2f19553c25d4",
@@ -11472,10 +10947,7 @@
       },
       "sectorId": "sector-86",
       "subSectorId": "subsector-86-7",
-      "connections": [
-        "7279fb7ce06b822ade17356d6be445a2",
-        "3c374c3382f4248a274edd662e185f9b"
-      ]
+      "connections": ["7279fb7ce06b822ade17356d6be445a2", "3c374c3382f4248a274edd662e185f9b"]
     },
     {
       "systemId": "8f1c8159bc6e2e9de326c5b0693e4d56",
@@ -11502,10 +10974,7 @@
       },
       "sectorId": "sector-17",
       "subSectorId": "subsector-17-22",
-      "connections": [
-        "49f9f863394e84be7300397d86a3d4d1",
-        "a97d2bd129004d631cf9881caec51584"
-      ]
+      "connections": ["49f9f863394e84be7300397d86a3d4d1", "a97d2bd129004d631cf9881caec51584"]
     },
     {
       "systemId": "afcefe4dc7c2d3ea7d6b62e2d5c26dac",
@@ -11597,10 +11066,7 @@
       },
       "sectorId": "sector-15",
       "subSectorId": "subsector-15-0",
-      "connections": [
-        "f6bf78e1309755b6dfdea606ac36bec8",
-        "f007c5ffec59dab74f4dbfac12403e39"
-      ]
+      "connections": ["f6bf78e1309755b6dfdea606ac36bec8", "f007c5ffec59dab74f4dbfac12403e39"]
     },
     {
       "systemId": "a441ac0097030d519de5f8c2b822b558",
@@ -11658,10 +11124,7 @@
       },
       "sectorId": "sector-2",
       "subSectorId": "subsector-2-18",
-      "connections": [
-        "ac3ccd5325b3912ec0fb1179a25f232c",
-        "845df830b84e8f54e4850eff19fa0dd9"
-      ]
+      "connections": ["ac3ccd5325b3912ec0fb1179a25f232c", "845df830b84e8f54e4850eff19fa0dd9"]
     },
     {
       "systemId": "5668039e6063a1d29954c5c8d52b0fa2",
@@ -11688,10 +11151,7 @@
       },
       "sectorId": "sector-20",
       "subSectorId": "subsector-20-7",
-      "connections": [
-        "b1185d04ce5a679db274d4c9db5bf4cd",
-        "0a1ed8fa37de45d2844c3b6137266f3d"
-      ]
+      "connections": ["b1185d04ce5a679db274d4c9db5bf4cd", "0a1ed8fa37de45d2844c3b6137266f3d"]
     },
     {
       "systemId": "8ce4e40aaee782e689795647d27913fd",
@@ -11718,10 +11178,7 @@
       },
       "sectorId": "sector-66",
       "subSectorId": "subsector-66-3",
-      "connections": [
-        "5ee642e0f76a07fa9b38d77232adcbc1",
-        "0a577d6f80404f51108c23aec84372f2"
-      ]
+      "connections": ["5ee642e0f76a07fa9b38d77232adcbc1", "0a577d6f80404f51108c23aec84372f2"]
     },
     {
       "systemId": "94213ca812a28290cc2906061ec15a03",
@@ -11748,10 +11205,7 @@
       },
       "sectorId": "sector-71",
       "subSectorId": "subsector-71-11",
-      "connections": [
-        "82e7f53217c03c705f7a3d88b8f53d60",
-        "5e4fe2ce707e0a8a3a8ab0b089ee628e"
-      ]
+      "connections": ["82e7f53217c03c705f7a3d88b8f53d60", "5e4fe2ce707e0a8a3a8ab0b089ee628e"]
     },
     {
       "systemId": "511473671a70cf1f06afcaff85bec8a8",
@@ -11809,9 +11263,7 @@
       },
       "sectorId": "sector-94",
       "subSectorId": "subsector-94-10",
-      "connections": [
-        "4bb9440c013232ac13a0b6cfde3aa9fb"
-      ]
+      "connections": ["4bb9440c013232ac13a0b6cfde3aa9fb"]
     },
     {
       "systemId": "02addf847041b8ddfff3259e790af88c",
@@ -11838,10 +11290,7 @@
       },
       "sectorId": "sector-72",
       "subSectorId": "subsector-72-11",
-      "connections": [
-        "94dff756b3039caa9963d9d70b4f2609",
-        "6c0157bf2a62f5acd7e79ca243f61fb6"
-      ]
+      "connections": ["94dff756b3039caa9963d9d70b4f2609", "6c0157bf2a62f5acd7e79ca243f61fb6"]
     },
     {
       "systemId": "25461e8060024ec9e31d97c07e073989",
@@ -11993,10 +11442,7 @@
       },
       "sectorId": "sector-100",
       "subSectorId": "subsector-100-18",
-      "connections": [
-        "c5d3791f9a475daa820afbf8c2c83ff2",
-        "7cbbe6380e93dbaaa6b90f55f80097aa"
-      ]
+      "connections": ["c5d3791f9a475daa820afbf8c2c83ff2", "7cbbe6380e93dbaaa6b90f55f80097aa"]
     },
     {
       "systemId": "ae621d84fe615ad9966768b417d87430",
@@ -12023,9 +11469,7 @@
       },
       "sectorId": "sector-101",
       "subSectorId": "subsector-101-14",
-      "connections": [
-        "85f26581165a17192f9561093243032f"
-      ]
+      "connections": ["85f26581165a17192f9561093243032f"]
     },
     {
       "systemId": "0275f4e4aab67e79df01828d6b8ff23b",
@@ -12084,9 +11528,7 @@
       },
       "sectorId": "sector-25",
       "subSectorId": "subsector-25-13",
-      "connections": [
-        "5ef0aecc3459e08e653b42472bc3144f"
-      ]
+      "connections": ["5ef0aecc3459e08e653b42472bc3144f"]
     },
     {
       "systemId": "ffd566a81fd02b55e3aff4145cc5bcee",
@@ -12206,10 +11648,7 @@
       },
       "sectorId": "sector-10",
       "subSectorId": "subsector-10-22",
-      "connections": [
-        "1deda51920bb43104faf5341e804fdc0",
-        "2838e293e3e3e3b927134afd8a9eae08"
-      ]
+      "connections": ["1deda51920bb43104faf5341e804fdc0", "2838e293e3e3e3b927134afd8a9eae08"]
     },
     {
       "systemId": "566eff1cc748b8706faec4aaabd9a4f8",
@@ -12236,9 +11675,7 @@
       },
       "sectorId": "sector-87",
       "subSectorId": "subsector-87-23",
-      "connections": [
-        "58333f0566a10e489f19909384d20966"
-      ]
+      "connections": ["58333f0566a10e489f19909384d20966"]
     },
     {
       "systemId": "98c92f9879fe17cf934c41d1016a58e7",
@@ -12391,10 +11828,7 @@
       },
       "sectorId": "sector-92",
       "subSectorId": "subsector-92-11",
-      "connections": [
-        "ccb58f3608aa8d7305d677f3e417e7da",
-        "5ac54d5c69ccf2281a836c3bf68e13d2"
-      ]
+      "connections": ["ccb58f3608aa8d7305d677f3e417e7da", "5ac54d5c69ccf2281a836c3bf68e13d2"]
     },
     {
       "systemId": "1deda51920bb43104faf5341e804fdc0",
@@ -12484,10 +11918,7 @@
       },
       "sectorId": "sector-80",
       "subSectorId": "subsector-80-2",
-      "connections": [
-        "51d15fe830b25bbfbbcc7b9a63fa4c91",
-        "0db7941f7d8296bb0e9030351d1ca3e0"
-      ]
+      "connections": ["51d15fe830b25bbfbbcc7b9a63fa4c91", "0db7941f7d8296bb0e9030351d1ca3e0"]
     },
     {
       "systemId": "72731428004d9807f8aae27e18ca0675",
@@ -12546,10 +11977,7 @@
       },
       "sectorId": "sector-63",
       "subSectorId": "subsector-63-20",
-      "connections": [
-        "e2bb09f1bbcd2ca58a6543a798e7686b",
-        "dbc3436a89da2ebc594889bb65ab8866"
-      ]
+      "connections": ["e2bb09f1bbcd2ca58a6543a798e7686b", "dbc3436a89da2ebc594889bb65ab8866"]
     },
     {
       "systemId": "2318bd4539e5a2119d81212478520b22",
@@ -12703,10 +12131,7 @@
       },
       "sectorId": "sector-4",
       "subSectorId": "subsector-4-2",
-      "connections": [
-        "3371e0e67802ac410ce0f1b0c1340e04",
-        "2487e5f06075e7472185f5d6d2754298"
-      ]
+      "connections": ["3371e0e67802ac410ce0f1b0c1340e04", "2487e5f06075e7472185f5d6d2754298"]
     },
     {
       "systemId": "7a6ab1c57180df90bd517779457e2c69",
@@ -12733,10 +12158,7 @@
       },
       "sectorId": "sector-19",
       "subSectorId": "subsector-19-7",
-      "connections": [
-        "b6e72b9ff587cbac6ace1db3701e6443",
-        "acaf72de364a9d4c1400c6dfeb7cfbda"
-      ]
+      "connections": ["b6e72b9ff587cbac6ace1db3701e6443", "acaf72de364a9d4c1400c6dfeb7cfbda"]
     },
     {
       "systemId": "4bb9440c013232ac13a0b6cfde3aa9fb",
@@ -12795,10 +12217,7 @@
       },
       "sectorId": "sector-31",
       "subSectorId": "subsector-31-1",
-      "connections": [
-        "3e3dcecc4b0a9a0f03df1d95587e1096",
-        "f7bf1dac70fc79c9b365accf54b6ef68"
-      ]
+      "connections": ["3e3dcecc4b0a9a0f03df1d95587e1096", "f7bf1dac70fc79c9b365accf54b6ef68"]
     },
     {
       "systemId": "c24bdf7dd73dd00cc674d62ed68da657",
@@ -12825,10 +12244,7 @@
       },
       "sectorId": "sector-99",
       "subSectorId": "subsector-99-6",
-      "connections": [
-        "9dc950dc6706f6c5b7d95cca0160ff64",
-        "d124151d10faa4b3ece77c3b6ffe803b"
-      ]
+      "connections": ["9dc950dc6706f6c5b7d95cca0160ff64", "d124151d10faa4b3ece77c3b6ffe803b"]
     },
     {
       "systemId": "e11b5bbe11c629f3c100296520cd58b5",
@@ -12917,10 +12333,7 @@
       },
       "sectorId": "sector-97",
       "subSectorId": "subsector-97-22",
-      "connections": [
-        "0b6bd15be768750c4e030edbcb402e87",
-        "e7b7b113e1ff4a587f8159b92018619e"
-      ]
+      "connections": ["0b6bd15be768750c4e030edbcb402e87", "e7b7b113e1ff4a587f8159b92018619e"]
     },
     {
       "systemId": "e04bd919bae110689ceb68239710628c",
@@ -12947,10 +12360,7 @@
       },
       "sectorId": "sector-76",
       "subSectorId": "subsector-76-10",
-      "connections": [
-        "c5089f856254d67bbe24fb425b6a4639",
-        "c27f17610e03c0d3cd018c76fdb7bc3c"
-      ]
+      "connections": ["c5089f856254d67bbe24fb425b6a4639", "c27f17610e03c0d3cd018c76fdb7bc3c"]
     },
     {
       "systemId": "3d1b1e2957629c94875f17f855e8ff19",
@@ -12977,10 +12387,7 @@
       },
       "sectorId": "sector-85",
       "subSectorId": "subsector-85-12",
-      "connections": [
-        "6e3fba0fb179a97ade961fc9a859cb94",
-        "3c9e6c290158117abf83b3cd078f15f1"
-      ]
+      "connections": ["6e3fba0fb179a97ade961fc9a859cb94", "3c9e6c290158117abf83b3cd078f15f1"]
     },
     {
       "systemId": "be0ed7c9e2f74a32e9bdd6a8d9124191",
@@ -13101,10 +12508,7 @@
       },
       "sectorId": "sector-95",
       "subSectorId": "subsector-95-8",
-      "connections": [
-        "d654e6074487cb2d5664a9b69c23da6b",
-        "e7b7b113e1ff4a587f8159b92018619e"
-      ]
+      "connections": ["d654e6074487cb2d5664a9b69c23da6b", "e7b7b113e1ff4a587f8159b92018619e"]
     },
     {
       "systemId": "8d3a18a3b45cade1c0cfbcfcfb4fe1c1",
@@ -13131,10 +12535,7 @@
       },
       "sectorId": "sector-21",
       "subSectorId": "subsector-21-6",
-      "connections": [
-        "c4f51f8e8de566e49a248a2fe470f742",
-        "9781139e9fec1c26e5901ff5d9c7373e"
-      ]
+      "connections": ["c4f51f8e8de566e49a248a2fe470f742", "9781139e9fec1c26e5901ff5d9c7373e"]
     },
     {
       "systemId": "9649051d5a2b9f013b9c7b98c18fc16a",
@@ -13192,9 +12593,7 @@
       },
       "sectorId": "sector-63",
       "subSectorId": "subsector-63-3",
-      "connections": [
-        "4eee5b5b819c3a64bd710bc9b9a7350b"
-      ]
+      "connections": ["4eee5b5b819c3a64bd710bc9b9a7350b"]
     },
     {
       "systemId": "6e3fba0fb179a97ade961fc9a859cb94",
@@ -13252,10 +12651,7 @@
       },
       "sectorId": "sector-77",
       "subSectorId": "subsector-77-13",
-      "connections": [
-        "81bd20e2a949f13a64377bf0fcaf1258",
-        "595d5c2efee3d87f658d1146ad32e148"
-      ]
+      "connections": ["81bd20e2a949f13a64377bf0fcaf1258", "595d5c2efee3d87f658d1146ad32e148"]
     },
     {
       "systemId": "e41dc48f629aa60577c3d328aa4b5c09",
@@ -13376,10 +12772,7 @@
       },
       "sectorId": "sector-33",
       "subSectorId": "subsector-33-23",
-      "connections": [
-        "a0f5e3272a0fbc2e51e1ed6b5827920a",
-        "deb2238ec18d6751b9077e2fef27d2d4"
-      ]
+      "connections": ["a0f5e3272a0fbc2e51e1ed6b5827920a", "deb2238ec18d6751b9077e2fef27d2d4"]
     },
     {
       "systemId": "cb7e5da2b696279d307db09049d3b845",
@@ -13406,10 +12799,7 @@
       },
       "sectorId": "sector-20",
       "subSectorId": "subsector-20-17",
-      "connections": [
-        "d9348c764d53cd32dfe659bf07f570e1",
-        "b1185d04ce5a679db274d4c9db5bf4cd"
-      ]
+      "connections": ["d9348c764d53cd32dfe659bf07f570e1", "b1185d04ce5a679db274d4c9db5bf4cd"]
     },
     {
       "systemId": "4b6b2f2e510db9a66af5c91ef5b4781e",
@@ -13436,10 +12826,7 @@
       },
       "sectorId": "sector-72",
       "subSectorId": "subsector-72-6",
-      "connections": [
-        "487d08936b307b798feddb463a0d7743",
-        "4ed9467ac769aebc743752f69e8bfdf0"
-      ]
+      "connections": ["487d08936b307b798feddb463a0d7743", "4ed9467ac769aebc743752f69e8bfdf0"]
     },
     {
       "systemId": "8742654d4f4102256216dc483e1c3198",
@@ -13626,9 +13013,7 @@
       },
       "sectorId": "sector-54",
       "subSectorId": "subsector-54-5",
-      "connections": [
-        "346349786e9673abe0a4b2fcd7d3ca2f"
-      ]
+      "connections": ["346349786e9673abe0a4b2fcd7d3ca2f"]
     },
     {
       "systemId": "85f26581165a17192f9561093243032f",
@@ -13687,10 +13072,7 @@
       },
       "sectorId": "sector-93",
       "subSectorId": "subsector-93-13",
-      "connections": [
-        "effc20e5dc5fcf31533dc5a349ea0e48",
-        "791c692e011c9cd5211786df291c2e08"
-      ]
+      "connections": ["effc20e5dc5fcf31533dc5a349ea0e48", "791c692e011c9cd5211786df291c2e08"]
     },
     {
       "systemId": "0db7941f7d8296bb0e9030351d1ca3e0",
@@ -13748,9 +13130,7 @@
       },
       "sectorId": "sector-25",
       "subSectorId": "subsector-25-2",
-      "connections": [
-        "5ef0aecc3459e08e653b42472bc3144f"
-      ]
+      "connections": ["5ef0aecc3459e08e653b42472bc3144f"]
     },
     {
       "systemId": "53bf23a81c88a54089e7e9ac04465f1e",
@@ -13777,10 +13157,7 @@
       },
       "sectorId": "sector-40",
       "subSectorId": "subsector-40-0",
-      "connections": [
-        "01d637b2690bccfa60269f43f86a0328",
-        "39dc96cf9bb4998b08e1fcd227543f5b"
-      ]
+      "connections": ["01d637b2690bccfa60269f43f86a0328", "39dc96cf9bb4998b08e1fcd227543f5b"]
     },
     {
       "systemId": "92e0be4581e6e4683b732c1d6484b00c",
@@ -13838,10 +13215,7 @@
       },
       "sectorId": "sector-48",
       "subSectorId": "subsector-48-6",
-      "connections": [
-        "d40768ef9a357ac436dc534f08935d5a",
-        "f9d70841e4971ccddc8fc9749d38e8e4"
-      ]
+      "connections": ["d40768ef9a357ac436dc534f08935d5a", "f9d70841e4971ccddc8fc9749d38e8e4"]
     },
     {
       "systemId": "35e05ff2e1816bad5c77ef01b2d1a34c",
@@ -13868,10 +13242,7 @@
       },
       "sectorId": "sector-42",
       "subSectorId": "subsector-42-17",
-      "connections": [
-        "83695c730f47bd09fc5de42ccca2ddef",
-        "9239df499ace33699377d68bb0c73103"
-      ]
+      "connections": ["83695c730f47bd09fc5de42ccca2ddef", "9239df499ace33699377d68bb0c73103"]
     },
     {
       "systemId": "49a4800c3d324a16639e54ef4aa6c587",
@@ -13961,10 +13332,7 @@
       },
       "sectorId": "sector-10",
       "subSectorId": "subsector-10-18",
-      "connections": [
-        "1deda51920bb43104faf5341e804fdc0",
-        "fdb4dd5b90c4259d580185b433d571aa"
-      ]
+      "connections": ["1deda51920bb43104faf5341e804fdc0", "fdb4dd5b90c4259d580185b433d571aa"]
     },
     {
       "systemId": "e92123538c66403bbc8edecb5fbed50a",
@@ -14116,10 +13484,7 @@
       },
       "sectorId": "sector-67",
       "subSectorId": "subsector-67-8",
-      "connections": [
-        "c27937cfd483159e8eb1e305361e70b4",
-        "173aee668621217c9cf442105f9993c8"
-      ]
+      "connections": ["c27937cfd483159e8eb1e305361e70b4", "173aee668621217c9cf442105f9993c8"]
     },
     {
       "systemId": "1b510c248767e5f252fd4b253b2061fd",
@@ -14177,10 +13542,7 @@
       },
       "sectorId": "sector-71",
       "subSectorId": "subsector-71-12",
-      "connections": [
-        "82e7f53217c03c705f7a3d88b8f53d60",
-        "487d08936b307b798feddb463a0d7743"
-      ]
+      "connections": ["82e7f53217c03c705f7a3d88b8f53d60", "487d08936b307b798feddb463a0d7743"]
     },
     {
       "systemId": "52cdab29fbcece4cdfb78d691cbbbcea",
@@ -14207,10 +13569,7 @@
       },
       "sectorId": "sector-83",
       "subSectorId": "subsector-83-10",
-      "connections": [
-        "d16e71e64c9b513fc0f98533c7c21e30",
-        "daab2a743ca8bab296fe3f6a6a5e3da4"
-      ]
+      "connections": ["d16e71e64c9b513fc0f98533c7c21e30", "daab2a743ca8bab296fe3f6a6a5e3da4"]
     },
     {
       "systemId": "939e27c32dde8152e875db9abb029ecc",
@@ -14237,10 +13596,7 @@
       },
       "sectorId": "sector-91",
       "subSectorId": "subsector-91-2",
-      "connections": [
-        "730294132976aca068bc45c95e257cef",
-        "a198fce9e3c930b3a12ae81b481a7373"
-      ]
+      "connections": ["730294132976aca068bc45c95e257cef", "a198fce9e3c930b3a12ae81b481a7373"]
     },
     {
       "systemId": "dbc3436a89da2ebc594889bb65ab8866",
@@ -14298,10 +13654,7 @@
       },
       "sectorId": "sector-79",
       "subSectorId": "subsector-79-18",
-      "connections": [
-        "a48b64d9619c88fd15f035b3449f48b9",
-        "7b03b0333ffd148df1180792fe746d05"
-      ]
+      "connections": ["a48b64d9619c88fd15f035b3449f48b9", "7b03b0333ffd148df1180792fe746d05"]
     },
     {
       "systemId": "29cd14b5ec17fd6c025548e720191c5b",
@@ -14328,10 +13681,7 @@
       },
       "sectorId": "sector-83",
       "subSectorId": "subsector-83-17",
-      "connections": [
-        "5815a3e645f0781204d31e45966bf87b",
-        "39bcfd3f3f4db2592f0f80e636e27d84"
-      ]
+      "connections": ["5815a3e645f0781204d31e45966bf87b", "39bcfd3f3f4db2592f0f80e636e27d84"]
     },
     {
       "systemId": "f61a345bdc6d278a8a633148e02b6452",
@@ -14389,10 +13739,7 @@
       },
       "sectorId": "sector-48",
       "subSectorId": "subsector-48-18",
-      "connections": [
-        "d40768ef9a357ac436dc534f08935d5a",
-        "523617b002e2199f45e348e50e5004b3"
-      ]
+      "connections": ["d40768ef9a357ac436dc534f08935d5a", "523617b002e2199f45e348e50e5004b3"]
     },
     {
       "systemId": "2487e5f06075e7472185f5d6d2754298",
@@ -14452,10 +13799,7 @@
       },
       "sectorId": "sector-101",
       "subSectorId": "subsector-101-22",
-      "connections": [
-        "3726d8567388a6adc1b41a4a80ee5f51",
-        "336dc7c541cf4dd8000964303400ef3b"
-      ]
+      "connections": ["3726d8567388a6adc1b41a4a80ee5f51", "336dc7c541cf4dd8000964303400ef3b"]
     },
     {
       "systemId": "3988610b6ce42f5098da348bffcb5a50",
@@ -14482,10 +13826,7 @@
       },
       "sectorId": "sector-1",
       "subSectorId": "subsector-1-8",
-      "connections": [
-        "25461e8060024ec9e31d97c07e073989",
-        "714d987dfe8ef3664d6b2d2f084eb005"
-      ]
+      "connections": ["25461e8060024ec9e31d97c07e073989", "714d987dfe8ef3664d6b2d2f084eb005"]
     },
     {
       "systemId": "8efe0e581b1ad7ea575a56444d03134b",
@@ -14606,10 +13947,7 @@
       },
       "sectorId": "sector-107",
       "subSectorId": "subsector-107-22",
-      "connections": [
-        "79648e6cbd4e37c97d005bf5f7078a66",
-        "cce753ebafa314854f6e7478da4a4e00"
-      ]
+      "connections": ["79648e6cbd4e37c97d005bf5f7078a66", "cce753ebafa314854f6e7478da4a4e00"]
     },
     {
       "systemId": "db986e36b9069473006ba10b0dffb34c",
@@ -14636,10 +13974,7 @@
       },
       "sectorId": "sector-65",
       "subSectorId": "subsector-65-5",
-      "connections": [
-        "f33f712b7696977cc9bde9bcbd974461",
-        "071ca0461406d6c2a133a624ff05dcae"
-      ]
+      "connections": ["f33f712b7696977cc9bde9bcbd974461", "071ca0461406d6c2a133a624ff05dcae"]
     },
     {
       "systemId": "55bd12ebb441e07b01290257bfd01cc9",
@@ -14666,10 +14001,7 @@
       },
       "sectorId": "sector-80",
       "subSectorId": "subsector-80-0",
-      "connections": [
-        "427d5f2320b819890d36976562453a35",
-        "1886e0e01ed5ac9bcb9d0ad85ac719c5"
-      ]
+      "connections": ["427d5f2320b819890d36976562453a35", "1886e0e01ed5ac9bcb9d0ad85ac719c5"]
     },
     {
       "systemId": "84ac9b9490814c34b8e993cc1902c2a7",
@@ -14696,10 +14028,7 @@
       },
       "sectorId": "sector-65",
       "subSectorId": "subsector-65-10",
-      "connections": [
-        "f33f712b7696977cc9bde9bcbd974461",
-        "932e6dda43e01cdb023d8ac614c78458"
-      ]
+      "connections": ["f33f712b7696977cc9bde9bcbd974461", "932e6dda43e01cdb023d8ac614c78458"]
     },
     {
       "systemId": "2dc5616da21595425762eca8a154e66c",
@@ -14726,9 +14055,7 @@
       },
       "sectorId": "sector-38",
       "subSectorId": "subsector-38-6",
-      "connections": [
-        "8dd9ddc8fbbd63aab258621d38ade1ab"
-      ]
+      "connections": ["8dd9ddc8fbbd63aab258621d38ade1ab"]
     },
     {
       "systemId": "acaf72de364a9d4c1400c6dfeb7cfbda",
@@ -14817,10 +14144,7 @@
       },
       "sectorId": "sector-78",
       "subSectorId": "subsector-78-9",
-      "connections": [
-        "9cea52a2c135090dcae3cd01045ca9bd",
-        "e11904df650b36dc2fd6dc4783c81e55"
-      ]
+      "connections": ["9cea52a2c135090dcae3cd01045ca9bd", "e11904df650b36dc2fd6dc4783c81e55"]
     },
     {
       "systemId": "f01c75178bf1c3450bef2696d967b6bb",
@@ -14910,9 +14234,7 @@
       },
       "sectorId": "sector-36",
       "subSectorId": "subsector-36-9",
-      "connections": [
-        "4d098f6138f3a6b550bb81f129e658ae"
-      ]
+      "connections": ["4d098f6138f3a6b550bb81f129e658ae"]
     },
     {
       "systemId": "07d7528ed5df663a5769d40d8909dbf1",
@@ -14939,9 +14261,7 @@
       },
       "sectorId": "sector-26",
       "subSectorId": "subsector-26-1",
-      "connections": [
-        "676907f50d3eb0c9cc08d8f5fedff3c6"
-      ]
+      "connections": ["676907f50d3eb0c9cc08d8f5fedff3c6"]
     },
     {
       "systemId": "1808ccdf4565aac078bac8717d92dd03",
@@ -14968,10 +14288,7 @@
       },
       "sectorId": "sector-87",
       "subSectorId": "subsector-87-14",
-      "connections": [
-        "e79673f7f7fee114b89c3e4977cf7da8",
-        "14ca135f969c567920bc300a0fee871f"
-      ]
+      "connections": ["e79673f7f7fee114b89c3e4977cf7da8", "14ca135f969c567920bc300a0fee871f"]
     },
     {
       "systemId": "afeca3afe65bf3e04c5f1a7695ce3533",
@@ -15030,10 +14347,7 @@
       },
       "sectorId": "sector-5",
       "subSectorId": "subsector-5-12",
-      "connections": [
-        "035ad3faf26116c79564de65f85c83ee",
-        "4e23607021b138482a1b1246c1950e9f"
-      ]
+      "connections": ["035ad3faf26116c79564de65f85c83ee", "4e23607021b138482a1b1246c1950e9f"]
     },
     {
       "systemId": "8a78d9a76274e335ad8d6f77fd81cacb",
@@ -15060,10 +14374,7 @@
       },
       "sectorId": "sector-34",
       "subSectorId": "subsector-34-1",
-      "connections": [
-        "a3d50f2c5374deeac67867e6d6682947",
-        "d194b91da1edee11ba136e90ef80fc36"
-      ]
+      "connections": ["a3d50f2c5374deeac67867e6d6682947", "d194b91da1edee11ba136e90ef80fc36"]
     },
     {
       "systemId": "5e4fe2ce707e0a8a3a8ab0b089ee628e",
@@ -15183,10 +14494,7 @@
       },
       "sectorId": "sector-63",
       "subSectorId": "subsector-63-15",
-      "connections": [
-        "e2bb09f1bbcd2ca58a6543a798e7686b",
-        "8d4ec34bba8b86fb8bd086415b282331"
-      ]
+      "connections": ["e2bb09f1bbcd2ca58a6543a798e7686b", "8d4ec34bba8b86fb8bd086415b282331"]
     },
     {
       "systemId": "1d01ed6d9705c466d4c41ff5a7e254e8",
@@ -15213,9 +14521,7 @@
       },
       "sectorId": "sector-90",
       "subSectorId": "subsector-90-15",
-      "connections": [
-        "942f983070399251a9896d59d54aac8a"
-      ]
+      "connections": ["942f983070399251a9896d59d54aac8a"]
     },
     {
       "systemId": "b116da578555f847ca19c1a2c7f98525",
@@ -15242,10 +14548,7 @@
       },
       "sectorId": "sector-104",
       "subSectorId": "subsector-104-8",
-      "connections": [
-        "7c7d5b403245019a74d734a19e869b54",
-        "48ffd8595786b752af5e7b435d765d2b"
-      ]
+      "connections": ["7c7d5b403245019a74d734a19e869b54", "48ffd8595786b752af5e7b435d765d2b"]
     },
     {
       "systemId": "47a51df9eefe12647bb9731d962d4f7b",
@@ -15272,10 +14575,7 @@
       },
       "sectorId": "sector-13",
       "subSectorId": "subsector-13-10",
-      "connections": [
-        "462b5e4ff151b8bac30d9349070fd3a0",
-        "74dae175a253f5c30532f5e9ffc0e8de"
-      ]
+      "connections": ["462b5e4ff151b8bac30d9349070fd3a0", "74dae175a253f5c30532f5e9ffc0e8de"]
     },
     {
       "systemId": "767591f44b5d2228d8b89aa8ee7b45a9",
@@ -15333,10 +14633,7 @@
       },
       "sectorId": "sector-88",
       "subSectorId": "subsector-88-22",
-      "connections": [
-        "ed9845fa6898abc6e41476a10c2c123c",
-        "1808ccdf4565aac078bac8717d92dd03"
-      ]
+      "connections": ["ed9845fa6898abc6e41476a10c2c123c", "1808ccdf4565aac078bac8717d92dd03"]
     },
     {
       "systemId": "86e33cc095ff0747abf51a53cf09b90c",
@@ -15395,10 +14692,7 @@
       },
       "sectorId": "sector-11",
       "subSectorId": "subsector-11-7",
-      "connections": [
-        "afa1aeec8b765fac13cf9e55ecb9d7e5",
-        "f007c5ffec59dab74f4dbfac12403e39"
-      ]
+      "connections": ["afa1aeec8b765fac13cf9e55ecb9d7e5", "f007c5ffec59dab74f4dbfac12403e39"]
     },
     {
       "systemId": "d004880e6e38bb013718885ddf55da1d",
@@ -15425,10 +14719,7 @@
       },
       "sectorId": "sector-106",
       "subSectorId": "subsector-106-15",
-      "connections": [
-        "ef8119413638ddcaf323c712d7454280",
-        "7aff79bdf54540405ecc72fd7a057c72"
-      ]
+      "connections": ["ef8119413638ddcaf323c712d7454280", "7aff79bdf54540405ecc72fd7a057c72"]
     },
     {
       "systemId": "1ef59a64aa3e127f820a71be9b4d6716",
@@ -15486,10 +14777,7 @@
       },
       "sectorId": "sector-26",
       "subSectorId": "subsector-26-13",
-      "connections": [
-        "5a3a3e5c9011dffd226321b0acc1df2d",
-        "85ba4421df060f1e1ec65014b9866e5c"
-      ]
+      "connections": ["5a3a3e5c9011dffd226321b0acc1df2d", "85ba4421df060f1e1ec65014b9866e5c"]
     },
     {
       "systemId": "fcb5b62677817e947495922392bcf4cf",
@@ -15581,10 +14869,7 @@
       },
       "sectorId": "sector-42",
       "subSectorId": "subsector-42-7",
-      "connections": [
-        "83695c730f47bd09fc5de42ccca2ddef",
-        "ba8108b0680cda56f1dda9d211d72daa"
-      ]
+      "connections": ["83695c730f47bd09fc5de42ccca2ddef", "ba8108b0680cda56f1dda9d211d72daa"]
     },
     {
       "systemId": "9781139e9fec1c26e5901ff5d9c7373e",
@@ -15706,9 +14991,7 @@
       },
       "sectorId": "sector-20",
       "subSectorId": "subsector-20-8",
-      "connections": [
-        "21bb0f82a26ece8dfee6194ca96f8552"
-      ]
+      "connections": ["21bb0f82a26ece8dfee6194ca96f8552"]
     },
     {
       "systemId": "e77b5f10751a862a01ca3583134f1712",
@@ -15766,10 +15049,7 @@
       },
       "sectorId": "sector-11",
       "subSectorId": "subsector-11-9",
-      "connections": [
-        "fa49d78e3ed6119c54513eb69313d68f",
-        "56b00576d7af5da418b90f387f252652"
-      ]
+      "connections": ["fa49d78e3ed6119c54513eb69313d68f", "56b00576d7af5da418b90f387f252652"]
     },
     {
       "systemId": "f7bf1dac70fc79c9b365accf54b6ef68",
@@ -15828,10 +15108,7 @@
       },
       "sectorId": "sector-53",
       "subSectorId": "subsector-53-6",
-      "connections": [
-        "b2d4653d9614c19daa2559cafafa0943",
-        "282560ed84a0d42aaa09f13f249596f8"
-      ]
+      "connections": ["b2d4653d9614c19daa2559cafafa0943", "282560ed84a0d42aaa09f13f249596f8"]
     },
     {
       "systemId": "7776f57dc2d58f3e51279ee68b5c102f",
@@ -15983,10 +15260,7 @@
       },
       "sectorId": "sector-28",
       "subSectorId": "subsector-28-11",
-      "connections": [
-        "c7b0aacb6fa92e28beff459d93a0f058",
-        "afeca3afe65bf3e04c5f1a7695ce3533"
-      ]
+      "connections": ["c7b0aacb6fa92e28beff459d93a0f058", "afeca3afe65bf3e04c5f1a7695ce3533"]
     },
     {
       "systemId": "044858c347afe81e8a39c68116f4a22e",
@@ -16075,10 +15349,7 @@
       },
       "sectorId": "sector-105",
       "subSectorId": "subsector-105-11",
-      "connections": [
-        "8067737765abeb7e3e7f89a9a904b04a",
-        "c8b8294f4c647397bae085d40d24ac7a"
-      ]
+      "connections": ["8067737765abeb7e3e7f89a9a904b04a", "c8b8294f4c647397bae085d40d24ac7a"]
     },
     {
       "systemId": "8067737765abeb7e3e7f89a9a904b04a",
@@ -16229,10 +15500,7 @@
       },
       "sectorId": "sector-50",
       "subSectorId": "subsector-50-22",
-      "connections": [
-        "8742654d4f4102256216dc483e1c3198",
-        "b898ef122dc5326b7be03f0f14078f50"
-      ]
+      "connections": ["8742654d4f4102256216dc483e1c3198", "b898ef122dc5326b7be03f0f14078f50"]
     },
     {
       "systemId": "fcfa77e226f5657a84698c9034282f23",
@@ -16259,10 +15527,7 @@
       },
       "sectorId": "sector-12",
       "subSectorId": "subsector-12-6",
-      "connections": [
-        "10dccd8e4792a83f04571130c3cff08b",
-        "5df2537e80712659e5580e73498f8162"
-      ]
+      "connections": ["10dccd8e4792a83f04571130c3cff08b", "5df2537e80712659e5580e73498f8162"]
     },
     {
       "systemId": "942f983070399251a9896d59d54aac8a",
@@ -16355,10 +15620,7 @@
       },
       "sectorId": "sector-99",
       "subSectorId": "subsector-99-13",
-      "connections": [
-        "c24bdf7dd73dd00cc674d62ed68da657",
-        "9dc950dc6706f6c5b7d95cca0160ff64"
-      ]
+      "connections": ["c24bdf7dd73dd00cc674d62ed68da657", "9dc950dc6706f6c5b7d95cca0160ff64"]
     },
     {
       "systemId": "2c4de11ff78806af610ff9a2854396f2",
@@ -16385,9 +15647,7 @@
       },
       "sectorId": "sector-30",
       "subSectorId": "subsector-30-13",
-      "connections": [
-        "1de06682718a414259ed39507e0259b6"
-      ]
+      "connections": ["1de06682718a414259ed39507e0259b6"]
     },
     {
       "systemId": "84b30ff594e60c1a5ef064a7afa29126",
@@ -16446,10 +15706,7 @@
       },
       "sectorId": "sector-7",
       "subSectorId": "subsector-7-14",
-      "connections": [
-        "1f87982f87b1988866cebffe3208019e",
-        "6066e2ab1e2b1576b6df6b7eaeaad0b4"
-      ]
+      "connections": ["1f87982f87b1988866cebffe3208019e", "6066e2ab1e2b1576b6df6b7eaeaad0b4"]
     },
     {
       "systemId": "54d1a4867d0c5454e7af252613d07f3a",
@@ -16507,10 +15764,7 @@
       },
       "sectorId": "sector-39",
       "subSectorId": "subsector-39-18",
-      "connections": [
-        "d917caa4db0d36eb05318f9b18f87df8",
-        "461831ed66a976e0af1617a8846c027f"
-      ]
+      "connections": ["d917caa4db0d36eb05318f9b18f87df8", "461831ed66a976e0af1617a8846c027f"]
     },
     {
       "systemId": "f5d14a10e87cdfee4a9515712add4a05",
@@ -16633,10 +15887,7 @@
       },
       "sectorId": "sector-76",
       "subSectorId": "subsector-76-6",
-      "connections": [
-        "c27f17610e03c0d3cd018c76fdb7bc3c",
-        "02addf847041b8ddfff3259e790af88c"
-      ]
+      "connections": ["c27f17610e03c0d3cd018c76fdb7bc3c", "02addf847041b8ddfff3259e790af88c"]
     },
     {
       "systemId": "cce753ebafa314854f6e7478da4a4e00",
@@ -16726,10 +15977,7 @@
       },
       "sectorId": "sector-62",
       "subSectorId": "subsector-62-14",
-      "connections": [
-        "5c9bfdb44e45c88af9d7b8b972ac98d0",
-        "6e7e2942cc0ed9af326b6301a01c0713"
-      ]
+      "connections": ["5c9bfdb44e45c88af9d7b8b972ac98d0", "6e7e2942cc0ed9af326b6301a01c0713"]
     },
     {
       "systemId": "eebfdd92677f64c9df26c985c731b273",
@@ -16756,9 +16004,7 @@
       },
       "sectorId": "sector-55",
       "subSectorId": "subsector-55-5",
-      "connections": [
-        "044858c347afe81e8a39c68116f4a22e"
-      ]
+      "connections": ["044858c347afe81e8a39c68116f4a22e"]
     },
     {
       "systemId": "7e0f023fbf90bc1594ba6c473bd2a3e7",
@@ -16816,10 +16062,7 @@
       },
       "sectorId": "sector-29",
       "subSectorId": "subsector-29-22",
-      "connections": [
-        "85ba4421df060f1e1ec65014b9866e5c",
-        "25fe0d0852ae79c5ce335dca9064446b"
-      ]
+      "connections": ["85ba4421df060f1e1ec65014b9866e5c", "25fe0d0852ae79c5ce335dca9064446b"]
     },
     {
       "systemId": "346349786e9673abe0a4b2fcd7d3ca2f",
@@ -16877,9 +16120,7 @@
       },
       "sectorId": "sector-27",
       "subSectorId": "subsector-27-10",
-      "connections": [
-        "92e0be4581e6e4683b732c1d6484b00c"
-      ]
+      "connections": ["92e0be4581e6e4683b732c1d6484b00c"]
     },
     {
       "systemId": "69b02d9b33a73f6aa0ae9b355051a0aa",
@@ -16906,10 +16147,7 @@
       },
       "sectorId": "sector-45",
       "subSectorId": "subsector-45-8",
-      "connections": [
-        "2755912906f8eba1c925b9b8749e377f",
-        "e11b5bbe11c629f3c100296520cd58b5"
-      ]
+      "connections": ["2755912906f8eba1c925b9b8749e377f", "e11b5bbe11c629f3c100296520cd58b5"]
     },
     {
       "systemId": "2838e293e3e3e3b927134afd8a9eae08",
@@ -16967,10 +16205,7 @@
       },
       "sectorId": "sector-21",
       "subSectorId": "subsector-21-21",
-      "connections": [
-        "9781139e9fec1c26e5901ff5d9c7373e",
-        "0f110be13cd935d898f416dc4a52ef2e"
-      ]
+      "connections": ["9781139e9fec1c26e5901ff5d9c7373e", "0f110be13cd935d898f416dc4a52ef2e"]
     },
     {
       "systemId": "f007c5ffec59dab74f4dbfac12403e39",
@@ -17028,9 +16263,7 @@
       },
       "sectorId": "sector-39",
       "subSectorId": "subsector-39-4",
-      "connections": [
-        "df037a9e79abb31729693e2b9a44f7b4"
-      ]
+      "connections": ["df037a9e79abb31729693e2b9a44f7b4"]
     },
     {
       "systemId": "56f5c8a013030c375e502c1885ec4152",
@@ -17088,9 +16321,7 @@
       },
       "sectorId": "sector-42",
       "subSectorId": "subsector-42-16",
-      "connections": [
-        "83695c730f47bd09fc5de42ccca2ddef"
-      ]
+      "connections": ["83695c730f47bd09fc5de42ccca2ddef"]
     },
     {
       "systemId": "759c71906cd2020510a038b70ba7d6fc",
@@ -17211,9 +16442,7 @@
       },
       "sectorId": "sector-5",
       "subSectorId": "subsector-5-9",
-      "connections": [
-        "11966178feb8bc3ff30426fbf527b8d0"
-      ]
+      "connections": ["11966178feb8bc3ff30426fbf527b8d0"]
     },
     {
       "systemId": "b898ef122dc5326b7be03f0f14078f50",
@@ -17302,10 +16531,7 @@
       },
       "sectorId": "sector-68",
       "subSectorId": "subsector-68-1",
-      "connections": [
-        "69b2a9f696e89595e5470de70ec46d09",
-        "985e1253c0d9cdb7683e64fefc51a742"
-      ]
+      "connections": ["69b2a9f696e89595e5470de70ec46d09", "985e1253c0d9cdb7683e64fefc51a742"]
     },
     {
       "systemId": "18154baa80b97d0e583e21fe12d362b8",
@@ -17332,10 +16558,7 @@
       },
       "sectorId": "sector-90",
       "subSectorId": "subsector-90-1",
-      "connections": [
-        "6bed6a221b4d480f2472aa486636fab0",
-        "14aaa3963a17fd6fe8a317285c859240"
-      ]
+      "connections": ["6bed6a221b4d480f2472aa486636fab0", "14aaa3963a17fd6fe8a317285c859240"]
     },
     {
       "systemId": "655b5cecb3aa70ca02080d8f16c67035",
@@ -17362,10 +16585,7 @@
       },
       "sectorId": "sector-2",
       "subSectorId": "subsector-2-17",
-      "connections": [
-        "ac3ccd5325b3912ec0fb1179a25f232c",
-        "a4a61946de1849fe1375a9ae3cde0bc0"
-      ]
+      "connections": ["ac3ccd5325b3912ec0fb1179a25f232c", "a4a61946de1849fe1375a9ae3cde0bc0"]
     },
     {
       "systemId": "f6a3919d24ecb2322863a26530cd9088",
@@ -17456,9 +16676,7 @@
       },
       "sectorId": "sector-91",
       "subSectorId": "subsector-91-13",
-      "connections": [
-        "fcb5b62677817e947495922392bcf4cf"
-      ]
+      "connections": ["fcb5b62677817e947495922392bcf4cf"]
     },
     {
       "systemId": "358fd436602ed53b8e54fd6e2694caa6",
@@ -17548,10 +16766,7 @@
       },
       "sectorId": "sector-46",
       "subSectorId": "subsector-46-5",
-      "connections": [
-        "014421a50088da622befe22fe1b12e7e",
-        "d79224094f1c0ab5036659dc4d04845b"
-      ]
+      "connections": ["014421a50088da622befe22fe1b12e7e", "d79224094f1c0ab5036659dc4d04845b"]
     },
     {
       "systemId": "43d329f0b5ee4954e1650f3d9a30c958",
@@ -17578,10 +16793,7 @@
       },
       "sectorId": "sector-26",
       "subSectorId": "subsector-26-23",
-      "connections": [
-        "5a3a3e5c9011dffd226321b0acc1df2d",
-        "389da879d610555be28d7459e5b518fa"
-      ]
+      "connections": ["5a3a3e5c9011dffd226321b0acc1df2d", "389da879d610555be28d7459e5b518fa"]
     },
     {
       "systemId": "afda9bea7f948f4a066a8882cdfa9055",
@@ -17640,10 +16852,7 @@
       },
       "sectorId": "sector-101",
       "subSectorId": "subsector-101-4",
-      "connections": [
-        "85f26581165a17192f9561093243032f",
-        "41ae6b68b9b39dc882bcf64fec0aeb66"
-      ]
+      "connections": ["85f26581165a17192f9561093243032f", "41ae6b68b9b39dc882bcf64fec0aeb66"]
     },
     {
       "systemId": "7b72a71671f582113f91df20da61b6fb",
@@ -17670,10 +16879,7 @@
       },
       "sectorId": "sector-102",
       "subSectorId": "subsector-102-15",
-      "connections": [
-        "4880f40b7a01458ef0768a72a574598c",
-        "9fcaae94376689a3b5cd787499a29040"
-      ]
+      "connections": ["4880f40b7a01458ef0768a72a574598c", "9fcaae94376689a3b5cd787499a29040"]
     },
     {
       "systemId": "b57e5fa08833422c1da36e6cfb992f27",
@@ -17700,10 +16906,7 @@
       },
       "sectorId": "sector-59",
       "subSectorId": "subsector-59-16",
-      "connections": [
-        "7fbe482c790a43aa506ee23325ddbfc5",
-        "427d5f2320b819890d36976562453a35"
-      ]
+      "connections": ["7fbe482c790a43aa506ee23325ddbfc5", "427d5f2320b819890d36976562453a35"]
     },
     {
       "systemId": "e9ee44c29af35dae80be84474852316b",
@@ -17730,9 +16933,7 @@
       },
       "sectorId": "sector-44",
       "subSectorId": "subsector-44-14",
-      "connections": [
-        "36800ca424af8b9fd8ca0e96b70e4647"
-      ]
+      "connections": ["36800ca424af8b9fd8ca0e96b70e4647"]
     },
     {
       "systemId": "9348e317c3fb1baa09ca61290e71dd2d",
@@ -17821,10 +17022,7 @@
       },
       "sectorId": "sector-92",
       "subSectorId": "subsector-92-8",
-      "connections": [
-        "c7584851e1eb724f37090a3e806c4f82",
-        "7216cf2eeef7e36a121b9d6edacc9400"
-      ]
+      "connections": ["c7584851e1eb724f37090a3e806c4f82", "7216cf2eeef7e36a121b9d6edacc9400"]
     },
     {
       "systemId": "01d637b2690bccfa60269f43f86a0328",
@@ -17882,10 +17080,7 @@
       },
       "sectorId": "sector-72",
       "subSectorId": "subsector-72-17",
-      "connections": [
-        "94dff756b3039caa9963d9d70b4f2609",
-        "b9f56e8983af6494076a224811616485"
-      ]
+      "connections": ["94dff756b3039caa9963d9d70b4f2609", "b9f56e8983af6494076a224811616485"]
     },
     {
       "systemId": "cc2c8403f63cc01c733d9a53a7d2b307",
@@ -17912,9 +17107,7 @@
       },
       "sectorId": "sector-106",
       "subSectorId": "subsector-106-3",
-      "connections": [
-        "ef8119413638ddcaf323c712d7454280"
-      ]
+      "connections": ["ef8119413638ddcaf323c712d7454280"]
     },
     {
       "systemId": "c27937cfd483159e8eb1e305361e70b4",
@@ -18038,9 +17231,7 @@
       },
       "sectorId": "sector-14",
       "subSectorId": "subsector-14-17",
-      "connections": [
-        "4c9f54c135411b664fd2af52326f80b4"
-      ]
+      "connections": ["4c9f54c135411b664fd2af52326f80b4"]
     },
     {
       "systemId": "9667f69f883e9aaaf8aa8f7db7da89dd",
@@ -18067,9 +17258,7 @@
       },
       "sectorId": "sector-96",
       "subSectorId": "subsector-96-8",
-      "connections": [
-        "8c9d5a43e7d3f199f1af304904045c56"
-      ]
+      "connections": ["8c9d5a43e7d3f199f1af304904045c56"]
     },
     {
       "systemId": "336dc7c541cf4dd8000964303400ef3b",
@@ -18191,10 +17380,7 @@
       },
       "sectorId": "sector-95",
       "subSectorId": "subsector-95-12",
-      "connections": [
-        "1735fd86d23c9ad0523761c36050f1a4",
-        "d654e6074487cb2d5664a9b69c23da6b"
-      ]
+      "connections": ["1735fd86d23c9ad0523761c36050f1a4", "d654e6074487cb2d5664a9b69c23da6b"]
     },
     {
       "systemId": "b3ee0e89b2547c94b3561607225e0f17",
@@ -18221,10 +17407,7 @@
       },
       "sectorId": "sector-13",
       "subSectorId": "subsector-13-19",
-      "connections": [
-        "651bab1e33aa2679c8558b453360a5ac",
-        "aa0db74b00f7d66ade275b221edafd75"
-      ]
+      "connections": ["651bab1e33aa2679c8558b453360a5ac", "aa0db74b00f7d66ade275b221edafd75"]
     },
     {
       "systemId": "d595750ec5b15de7ad70e26db3c75bd7",
@@ -18251,10 +17434,7 @@
       },
       "sectorId": "sector-75",
       "subSectorId": "subsector-75-22",
-      "connections": [
-        "8c0bb594af979db40df21ced02234f73",
-        "57d5247b69e404a1934172e90835408a"
-      ]
+      "connections": ["8c0bb594af979db40df21ced02234f73", "57d5247b69e404a1934172e90835408a"]
     },
     {
       "systemId": "9fcaae94376689a3b5cd787499a29040",
@@ -18378,10 +17558,7 @@
       },
       "sectorId": "sector-81",
       "subSectorId": "subsector-81-20",
-      "connections": [
-        "b68ff03ba0b64cb3ef90f33dc09bf37e",
-        "49a4800c3d324a16639e54ef4aa6c587"
-      ]
+      "connections": ["b68ff03ba0b64cb3ef90f33dc09bf37e", "49a4800c3d324a16639e54ef4aa6c587"]
     },
     {
       "systemId": "6aa86509e9074c6e2e7d4841cd5c4a64",
@@ -18408,10 +17585,7 @@
       },
       "sectorId": "sector-32",
       "subSectorId": "subsector-32-0",
-      "connections": [
-        "20981f589edbd8e9178dbfbf493d7055",
-        "d06f82bd4862dcc3b4fa52fca1c9ca48"
-      ]
+      "connections": ["20981f589edbd8e9178dbfbf493d7055", "d06f82bd4862dcc3b4fa52fca1c9ca48"]
     },
     {
       "systemId": "c5a14a76a6ad8ea6234c6c1a6709604f",
@@ -18438,10 +17612,7 @@
       },
       "sectorId": "sector-48",
       "subSectorId": "subsector-48-2",
-      "connections": [
-        "523617b002e2199f45e348e50e5004b3",
-        "0275f4e4aab67e79df01828d6b8ff23b"
-      ]
+      "connections": ["523617b002e2199f45e348e50e5004b3", "0275f4e4aab67e79df01828d6b8ff23b"]
     },
     {
       "systemId": "05967fc0c25d03e95bc9191b5babd156",
@@ -18468,10 +17639,7 @@
       },
       "sectorId": "sector-89",
       "subSectorId": "subsector-89-23",
-      "connections": [
-        "d1b961097ad5fa2e75e6a0bce4695f58",
-        "358fd436602ed53b8e54fd6e2694caa6"
-      ]
+      "connections": ["d1b961097ad5fa2e75e6a0bce4695f58", "358fd436602ed53b8e54fd6e2694caa6"]
     },
     {
       "systemId": "18c4fa43503cca47e7d019e95833b138",
@@ -18560,10 +17728,7 @@
       },
       "sectorId": "sector-33",
       "subSectorId": "subsector-33-15",
-      "connections": [
-        "deb2238ec18d6751b9077e2fef27d2d4",
-        "20981f589edbd8e9178dbfbf493d7055"
-      ]
+      "connections": ["deb2238ec18d6751b9077e2fef27d2d4", "20981f589edbd8e9178dbfbf493d7055"]
     },
     {
       "systemId": "a3d50f2c5374deeac67867e6d6682947",
@@ -18714,10 +17879,7 @@
       },
       "sectorId": "sector-12",
       "subSectorId": "subsector-12-23",
-      "connections": [
-        "c3d18bc29e9daac072cf87fd58c6d5fa",
-        "6ee18047ce7831cf5859d4dc22217043"
-      ]
+      "connections": ["c3d18bc29e9daac072cf87fd58c6d5fa", "6ee18047ce7831cf5859d4dc22217043"]
     },
     {
       "systemId": "7c571f8a1f3bffb03477ed78da35e38c",
@@ -18776,10 +17938,7 @@
       },
       "sectorId": "sector-15",
       "subSectorId": "subsector-15-20",
-      "connections": [
-        "f6bf78e1309755b6dfdea606ac36bec8",
-        "ed82f150ae30b5f9ef7dcbdb01d226b4"
-      ]
+      "connections": ["f6bf78e1309755b6dfdea606ac36bec8", "ed82f150ae30b5f9ef7dcbdb01d226b4"]
     },
     {
       "systemId": "ed26b3e5b11a44fd544611046060e5e5",
@@ -18806,10 +17965,7 @@
       },
       "sectorId": "sector-22",
       "subSectorId": "subsector-22-16",
-      "connections": [
-        "6fcfe8b4087a0b964ccc698e066416ec",
-        "ff8bd00aa04b6cd13b038b5e17c0954a"
-      ]
+      "connections": ["6fcfe8b4087a0b964ccc698e066416ec", "ff8bd00aa04b6cd13b038b5e17c0954a"]
     },
     {
       "systemId": "f56e1f31ba3ac98d8f0875e91cbcc850",
@@ -18836,10 +17992,7 @@
       },
       "sectorId": "sector-61",
       "subSectorId": "subsector-61-16",
-      "connections": [
-        "7eb87450fab38d5a2d8316ccb9175af9",
-        "fbbf232ab076c0ae572ba4e98b994317"
-      ]
+      "connections": ["7eb87450fab38d5a2d8316ccb9175af9", "fbbf232ab076c0ae572ba4e98b994317"]
     },
     {
       "systemId": "7d295f409aa4829a2528c3b62cb7a79b",
@@ -18866,9 +18019,7 @@
       },
       "sectorId": "sector-47",
       "subSectorId": "subsector-47-6",
-      "connections": [
-        "5138e00cb601babcd5859b26339ecf6e"
-      ]
+      "connections": ["5138e00cb601babcd5859b26339ecf6e"]
     },
     {
       "systemId": "936ec33054ffdf447d422ae87cc97f63",
@@ -18895,9 +18046,7 @@
       },
       "sectorId": "sector-38",
       "subSectorId": "subsector-38-16",
-      "connections": [
-        "77869fe0e508d3386b3a0635aec0d861"
-      ]
+      "connections": ["77869fe0e508d3386b3a0635aec0d861"]
     },
     {
       "systemId": "336370442f4a169719081c0d5924693d",
@@ -19017,10 +18166,7 @@
       },
       "sectorId": "sector-28",
       "subSectorId": "subsector-28-1",
-      "connections": [
-        "c7b0aacb6fa92e28beff459d93a0f058",
-        "15be174b3a40b51252a4b3d117045664"
-      ]
+      "connections": ["c7b0aacb6fa92e28beff459d93a0f058", "15be174b3a40b51252a4b3d117045664"]
     },
     {
       "systemId": "99407a57f4ce8c0f21f40bf17f4bdd77",
@@ -19079,10 +18225,7 @@
       },
       "sectorId": "sector-94",
       "subSectorId": "subsector-94-5",
-      "connections": [
-        "1ab2d0bddb63cf5a98d72bf7312aa849",
-        "0bcaf82789f8394e029cb2fd0f6113a2"
-      ]
+      "connections": ["1ab2d0bddb63cf5a98d72bf7312aa849", "0bcaf82789f8394e029cb2fd0f6113a2"]
     },
     {
       "systemId": "e7b81360554cfd1e10977d34a3e2b53a",
@@ -19141,10 +18284,7 @@
       },
       "sectorId": "sector-75",
       "subSectorId": "subsector-75-1",
-      "connections": [
-        "d595750ec5b15de7ad70e26db3c75bd7",
-        "0c8e947391c5402a8300876b16598073"
-      ]
+      "connections": ["d595750ec5b15de7ad70e26db3c75bd7", "0c8e947391c5402a8300876b16598073"]
     },
     {
       "systemId": "53aaa838d80d3aba382f558e5ec50db5",
@@ -19171,10 +18311,7 @@
       },
       "sectorId": "sector-36",
       "subSectorId": "subsector-36-21",
-      "connections": [
-        "a441ac0097030d519de5f8c2b822b558",
-        "5a576d0587306acaa11514a879b6966b"
-      ]
+      "connections": ["a441ac0097030d519de5f8c2b822b558", "5a576d0587306acaa11514a879b6966b"]
     },
     {
       "systemId": "d06f82bd4862dcc3b4fa52fca1c9ca48",
@@ -19201,10 +18338,7 @@
       },
       "sectorId": "sector-36",
       "subSectorId": "subsector-36-5",
-      "connections": [
-        "9e0f4a18381e14dcf7f525c027b62314",
-        "6aa86509e9074c6e2e7d4841cd5c4a64"
-      ]
+      "connections": ["9e0f4a18381e14dcf7f525c027b62314", "6aa86509e9074c6e2e7d4841cd5c4a64"]
     },
     {
       "systemId": "e9765643b7f8cd3d9508900962edd1e8",
@@ -19262,10 +18396,7 @@
       },
       "sectorId": "sector-16",
       "subSectorId": "subsector-16-22",
-      "connections": [
-        "334d3d0b29cbaf87644eab1e69222384",
-        "ed82f150ae30b5f9ef7dcbdb01d226b4"
-      ]
+      "connections": ["334d3d0b29cbaf87644eab1e69222384", "ed82f150ae30b5f9ef7dcbdb01d226b4"]
     },
     {
       "systemId": "6ee18047ce7831cf5859d4dc22217043",
@@ -19354,9 +18485,7 @@
       },
       "sectorId": "sector-106",
       "subSectorId": "subsector-106-10",
-      "connections": [
-        "7aff79bdf54540405ecc72fd7a057c72"
-      ]
+      "connections": ["7aff79bdf54540405ecc72fd7a057c72"]
     },
     {
       "systemId": "3afeb62d02c61ce8e6a71008f76b04c2",
@@ -19477,10 +18606,7 @@
       },
       "sectorId": "sector-105",
       "subSectorId": "subsector-105-17",
-      "connections": [
-        "0c2ffbe2cd08849b4b37c0aa76e14fba",
-        "8067737765abeb7e3e7f89a9a904b04a"
-      ]
+      "connections": ["0c2ffbe2cd08849b4b37c0aa76e14fba", "8067737765abeb7e3e7f89a9a904b04a"]
     },
     {
       "systemId": "ac35dd2a980e53fedd1a4fe87a909972",
@@ -19507,10 +18633,7 @@
       },
       "sectorId": "sector-56",
       "subSectorId": "subsector-56-4",
-      "connections": [
-        "f02f1292a7520f7bc96453010102f8c1",
-        "66a9e561febf0198334ee2fa29299440"
-      ]
+      "connections": ["f02f1292a7520f7bc96453010102f8c1", "66a9e561febf0198334ee2fa29299440"]
     }
   ]
 }

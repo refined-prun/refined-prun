@@ -27,21 +27,21 @@ export default defineConfig({
       outputPath: outDir,
     }),
     watchPublicPlugin(),
-    makeManifestPlugin({ 
+    makeManifestPlugin({
       outDir,
       manifestFile,
     }),
     isDev &&
-    watchRebuildPlugin({
-      options: {
-        'socket-io-proxy': {
-          skip: true,
+      watchRebuildPlugin({
+        options: {
+          'socket-io-proxy': {
+            skip: true,
+          },
+          'socket-io-proxy-inject': {
+            skip: true,
+          },
         },
-        'socket-io-proxy-inject': {
-          skip: true,
-        },
-      },
-    }),
+      }),
   ],
   publicDir: resolve(rootDir, 'public'),
   build: {
