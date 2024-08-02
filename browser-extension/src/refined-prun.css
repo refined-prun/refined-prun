@@ -404,12 +404,6 @@ td.burn-red-no-hover {
   color: #1e1e1e;
 }
 
-.notification {
-  display: inline-block;
-  min-width: 65px;
-  max-width: 65px;
-}
-
 .fin-box {
   margin: 1px;
   min-width: 100px;

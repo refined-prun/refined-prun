@@ -1,6 +1,5 @@
 import { ModuleRunner } from './ModuleRunner';
 import { OrderETAs } from '@src/features/OrderETAs';
-import { Notifications } from '@src/features/Notifications';
 import { getCXPrices, getPrices } from './BackgroundRunner';
 import { getSpecial } from './util';
 import { appendStyle, RPrunStylesheet } from './Style';
@@ -91,7 +90,6 @@ async function mainRun() {
   const modules = [
     new OrderETAs(),
     new InventoryOrganizer(userInfo, result),
-    new Notifications(userInfo),
     new ScreenUnpack(result['PMMGExtended']['unpack_exceptions']),
     new HeaderMinimizer(result['PMMGExtended']['minimize_by_default']),
     new AdvancedMode(result['PMMGExtended']['advanced_mode']),
