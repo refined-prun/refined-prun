@@ -9,9 +9,8 @@ async function onBufferCreated(buffer: PrunBuffer) {
   if (!buffer.firstActivation) {
     return;
   }
-  const tileControls = await descendantPresent(buffer.frame, PrunCss.TileFrame.controls);
-  const hiddenControls = await descendantPresent(tileControls, PrunCss.TileControls.controls);
 
+  const splitControls = await descendantPresent(buffer.frame, PrunCss.TileControls.splitControls);
   const button = (
     <div
       className="button-upper-right"
@@ -26,7 +25,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
     </div>
   );
 
-  hiddenControls.firstChild!.insertBefore(button, hiddenControls.firstChild!.firstChild);
+  splitControls.children[0].before(button);
 }
 
 export function init() {

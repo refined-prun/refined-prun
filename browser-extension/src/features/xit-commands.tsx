@@ -91,7 +91,8 @@ async function onBufferCreated(buffer: PrunBuffer) {
       ⟳
     </div>
   );
-  header.insertBefore(refreshButton, header.firstChild);
+
+  header.children[0].before(refreshButton);
 }
 
 export function init() {

@@ -20,7 +20,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
       <img src={path} alt="Calculator icon" />
     </div>
   );
-  tileControls.insertBefore(button, tileControls.children[0]);
+  tileControls.children[0].before(button);
 }
 
 export function init() {
