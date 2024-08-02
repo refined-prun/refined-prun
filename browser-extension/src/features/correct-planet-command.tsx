@@ -1,10 +1,9 @@
 import { changeValue } from '../util';
 import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
-import { $ } from 'select-dom';
-import { dot } from '@src/utils/dot';
 import prun from '@src/prun-api/prun';
 import observeReadyElementsByClassName from '@src/utils/mutation-observer';
+import { _$ } from '@src/utils/get-element-by-class-name';
 
 const correctableCommands = new Set([
   'ADM',
@@ -29,7 +28,7 @@ const correctableCommands = new Set([
 
 export function onSelectorReady(selector: HTMLDivElement) {
   const form = selector.children[0] as HTMLFormElement;
-  const input = $(dot(PrunCss.PanelSelector.input), form) as HTMLInputElement;
+  const input = _$(PrunCss.PanelSelector.input, form) as HTMLInputElement;
   form.onsubmit = ev => {
     const commandParts = input.value.split(' ');
     if (!correctableCommands.has(commandParts[0].toUpperCase())) {

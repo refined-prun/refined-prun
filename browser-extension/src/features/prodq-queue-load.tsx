@@ -1,10 +1,10 @@
 import { parseDuration } from '../util';
 import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
-import { $$ } from 'select-dom';
-import { dot } from '@src/utils/dot';
 import { h } from 'dom-chef';
 import PrunCss from '@src/prun-ui/prun-css';
+import { $$ } from 'select-dom';
+import { _$$ } from '@src/utils/get-element-by-class-name';
 
 function updateBuffer(buffer: PrunBuffer) {
   if (!buffer.frame.isConnected) {
@@ -12,11 +12,11 @@ function updateBuffer(buffer: PrunBuffer) {
   }
 
   const tag = 'rprun-prod-queue-load';
-  for (const element of Array.from(buffer.frame.getElementsByClassName(tag))) {
+  for (const element of _$$(tag, buffer.frame)) {
     element.remove();
   }
 
-  const tables = $$(dot(PrunCss.ProductionQueue.table), buffer.frame);
+  const tables = _$$(PrunCss.ProductionQueue.table, buffer.frame);
   for (const table of tables) {
     const rows = $$('tbody:nth-of-type(2) > tr', table);
     const totalTime = rows.map(getEtaFromRow).reduce((x, y) => x + y, 0);

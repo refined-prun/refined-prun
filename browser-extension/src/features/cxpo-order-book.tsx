@@ -9,6 +9,7 @@ import { useLayoutEffect, useRef } from 'preact/compat';
 import classNames from 'classnames';
 import descendantPresent from '@src/utils/descendant-present';
 import useReactive from '@src/hooks/use-reactive';
+import { _$$ } from '@src/utils/get-element-by-class-name';
 
 async function onBufferCreated(buffer: PrunBuffer) {
   if (!buffer.parameter) {
@@ -19,10 +20,10 @@ async function onBufferCreated(buffer: PrunBuffer) {
   const formParent = form.parentElement!;
   formParent.style.display = 'flex';
   form.style.flex = '1';
-  for (const label of Array.from(form.getElementsByClassName(PrunCss.FormComponent.label))) {
+  for (const label of _$$(PrunCss.FormComponent.label, form)) {
     (label as HTMLLabelElement).style.minWidth = '95px';
   }
-  for (const span of Array.from(form.getElementsByClassName(PrunCss.Tooltip.container))) {
+  for (const span of _$$(PrunCss.Tooltip.container, form)) {
     span.setAttribute('data-tooltip-position', 'right');
   }
 

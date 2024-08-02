@@ -3,6 +3,7 @@ import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
 import PrunCss from '@src/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
+import { _$ } from '@src/utils/get-element-by-class-name';
 
 async function onBufferCreated(buffer: PrunBuffer) {
   const form = await descendantPresent(buffer.frame, PrunCss.ComExPlaceOrderForm.form);
@@ -12,8 +13,10 @@ async function onBufferCreated(buffer: PrunBuffer) {
 }
 
 function replaceRowValue(row: Element, value: string) {
-  const divs = row.getElementsByClassName(PrunCss.StaticInput.static);
-  divs[0].textContent = value;
+  const label = _$(PrunCss.StaticInput.static, row);
+  if (label) {
+    label.textContent = value;
+  }
 }
 
 export function init() {

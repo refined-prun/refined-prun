@@ -3,7 +3,7 @@ import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
 import { h } from 'dom-chef';
 import { $$ } from 'select-dom';
-import { dot } from '@src/utils/dot';
+import { _$$ } from '@src/utils/get-element-by-class-name';
 
 const tag = 'rprun-sfc-eta';
 
@@ -11,7 +11,7 @@ function updateBuffer(buffer: PrunBuffer) {
   if (!buffer.frame.isConnected) {
     return;
   }
-  const cleanupList = $$(dot(tag), buffer.frame);
+  const cleanupList = _$$(tag, buffer.frame);
   for (const element of cleanupList) {
     element.remove();
   }

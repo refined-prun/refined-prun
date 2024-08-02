@@ -1,11 +1,10 @@
 import { XITClasses } from '@src/XIT';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
-import { dot } from '@src/utils/dot';
-import { $ } from 'select-dom';
 import PrunCss from '@src/prun-ui/prun-css';
 import { h } from 'dom-chef';
 import descendantPresent from '@src/utils/descendant-present';
+import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let xitArgs: any;
@@ -73,12 +72,12 @@ async function onBufferCreated(buffer: PrunBuffer) {
     xitArgs.webData,
     xitArgs.modules,
   );
-  $(dot(PrunCss.TileFrame.title), frame)!.textContent = xitObject.name;
+  _$(PrunCss.TileFrame.title, frame)!.textContent = xitObject.name;
   xitObject.create_buffer();
 
   const header = frame.children[3] || frame.children[2];
   const className = 'prun-xit-refresh';
-  for (const element of Array.from(header.getElementsByClassName(className))) {
+  for (const element of _$$(className, header)) {
     element.remove();
   }
   const refreshButton = (
