@@ -15,7 +15,7 @@ import {
 } from '../util';
 import { Style, TextColors } from '../Style';
 import { NonProductionBuildings } from '../GameProperties';
-import xit from '@src/xit-registry';
+import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class Checklists {

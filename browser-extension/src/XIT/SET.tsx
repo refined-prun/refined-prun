@@ -9,7 +9,7 @@ import {
   createToolTip,
 } from '../util';
 import { Style, WithStyles } from '../Style';
-import xit from '@src/xit-registry';
+import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class Settings {

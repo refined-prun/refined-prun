@@ -1,7 +1,7 @@
 import { clearChildren, createTextSpan, setSettings } from '../util';
 import { NonProductionBuildings } from '../GameProperties';
 import user from '@src/store/user';
-import xit from '@src/xit-registry';
+import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 // This entire module is really, really messy and needs to be rewritten.

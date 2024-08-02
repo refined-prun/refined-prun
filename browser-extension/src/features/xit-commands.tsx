@@ -4,7 +4,7 @@ import buffers from '@src/prun-ui/prun-buffers';
 import PrunCss from '@src/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
 import { _$ } from '@src/utils/get-element-by-class-name';
-import xit from '@src/xit-registry';
+import xit from '@src/XIT/xit-registry';
 import { render } from 'preact';
 import { appendRootFragment } from '@src/utils/create-root-fragment';
 

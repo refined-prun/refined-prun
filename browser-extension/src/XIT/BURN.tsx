@@ -11,7 +11,7 @@ import {
 } from '../util';
 import { Selector } from '../Selector';
 import prun from '@src/prun-api/prun';
-import xit from '@src/xit-registry';
+import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class Burn {

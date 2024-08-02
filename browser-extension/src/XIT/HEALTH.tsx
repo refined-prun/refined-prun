@@ -2,7 +2,7 @@ import { clearChildren, createTable, createTextSpan } from '../util';
 import { Style, TextColors } from '../Style';
 import system from '@src/system';
 import user from '@src/store/user';
-import xit from '@src/xit-registry';
+import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class DataHealth {

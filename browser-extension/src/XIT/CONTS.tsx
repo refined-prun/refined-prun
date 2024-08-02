@@ -3,7 +3,7 @@ import { clearChildren, createLink, createTextSpan, createTable, createMaterialE
 import { TextColors } from '../Style';
 
 import { FactionHeaders } from '../GameProperties';
-import xit from '@src/xit-registry';
+import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class Contracts {

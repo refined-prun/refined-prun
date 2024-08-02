@@ -3,7 +3,7 @@ import { Style } from '../Style';
 import { h } from 'dom-chef';
 import { $$ } from 'select-dom';
 import PrunCss from '@src/prun-ui/prun-css';
-import xit from '@src/xit-registry';
+import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class Debug {

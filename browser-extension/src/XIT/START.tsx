@@ -1,6 +1,6 @@
 import { Link } from '@src/components/Link';
 import { h } from 'preact';
-import xit from '@src/xit-registry';
+import xit from './xit-registry';
 
 function START() {
   return (

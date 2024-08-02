@@ -1,5 +1,5 @@
 import { clearChildren } from '../util';
-import xit from '@src/xit-registry';
+import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class PrUN {
