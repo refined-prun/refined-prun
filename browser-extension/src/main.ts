@@ -12,7 +12,6 @@ import { PendingContracts } from '@src/features/PendingContracts';
 import { CompactUI } from '@src/features/CompactUI';
 import { calculateFinancials } from './XIT/Finances';
 import { AdvancedMode } from '@src/features/AdvancedMode';
-import { ChatDeleteButton } from '@src/features/ChatDeleteButton';
 import { IconMarkers } from '@src/features/IconMarkers';
 import { PostLM } from '@src/features/PostLM';
 import { loadSettings, Settings } from './Settings';
@@ -65,16 +64,6 @@ async function mainRun() {
     appendStyle(RPrunStylesheet.advanced);
   }
 
-  // Apply hiding chat delete button if enabled
-  if (result['PMMGExtended']['chat_delete_hidden']) {
-    appendStyle(RPrunStylesheet.hideChatDelete);
-  }
-
-  // Apply hiding join/leave messages if enabled
-  if (result['PMMGExtended']['join_leave_hidden']) {
-    appendStyle(RPrunStylesheet.hideChatJoinLeave);
-  }
-
   // Introduce an object that will hold and be periodically updated with latest info harvested from server traffic
   const userInfo = {};
 
@@ -109,7 +98,6 @@ async function mainRun() {
     new Sidebar(result['PMMGExtended']['sidebar']),
     new PendingContracts(userInfo),
     new CompactUI(result),
-    new ChatDeleteButton(result),
     new IconMarkers(),
     new PostLM(),
   ];

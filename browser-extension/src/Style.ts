@@ -217,8 +217,6 @@ export const CategoryColors = {
 export enum RPrunStylesheet {
   refinedPrun = 'refined-prun',
   advanced = 'pmmg-advanced',
-  hideChatDelete = 'pmmg-hide-chat-delete',
-  hideChatJoinLeave = 'pmmg-hide-chat-join-leave',
   enhancedColors = 'pmmg-enhanced-colors',
   icons = 'pmmg-icons',
   oldColors = 'pmmg-old-colors',

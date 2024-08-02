@@ -3,12 +3,12 @@ import asyncForEach from '@src/utils/async-foreach';
 import getBrowserVersion from '@src/utils/browser-version';
 import { castArray } from '@src/utils/cast-array';
 
-type FeatureInitResult = void | false;
+type FeatureInitResult = void | boolean;
 type FeatureInit = (signal: AbortSignal) => Promisable<FeatureInitResult>;
 
 interface FeatureDescriptor {
   id: string;
-  init: Arrayable<FeatureInit>;
+  init?: Arrayable<FeatureInit>;
 }
 
 const registry: FeatureDescriptor[] = [];
@@ -55,18 +55,27 @@ function add(descriptor: FeatureDescriptor) {
 async function init() {
   const featureController = new AbortController();
   for (const feature of registry) {
+    await initializeFeature(feature, featureController.signal);
+  }
+}
+
+async function initializeFeature(feature: FeatureDescriptor, signal: AbortSignal) {
+  let result: FeatureInitResult;
+  if (feature.init) {
     await asyncForEach(castArray(feature.init), async init => {
-      let result: FeatureInitResult | undefined;
       try {
-        result = await init(featureController.signal);
-        // Features can return `false` when they decide not to run on the current page
-        if (result !== false) {
-          log.info('✅', feature.id);
-        }
+        result = await init(signal);
       } catch (error) {
         log.error(feature.id, error);
       }
     });
+  } else {
+    result = true;
+  }
+  // Features can return `false` when they decide not to run on the current page
+  if (result !== false) {
+    document.documentElement.setAttribute(`rprun-${feature.id}`, '');
+    log.info('✅', feature.id);
   }
 }
 

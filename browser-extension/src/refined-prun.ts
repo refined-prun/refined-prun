@@ -1,5 +1,7 @@
 import './features/xit-commands';
 import './features/com-add-images';
+import './features/com-hide-delete-button';
+import './features/com-hide-join-leave';
 import './features/cxob-highlight-own-orders';
 import './features/cxpo-order-book';
 import './features/cxpo-shorten-names';
