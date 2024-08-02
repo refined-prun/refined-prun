@@ -3,18 +3,16 @@ import buffers from '@src/prun-ui/prun-buffers';
 import PrunCss from '@src/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
 import { h } from 'dom-chef';
+import { observeChildListChanged } from '@src/utils/mutation-observer';
 
 async function onBufferCreated(buffer: PrunBuffer) {
   const chatArea = await descendantPresent(buffer.frame, PrunCss.Channel.messageAndUserList);
-  const chatLinks = chatArea.getElementsByClassName(PrunCss.Link.link);
+  const messages = await descendantPresent(buffer.frame, PrunCss.MessageList.messages);
+  const chatLinks = messages.getElementsByClassName(PrunCss.Link.link);
   const processedLinks: WeakSet<Element> = new WeakSet();
-  runUpdate();
-
-  function runUpdate() {
-    if (!buffer.frame.isConnected) {
-      return;
-    }
-    for (const link of Array.from(chatLinks)) {
+  observeChildListChanged(messages, () => {
+    for (let i = 0; i < chatLinks.length; i++) {
+      const link = chatLinks[i];
       if (processedLinks.has(link)) {
         continue;
       }
@@ -36,8 +34,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
       link.parentElement.appendChild(<br />);
       link.parentElement.appendChild(img);
     }
-    requestAnimationFrame(runUpdate);
-  }
+  });
 }
 
 function isImage(url: string) {
