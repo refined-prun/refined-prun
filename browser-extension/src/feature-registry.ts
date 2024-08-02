@@ -3,8 +3,7 @@ import asyncForEach from '@src/utils/async-foreach';
 import getBrowserVersion from '@src/utils/browser-version';
 import { castArray } from '@src/utils/cast-array';
 
-type FeatureInitResult = void | boolean;
-type FeatureInit = (signal: AbortSignal) => Promisable<FeatureInitResult>;
+type FeatureInit = (signal: AbortSignal) => Promisable<void>;
 
 interface FeatureDescriptor {
   id: string;
@@ -60,20 +59,18 @@ async function init() {
 }
 
 async function initializeFeature(feature: FeatureDescriptor, signal: AbortSignal) {
-  let result: FeatureInitResult;
+  let result = true;
   if (feature.init) {
     await asyncForEach(castArray(feature.init), async init => {
       try {
-        result = await init(signal);
+        await init(signal);
       } catch (error) {
         log.error(feature.id, error);
+        result = false;
       }
     });
-  } else {
-    result = true;
   }
-  // Features can return `false` when they decide not to run on the current page
-  if (result !== false) {
+  if (result) {
     document.documentElement.setAttribute(`rprun-${feature.id}`, '');
     log.info('✅', feature.id);
   }
