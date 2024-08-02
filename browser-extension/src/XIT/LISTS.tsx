@@ -12,6 +12,8 @@ import {
   showBuffer,
 } from '../util';
 import { Style } from '../Style';
+import xit from '@src/xit-registry';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class CommandLists {
   private tile: HTMLElement;
@@ -324,3 +326,9 @@ function createEditInterface(tile, result, parameters, settings: any[] = [], lis
   greyStripes.appendChild(makePopupSpacer(tile, overlapDiv));
   return;
 }
+
+xit.add({
+  command: ['LIST', 'LISTS'],
+  name: 'COMMAND LIST',
+  component: createXitAdapter(CommandLists),
+});

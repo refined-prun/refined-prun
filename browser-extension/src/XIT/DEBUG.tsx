@@ -3,6 +3,8 @@ import { Style } from '../Style';
 import { h } from 'dom-chef';
 import { $$ } from 'select-dom';
 import PrunCss from '@src/prun-ui/prun-css';
+import xit from '@src/xit-registry';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class Debug {
   private tile: HTMLElement;
@@ -162,3 +164,9 @@ function downloadPrunCssClasses() {
   const json = JSON.stringify(result, undefined, 2);
   downloadFile(json, 'prun-css-classes.json', false);
 }
+
+xit.add({
+  command: 'DEBUG',
+  name: 'DEBUG',
+  component: createXitAdapter(Debug),
+});

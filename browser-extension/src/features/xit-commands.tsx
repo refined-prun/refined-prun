@@ -1,13 +1,16 @@
-import { XITClasses } from '@src/XIT';
+import './xit-commands.css';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
 import PrunCss from '@src/prun-ui/prun-css';
-import { h } from 'dom-chef';
 import descendantPresent from '@src/utils/descendant-present';
-import { _$, _$$ } from '@src/utils/get-element-by-class-name';
+import { _$ } from '@src/utils/get-element-by-class-name';
+import xit from '@src/xit-registry';
+import { render } from 'preact';
+import { appendRootFragment } from '@src/utils/create-root-fragment';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let xitArgs: any;
+export const getXitArgs = () => xitArgs;
 
 export function applyXITParameters(pmmgSettings, userInfo, webData, modules) {
   xitArgs = {
@@ -48,51 +51,21 @@ async function onBufferCreated(buffer: PrunBuffer) {
     return;
   }
 
-  body.classList.add('xit-tile');
-  // Green screen
+  // Remove green screen
   body.style.background = '';
-  if (body.firstChild) {
-    (body.firstChild as HTMLElement).style.backgroundColor = '#222222';
-  }
+  body.classList.add('rprun-xit-tile');
 
-  const xitClass = XITClasses[command.toUpperCase()];
-  if (!xitClass) {
+  const xitCommand = xit.get(command);
+  if (!xitCommand) {
     body.textContent = 'Error! No Matching Function!';
     return;
   }
 
-  const contentDiv = <div style={{ height: '100%', flexGrow: 1 }} />;
-  body.appendChild(contentDiv);
+  _$(PrunCss.TileFrame.title, frame)!.textContent =
+    typeof xitCommand.name === 'string' ? xitCommand.name : xitCommand.name(parameters);
 
-  const xitObject = new xitClass(
-    contentDiv,
-    parameters,
-    xitArgs.pmmgSettings,
-    xitArgs.userInfo,
-    xitArgs.webData,
-    xitArgs.modules,
-  );
-  _$(PrunCss.TileFrame.title, frame)!.textContent = xitObject.name;
-  xitObject.create_buffer();
-
-  const header = frame.children[3] || frame.children[2];
-  const className = 'prun-xit-refresh';
-  for (const element of _$$(className, header)) {
-    element.remove();
-  }
-  const refreshButton = (
-    <div
-      className={`${className} button-upper-right`}
-      style={{
-        fontSize: __CHROME__ ? '16px' : '18px',
-        paddingTop: __CHROME__ ? '12px' : '7px',
-      }}
-      onClick={() => xitObject.create_buffer()}>
-      ⟳
-    </div>
-  );
-
-  header.children[0].before(refreshButton);
+  const vNode = xitCommand.component(parameters);
+  render(vNode, appendRootFragment(body, 'div'));
 }
 
 export function init() {

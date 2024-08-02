@@ -3,6 +3,8 @@ import { clearChildren, createLink, createTextSpan, createTable, createMaterialE
 import { TextColors } from '../Style';
 
 import { FactionHeaders } from '../GameProperties';
+import xit from '@src/xit-registry';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class Contracts {
   private tile: HTMLElement;
@@ -302,3 +304,9 @@ const friendlyConditionText = {
 };
 
 const materialFulfilmentType = ['DELIVERY', 'DELIVERY_SHIPMENT', 'PROVISION_SHIPMENT', 'COMEX_PURCHASE_PICKUP'];
+
+xit.add({
+  command: ['CONTS', 'CONTRACTS'],
+  name: 'CONTRACTS',
+  component: createXitAdapter(Contracts),
+});

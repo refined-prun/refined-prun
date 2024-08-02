@@ -1,4 +1,6 @@
 import { clearChildren, XITWebRequest, hourFormatter, dateFormatter } from '../util';
+import xit from '@src/xit-registry';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class FIOChat {
   private tile;
@@ -100,3 +102,9 @@ function Chat_post(chatDiv, parameters, jsondata) {
   });
   return;
 }
+
+xit.add({
+  command: 'CHAT',
+  name: 'FIO Chat',
+  component: createXitAdapter(FIOChat),
+});

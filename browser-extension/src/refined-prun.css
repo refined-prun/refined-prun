@@ -381,13 +381,6 @@ td.burn-red-no-hover {
   background: #d9534f;
 }
 
-.xit-tile {
-  background-color: #222222 !important;
-  padding-top: 4px;
-  display: flex;
-  flex-flow: column;
-}
-
 .refresh-button {
   background-color: #f7a600;
   color: #eee;
@@ -494,10 +487,6 @@ div.Head__container___3ecBw0E > div:nth-child(2) {
 
 div.TileControls__splitControls___fcU57en {
   display: inline-flex;
-}
-
-.ScrollView__view___ovf59Tk > div[style*='background: rgb(0, 255, 0)'] {
-  display: none;
 }
 
 /*

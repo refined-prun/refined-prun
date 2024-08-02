@@ -10,6 +10,7 @@ export default async function descendantPresent(element: Element, className: str
   await oneMutation(element, {
     childList: true,
     subtree: true,
+    signal,
     filter: () => childElements.length > 0,
   });
 

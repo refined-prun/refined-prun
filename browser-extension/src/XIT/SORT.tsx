@@ -10,6 +10,8 @@ import {
   createSmallButton,
 } from '../util';
 import { Style } from '../Style';
+import xit from '@src/xit-registry';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class Sort {
   private tile: HTMLElement;
@@ -326,3 +328,9 @@ function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: a
 
   greyStripes.appendChild(makePopupSpacer(tile, overlapDiv));
 }
+
+xit.add({
+  command: 'SORT',
+  name: 'SORTING OPTIONS',
+  component: createXitAdapter(Sort),
+});

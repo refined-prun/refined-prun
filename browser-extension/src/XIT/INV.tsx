@@ -1,4 +1,6 @@
 import { clearChildren, createTextSpan, createMaterialElement, createLink, XITWebRequest, materialSort } from '../util';
+import xit from '@src/xit-registry';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class FIOInventory {
   private tile: HTMLElement;
@@ -242,3 +244,9 @@ function fioMatsAlphabetSort(itemA: any, itemB: any) {
   const tickerB = itemB['MaterialTicker'];
   return materialSort(tickerA, tickerB);
 }
+
+xit.add({
+  command: 'INV',
+  name: 'FIO INVENTORY',
+  component: createXitAdapter(FIOInventory),
+});

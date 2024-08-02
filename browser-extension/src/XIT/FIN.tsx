@@ -21,6 +21,8 @@ import { Consumption, CurrencySymbols } from '../GameProperties';
 import { generateLineGraph, generatePieChart } from '../charts';
 import system from '@src/system';
 import user from '@src/store/user';
+import xit from '@src/xit-registry';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class Finances {
   private tile: HTMLElement;
@@ -1449,3 +1451,9 @@ function interpretCX(CXString, result) {
   }
   return [CX, priceType];
 }
+
+xit.add({
+  command: ['FIN', 'FINANCE', 'FINANCES'],
+  name: 'FINANCES',
+  component: createXitAdapter(Finances),
+});

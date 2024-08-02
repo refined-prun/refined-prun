@@ -11,6 +11,8 @@ import {
 } from '../util';
 import { Selector } from '../Selector';
 import prun from '@src/prun-api/prun';
+import xit from '@src/xit-registry';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class Burn {
   private tile: HTMLElement;
@@ -460,3 +462,15 @@ function updateBurn(table, dispSettings) {
   });
   return;
 }
+
+xit.add({
+  command: 'BURN',
+  name: parameters => {
+    if (parameters[1] && !parameters[2]) {
+      return `ENHANCED BURN - ${parameters[1].toUpperCase()}`;
+    }
+
+    return 'ENHANCED BURN';
+  },
+  component: createXitAdapter(Burn),
+});

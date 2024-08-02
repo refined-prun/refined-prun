@@ -1,6 +1,8 @@
 import { clearChildren, createTextSpan, setSettings } from '../util';
 import { NonProductionBuildings } from '../GameProperties';
 import user from '@src/store/user';
+import xit from '@src/xit-registry';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 // This entire module is really, really messy and needs to be rewritten.
 export class Repairs {
@@ -443,3 +445,9 @@ function generateGeneralRepairScreen(body, matDiv, buildings, ships, thresholdIn
 function buildingSort(a, b) {
   return a[1]['condition'] > b[1]['condition'] ? 1 : -1;
 }
+
+xit.add({
+  command: 'REPAIRS',
+  name: 'REPAIRS',
+  component: createXitAdapter(Repairs),
+});

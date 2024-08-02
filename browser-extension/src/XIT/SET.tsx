@@ -9,6 +9,8 @@ import {
   createToolTip,
 } from '../util';
 import { Style, WithStyles } from '../Style';
+import xit from '@src/xit-registry';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class Settings {
   private tile: HTMLElement;
@@ -745,3 +747,9 @@ function makeToggleButton(on: string, off: string, f: () => void, state: boolean
   toggle.style.width = '40px';
   return toggle;
 }
+
+xit.add({
+  command: ['SET', 'SETTINGS'],
+  name: 'RPRUN SETTINGS',
+  component: createXitAdapter(Settings),
+});

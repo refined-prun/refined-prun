@@ -1,4 +1,6 @@
 import { clearChildren } from '../util';
+import xit from '@src/xit-registry';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class PrUN {
   private tile: HTMLElement;
@@ -27,6 +29,12 @@ export class PrUN {
     // Nothing constantly running so nothing to destroy
   }
 }
+
+xit.add({
+  command: 'PRUN',
+  name: 'PRUN-CEPTION',
+  component: createXitAdapter(PrUN),
+});
 
 export class Prosperity {
   private tile: HTMLElement;
@@ -62,6 +70,12 @@ export class Prosperity {
     // Nothing constantly running so nothing to destroy
   }
 }
+
+xit.add({
+  command: 'PROSPERITY',
+  name: 'PROSPERITY',
+  component: createXitAdapter(Prosperity),
+});
 
 export class Sheets {
   private tile: HTMLElement;
@@ -99,6 +113,12 @@ export class Sheets {
     // Nothing constantly running so nothing to destroy
   }
 }
+
+xit.add({
+  command: ['SHEET', 'SHEETS'],
+  name: 'GOOGLE SHEETS',
+  component: createXitAdapter(Sheets),
+});
 
 /* // All Discord server stuff is broken. Changes to widgetbot? Not many people seem to use it so I'll remove it for the time being.
 const DiscordServers = {
@@ -181,6 +201,12 @@ export class Wiki {
   }
 }
 
+xit.add({
+  command: 'WIKI',
+  name: 'PRUN WIKI',
+  component: createXitAdapter(Wiki),
+});
+
 export class PrunPlanner {
   private tile: HTMLElement;
   private parameters: string[];
@@ -216,6 +242,12 @@ export class PrunPlanner {
   }
 }
 
+xit.add({
+  command: ['PLANNER', 'PLAN', 'PRUNPLANNER'],
+  name: 'PRUN PLANNER',
+  component: createXitAdapter(PrunPlanner),
+});
+
 export class Map {
   private tile: HTMLElement;
   public name = "Taiyi's Map";
@@ -243,3 +275,9 @@ export class Map {
     // Nothing constantly running so nothing to destroy
   }
 }
+
+xit.add({
+  command: 'MAP',
+  name: "Taiyi's Map",
+  component: createXitAdapter(Map),
+});

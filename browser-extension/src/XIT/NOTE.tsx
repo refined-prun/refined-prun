@@ -9,6 +9,8 @@ import {
   Popup,
 } from '../util';
 import { Style } from '../Style';
+import xit from '@src/xit-registry';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class Notes {
   private tile: HTMLDivElement;
@@ -277,3 +279,9 @@ function renderNoteText(note: NoteStructure, noteText: string): void {
     });
   });
 }
+
+xit.add({
+  command: ['NOTE', 'NOTES'],
+  name: 'NOTE',
+  component: createXitAdapter(Notes),
+});

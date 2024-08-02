@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { clearChildren } from '../util';
+import xit from '@src/xit-registry';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class Calculator {
   private tile: HTMLElement;
@@ -28,3 +30,9 @@ export class Calculator {
     // Nothing constantly running so nothing to destroy
   }
 }
+
+xit.add({
+  command: ['CALC', 'CALCULATOR'],
+  name: 'CALCULATOR',
+  component: createXitAdapter(Calculator),
+});

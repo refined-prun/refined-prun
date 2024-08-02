@@ -15,6 +15,8 @@ import {
 } from '../util';
 import { Style, TextColors } from '../Style';
 import { NonProductionBuildings } from '../GameProperties';
+import xit from '@src/xit-registry';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class Checklists {
   private tile: HTMLElement;
@@ -878,3 +880,9 @@ function checkSort(a, b) {
 
   return a.checkInfo.created > b.checkInfo.created ? 1 : -1;
 }
+
+xit.add({
+  command: ['CHECK', 'CHECKLIST', 'CHECKLISTS'],
+  name: 'CHECKLIST',
+  component: createXitAdapter(Checklists),
+});

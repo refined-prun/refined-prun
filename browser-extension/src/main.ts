@@ -9,7 +9,7 @@ import { InventoryOrganizer } from '@src/features/InventoryOrganizer';
 import { HeaderMinimizer } from '@src/features/HeaderMinimizer';
 import { PendingContracts } from '@src/features/PendingContracts';
 import { CompactUI } from '@src/features/CompactUI';
-import { calculateFinancials } from './XIT/Finances';
+import { calculateFinancials } from './XIT/FIN';
 import { AdvancedMode } from '@src/features/AdvancedMode';
 import { IconMarkers } from '@src/features/IconMarkers';
 import { PostLM } from '@src/features/PostLM';

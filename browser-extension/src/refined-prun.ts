@@ -17,4 +17,23 @@ import './features/evaluate-input-formula';
 import './features/shipping-per-unit-price';
 import './features/reload-page-on-websocket-disconnect';
 
+import './XIT/ACT';
+import './XIT/BURN';
+import './XIT/CALC';
+import './XIT/CHAT';
+import './XIT/CHECK';
+import './XIT/CONTS';
+import './XIT/DEBUG';
+import './XIT/FIN';
+import './XIT/HEALTH';
+import './XIT/HELP';
+import './XIT/INV';
+import './XIT/LISTS';
+import './XIT/NOTE';
+import './XIT/REPAIRS';
+import './XIT/SET';
+import './XIT/SORT';
+import './XIT/START';
+import './XIT/Web';
+
 import './main';

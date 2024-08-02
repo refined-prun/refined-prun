@@ -1,5 +1,7 @@
 import { createTextSpan, clearChildren, createLink } from '../util';
 import { Style } from '../Style';
+import xit from '@src/xit-registry';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 
 export class Help {
   private tile: HTMLElement;
@@ -355,3 +357,9 @@ function createTextDiv(contentText) {
   textDiv.style.margin = '5px';
   return textDiv;
 }
+
+xit.add({
+  command: 'HELP',
+  name: 'HELP',
+  component: createXitAdapter(Help),
+});
