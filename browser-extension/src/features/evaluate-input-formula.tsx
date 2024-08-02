@@ -2,7 +2,6 @@ import { changeValue } from '../util';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
-import { $$ } from 'select-dom';
 import Mexp from 'math-expression-evaluator';
 import prun from '@src/prun-api/prun';
 
@@ -10,9 +9,13 @@ const mexp = new Mexp();
 
 function onBufferCreated(buffer: PrunBuffer) {
   const appliedInputs: WeakSet<HTMLInputElement> = new WeakSet();
+  const inputs = buffer.frame.getElementsByTagName('input');
   observeDescendantListChanged(buffer.frame, () => {
-    const inputs = $$('input', buffer.frame).filter(x => !appliedInputs.has(x));
-    for (const input of inputs) {
+    for (let i = 0; i < inputs.length; i++) {
+      const input = inputs[i];
+      if (appliedInputs.has(input)) {
+        continue;
+      }
       appliedInputs.add(input);
       input.addEventListener('keyup', e => onKeyUp(input, e));
     }

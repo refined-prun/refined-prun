@@ -430,11 +430,6 @@ td.burn-red-no-hover {
   color: #f7a600 !important;
 }
 
-.chat-image {
-  max-height: 300px;
-  max-width: 90%;
-}
-
 .input-text {
   padding: 0px 5px;
   margin: 5px;

@@ -1,3 +1,4 @@
+import './com-add-images.css';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
 import PrunCss from '@src/prun-ui/prun-css';
@@ -27,7 +28,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
         <img
           src={linkText}
           alt="Chat image"
-          className="chat-image"
+          className="rprun-chat-image"
           onLoad={() => chatArea.scrollBy(0, (img.offsetHeight || 0) + 2)}
         />
       );
