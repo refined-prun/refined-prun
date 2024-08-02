@@ -21,7 +21,7 @@ import {
 import { Style } from '../Style';
 import { Selector } from '../Selector';
 import { ExchangeTickersReverse, NonProductionBuildings } from '../GameProperties';
-import user from '@src/prun-api/user';
+import user from '@src/store/user';
 
 export class Execute {
   private tile: HTMLElement;

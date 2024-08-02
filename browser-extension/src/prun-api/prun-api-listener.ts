@@ -3,7 +3,7 @@ import { transmitted_events } from './default-event-payload';
 import { socketIOMiddleware } from './socket-io-middleware';
 import system from '@src/system';
 import prun from '@src/prun-api/prun';
-import user from '@src/prun-api/user';
+import user from '@src/store/user';
 
 interface ApiEvent {
   payload: any;

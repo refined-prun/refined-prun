@@ -1,6 +1,6 @@
 import { clearChildren, createTextSpan, setSettings } from '../util';
 import { NonProductionBuildings } from '../GameProperties';
-import user from '@src/prun-api/user';
+import user from '@src/store/user';
 
 // This entire module is really, really messy and needs to be rewritten.
 export class Repairs {

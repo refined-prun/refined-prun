@@ -1,5 +1,5 @@
 import './cxpo-order-book.css';
-import user from '@src/prun-api/user';
+import user from '@src/store/user';
 import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
 import { appendRootFragment } from '@src/utils/create-root-fragment';

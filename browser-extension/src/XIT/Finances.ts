@@ -20,7 +20,7 @@ import { Style, TextColors } from '../Style';
 import { Consumption, CurrencySymbols } from '../GameProperties';
 import { generateLineGraph, generatePieChart } from '../charts';
 import system from '@src/system';
-import user from '@src/prun-api/user';
+import user from '@src/store/user';
 
 export class Finances {
   private tile: HTMLElement;
