@@ -1,0 +1,13 @@
+.rprun-Link {
+  color: #3fa2de;
+  cursor: pointer;
+  display: block;
+}
+
+.rprun-Link--inline {
+  display: inline-block;
+}
+
+.rprun-Link:hover {
+  color: #f7a600 !important;
+}

@@ -12,26 +12,17 @@ function START() {
       <p>This is a short tutorial on how to get the most out of the extension.</p>
       <p>
         Details on what PMMG offers can be found here:&nbsp;
-        <a
-          href="https://sites.google.com/view/pmmgextended/home?authuser=0"
-          target="_blank"
-          class="link"
-          style={{ display: 'inline-block' }}
-          rel="noreferrer">
+        <Link inline href="https://sites.google.com/view/pmmgextended/home?authuser=0">
           PMMG Extended
-        </a>
-      </p>
-      <p>
-        You can find a list of all of the PMMG commands using
-        <Link command="XIT HELP" style={{ display: 'inline-block' }}>
-          XIT HELP
         </Link>
       </p>
       <p>
-        PMMG&apos;s settings can be accessed using
-        <Link command="XIT SETTINGS" style={{ display: 'inline-block' }}>
-          XIT SETTINGS
-        </Link>
+        You can find a list of all of the PMMG commands using&nbsp;
+        <Link inline command="XIT HELP" />
+      </p>
+      <p>
+        PMMG&apos;s settings can be accessed using&nbsp;
+        <Link inline command="XIT SETTINGS" />
       </p>
       <p>
         To get PMMG to show you data about your space empire, you need to &apos;scan in&apos; your bases by refreshing
