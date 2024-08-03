@@ -19,7 +19,7 @@ import './features/shipping-per-unit-price';
 import './features/reload-page-on-websocket-disconnect';
 
 import './XIT/ACT';
-import './XIT/BURN';
+import './XIT/BURN/BURN';
 import './XIT/CALC';
 import './XIT/CHAT';
 import './XIT/CHECK';
