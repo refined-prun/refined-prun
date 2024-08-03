@@ -5,26 +5,7 @@ import prun from '@src/prun-api/prun';
 import observeReadyElementsByClassName from '@src/utils/mutation-observer';
 import { _$ } from '@src/utils/get-element-by-class-name';
 
-const correctableCommands = new Set([
-  'ADM',
-  'BSC',
-  'COGC',
-  'COGCPEX',
-  'COGCU',
-  'FLTP',
-  'LR',
-  'LMP',
-  'LM',
-  'PLI',
-  'POPI',
-  'POPR',
-  'PPS',
-  'SHY',
-  'WAR',
-  'BS',
-  'BRA',
-  'GOV',
-]);
+const correctableCommands = new Set(['CXM', 'CXOB', 'CXP', 'CXPC', 'CXPO', 'MAT']);
 
 export function onSelectorReady(selector: HTMLDivElement) {
   const input = _$(PrunCss.PanelSelector.input, selector) as HTMLInputElement;
@@ -35,13 +16,18 @@ export function onSelectorReady(selector: HTMLDivElement) {
       return;
     }
 
-    const planet = prun.planets.getByName(commandParts[1]);
-    if (!planet) {
+    const parameter = commandParts[1];
+    if (parameter === parameter.toUpperCase()) {
+      return;
+    }
+
+    const material = prun.materials.get(parameter);
+    if (!material) {
       return;
     }
 
     ev.stopPropagation();
-    commandParts[1] = planet.naturalId;
+    commandParts[1] = parameter.toUpperCase();
     changeValue(input, commandParts.join(' '));
     setTimeout(() => form.requestSubmit(), 0);
   });
@@ -52,6 +38,6 @@ export function init() {
 }
 
 void features.add({
-  id: 'correct-planet-command',
+  id: 'correct-material-command',
   init,
 });

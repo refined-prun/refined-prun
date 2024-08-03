@@ -12,6 +12,7 @@ import './features/prod-burn-link';
 import './features/prodq-queue-load';
 import './features/header-calculator-button';
 import './features/header-duplicate-button';
+import './features/correct-material-command';
 import './features/correct-planet-command';
 import './features/evaluate-input-formula';
 import './features/shipping-per-unit-price';

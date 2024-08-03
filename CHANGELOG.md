@@ -1,5 +1,6 @@
 New features:
 - reload-page-on-websocket-disconnect
+- correct-material-command
 
 Changes:
 - Changed XIT calculator to https://desmos.com/scientific
