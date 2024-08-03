@@ -7,7 +7,6 @@ import { _$ } from '@src/utils/get-element-by-class-name';
 import xit from '@src/XIT/xit-registry';
 import { render } from 'preact';
 import { appendRootFragment } from '@src/utils/create-root-fragment';
-import { showBuffer } from '@src/util';
 import { h } from 'dom-chef';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -8,6 +8,7 @@ type FeatureInit = (signal: AbortSignal) => Promisable<void>;
 interface FeatureDescriptor {
   id: string;
   init?: Arrayable<FeatureInit>;
+  attribute?: boolean;
 }
 
 const registry: FeatureDescriptor[] = [];
@@ -71,7 +72,9 @@ async function initializeFeature(feature: FeatureDescriptor, signal: AbortSignal
     });
   }
   if (result) {
-    document.documentElement.setAttribute(`rprun-${feature.id}`, '');
+    if (feature.attribute) {
+      document.documentElement.setAttribute(`rprun-${feature.id}`, '');
+    }
     log.info('✅', feature.id);
   }
 }
