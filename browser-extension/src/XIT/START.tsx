@@ -41,5 +41,5 @@ function START() {
 xit.add({
   command: 'START',
   name: 'PMMG INTRODUCTION',
-  component: START,
+  component: () => <START />,
 });
