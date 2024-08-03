@@ -1,395 +1,346 @@
-import {
-  clearChildren,
-  createTextSpan,
-  CategorySort,
-  findCorrespondingPlanet,
-  createMaterialElement,
-  calculateBurn,
-  createSettingsButton,
-  comparePlanets,
-} from '../util';
+import { BurnValues, calculateBurn, CategorySort, comparePlanets, findCorrespondingPlanet, showBuffer } from '../util';
 import { Selector } from '../Selector';
 import prun from '@src/prun-api/prun';
 import xit from './xit-registry';
-import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import { settings } from '@src/store/settings';
 import user from '@src/store/user';
+import { h } from 'preact';
+import classNames from 'classnames';
+import PrunCss from '@src/prun-ui/prun-css';
+import { Planet } from '@src/prun-api/prun-planets';
+import useReactive from '@src/hooks/use-reactive';
+import { CategoryColors } from '@src/Style';
+import { useRef } from 'preact/compat';
 
-export class Burn {
-  private tile: HTMLElement;
-  private parameters: string[];
-  private alive;
-  public name: string;
-  private planetBurn;
+function BURN(props: { parameters: string[] }) {
+  const { parameters } = props;
+  const requestedData = useRef(new Set() as Set<string>);
+  const planetBurn = useReactive(() =>
+    internalCalculateBurn(parameters, id => {
+      if (requestedData.current.has(id)) {
+        return;
+      }
+      requestedData.current.add(id);
+      showBuffer(`BS ${id}`, true, true);
+    }),
+  );
 
-  constructor(tile, parameters) {
-    this.tile = tile;
-    this.parameters = parameters;
-    this.alive = true;
+  const screenNameElem = document.querySelector(Selector.ScreenName);
+  const screenName = screenNameElem ? screenNameElem.textContent : '';
 
-    if (parameters[1] && !parameters[2]) {
-      this.name = `ENHANCED BURN - ${parameters[1].toUpperCase()}`;
+  const bufferName = screenName + parameters.join('');
+
+  const dispSettings = settings.burn.buffers[bufferName] || {
+    red: true,
+    yellow: true,
+    green: true,
+    inf: true,
+    minimized: {},
+  };
+  settings.burn.buffers[bufferName] = dispSettings;
+
+  const isMultiplanet = parameters.length > 2 || parameters[1].toLowerCase() == 'all';
+  const sections = [] as h.JSX.Element[];
+
+  for (const burn of planetBurn) {
+    sections.push(<BurnSection isMultiplanet={isMultiplanet} burn={burn} dispSettings={dispSettings} />);
+  }
+
+  function onRedClick() {
+    dispSettings.red = !dispSettings.red;
+    // setSettings(pmmgSettings);
+  }
+
+  function onYellowClick() {
+    dispSettings.yellow = !dispSettings.yellow;
+    // setSettings(pmmgSettings);
+  }
+
+  function onGreenClick() {
+    dispSettings.green = !dispSettings.green;
+    //setSettings(pmmgSettings);
+  }
+
+  function onInfClick() {
+    dispSettings.inf = !dispSettings.inf;
+    //setSettings(pmmgSettings);
+  }
+
+  return (
+    <div style={{ height: '100%', flexGrow: 1, paddingTop: '4px' }}>
+      <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex' }}>
+          <SettingsButton text="RED" width={22.025} toggled={dispSettings.red} onClick={onRedClick} />
+          <SettingsButton text="YELLOW" width={40.483} toggled={dispSettings.yellow} onClick={onYellowClick} />
+          <SettingsButton text="GREEN" width={34.65} toggled={dispSettings.green} onClick={onGreenClick} />
+          <SettingsButton text="INF" width={19.6} toggled={dispSettings.inf} onClick={onInfClick} />
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th colSpan={2} style={{ paddingTop: 0 }}>
+              Needs
+            </th>
+            <th style={{ paddingTop: 0 }}>Production</th>
+            <th style={{ paddingTop: 0 }}>Inv</th>
+            <th style={{ paddingTop: 0 }}>Amt. Needed</th>
+            <th style={{ paddingTop: 0 }}>Burn</th>
+          </tr>
+        </thead>
+        {sections}
+      </table>
+    </div>
+  );
+}
+
+function BurnSection(props: { isMultiplanet: boolean; burn: PlanetBurn; dispSettings }) {
+  const { isMultiplanet, burn, dispSettings } = props;
+
+  const isMinimized = useReactive(() => dispSettings.minimized && dispSettings.minimized[burn.planetName]);
+
+  const rows = [] as h.JSX.Element[];
+
+  const onHeaderClick = () => {
+    if (dispSettings.minimized[burn.planetName]) {
+      delete dispSettings.minimized[burn.planetName];
     } else {
-      this.name = 'ENHANCED BURN';
+      dispSettings.minimized[burn.planetName] = true;
+    }
+
+    //setSettings(pmmgSettings);
+  };
+
+  if (isMultiplanet) {
+    rows.push(<PlanetHeader key={burn.planetName} burn={burn} minimized={isMinimized} onClick={onHeaderClick} />);
+  }
+
+  if (!isMinimized) {
+    const burnMaterials = Object.keys(burn.burn);
+    burnMaterials.sort(CategorySort);
+
+    for (const ticker of burnMaterials) {
+      rows.push(
+        <MaterialRow
+          key={ticker}
+          ticker={ticker}
+          isMultiplanet={isMultiplanet}
+          burn={burn}
+          dispSettings={dispSettings}
+        />,
+      );
     }
   }
 
-  create_buffer() {
-    // Set static versions of class parameters to be passed to functions downstream
-    const parameters = this.parameters;
-
-    const planetBurn = internalCalculateBurn(this.parameters);
-
-    if (this.planetBurn && this.planetBurn.length == planetBurn.length) {
-      // Has been calculated, no update in length
-      let mismatchFound = false;
-
-      for (let i = 0; i < planetBurn.length; i++) {
-        Object.keys(planetBurn[i].burn).forEach(mat => {
-          if (
-            !this.planetBurn[i].burn[mat] ||
-            this.planetBurn[i].burn[mat].DaysLeft != planetBurn[i].burn[mat].DaysLeft
-          ) {
-            mismatchFound = true;
-          }
-        });
-        if (mismatchFound) {
-          break;
-        }
-      }
-      if (!mismatchFound) {
-        // If nothing is different, don't update
-        this.update_buffer();
-        return;
-      }
-    }
-
-    this.planetBurn = planetBurn;
-
-    clearChildren(this.tile);
-
-    // Burn data is non-empty
-    this.tile.id = 'pmmg-load-success';
-
-    // Start creating burn buffer
-
-    const screenNameElem = document.querySelector(Selector.ScreenName);
-    const screenName = screenNameElem ? screenNameElem.textContent : '';
-
-    const bufferName = screenName + this.parameters.join('');
-
-    const dispSettings = settings.burn.buffers[bufferName] || {
-      red: true,
-      yellow: true,
-      green: true,
-      inf: true,
-      minimized: {},
-    };
-
-    const table = document.createElement('table');
-    const bufferHeader = document.createElement('div');
-    bufferHeader.style.display = 'flex';
-    this.tile.appendChild(bufferHeader);
-    const settingsDiv = document.createElement('div');
-    settingsDiv.style.display = 'flex';
-    bufferHeader.appendChild(settingsDiv);
-
-    // Create settings behavior
-    settingsDiv.appendChild(
-      createSettingsButton('RED', 22.025, dispSettings.red, () => {
-        dispSettings.red = !dispSettings.red;
-        updateBurn(table, dispSettings);
-        settings.burn.buffers[bufferName] = dispSettings;
-
-        // setSettings(pmmgSettings);
-      }),
-    );
-    settingsDiv.appendChild(
-      createSettingsButton('YELLOW', 40.483, dispSettings.yellow, () => {
-        dispSettings.yellow = !dispSettings.yellow;
-        updateBurn(table, dispSettings);
-        settings.burn.buffers[bufferName] = dispSettings;
-
-        // setSettings(pmmgSettings);
-      }),
-    );
-    settingsDiv.appendChild(
-      createSettingsButton('GREEN', 34.65, dispSettings.green, () => {
-        dispSettings.green = !dispSettings.green;
-        updateBurn(table, dispSettings);
-        settings.burn.buffers[bufferName] = dispSettings;
-
-        //setSettings(pmmgSettings);
-      }),
-    );
-    settingsDiv.appendChild(
-      createSettingsButton('INF', 19.6, dispSettings.inf, () => {
-        dispSettings.inf = !dispSettings.inf;
-        updateBurn(table, dispSettings);
-        settings.burn.buffers[bufferName] = dispSettings;
-
-        //setSettings(pmmgSettings);
-      }),
-    );
-
-    const head = document.createElement('thead');
-    const headRow = document.createElement('tr');
-    head.appendChild(headRow);
-    table.appendChild(head);
-
-    const isMultiplanet = parameters[2] || parameters[1].toLowerCase() == 'all';
-
-    for (const title of ['Needs', 'Production', 'Inv', 'Amt. Needed', 'Burn']) {
-      const header = document.createElement('th');
-      header.textContent = title;
-      header.style.paddingTop = '0';
-      headRow.appendChild(header);
-    }
-    (headRow.firstChild as HTMLTableCellElement).colSpan = 2;
-
-    planetBurn.forEach(burn => {
-      const body = document.createElement('tbody');
-      table.appendChild(body);
-
-      if (isMultiplanet) {
-        const nameRow = document.createElement('tr');
-        const nameRowColumn = document.createElement('td');
-
-        const isMinimized = dispSettings.minimized && dispSettings.minimized[burn.planetName];
-        const minimizeButton = document.createElement('div');
-        minimizeButton.textContent = isMinimized ? '+' : '-';
-        minimizeButton.classList.add('pb-burn-minimize');
-        nameRowColumn.appendChild(minimizeButton);
-
-        minimizeButton.addEventListener('click', () => {
-          if (!dispSettings.minimized) {
-            dispSettings.minimized = {};
-          }
-
-          if (dispSettings.minimized[burn.planetName]) {
-            delete dispSettings.minimized[burn.planetName];
-            minimizeButton.textContent = '-';
-          } else {
-            dispSettings.minimized[burn.planetName] = true;
-            minimizeButton.textContent = '+';
-          }
-          updateBurn(table, dispSettings);
-          settings.burn.buffers[bufferName] = dispSettings;
-
-          //setSettings(pmmgSettings);
-        });
-
-        nameRowColumn.colSpan = 5;
-        nameRowColumn.appendChild(createTextSpan(burn.planetName));
-        nameRowColumn.classList.add('title');
-        nameRowColumn.style.display = 'table-cell';
-        nameRowColumn.style.backgroundColor = 'rgba(1, 1, 1, 0)';
-        nameRow.appendChild(nameRowColumn);
-        body.appendChild(nameRow);
-
-        // Add column for burn days for planet
-        let minDaysLeft = 1000;
-        Object.keys(burn.burn).forEach(mat => {
-          if (
-            !isNaN(burn.burn[mat]['DailyAmount']) &&
-            burn.burn[mat]['DailyAmount'] < 0 &&
-            burn.burn[mat]['DaysLeft'] < minDaysLeft
-          ) {
-            minDaysLeft = burn.burn[mat]['DaysLeft'];
-          }
-        });
-
-        const burnColumn = document.createElement('td');
-        burnColumn.appendChild(
-          createTextSpan(
-            `${
-              minDaysLeft < 500 ? Math.floor(minDaysLeft).toLocaleString(undefined, { maximumFractionDigits: 0 }) : '∞'
-            } Days`,
-          ),
-        );
-        if (minDaysLeft >= 500) {
-          burnColumn.classList.add('burn-green-no-hover');
-          burnColumn.classList.add('burn-infinite');
-        } else if (minDaysLeft <= settings.burn.red) {
-          burnColumn.classList.add('burn-red-no-hover');
-        } else if (minDaysLeft <= settings.burn.yellow) {
-          burnColumn.classList.add('burn-yellow-no-hover');
-        } else {
-          burnColumn.classList.add('burn-green-no-hover');
-        }
-
-        nameRow.appendChild(burnColumn);
-        nameRow.style.borderBottom = '1px solid #2b485a';
-      }
-
-      const burnMaterials = Object.keys(burn.burn);
-      burnMaterials.sort(CategorySort);
-
-      for (const ticker of burnMaterials) {
-        const row = document.createElement('tr');
-        body.appendChild(row);
-        const materialColumn = document.createElement('td');
-        materialColumn.style.width = '32px';
-        materialColumn.style.paddingRight = '0px';
-        materialColumn.style.paddingLeft = isMultiplanet ? '32px' : '0px';
-        const matElem = createMaterialElement(ticker, 'prun-remove-js', 'none', false, true);
-        if (matElem) {
-          materialColumn.appendChild(matElem);
-        }
-        row.appendChild(materialColumn);
-        const nameSpan = createTextSpan(prun.materials.get(ticker)?.displayName);
-        nameSpan.style.fontWeight = 'bold';
-        const nameColumn = document.createElement('td');
-        nameColumn.appendChild(nameSpan);
-        row.appendChild(nameColumn);
-
-        const consColumn = document.createElement('td');
-        consColumn.appendChild(
-          createTextSpan(
-            `${burn.burn[ticker]['DailyAmount'].toLocaleString(undefined, {
-              maximumFractionDigits: Math.abs(burn.burn[ticker]['DailyAmount']) < 1 ? 2 : 1,
-              minimumFractionDigits: Math.abs(burn.burn[ticker]['DailyAmount']) < 1 ? 2 : undefined,
-            })} / Day`,
-          ),
-        );
-        row.appendChild(consColumn);
-
-        const invColumn = document.createElement('td');
-        const invAmount = burn.burn[ticker]['Inventory'] == undefined ? 0 : burn.burn[ticker]['Inventory'];
-        invColumn.appendChild(createTextSpan(invAmount.toLocaleString(undefined)));
-        row.appendChild(invColumn);
-
-        const burnDays = burn.burn[ticker]['DaysLeft'];
-        const burnColumn = document.createElement('td');
-        burnColumn.appendChild(
-          createTextSpan(
-            `${
-              burnDays != '∞' && burnDays < 500 && burn.burn[ticker]['DailyAmount'] < 0
-                ? Math.floor(burnDays).toLocaleString(undefined, { maximumFractionDigits: 0 })
-                : '∞'
-            } Days`,
-          ),
-        );
-        if (burn.burn[ticker]['DailyAmount'] >= 0) {
-          burnColumn.classList.add('burn-green');
-          burnColumn.classList.add('burn-infinite');
-        } else if (burnDays <= settings.burn.red) {
-          burnColumn.classList.add('burn-red');
-        } else if (burnDays <= settings.burn.yellow) {
-          burnColumn.classList.add('burn-yellow');
-        } else {
-          burnColumn.classList.add('burn-green');
-        }
-
-        const needColumn = document.createElement('td');
-        const needAmt =
-          burnDays > settings.burn.resupply || burn.burn[ticker]['DailyAmount'] > 0
-            ? 0
-            : burnDays - settings.burn.resupply * burn.burn[ticker]['DailyAmount'];
-        needColumn.appendChild(
-          createTextSpan(isNaN(needAmt) ? '0' : needAmt.toLocaleString(undefined, { maximumFractionDigits: 0 })),
-        );
-
-        row.appendChild(needColumn);
-        row.appendChild(burnColumn);
-      }
-    });
-
-    updateBurn(table, dispSettings);
-    this.tile.appendChild(table);
-
-    this.update_buffer();
-    return;
-  }
-
-  update_buffer() {
-    this.alive = document.body.contains(this.tile);
-    if (this.alive) {
-      window.setTimeout(() => this.create_buffer(), 3000);
-    }
-  }
-
-  destroy_buffer() {
-    // Nothing constantly running so nothing to destroy
-  }
+  return <tbody>{rows}</tbody>;
 }
 
-function internalCalculateBurn(parameters) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const planetBurn = [] as any[];
+function PlanetHeader(props: { burn: PlanetBurn; minimized: boolean; onClick: () => void }) {
+  const { burn, minimized, onClick } = props;
 
-  if (!parameters[1] || parameters[1].toLowerCase() == 'all') {
-    user.workforce.forEach(planetWorkforce => {
-      if (!planetWorkforce.PlanetName) {
-        return;
-      }
-
-      // Calculate burn for each planet
-      const production = findCorrespondingPlanet(planetWorkforce.PlanetName, user.production);
-      const workforce = findCorrespondingPlanet(planetWorkforce.PlanetName, user.workforce);
-      const inv = findCorrespondingPlanet(planetWorkforce.PlanetName, user.storage, true);
-
-      planetBurn.push({ burn: calculateBurn(production, workforce, inv), planetName: planetWorkforce.PlanetName });
-    });
-  } else {
-    for (let i = 1; i < parameters.length; i++) {
-      // Calculate burn for each planet
-      const production = findCorrespondingPlanet(parameters[i], user.production);
-      const workforce = findCorrespondingPlanet(parameters[i], user.workforce);
-      const inv = findCorrespondingPlanet(parameters[i], user.storage, true);
-
-      planetBurn.push({ burn: calculateBurn(production, workforce, inv), planetName: parameters[i] });
+  let daysLeft = 1000;
+  for (const key of Object.keys(burn.burn)) {
+    const mat = burn.burn[key];
+    if (!isNaN(mat.DailyAmount) && mat.DailyAmount < 0 && mat.DaysLeft < daysLeft) {
+      daysLeft = mat.DaysLeft;
     }
   }
 
-  // If more than 1 planet, make "overall" category
-  if (planetBurn.length > 1) {
-    const overallBurn = {};
-    planetBurn.forEach(burn => {
-      Object.keys(burn.burn).forEach(mat => {
-        if (overallBurn[mat]) {
-          overallBurn[mat].DailyAmount += burn.burn[mat].DailyAmount;
-          overallBurn[mat].Inventory += burn.burn[mat].Inventory;
-        } else {
-          overallBurn[mat] = {};
-          overallBurn[mat].DailyAmount = burn.burn[mat].DailyAmount;
-          overallBurn[mat].Inventory = burn.burn[mat].Inventory;
-        }
-      });
-    });
+  const burnClass = classNames({
+    'burn-red-no-hover': daysLeft <= settings.burn.red,
+    'burn-yellow-no-hover': daysLeft <= settings.burn.yellow,
+    'burn-green-no-hover': daysLeft > settings.burn.yellow,
+    'burn-infinite': daysLeft >= 500,
+  });
 
-    Object.keys(overallBurn).forEach(mat => {
-      if (overallBurn[mat].DailyAmount >= 0) {
-        overallBurn[mat].DaysLeft = 1000;
-      } else {
-        overallBurn[mat].DaysLeft = -overallBurn[mat].Inventory / overallBurn[mat].DailyAmount;
-      }
-    });
-
-    planetBurn.push({ burn: overallBurn, planetName: 'Overall' });
-  }
-
-  planetBurn.sort(burnPlanetSort);
-
-  return planetBurn;
+  return (
+    <tr style={{ borderBottom: '1px solid #2b485a' }}>
+      <td colSpan={5} class="title" style={{ display: 'table-cell', backgroundColor: 'rgba(1, 1, 1, 0)' }}>
+        <div class="pb-burn-minimize" onClick={onClick}>
+          {minimized ? '+' : '-'}
+        </div>
+        <span>{burn.planetName}</span>
+      </td>
+      <td class={burnClass}>
+        <span>{daysLeft < 500 ? Math.floor(daysLeft) : '∞'} Days</span>
+      </td>
+    </tr>
+  );
 }
 
-// Sort entries in planetBurn like the game does it
-function burnPlanetSort(a, b) {
-  if (a.planetName == 'Overall') {
-    return 1;
-  }
-  if (b.planetName == 'Overall') {
-    return -1;
+function MaterialRow(props: { ticker: string; isMultiplanet: boolean; burn: PlanetBurn; dispSettings }) {
+  const { ticker, isMultiplanet, burn, dispSettings } = props;
+  const { red, yellow, resupply } = useReactive(() => ({
+    red: settings.burn.red,
+    yellow: settings.burn.yellow,
+    resupply: settings.burn.resupply,
+  }));
+
+  const matBurn = burn.burn[ticker];
+  const burnDays = matBurn.DaysLeft;
+  const production = matBurn.DailyAmount;
+  const invAmount = matBurn.Inventory ?? 0;
+
+  const isRed = burnDays <= red;
+  const isYellow = burnDays <= yellow;
+  const isGreen = burnDays > yellow;
+  const isInf = production >= 0;
+
+  const isVisible = useReactive(() => {
+    if (isInf && !dispSettings.inf) {
+      return false;
+    }
+    return (isRed && dispSettings.red) || (isYellow && dispSettings.yellow) || (isGreen && dispSettings.green);
+  });
+
+  if (!isVisible) {
+    return null;
   }
 
-  return comparePlanets(a.planetName, b.planetName);
+  const materialColumnStyle = {
+    width: '32px',
+    paddingRight: '0px',
+    paddingLeft: isMultiplanet ? '32px' : '0px',
+  };
+
+  const consText = Math.abs(production) < 1 ? production.toFixed(2) : production.toFixed(1);
+
+  const needAmt = burnDays > resupply || production > 0 ? 0 : burnDays - resupply * production;
+
+  const burnText =
+    Number.isFinite(burnDays) && burnDays < 500 && production < 0 ? Math.floor(burnDays).toString() : '∞';
+
+  const burnClass = classNames({
+    'burn-red-no-hover': burnDays <= red,
+    'burn-yellow-no-hover': burnDays <= yellow,
+    'burn-green-no-hover': burnDays > yellow,
+    'burn-infinite': production >= 0,
+  });
+
+  return (
+    <tr>
+      <td style={materialColumnStyle}>
+        <MaterialIcon small ticker={ticker} />
+      </td>
+      <td>
+        <span style={{ fontWeight: 'bold' }}>{prun.materials.get(ticker)?.displayName}</span>
+      </td>
+      <td>
+        <span>{consText} / Day</span>
+      </td>
+      <td>
+        <span>{invAmount}</span>
+      </td>
+      <td>
+        <span>{isNaN(needAmt) ? '0' : needAmt.toFixed(0)}</span>
+      </td>
+      <td class={burnClass}>
+        <span>{burnText} Days</span>
+      </td>
+    </tr>
+  );
+}
+
+interface MaterialProps {
+  ticker: string;
+  amount?: number;
+  text?: boolean;
+  small?: boolean;
+  building?: boolean;
+}
+
+function MaterialIcon({ amount, building, small, text, ticker }: MaterialProps) {
+  const material = prun.materials.get(ticker);
+  if (!material && ticker != 'SHPT' && !building) {
+    // Return nothing if the material isn't recognized
+    return null;
+  }
+
+  // The full name of the material (Basic Bulkhead)
+  const name = material?.displayName || 'Shipment';
+  // The category of the material
+  const category = material?.category.name || 'shipment';
+
+  const innerContainerStyle = {
+    background: building
+      ? 'linear-gradient(135deg, rgb(52, 140, 160), rgb(77, 165, 185))'
+      : CategoryColors[category][0],
+    color: building ? 'rgb(179, 255, 255)' : CategoryColors[category][1],
+  };
+  const innerContainerTitle = building ? '' : name;
+  const onInnerContainerClick = () => {
+    showBuffer(`MAT ${ticker.toUpperCase()}`);
+  };
+
+  const innerContainer = (
+    <div
+      class={PrunCss.ColoredIcon.container}
+      style={innerContainerStyle}
+      title={innerContainerTitle}
+      onClick={onInnerContainerClick}>
+      <div class={PrunCss.ColoredIcon.labelContainer}>
+        <span class={PrunCss.ColoredIcon.label}>{ticker}</span>
+      </div>
+    </div>
+  );
+
+  const materialIconClasses = classNames(PrunCss.MaterialIcon.container, {
+    'mat-element-small': small,
+    'mat-element-large': !small,
+  });
+
+  let amountElement: h.JSX.Element | null = null;
+  if (amount) {
+    const amountClass = classNames([
+      PrunCss.MaterialIcon.indicator,
+      PrunCss.MaterialIcon.neutral,
+      'MaterialIcon__type-very-small___UMzQ3ir',
+    ]);
+
+    amountElement = (
+      <div class={PrunCss.MaterialIcon.indicatorContainer}>
+        <div class={amountClass}>{amount}</div>
+      </div>
+    );
+  }
+
+  const materialIcon = (
+    <div class={materialIconClasses}>
+      {innerContainer}
+      {amountElement}
+    </div>
+  );
+
+  if (small) {
+    // Small material elements don't need all the wrapping
+    return materialIcon;
+  }
+
+  let textElement: h.JSX.Element | null = null;
+
+  if (text) {
+    const textElementClass = classNames([
+      PrunCss.GridItemView.name,
+      'fonts__font-regular___Sxp1xjo',
+      'type__type-regular___k8nHUfI',
+    ]);
+    textElement = <span class={textElementClass}>{name}</span>;
+  }
+
+  return (
+    <div class={PrunCss.GridItemView.container}>
+      <div class={PrunCss.GridItemView.image}>
+        {materialIcon}
+        {textElement}
+      </div>
+    </div>
+  );
 }
 
 function updateBurn(table, dispSettings) {
-  (Array.from(table.children) as HTMLElement[]).forEach(child => {
+  for (const child of Array.from(table.children) as HTMLElement[]) {
     if (!child.children) {
-      return;
+      continue;
     }
 
     // Hide further elements if minimized
@@ -408,7 +359,7 @@ function updateBurn(table, dispSettings) {
         }
 
         if (minimized) {
-          return;
+          continue;
         }
       }
     }
@@ -440,8 +391,121 @@ function updateBurn(table, dispSettings) {
         row.style.height = dispSettings.red ? 'auto' : '0px';
       }
     });
-  });
+  }
   return;
+}
+
+function SettingsButton(props: { toggled: boolean; text: string; width: number; onClick: () => void }) {
+  const { toggled, text, width, onClick } = props;
+  const buttonClass = classNames(PrunCss.RadioItem.container, PrunCss.RadioItem.containerHorizontal);
+  const barUntoggledClass = classNames(PrunCss.RadioItem.indicator, PrunCss.RadioItem.indicatorHorizontal);
+  const barToggledClass = classNames(
+    PrunCss.RadioItem.indicator,
+    PrunCss.RadioItem.indicatorHorizontal,
+    PrunCss.RadioItem.active,
+    PrunCss.effects.shadowPrimary,
+  );
+  const barClass = toggled ? barToggledClass : barUntoggledClass;
+  const barStyle = {
+    width: `${width}px`,
+    maxWidth: `${width}px`,
+    height: '2px',
+  };
+  const textBoxClass = classNames(
+    PrunCss.RadioItem.value,
+    PrunCss.RadioItem.valueHorizontal,
+    // TODO: These classes were not exported for some reason
+    'fonts__font-regular___Sxp1xjo',
+    'type__type-small___pMQhMQO',
+  );
+  return (
+    <span class={buttonClass} onClick={onClick}>
+      <div class={barClass} style={barStyle} />
+      <div class={textBoxClass}>{text}</div>
+    </span>
+  );
+}
+
+interface PlanetBurn {
+  burn: BurnValues;
+  planetName: string;
+}
+
+function internalCalculateBurn(parameters: string[], requestData: (id: string) => void) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const planetBurn = [] as PlanetBurn[];
+  const planets = [] as Planet[];
+
+  if (parameters.length > 2 && parameters[1].toLowerCase() != 'all') {
+    for (let i = 1; i < parameters.length; i++) {
+      const planet = prun.planets.get(parameters[i]);
+      if (planet) {
+        planets.push(planet);
+      }
+    }
+  } else {
+    for (const site of user.sites.filter(x => x.type === 'BASE')) {
+      const planet = prun.planets.get(site.PlanetNaturalId);
+      if (planet) {
+        planets.push(planet);
+      }
+    }
+  }
+
+  for (const planet of planets) {
+    const production = findCorrespondingPlanet(planet.name, user.production);
+    const workforce = findCorrespondingPlanet(planet.name, user.workforce);
+    const inv = findCorrespondingPlanet(planet.name, user.storage, true);
+    if (!production || !workforce) {
+      requestData(planet.naturalId);
+      continue;
+    }
+
+    planetBurn.push({ burn: calculateBurn(production, workforce, inv), planetName: planet.name });
+  }
+
+  // If more than 1 planet, make "overall" category
+  if (planetBurn.length > 1) {
+    const overallBurn = {};
+    for (const burn of planetBurn) {
+      for (const mat of Object.keys(burn.burn)) {
+        if (overallBurn[mat]) {
+          overallBurn[mat].DailyAmount += burn.burn[mat].DailyAmount;
+          overallBurn[mat].Inventory += burn.burn[mat].Inventory;
+        } else {
+          overallBurn[mat] = {};
+          overallBurn[mat].DailyAmount = burn.burn[mat].DailyAmount;
+          overallBurn[mat].Inventory = burn.burn[mat].Inventory;
+        }
+      }
+    }
+
+    for (const mat of Object.keys(overallBurn)) {
+      if (overallBurn[mat].DailyAmount >= 0) {
+        overallBurn[mat].DaysLeft = 1000;
+      } else {
+        overallBurn[mat].DaysLeft = -overallBurn[mat].Inventory / overallBurn[mat].DailyAmount;
+      }
+    }
+
+    planetBurn.push({ burn: overallBurn, planetName: 'Overall' });
+  }
+
+  planetBurn.sort(burnPlanetSort);
+
+  return planetBurn;
+}
+
+// Sort entries in planetBurn like the game does it
+function burnPlanetSort(a, b) {
+  if (a.planetName == 'Overall') {
+    return 1;
+  }
+  if (b.planetName == 'Overall') {
+    return -1;
+  }
+
+  return comparePlanets(a.planetName, b.planetName);
 }
 
 xit.add({
@@ -453,5 +517,5 @@ xit.add({
 
     return 'ENHANCED BURN';
   },
-  component: createXitAdapter(Burn),
+  component: parameters => <BURN parameters={parameters} />,
 });

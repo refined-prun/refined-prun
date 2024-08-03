@@ -40,19 +40,27 @@ export class DataHealth {
       return;
     }
 
-    user.workforce.forEach(workforce => {
+    for (const site of user.sites.filter(x => x.type === 'BASE')) {
+      if (site.PlanetName) {
+        baseInfo[site.PlanetName] = [false, false, false];
+      }
+    }
+
+    for (const workforce of user.workforce) {
       if (workforce.PlanetName && !baseInfo[workforce.PlanetName]) {
         baseInfo[workforce.PlanetName] = [true, false, false];
+      } else if (workforce.PlanetName) {
+        baseInfo[workforce.PlanetName][0] = true;
       }
-    });
+    }
 
-    user.production.forEach(production => {
+    for (const production of user.production) {
       if (production.PlanetName && !baseInfo[production.PlanetName]) {
         baseInfo[production.PlanetName] = [false, true, false];
       } else if (production.PlanetName) {
         baseInfo[production.PlanetName][1] = true;
       }
-    });
+    }
 
     for (const storage of user.storage) {
       if (storage.PlanetName && storage.type == 'STORE' && !baseInfo[storage.PlanetName]) {

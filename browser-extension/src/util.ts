@@ -4,6 +4,11 @@ import { Stations } from './GameProperties';
 import { CategoryColors, DefaultColors, Style, WithStyles } from './Style';
 import system from '@src/system';
 import prun from '@src/prun-api/prun';
+import { _$, _$$ } from '@src/utils/get-element-by-class-name';
+import PrunCss from '@src/prun-ui/prun-css';
+import observeReadyElementsByClassName from '@src/utils/mutation-observer';
+import onetime from 'onetime';
+import { dot } from '@src/utils/dot';
 
 export const hourFormatter = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
 
@@ -509,27 +514,40 @@ export function createLink(text, command, autoSubmit = true) {
   return linkDiv;
 }
 
+const commandQueue: [string, boolean, boolean][] = [];
+
 // Shows a buffer with a specified command
-export function showBuffer(command, autoSubmit = true) {
-  const button = document.getElementById(Selector.NewBFRButton);
+export function showBuffer(command: string, autoSubmit = true, autoClose = false) {
+  setupShowBufferTracking();
+
+  const button = _$(PrunCss.Dock.create) as HTMLButtonElement;
   if (button == null) {
     return false;
   }
 
-  const addSubmitCommand = (input, cmd) => {
-    changeValue(input, cmd);
-    if (autoSubmit) {
-      input.parentElement.parentElement.requestSubmit();
-    }
-  };
-
-  // Watch for future buffer creation
-  monitorOnElementCreated(Selector.BufferTextField, elem => addSubmitCommand(elem, command));
-
-  // Create new Buffer
+  commandQueue.push([command, autoSubmit, autoClose]);
   button.click();
   return true;
 }
+
+const setupShowBufferTracking = onetime(() => {
+  observeReadyElementsByClassName(PrunCss.PanelSelector.input, input => {
+    if (commandQueue.length === 0) {
+      return;
+    }
+    const [command, autoSubmit, autoClose] = commandQueue.shift()!;
+    changeValue(input, command);
+    if (autoSubmit) {
+      (input as HTMLInputElement).form!.requestSubmit();
+      if (autoClose) {
+        const window = input.closest(dot(PrunCss.Window.window))!;
+        const buttons = _$$(PrunCss.Window.button, window);
+        const closeButton = buttons.find(x => x.textContent === 'x');
+        setTimeout(() => (closeButton as HTMLButtonElement)?.click(), 0);
+      }
+    }
+  });
+});
 
 // Change the value of a new buffer box
 export function changeValue(input, value) {
@@ -579,38 +597,6 @@ export function changeSelectValue(input, value) {
   inputEvent.initEvent('input', true, true);
   // Dispatch the event to the input element
   input.dispatchEvent(inputEvent);
-}
-
-// Wait for a new buffer to be created
-export function monitorOnElementCreated(selector, callback, onlyOnce = true) {
-  const getElementsFromNodes = nodes =>
-    Array.from(nodes)
-      .flatMap(node =>
-        (node as Node).nodeType === 3 ? null : Array.from((node as HTMLElement).querySelectorAll(selector)),
-      )
-      .filter(item => item !== null);
-  const onMutationsObserved = function (mutations) {
-    mutations.forEach(mutation => {
-      if (mutation.addedNodes.length) {
-        const elements = getElementsFromNodes(mutation.addedNodes);
-        for (let i = 0, len = elements.length; i < len; i++) {
-          callback(elements[i]);
-          if (onlyOnce) observer.disconnect();
-        }
-      }
-    });
-  };
-
-  const containerSelector = 'body';
-  const target = document.querySelector(containerSelector);
-  if (!target) {
-    return;
-  }
-  const config = { childList: true, subtree: true };
-  const MutationObserver = window['MutationObserver'] || window['WebKitMutationObserver'];
-  const observer = new MutationObserver(onMutationsObserved);
-  observer.observe(target as Node, config);
-  return;
 }
 
 // Remove all elements added in the last run with a class name
@@ -849,99 +835,112 @@ export function createContractDict(contracts, contractdict) {
   }
 }
 
+export interface MaterialBurn {
+  DailyAmount: number;
+  Inventory: number;
+  DaysLeft: number;
+  Type: 'input' | 'output' | 'workforce';
+}
+
+export interface BurnValues {
+  [ticker: string]: MaterialBurn;
+}
+
 // Calculate burn
 export function calculateBurn(production, workforce, inventory) {
-  const burnDict = {};
+  const burnDict: BurnValues = {};
 
   if (production && production.lines) {
-    production.lines.forEach(line => {
+    for (const line of production.lines) {
       const numLines = line.capacity;
       let hasRecurring = false;
       let totalDuration = 0;
-      line.orders.forEach(order => {
+      for (const order of line.orders) {
         if (!order.started) {
           // Only account for orders in the queue.
           hasRecurring = hasRecurring || order.recurring;
         }
-      });
-      line.orders.forEach(order => {
+      }
+      for (const order of line.orders) {
         if (!order.started && (!hasRecurring || order.recurring)) {
           // Only account for orders in the queue.
           totalDuration += order.duration;
         }
-      });
+      }
       totalDuration /= 86400000; // Convert to days
 
-      line.orders.forEach(order => {
+      for (const order of line.orders) {
         if (!order.started && (!hasRecurring || order.recurring)) {
-          order.outputs.forEach(mat => {
-            if (burnDict[mat['MaterialTicker']]) {
-              burnDict[mat['MaterialTicker']]['DailyAmount'] += (mat['Amount'] * numLines) / totalDuration;
+          for (const mat of order.outputs) {
+            const materialBurn = burnDict[mat.MaterialTicker];
+            if (materialBurn) {
+              materialBurn.DailyAmount += (mat.Amount * numLines) / totalDuration;
             } else {
-              burnDict[mat['MaterialTicker']] = {
-                DailyAmount: (mat['Amount'] * numLines) / totalDuration,
+              burnDict[mat.MaterialTicker] = {
+                DailyAmount: (mat.Amount * numLines) / totalDuration,
                 Inventory: 0,
                 DaysLeft: 0,
                 Type: 'output',
               };
             }
-          });
-          order.inputs.forEach(mat => {
-            if (burnDict[mat['MaterialTicker']]) {
-              burnDict[mat['MaterialTicker']]['DailyAmount'] -= (mat['Amount'] * numLines) / totalDuration;
-              if (burnDict[mat['MaterialTicker']]['Type'] == 'output') {
-                burnDict[mat['MaterialTicker']]['Type'] = 'input';
+          }
+          for (const mat of order.inputs) {
+            const materialBurn = burnDict[mat.MaterialTicker];
+            if (materialBurn) {
+              materialBurn.DailyAmount -= (mat.Amount * numLines) / totalDuration;
+              if (materialBurn.Type == 'output') {
+                materialBurn.Type = 'input';
               }
             } else {
-              burnDict[mat['MaterialTicker']] = {
-                DailyAmount: (-mat['Amount'] * numLines) / totalDuration,
+              burnDict[mat.MaterialTicker] = {
+                DailyAmount: (-mat.Amount * numLines) / totalDuration,
                 Inventory: 0,
                 DaysLeft: 0,
                 Type: 'input',
               };
             }
-          });
+          }
         }
-      });
-    });
+      }
+    }
   }
 
   if (workforce && workforce.workforce) {
-    workforce.workforce.forEach(tier => {
-      // Loop over all 5 tiers of workers
-      if (tier.population > 1) {
-        // Don't count the one bugged population
-        tier.needs.forEach(need => {
-          const ticker = need.material.ticker;
-          if (burnDict[ticker]) {
-            burnDict[ticker]['DailyAmount'] -= need.unitsPerInterval;
-            burnDict[ticker]['Type'] = 'workforce';
-          } else {
-            burnDict[ticker] = {
-              DailyAmount: -need.unitsPerInterval,
-              Inventory: 0,
-              DaysLeft: 0,
-              Type: 'workforce',
-            };
-          }
-        });
+    for (const tier of workforce.workforce) {
+      if (tier.population <= 1) {
+        // Don't count the bugged workforce with one population.
+        continue;
       }
-    });
+      for (const need of tier.needs) {
+        const ticker = need.material.ticker;
+        const materialBurn = burnDict[ticker];
+        if (materialBurn) {
+          materialBurn.DailyAmount -= need.unitsPerInterval;
+          materialBurn.Type = 'workforce';
+        } else {
+          burnDict[ticker] = {
+            DailyAmount: -need.unitsPerInterval,
+            Inventory: 0,
+            DaysLeft: 0,
+            Type: 'workforce',
+          };
+        }
+      }
+    }
   }
 
   if (inventory && inventory.items) {
-    inventory.items.forEach(item => {
-      if (burnDict[item.MaterialTicker]) {
-        // Only care about items that are burned, not other inventory items
-        burnDict[item.MaterialTicker]['Inventory'] += item.Amount;
-        if (item.Amount != 0) {
-          burnDict[item.MaterialTicker]['DaysLeft'] =
-            burnDict[item.MaterialTicker]['DailyAmount'] > 0
-              ? 1000
-              : Math.floor(-burnDict[item.MaterialTicker]['Inventory'] / burnDict[item.MaterialTicker]['DailyAmount']);
-        }
+    for (const item of inventory.items) {
+      const materialBurn = burnDict[item.MaterialTicker];
+      if (!materialBurn) {
+        continue;
       }
-    });
+      materialBurn.Inventory += item.Amount;
+      if (item.Amount != 0) {
+        materialBurn.DaysLeft =
+          materialBurn.DailyAmount > 0 ? 1000 : Math.floor(-materialBurn.Inventory / materialBurn.DailyAmount);
+      }
+    }
   }
 
   return burnDict;

@@ -26,7 +26,7 @@ const correctableCommands = new Set([
   'GOV',
 ]);
 
-export function onSelectorReady(selector: HTMLDivElement) {
+function onSelectorReady(selector: HTMLDivElement) {
   const input = _$(PrunCss.PanelSelector.input, selector) as HTMLInputElement;
   const form = input.form!;
   form.addEventListener('submit', ev => {
