@@ -205,7 +205,7 @@ function MaterialRow(props: { ticker: string; isMultiplanet: boolean; burn: Plan
 
   const consText = Math.abs(production) < 1 ? production.toFixed(2) : production.toFixed(1);
 
-  const needAmt = burnDays > resupply || production > 0 ? 0 : burnDays - resupply * production;
+  const needAmt = burnDays > resupply || production > 0 ? 0 : (burnDays - resupply) * production;
 
   const burnText =
     Number.isFinite(burnDays) && burnDays < 500 && production < 0 ? Math.floor(burnDays).toString() : '∞';
