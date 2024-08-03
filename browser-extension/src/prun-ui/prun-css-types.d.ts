@@ -25,7 +25,7 @@ declare module PrunUI {
     BuildingIcon: BuildingIcon;
     BuildingInformation: BuildingInformation;
     BuildingList: BuildingList;
-    BuildingRepairAssistantPanel: BuildingRepairAssistantPanel;
+    BuildingRepairAssistantPanel: BuildingIcon;
     Button: Button;
     Card: Card;
     Carousel: Carousel;
@@ -41,7 +41,7 @@ declare module PrunUI {
     CoGCVotingDetails: CoGCVotingDetails;
     CoGCVoting: App;
     CoGC: CoGC;
-    ColoredIcon: ColoredIcon;
+    ColoredIcon: BuildingIcon;
     ColoredValue: ColoredValue;
     ComExInlineTickerQuote: App;
     ComExListTable: COMExListTable;
@@ -154,7 +154,7 @@ declare module PrunUI {
     Motion: Motion;
     NoTestServerAccess: NoTestServerAccess;
     Node: Node;
-    NotificationsPanel: App;
+    NotificationsPanel: NotificationsPanel;
     OrderSlot: OrderSlot;
     OrderStatusLabel: OrderStatusLabel;
     OrderStatus: OrderStatus;
@@ -180,7 +180,7 @@ declare module PrunUI {
     ProductionQueue: ProductionQueue;
     Program: CorporationInvitesContainer;
     ProgressBar: ProgressBar;
-    Prompt: Prompt;
+    Prompt: AddressSelector;
     RadioGroup: RadioGroup;
     RadioItem: RadioItem;
     RangeBar: RangeBar;
@@ -263,14 +263,17 @@ declare module PrunUI {
     Warehouse: Warehouse;
     Window: Window;
     Workforces: Workforces;
+    colors: Colors;
     effects: Effects;
     emptyTile: EmptyTile;
     figures: Figures;
-    forms: Prompt;
+    fonts: Fonts;
+    forms: AddressSelector;
     links: Links;
     styles: Styles;
     suggestions: Suggestions;
     tables: Tables;
+    type: BuildingIcon;
     ui: UI;
   }
 
@@ -290,6 +293,7 @@ declare module PrunUI {
   }
 
   export interface ActionFeedback {
+    backgroundStripes: string;
     dismiss: string;
     error: string;
     message: string;
@@ -323,11 +327,13 @@ declare module PrunUI {
     cmdMobile: string;
     cmd: string;
     containerOpen?: string;
-    container: string;
+    container?: string;
     dynamicMobile: string;
     dynamic: string;
     errorMobile: string;
     error: string;
+    formComponentMobile: string;
+    formComponent: string;
     form: string;
     headerMobile: string;
     header: string;
@@ -346,6 +352,8 @@ declare module PrunUI {
     suggestionsList?: string;
     suggestionEntry?: string;
     suggestionName?: string;
+    promptMobile?: string;
+    prompt?: string;
     info?: string;
   }
 
@@ -454,9 +462,22 @@ declare module PrunUI {
   }
 
   export interface BuildingIcon {
-    container: string;
-    tickerContainer: string;
-    ticker: string;
+    container?: string;
+    tickerContainer?: string;
+    ticker?: string;
+    typeIntro: string;
+    typeLarge: string;
+    typeLarger: string;
+    typeRegular: string;
+    typeSmall: string;
+    typeTitle: string;
+    typeVeryLarge: string;
+    typeVerySmall: string;
+    typeVeryVeryLarge: string;
+    buildingList?: string;
+    building?: string;
+    labelContainer?: string;
+    label?: string;
   }
 
   export interface BuildingInformation {
@@ -480,12 +501,8 @@ declare module PrunUI {
     materiallist: string;
   }
 
-  export interface BuildingRepairAssistantPanel {
-    buildingList: string;
-    building: string;
-  }
-
   export interface Button {
+    backgroundStripes: string;
     btn: string;
     dangerInlineMobile: string;
     dangerInline: string;
@@ -615,12 +632,6 @@ declare module PrunUI {
     vote: string;
   }
 
-  export interface ColoredIcon {
-    container: string;
-    labelContainer: string;
-    label: string;
-  }
-
   export interface ColoredValue {
     negative: string;
     positive: string;
@@ -702,6 +713,7 @@ declare module PrunUI {
   }
 
   export interface Connecting {
+    backgroundStripes: string;
     error: string;
     message: string;
     overlay: string;
@@ -824,6 +836,7 @@ declare module PrunUI {
   }
 
   export interface Error {
+    backgroundStripes: string;
     containerMobile: string;
     errorMobile: string;
     error: string;
@@ -1161,6 +1174,15 @@ declare module PrunUI {
     neutral: string;
     primary: string;
     success: string;
+    typeIntro: string;
+    typeLarge: string;
+    typeLarger: string;
+    typeRegular: string;
+    typeSmall: string;
+    typeTitle: string;
+    typeVeryLarge: string;
+    typeVerySmall: string;
+    typeVeryVeryLarge: string;
   }
 
   export interface MaterialInformation {
@@ -1263,6 +1285,12 @@ declare module PrunUI {
     horizontal: string;
     node: string;
     vertical: string;
+  }
+
+  export interface NotificationsPanel {
+    activeContext: string;
+    container: string;
+    otherContexts: string;
   }
 
   export interface OrderSlot {
@@ -1412,33 +1440,6 @@ declare module PrunUI {
     warning: string;
   }
 
-  export interface Prompt {
-    activeMobile: string;
-    active: string;
-    btnDanger: string;
-    btnNeutral: string;
-    btnPrimary: string;
-    btnSuccess: string;
-    btn: string;
-    cmdMobile: string;
-    cmd: string;
-    dynamicMobile: string;
-    dynamic: string;
-    errorMobile: string;
-    error: string;
-    form: string;
-    headerMobile: string;
-    header: string;
-    inputMobile: string;
-    input: string;
-    passiveMobile: string;
-    passive: string;
-    promptMobile?: string;
-    prompt?: string;
-    staticMobile: string;
-    static: string;
-  }
-
   export interface RadioGroup {
     container: string;
     horizontal: string;
@@ -1493,6 +1494,7 @@ declare module PrunUI {
   }
 
   export interface Restriction {
+    backgroundStripes: string;
     headline: string;
     message: string;
     overlay: string;
@@ -1519,6 +1521,10 @@ declare module PrunUI {
   }
 
   export interface ScrollView {
+    thumbHorizontal: string;
+    thumbVertical: string;
+    trackHorizontal: string;
+    trackVertical: string;
     track: string;
     viewMobile: string;
     view: string;
@@ -1643,6 +1649,7 @@ declare module PrunUI {
     ownCurrency: string;
     sectionContent: string;
     sectionHead: string;
+    sidebarLine: string;
     title: string;
   }
 
@@ -1951,6 +1958,15 @@ declare module PrunUI {
     warning: string;
   }
 
+  export interface Colors {
+    textBright: string;
+    textDanger: string;
+    textDisabled: string;
+    textRegular: string;
+    textSuccess: string;
+    textWarning: string;
+  }
+
   export interface Effects {
     insetShadowDimmed: string;
     insetShadowFailure: string;
@@ -1979,6 +1995,13 @@ declare module PrunUI {
     figureMobile: string;
     figure: string;
     label: string;
+  }
+
+  export interface Fonts {
+    fontHeaders: string;
+    fontRegular: string;
+    fontSmallHeaders: string;
+    fontSmoothing: string;
   }
 
   export interface Links {

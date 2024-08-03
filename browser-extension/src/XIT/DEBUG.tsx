@@ -137,7 +137,7 @@ function downloadPrunCssClasses() {
     if (text === null) {
       continue;
     }
-    const matches = text.match(/\w+__\w+___\w+/g);
+    const matches = text.match(/[\w-]+__[\w-]+___[\w-]+/g);
     for (const match of matches ?? []) {
       classes.push(match);
     }
@@ -145,12 +145,13 @@ function downloadPrunCssClasses() {
   classes.sort();
   const result = {};
   for (const cssClass of classes) {
+    const camelize = (s: string) => s.replace(/-./g, x => x[1].toUpperCase());
     const parts = cssClass.replace('.', '').replace('___', '_').replace('__', '_').split('_');
-    const parent = parts[0];
+    const parent = camelize(parts[0]);
     if (parent === '') {
       continue;
     }
-    const child = parts[1];
+    const child = camelize(parts[1]);
     let parentObject = result[parent];
     if (parentObject === undefined) {
       parentObject = {};

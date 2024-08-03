@@ -294,7 +294,7 @@ function MaterialIcon({ amount, building, small, text, ticker }: MaterialProps) 
     const amountClass = classNames([
       PrunCss.MaterialIcon.indicator,
       PrunCss.MaterialIcon.neutral,
-      'MaterialIcon__type-very-small___UMzQ3ir',
+      PrunCss.MaterialIcon.typeVerySmall,
     ]);
 
     amountElement = (
@@ -321,8 +321,8 @@ function MaterialIcon({ amount, building, small, text, ticker }: MaterialProps) 
   if (text) {
     const textElementClass = classNames([
       PrunCss.GridItemView.name,
-      'fonts__font-regular___Sxp1xjo',
-      'type__type-regular___k8nHUfI',
+      PrunCss.fonts.fontRegular,
+      PrunCss.type.typeRegular,
     ]);
     textElement = <span class={textElementClass}>{name}</span>;
   }
@@ -356,9 +356,8 @@ function SettingsButton(props: { toggled: boolean; text: string; width: number; 
   const textBoxClass = classNames(
     PrunCss.RadioItem.value,
     PrunCss.RadioItem.valueHorizontal,
-    // TODO: These classes were not exported for some reason
-    'fonts__font-regular___Sxp1xjo',
-    'type__type-small___pMQhMQO',
+    PrunCss.fonts.fontRegular,
+    PrunCss.type.typeSmall,
   );
   return (
     <span class={buttonClass} onClick={onClick}>

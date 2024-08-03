@@ -13,6 +13,7 @@
     "text": "ActionConfirmationOverlay__text___qkKzVK0"
   },
   "ActionFeedback": {
+    "backgroundStripes": "ActionFeedback__background-stripes___kymoBYd",
     "dismiss": "ActionFeedback__dismiss___x5Ln7y1",
     "error": "ActionFeedback__error___xlcZVC4",
     "message": "ActionFeedback__message___G2Sz4bw",
@@ -48,6 +49,8 @@
     "dynamic": "AddressSelector__dynamic___pZE5muC",
     "errorMobile": "AddressSelector__errorMobile___Scw5O5S",
     "error": "AddressSelector__error___gZfoUTL",
+    "formComponentMobile": "AddressSelector__form-componentMobile___xW03a_m",
+    "formComponent": "AddressSelector__form-component___o_zVEMc",
     "form": "AddressSelector__form___PcpKDEL",
     "headerMobile": "AddressSelector__headerMobile___UGn3Bmx",
     "header": "AddressSelector__header___oX0hTsp",
@@ -154,7 +157,16 @@
   "BuildingIcon": {
     "container": "BuildingIcon__container___jF5GUsz",
     "tickerContainer": "BuildingIcon__tickerContainer___NZx3G8C",
-    "ticker": "BuildingIcon__ticker___LttpYJQ"
+    "ticker": "BuildingIcon__ticker___LttpYJQ",
+    "typeIntro": "BuildingIcon__type-intro___kuAjiM3",
+    "typeLarge": "BuildingIcon__type-large___YFSR2mV",
+    "typeLarger": "BuildingIcon__type-larger___h9BtHpN",
+    "typeRegular": "BuildingIcon__type-regular___nyGJNBk",
+    "typeSmall": "BuildingIcon__type-small___esAFgS_",
+    "typeTitle": "BuildingIcon__type-title___Elby0CZ",
+    "typeVeryLarge": "BuildingIcon__type-very-large___Iubd6Qr",
+    "typeVerySmall": "BuildingIcon__type-very-small___YT_nB8W",
+    "typeVeryVeryLarge": "BuildingIcon__type-very-very-large___H7J_5ko"
   },
   "BuildingInformation": {
     "buildingCostList": "BuildingInformation__buildingCostList___qFC440F",
@@ -177,9 +189,19 @@
   },
   "BuildingRepairAssistantPanel": {
     "buildingList": "BuildingRepairAssistantPanel__buildingList___Ux7c0x5",
-    "building": "BuildingRepairAssistantPanel__building___aqaMFF1"
+    "building": "BuildingRepairAssistantPanel__building___aqaMFF1",
+    "typeIntro": "BuildingRepairAssistantPanel__type-intro___SrLSKt0",
+    "typeLarge": "BuildingRepairAssistantPanel__type-large___x86zd8E",
+    "typeLarger": "BuildingRepairAssistantPanel__type-larger___AmtHluP",
+    "typeRegular": "BuildingRepairAssistantPanel__type-regular___rk1AMut",
+    "typeSmall": "BuildingRepairAssistantPanel__type-small___H_hmBxE",
+    "typeTitle": "BuildingRepairAssistantPanel__type-title___CWoM_GX",
+    "typeVeryLarge": "BuildingRepairAssistantPanel__type-very-large___mMfCxti",
+    "typeVerySmall": "BuildingRepairAssistantPanel__type-very-small___M3cS3t_",
+    "typeVeryVeryLarge": "BuildingRepairAssistantPanel__type-very-very-large___ENojUZG"
   },
   "Button": {
+    "backgroundStripes": "Button__background-stripes___G3hMh76",
     "btn": "Button__btn___UJGZ1b7",
     "dangerInlineMobile": "Button__dangerInlineMobile___FFyVBd0",
     "dangerInline": "Button__dangerInline___MgsRqBc",
@@ -301,7 +323,16 @@
   "ColoredIcon": {
     "container": "ColoredIcon__container___djaR4r2",
     "labelContainer": "ColoredIcon__labelContainer___YVfgzOk",
-    "label": "ColoredIcon__label___OU1I4oP"
+    "label": "ColoredIcon__label___OU1I4oP",
+    "typeIntro": "ColoredIcon__type-intro___HcDSfLl",
+    "typeLarge": "ColoredIcon__type-large___0ZCo988",
+    "typeLarger": "ColoredIcon__type-larger___JE4l3wu",
+    "typeRegular": "ColoredIcon__type-regular___LVv1HTL",
+    "typeSmall": "ColoredIcon__type-small___CLvZFbT",
+    "typeTitle": "ColoredIcon__type-title___trMLH4V",
+    "typeVeryLarge": "ColoredIcon__type-very-large___aZcqV53",
+    "typeVerySmall": "ColoredIcon__type-very-small___bbZ8tpy",
+    "typeVeryVeryLarge": "ColoredIcon__type-very-very-large___fSEtWfV"
   },
   "ColoredValue": {
     "negative": "ColoredValue__negative___cq9dP4w",
@@ -384,6 +415,7 @@
     "selector": "ComponentOptionSelection__selector___B1PiICo"
   },
   "Connecting": {
+    "backgroundStripes": "Connecting__background-stripes___ZLldqYm",
     "error": "Connecting__error___TYYmi5x",
     "message": "Connecting__message___AQISYY3",
     "overlay": "Connecting__overlay___oNNt5yF",
@@ -529,6 +561,7 @@
     "value": "EnvironmentTable__value___lmdW9Is"
   },
   "Error": {
+    "backgroundStripes": "Error__background-stripes___jLu4nda",
     "containerMobile": "Error__containerMobile___nRf1x7t",
     "errorMobile": "Error__errorMobile___te39Rmr",
     "error": "Error__error___K6w9W8w",
@@ -885,7 +918,16 @@
     "indicator": "MaterialIcon__indicator___SHwlndJ",
     "neutral": "MaterialIcon__neutral___SYsHXAa",
     "primary": "MaterialIcon__primary___Q8DokYB",
-    "success": "MaterialIcon__success___GChJznv"
+    "success": "MaterialIcon__success___GChJznv",
+    "typeIntro": "MaterialIcon__type-intro___nlwkjsZ",
+    "typeLarge": "MaterialIcon__type-large___Ck91F1P",
+    "typeLarger": "MaterialIcon__type-larger___QujX6g2",
+    "typeRegular": "MaterialIcon__type-regular___Tn8T6Sw",
+    "typeSmall": "MaterialIcon__type-small___sJLxdYS",
+    "typeTitle": "MaterialIcon__type-title___VFcVEBs",
+    "typeVeryLarge": "MaterialIcon__type-very-large___pH1k_Kl",
+    "typeVerySmall": "MaterialIcon__type-very-small___UMzQ3ir",
+    "typeVeryVeryLarge": "MaterialIcon__type-very-very-large___C7yEwbW"
   },
   "MaterialInformation": {
     "containerMobile": "MaterialInformation__containerMobile___GhZ2slG",
@@ -923,6 +965,8 @@
     "dynamic": "MaterialSelector__dynamic___qRX5RXI",
     "errorMobile": "MaterialSelector__errorMobile___fhuUojM",
     "error": "MaterialSelector__error___pu44Udb",
+    "formComponentMobile": "MaterialSelector__form-componentMobile___QwWF0TE",
+    "formComponent": "MaterialSelector__form-component___qS05mJn",
     "form": "MaterialSelector__form___HNlelau",
     "headerMobile": "MaterialSelector__headerMobile___toWYVtR",
     "header": "MaterialSelector__header___R7qUnCW",
@@ -1020,7 +1064,9 @@
     "vertical": "Node__vertical___L2gu3I4"
   },
   "NotificationsPanel": {
-    "container": "NotificationsPanel__container___tQOlRoj"
+    "activeContext": "NotificationsPanel__activeContext___o3hVqiF",
+    "container": "NotificationsPanel__container___tQOlRoj",
+    "otherContexts": "NotificationsPanel__otherContexts___kcsNGui"
   },
   "OrderSlot": {
     "containerMobile": "OrderSlot__containerMobile___ZuVbyOk",
@@ -1205,6 +1251,8 @@
     "dynamic": "Prompt__dynamic___Qp2i3e7",
     "errorMobile": "Prompt__errorMobile___OJW1FKx",
     "error": "Prompt__error___EJgv0V6",
+    "formComponentMobile": "Prompt__form-componentMobile___ZPxKraw",
+    "formComponent": "Prompt__form-component___j__5XdE",
     "form": "Prompt__form___qmYGUr7",
     "headerMobile": "Prompt__headerMobile___nxtlzVF",
     "header": "Prompt__header___OiI3wZV",
@@ -1272,6 +1320,7 @@
     "gridContainer": "ResourceTable__gridContainer___ymrzTcD"
   },
   "RestrictionBanner": {
+    "backgroundStripes": "RestrictionBanner__background-stripes___lQBgZX5",
     "headline": "RestrictionBanner__headline___we5q6tj",
     "message": "RestrictionBanner__message___EhVHWbt",
     "overlay": "RestrictionBanner__overlay___KbzxoQ3",
@@ -1279,6 +1328,7 @@
     "unavailable": "RestrictionBanner__unavailable___dcaxeJ2"
   },
   "Restriction": {
+    "backgroundStripes": "Restriction__background-stripes___UbGtS5g",
     "headline": "Restriction__headline___RHqw991",
     "message": "Restriction__message___CrfFzRT",
     "overlay": "Restriction__overlay___pPiCzAG",
@@ -1301,6 +1351,10 @@
     "undo": "ScreenControls__undo___MewyiLs"
   },
   "ScrollView": {
+    "thumbHorizontal": "ScrollView__thumb-horizontal___QIUMIda",
+    "thumbVertical": "ScrollView__thumb-vertical___SLl4xFN",
+    "trackHorizontal": "ScrollView__track-horizontal___GesaubR",
+    "trackVertical": "ScrollView__track-vertical___uyBxTQz",
     "track": "ScrollView__track___WsFW9Gq",
     "viewMobile": "ScrollView__viewMobile___ej9LTvq",
     "view": "ScrollView__view___ovf59Tk"
@@ -1419,6 +1473,8 @@
     "dynamic": "ShipyardProjects__dynamic___PgX79bA",
     "errorMobile": "ShipyardProjects__errorMobile___hCMgjdV",
     "error": "ShipyardProjects__error___fQzE3VB",
+    "formComponentMobile": "ShipyardProjects__form-componentMobile___tfH7yRC",
+    "formComponent": "ShipyardProjects__form-component___IroqKNt",
     "form": "ShipyardProjects__form___okKGGRQ",
     "headerMobile": "ShipyardProjects__headerMobile___ikZkA6C",
     "header": "ShipyardProjects__header___KLLE686",
@@ -1446,6 +1502,7 @@
     "ownCurrency": "Sidebar__ownCurrency___HLFDXhz",
     "sectionContent": "Sidebar__sectionContent___wgGYFop",
     "sectionHead": "Sidebar__sectionHead____NHLKDT",
+    "sidebarLine": "Sidebar__sidebar-line___bE2rbRb",
     "title": "Sidebar__title___Ul5dAjT"
   },
   "SiteBuildOption": {
@@ -1732,6 +1789,8 @@
     "dynamic": "UserSelector__dynamic___ipoF8mD",
     "errorMobile": "UserSelector__errorMobile___zVM_G7T",
     "error": "UserSelector__error___BeiMPEG",
+    "formComponentMobile": "UserSelector__form-componentMobile___MpZLHEN",
+    "formComponent": "UserSelector__form-component___WxWIl8a",
     "form": "UserSelector__form___TActgif",
     "headerMobile": "UserSelector__headerMobile___VGtdl6L",
     "header": "UserSelector__header___rIZrAko",
@@ -1791,6 +1850,14 @@
     "totalSatisfaction": "Workforces__totalSatisfaction___RNuY03v",
     "warning": "Workforces__warning___t8pFltV"
   },
+  "colors": {
+    "textBright": "colors__text-bright___EdGzDZT",
+    "textDanger": "colors__text-danger___Gx_OdiS",
+    "textDisabled": "colors__text-disabled___kyhHXuk",
+    "textRegular": "colors__text-regular___KVMyXLw",
+    "textSuccess": "colors__text-success___irFtm2l",
+    "textWarning": "colors__text-warning___UZbRBLY"
+  },
   "effects": {
     "insetShadowDimmed": "effects__insetShadowDimmed___KifmueU",
     "insetShadowFailure": "effects__insetShadowFailure___G86SHqH",
@@ -1818,6 +1885,12 @@
     "figure": "figures__figure____Si_Mwh",
     "label": "figures__label___gP7bu1i"
   },
+  "fonts": {
+    "fontHeaders": "fonts__font-headers___eDKxf8h",
+    "fontRegular": "fonts__font-regular___Sxp1xjo",
+    "fontSmallHeaders": "fonts__font-small-headers___PZa5nr5",
+    "fontSmoothing": "fonts__font-smoothing___TX41M3J"
+  },
   "forms": {
     "activeMobile": "forms__activeMobile___hzAvdwg",
     "active": "forms__active___wn9KQTZ",
@@ -1832,6 +1905,8 @@
     "dynamic": "forms__dynamic___FHDMFtf",
     "errorMobile": "forms__errorMobile___ZBlZak9",
     "error": "forms__error___nWVhbAS",
+    "formComponentMobile": "forms__form-componentMobile___EmB1KAd",
+    "formComponent": "forms__form-component___yTgP_Qa",
     "form": "forms__form___agLA3i_",
     "headerMobile": "forms__headerMobile___LuLbiXw",
     "header": "forms__header___Vl8Yv9a",
@@ -1869,6 +1944,17 @@
   },
   "tables": {
     "table": "tables__table___UOWDoaY"
+  },
+  "type": {
+    "typeIntro": "type__type-intro___V3yrYdz",
+    "typeLarge": "type__type-large___CAYyb2n",
+    "typeLarger": "type__type-larger___VdpJIb1",
+    "typeRegular": "type__type-regular___k8nHUfI",
+    "typeSmall": "type__type-small___pMQhMQO",
+    "typeTitle": "type__type-title___zLHUY5c",
+    "typeVeryLarge": "type__type-very-large____Hxqf3q",
+    "typeVerySmall": "type__type-very-small___HaVMqrE",
+    "typeVeryVeryLarge": "type__type-very-very-large___oyrMEGq"
   },
   "ui": {
     "header2": "ui__header2___bTIbtzQ"
