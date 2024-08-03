@@ -454,7 +454,6 @@ function addChecklistItem(params) {
   const popup = params[0];
   const info = params[1];
   const checklist = params[2];
-  const userInfo = params[3];
 
   // Do some post-processing of the info
   switch (info.type) {

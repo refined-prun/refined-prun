@@ -337,64 +337,6 @@ function MaterialIcon({ amount, building, small, text, ticker }: MaterialProps) 
   );
 }
 
-function updateBurn(table, dispSettings) {
-  for (const child of Array.from(table.children) as HTMLElement[]) {
-    if (!child.children) {
-      continue;
-    }
-
-    // Hide further elements if minimized
-    if (child && child.children[0] && !child.children[0].children[5]) {
-      // Is header row
-      const planetSpan = child.children[0].querySelector('span');
-      if (planetSpan) {
-        const planet = planetSpan.textContent;
-        const minimized = planet && dispSettings.minimized && dispSettings.minimized[planet];
-        for (let i = 1; i < child.children.length; i++) {
-          const row = child.children[i] as HTMLElement;
-          row.style.display = !minimized ? 'table-row' : 'none';
-          row.style.visibility = !minimized ? 'visible' : 'hidden';
-          row.style.width = !minimized ? 'auto' : '0px';
-          row.style.height = !minimized ? 'auto' : '0px';
-        }
-
-        if (minimized) {
-          continue;
-        }
-      }
-    }
-
-    (Array.from(child.children) as HTMLElement[]).forEach(row => {
-      if (!row.children || !row.children[5]) {
-        return;
-      }
-
-      if (row.children[5].classList.contains('burn-infinite')) {
-        row.style.display = dispSettings.inf ? 'table-row' : 'none';
-        row.style.visibility = dispSettings.inf ? 'visible' : 'hidden';
-        row.style.width = dispSettings.inf ? 'auto' : '0px';
-        row.style.height = dispSettings.inf ? 'auto' : '0px';
-      } else if (row.children[5].classList.contains('burn-green')) {
-        row.style.display = dispSettings.green ? 'table-row' : 'none';
-        row.style.visibility = dispSettings.green ? 'visible' : 'hidden';
-        row.style.width = dispSettings.green ? 'auto' : '0px';
-        row.style.height = dispSettings.green ? 'auto' : '0px';
-      } else if (row.children[5].classList.contains('burn-yellow')) {
-        row.style.display = dispSettings.yellow ? 'table-row' : 'none';
-        row.style.visibility = dispSettings.yellow ? 'visible' : 'hidden';
-        row.style.width = dispSettings.yellow ? 'auto' : '0px';
-        row.style.height = dispSettings.yellow ? 'auto' : '0px';
-      } else if (row.children[5].classList.contains('burn-red')) {
-        row.style.display = dispSettings.red ? 'table-row' : 'none';
-        row.style.visibility = dispSettings.red ? 'visible' : 'hidden';
-        row.style.width = dispSettings.red ? 'auto' : '0px';
-        row.style.height = dispSettings.red ? 'auto' : '0px';
-      }
-    });
-  }
-  return;
-}
-
 function SettingsButton(props: { toggled: boolean; text: string; width: number; onClick: () => void }) {
   const { toggled, text, width, onClick } = props;
   const buttonClass = classNames(PrunCss.RadioItem.container, PrunCss.RadioItem.containerHorizontal);
