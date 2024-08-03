@@ -27,5 +27,5 @@ export function LegacyXitAdapter(props: { xitClass: new (...args: any[]) => XITM
     );
     xitObject.create_buffer();
   }, [props.parameters, props.xitClass]);
-  return <div ref={container} style={{ height: '100%', flexGrow: 1 }} />;
+  return <div ref={container} style={{ height: '100%', flexGrow: 1, paddingTop: '4px' }} />;
 }

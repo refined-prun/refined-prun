@@ -7,6 +7,8 @@ import { _$ } from '@src/utils/get-element-by-class-name';
 import xit from '@src/XIT/xit-registry';
 import { render } from 'preact';
 import { appendRootFragment } from '@src/utils/create-root-fragment';
+import { showBuffer } from '@src/util';
+import { h } from 'dom-chef';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let xitArgs: any;
@@ -24,8 +26,10 @@ export function applyXITParameters(pmmgSettings, userInfo, webData, modules) {
 async function onBufferCreated(buffer: PrunBuffer) {
   const frame = buffer.frame;
   const scrollView = await descendantPresent(frame, PrunCss.ScrollView.view);
-  const body = scrollView.children[0] as HTMLDivElement;
-  if (!body) {
+  // XIT command produces a buffer with full-size green screen on top.
+  // For custom XIT commands we just draw on top of it.
+  const greenScreen = scrollView.children[0] as HTMLDivElement;
+  if (!greenScreen) {
     return;
   }
 
@@ -51,13 +55,13 @@ async function onBufferCreated(buffer: PrunBuffer) {
     return;
   }
 
-  // Remove green screen
-  body.style.background = '';
-  body.classList.add('rprun-xit-tile');
+  const container = <div className="rprun-XIT-container" />;
+  const background = <div className="rprun-XIT-background">{container}</div>;
+  greenScreen.appendChild(background);
 
   const xitCommand = xit.get(command);
   if (!xitCommand) {
-    body.textContent = 'Error! No Matching Function!';
+    container.textContent = 'Error! No Matching Function!';
     return;
   }
 
@@ -65,7 +69,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
     typeof xitCommand.name === 'string' ? xitCommand.name : xitCommand.name(parameters);
 
   const vNode = xitCommand.component(parameters);
-  render(vNode, appendRootFragment(body, 'div'));
+  render(vNode, appendRootFragment(container, 'div'));
 }
 
 export function init() {

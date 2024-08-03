@@ -1,8 +1,21 @@
-.rprun-xit-tile {
-  position: relative;
+/* Completely overlay green screen to prevent visual artifacts*/
+.rprun-XIT-background {
   width: 100%;
   height: 100%;
-  padding-top: 4px;
-  display: flex;
-  flex-flow: column;
+  background-color: #222;
+}
+
+/* Counter -1px inset from ScrollView */
+.rprun-XIT-container {
+  position: absolute;
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+  inset: 1px;
+}
+
+.rprun-XIT-title {
+  font-weight: bold;
+  display: block;
+  font-size: 16px;
+  padding-left: 5px;
 }
