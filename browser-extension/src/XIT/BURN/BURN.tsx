@@ -1,5 +1,4 @@
 import { BurnValues, calculateBurn, comparePlanets, findCorrespondingPlanet, showBuffer } from '@src/util';
-import { Selector } from '@src/Selector';
 import prun from '@src/prun-api/prun';
 import xit from '../xit-registry';
 import { settings } from '@src/store/settings';
@@ -10,6 +9,8 @@ import useReactive from '@src/hooks/use-reactive';
 import { useRef } from 'preact/compat';
 import BurnSection from '@src/XIT/BURN/BurnSection';
 import SettingsButton from '@src/XIT/BURN/SettingsButton';
+import { _$ } from '@src/utils/get-element-by-class-name';
+import PrunCss from '@src/prun-ui/prun-css';
 
 function BURN(props: { parameters: string[] }) {
   const { parameters } = props;
@@ -24,7 +25,7 @@ function BURN(props: { parameters: string[] }) {
     }),
   );
 
-  const screenNameElem = document.querySelector(Selector.ScreenName);
+  const screenNameElem = _$(PrunCss.ScreenControls.currentScreenName);
   const screenName = screenNameElem ? screenNameElem.textContent : '';
 
   const bufferName = screenName + parameters.join('');

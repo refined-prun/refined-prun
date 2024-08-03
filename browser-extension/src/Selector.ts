@@ -4,17 +4,12 @@
  * These are CSS selectors, and not XPath expressions.
  */
 export const Selector = {
-  ProdQueueTable: "table[class~='ProductionQueue__table___jHQGyUI']",
   BufferHeaderClass: 'TileFrame__cmd___ScBYW0n type__type-very-small___HaVMqrE',
   BufferHeader: "div[class~='TileFrame__cmd___ScBYW0n']",
   Sidebar: 'div#TOUR_TARGET_SIDEBAR_RIGHT',
   LMPostForm: "form[class~='LocalMarketPost__form___CAVPdDE']",
-  WorkforceConsumptionTable: "div[class~='TileFrame__title___xRcZCPx']",
-  Notification: "div[class~='AlertListItem__content___XYebR1E']",
   ProdQueue: "div[class~='SiteProductionLines__column____s3cTk7']",
   BufferPanel: "div[class~='ScrollView__view___ovf59Tk']",
-  NewBFRButton: 'TOUR_TARGET_BUTTON_BUFFER_NEW',
-  BufferTextField: "input[class~='PanelSelector__input___wUstHrO']",
   ScreenControls: 'TOUR_TARGET_SCREEN_CONTROLS',
   LeftSidebar: 'TOUR_TARGET_SIDEBAR_LEFT_02',
   ScreenName: "span[class~='ScreenControls__currentScreenName___I2sIYag']",
@@ -34,11 +29,7 @@ export const Selector = {
   Divider: "div[class~='SectionList__divider___cwWO45v']",
   SmallButton: "button[class~='Button__darkInline___z_YKa91']",
   StoreViewName: "span[class~='StoreView__name___eX4pgs6']",
-  FormLabels: '.forms__form-component___yTgP_Qa label',
-  ChannelControls: "div[class~='Channel__controls___JnQCa9m']",
-  RadioIndicator: "div[class~='RadioItem__indicator___QzQtjhA']",
   InventoryContainer: "div[class~='StoreView__container___RrvYu52']",
-  FormTooltip: "span[class~='Tooltip__container___O8IKVEa']",
   ButtonSuccess: "button[class~='Button__success___bCiIVXw']",
   ActionFeedback: "span[class~='ActionFeedback__message___G2Sz4bw']",
   ActionFeedbackMain: "span[class~='ActionFeedback__message___G2Sz4bw'] > span",
@@ -48,5 +39,4 @@ export const Selector = {
   ActionConfirmationMessage: "span[class~='ActionConfirmationOverlay__message___OajoGeh']",
   StoreSelect: "select[class~='StoreSelect__container___tDwUv6W']",
   MaterialSelector: "input[class~='MaterialSelector__input___tyJaKPm']",
-  ContextBar: "div[class~='ContextControls__container___dzDODeW']",
 };
