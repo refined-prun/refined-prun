@@ -1,7 +1,6 @@
 import {
   clearChildren,
   createTextSpan,
-  setSettings,
   CategorySort,
   findCorrespondingPlanet,
   createMaterialElement,
@@ -13,21 +12,19 @@ import { Selector } from '../Selector';
 import prun from '@src/prun-api/prun';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import { settings } from '@src/store/settings';
+import user from '@src/store/user';
 
 export class Burn {
   private tile: HTMLElement;
   private parameters: string[];
-  private pmmgSettings;
-  private userInfo;
   private alive;
   public name: string;
   private planetBurn;
 
-  constructor(tile, parameters, pmmgSettings, userInfo) {
+  constructor(tile, parameters) {
     this.tile = tile;
     this.parameters = parameters;
-    this.pmmgSettings = pmmgSettings;
-    this.userInfo = userInfo;
     this.alive = true;
 
     if (parameters[1] && !parameters[2]) {
@@ -40,16 +37,8 @@ export class Burn {
   create_buffer() {
     // Set static versions of class parameters to be passed to functions downstream
     const parameters = this.parameters;
-    const pmmgSettings = this.pmmgSettings;
 
-    if (!this.userInfo['PMMG-User-Info'] || !this.userInfo['PMMG-User-Info']['workforce']) {
-      clearChildren(this.tile);
-      this.tile.textContent = 'Loading Burn Data...';
-      this.tile.id = 'pmmg-reload';
-      return;
-    }
-
-    const planetBurn = internalCalculateBurn(this.parameters, this.userInfo);
+    const planetBurn = internalCalculateBurn(this.parameters);
 
     if (this.planetBurn && this.planetBurn.length == planetBurn.length) {
       // Has been calculated, no update in length
@@ -89,10 +78,7 @@ export class Burn {
 
     const bufferName = screenName + this.parameters.join('');
 
-    if (!this.pmmgSettings['PMMGExtended']['burn_settings']) {
-      this.pmmgSettings['PMMGExtended']['burn_settings'] = {};
-    }
-    const dispSettings = this.pmmgSettings['PMMGExtended']['burn_settings'][bufferName] || {
+    const dispSettings = settings.burn.buffers[bufferName] || {
       red: true,
       yellow: true,
       green: true,
@@ -113,36 +99,36 @@ export class Burn {
       createSettingsButton('RED', 22.025, dispSettings.red, () => {
         dispSettings.red = !dispSettings.red;
         updateBurn(table, dispSettings);
-        pmmgSettings['PMMGExtended']['burn_settings'][bufferName] = dispSettings;
+        settings.burn.buffers[bufferName] = dispSettings;
 
-        setSettings(pmmgSettings);
+        // setSettings(pmmgSettings);
       }),
     );
     settingsDiv.appendChild(
       createSettingsButton('YELLOW', 40.483, dispSettings.yellow, () => {
         dispSettings.yellow = !dispSettings.yellow;
         updateBurn(table, dispSettings);
-        pmmgSettings['PMMGExtended']['burn_settings'][bufferName] = dispSettings;
+        settings.burn.buffers[bufferName] = dispSettings;
 
-        setSettings(pmmgSettings);
+        // setSettings(pmmgSettings);
       }),
     );
     settingsDiv.appendChild(
       createSettingsButton('GREEN', 34.65, dispSettings.green, () => {
         dispSettings.green = !dispSettings.green;
         updateBurn(table, dispSettings);
-        pmmgSettings['PMMGExtended']['burn_settings'][bufferName] = dispSettings;
+        settings.burn.buffers[bufferName] = dispSettings;
 
-        setSettings(pmmgSettings);
+        //setSettings(pmmgSettings);
       }),
     );
     settingsDiv.appendChild(
       createSettingsButton('INF', 19.6, dispSettings.inf, () => {
         dispSettings.inf = !dispSettings.inf;
         updateBurn(table, dispSettings);
-        pmmgSettings['PMMGExtended']['burn_settings'][bufferName] = dispSettings;
+        settings.burn.buffers[bufferName] = dispSettings;
 
-        setSettings(pmmgSettings);
+        //setSettings(pmmgSettings);
       }),
     );
 
@@ -188,9 +174,9 @@ export class Burn {
             minimizeButton.textContent = '+';
           }
           updateBurn(table, dispSettings);
-          pmmgSettings['PMMGExtended']['burn_settings'][bufferName] = dispSettings;
+          settings.burn.buffers[bufferName] = dispSettings;
 
-          setSettings(pmmgSettings);
+          //setSettings(pmmgSettings);
         });
 
         nameRowColumn.colSpan = 5;
@@ -224,9 +210,9 @@ export class Burn {
         if (minDaysLeft >= 500) {
           burnColumn.classList.add('burn-green-no-hover');
           burnColumn.classList.add('burn-infinite');
-        } else if (minDaysLeft <= (this.pmmgSettings['PMMGExtended']['burn_thresholds'] || [3, 7])[0]) {
+        } else if (minDaysLeft <= settings.burn.red) {
           burnColumn.classList.add('burn-red-no-hover');
-        } else if (minDaysLeft <= (this.pmmgSettings['PMMGExtended']['burn_thresholds'] || [3, 7])[1]) {
+        } else if (minDaysLeft <= settings.burn.yellow) {
           burnColumn.classList.add('burn-yellow-no-hover');
         } else {
           burnColumn.classList.add('burn-green-no-hover');
@@ -287,9 +273,9 @@ export class Burn {
         if (burn.burn[ticker]['DailyAmount'] >= 0) {
           burnColumn.classList.add('burn-green');
           burnColumn.classList.add('burn-infinite');
-        } else if (burnDays <= (this.pmmgSettings['PMMGExtended']['burn_thresholds'] || [3, 7])[0]) {
+        } else if (burnDays <= settings.burn.red) {
           burnColumn.classList.add('burn-red');
-        } else if (burnDays <= (this.pmmgSettings['PMMGExtended']['burn_thresholds'] || [3, 7])[1]) {
+        } else if (burnDays <= settings.burn.yellow) {
           burnColumn.classList.add('burn-yellow');
         } else {
           burnColumn.classList.add('burn-green');
@@ -297,14 +283,9 @@ export class Burn {
 
         const needColumn = document.createElement('td');
         const needAmt =
-          burnDays >
-            (this.pmmgSettings['PMMGExtended']['burn_thresholds'] || [3, 7])[1] +
-              (this.pmmgSettings['PMMGExtended']['burn_green_buffer'] || 7) || burn.burn[ticker]['DailyAmount'] > 0
+          burnDays > settings.burn.resupply || burn.burn[ticker]['DailyAmount'] > 0
             ? 0
-            : (burnDays -
-                (this.pmmgSettings['PMMGExtended']['burn_thresholds'] || [3, 7])[1] -
-                (this.pmmgSettings['PMMGExtended']['burn_green_buffer'] || 7)) *
-              burn.burn[ticker]['DailyAmount'];
+            : burnDays - settings.burn.resupply * burn.burn[ticker]['DailyAmount'];
         needColumn.appendChild(
           createTextSpan(isNaN(needAmt) ? '0' : needAmt.toLocaleString(undefined, { maximumFractionDigits: 0 })),
         );
@@ -333,29 +314,29 @@ export class Burn {
   }
 }
 
-function internalCalculateBurn(parameters, userInfo) {
+function internalCalculateBurn(parameters) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const planetBurn = [] as any[];
 
   if (!parameters[1] || parameters[1].toLowerCase() == 'all') {
-    userInfo['PMMG-User-Info']['workforce'].forEach(planetWorkforce => {
+    user.workforce.forEach(planetWorkforce => {
       if (!planetWorkforce.PlanetName) {
         return;
       }
 
       // Calculate burn for each planet
-      const production = findCorrespondingPlanet(planetWorkforce.PlanetName, userInfo['PMMG-User-Info']['production']);
-      const workforce = findCorrespondingPlanet(planetWorkforce.PlanetName, userInfo['PMMG-User-Info']['workforce']);
-      const inv = findCorrespondingPlanet(planetWorkforce.PlanetName, userInfo['PMMG-User-Info']['storage'], true);
+      const production = findCorrespondingPlanet(planetWorkforce.PlanetName, user.production);
+      const workforce = findCorrespondingPlanet(planetWorkforce.PlanetName, user.workforce);
+      const inv = findCorrespondingPlanet(planetWorkforce.PlanetName, user.storage, true);
 
       planetBurn.push({ burn: calculateBurn(production, workforce, inv), planetName: planetWorkforce.PlanetName });
     });
   } else {
     for (let i = 1; i < parameters.length; i++) {
       // Calculate burn for each planet
-      const production = findCorrespondingPlanet(parameters[i], userInfo['PMMG-User-Info']['production']);
-      const workforce = findCorrespondingPlanet(parameters[i], userInfo['PMMG-User-Info']['workforce']);
-      const inv = findCorrespondingPlanet(parameters[i], userInfo['PMMG-User-Info']['storage'], true);
+      const production = findCorrespondingPlanet(parameters[i], user.production);
+      const workforce = findCorrespondingPlanet(parameters[i], user.workforce);
+      const inv = findCorrespondingPlanet(parameters[i], user.storage, true);
 
       planetBurn.push({ burn: calculateBurn(production, workforce, inv), planetName: parameters[i] });
     }

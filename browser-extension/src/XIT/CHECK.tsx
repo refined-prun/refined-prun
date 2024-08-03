@@ -17,6 +17,7 @@ import { Style, TextColors } from '../Style';
 import { NonProductionBuildings } from '../GameProperties';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import user from '@src/store/user';
 
 export class Checklists {
   private tile: HTMLElement;
@@ -343,9 +344,7 @@ function updatePopupInfo(junk, params) {
       // Add in the planet row
       planetNames = [] as any[];
 
-      if (userInfo['PMMG-User-Info']['workforce']) {
-        planetNames = userInfo['PMMG-User-Info']['workforce'].map(planet => planet.PlanetName);
-      }
+      planetNames = user.workforce.map(planet => planet.PlanetName);
 
       if (info['planet'] && planetNames.includes(info['planet']) && planetNames.length !== 1) {
         planetNames.push(planetNames.indexOf(info['planet']));
@@ -367,11 +366,7 @@ function updatePopupInfo(junk, params) {
     } else if (typeValue == 'Repair') {
       planetNames = [] as any[];
 
-      if (userInfo['PMMG-User-Info']['sites']) {
-        planetNames = userInfo['PMMG-User-Info']['sites']
-          .filter(site => site.type == 'BASE')
-          .map(site => site.PlanetName);
-      }
+      planetNames = user.sites.filter(site => site.type == 'BASE').map(site => site.PlanetName);
       if (info['planet'] && planetNames.includes(info['planet']) && planetNames.length !== 1) {
         planetNames.push(planetNames.indexOf(info['planet']));
       }
@@ -468,8 +463,8 @@ function addChecklistItem(params) {
         info['days'] == '1' ? 'day' : 'days'
       } of consumables.`;
 
-      const planetWorkforce = findCorrespondingPlanet(info['planet'], userInfo['PMMG-User-Info']['workforce']);
-      const planetProduction = findCorrespondingPlanet(info['planet'], userInfo['PMMG-User-Info']['production']);
+      const planetWorkforce = findCorrespondingPlanet(info['planet'], user.workforce);
+      const planetProduction = findCorrespondingPlanet(info['planet'], user.production);
 
       const burn = calculateBurn(planetProduction, planetWorkforce, null);
 
@@ -494,7 +489,7 @@ function addChecklistItem(params) {
 
       const mats = {};
 
-      const site = findCorrespondingPlanet(info['planet'], userInfo['PMMG-User-Info']['sites'], true);
+      const site = findCorrespondingPlanet(info['planet'], user.sites, true);
       info['children'] = []; // This also resets previous children
       if (site.buildings) {
         site.buildings.forEach(building => {

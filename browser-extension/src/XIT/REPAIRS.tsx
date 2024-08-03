@@ -9,14 +9,12 @@ export class Repairs {
   private tile: HTMLElement;
   private parameters: string[];
   private pmmgSettings;
-  private userInfo;
   public name = 'REPAIRS';
 
-  constructor(tile, parameters, pmmgSettings, userInfo) {
+  constructor(tile, parameters, pmmgSettings) {
     this.tile = tile;
     this.parameters = parameters;
     this.pmmgSettings = pmmgSettings;
-    this.userInfo = userInfo;
   }
 
   create_buffer() {
@@ -24,7 +22,7 @@ export class Repairs {
     const pmmgSettings = this.pmmgSettings;
 
     clearChildren(this.tile);
-    if (!this.userInfo['PMMG-User-Info'] || !this.userInfo['PMMG-User-Info']['sites']) {
+    if (user.sites.length === 0) {
       this.tile.textContent = 'Loading Repair Data...';
       this.tile.id = 'pmmg-reload';
       return;
@@ -100,17 +98,15 @@ export class Repairs {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const buildings = [] as any[];
-      this.userInfo['PMMG-User-Info']['sites'].forEach(site => {
+      for (const site of user.sites) {
         if (site.type != 'BASE') {
-          return;
+          continue;
         }
 
-        site.buildings.forEach(build => {
+        for (const build of site.buildings) {
           buildings.push([site['PlanetName'], build]);
-          return;
-        });
-        return;
-      });
+        }
+      }
       buildings.sort(buildingSort);
 
       const body = document.createElement('tbody');
@@ -141,7 +137,7 @@ export class Repairs {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const siteData = [] as any[];
-      this.userInfo['PMMG-User-Info']['sites'].forEach(site => {
+      for (const site of user.sites) {
         if (
           site.type == 'BASE' &&
           (site['PlanetName'].toUpperCase() == screenName || site['PlanetNaturalId'].toUpperCase() == screenName) &&
@@ -151,8 +147,7 @@ export class Repairs {
             siteData.push([this.parameters[1], building]);
           });
         }
-        return;
-      });
+      }
 
       const inputDiv = document.createElement('div');
       this.tile.appendChild(inputDiv);

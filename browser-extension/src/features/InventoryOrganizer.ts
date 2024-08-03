@@ -14,6 +14,7 @@ import {
 import { Selector } from '../Selector';
 import { Style } from '../Style';
 import { SortingTriangleHTML } from '../GameProperties';
+import user from '@src/store/user';
 
 /**
  * Sort inventory into custom categories
@@ -75,13 +76,10 @@ export class InventoryOrganizer implements Module {
       const planetName = planetNameElem ? parsePlanetName(planetNameElem.textContent) : ''; // Get the text out of it
 
       let burn;
-      if (
-        this.userInfo['PMMG-User-Info'] &&
-        findCorrespondingPlanet(planetName, this.userInfo['PMMG-User-Info']['workforce'])
-      ) {
-        const workforce = findCorrespondingPlanet(planetName, this.userInfo['PMMG-User-Info']['workforce']);
-        const production = findCorrespondingPlanet(planetName, this.userInfo['PMMG-User-Info']['production']);
-        const inventory = findCorrespondingPlanet(planetName, this.userInfo['PMMG-User-Info']['storage']);
+      if (this.userInfo['PMMG-User-Info'] && findCorrespondingPlanet(planetName, user.workforce)) {
+        const workforce = findCorrespondingPlanet(planetName, user.workforce);
+        const production = findCorrespondingPlanet(planetName, user.production);
+        const inventory = findCorrespondingPlanet(planetName, user.storage);
 
         burn = calculateBurn(production, workforce, inventory);
       }

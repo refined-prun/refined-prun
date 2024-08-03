@@ -809,22 +809,18 @@ function chooseScreen(finResult, params) {
     });
     pieDiv.appendChild(locPieCanvas);
   } else if (parameters[1].toLowerCase() == 'production' || parameters[1].toLowerCase() == 'prod') {
-    // Revenue/profit derived from burn data
-    if (!userInfo['PMMG-User-Info'] || !userInfo['PMMG-User-Info']['workforce']) {
-      tile.id = 'pmmg-reload';
-      return;
-    }
+    // Revenue/profit derived from burn dat
     tile.textContent = '';
     tile.id = 'pmmg-load-success';
 
     // Calculate the player burn from userInfo
     const planets = [] as string[];
-    userInfo['PMMG-User-Info']['workforce'].forEach(workforce => {
+    user.workforce.forEach(workforce => {
       if (workforce.PlanetName && !planets.includes(workforce.PlanetName)) {
         planets.push(workforce.PlanetName);
       }
     });
-    userInfo['PMMG-User-Info']['production'].forEach(production => {
+    user.production.forEach(production => {
       if (production.PlanetName && !planets.includes(production.PlanetName)) {
         planets.push(production.PlanetName);
       }
@@ -834,8 +830,8 @@ function chooseScreen(finResult, params) {
     let totalProduced = 0;
     let totalConsumed = 0;
     planets.forEach(planet => {
-      const planetProduction = findCorrespondingPlanet(planet, userInfo['PMMG-User-Info']['production']);
-      const planetWorkforce = findCorrespondingPlanet(planet, userInfo['PMMG-User-Info']['workforce']);
+      const planetProduction = findCorrespondingPlanet(planet, user.production);
+      const planetWorkforce = findCorrespondingPlanet(planet, user.workforce);
 
       const planetFinances = [] as any[];
       planetFinances.push(planet);
@@ -1197,71 +1193,66 @@ export function calculateFinancials(webData, userInfo, result, loop) {
   finSnapshot['Inventory'] = [];
   finSnapshot['Buildings'] = [];
 
-  if (userInfo['PMMG-User-Info']['storage']) {
-    userInfo['PMMG-User-Info']['storage'].forEach(location => {
-      let value = 0;
+  for (const location of user.storage) {
+    let value = 0;
 
-      location['items'].forEach(mat => {
+    location['items'].forEach(mat => {
+      value +=
+        getPrice(
+          cxPrices,
+          webData['custom_prices'],
+          result['PMMGExtended']['pricing_scheme'],
+          mat.MaterialTicker,
+          userInfo,
+          priceBasket,
+        ) * mat.Amount;
+    });
+
+    let name;
+    if (location.type == 'STORE' || location.type == 'WAREHOUSE_STORE') {
+      name = location.PlanetName;
+    } else {
+      name = location.name;
+    }
+
+    if (value == 0) {
+      continue;
+    }
+
+    let isMatch = false; // Consolidate multiple storages down into one (warehouses + bases or cargo + stl + ftl tanks)
+    finSnapshot['Inventory'].forEach(inv => {
+      if (inv[0] == name) {
+        isMatch = true;
+        inv[1] += Math.round(value * 100) / 100;
+      }
+    });
+    if (!isMatch) {
+      finSnapshot['Inventory'].push([name, Math.round(value * 100) / 100]);
+    }
+  }
+  // Put together building value
+  for (const location of user.sites) {
+    if (location.type != 'BASE') {
+      continue;
+    }
+    let value = 0;
+    location['buildings'].forEach(building => {
+      building['reclaimableMaterials'].forEach(mat => {
         value +=
           getPrice(
             cxPrices,
             webData['custom_prices'],
             result['PMMGExtended']['pricing_scheme'],
-            mat.MaterialTicker,
+            mat.material.ticker,
             userInfo,
             priceBasket,
-          ) * mat.Amount;
+          ) * mat.amount;
       });
-
-      let name;
-      if (location.type == 'STORE' || location.type == 'WAREHOUSE_STORE') {
-        name = location.PlanetName;
-      } else {
-        name = location.name;
-      }
-
-      if (value == 0) {
-        return;
-      }
-
-      let isMatch = false; // Consolidate multiple storages down into one (warehouses + bases or cargo + stl + ftl tanks)
-      finSnapshot['Inventory'].forEach(inv => {
-        if (inv[0] == name) {
-          isMatch = true;
-          inv[1] += Math.round(value * 100) / 100;
-        }
-      });
-      if (!isMatch) {
-        finSnapshot['Inventory'].push([name, Math.round(value * 100) / 100]);
-      }
-      return;
     });
-  }
-  // Put together building value
-  if (userInfo['PMMG-User-Info']['sites']) {
-    userInfo['PMMG-User-Info']['sites'].forEach(location => {
-      if (location.type != 'BASE') {
-        return;
-      }
-      let value = 0;
-      location['buildings'].forEach(building => {
-        building['reclaimableMaterials'].forEach(mat => {
-          value +=
-            getPrice(
-              cxPrices,
-              webData['custom_prices'],
-              result['PMMGExtended']['pricing_scheme'],
-              mat.material.ticker,
-              userInfo,
-              priceBasket,
-            ) * mat.amount;
-        });
-      });
-      if (value == 0) {
-        return;
-      }
-      finSnapshot['Buildings'].push([location.PlanetName, Math.round(value * 100) / 100]);
-    });
+    if (value == 0) {
+      continue;
+    }
+    finSnapshot['Buildings'].push([location.PlanetName, Math.round(value * 100) / 100]);
   }
 
   // Handle contracts

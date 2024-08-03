@@ -3,7 +3,14 @@ import { transmitted_events } from './default-event-payload';
 import { socketIOMiddleware } from './socket-io-middleware';
 import system from '@src/system';
 import prun from '@src/prun-api/prun';
-import user from '@src/store/user';
+import user, {
+  BaseSiteEntry,
+  ProductionLineEntry,
+  ProductionOrderEntry,
+  ProductionSiteEntry,
+  StorageEntry,
+  WarehouseSiteEntry,
+} from '@src/store/user';
 
 interface ApiEvent {
   payload: any;
@@ -170,20 +177,8 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
     result['PMMG-User-Info'] = {};
   }
 
-  if (!result['PMMG-User-Info']['sites']) {
-    result['PMMG-User-Info']['sites'] = [];
-  }
-  if (!result['PMMG-User-Info']['storage']) {
-    result['PMMG-User-Info']['storage'] = [];
-  }
-  if (!result['PMMG-User-Info']['workforce']) {
-    result['PMMG-User-Info']['workforce'] = [];
-  }
   if (!result['PMMG-User-Info']['contracts']) {
     result['PMMG-User-Info']['contracts'] = [];
-  }
-  if (!result['PMMG-User-Info']['production']) {
-    result['PMMG-User-Info']['production'] = [];
   }
   if (!result['PMMG-User-Info']['currency']) {
     result['PMMG-User-Info']['currency'] = [];
@@ -192,29 +187,24 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
   let matchIndex: any;
   let planetId: any;
   let planetName: any;
-  let workforceArray: any;
   let badParams: any;
   let matchingContract: any;
-  let siteInfo: any;
   let badKeys: any;
 
   switch (eventdata.messageType) {
     case 'SITE_SITES':
-      result['PMMG-User-Info'].sites = result['PMMG-User-Info'].sites.filter(item => item.type !== 'BASE');
+      user.sites = user.sites.filter(item => item.type !== 'BASE');
 
-      eventdata.payload.sites.forEach(site => {
-        const planetId = site.address.lines[1].entity.naturalId;
-        const planetName = site.address.lines[1].entity.name;
-
-        const siteData = {
-          PlanetName: planetName,
-          PlanetNaturalId: planetId,
+      for (const site of eventdata.payload.sites) {
+        const siteData: BaseSiteEntry = {
+          PlanetName: site.address.lines[1].entity.name,
+          PlanetNaturalId: site.address.lines[1].entity.naturalId,
           siteId: site.siteId,
-          buildings: <unknown[]>[],
+          buildings: [],
           type: 'BASE',
         };
 
-        site.platforms.forEach(building => {
+        for (const building of site.platforms) {
           const buildingTicker = building.module.reactorTicker;
 
           const lastRepair = building.lastRepair?.timestamp ?? building.creationTime.timestamp;
@@ -226,144 +216,127 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
             reclaimableMaterials: building.reclaimableMaterials,
             repairMaterials: building.repairMaterials,
           });
-        });
+        }
 
-        result['PMMG-User-Info'].sites.push(siteData);
-      });
+        user.sites.push(siteData);
+      }
 
-      if (result['PMMG-User-Info'].storage) {
+      if (user.storage.length > 0) {
         const planets = {};
-        result['PMMG-User-Info'].sites.forEach(site => {
+        for (const site of user.sites) {
           planets[site.siteId] = [site.PlanetName, site.PlanetNaturalId];
-        });
-        result['PMMG-User-Info'].storage.forEach(store => {
+        }
+        for (const store of user.storage) {
           if (planets[store.addressableId]) {
             store.PlanetName = planets[store.addressableId][0];
             store.PlanetNaturalId = planets[store.addressableId][1];
           }
-        });
+        }
       }
       break;
-    case 'STORAGE_STORAGES':
-      eventdata.payload.stores.forEach(store => {
-        const duplicateStoreIndex = result['PMMG-User-Info'].storage.findIndex(item => item.id === store.id);
+    case 'STORAGE_STORAGES': {
+      for (const store of eventdata.payload.stores) {
+        const existingStore = user.storage.findIndex(item => item.id === store.id);
 
-        store.items = store.items
+        const items = store.items
           .filter(x => x.quantity && x.quantity.material)
-          .map(
-            x =>
-              <any>{
-                weight: x.weight,
-                volume: x.volume,
-                MaterialTicker: x.quantity.material.ticker,
-                Amount: x.quantity.amount,
-              },
-          );
+          .map(x => ({
+            ...x,
+            MaterialTicker: x.quantity.material.ticker,
+            Amount: x.quantity.amount,
+          }));
 
-        if (duplicateStoreIndex != -1) {
-          result['PMMG-User-Info'].storage[duplicateStoreIndex] = store;
+        const customStore: StorageEntry = {
+          ...store,
+          items,
+        };
+
+        if (existingStore != -1) {
+          user.storage[existingStore] = customStore;
         } else {
-          result['PMMG-User-Info'].storage.push(store);
+          user.storage.push(customStore);
         }
-      });
+      }
 
       // Assign planet names
-
-      if (result['PMMG-User-Info'].sites) {
+      if (user.sites) {
         const planets = {};
-        result['PMMG-User-Info'].sites.forEach(site => {
+        for (const site of user.sites) {
           planets[site.siteId] = [site.PlanetName, site.PlanetNaturalId];
-        });
-        result['PMMG-User-Info'].storage.forEach(store => {
+        }
+        for (const store of user.storage) {
           if (planets[store.addressableId]) {
             store.PlanetName = planets[store.addressableId][0];
             store.PlanetNaturalId = planets[store.addressableId][1];
           }
-        });
+        }
       }
       break;
+    }
     case 'STORAGE_CHANGE':
-      eventdata.payload.stores.forEach((store: any) => {
-        const matchingStore = result['PMMG-User-Info'].sites.find(item => item.siteId === store.addressableId);
+      for (const store of eventdata.payload.stores) {
+        const matchingStore = user.sites.find(item => item.siteId === store.addressableId);
 
-        const index = result['PMMG-User-Info'].storage.findIndex(item => item.addressableId === store.addressableId);
+        const index = user.storage.findIndex(item => item.addressableId === store.addressableId);
+        const items = store.items
+          .filter(x => x.quantity && x.quantity.material)
+          .map(x => ({
+            ...x,
+            MaterialTicker: x.quantity.material.ticker,
+            Amount: x.quantity.amount,
+          }));
 
         if (matchingStore) {
-          store.PlanetNaturalId = matchingStore.PlanetNaturalId;
-          store.PlanetName = matchingStore.PlanetName;
-          const givenItems = store.items;
-          store.items = [];
-          givenItems.forEach(item => {
-            if (item.quantity && item.quantity.material) {
-              store.items.push({
-                weight: item.weight,
-                volume: item.volume,
-                MaterialTicker: item.quantity.material.ticker,
-                Amount: item.quantity.amount,
-              });
-            } else {
-              //console.log(item); // Debug line. Some items seem to not have a quantity. This should help figure out what those are.
-            }
-          });
+          const customStore: StorageEntry = {
+            ...store,
+            PlanetName: matchingStore.PlanetName,
+            PlanetNaturalId: matchingStore.PlanetNaturalId,
+            items,
+          };
 
           if (index != -1) {
-            result['PMMG-User-Info'].storage[index] = store;
+            user.storage[index] = customStore;
           } else {
-            result['PMMG-User-Info'].storage.push(store);
+            user.storage.push(customStore);
           }
         } else if (store.name) {
           // Ship store
-          const matchingShipStoreIndex = result['PMMG-User-Info'].storage.findIndex(
-            item => item.addressableId === store.addressableId,
-          );
+          const matchingShipStoreIndex = user.storage.findIndex(item => item.addressableId === store.addressableId);
 
-          const givenItems = store.items;
-          store.items = [];
-          givenItems.forEach(item => {
-            if (item.quantity && item.quantity.material) {
-              store.items.push({
-                weight: item.weight,
-                volume: item.volume,
-                MaterialTicker: item.quantity.material.ticker,
-                Amount: item.quantity.amount,
-              });
-            } else {
-              //console.log(item); // Debug line. Some items seem to not have a quantity. This should help figure out what those are.
-            }
-          });
+          const customStore: StorageEntry = {
+            ...store,
+            items,
+          };
 
           if (matchingShipStoreIndex != -1) {
-            result['PMMG-User-Info'].storage[matchingShipStoreIndex] = store;
+            user.storage[matchingShipStoreIndex] = customStore;
           } else {
-            result['PMMG-User-Info'].storage.push(store);
+            user.storage.push(customStore);
           }
         }
-      });
+      }
       break;
     case 'WAREHOUSE_STORAGES':
-      result['PMMG-User-Info'].sites = result['PMMG-User-Info'].sites.filter(item => item.type !== 'WAREHOUSE');
+      user.sites = user.sites.filter(item => item.type !== 'WAREHOUSE');
 
-      eventdata.payload.storages.forEach(warehouse => {
-        const planetId = warehouse.address.lines[1].entity.naturalId;
-        const planetName = warehouse.address.lines[1].entity.name;
-
-        const siteData = {
-          PlanetNaturalId: planetId,
-          PlanetName: planetName,
+      for (const warehouse of eventdata.payload.storages) {
+        const siteData: WarehouseSiteEntry = {
+          PlanetNaturalId: warehouse.address.lines[1].entity.naturalId,
+          PlanetName: warehouse.address.lines[1].entity.name,
           type: 'WAREHOUSE',
           units: warehouse.units,
           siteId: warehouse.warehouseId,
         };
 
-        result['PMMG-User-Info'].sites.push(siteData);
-      });
+        user.sites.push(siteData);
+      }
       break;
-    case 'WORKFORCE_WORKFORCES':
-      matchIndex = result['PMMG-User-Info'].workforce.findIndex(item => item.siteId === eventdata.payload.siteId);
+    case 'WORKFORCE_WORKFORCES': {
+      matchIndex = user.workforce.findIndex(item => item.siteId === eventdata.payload.siteId);
       planetId = eventdata.payload.address.lines[1].entity.naturalId;
       planetName = eventdata.payload.address.lines[1].entity.name;
 
-      workforceArray = {
+      const workforceInfo = {
         PlanetName: planetName,
         PlanetNaturalId: planetId,
         workforce: eventdata.payload.workforces,
@@ -371,12 +344,13 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
       };
 
       if (matchIndex != -1) {
-        result['PMMG-User-Info'].workforce[matchIndex] = workforceArray;
+        user.workforce[matchIndex] = workforceInfo;
       } else {
-        result['PMMG-User-Info'].workforce.push(workforceArray);
+        user.workforce.push(workforceInfo);
       }
 
       break;
+    }
     case 'CONTRACTS_CONTRACTS':
       badParams = [
         'id',
@@ -425,50 +399,44 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
         result['PMMG-User-Info'].contracts.push(eventdata.payload);
       }
       break;
-    case 'PRODUCTION_SITE_PRODUCTION_LINES':
-      //console.log(eventdata["payload"]);
-      matchIndex = result['PMMG-User-Info'].production.findIndex(item => item.siteId === eventdata.payload.siteId);
+    case 'PRODUCTION_SITE_PRODUCTION_LINES': {
+      matchIndex = user.production.findIndex(item => item.siteId === eventdata.payload.siteId);
 
-      siteInfo = { lines: [], siteId: eventdata.payload.siteId };
-      eventdata.payload.productionLines.forEach(line => {
-        const planetId = line.address.lines[1].entity.naturalId;
-        const planetName = line.address.lines[1].entity.name;
-
-        const prodLine = {
-          PlanetName: planetName,
-          PlanetNaturalId: planetId,
+      const siteInfo: ProductionSiteEntry = {
+        PlanetName: '',
+        PlanetNaturalId: '',
+        lines: [],
+        siteId: eventdata.payload.siteId,
+      };
+      for (const line of eventdata.payload.productionLines) {
+        const prodLine: ProductionLineEntry = {
+          PlanetName: line.address.lines[1].entity.name,
+          PlanetNaturalId: line.address.lines[1].entity.naturalId,
           capacity: line.capacity,
           condition: line.condition,
           efficiency: line.efficiency,
           efficiencyFactors: line.efficiencyFactors,
           type: line.type,
-          orders: <any[]>[],
+          orders: [],
         };
 
-        line.orders.forEach(order => {
-          const orderInfo: any = {};
-          orderInfo.completed = order.completed;
-          orderInfo.started = order.started ? order.started.timestamp : order.started;
-          orderInfo.duration = order.duration ? order.duration.millis : Infinity; // Did this null value kill stuff down the line?
-          orderInfo.halted = order.halted;
-          orderInfo.productionFee = order.productionFee;
-          orderInfo.recurring = order.recurring;
-
-          orderInfo.inputs = [];
-          order.inputs.forEach(input => {
-            orderInfo.inputs.push({ MaterialTicker: input.material.ticker, Amount: input.amount });
-          });
-
-          orderInfo.outputs = [];
-          order.outputs.forEach(input => {
-            orderInfo.outputs.push({ MaterialTicker: input.material.ticker, Amount: input.amount });
-          });
+        for (const order of line.orders) {
+          const orderInfo: ProductionOrderEntry = {
+            completed: order.completed,
+            started: order.started ? order.started.timestamp : order.started,
+            duration: order.duration ? order.duration.millis : Infinity, // Did this null value kill stuff down the line?
+            halted: order.halted,
+            productionFee: order.productionFee,
+            recurring: order.recurring,
+            inputs: order.inputs.map(x => ({ MaterialTicker: x.material.ticker, Amount: x.amount })),
+            outputs: order.outputs.map(x => ({ MaterialTicker: x.material.ticker, Amount: x.amount })),
+          };
 
           prodLine.orders.push(orderInfo);
-        });
+        }
 
         siteInfo.lines.push(prodLine);
-      });
+      }
 
       if (siteInfo.lines[0]) {
         siteInfo.PlanetName = siteInfo.lines[0].PlanetName;
@@ -476,11 +444,12 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
       }
 
       if (matchIndex != -1) {
-        result['PMMG-User-Info'].production[matchIndex] = siteInfo;
+        user.production[matchIndex] = siteInfo;
       } else {
-        result['PMMG-User-Info'].production.push(siteInfo);
+        user.production.push(siteInfo);
       }
       break;
+    }
     case 'COMPANY_DATA':
       user.company.name = eventdata.payload.name;
       user.company.id = eventdata.payload.id;

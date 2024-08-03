@@ -520,7 +520,7 @@ class GenerateScreen {
       case 'Resupply': {
         // Get list of planets
         const possiblePlanets = [] as any[];
-        this.userInfo['PMMG-User-Info'].workforce.forEach(planet => {
+        user.workforce.forEach(planet => {
           if (planet.PlanetName) {
             possiblePlanets.push(planet.PlanetName);
           }
@@ -562,7 +562,7 @@ class GenerateScreen {
       case 'Repair': {
         // Get list of planets
         const possiblePlanets = [] as any[];
-        this.userInfo['PMMG-User-Info'].sites.forEach(planet => {
+        user.sites.forEach(planet => {
           if (planet.PlanetName && planet.type == 'BASE') {
             possiblePlanets.push(planet.PlanetName);
           }
@@ -1143,7 +1143,7 @@ function parseActionPackage(rawActionPackage, userInfo, messageBox) {
   const CXInvs = {};
   ['AI1', 'CI1', 'CI2', 'IC1', 'NC1', 'NC2'].forEach(ticker => {
     CXInvs[ticker] = {};
-    const inv = findCorrespondingPlanet(ExchangeTickersReverse[ticker], userInfo['PMMG-User-Info']['storage'], false);
+    const inv = findCorrespondingPlanet(ExchangeTickersReverse[ticker], user.storage, false);
 
     if (inv) {
       inv.items.forEach(mat => {
@@ -1316,9 +1316,9 @@ function parseGroup(group, messageBox, userInfo, errorFlag) {
     // Array of tickers to exclude
     const exclusions = group.exclusions || [];
 
-    const planetProduction = findCorrespondingPlanet(group.planet, userInfo['PMMG-User-Info']['production']);
-    const planetWorkforce = findCorrespondingPlanet(group.planet, userInfo['PMMG-User-Info']['workforce']);
-    const planetInv = findCorrespondingPlanet(group.planet, userInfo['PMMG-User-Info']['storage'], true);
+    const planetProduction = findCorrespondingPlanet(group.planet, user.production);
+    const planetWorkforce = findCorrespondingPlanet(group.planet, user.workforce);
+    const planetInv = findCorrespondingPlanet(group.planet, user.storage, true);
 
     if (planetProduction && planetWorkforce && planetInv) {
       const planetBurn = calculateBurn(planetProduction, planetWorkforce, planetInv); // The planet burn data
@@ -1355,7 +1355,7 @@ function parseGroup(group, messageBox, userInfo, errorFlag) {
     const threshold = isNaN(parseFloat(group.days)) ? 0 : parseFloat(group.days); // The threshold to start repairing buildings [days]
     const advanceDays = isNaN(parseFloat(group.advanceDays)) ? 0 : parseFloat(group.advanceDays); // The number of days forward looking
 
-    const planetSite = findCorrespondingPlanet(group.planet, userInfo['PMMG-User-Info']['sites'], true);
+    const planetSite = findCorrespondingPlanet(group.planet, user.sites, true);
 
     if (planetSite && planetSite.buildings) {
       planetSite.buildings.forEach(building => {

@@ -40,13 +40,13 @@ export class DataHealth {
       return;
     }
 
-    (this.userInfo['PMMG-User-Info']['workforce'] || []).forEach(workforce => {
+    user.workforce.forEach(workforce => {
       if (workforce.PlanetName && !baseInfo[workforce.PlanetName]) {
         baseInfo[workforce.PlanetName] = [true, false, false];
       }
     });
 
-    (this.userInfo['PMMG-User-Info']['production'] || []).forEach(production => {
+    user.production.forEach(production => {
       if (production.PlanetName && !baseInfo[production.PlanetName]) {
         baseInfo[production.PlanetName] = [false, true, false];
       } else if (production.PlanetName) {
@@ -54,13 +54,13 @@ export class DataHealth {
       }
     });
 
-    (this.userInfo['PMMG-User-Info']['storage'] || []).forEach(storage => {
+    for (const storage of user.storage) {
       if (storage.PlanetName && storage.type == 'STORE' && !baseInfo[storage.PlanetName]) {
         baseInfo[storage.PlanetName] = [false, false, true];
       } else if (storage.PlanetName && storage.type == 'STORE') {
         baseInfo[storage.PlanetName][2] = true;
       }
-    });
+    }
 
     Object.keys(baseInfo).forEach(planet => {
       const row = document.createElement('tr');
@@ -85,33 +85,25 @@ export class DataHealth {
     this.tile.appendChild(otherTitle);
     const otherTable = createTable(this.tile, ['Parameter', 'Value']);
 
-    const numBaseSites = (this.userInfo['PMMG-User-Info']['sites'] || []).filter(item => item.type === 'BASE').length;
+    const numBaseSites = user.sites.filter(item => item.type === 'BASE').length;
     otherTable.appendChild(createTableRow('Base Sites', numBaseSites));
 
-    const numWarehouseSites = (this.userInfo['PMMG-User-Info']['sites'] || []).filter(
-      item => item.type !== 'BASE',
-    ).length;
+    const numWarehouseSites = user.sites.filter(item => item.type !== 'BASE').length;
     otherTable.appendChild(createTableRow('Warehouse Sites', numWarehouseSites));
 
-    const numBaseStores = (this.userInfo['PMMG-User-Info']['storage'] || []).filter(
-      item => item.type === 'STORE',
-    ).length;
+    const numBaseStores = user.storage.filter(item => item.type === 'STORE').length;
     otherTable.appendChild(createTableRow('Base Stores', numBaseStores));
 
-    const numWarehouseStores = (this.userInfo['PMMG-User-Info']['storage'] || []).filter(
-      item => item.type === 'WAREHOUSE_STORE',
-    ).length;
+    const numWarehouseStores = user.storage.filter(item => item.type === 'WAREHOUSE_STORE').length;
     otherTable.appendChild(createTableRow('Warehouse Stores', numWarehouseStores));
 
-    const numShipStores = (this.userInfo['PMMG-User-Info']['storage'] || []).filter(
-      item => item.type === 'SHIP_STORE',
-    ).length;
+    const numShipStores = user.storage.filter(item => item.type === 'SHIP_STORE').length;
     otherTable.appendChild(createTableRow('Ship Stores', numShipStores));
 
-    const numWorkforces = (this.userInfo['PMMG-User-Info']['workforce'] || []).length;
+    const numWorkforces = user.workforce.length;
     otherTable.appendChild(createTableRow('Workforces', numWorkforces));
 
-    const numProduction = (this.userInfo['PMMG-User-Info']['production'] || []).length;
+    const numProduction = user.production.length;
     otherTable.appendChild(createTableRow('Production Sites', numProduction));
 
     const contracts = (this.userInfo['PMMG-User-Info']['contracts'] || []).length;
