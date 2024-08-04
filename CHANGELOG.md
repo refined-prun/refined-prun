@@ -1,4 +1,5 @@
 New features:
+- XIT CXOS
 - reload-page-on-websocket-disconnect
 - correct-material-command
 

@@ -24,6 +24,7 @@ import './XIT/CALC';
 import './XIT/CHAT';
 import './XIT/CHECK';
 import './XIT/CONTS';
+import './XIT/CXOS';
 import './XIT/DEBUG';
 import './XIT/FIN';
 import './XIT/HEALTH';

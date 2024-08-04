@@ -313,11 +313,7 @@ declare module PrunApi {
       code: string;
     }
 
-    export enum Status {
-      Placed = 'PLACED',
-      PartiallyFilled = 'PARTIALLY_FILLED',
-      Filled = 'FILLED',
-    }
+    declare type Status = 'PLACED' | 'PARTIALLY_FILLED' | 'FILLED';
 
     export interface Trade {
       id: string;
@@ -327,10 +323,7 @@ declare module PrunApi {
       partner: Exchange;
     }
 
-    export enum OrderType {
-      Buying = 'BUYING',
-      Selling = 'SELLING',
-    }
+    declare type OrderType = 'BUYING' | 'SELLING';
   }
 
   declare module COMPANY_DATA {
