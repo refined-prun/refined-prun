@@ -1,6 +1,5 @@
 import { clearChildren, createTable, createTextSpan } from '../util';
-import { Style, TextColors } from '../Style';
-import system from '@src/system';
+import { TextColors } from '../Style';
 import user from '@src/store/user';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
@@ -114,7 +113,7 @@ export class DataHealth {
     const numProduction = user.production.length;
     otherTable.appendChild(createTableRow('Production Sites', numProduction));
 
-    const contracts = (this.userInfo['PMMG-User-Info']['contracts'] || []).length;
+    const contracts = user.contracts.length;
     otherTable.appendChild(createTableRow('Contracts', contracts));
 
     const cxos = user.cxos.length;
@@ -123,12 +122,7 @@ export class DataHealth {
     const fxos = user.fxos.length;
     otherTable.appendChild(createTableRow('FXOS', fxos));
 
-    otherTable.appendChild(
-      createTableRow(
-        'Currency',
-        this.userInfo['PMMG-User-Info']['currency'] && this.userInfo['PMMG-User-Info']['currency'][0] != undefined,
-      ),
-    );
+    otherTable.appendChild(createTableRow('Currency', user.currency.length > 0));
 
     const cxPriceAge = this.userInfo['PMMG-User-Info']['cx_prices']
       ? `${((Date.now() - this.userInfo['PMMG-User-Info']['cx_prices']['Age']) / 3600000).toLocaleString(undefined, {
@@ -137,17 +131,6 @@ export class DataHealth {
       : // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (false as any);
     otherTable.appendChild(createTableRow('CX Price Age', cxPriceAge));
-
-    const clearButton = document.createElement('button');
-    clearButton.textContent = 'Clear User Data';
-    clearButton.classList.add(...Style.Button);
-    clearButton.classList.add(...Style.ButtonPrimary);
-    clearButton.style.margin = '4px';
-    clearButton.style.display = 'block';
-    clearButton.addEventListener('click', () => {
-      system.storage.local.remove('PMMG-User-Info');
-    });
-    this.tile.appendChild(clearButton);
   }
 
   update_buffer() {

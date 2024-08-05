@@ -5,34 +5,33 @@ import { TextColors } from '../Style';
 import { FactionHeaders } from '../GameProperties';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import user from '@src/store/user';
 
 export class Contracts {
   private tile: HTMLElement;
   public parameters: string[];
   public pmmgSettings;
-  private userInfo;
   private alive: boolean;
 
   public name = 'CONTRACTS';
 
-  constructor(tile, parameters, pmmgSettings, userInfo) {
+  constructor(tile, parameters, pmmgSettings) {
     this.tile = tile;
     this.parameters = parameters;
     this.pmmgSettings = pmmgSettings;
-    this.userInfo = userInfo;
     this.alive = true;
   }
 
   create_buffer() {
     clearChildren(this.tile);
 
-    if (!this.userInfo['PMMG-User-Info'] || !this.userInfo['PMMG-User-Info']['contracts']) {
+    if (user.contracts.length === 0) {
       this.tile.textContent = 'Loading Contract Data...';
       this.tile.id = 'pmmg-reload';
       return;
     }
 
-    const contractData = this.userInfo['PMMG-User-Info']['contracts'];
+    const contractData = user.contracts;
 
     const validContracts = contractData.filter(c => !invalidContractStatus.includes(c['status']));
 

@@ -12,7 +12,6 @@ function OnClear_Click() {
   system.storage.local.remove('PMMG-Notes');
   system.storage.local.remove('PMMG-Lists');
   system.storage.local.remove('PMMG-Finances');
-  system.storage.local.remove('PMMG-User-Info');
   system.storage.local.remove('PMMG-Checklists');
   system.storage.local.remove('PMMG-Markers');
   system.storage.local.remove('PMMG-Action');

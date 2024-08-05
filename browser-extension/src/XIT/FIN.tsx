@@ -1183,10 +1183,8 @@ export function calculateFinancials(webData, userInfo, result, loop) {
   // Get currencies
   finSnapshot['Currencies'] = [];
 
-  if (userInfo['PMMG-User-Info']['currency']) {
-    userInfo['PMMG-User-Info']['currency'].forEach(currency => {
-      finSnapshot['Currencies'].push([currency['currency'], Math.round(currency['amount'] * 100) / 100]);
-    });
+  for (const currency of user.currency) {
+    finSnapshot['Currencies'].push([currency.currency, Math.round(currency.amount * 100) / 100]);
   }
 
   // Put together inventory value
@@ -1258,64 +1256,60 @@ export function calculateFinancials(webData, userInfo, result, loop) {
   // Handle contracts
   let contractValue = 0;
   let contractLiability = 0;
-  if (userInfo['PMMG-User-Info']['contracts']) {
-    const validContracts = userInfo['PMMG-User-Info']['contracts'].filter(
-      c => !invalidContractStatus.includes(c['status']),
-    );
+  const validContracts = user.contracts.filter(c => !invalidContractStatus.includes(c['status']));
 
-    validContracts.forEach(contract => {
-      const party = contract['party'];
-      //console.log(party)
-      contract['conditions'].forEach(condition => {
-        if (condition['status'] == 'FULFILLED') {
-          return;
+  for (const contract of validContracts) {
+    const party = contract['party'];
+    //console.log(party)
+    contract['conditions'].forEach(condition => {
+      if (condition['status'] == 'FULFILLED') {
+        return;
+      }
+      if (condition['type'] == 'DELIVERY' || condition['type'] == 'PROVISION') {
+        if (condition['party'] == party) {
+          contractLiability +=
+            getPrice(
+              cxPrices,
+              webData['custom_prices'],
+              result['PMMGExtended']['pricing_scheme'],
+              condition.quantity!.material.ticker,
+              userInfo,
+              priceBasket,
+            ) * condition.quantity!.amount;
+        } else {
+          contractValue +=
+            getPrice(
+              cxPrices,
+              webData['custom_prices'],
+              result['PMMGExtended']['pricing_scheme'],
+              condition.quantity!.material.ticker,
+              userInfo,
+              priceBasket,
+            ) * condition.quantity!.amount;
         }
-        if (condition['type'] == 'DELIVERY' || condition['type'] == 'PROVISION') {
-          if (condition['party'] == party) {
-            contractLiability +=
-              getPrice(
-                cxPrices,
-                webData['custom_prices'],
-                result['PMMGExtended']['pricing_scheme'],
-                condition.quantity.material.ticker,
-                userInfo,
-                priceBasket,
-              ) * condition.quantity.amount;
-          } else {
-            contractValue +=
-              getPrice(
-                cxPrices,
-                webData['custom_prices'],
-                result['PMMGExtended']['pricing_scheme'],
-                condition.quantity.material.ticker,
-                userInfo,
-                priceBasket,
-              ) * condition.quantity.amount;
-          }
-        } else if (condition['type'] == 'PAYMENT') {
-          if (condition['party'] == party) {
-            contractLiability += condition.amount.amount;
-          } else {
-            contractValue += condition.amount.amount;
-          }
-        } else if (condition['type'] == 'LOAN_INSTALLMENT') {
-          if (condition['party'] == party) {
-            contractLiability += condition.interest.amount + condition.repayment.amount;
-          } else {
-            contractValue += condition.interest.amount + condition.repayment.amount;
-          }
-        } else if (condition['type'] == 'LOAN_PAYOUT') {
-          if (condition['party'] == party) {
-            contractLiability += condition.amount.amount;
-          } else {
-            contractValue += condition.amount.amount;
-          }
+      } else if (condition['type'] == 'PAYMENT') {
+        if (condition['party'] == party) {
+          contractLiability += condition.amount!.amount;
+        } else {
+          contractValue += condition.amount!.amount;
         }
-      });
+      } else if (condition['type'] == 'LOAN_INSTALLMENT') {
+        if (condition['party'] == party) {
+          contractLiability += condition.interest!.amount + condition.repayment!.amount;
+        } else {
+          contractValue += condition.interest!.amount + condition.repayment!.amount;
+        }
+      } else if (condition['type'] == 'LOAN_PAYOUT') {
+        if (condition['party'] == party) {
+          contractLiability += condition.amount!.amount;
+        } else {
+          contractValue += condition.amount!.amount;
+        }
+      }
     });
-    finSnapshot['ContractValue'] = Math.round(contractValue * 100) / 100;
-    finSnapshot['ContractLiability'] = Math.round(contractLiability * 100) / 100;
   }
+  finSnapshot['ContractValue'] = Math.round(contractValue * 100) / 100;
+  finSnapshot['ContractLiability'] = Math.round(contractLiability * 100) / 100;
 
   // Handle CXOS
   let cxBuyValue = 0;

@@ -55,14 +55,7 @@ const loggedMessageTypes = [
 
 async function ProcessEvent(apiEvent: ApiEvent, event_list, full_event?) {
   const eventData = apiEvent.payload;
-  // Log everything
-  /*
-  const badTypes = ["ACTION_COMPLETED", "DATA_DATA", "CHANNEL_DATA", "CHANNEL_USER_LIST", "CHANNEL_UNSEEN_MESSAGES_COUNT"];
-  if(eventData && !badTypes.includes(eventData.messageType))
-  {
-    console.log(eventData.messageType);
-    console.log(eventData);
-  }*/
+  console.log(eventData);
 
   // Detect bad events
   if (typeof eventData === 'undefined' || eventData === null || typeof eventData.messageType === 'undefined') {
@@ -75,12 +68,9 @@ async function ProcessEvent(apiEvent: ApiEvent, event_list, full_event?) {
     companyContext === null ||
     apiEvent.context == companyContext;
   if (!isCompanyContext) {
-    // We're running under a non-company context
-    //console.log("Running under non-company context!");
     return;
   }
 
-  // Handle determining the current context
   if (
     eventData.messageType == 'ACTION_COMPLETED' &&
     eventData.payload &&
@@ -100,18 +90,12 @@ async function ProcessEvent(apiEvent: ApiEvent, event_list, full_event?) {
     }
   }
 
-  //console.debug(eventData);
-
   // Log Events into Storage
   if (eventData && eventData.messageType && loggedMessageTypes.includes(eventData.messageType)) {
-    //console.log("Logging Event into Storage");
-    const userInfo = await system.storage.local.get('PMMG-User-Info');
-    await logEvent(userInfo, eventData);
-    await sleep(50);
+    logEvent(eventData);
     return;
   }
 
-  // Process Events
   if (eventData.messageType in event_list) {
     console.debug(`Event to process: ${eventData.messageType}`);
     if (typeof full_event === 'undefined') {
@@ -123,7 +107,6 @@ async function ProcessEvent(apiEvent: ApiEvent, event_list, full_event?) {
     }
 
     if (match_event.action == 'subprocess_payload') {
-      //console.log("Processing Subevent")
       console.log(eventData.payload.message);
       await ProcessEvent(
         {
@@ -135,24 +118,16 @@ async function ProcessEvent(apiEvent: ApiEvent, event_list, full_event?) {
       );
     }
   } else {
-    //console.debug("Event not found: " + eventData.messageType);
   }
 }
 
 async function QueueEvent(apiEvent: ApiEvent) {
-  //console.debug("Queue event; eventQueue.size " + eventQueue.length);
-  //console.debug("Queue event; processing? " + processingQueue);
-
   eventQueue.push(apiEvent);
   if (!processingQueue) {
     processingQueue = true;
-    //console.debug("Queue event processing; queue size? " + eventQueue.length);
-
     let currentEvent = eventQueue.shift();
-    //console.log("Waiting to Process Event");
     while (currentEvent !== undefined) {
       await ProcessEvent(currentEvent, transmitted_events);
-      //console.log("Queue event processing check; queue size? " + eventQueue.length);
       currentEvent = eventQueue.shift();
     }
 
@@ -160,42 +135,16 @@ async function QueueEvent(apiEvent: ApiEvent) {
   }
 }
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-// Turn the eventdata received by PrUN into a form stored and readable by PMMG
-// result: Dictionary with the key "PMMG-User-Info" that contains all the user's stored game data info
-// eventdata: The message sent from the server containing updated game data info
-async function logEvent(result, eventdata: PrunApi.Packet) {
-  console.log(eventdata.messageType);
-  // Reset it every time for testing
-  //result["PMMG-User-Info"] = {};
-
-  // Initialize it if not initialized
-  if (!result['PMMG-User-Info']) {
-    result['PMMG-User-Info'] = {};
-  }
-
-  if (!result['PMMG-User-Info']['contracts']) {
-    result['PMMG-User-Info']['contracts'] = [];
-  }
-  if (!result['PMMG-User-Info']['currency']) {
-    result['PMMG-User-Info']['currency'] = [];
-  }
-
+function logEvent(eventData: PrunApi.Packet) {
   let matchIndex: any;
   let planetId: any;
   let planetName: any;
-  let badParams: any;
-  let matchingContract: any;
-  let badKeys: any;
 
-  switch (eventdata.messageType) {
+  switch (eventData.messageType) {
     case 'SITE_SITES':
       user.sites = user.sites.filter(item => item.type !== 'BASE');
 
-      for (const site of eventdata.payload.sites) {
+      for (const site of eventData.payload.sites) {
         const siteData: BaseSiteEntry = {
           PlanetName: site.address.lines[1].entity.name,
           PlanetNaturalId: site.address.lines[1].entity.naturalId,
@@ -235,7 +184,7 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
       }
       break;
     case 'STORAGE_STORAGES': {
-      for (const store of eventdata.payload.stores) {
+      for (const store of eventData.payload.stores) {
         const existingStore = user.storage.findIndex(item => item.id === store.id);
 
         const items = store.items
@@ -274,7 +223,7 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
       break;
     }
     case 'STORAGE_CHANGE':
-      for (const store of eventdata.payload.stores) {
+      for (const store of eventData.payload.stores) {
         const matchingStore = user.sites.find(item => item.siteId === store.addressableId);
 
         const index = user.storage.findIndex(item => item.addressableId === store.addressableId);
@@ -319,7 +268,7 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
     case 'WAREHOUSE_STORAGES':
       user.sites = user.sites.filter(item => item.type !== 'WAREHOUSE');
 
-      for (const warehouse of eventdata.payload.storages) {
+      for (const warehouse of eventData.payload.storages) {
         const siteData: WarehouseSiteEntry = {
           PlanetNaturalId: warehouse.address.lines[1].entity.naturalId,
           PlanetName: warehouse.address.lines[1].entity.name,
@@ -332,15 +281,15 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
       }
       break;
     case 'WORKFORCE_WORKFORCES': {
-      matchIndex = user.workforce.findIndex(item => item.siteId === eventdata.payload.siteId);
-      planetId = eventdata.payload.address.lines[1].entity.naturalId;
-      planetName = eventdata.payload.address.lines[1].entity.name;
+      matchIndex = user.workforce.findIndex(item => item.siteId === eventData.payload.siteId);
+      planetId = eventData.payload.address.lines[1].entity.naturalId;
+      planetName = eventData.payload.address.lines[1].entity.name;
 
       const workforceInfo = {
         PlanetName: planetName,
         PlanetNaturalId: planetId,
-        workforce: eventdata.payload.workforces,
-        siteId: eventdata.payload.siteId,
+        workforce: eventData.payload.workforces,
+        siteId: eventData.payload.siteId,
       };
 
       if (matchIndex != -1) {
@@ -352,63 +301,27 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
       break;
     }
     case 'CONTRACTS_CONTRACTS':
-      badParams = [
-        'id',
-        'canExtend',
-        'canRequestTermination',
-        'extensionDeadline',
-        'terminationReceived',
-        'terminationSent',
-      ];
-      eventdata.payload.contracts.forEach(contract => {
-        badParams.forEach(param => {
-          delete contract[param];
-        });
-        contract.conditions.forEach(condition => {
-          // @ts-expect-error TODO: Why do you even delete this
-          delete condition.id;
-        });
-      });
-
-      result['PMMG-User-Info'].contracts = eventdata.payload.contracts;
+      user.contracts = eventData.payload.contracts;
       break;
     case 'CONTRACTS_CONTRACT':
-      badKeys = [
-        'id',
-        'canExtend',
-        'canRequestTermination',
-        'extensionDeadline',
-        'terminationReceived',
-        'terminationSent',
-      ];
-      matchingContract = result['PMMG-User-Info'].contracts.find(obj => obj.localId === eventdata.payload.localId);
-      if (matchingContract) {
-        // Copy new object into old
-        const oldKeys = Object.keys(matchingContract);
-        oldKeys.forEach(key => {
-          delete matchingContract[key];
-        });
-        const newKeys = Object.keys(eventdata.payload);
-        newKeys.forEach(key => {
-          if (!badKeys.includes(key)) {
-            matchingContract[key] = eventdata.payload[key];
-          }
-        });
-      } // Otherwise push it in its entirety. Doesn't get rid of uneccessary params, but that's fine. They'll be wiped on the next full reload.
-      else {
-        result['PMMG-User-Info'].contracts.push(eventdata.payload);
+      for (let i = 0; i < user.contracts.length; i++) {
+        const contract = user.contracts[i];
+        if (contract.id !== eventData.payload.id) {
+          continue;
+        }
+        user.contracts[i] = eventData.payload;
       }
       break;
     case 'PRODUCTION_SITE_PRODUCTION_LINES': {
-      matchIndex = user.production.findIndex(item => item.siteId === eventdata.payload.siteId);
+      matchIndex = user.production.findIndex(item => item.siteId === eventData.payload.siteId);
 
       const siteInfo: ProductionSiteEntry = {
         PlanetName: '',
         PlanetNaturalId: '',
         lines: [],
-        siteId: eventdata.payload.siteId,
+        siteId: eventData.payload.siteId,
       };
-      for (const line of eventdata.payload.productionLines) {
+      for (const line of eventData.payload.productionLines) {
         const prodLine: ProductionLineEntry = {
           PlanetName: line.address.lines[1].entity.name,
           PlanetNaturalId: line.address.lines[1].entity.naturalId,
@@ -451,30 +364,22 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
       break;
     }
     case 'COMPANY_DATA':
-      user.company.name = eventdata.payload.name;
-      user.company.id = eventdata.payload.id;
+      user.company.name = eventData.payload.name;
+      user.company.id = eventData.payload.id;
       break;
     case 'ACCOUNTING_CASH_BALANCES':
-      result['PMMG-User-Info'].currency = [];
-
-      console.log(eventdata.payload);
-
-      if (eventdata.payload.currencyAccounts) {
-        eventdata.payload.currencyAccounts.forEach(account => {
-          result['PMMG-User-Info'].currency.push(account.currencyBalance);
-        });
-      }
+      user.currency = eventData.payload.currencyAccounts.map(x => x.currencyBalance);
       break;
     case 'FOREX_TRADER_ORDERS':
-      user.fxos = eventdata.payload.orders;
+      user.fxos = eventData.payload.orders;
       console.log(user.fxos);
       break;
     case 'COMEX_TRADER_ORDERS':
-      user.cxos = eventdata.payload.orders;
+      user.cxos = eventData.payload.orders;
       break;
     case 'COMEX_BROKER_DATA':
-      user.cxob[eventdata.payload.ticker] = {
-        ...eventdata.payload,
+      user.cxob[eventData.payload.ticker] = {
+        ...eventData.payload,
         timestamp: Date.now(),
       };
 
@@ -485,20 +390,16 @@ async function logEvent(result, eventdata: PrunApi.Packet) {
       });
       break;
     case 'SHIP_SHIPS': {
-      user.ships = eventdata.payload.ships;
+      user.ships = eventData.payload.ships;
       break;
     }
     case 'WORLD_MATERIAL_CATEGORIES': {
-      prun.materials.applyApiPayload(eventdata.payload);
+      prun.materials.applyApiPayload(eventData.payload);
       break;
     }
     case 'SYSTEM_STARS_DATA': {
-      prun.systems.applyApiPayload(eventdata.payload);
+      prun.systems.applyApiPayload(eventData.payload);
       break;
     }
   }
-
-  console.log(result);
-  //console.log("Finished Logging Event, now Setting...");
-  await system.storage.local.set(result);
 }

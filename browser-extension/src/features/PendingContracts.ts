@@ -1,14 +1,10 @@
 import { Module } from '../ModuleRunner';
 import { createTextSpan, genericCleanup, createContractDict } from '../util';
 import { Selector } from '../Selector';
+import user from '@src/store/user';
 
 export class PendingContracts implements Module {
   private tag = 'pb-pending-contracts';
-  private userInfo;
-
-  constructor(userInfo) {
-    this.userInfo = userInfo;
-  }
 
   cleanup() {
     genericCleanup(this.tag);
@@ -17,8 +13,8 @@ export class PendingContracts implements Module {
   run() {
     const contractLines = Array.from(document.querySelectorAll(Selector.SidebarContract)) as HTMLElement[]; // All the contract lines
 
-    if (contractLines.length > 0 && this.userInfo['PMMG-User-Info'] && this.userInfo['PMMG-User-Info']['contracts']) {
-      const contracts = this.userInfo['PMMG-User-Info']['contracts'];
+    if (contractLines.length > 0 && user.contracts.length > 0) {
+      const contracts = user.contracts;
       const contractdict = {};
 
       createContractDict(contracts, contractdict); // Turn the array into a dictionary with keys being contract IDs

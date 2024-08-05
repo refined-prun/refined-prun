@@ -94,7 +94,7 @@ async function mainRun() {
     new HeaderMinimizer(result['PMMGExtended']['minimize_by_default']),
     new AdvancedMode(result['PMMGExtended']['advanced_mode']),
     new Sidebar(result['PMMGExtended']['sidebar']),
-    new PendingContracts(userInfo),
+    new PendingContracts(),
     new CompactUI(result),
     new IconMarkers(),
     new PostLM(),

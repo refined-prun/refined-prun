@@ -20,11 +20,9 @@ import user from '@src/store/user';
  * Sort inventory into custom categories
  */
 export class InventoryOrganizer implements Module {
-  private userInfo; // The burn from the user info storage
   private result; // The settings stored
   private tag = 'pb-inv-org'; // The tag used to identifiy elements that need to be updated
   constructor(userInfo, result) {
-    this.userInfo = userInfo;
     this.result = result;
   }
 
@@ -76,7 +74,7 @@ export class InventoryOrganizer implements Module {
       const planetName = planetNameElem ? parsePlanetName(planetNameElem.textContent) : ''; // Get the text out of it
 
       let burn;
-      if (this.userInfo['PMMG-User-Info'] && findCorrespondingPlanet(planetName, user.workforce)) {
+      if (findCorrespondingPlanet(planetName, user.workforce)) {
         const workforce = findCorrespondingPlanet(planetName, user.workforce);
         const production = findCorrespondingPlanet(planetName, user.production);
         const inventory = findCorrespondingPlanet(planetName, user.storage);
