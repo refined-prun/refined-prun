@@ -43,7 +43,9 @@ function BURN(props: { parameters: string[] }) {
   const sections = [] as h.JSX.Element[];
 
   for (const burn of planetBurn) {
-    sections.push(<BurnSection isMultiplanet={isMultiplanet} burn={burn} dispSettings={dispSettings} />);
+    sections.push(
+      <BurnSection key={burn.planetName} isMultiplanet={isMultiplanet} burn={burn} dispSettings={dispSettings} />,
+    );
   }
 
   function onRedClick() {
