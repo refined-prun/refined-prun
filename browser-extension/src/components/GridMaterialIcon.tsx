@@ -11,12 +11,15 @@ interface Props {
 }
 
 export default function GridMaterialIcon({ amount, small, text, ticker }: Props) {
-  const material = prun.materials.get(ticker);
-  if (!material && ticker != 'SHPT') {
-    return null;
+  let name: string | undefined;
+  if (!text) {
+    name = undefined;
+  } else if (ticker === 'SHPT') {
+    name = 'Shipment';
+  } else {
+    const material = prun.materials.get(ticker);
+    name = material?.displayName ?? '???';
   }
-
-  const name = text ? material?.displayName || 'Shipment' : undefined;
 
   return (
     <GridItemView name={name}>

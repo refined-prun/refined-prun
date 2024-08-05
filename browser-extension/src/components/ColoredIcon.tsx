@@ -8,13 +8,16 @@ interface Props {
 }
 
 export default function ColoredIcon({ ticker }: Props) {
-  const material = prun.materials.get(ticker);
-  if (!material && ticker != 'SHPT') {
-    return null;
+  let name: string;
+  let category: string;
+  if (ticker === 'SHPT') {
+    name = 'Shipment';
+    category = 'shipment';
+  } else {
+    const material = prun.materials.get(ticker);
+    name = material?.displayName ?? '???';
+    category = material?.category.name ?? 'unknown';
   }
-
-  const name = material?.displayName || 'Shipment';
-  const category = material?.category.name || 'shipment';
 
   const style = {
     background: categoryColors[category][0],
@@ -67,4 +70,5 @@ const categoryColors = {
   'ship kits': ['linear-gradient(135deg, rgb(154, 84, 0), rgb(178, 109, 25))', 'rgb(255, 211, 127)'],
   utility: ['linear-gradient(135deg, rgb(161, 148, 136), rgb(186, 173, 161))', 'rgb(255, 255, 255)'],
   shipment: ['linear-gradient(135deg, #030303, #181818)', '#7f7f7f'],
+  unknown: ['#ff00ff', '#00ffff'],
 };

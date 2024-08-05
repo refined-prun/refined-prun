@@ -1,5 +1,4 @@
 import './MaterialIcon.css';
-import prun from '@src/prun-api/prun';
 import PrunCss from '@src/prun-ui/prun-css';
 import classNames from 'classnames';
 import { h } from 'preact';
@@ -12,11 +11,6 @@ interface Props {
 }
 
 export default function MaterialIcon({ amount, small, ticker }: Props) {
-  const material = prun.materials.get(ticker);
-  if (!material && ticker != 'SHPT') {
-    return null;
-  }
-
   const classes = classNames(PrunCss.MaterialIcon.container, {
     'rprun-mat-element-small': small,
     'rprun-mat-element-large': !small,
