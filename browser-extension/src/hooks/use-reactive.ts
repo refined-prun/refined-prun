@@ -3,13 +3,15 @@ import { effect, stop } from '@vue/reactivity';
 
 export default function useReactive<T>(fn: () => T): T {
   const value = useRef<T>();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const forceUpdate = useForceUpdate();
   const runner = useMemo(
     () =>
       effect(() => {
-        value.current = fn();
-        forceUpdate();
+        const newValue = fn();
+        if (value.current !== newValue) {
+          value.current = newValue;
+          forceUpdate();
+        }
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
