@@ -1,4 +1,4 @@
-import { showBuffer, getLocalStorage, getBuffers } from './util';
+import { showBuffer, getBuffers } from './util';
 import { FriendlyNames } from './GameProperties';
 import { Selector } from './Selector';
 import { saveSettings, Settings } from './Settings';
@@ -119,13 +119,4 @@ export class ModuleRunner {
     // @TODO: Vary the interval based on module performance
     window.setTimeout(() => this.loop(), 250);
   }
-
-  loopUserInfo() {
-    getLocalStorage('PMMG-User-Info', updateUserInfo, this.userInfo);
-    window.setTimeout(() => this.loopUserInfo(), 500);
-  }
-}
-
-function updateUserInfo(result, userInfo) {
-  userInfo['PMMG-User-Info'] = result['PMMG-User-Info'] || {};
 }

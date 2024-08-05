@@ -3,19 +3,18 @@ import { TextColors } from '../Style';
 import user from '@src/store/user';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import cx from '@src/prun-api/cx';
 
 export class DataHealth {
   private tile: HTMLElement;
   public parameters: string[];
   public pmmgSettings;
-  private userInfo;
   public name = 'DATA HEALTH';
 
-  constructor(tile, parameters, pmmgSettings, userInfo) {
+  constructor(tile, parameters, pmmgSettings) {
     this.tile = tile;
     this.parameters = parameters;
     this.pmmgSettings = pmmgSettings;
-    this.userInfo = userInfo;
   }
 
   create_buffer() {
@@ -28,16 +27,6 @@ export class DataHealth {
 
     const baseBody = createTable(this.tile, ['Planet', 'Workforce', 'Production', 'Storage']);
     const baseInfo = {};
-
-    if (!this.userInfo['PMMG-User-Info']) {
-      // This should almost never happen.
-      this.tile.appendChild(
-        createTextSpan(
-          'No collected data is present. Refresh the buffer. If the problem persists, contact Pi314 on Discord.',
-        ),
-      );
-      return;
-    }
 
     for (const site of user.sites.filter(x => x.type === 'BASE')) {
       if (site.PlanetName) {
@@ -124,10 +113,8 @@ export class DataHealth {
 
     otherTable.appendChild(createTableRow('Currency', user.currency.length > 0));
 
-    const cxPriceAge = this.userInfo['PMMG-User-Info']['cx_prices']
-      ? `${((Date.now() - this.userInfo['PMMG-User-Info']['cx_prices']['Age']) / 3600000).toLocaleString(undefined, {
-          maximumFractionDigits: 0,
-        })}h`
+    const cxPriceAge = cx.prices
+      ? `${((Date.now() - cx.prices.Age) / 3600000).toFixed(0)}h`
       : // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (false as any);
     otherTable.appendChild(createTableRow('CX Price Age', cxPriceAge));

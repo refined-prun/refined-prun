@@ -1,6 +1,6 @@
 import { ModuleRunner } from './ModuleRunner';
 import { OrderETAs } from '@src/features/OrderETAs';
-import { getCXPrices, getPrices } from './BackgroundRunner';
+import { getPrices } from './BackgroundRunner';
 import { getSpecial } from './util';
 import { appendStyle, RPrunStylesheet } from './Style';
 import { ScreenUnpack } from '@src/features/ScreenUnpack';
@@ -20,6 +20,7 @@ import { loadPrunCss } from '@src/prun-ui/prun-css';
 import { applyXITParameters } from '@src/features/xit-commands';
 
 import './refined-prun.css';
+import cx from '@src/prun-api/cx';
 
 // The main function that initializes everything
 async function mainRun() {
@@ -75,8 +76,7 @@ async function mainRun() {
     1000,
   );
 
-  // Get CX Prices
-  window.setTimeout(() => getCXPrices(userInfo), 1000);
+  void cx.trackPrices();
 
   // Do FIN recording
   if (
@@ -104,10 +104,7 @@ async function mainRun() {
   const runner = new ModuleRunner(modules, result, webData, userInfo);
 
   // Start the loop
-  (function () {
-    runner.loop();
-    runner.loopUserInfo();
-  })();
+  runner.loop();
 }
 
 async function waitUntilPrunLoaded() {

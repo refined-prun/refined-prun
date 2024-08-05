@@ -23,6 +23,7 @@ import system from '@src/system';
 import user from '@src/store/user';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import cx from '@src/prun-api/cx';
 
 export class Finances {
   private tile: HTMLElement;
@@ -137,10 +138,10 @@ function chooseScreen(finResult, params) {
     priceType = interpreted[1];
   }
 
-  if (!userInfo['PMMG-User-Info'] || !userInfo['PMMG-User-Info']['cx_prices']) {
+  if (!cx.prices) {
     return;
   }
-  const cxPrices = userInfo['PMMG-User-Info']['cx_prices'][CX][priceType]; // Dictionary containing prices keyed to material tickers
+  const cxPrices = cx.prices[CX][priceType]; // Dictionary containing prices keyed to material tickers
 
   // Calculate price basket
   const weights = { PIO: 0.7435, SET: 0.1954, TEC: 0.0444, ENG: 0.0132, SCI: 0.0035 };
@@ -150,7 +151,7 @@ function chooseScreen(finResult, params) {
   Object.keys(Consumption).forEach(workforce => {
     let tierCost = 0;
     Object.keys(Consumption[workforce]).forEach(mat => {
-      tierCost += averageCX(userInfo['PMMG-User-Info']['cx_prices'], mat) * Consumption[workforce][mat];
+      tierCost += averageCX(cx.prices, mat) * Consumption[workforce][mat];
     });
 
     priceBasket += tierCost * weights[workforce];
@@ -1103,7 +1104,7 @@ function getPrice(cxPrices, customPrices, priceScheme, ticker, userInfo, priceBa
   if (priceScheme == 'Custom (Spreadsheet)' && customPrices && customPrices[ticker]) {
     return customPrices[ticker];
   } else if (priceScheme == 'Price Basket') {
-    return averageCX(userInfo['PMMG-User-Info']['cx_prices'], ticker) / priceBasket;
+    return averageCX(cx.prices, ticker) / priceBasket;
   }
 
   return cxPrices[ticker] || 0;
@@ -1140,7 +1141,7 @@ export function calculateFinancials(webData, userInfo, result, loop) {
   //playerData, contracts, prices, cxos
   // Wait until contracts and prices are in
   if (loop) {
-    if (userInfo['PMMG-User-Info'] && userInfo['PMMG-User-Info']['cx_prices']) {
+    if (cx.prices) {
       window.setTimeout(() => calculateFinancials(webData, userInfo, result, false), 100);
       return;
     }
@@ -1159,7 +1160,7 @@ export function calculateFinancials(webData, userInfo, result, loop) {
     priceType = interpreted[1];
   }
 
-  const cxPrices = userInfo['PMMG-User-Info']['cx_prices'][CX][priceType];
+  const cxPrices = cx.prices[CX][priceType];
 
   // Calculate price basket
   const weights = { PIO: 0.7435, SET: 0.1954, TEC: 0.0444, ENG: 0.0132, SCI: 0.0035 };
@@ -1169,7 +1170,7 @@ export function calculateFinancials(webData, userInfo, result, loop) {
   Object.keys(Consumption).forEach(workforce => {
     let tierCost = 0;
     Object.keys(Consumption[workforce]).forEach(mat => {
-      tierCost += averageCX(userInfo['PMMG-User-Info']['cx_prices'], mat) * Consumption[workforce][mat];
+      tierCost += averageCX(cx.prices, mat) * Consumption[workforce][mat];
     });
 
     priceBasket += tierCost * weights[workforce];

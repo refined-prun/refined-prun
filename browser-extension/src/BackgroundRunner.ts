@@ -1,5 +1,3 @@
-import { setSettings } from './util';
-
 // Get corp prices asynchronously
 // "prices" will contain the prices after the end of the web request
 export function getPrices(webData, sheetURL, sheetName) {
@@ -56,57 +54,6 @@ export function getPrices(webData, sheetURL, sheetName) {
   xhr.timeout = 10000;
 
   xhr.open('GET', address, true);
-  xhr.send(null);
-
-  return;
-}
-
-// Get CX prices asynchronously
-// "cxPrices" will contain the prices at the end of the web request
-export function getCXPrices(userInfo) {
-  // Create a new XML Http Request
-  const xhr = new XMLHttpRequest();
-  xhr.ontimeout = function () {
-    console.log('PMMG: CX Price Timeout');
-  };
-
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == XMLHttpRequest.DONE) {
-      try {
-        // Parse the results
-        console.log('PMMG: Retreived CX Prices');
-        const priceData = JSON.parse(xhr.responseText);
-
-        // The data points for each CX to pull
-        const wantedResults = ['AskPrice', 'BidPrice', 'Average', 'AskAvail', 'BidAvail'];
-        const CXs = ['AI1', 'CI1', 'CI2', 'IC1', 'NC1', 'NC2']; // All the CXs
-
-        userInfo['PMMG-User-Info']['cx_prices'] = {};
-
-        CXs.forEach(CX => {
-          userInfo['PMMG-User-Info']['cx_prices'][CX] = {};
-          wantedResults.forEach(wanted => {
-            userInfo['PMMG-User-Info']['cx_prices'][CX][wanted] = {};
-            priceData.forEach(mat => {
-              userInfo['PMMG-User-Info']['cx_prices'][CX][wanted][mat['Ticker']] = mat[`${CX}-${wanted}`];
-            });
-          });
-        });
-
-        // Date the data
-        userInfo['PMMG-User-Info']['cx_prices']['Age'] = Date.now();
-        setSettings(userInfo);
-      } catch (SyntaxError) {
-        console.log('PMMG: Bad Data from Rain Prices');
-      }
-    }
-
-    return;
-  };
-
-  // Send the request
-  xhr.timeout = 10000;
-  xhr.open('GET', 'https://rest.fnar.net/rain/prices', true);
   xhr.send(null);
 
   return;
