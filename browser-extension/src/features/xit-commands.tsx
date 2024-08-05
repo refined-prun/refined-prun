@@ -13,9 +13,8 @@ import { h } from 'dom-chef';
 let xitArgs: any;
 export const getXitArgs = () => xitArgs;
 
-export function applyXITParameters(pmmgSettings, userInfo, webData, modules) {
+export function applyXITParameters(pmmgSettings, webData, modules) {
   xitArgs = {
-    userInfo,
     webData,
     modules,
     pmmgSettings,

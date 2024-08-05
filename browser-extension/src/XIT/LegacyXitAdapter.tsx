@@ -21,7 +21,6 @@ export function LegacyXitAdapter(props: { xitClass: new (...args: any[]) => XITM
       container.current,
       props.parameters,
       args.pmmgSettings,
-      args.userInfo,
       args.webData,
       args.modules,
     );

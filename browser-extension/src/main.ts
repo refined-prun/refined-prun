@@ -64,9 +64,6 @@ async function mainRun() {
     appendStyle(RPrunStylesheet.advanced);
   }
 
-  // Introduce an object that will hold and be periodically updated with latest info harvested from server traffic
-  const userInfo = {};
-
   // All asynchronous web data put in as keys into this dictionary
   const webData = {};
 
@@ -85,11 +82,11 @@ async function mainRun() {
       Date.now() - result['PMMGExtended']['last_fin_recording'] > 64800000)
   ) {
     // 72000000
-    window.setTimeout(() => calculateFinancials(webData, userInfo, result, true), 1000);
+    window.setTimeout(() => calculateFinancials(webData, result, true), 1000);
   }
   const modules = [
     new OrderETAs(),
-    new InventoryOrganizer(userInfo, result),
+    new InventoryOrganizer(result),
     new ScreenUnpack(result['PMMGExtended']['unpack_exceptions']),
     new HeaderMinimizer(result['PMMGExtended']['minimize_by_default']),
     new AdvancedMode(result['PMMGExtended']['advanced_mode']),
@@ -99,9 +96,9 @@ async function mainRun() {
     new IconMarkers(),
     new PostLM(),
   ];
-  applyXITParameters(result, userInfo, webData, modules);
+  applyXITParameters(result, webData, modules);
   await features.init();
-  const runner = new ModuleRunner(modules, result, webData, userInfo);
+  const runner = new ModuleRunner(modules, result);
 
   // Start the loop
   runner.loop();

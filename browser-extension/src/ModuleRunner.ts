@@ -24,17 +24,14 @@ interface ModuleEntry {
 
 export class ModuleRunner {
   private readonly modules: ModuleEntry[]; // The list of features run by the extension
-  private userInfo;
   private result: Settings; // The stored settings
   private iteration;
 
-  constructor(modules: Module[], result: Settings, webData, userInfo) {
+  constructor(modules: Module[], result: Settings) {
     // Construct global variables
     this.iteration = 0;
     this.modules = modules.map(m => this.moduleToME(m));
     this.result = result;
-    this.userInfo = userInfo;
-
     this.updateActiveModules(result);
   }
 

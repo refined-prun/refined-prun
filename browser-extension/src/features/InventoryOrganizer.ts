@@ -22,7 +22,7 @@ import user from '@src/store/user';
 export class InventoryOrganizer implements Module {
   private result; // The settings stored
   private tag = 'pb-inv-org'; // The tag used to identifiy elements that need to be updated
-  constructor(userInfo, result) {
+  constructor(result) {
     this.result = result;
   }
 

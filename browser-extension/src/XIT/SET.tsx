@@ -16,16 +16,14 @@ export class Settings {
   private tile: HTMLElement;
   public parameters: string[];
   private pmmgSettings;
-  public userInfo;
   public webData;
   private modules;
   public name = 'PMMG SETTINGS';
 
-  constructor(tile, parameters, pmmgSettings, userInfo, webData, modules) {
+  constructor(tile, parameters, pmmgSettings, webData, modules) {
     this.tile = tile;
     this.parameters = parameters;
     this.pmmgSettings = pmmgSettings;
-    this.userInfo = userInfo;
     this.webData = webData;
     this.modules = modules;
   }

@@ -23,14 +23,12 @@ export class Checklists {
   private tile: HTMLElement;
   private parameters: string[];
   public pmmgResult;
-  private userInfo;
   public name = 'CHECKLIST';
 
-  constructor(tile, parameters, pmmgResult, userInfo) {
+  constructor(tile, parameters, pmmgResult) {
     this.tile = tile;
     this.parameters = parameters;
     this.pmmgResult = pmmgResult;
-    this.userInfo = userInfo;
   }
 
   create_buffer() {
@@ -42,7 +40,7 @@ export class Checklists {
     } else {
       // Display the specified check
       const checkName = this.parameters.slice(1).join(' ');
-      displayChecklist(this.tile, this.userInfo, checkName);
+      displayChecklist(this.tile, checkName);
     }
     return;
   }
@@ -216,7 +214,7 @@ function deleteChecklist(result, params) {
   generateCheckTable(result, tile);
 }
 
-function displayChecklist(tile, userInfo, checkName) {
+function displayChecklist(tile, checkName) {
   // Create an individual checklist
   // Create the title at the top of the checklist
   const nameDiv = document.createElement('div');
@@ -227,7 +225,7 @@ function displayChecklist(tile, userInfo, checkName) {
   const checkDiv = document.createElement('div'); // Div where all the checklist items are housed
   tile.appendChild(checkDiv);
 
-  const checklist = new Checklist(checkName, checkDiv, tile, userInfo);
+  const checklist = new Checklist(checkName, checkDiv, tile);
 
   const addButton = document.createElement('button');
   addButton.classList.add(...Style.Button);
@@ -237,14 +235,14 @@ function displayChecklist(tile, userInfo, checkName) {
   addButton.textContent = 'ADD ITEM';
 
   addButton.addEventListener('click', () => {
-    generateEditPopup(tile, checklist, userInfo);
+    generateEditPopup(tile, checklist);
   });
 
   return;
 }
 
 // Generate the popup to add or edit a checklist
-function generateEditPopup(tile, checklist, userInfo, info?) {
+function generateEditPopup(tile, checklist, info?) {
   if (!info) {
     info = { type: 'Text', completed: false, id: generateRandomHexSequence(8), created: Date.now() }; // The information defining the checklist item
   }
@@ -257,7 +255,7 @@ function generateEditPopup(tile, checklist, userInfo, info?) {
     ['Text', 'Resupply', 'Repair', editPopupTypes[info.type]],
     'The type of checklist item being added.',
     updatePopupInfo,
-    [popup, info, userInfo],
+    [popup, info],
   );
 
   // Date row (present on all)
@@ -272,7 +270,7 @@ function generateEditPopup(tile, checklist, userInfo, info?) {
     info.duedate ? date.toISOString().slice(0, 16) : undefined,
     undefined,
     updatePopupInfo,
-    [popup, info, userInfo],
+    [popup, info],
   );
 
   // Recurring period row (present on all)
@@ -282,7 +280,7 @@ function generateEditPopup(tile, checklist, userInfo, info?) {
     info.recurring,
     'How often the checklist item will be added back. Will not function without a due date.',
     updatePopupInfo,
-    [popup, info, userInfo],
+    [popup, info],
   );
 
   // Confirm/add row (present on all)
@@ -290,7 +288,6 @@ function generateEditPopup(tile, checklist, userInfo, info?) {
     popup,
     info,
     checklist,
-    userInfo,
   ]);
 
   // Delete row (present on all)
@@ -302,7 +299,7 @@ function generateEditPopup(tile, checklist, userInfo, info?) {
   popup.getRowByName('DELETE').rowInput.classList.remove(Style.ButtonPrimary);
   popup.getRowByName('DELETE').rowInput.classList.add(Style.ButtonDanger);
 
-  updatePopupInfo(null, [popup, info, userInfo, true]); // Trigger the creation of additional rows
+  updatePopupInfo(null, [popup, info, true]); // Trigger the creation of additional rows
 }
 
 const editPopupTypes = {
@@ -316,14 +313,13 @@ const editPopupTypes = {
 // This function is called every time something changes on the popup.
 function updatePopupInfo(junk, params) {
   let planetNames;
-  if (!params[0] || !params[1] || !params[2]) {
+  if (!params[0] || !params[1]) {
     return;
   }
 
   const popup = params[0];
   const info = params[1];
-  const userInfo = params[2];
-  const manuallyUpdate = params[3];
+  const manuallyUpdate = params[2];
 
   const typeValue = popup.rows[0].rowInput.selectedOptions[0].value;
   // Type value changed
@@ -338,7 +334,7 @@ function updatePopupInfo(junk, params) {
     if (typeValue == 'Text') {
       // If it was just changed back to text...
       // Add in the text row
-      popup.addPopupRow('text', 'Text', info['name'], undefined, updatePopupInfo, [popup, info, userInfo]);
+      popup.addPopupRow('text', 'Text', info['name'], undefined, updatePopupInfo, [popup, info]);
     } else if (typeValue == 'Resupply') {
       // If it was changed to Resupply
       // Add in the planet row
@@ -350,18 +346,14 @@ function updatePopupInfo(junk, params) {
         planetNames.push(planetNames.indexOf(info['planet']));
       }
 
-      popup.addPopupRow('dropdown', 'Planet', planetNames, 'The base to resupply.', updatePopupInfo, [
-        popup,
-        info,
-        userInfo,
-      ]);
+      popup.addPopupRow('dropdown', 'Planet', planetNames, 'The base to resupply.', updatePopupInfo, [popup, info]);
       popup.addPopupRow(
         'number',
         'Days',
         info['days'] ? info['days'].toString() : '0',
         'The number of days of supplies',
         updatePopupInfo,
-        [popup, info, userInfo],
+        [popup, info],
       );
     } else if (typeValue == 'Repair') {
       planetNames = [] as any[];
@@ -371,18 +363,14 @@ function updatePopupInfo(junk, params) {
         planetNames.push(planetNames.indexOf(info['planet']));
       }
 
-      popup.addPopupRow('dropdown', 'Planet', planetNames, 'The base to repair.', updatePopupInfo, [
-        popup,
-        info,
-        userInfo,
-      ]);
+      popup.addPopupRow('dropdown', 'Planet', planetNames, 'The base to repair.', updatePopupInfo, [popup, info]);
       popup.addPopupRow(
         'number',
         'Threshold',
         info['days'] ? info['days'].toString() : '0',
         'The cutoff for the age of buildings displayed (in days)',
         updatePopupInfo,
-        [popup, info, userInfo],
+        [popup, info],
       );
     }
 
@@ -634,13 +622,11 @@ class Checklist {
   public name: string; // The name of the checklist
   public checkDiv: HTMLElement; // The div all the elements are contained in
   public tile: HTMLElement; // The tile of the whole buffer. ONLY USE FOR POPUP GENERATION
-  public userInfo; // User Info gathered by PMMG
 
-  constructor(name, checkDiv, tile, userInfo) {
+  constructor(name, checkDiv, tile) {
     this.name = name;
     this.checkDiv = checkDiv;
     this.tile = tile;
-    this.userInfo = userInfo;
 
     this.recreate();
   }
@@ -761,7 +747,7 @@ class CheckItem {
 
       // Handle action listener for modify button
       this.editButton.addEventListener('click', () => {
-        generateEditPopup(checklist.tile, checklist, checklist.userInfo, thisObject.checkInfo);
+        generateEditPopup(checklist.tile, checklist, thisObject.checkInfo);
       });
     }
 

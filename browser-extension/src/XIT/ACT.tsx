@@ -29,14 +29,12 @@ export class Execute {
   private tile: HTMLElement;
   public parameters: string[];
   public pmmgSettings;
-  public userInfo;
   public name = 'ACTION PACKAGE';
 
-  constructor(tile, parameters, pmmgSettings, userInfo) {
+  constructor(tile, parameters, pmmgSettings) {
     this.tile = tile;
     this.parameters = parameters;
     this.pmmgSettings = pmmgSettings;
-    this.userInfo = userInfo;
 
     if (!parameters[1]) {
       this.name = 'ACTION PACKAGES';
@@ -55,9 +53,9 @@ export class Execute {
       createSummaryScreen(this.tile, this);
     } else if (this.parameters[1] && this.parameters[1].toLowerCase() == 'gen') {
       // Generate the creation/edit screen
-      createGenerateScreen(this.tile, this.parameters.slice(2).join(' '), this.userInfo);
+      createGenerateScreen(this.tile, this.parameters.slice(2).join(' '));
     } else {
-      createExecuteScreen(this.tile, this.parameters.slice(1).join(' '), this.userInfo);
+      createExecuteScreen(this.tile, this.parameters.slice(1).join(' '));
     }
 
     return;
@@ -305,7 +303,7 @@ async function createSummaryScreen(tile, parentBuffer) {
 }
 
 // All functions associated with generating/editing action packages
-async function createGenerateScreen(tile, packageName, userInfo) {
+async function createGenerateScreen(tile, packageName) {
   if (!packageName || packageName == '') {
     tile.textContent = 'Error: Please name the action package by including an extra parameter';
     return;
@@ -326,13 +324,12 @@ async function createGenerateScreen(tile, packageName, userInfo) {
     }
   }
 
-  new GenerateScreen(tile, actionPackage, userInfo);
+  new GenerateScreen(tile, actionPackage);
 }
 
 // Class for holding info on the screen for generating action packages
 class GenerateScreen {
   public tile: HTMLElement;
-  private userInfo;
 
   // Sections for each part of the screen (containing all rows)
   public globalSection?: HTMLElement;
@@ -350,12 +347,11 @@ class GenerateScreen {
   public actions: any[];
   public groups: any[];
 
-  constructor(tile, actionPackage, userInfo) {
+  constructor(tile, actionPackage) {
     this.tile = tile;
     this.globalAttributes = actionPackage.global || {};
     this.actions = actionPackage.actions || [];
     this.groups = actionPackage.groups || [];
-    this.userInfo = userInfo;
 
     this.generateGlobalForm();
     this.generateGroupForm();
@@ -1128,7 +1124,7 @@ class GenerateScreen {
 // All functions associated with actually executing an action package as a command package
 
 // Turn stored action package (resupply base for 30 days) to series of actionable actions (buy 1000 RAT, then 1000 DW, etc)
-function parseActionPackage(rawActionPackage, userInfo, messageBox) {
+function parseActionPackage(rawActionPackage, messageBox) {
   const actionPackage = [] as any;
   actionPackage.valid = false;
 
@@ -1178,7 +1174,7 @@ function parseActionPackage(rawActionPackage, userInfo, messageBox) {
 
       const group = rawActionPackage.groups[groupIndexes[action.group]];
       const errorFlag = [false];
-      const parsedGroup = parseGroup(group, messageBox, userInfo, errorFlag); // Parse materials needed. Object with keys equal to material tickers and values equal to number of materials
+      const parsedGroup = parseGroup(group, messageBox, errorFlag); // Parse materials needed. Object with keys equal to material tickers and values equal to number of materials
 
       // Take out materials in CX inventory if requested
       if (action.useCXInv) {
@@ -1298,7 +1294,7 @@ function parseActionPackage(rawActionPackage, userInfo, messageBox) {
 }
 
 // Parse a material group into a list of materials
-function parseGroup(group, messageBox, userInfo, errorFlag) {
+function parseGroup(group, messageBox, errorFlag) {
   let parsedGroup = {};
   if (group.type == 'Resupply') {
     // Interpret burn to get number of materials
@@ -1423,7 +1419,7 @@ function parseGroup(group, messageBox, userInfo, errorFlag) {
   return parsedGroup;
 }
 
-async function createExecuteScreen(tile, packageName, userInfo) {
+async function createExecuteScreen(tile, packageName) {
   const title = document.createElement('h2');
   title.textContent = packageName;
   title.classList.add(...Style.DraftName);
@@ -1477,7 +1473,7 @@ async function createExecuteScreen(tile, packageName, userInfo) {
   // Add action listener for viewing
   viewButton.addEventListener('click', () => {
     addMessage(messageBox, '', true);
-    const actionPackage = parseActionPackage(rawActionPackage, userInfo, messageBox);
+    const actionPackage = parseActionPackage(rawActionPackage, messageBox);
     actionPackage.forEach(action => {
       addMessage(messageBox, generatePrettyName(action));
     });
@@ -1490,7 +1486,7 @@ async function createExecuteScreen(tile, packageName, userInfo) {
   // Add action listener for validation
   validateButton.addEventListener('click', () => {
     addMessage(messageBox, '', true);
-    const actionPackage = parseActionPackage(rawActionPackage, userInfo, messageBox);
+    const actionPackage = parseActionPackage(rawActionPackage, messageBox);
     actionPackage.valid && validateAction(actionPackage, messageBox);
   });
 
@@ -1498,7 +1494,7 @@ async function createExecuteScreen(tile, packageName, userInfo) {
   executeButton.addEventListener('click', async () => {
     addMessage(messageBox, '', true);
     // Check validation
-    const actionPackage = parseActionPackage(rawActionPackage, userInfo, messageBox);
+    const actionPackage = parseActionPackage(rawActionPackage, messageBox);
     const valid = actionPackage.valid && validateAction(actionPackage, messageBox);
     if (!valid) {
       return;

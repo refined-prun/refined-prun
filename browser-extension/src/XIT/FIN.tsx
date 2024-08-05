@@ -29,16 +29,14 @@ export class Finances {
   private tile: HTMLElement;
   private parameters: string[];
   private pmmgSettings;
-  private userInfo;
   private webData;
 
   public name = 'FINANCES';
 
-  constructor(tile, parameters, pmmgSettings, userInfo, webData) {
+  constructor(tile, parameters, pmmgSettings, webData) {
     this.tile = tile;
     this.parameters = parameters;
     this.pmmgSettings = pmmgSettings;
-    this.userInfo = userInfo;
     this.webData = webData;
   }
 
@@ -94,14 +92,7 @@ export class Finances {
     }
 
     // Get stored financial data
-    getLocalStorage('PMMG-Finance', chooseScreen, [
-      this.tile,
-      this.parameters,
-      this.pmmgSettings,
-      this.webData,
-      this.userInfo,
-      this,
-    ]);
+    getLocalStorage('PMMG-Finance', chooseScreen, [this.tile, this.parameters, this.pmmgSettings, this.webData, this]);
     return;
   }
 
@@ -126,8 +117,7 @@ function chooseScreen(finResult, params) {
   const parameters = params[1];
   const pmmgSettings = params[2];
   const webData = params[3];
-  const userInfo = params[4];
-  const finObj = params[5];
+  const finObj = params[4];
 
   // Determine the array of CX prices to use
   let CX = 'AI1';
@@ -138,10 +128,10 @@ function chooseScreen(finResult, params) {
     priceType = interpreted[1];
   }
 
-  if (!cx.prices) {
+  if (!cx.prices || !cx.prices[CX]) {
     return;
   }
-  const cxPrices = cx.prices[CX][priceType]; // Dictionary containing prices keyed to material tickers
+  const cxPrices = cx.prices[CX]![priceType]; // Dictionary containing prices keyed to material tickers
 
   // Calculate price basket
   const weights = { PIO: 0.7435, SET: 0.1954, TEC: 0.0444, ENG: 0.0132, SCI: 0.0035 };
@@ -444,7 +434,7 @@ function chooseScreen(finResult, params) {
     tile.appendChild(addButton);
 
     addButton.addEventListener('click', () => {
-      calculateFinancials(webData, userInfo, pmmgSettings, true);
+      calculateFinancials(webData, pmmgSettings, true);
       finObj.create_buffer();
     });
 
@@ -814,7 +804,6 @@ function chooseScreen(finResult, params) {
     tile.textContent = '';
     tile.id = 'pmmg-load-success';
 
-    // Calculate the player burn from userInfo
     const planets = [] as string[];
     user.workforce.forEach(workforce => {
       if (workforce.PlanetName && !planets.includes(workforce.PlanetName)) {
@@ -848,7 +837,6 @@ function chooseScreen(finResult, params) {
                 webData['custom_prices'],
                 pmmgSettings['PMMGExtended']['pricing_scheme'],
                 need.material.ticker,
-                userInfo,
                 priceBasket,
               ) * need.unitsPerInterval;
           });
@@ -883,7 +871,6 @@ function chooseScreen(finResult, params) {
                     webData['custom_prices'],
                     pmmgSettings['PMMGExtended']['pricing_scheme'],
                     mat.MaterialTicker,
-                    userInfo,
                     priceBasket,
                   ) *
                     mat.Amount *
@@ -899,7 +886,6 @@ function chooseScreen(finResult, params) {
                     webData['custom_prices'],
                     pmmgSettings['PMMGExtended']['pricing_scheme'],
                     mat.MaterialTicker,
-                    userInfo,
                     priceBasket,
                   ) *
                     mat.Amount *
@@ -1100,7 +1086,7 @@ function clearData(result) {
   system.storage.local.remove('PMMG-Finance');
 }
 
-function getPrice(cxPrices, customPrices, priceScheme, ticker, userInfo, priceBasket) {
+function getPrice(cxPrices, customPrices, priceScheme, ticker, priceBasket) {
   if (priceScheme == 'Custom (Spreadsheet)' && customPrices && customPrices[ticker]) {
     return customPrices[ticker];
   } else if (priceScheme == 'Price Basket') {
@@ -1137,15 +1123,15 @@ const CustomSchemes = {
 };
 
 // Actually recording and processing the financials once they are received through BackgroundRunner.
-export function calculateFinancials(webData, userInfo, result, loop) {
+export function calculateFinancials(webData, result, loop) {
   //playerData, contracts, prices, cxos
   // Wait until contracts and prices are in
   if (loop) {
     if (cx.prices) {
-      window.setTimeout(() => calculateFinancials(webData, userInfo, result, false), 100);
+      window.setTimeout(() => calculateFinancials(webData, result, false), 100);
       return;
     }
-    window.setTimeout(() => calculateFinancials(webData, userInfo, result, true), 50);
+    window.setTimeout(() => calculateFinancials(webData, result, true), 50);
     return;
   }
 
@@ -1160,7 +1146,7 @@ export function calculateFinancials(webData, userInfo, result, loop) {
     priceType = interpreted[1];
   }
 
-  const cxPrices = cx.prices[CX][priceType];
+  const cxPrices = cx.prices![CX]![priceType];
 
   // Calculate price basket
   const weights = { PIO: 0.7435, SET: 0.1954, TEC: 0.0444, ENG: 0.0132, SCI: 0.0035 };
@@ -1202,7 +1188,6 @@ export function calculateFinancials(webData, userInfo, result, loop) {
           webData['custom_prices'],
           result['PMMGExtended']['pricing_scheme'],
           mat.MaterialTicker,
-          userInfo,
           priceBasket,
         ) * mat.Amount;
     });
@@ -1243,7 +1228,6 @@ export function calculateFinancials(webData, userInfo, result, loop) {
             webData['custom_prices'],
             result['PMMGExtended']['pricing_scheme'],
             mat.material.ticker,
-            userInfo,
             priceBasket,
           ) * mat.amount;
       });
@@ -1274,7 +1258,6 @@ export function calculateFinancials(webData, userInfo, result, loop) {
               webData['custom_prices'],
               result['PMMGExtended']['pricing_scheme'],
               condition.quantity!.material.ticker,
-              userInfo,
               priceBasket,
             ) * condition.quantity!.amount;
         } else {
@@ -1284,7 +1267,6 @@ export function calculateFinancials(webData, userInfo, result, loop) {
               webData['custom_prices'],
               result['PMMGExtended']['pricing_scheme'],
               condition.quantity!.material.ticker,
-              userInfo,
               priceBasket,
             ) * condition.quantity!.amount;
         }
@@ -1328,7 +1310,6 @@ export function calculateFinancials(webData, userInfo, result, loop) {
           webData['custom_prices'],
           result['PMMGExtended']['pricing_scheme'],
           order.material.ticker,
-          userInfo,
           priceBasket,
         ) * order.amount;
     } else {

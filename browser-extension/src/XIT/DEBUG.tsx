@@ -10,16 +10,14 @@ export class Debug {
   private tile: HTMLElement;
   private parameters: string[];
   private pmmgSettings;
-  private userInfo;
   private webData;
 
   public name = 'DEBUG';
 
-  constructor(tile, parameters, pmmgSettings, userInfo, webData) {
+  constructor(tile, parameters, pmmgSettings, webData) {
     this.tile = tile;
     this.parameters = parameters;
     this.pmmgSettings = pmmgSettings;
-    this.userInfo = userInfo;
     this.webData = webData;
   }
 
@@ -41,9 +39,6 @@ export class Debug {
     );
     downloadButtons.appendChild(
       createDownloadButton(this.webData, 'Download All Web Data', `pmmg-web-data${Date.now().toString()}.json`),
-    );
-    downloadButtons.appendChild(
-      createDownloadButton(this.userInfo, 'Download All Collected Data', `pmmg-user-info${Date.now().toString()}.json`),
     );
     downloadButtons.appendChild(createDownloadPrunCssClassesButton());
     const endpointLabel = document.createElement('div');
