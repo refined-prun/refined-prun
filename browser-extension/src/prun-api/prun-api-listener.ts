@@ -8,6 +8,7 @@ import user, {
   StorageEntry,
   WarehouseSiteEntry,
 } from '@src/store/user';
+import removeArrayElement from '@src/utils/remove-array-element';
 
 let companyContext: string | undefined;
 
@@ -285,6 +286,31 @@ function processEvent(packet: PrunApi.Packet) {
     }
     case 'COMEX_TRADER_ORDERS': {
       user.cxos = packet.payload.orders;
+      break;
+    }
+    case 'COMEX_TRADER_ORDER_ADDED': {
+      const cxos = user.cxos.slice();
+      cxos.push(packet.payload);
+      user.cxos = cxos;
+      break;
+    }
+    case 'COMEX_TRADER_ORDER_UPDATED': {
+      const cxos = user.cxos.slice();
+      for (let i = 0; i < cxos.length; i++) {
+        const order = cxos[i];
+        if (order.id === packet.payload.id) {
+          cxos[i] = packet.payload;
+          break;
+        }
+      }
+      user.cxos = cxos;
+      break;
+    }
+    case 'COMEX_TRADER_ORDER_REMOVED': {
+      const cxos = user.cxos.slice();
+      const order = cxos.find(x => x.id === packet.payload.orderId);
+      removeArrayElement(cxos, order);
+      user.cxos = cxos;
       break;
     }
     case 'COMEX_BROKER_DATA': {

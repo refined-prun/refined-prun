@@ -8,8 +8,8 @@ import { useEffect } from 'preact/compat';
 import { showBuffer } from '@src/util';
 
 interface Entry {
-  order: PrunApi.COMEX_TRADER_ORDERS.Order;
-  trade: PrunApi.COMEX_TRADER_ORDERS.Trade;
+  order: PrunApi.CXOrder;
+  trade: PrunApi.CXTrade;
   timestamp: number;
 }
 

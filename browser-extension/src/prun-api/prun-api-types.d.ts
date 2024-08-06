@@ -193,17 +193,51 @@ declare module PrunApi {
     Terminated = 'TERMINATED',
   }
 
+  export interface ExchangeEntity {
+    id: string;
+    name: string;
+    code: string;
+  }
+
+  export interface CXOrder {
+    id: string;
+    exchange: ExchangeEntity;
+    brokerId: string;
+    type: CXOrderType;
+    material: Material;
+    amount: number;
+    initialAmount: number;
+    limit: CurrencyAmount;
+    status: CXOrderStatus;
+    created: DateTime;
+    trades: CXTrade[];
+  }
+
+  declare type CXOrderStatus = 'PLACED' | 'PARTIALLY_FILLED' | 'FILLED';
+
+  export interface CXTrade {
+    id: string;
+    amount: number;
+    price: CurrencyAmount;
+    time: DateTime;
+    partner: ExchangeEntity;
+  }
+
+  declare type CXOrderType = 'BUYING' | 'SELLING';
+
   export interface PrunPacket<T, K> {
     messageType: T;
     payload: K;
   }
 
   export type Packet =
-    | ACTION_COMPLETED.Packet
-    | USER_DATA.Packet
     | ACCOUNTING_CASH_BALANCES.Packet
+    | ACTION_COMPLETED.Packet
     | COMEX_BROKER_DATA.Packet
     | COMEX_TRADER_ORDERS.Packet
+    | COMEX_TRADER_ORDER_ADDED.Packet
+    | COMEX_TRADER_ORDER_REMOVED.Packet
+    | COMEX_TRADER_ORDER_UPDATED.Packet
     | COMPANY_DATA.Packet
     | CONTRACTS_CONTRACTS.Packet
     | CONTRACTS_CONTRACT.Packet
@@ -214,6 +248,7 @@ declare module PrunApi {
     | STORAGE_CHANGE.Packet
     | STORAGE_STORAGES.Packet
     | SYSTEM_STARS_DATA.Packet
+    | USER_DATA.Packet
     | WAREHOUSE_STORAGES.Packet
     | WORKFORCE_WORKFORCES.Packet
     | WORLD_MATERIAL_CATEGORIES.Packet;
@@ -286,7 +321,7 @@ declare module PrunApi {
     export interface Payload {
       id: string;
       ticker: string;
-      exchange: Entity;
+      exchange: ExchangeEntity;
       address: Address;
       currency: Currency;
       material: Material;
@@ -309,12 +344,6 @@ declare module PrunApi {
       buyingOrders: Order[];
     }
 
-    export interface Entity {
-      id: string;
-      name: string;
-      code: string;
-    }
-
     export interface PriceAmount {
       price: CurrencyAmount;
       amount: number;
@@ -322,7 +351,7 @@ declare module PrunApi {
 
     export interface Order {
       id: string;
-      trader: Entity;
+      trader: ExchangeEntity;
       amount: number;
       limit: CurrencyAmount;
     }
@@ -337,40 +366,24 @@ declare module PrunApi {
     export type Packet = PrunPacket<'COMEX_TRADER_ORDERS', Payload>;
 
     export interface Payload {
-      orders: Order[];
+      orders: CXOrder[];
     }
+  }
 
-    export interface Order {
-      id: string;
-      exchange: Exchange;
-      brokerId: string;
-      type: OrderType;
-      material: Material;
-      amount: number;
-      initialAmount: number;
-      limit: CurrencyAmount;
-      status: Status;
-      created: DateTime;
-      trades: Trade[];
+  declare module COMEX_TRADER_ORDER_ADDED {
+    export type Packet = PrunPacket<'COMEX_TRADER_ORDER_ADDED', CXOrder>;
+  }
+
+  declare module COMEX_TRADER_ORDER_REMOVED {
+    export type Packet = PrunPacket<'COMEX_TRADER_ORDER_REMOVED', Payload>;
+
+    export interface Payload {
+      orderId: string;
     }
+  }
 
-    export interface Exchange {
-      id: string;
-      name: string;
-      code: string;
-    }
-
-    declare type Status = 'PLACED' | 'PARTIALLY_FILLED' | 'FILLED';
-
-    export interface Trade {
-      id: string;
-      amount: number;
-      price: CurrencyAmount;
-      time: DateTime;
-      partner: Exchange;
-    }
-
-    declare type OrderType = 'BUYING' | 'SELLING';
+  declare module COMEX_TRADER_ORDER_UPDATED {
+    export type Packet = PrunPacket<'COMEX_TRADER_ORDER_UPDATED', CXOrder>;
   }
 
   declare module COMPANY_DATA {
@@ -490,13 +503,7 @@ declare module PrunApi {
       amount: CurrencyAmount;
       price: Limit;
       time: DateTime;
-      partner: Partner;
-    }
-
-    export interface Partner {
-      id: string;
-      name: string;
-      code: string;
+      partner: ExchangeEntity;
     }
 
     export enum OrderType {
