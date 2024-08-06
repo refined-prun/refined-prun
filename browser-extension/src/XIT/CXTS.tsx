@@ -13,7 +13,7 @@ interface Entry {
   timestamp: number;
 }
 
-function CXOS() {
+function CXTS() {
   useEffect(() => {
     showBuffer('CXOS 9999', true, true);
   }, []);
@@ -178,7 +178,7 @@ function formatPrice(x: string) {
 }
 
 xit.add({
-  command: ['CXOS'],
-  name: 'CXOS',
-  component: () => <CXOS />,
+  command: ['CXTS'],
+  name: 'Recent Trades',
+  component: () => <CXTS />,
 });
