@@ -199,6 +199,8 @@ declare module PrunApi {
   }
 
   export type Packet =
+    | ACTION_COMPLETED.Packet
+    | USER_DATA.Packet
     | ACCOUNTING_CASH_BALANCES.Packet
     | COMEX_BROKER_DATA.Packet
     | COMEX_TRADER_ORDERS.Packet
@@ -215,6 +217,51 @@ declare module PrunApi {
     | WAREHOUSE_STORAGES.Packet
     | WORKFORCE_WORKFORCES.Packet
     | WORLD_MATERIAL_CATEGORIES.Packet;
+
+  declare module ACTION_COMPLETED {
+    export type Packet = PrunPacket<'ACTION_COMPLETED', Payload>;
+
+    export interface Payload {
+      actionId: string;
+      status: number;
+      message: PrunApi.Packet | null;
+    }
+  }
+
+  declare module USER_DATA {
+    export type Packet = PrunPacket<'USER_DATA', Payload>;
+
+    export interface Payload {
+      id: string;
+      username: string;
+      subscriptionLevel: string;
+      subscriptionExpiry: DateTime;
+      highestTier: null;
+      team: boolean;
+      moderator: boolean;
+      pioneer: boolean;
+      perks: unknown[];
+      created: DateTime;
+      companyId: string;
+      systemNamingRights: number;
+      planetNamingRights: number;
+      isPayingUser: boolean;
+      isModeratorChat: boolean;
+      mutedUsers: unknown[];
+      blacklistedUsers: unknown[];
+      isMuted: boolean;
+      discardedNotifications: unknown[];
+      contexts: Context[];
+      preferredLocale: string;
+    }
+
+    export interface Context {
+      id: string;
+      type: string;
+      creation: DateTime;
+      actionRoles: string[];
+    }
+  }
 
   declare module ACCOUNTING_CASH_BALANCES {
     export type Packet = PrunPacket<'ACCOUNTING_CASH_BALANCES', Payload>;

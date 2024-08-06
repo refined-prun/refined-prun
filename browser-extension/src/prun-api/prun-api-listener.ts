@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { transmitted_events } from './default-event-payload';
-import { socketIOMiddleware } from './socket-io-middleware';
-import system from '@src/system';
+import socketIOMiddleware from './socket-io-middleware';
 import prun from '@src/prun-api/prun';
 import user, {
   BaseSiteEntry,
@@ -12,139 +9,43 @@ import user, {
   WarehouseSiteEntry,
 } from '@src/store/user';
 
-interface ApiEvent {
-  payload: any;
-  context: string | undefined;
-}
+let companyContext: string | undefined;
 
 export async function listenPrunApi() {
-  const contextStorage = await system.storage.local.get('PMMGContext');
-  if (contextStorage['PMMGContext']) {
-    companyContext = contextStorage['PMMGContext'];
-  }
-  socketIOMiddleware((context, payload) => {
-    QueueEvent({ context, payload });
+  socketIOMiddleware<PrunApi.Packet>((context, payload) => {
+    try {
+      if (context === companyContext || !companyContext || !context) {
+        processEvent(payload);
+      }
+    } catch (error) {
+      console.error(error);
+    }
     return false;
   });
 }
 
-const eventQueue: ApiEvent[] = [];
-let processingQueue = false;
-
-let companyContext;
-
-const loggedMessageTypes = [
-  'COMEX_BROKER_DATA',
-  'SITE_SITES',
-  'STORAGE_STORAGES',
-  'WAREHOUSE_STORAGES',
-  'WORKFORCE_WORKFORCES',
-  'CONTRACTS_CONTRACTS',
-  'CONTRACTS_CONTRACT',
-  'PRODUCTION_SITE_PRODUCTION_LINES',
-  'COMPANY_DATA',
-  'FOREX_TRADER_ORDERS',
-  'COMEX_TRADER_ORDERS',
-  'STORAGE_CHANGE',
-  'COMPANY_DATA',
-  'SHIP_SHIPS',
-  'WORLD_MATERIAL_CATEGORIES',
-  'ACCOUNTING_CASH_BALANCES',
-  'SYSTEM_STARS_DATA',
-];
-
-async function ProcessEvent(apiEvent: ApiEvent, event_list, full_event?) {
-  const eventData = apiEvent.payload;
-  console.log(eventData);
-
-  // Detect bad events
-  if (typeof eventData === 'undefined' || eventData === null || typeof eventData.messageType === 'undefined') {
-    return;
+function processEvent(packet: PrunApi.Packet) {
+  if (__DEV__ && packet.messageType !== 'ACTION_COMPLETED') {
+    console.log(packet);
   }
 
-  const isCompanyContext =
-    apiEvent.context === undefined ||
-    companyContext === undefined ||
-    companyContext === null ||
-    apiEvent.context == companyContext;
-  if (!isCompanyContext) {
-    return;
-  }
-
-  if (
-    eventData.messageType == 'ACTION_COMPLETED' &&
-    eventData.payload &&
-    eventData.payload.message &&
-    eventData.payload.message.messageType == 'USER_DATA' &&
-    eventData.payload.message.payload &&
-    eventData.payload.message.payload.contexts
-  ) {
-    console.log('Found USER_DATA payload');
-    for (const context in eventData.payload.message.payload.contexts) {
-      if (eventData.payload.message.payload.contexts[context].type == 'COMPANY') {
-        companyContext = eventData.payload.message.payload.contexts[context].id;
-        await system.storage.local.set({ PMMGContext: companyContext });
-        console.log(`Found company context: ${companyContext}`);
-        break;
+  switch (packet.messageType) {
+    case 'ACTION_COMPLETED': {
+      const message = packet.payload.message;
+      if (message) {
+        processEvent(message);
       }
+      break;
     }
-  }
-
-  // Log Events into Storage
-  if (eventData && eventData.messageType && loggedMessageTypes.includes(eventData.messageType)) {
-    logEvent(eventData);
-    return;
-  }
-
-  if (eventData.messageType in event_list) {
-    console.debug(`Event to process: ${eventData.messageType}`);
-    if (typeof full_event === 'undefined') {
-      full_event = eventData;
+    case 'USER_DATA': {
+      const context = packet.payload.contexts.find(x => x.type === 'COMPANY');
+      companyContext = context?.id ?? companyContext;
+      break;
     }
-    const match_event = event_list[eventData.messageType];
-    if (typeof match_event === 'undefined') {
-      console.error('messagetype should be in list, but we still failed?');
-    }
-
-    if (match_event.action == 'subprocess_payload') {
-      console.log(eventData.payload.message);
-      await ProcessEvent(
-        {
-          payload: eventData.payload.message,
-          context: apiEvent.context,
-        },
-        match_event.payload_events,
-        full_event,
-      );
-    }
-  } else {
-  }
-}
-
-async function QueueEvent(apiEvent: ApiEvent) {
-  eventQueue.push(apiEvent);
-  if (!processingQueue) {
-    processingQueue = true;
-    let currentEvent = eventQueue.shift();
-    while (currentEvent !== undefined) {
-      await ProcessEvent(currentEvent, transmitted_events);
-      currentEvent = eventQueue.shift();
-    }
-
-    processingQueue = false;
-  }
-}
-
-function logEvent(eventData: PrunApi.Packet) {
-  let matchIndex: any;
-  let planetId: any;
-  let planetName: any;
-
-  switch (eventData.messageType) {
-    case 'SITE_SITES':
+    case 'SITE_SITES': {
       user.sites = user.sites.filter(item => item.type !== 'BASE');
 
-      for (const site of eventData.payload.sites) {
+      for (const site of packet.payload.sites) {
         const siteData: BaseSiteEntry = {
           PlanetName: site.address.lines[1].entity.name,
           PlanetNaturalId: site.address.lines[1].entity.naturalId,
@@ -183,8 +84,9 @@ function logEvent(eventData: PrunApi.Packet) {
         }
       }
       break;
+    }
     case 'STORAGE_STORAGES': {
-      for (const store of eventData.payload.stores) {
+      for (const store of packet.payload.stores) {
         const existingStore = user.storage.findIndex(item => item.id === store.id);
 
         const items = store.items
@@ -222,8 +124,8 @@ function logEvent(eventData: PrunApi.Packet) {
       }
       break;
     }
-    case 'STORAGE_CHANGE':
-      for (const store of eventData.payload.stores) {
+    case 'STORAGE_CHANGE': {
+      for (const store of packet.payload.stores) {
         const matchingStore = user.sites.find(item => item.siteId === store.addressableId);
 
         const index = user.storage.findIndex(item => item.addressableId === store.addressableId);
@@ -265,10 +167,11 @@ function logEvent(eventData: PrunApi.Packet) {
         }
       }
       break;
-    case 'WAREHOUSE_STORAGES':
+    }
+    case 'WAREHOUSE_STORAGES': {
       user.sites = user.sites.filter(item => item.type !== 'WAREHOUSE');
 
-      for (const warehouse of eventData.payload.storages) {
+      for (const warehouse of packet.payload.storages) {
         const siteData: WarehouseSiteEntry = {
           PlanetNaturalId: warehouse.address.lines[1].entity.naturalId,
           PlanetName: warehouse.address.lines[1].entity.name,
@@ -280,16 +183,17 @@ function logEvent(eventData: PrunApi.Packet) {
         user.sites.push(siteData);
       }
       break;
+    }
     case 'WORKFORCE_WORKFORCES': {
-      matchIndex = user.workforce.findIndex(item => item.siteId === eventData.payload.siteId);
-      planetId = eventData.payload.address.lines[1].entity.naturalId;
-      planetName = eventData.payload.address.lines[1].entity.name;
+      const matchIndex = user.workforce.findIndex(item => item.siteId === packet.payload.siteId);
+      const planetId = packet.payload.address.lines[1].entity.naturalId;
+      const planetName = packet.payload.address.lines[1].entity.name;
 
       const workforceInfo = {
         PlanetName: planetName,
         PlanetNaturalId: planetId,
-        workforce: eventData.payload.workforces,
-        siteId: eventData.payload.siteId,
+        workforce: packet.payload.workforces,
+        siteId: packet.payload.siteId,
       };
 
       if (matchIndex != -1) {
@@ -300,28 +204,30 @@ function logEvent(eventData: PrunApi.Packet) {
 
       break;
     }
-    case 'CONTRACTS_CONTRACTS':
-      user.contracts = eventData.payload.contracts;
+    case 'CONTRACTS_CONTRACTS': {
+      user.contracts = packet.payload.contracts;
       break;
-    case 'CONTRACTS_CONTRACT':
+    }
+    case 'CONTRACTS_CONTRACT': {
       for (let i = 0; i < user.contracts.length; i++) {
         const contract = user.contracts[i];
-        if (contract.id !== eventData.payload.id) {
+        if (contract.id !== packet.payload.id) {
           continue;
         }
-        user.contracts[i] = eventData.payload;
+        user.contracts[i] = packet.payload;
       }
       break;
+    }
     case 'PRODUCTION_SITE_PRODUCTION_LINES': {
-      matchIndex = user.production.findIndex(item => item.siteId === eventData.payload.siteId);
+      const matchIndex = user.production.findIndex(item => item.siteId === packet.payload.siteId);
 
       const siteInfo: ProductionSiteEntry = {
         PlanetName: '',
         PlanetNaturalId: '',
         lines: [],
-        siteId: eventData.payload.siteId,
+        siteId: packet.payload.siteId,
       };
-      for (const line of eventData.payload.productionLines) {
+      for (const line of packet.payload.productionLines) {
         const prodLine: ProductionLineEntry = {
           PlanetName: line.address.lines[1].entity.name,
           PlanetNaturalId: line.address.lines[1].entity.naturalId,
@@ -363,23 +269,27 @@ function logEvent(eventData: PrunApi.Packet) {
       }
       break;
     }
-    case 'COMPANY_DATA':
-      user.company.name = eventData.payload.name;
-      user.company.id = eventData.payload.id;
+    case 'COMPANY_DATA': {
+      user.company.name = packet.payload.name;
+      user.company.id = packet.payload.id;
       break;
-    case 'ACCOUNTING_CASH_BALANCES':
-      user.currency = eventData.payload.currencyAccounts.map(x => x.currencyBalance);
+    }
+    case 'ACCOUNTING_CASH_BALANCES': {
+      user.currency = packet.payload.currencyAccounts.map(x => x.currencyBalance);
       break;
-    case 'FOREX_TRADER_ORDERS':
-      user.fxos = eventData.payload.orders;
+    }
+    case 'FOREX_TRADER_ORDERS': {
+      user.fxos = packet.payload.orders;
       console.log(user.fxos);
       break;
-    case 'COMEX_TRADER_ORDERS':
-      user.cxos = eventData.payload.orders;
+    }
+    case 'COMEX_TRADER_ORDERS': {
+      user.cxos = packet.payload.orders;
       break;
-    case 'COMEX_BROKER_DATA':
-      user.cxob[eventData.payload.ticker] = {
-        ...eventData.payload,
+    }
+    case 'COMEX_BROKER_DATA': {
+      user.cxob[packet.payload.ticker] = {
+        ...packet.payload,
         timestamp: Date.now(),
       };
 
@@ -389,16 +299,17 @@ function logEvent(eventData: PrunApi.Packet) {
         }
       });
       break;
+    }
     case 'SHIP_SHIPS': {
-      user.ships = eventData.payload.ships;
+      user.ships = packet.payload.ships;
       break;
     }
     case 'WORLD_MATERIAL_CATEGORIES': {
-      prun.materials.applyApiPayload(eventData.payload);
+      prun.materials.applyApiPayload(packet.payload);
       break;
     }
     case 'SYSTEM_STARS_DATA': {
-      prun.systems.applyApiPayload(eventData.payload);
+      prun.systems.applyApiPayload(packet.payload);
       break;
     }
   }

@@ -2,9 +2,9 @@ import { decodePayload, encodePayload } from 'engine.io-parser';
 import { Decoder, Encoder } from 'socket.io-parser';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Middleware = (context: string | undefined, packet: any) => boolean;
+type Middleware<T> = (context: string | undefined, packet: T) => boolean;
 
-export function socketIOMiddleware(middleware: Middleware) {
+export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
   window.addEventListener('message', (event: MessageEvent<SocketIOProxyMessage>) => {
     if (event.source !== window) {
       return;
@@ -31,7 +31,7 @@ export function socketIOMiddleware(middleware: Middleware) {
   );
 }
 
-function processMessage(message: SocketIOProxyMessage, middleware: Middleware) {
+function processMessage<T>(message: SocketIOProxyMessage, middleware: Middleware<T>) {
   let data = message.data;
   const engineIOPackets = decodePayload(data);
   let rewriteMessage = false;
@@ -47,7 +47,7 @@ function processMessage(message: SocketIOProxyMessage, middleware: Middleware) {
         return;
       }
 
-      if (middleware(message.context, data[1])) {
+      if (middleware(message.context, payload)) {
         const encoder = new Encoder();
         engineIOPacket.data = encoder.encode(decodedPacket)[0];
         rewriteMessage = true;
