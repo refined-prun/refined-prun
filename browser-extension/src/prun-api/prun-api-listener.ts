@@ -207,20 +207,6 @@ function processEvent(packet: PrunApi.Packet) {
 
       break;
     }
-    case 'CONTRACTS_CONTRACTS': {
-      user.contracts = packet.payload.contracts;
-      break;
-    }
-    case 'CONTRACTS_CONTRACT': {
-      for (let i = 0; i < user.contracts.length; i++) {
-        const contract = user.contracts[i];
-        if (contract.id !== packet.payload.id) {
-          continue;
-        }
-        user.contracts[i] = packet.payload;
-      }
-      break;
-    }
     case 'PRODUCTION_SITE_PRODUCTION_LINES': {
       const matchIndex = user.production.findIndex(item => item.siteId === packet.payload.siteId);
 

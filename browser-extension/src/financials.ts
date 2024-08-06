@@ -2,7 +2,7 @@ import cx from '@src/prun-api/cx';
 import { getLocalStorage, setSettings } from '@src/util';
 import { Consumption } from '@src/GameProperties';
 import user from '@src/store/user';
-import { selectCxos, selectFxos } from '@src/store/database/selectors';
+import { selectContracts, selectCxos, selectFxos } from '@src/store/database/selectors';
 import database from '@src/store/database/database';
 
 // Actually recording and processing the financials once they are received through BackgroundRunner.
@@ -125,7 +125,7 @@ export function calculateFinancials(webData, result, loop) {
   // Handle contracts
   let contractValue = 0;
   let contractLiability = 0;
-  const validContracts = user.contracts.filter(c => !invalidContractStatus.includes(c['status']));
+  const validContracts = selectContracts(databaseState).filter(c => !invalidContractStatus.includes(c['status']));
 
   for (const contract of validContracts) {
     const party = contract['party'];

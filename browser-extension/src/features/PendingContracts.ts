@@ -1,7 +1,8 @@
 import { Module } from '../ModuleRunner';
 import { createTextSpan, genericCleanup, createContractDict } from '../util';
 import { Selector } from '../Selector';
-import user from '@src/store/user';
+import { selectContracts } from '@src/store/database/selectors';
+import database from '@src/store/database/database';
 
 export class PendingContracts implements Module {
   private tag = 'pb-pending-contracts';
@@ -13,8 +14,8 @@ export class PendingContracts implements Module {
   run() {
     const contractLines = Array.from(document.querySelectorAll(Selector.SidebarContract)) as HTMLElement[]; // All the contract lines
 
-    if (contractLines.length > 0 && user.contracts.length > 0) {
-      const contracts = user.contracts;
+    const contracts = selectContracts(database.getState());
+    if (contractLines.length > 0 && contracts.length > 0) {
       const contractdict = {};
 
       createContractDict(contracts, contractdict); // Turn the array into a dictionary with keys being contract IDs

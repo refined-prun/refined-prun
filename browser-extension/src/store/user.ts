@@ -80,7 +80,6 @@ const user = reactive({
   sites: [] as (BaseSiteEntry | WarehouseSiteEntry)[],
   storage: [] as StorageEntry[],
   workforce: [] as WorkforceEntry[],
-  contracts: [] as PrunApi.Contract[],
   production: [] as ProductionSiteEntry[],
   currency: [] as PrunApi.CurrencyAmount[],
   fxos: [] as PrunApi.FXOrder[],

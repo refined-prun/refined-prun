@@ -5,7 +5,8 @@ import { TextColors } from '../Style';
 import { FactionHeaders } from '../GameProperties';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
-import user from '@src/store/user';
+import { selectContracts } from '@src/store/database/selectors';
+import database from '@src/store/database/database';
 
 interface ContractEntry extends PrunApi.Contract {
   FilteredConditions: {
@@ -44,14 +45,15 @@ export class Contracts {
 
   create_buffer() {
     clearChildren(this.tile);
+    const contracts = selectContracts(database.getState());
 
-    if (user.contracts.length === 0) {
+    if (contracts.length === 0) {
       this.tile.textContent = 'Loading Contract Data...';
       this.tile.id = 'pmmg-reload';
       return;
     }
 
-    const validContracts = user.contracts.filter(c => !invalidContractStatus.includes(c.status));
+    const validContracts = contracts.filter(c => !invalidContractStatus.includes(c.status));
 
     const entries: ContractEntry[] = [];
 
