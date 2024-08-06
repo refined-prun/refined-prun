@@ -9,7 +9,6 @@ import { InventoryOrganizer } from '@src/features/InventoryOrganizer';
 import { HeaderMinimizer } from '@src/features/HeaderMinimizer';
 import { PendingContracts } from '@src/features/PendingContracts';
 import { CompactUI } from '@src/features/CompactUI';
-import { calculateFinancials } from './XIT/FIN';
 import { AdvancedMode } from '@src/features/AdvancedMode';
 import { IconMarkers } from '@src/features/IconMarkers';
 import { PostLM } from '@src/features/PostLM';
@@ -21,6 +20,7 @@ import { applyXITParameters } from '@src/features/xit-commands';
 
 import './refined-prun.css';
 import cx from '@src/prun-api/cx';
+import { calculateFinancials } from '@src/financials';
 
 // The main function that initializes everything
 async function mainRun() {
