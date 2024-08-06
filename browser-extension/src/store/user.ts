@@ -72,11 +72,6 @@ export interface SiteBuilding {
   repairMaterials: PrunApi.MaterialAmount[];
 }
 
-export interface ContractExtras {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  FilteredConditions?: { [key: string]: any };
-}
-
 const user = reactive({
   company: {
     name: '',
@@ -85,7 +80,7 @@ const user = reactive({
   sites: [] as (BaseSiteEntry | WarehouseSiteEntry)[],
   storage: [] as StorageEntry[],
   workforce: [] as WorkforceEntry[],
-  contracts: [] as (PrunApi.Contract & ContractExtras)[],
+  contracts: [] as PrunApi.Contract[],
   production: [] as ProductionSiteEntry[],
   currency: [] as PrunApi.CurrencyAmount[],
   fxos: [] as PrunApi.FXOrder[],

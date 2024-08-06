@@ -1,4 +1,4 @@
-import { clearChildren, createLink, createTextSpan, createTable, createMaterialElement, createTextDiv } from '../util';
+import { clearChildren, createLink, createMaterialElement, createTable, createTextDiv, createTextSpan } from '../util';
 
 import { TextColors } from '../Style';
 
@@ -6,6 +6,26 @@ import { FactionHeaders } from '../GameProperties';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import user from '@src/store/user';
+
+interface ContractEntry extends PrunApi.Contract {
+  FilteredConditions: {
+    self: PartyConditions;
+    partner: PartyConditions;
+  };
+  IsFaction: boolean;
+  materialConditions: PrunApi.ContractCondition[];
+}
+
+interface PartyConditions {
+  conditions: PrunApi.ContractCondition[];
+  loanInstallment?: LoanInstallment;
+}
+
+interface LoanInstallment {
+  total: number;
+  filled: number;
+  type: 'GROUPED_LOAN';
+}
 
 export class Contracts {
   private tile: HTMLElement;
@@ -31,89 +51,92 @@ export class Contracts {
       return;
     }
 
-    const contractData = user.contracts;
+    const validContracts = user.contracts.filter(c => !invalidContractStatus.includes(c.status));
 
-    const validContracts = contractData.filter(c => !invalidContractStatus.includes(c['status']));
+    const entries: ContractEntry[] = [];
 
-    validContracts.map(
-      //LARGE BLOCK START
-      contract => {
-        contract['IsFaction'] = false;
-        contract['materialConditions'] = [];
+    for (const contract of validContracts) {
+      let isFaction = false;
+      const materialConditions: PrunApi.ContractCondition[] = [];
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const selfConditions = [] as any;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const partnerConditions = [] as any;
+      const selfConditions: PartyConditions = {
+        conditions: [],
+      };
+      const partnerConditions: PartyConditions = {
+        conditions: [],
+      };
 
-        contract.conditions.map(condition => {
-          // Determine if REPUTATION condition type exists to denote Faction contract
-          if (condition['type'] === 'REPUTATION') contract['IsFaction'] = true;
+      for (const condition of contract.conditions) {
+        // Determine if REPUTATION condition type exists to denote Faction contract
+        if (condition.type === 'REPUTATION') isFaction = true;
 
-          if (condition['quantity'] !== null && materialFulfilmentType.includes(condition['type']))
-            contract['materialConditions'].push(condition);
+        if (condition.quantity !== null && materialFulfilmentType.includes(condition.type))
+          materialConditions.push(condition);
 
-          // Clump loan repayments together
-          if (condition.type == 'LOAN_INSTALLMENT') {
-            if (condition['party'] === contract['party']) {
-              if (selfConditions.loanInstallment) {
-                selfConditions.loanInstallment.total += 1;
-                if (condition.status == 'FULFILLED') {
-                  selfConditions.loanInstallment.filled += 1;
-                }
-              } else {
-                selfConditions.loanInstallment = {
-                  filled: condition.status == 'FULFILLED' ? 1 : 0,
-                  total: 1,
-                  type: 'GROUPED_LOAN',
-                };
-              }
-            } else if (partnerConditions.loanInstallment) {
-              partnerConditions.loanInstallment.total += 1;
+        // Clump loan repayments together
+        if (condition.type == 'LOAN_INSTALLMENT') {
+          if (condition.party === contract.party) {
+            if (selfConditions.loanInstallment) {
+              selfConditions.loanInstallment.total += 1;
               if (condition.status == 'FULFILLED') {
-                partnerConditions.loanInstallment.filled += 1;
+                selfConditions.loanInstallment.filled += 1;
               }
             } else {
-              partnerConditions.loanInstallment = {
+              selfConditions.loanInstallment = {
                 filled: condition.status == 'FULFILLED' ? 1 : 0,
                 total: 1,
                 type: 'GROUPED_LOAN',
               };
             }
-            return;
+          } else if (partnerConditions.loanInstallment) {
+            partnerConditions.loanInstallment.total += 1;
+            if (condition.status == 'FULFILLED') {
+              partnerConditions.loanInstallment.filled += 1;
+            }
+          } else {
+            partnerConditions.loanInstallment = {
+              filled: condition.status == 'FULFILLED' ? 1 : 0,
+              total: 1,
+              type: 'GROUPED_LOAN',
+            };
           }
+          continue;
+        }
 
-          // Categorize conditions by who fulfills it
-          if (condition['party'] === contract['party']) selfConditions.push(condition);
-          else partnerConditions.push(condition);
-        });
+        // Categorize conditions by who fulfills it
+        if (condition.party === contract.party) selfConditions.conditions.push(condition);
+        else partnerConditions.conditions.push(condition);
+      }
 
-        // Sort each category by ConditionIndex
-        selfConditions.sort(conditionSort);
-        partnerConditions.sort(conditionSort);
+      // Sort each category by ConditionIndex
+      selfConditions.conditions.sort(conditionSort);
+      partnerConditions.conditions.sort(conditionSort);
 
-        // Clear out default condition list and replace with named arrays
-        contract.FilteredConditions = {};
-        contract.FilteredConditions['self'] = selfConditions;
-        contract.FilteredConditions['partner'] = partnerConditions;
-      },
-    ); //LARGE BLOCK END
+      entries.push({
+        ...contract,
+        FilteredConditions: {
+          self: selfConditions,
+          partner: partnerConditions,
+        },
+        IsFaction: isFaction,
+        materialConditions,
+      });
+    }
 
-    validContracts.sort(ContractSort);
+    entries.sort(ContractSort);
 
     const table = createTable(this.tile, ['Contract ID', 'Material', "Partner's Conditions", 'My Conditions']);
-    if (validContracts.length === 0) {
+    if (entries.length === 0) {
       const row = createNoContractsRow(4);
       table.appendChild(row);
     } else {
-      validContracts.forEach(contract => {
+      entries.forEach(contract => {
         const row = createContractRow(contract);
         table.appendChild(row);
       });
     }
 
     this.update_buffer();
-    return;
   }
 
   update_buffer() {
@@ -122,21 +145,17 @@ export class Contracts {
       window.setTimeout(() => this.create_buffer(), 3000);
     }
   }
-
-  destroy_buffer() {
-    // Nothing constantly running so nothing to destroy
-  }
 }
 
 const invalidContractStatus = ['FULFILLED', 'BREACHED', 'TERMINATED', 'CANCELLED', 'REJECTED'];
 
-function createContractRow(contract) {
+function createContractRow(contract: ContractEntry) {
   const row = document.createElement('tr');
 
-  const contractLink = createLink(contract['name'] || contract['localId'], `CONT ${contract['localId']}`);
+  const contractLink = createLink(contract.name || contract.localId, `CONT ${contract.localId}`);
   const contractIdColumn = document.createElement('td');
 
-  contractIdColumn.appendChild(contract['IsFaction'] ? factionContract(contractLink) : contractLink);
+  contractIdColumn.appendChild(contract.IsFaction ? factionContract(contractLink) : contractLink);
   row.appendChild(contractIdColumn);
 
   // const deadlineColumn = document.createElement("td");
@@ -150,8 +169,8 @@ function createContractRow(contract) {
   const materialDiv = document.createElement('div');
   materialColumn.appendChild(materialDiv);
 
-  if (contract['materialConditions'].length > 0) {
-    contract['materialConditions'].forEach(materialCondition => {
+  if (contract.materialConditions.length > 0) {
+    contract.materialConditions.forEach(materialCondition => {
       if (!materialCondition.quantity || !materialCondition.quantity.material) {
         return;
       }
@@ -159,7 +178,7 @@ function createContractRow(contract) {
       const materialElement = createMaterialElement(
         materialCondition.quantity.material.ticker,
         'prun-remove-js',
-        materialCondition.quantity.amount,
+        materialCondition.quantity.amount.toString(),
         false,
         true,
       );
@@ -175,7 +194,7 @@ function createContractRow(contract) {
 
   const partnerColumn = document.createElement('td');
   let faction;
-  if (contract['IsFaction']) {
+  if (contract.IsFaction) {
     Object.keys(FactionHeaders).forEach(factionName => {
       if (contract.partner.name.includes(factionName)) {
         faction = FactionHeaders[factionName];
@@ -197,22 +216,24 @@ function createContractRow(contract) {
     partnerColumn.appendChild(partnerLink);
   }
 
-  for (const condition of contract.FilteredConditions['partner']) partnerColumn.appendChild(conditionStatus(condition));
+  for (const condition of contract.FilteredConditions.partner.conditions)
+    partnerColumn.appendChild(conditionStatus(condition));
 
   // Display grouped loan repayments
-  if (contract.FilteredConditions['partner'].loanInstallment) {
-    partnerColumn.appendChild(conditionStatus(contract.FilteredConditions['partner'].loanInstallment));
+  if (contract.FilteredConditions.partner.loanInstallment) {
+    partnerColumn.appendChild(conditionStatus(contract.FilteredConditions.partner.loanInstallment));
   }
 
   row.appendChild(partnerColumn);
 
   const selfColumn = document.createElement('td');
 
-  for (const condition of contract.FilteredConditions['self']) selfColumn.appendChild(conditionStatus(condition));
+  for (const condition of contract.FilteredConditions.self.conditions)
+    selfColumn.appendChild(conditionStatus(condition));
 
   // Display grouped loan repayments
-  if (contract.FilteredConditions['self'].loanInstallment) {
-    selfColumn.appendChild(conditionStatus(contract.FilteredConditions['self'].loanInstallment));
+  if (contract.FilteredConditions.self.loanInstallment) {
+    selfColumn.appendChild(conditionStatus(contract.FilteredConditions.self.loanInstallment));
   }
 
   row.appendChild(selfColumn);
@@ -233,11 +254,11 @@ function createNoContractsRow(colspan) {
 }
 
 function conditionSort(a, b) {
-  return a['index'] > b['index'] ? 1 : -1;
+  return a.index > b.index ? 1 : -1;
 }
 
 function ContractSort(a, b) {
-  return (a['date'] ? a['date']['timestamp'] : 0) > (b['date'] ? b['date']['timestamp'] : 0) ? 1 : -1;
+  return (a.date ? a.date.timestamp : 0) > (b.date ? b.date.timestamp : 0) ? 1 : -1;
 }
 
 function factionContract(link) {
@@ -257,7 +278,7 @@ function factionContract(link) {
   return conditionDiv;
 }
 
-function conditionStatus(condition) {
+function conditionStatus(condition: LoanInstallment | PrunApi.ContractCondition) {
   const conditionDiv = createTextDiv('');
 
   if (condition.type == 'GROUPED_LOAN') {
@@ -271,8 +292,8 @@ function conditionStatus(condition) {
     marker.style.fontWeight = 'bold';
     conditionDiv.appendChild(marker);
   } else {
-    const marker = createTextSpan(condition['status'] === 'FULFILLED' ? '✓' : 'X');
-    marker.style.color = condition['status'] === 'FULFILLED' ? TextColors.Success : TextColors.Failure;
+    const marker = createTextSpan(condition.status === 'FULFILLED' ? '✓' : 'X');
+    marker.style.color = condition.status === 'FULFILLED' ? TextColors.Success : TextColors.Failure;
     marker.style.fontWeight = 'bold';
 
     conditionDiv.appendChild(marker);
