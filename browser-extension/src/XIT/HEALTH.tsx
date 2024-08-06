@@ -5,7 +5,7 @@ import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import cx from '@src/prun-api/cx';
 import database from '@src/store/database/database';
-import { selectCxosTotal } from '@src/store/database/selectors';
+import { selectCxosTotal, selectFxosTotal } from '@src/store/database/selectors';
 
 export class DataHealth {
   private tile: HTMLElement;
@@ -21,6 +21,8 @@ export class DataHealth {
 
   create_buffer() {
     clearChildren(this.tile);
+
+    const databaseState = database.getState();
 
     // Construct table for health of base data
     const baseTitle = createTextSpan('Bases');
@@ -107,10 +109,10 @@ export class DataHealth {
     const contracts = user.contracts.length;
     otherTable.appendChild(createTableRow('Contracts', contracts));
 
-    const cxos = selectCxosTotal(database.getState());
+    const cxos = selectCxosTotal(databaseState);
     otherTable.appendChild(createTableRow('CXOS', cxos));
 
-    const fxos = user.fxos.length;
+    const fxos = selectFxosTotal(databaseState);
     otherTable.appendChild(createTableRow('FXOS', fxos));
 
     otherTable.appendChild(createTableRow('Currency', user.currency.length > 0));

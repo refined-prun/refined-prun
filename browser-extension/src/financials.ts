@@ -2,7 +2,7 @@ import cx from '@src/prun-api/cx';
 import { getLocalStorage, setSettings } from '@src/util';
 import { Consumption } from '@src/GameProperties';
 import user from '@src/store/user';
-import { selectCxos } from '@src/store/database/selectors';
+import { selectCxos, selectFxos } from '@src/store/database/selectors';
 import database from '@src/store/database/database';
 
 // Actually recording and processing the financials once they are received through BackgroundRunner.
@@ -16,6 +16,8 @@ export function calculateFinancials(webData, result, loop) {
     window.setTimeout(() => calculateFinancials(webData, result, true), 50);
     return;
   }
+
+  const databaseState = database.getState();
 
   result['PMMGExtended']['last_fin_recording'] = Date.now();
   setSettings(result);
@@ -180,9 +182,9 @@ export function calculateFinancials(webData, result, loop) {
   let cxBuyValue = 0;
   let cxSellValue = 0;
 
-  selectCxos(database.getState()).forEach(order => {
+  for (const order of selectCxos(databaseState)) {
     if (order.status == 'FILLED') {
-      return;
+      continue;
     }
 
     if (order.type == 'SELLING') {
@@ -197,14 +199,14 @@ export function calculateFinancials(webData, result, loop) {
     } else {
       cxBuyValue += order.limit.amount * order.amount;
     }
-  });
+  }
 
   // Handle FXOS
   let fxBuyValue = 0;
   let fxSellValue = 0;
-  user.fxos.forEach(order => {
+  for (const order of selectFxos(databaseState)) {
     if (order.status == 'FILLED') {
-      return;
+      continue;
     }
 
     if (order.type == 'SELLING') {
@@ -212,7 +214,7 @@ export function calculateFinancials(webData, result, loop) {
     } else {
       fxBuyValue += order.limit.rate * order.initialAmount.amount;
     }
-  });
+  }
 
   finSnapshot['CXBuy'] = Math.round(cxBuyValue * 100) / 100;
   finSnapshot['CXSell'] = Math.round(cxSellValue * 100) / 100;

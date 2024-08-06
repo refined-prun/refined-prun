@@ -281,11 +281,6 @@ function processEvent(packet: PrunApi.Packet) {
       user.currency = packet.payload.currencyAccounts.map(x => x.currencyBalance);
       break;
     }
-    case 'FOREX_TRADER_ORDERS': {
-      user.fxos = packet.payload.orders;
-      console.log(user.fxos);
-      break;
-    }
     case 'COMEX_BROKER_DATA': {
       user.cxob[packet.payload.ticker] = {
         ...packet.payload,

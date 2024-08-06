@@ -225,6 +225,43 @@ declare module PrunApi {
 
   declare type CXOrderType = 'BUYING' | 'SELLING';
 
+  export interface FXOrder {
+    id: string;
+    type: FXOrderType;
+    initialAmount: CurrencyAmount;
+    amount: CurrencyAmount;
+    limit: FXOrderLimit;
+    created: DateTime;
+    status: FXOrderStatus;
+    trades: FXTrade[];
+  }
+
+  export interface FXOrderLimit {
+    base: Currency;
+    quote: Currency;
+    rate: number;
+    decimals: number;
+  }
+
+  export enum FXOrderStatus {
+    Placed = 'PLACED',
+    PartiallyFilled = 'PARTIALLY_FILLED',
+    Filled = 'FILLED',
+  }
+
+  export interface FXTrade {
+    id: string;
+    amount: CurrencyAmount;
+    price: FXOrderLimit;
+    time: DateTime;
+    partner: ExchangeEntity;
+  }
+
+  export enum FXOrderType {
+    Buying = 'BUYING',
+    Selling = 'SELLING',
+  }
+
   export interface PrunPacket<T, K> {
     messageType: T;
     payload: K;
@@ -242,6 +279,9 @@ declare module PrunApi {
     | CONTRACTS_CONTRACTS.Packet
     | CONTRACTS_CONTRACT.Packet
     | FOREX_TRADER_ORDERS.Packet
+    | FOREX_TRADER_ORDER_ADDED.Packet
+    | FOREX_TRADER_ORDER_REMOVED.Packet
+    | FOREX_TRADER_ORDER_UPDATED.Packet
     | PRODUCTION_SITE_PRODUCTION_LINES.Packet
     | SHIP_SHIPS.Packet
     | SITE_SITES.Packet
@@ -471,45 +511,24 @@ declare module PrunApi {
     export type Packet = PrunPacket<'FOREX_TRADER_ORDERS', Payload>;
 
     export interface Payload {
-      orders: Order[];
+      orders: FXOrder[];
     }
+  }
 
-    export interface Order {
-      id: string;
-      type: OrderType;
-      initialAmount: CurrencyAmount;
-      amount: CurrencyAmount;
-      limit: Limit;
-      created: DateTime;
-      status: Status;
-      trades: Trade[];
-    }
+  declare module FOREX_TRADER_ORDER_ADDED {
+    export type Packet = PrunPacket<'FOREX_TRADER_ORDER_ADDED', FXOrder>;
+  }
 
-    export interface Limit {
-      base: Currency;
-      quote: Currency;
-      rate: number;
-      decimals: number;
-    }
+  declare module FOREX_TRADER_ORDER_REMOVED {
+    export type Packet = PrunPacket<'FOREX_TRADER_ORDER_REMOVED', Payload>;
 
-    export enum Status {
-      Placed = 'PLACED',
-      PartiallyFilled = 'PARTIALLY_FILLED',
-      Filled = 'FILLED',
+    export interface Payload {
+      orderId: string;
     }
+  }
 
-    export interface Trade {
-      id: string;
-      amount: CurrencyAmount;
-      price: Limit;
-      time: DateTime;
-      partner: ExchangeEntity;
-    }
-
-    export enum OrderType {
-      Buying = 'BUYING',
-      Selling = 'SELLING',
-    }
+  declare module FOREX_TRADER_ORDER_UPDATED {
+    export type Packet = PrunPacket<'FOREX_TRADER_ORDER_UPDATED', FXOrder>;
   }
 
   declare module PRODUCTION_SITE_PRODUCTION_LINES {
