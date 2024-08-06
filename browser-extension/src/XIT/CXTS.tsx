@@ -1,11 +1,11 @@
 import xit from './xit-registry';
 import { h } from 'preact';
-import useReactive from '@src/hooks/use-reactive';
-import user from '@src/store/user';
 import PrunCss from '@src/prun-ui/prun-css';
 import prun from '@src/prun-api/prun';
 import { useEffect } from 'preact/compat';
 import { showBuffer } from '@src/util';
+import useSelector from '@src/hooks/use-selector';
+import { selectCxos } from '@src/store/database/selectors';
 
 interface Entry {
   order: PrunApi.CXOrder;
@@ -18,7 +18,7 @@ function CXTS() {
     showBuffer('CXOS 9999', true, true);
   }, []);
 
-  const orders = useReactive(() => user.cxos);
+  const orders = useSelector(selectCxos);
 
   const entries: Entry[] = [];
   for (const order of orders) {

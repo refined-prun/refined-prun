@@ -18,6 +18,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@reduxjs/toolkit": "^2.2.7",
     "@vue/reactivity": "^3.4.34",
     "chart.js": "^4.4.3",
     "chartjs-adapter-date-fns": "^3.0.0",

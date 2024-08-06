@@ -88,7 +88,6 @@ const user = reactive({
   contracts: [] as (PrunApi.Contract & ContractExtras)[],
   production: [] as ProductionSiteEntry[],
   currency: [] as PrunApi.CurrencyAmount[],
-  cxos: [] as PrunApi.CXOrder[],
   fxos: [] as PrunApi.FOREX_TRADER_ORDERS.Order[],
   cxob: {} as { [key: string]: PrunApi.COMEX_BROKER_DATA.Payload & { timestamp: number } },
   ships: [] as PrunApi.SHIP_SHIPS.Ship[],

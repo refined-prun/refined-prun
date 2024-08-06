@@ -4,6 +4,8 @@ import user from '@src/store/user';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import cx from '@src/prun-api/cx';
+import database from '@src/store/database/database';
+import { selectCxosTotal } from '@src/store/database/selectors';
 
 export class DataHealth {
   private tile: HTMLElement;
@@ -105,7 +107,7 @@ export class DataHealth {
     const contracts = user.contracts.length;
     otherTable.appendChild(createTableRow('Contracts', contracts));
 
-    const cxos = user.cxos.length;
+    const cxos = selectCxosTotal(database.getState());
     otherTable.appendChild(createTableRow('CXOS', cxos));
 
     const fxos = user.fxos.length;

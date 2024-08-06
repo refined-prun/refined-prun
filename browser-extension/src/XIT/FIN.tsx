@@ -24,6 +24,8 @@ import user from '@src/store/user';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import cx from '@src/prun-api/cx';
+import database from '@src/store/database/database';
+import { selectCxos } from '@src/store/database/selectors';
 
 export class Finances {
   private tile: HTMLElement;
@@ -1298,7 +1300,7 @@ export function calculateFinancials(webData, result, loop) {
   let cxBuyValue = 0;
   let cxSellValue = 0;
 
-  user.cxos.forEach(order => {
+  selectCxos(database.getState()).forEach(order => {
     if (order.status == 'FILLED') {
       return;
     }
