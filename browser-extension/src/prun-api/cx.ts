@@ -7,7 +7,10 @@ async function fetchPrices() {
   const response = await fetch(url);
   const fioPrices = (await response.json()) as FioPrices[];
 
-  const newPrices: Prices = {};
+  // @ts-expect-error Ah shit here we go again
+  const newPrices: Prices = {
+    Age: Date.now(),
+  };
   for (const priceData of fioPrices) {
     const ticker = priceData.MaterialTicker;
     const cxPrices = (newPrices[priceData.ExchangeCode] ??= {
@@ -27,19 +30,21 @@ async function fetchPrices() {
 interface FioPrices {
   MaterialTicker: string;
   ExchangeCode: string;
-  MMBuy: null;
-  MMSell: null;
-  PriceAverage: number;
-  AskCount: number;
-  Ask: number;
-  Supply: number;
-  BidCount: null;
-  Bid: null;
+  MMBuy: number | null;
+  MMSell: number | null;
+  PriceAverage: number | null;
+  AskCount: number | null;
+  Ask: number | null;
+  Supply: number | null;
+  BidCount: number | null;
+  Bid: number | null;
   Demand: number;
 }
 
 interface Prices {
   [cxCode: string]: CXPrices | undefined;
+
+  // @ts-expect-error Ah shit here we go again
   Age: number;
 }
 
@@ -50,7 +55,7 @@ interface CXPrices {
 }
 
 interface MaterialPrices {
-  [ticker: string]: number | undefined;
+  [ticker: string]: number | undefined | null;
 }
 
 const cx = {
