@@ -7,9 +7,9 @@ import features from '@src/feature-registry';
 function START() {
   return (
     <div class="rprun-XIT-START">
-      <span class="rprun-XIT-title" style={{ paddingLeft: '0' }}>
+      <h1 class="rprun-XIT-title" style={{ paddingLeft: '0' }}>
         Thank you for using PMMG Extended!
-      </span>
+      </h1>
       <p>This is a short tutorial on how to get the most out of the extension.</p>
       <p>
         Details on what PMMG offers can be found here:&nbsp;
