@@ -36,6 +36,6 @@ import './XIT/REPAIRS';
 import './XIT/SET';
 import './XIT/SORT';
 import './XIT/START';
-import './XIT/Web';
+import './XIT/WEB';
 
 import './main';
