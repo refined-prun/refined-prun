@@ -8,8 +8,9 @@ import PrunCss from '@src/prun-ui/prun-css';
 import { useLayoutEffect, useRef } from 'preact/compat';
 import classNames from 'classnames';
 import descendantPresent from '@src/utils/descendant-present';
-import useReactive from '@src/hooks/use-reactive';
 import { _$$ } from '@src/utils/get-element-by-class-name';
+import useDatabase from '@src/hooks/use-database';
+import { selectCxobByTicker } from '@src/store/database/selectors';
 
 async function onBufferCreated(buffer: PrunBuffer) {
   if (!buffer.parameter) {
@@ -31,7 +32,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
 }
 
 function OrderBook(props: { ticker: string }) {
-  const orderInfo = useReactive(() => user.cxob[props.ticker]);
+  const orderInfo = useDatabase(s => selectCxobByTicker(s, props.ticker));
 
   const offers = (orderInfo?.sellingOrders ?? [])
     .slice()

@@ -3,11 +3,15 @@ import { State } from '@src/store/database/database';
 import fxosAdapter from '@src/store/database/fxos';
 import contractAdapter from '@src/store/database/contracts';
 import shipsAdapter from '@src/store/database/ships';
+import cxobAdapter from '@src/store/database/cxob';
 
 const contracts = contractAdapter.getSelectors((s: State) => s.contracts);
 export const selectContracts = contracts.selectAll;
 export const selectContractById = contracts.selectById;
 export const selectContractsTotal = contracts.selectTotal;
+
+const cxob = cxobAdapter.getSelectors((s: State) => s.cxob);
+export const selectCxobByTicker = cxob.selectById;
 
 const cxos = cxosAdapter.getSelectors((s: State) => s.cxos);
 export const selectCxos = cxos.selectAll;

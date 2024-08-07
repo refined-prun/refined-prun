@@ -82,7 +82,6 @@ const user = reactive({
   workforce: [] as WorkforceEntry[],
   production: [] as ProductionSiteEntry[],
   currency: [] as PrunApi.CurrencyAmount[],
-  cxob: {} as { [key: string]: PrunApi.COMEX_BROKER_DATA.Payload & { timestamp: number } },
 });
 
 export default user;

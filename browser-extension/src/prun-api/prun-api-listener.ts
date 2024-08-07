@@ -267,19 +267,6 @@ function processEvent(packet: PrunApi.Packet) {
       user.currency = packet.payload.currencyAccounts.map(x => x.currencyBalance);
       break;
     }
-    case 'COMEX_BROKER_DATA': {
-      user.cxob[packet.payload.ticker] = {
-        ...packet.payload,
-        timestamp: Date.now(),
-      };
-
-      Object.keys(user.cxob).forEach(ticker => {
-        if (Date.now() - user.cxob[ticker].timestamp > 900000) {
-          delete user.cxob[ticker];
-        }
-      });
-      break;
-    }
     case 'WORLD_MATERIAL_CATEGORIES': {
       prun.materials.applyApiPayload(packet.payload);
       break;

@@ -25,6 +25,8 @@ import user from '@src/store/user';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
+import { selectCxobByTicker } from '@src/store/database/selectors';
+import database from '@src/store/database/database';
 
 export class Execute {
   private tile: HTMLElement;
@@ -1204,9 +1206,10 @@ function parseActionPackage(rawActionPackage, messageBox) {
         const cxTicker = `${mat}.${action.exchange}`;
         let amount = parsedGroup[mat];
 
-        if (user.cxob[cxTicker] && Date.now() - user.cxob[cxTicker].timestamp < 900000) {
+        const orderBook = selectCxobByTicker(database.getState(), cxTicker);
+        if (orderBook && Date.now() - orderBook.timestamp < 900000) {
           // Check for existance and timestamp of data
-          if (user.cxob[cxTicker].sellingOrders.length == 0) {
+          if (orderBook.sellingOrders.length == 0) {
             // No orders
             if (action.buyPartial) {
               return; // Just ignore this one if we're fine with buying partial
@@ -1219,28 +1222,28 @@ function parseActionPackage(rawActionPackage, messageBox) {
           let remaining = parsedGroup[mat];
           let price;
           // Iterate through the orders to find the price to set to to buy it all
-          for (let i = 0; i < user.cxob[cxTicker].sellingOrders.length; i++) {
+          for (let i = 0; i < orderBook.sellingOrders.length; i++) {
             if (
               (!action.priceLimits ||
                 !action.priceLimits[mat] ||
-                action.priceLimits[mat] > user.cxob[cxTicker].sellingOrders[i].limit.amount) &&
-              user.cxob[cxTicker].sellingOrders[i].amount > remaining
+                action.priceLimits[mat] > orderBook.sellingOrders[i].limit.amount) &&
+              orderBook.sellingOrders[i].amount > remaining
             ) {
               // This order will be the filling one
-              price = user.cxob[cxTicker].sellingOrders[i].limit.amount;
+              price = orderBook.sellingOrders[i].limit.amount;
               break;
             } else {
               if (
                 (!action.priceLimits ||
                   !action.priceLimits[mat] ||
-                  action.priceLimits[mat] > user.cxob[cxTicker].sellingOrders[i].limit.amount) &&
-                !user.cxob[cxTicker].sellingOrders[i].amount
+                  action.priceLimits[mat] > orderBook.sellingOrders[i].limit.amount) &&
+                !orderBook.sellingOrders[i].amount
               ) {
                 // Only MMs will not have an amount attached
-                price = user.cxob[cxTicker].sellingOrders[i].limit.amount;
+                price = orderBook.sellingOrders[i].limit.amount;
                 break;
               }
-              remaining -= user.cxob[cxTicker].sellingOrders[i].amount; // Otherwise subtract the amount of that order from the amount remaining and continue
+              remaining -= orderBook.sellingOrders[i].amount; // Otherwise subtract the amount of that order from the amount remaining and continue
             }
           }
 
@@ -1261,10 +1264,10 @@ function parseActionPackage(rawActionPackage, messageBox) {
             addMessage(messageBox, `Error: Not enough materials on ${cxTicker}`);
             error = true;
             return;
-          } else if (!price && (!action.priceLimits || !action.priceLimits[mat]) && user.cxob[cxTicker].supply > 0) {
+          } else if (!price && (!action.priceLimits || !action.priceLimits[mat]) && orderBook.supply > 0) {
             // If fine with buying partial, buy the entire stock
-            price = user.cxob[cxTicker].sellingOrders[user.cxob[cxTicker].sellingOrders.length - 1].limit.amount;
-            amount = user.cxob[cxTicker].supply;
+            price = orderBook.sellingOrders[orderBook.sellingOrders.length - 1].limit.amount;
+            amount = orderBook.supply;
           } else if (!price && action.priceLimits && action.priceLimits[mat]) {
             return; // If there is no price, but buying partial, don't care and exit
           }
