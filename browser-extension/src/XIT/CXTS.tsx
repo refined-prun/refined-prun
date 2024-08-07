@@ -4,7 +4,7 @@ import PrunCss from '@src/prun-ui/prun-css';
 import prun from '@src/prun-api/prun';
 import { useEffect } from 'preact/compat';
 import { showBuffer } from '@src/util';
-import useSelector from '@src/hooks/use-selector';
+import useDatabase from '@src/hooks/use-database';
 import { selectCxos } from '@src/store/database/selectors';
 
 interface Entry {
@@ -18,7 +18,7 @@ function CXTS() {
     showBuffer('CXOS 9999', true, true);
   }, []);
 
-  const orders = useSelector(selectCxos);
+  const orders = useDatabase(selectCxos);
 
   const entries: Entry[] = [];
   for (const order of orders) {

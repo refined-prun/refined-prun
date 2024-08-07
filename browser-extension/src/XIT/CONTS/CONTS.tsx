@@ -1,11 +1,11 @@
 import xit from '../xit-registry';
 import { h } from 'preact';
 import { selectContracts } from '@src/store/database/selectors';
-import useSelector from '@src/hooks/use-selector';
+import useDatabase from '@src/hooks/use-database';
 import ContractRow from '@src/XIT/CONTS/ContractRow';
 
 function CONTS() {
-  const contracts = useSelector(selectContracts);
+  const contracts = useDatabase(selectContracts);
 
   if (contracts.length === 0) {
     return <div>Loading Contract Data...</div>;

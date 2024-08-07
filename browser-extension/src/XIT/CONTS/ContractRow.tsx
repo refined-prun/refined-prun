@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import useSelector from '@src/hooks/use-selector';
+import useDatabase from '@src/hooks/use-database';
 import { selectContractById } from '@src/store/database/selectors';
 import ContractLink from '@src/XIT/CONTS/ContractLink';
 import MaterialList from '@src/XIT/CONTS/MaterialList';
@@ -8,7 +8,7 @@ import ConditionList from '@src/XIT/CONTS/ConditionList';
 import { isPartnerCondition, isSelfCondition } from '@src/XIT/CONTS/utils';
 
 export default function ContractRow(props: { id: string }) {
-  const contract = useSelector(s => selectContractById(s, props.id));
+  const contract = useDatabase(s => selectContractById(s, props.id));
   const conditions = contract.conditions;
   const self = conditions.filter(x => isSelfCondition(contract, x));
   const partner = conditions.filter(x => isPartnerCondition(contract, x));
