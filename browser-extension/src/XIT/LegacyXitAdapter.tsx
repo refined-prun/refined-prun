@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { getXitArgs } from '@src/features/xit-commands';
+import { getXitArgs } from '@src/XIT/xit-commands';
 import { useLayoutEffect, useRef } from 'preact/compat';
 
 export interface XITModule {

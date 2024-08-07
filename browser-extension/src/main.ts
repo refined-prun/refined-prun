@@ -16,7 +16,7 @@ import { loadSettings, Settings } from './Settings';
 import features from '@src/feature-registry';
 import { initializePrunApi, loadGameData } from '@src/prun-api';
 import { loadPrunCss } from '@src/prun-ui/prun-css';
-import { applyXITParameters } from '@src/features/xit-commands';
+import { applyXITParameters } from '@src/XIT/xit-commands';
 
 import './refined-prun.css';
 import cx from '@src/prun-api/cx';
