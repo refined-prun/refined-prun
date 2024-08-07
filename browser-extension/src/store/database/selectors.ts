@@ -2,6 +2,7 @@ import cxosAdapter from '@src/store/database/cxos';
 import { State } from '@src/store/database/database';
 import fxosAdapter from '@src/store/database/fxos';
 import contractAdapter from '@src/store/database/contracts';
+import shipsAdapter from '@src/store/database/ships';
 
 const contracts = contractAdapter.getSelectors((s: State) => s.contracts);
 export const selectContracts = contracts.selectAll;
@@ -15,3 +16,6 @@ export const selectCxosTotal = cxos.selectTotal;
 const fxos = fxosAdapter.getSelectors((s: State) => s.fxos);
 export const selectFxos = fxos.selectAll;
 export const selectFxosTotal = fxos.selectTotal;
+
+const ships = shipsAdapter.getSelectors((s: State) => s.ships);
+export const selectShips = ships.selectAll;

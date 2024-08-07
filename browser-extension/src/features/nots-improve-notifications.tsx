@@ -5,7 +5,8 @@ import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
 import { h } from 'dom-chef';
-import user from '@src/store/user';
+import { selectShips } from '@src/store/database/selectors';
+import database from '@src/store/database/database';
 
 function onBufferReady(buffer: PrunBuffer) {
   const notifications = buffer.frame.getElementsByClassName(PrunCss.AlertListItem.content);
@@ -91,7 +92,8 @@ function processNotification(element: Element) {
       case 'arrived at': {
         newText = newText.replace(/its destination /, '');
         const match = newText.match(/AVI-[0-9A-Z]{5}/)?.[0];
-        const ship = user.ships.find(x => x.registration === match && x.name);
+        const ships = selectShips(database.getState());
+        const ship = ships.find(x => x.registration === match && x.name);
         if (match && ship) {
           newText = newText.replace(match, ship.name);
         }

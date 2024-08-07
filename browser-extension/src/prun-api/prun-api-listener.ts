@@ -280,10 +280,6 @@ function processEvent(packet: PrunApi.Packet) {
       });
       break;
     }
-    case 'SHIP_SHIPS': {
-      user.ships = packet.payload.ships;
-      break;
-    }
     case 'WORLD_MATERIAL_CATEGORIES': {
       prun.materials.applyApiPayload(packet.payload);
       break;

@@ -1,11 +1,13 @@
 import cxosAdapter from '@src/store/database/cxos';
 import fxosAdapter from '@src/store/database/fxos';
 import contractAdapter from '@src/store/database/contracts';
+import shipsAdapter from '@src/store/database/ships';
 
 let state = {
   contracts: contractAdapter.getInitialState(),
   cxos: cxosAdapter.getInitialState(),
   fxos: fxosAdapter.getInitialState(),
+  ships: shipsAdapter.getInitialState(),
 };
 
 export type State = typeof state;
@@ -19,6 +21,7 @@ function update(packet: PrunApi.Packet) {
     contracts: contractAdapter.reduce(state.contracts, packet),
     cxos: cxosAdapter.reduce(state.cxos, packet),
     fxos: fxosAdapter.reduce(state.fxos, packet),
+    ships: shipsAdapter.reduce(state.ships, packet),
   };
   for (const listener of listeners) {
     try {
