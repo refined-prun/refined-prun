@@ -19,7 +19,7 @@ function CONTS() {
   if (rows.length === 0) {
     rows.push(
       <tr>
-        <td colSpan={4}>No contracts</td>
+        <td colSpan={4}>No active contracts</td>
       </tr>,
     );
   }
@@ -28,7 +28,7 @@ function CONTS() {
     <table>
       <thead>
         <tr>
-          <th>Contract ID</th>
+          <th>Name</th>
           <th>Material</th>
           <th>Partner&apos;s Conditions</th>
           <th>My Conditions</th>
@@ -58,6 +58,6 @@ function compareContracts(a: PrunApi.Contract, b: PrunApi.Contract) {
 
 xit.add({
   command: ['CONTS', 'CONTRACTS'],
-  name: 'CONTRACTS',
+  name: 'ACTIVE CONTRACTS',
   component: () => <CONTS />,
 });

@@ -179,6 +179,6 @@ function formatPrice(x: string) {
 
 xit.add({
   command: ['CXTS'],
-  name: 'Recent Trades',
+  name: 'COMMODITY EXCHANGE TRADES',
   component: () => <CXTS />,
 });
