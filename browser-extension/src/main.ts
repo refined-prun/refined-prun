@@ -73,7 +73,7 @@ async function mainRun() {
     1000,
   );
 
-  void cx.trackPrices();
+  setTimeout(cx.fetchPrices, 1000);
 
   // Do FIN recording
   if (

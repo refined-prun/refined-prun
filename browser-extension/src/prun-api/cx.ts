@@ -1,7 +1,3 @@
-export async function trackPrices() {
-  setInterval(fetchPrices, 1000);
-}
-
 async function fetchPrices() {
   const url = 'https://rest.fnar.net/exchange/all';
   const response = await fetch(url);
@@ -59,7 +55,7 @@ interface MaterialPrices {
 }
 
 const cx = {
-  trackPrices,
+  fetchPrices,
   prices: undefined as Prices | undefined,
 };
 
