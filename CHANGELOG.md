@@ -4,7 +4,7 @@ New features:
 - correct-material-command
 
 Changes:
-- XIT CONTS now displays a ! mark for actionable contracts
+- XIT CONTS now displays a ! mark for contracts with unfulfilled own conditions
 - XIT CONTS now displays SHPT for contracts with shipment condition
 - Changed XIT calculator to https://desmos.com/scientific
 - Changed custom math evaluator to https://github.com/bugwheels94/math-expression-evaluator
