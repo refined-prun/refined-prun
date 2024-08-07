@@ -54,8 +54,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
   }
 
   const container = <div className="rprun-XIT-container" />;
-  const background = <div className="rprun-XIT-background">{container}</div>;
-  greenScreen.appendChild(background);
+  greenScreen.appendChild(container);
 
   const xitCommand = xit.get(command);
   if (!xitCommand) {
