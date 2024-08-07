@@ -51,13 +51,9 @@ function CXTS() {
     const date = new Date(timestamp);
     if (!sameDay(lastDate, date)) {
       const style = {
+        borderLeft: 'none',
         borderBottom: '1px solid #2b485a',
         borderTop: '1px solid #2b485a',
-      };
-      const secondPartStyle = {
-        backgroundColor: '#23282b',
-        borderLeft: 'none',
-        ...style,
       };
       const totals: h.JSX.Element[] = [];
       const keys = Object.keys(accumulatedTotals);
@@ -80,10 +76,12 @@ function CXTS() {
       }
       rows.push(
         <tr key={trade.id}>
-          <td colSpan={6} style={style}>
+          <td colSpan={2} style={style}>
             <span>{formatDate(lastDate)}</span>
           </td>
-          <td class={PrunCss.ComExOrdersTable.number} style={secondPartStyle}>
+          {/* This <tr> is needed so both other <tr>s are the same color */}
+          <td style={{ display: 'none' }} />
+          <td colSpan={5} style={style} class={PrunCss.ComExOrdersTable.number}>
             {totals}
           </td>
         </tr>,
