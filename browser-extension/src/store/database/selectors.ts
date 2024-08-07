@@ -5,6 +5,7 @@ import contractAdapter from '@src/store/database/contracts';
 
 const contracts = contractAdapter.getSelectors((s: State) => s.contracts);
 export const selectContracts = contracts.selectAll;
+export const selectContractById = contracts.selectById;
 export const selectContractsTotal = contracts.selectTotal;
 
 const cxos = cxosAdapter.getSelectors((s: State) => s.cxos);

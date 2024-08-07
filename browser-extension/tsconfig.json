@@ -5,7 +5,7 @@
     "baseUrl": "./",
     "jsx": "react",
     "jsxFactory": "h",
-    "jsxFragmentFactory": "DocumentFragment",
+    "jsxFragmentFactory": "Fragment",
     "skipLibCheck": true,
     "types": ["vite/client", "node"],
     "paths": {

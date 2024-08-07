@@ -1,3 +1,7 @@
+.rprun-MaterialIcon__container {
+  cursor: pointer;
+}
+
 .rprun-mat-element-large {
   height: 48px;
   width: 48px;

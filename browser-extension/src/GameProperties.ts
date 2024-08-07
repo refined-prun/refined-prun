@@ -10,12 +10,6 @@ export const CurrencySymbols = {
   ICA: 'ǂ',
   ECD: '€',
 };
-export const FactionHeaders = {
-  'Castillo-Ito': 'CI',
-  Insitor: 'IC',
-  Antares: 'AI',
-  'NEO Charter': 'NC',
-};
 export const RatingColors = {
   P: '#1b6b9c',
   U: '#8b211e',

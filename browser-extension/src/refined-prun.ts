@@ -23,7 +23,7 @@ import './XIT/BURN/BURN';
 import './XIT/CALC';
 import './XIT/CHAT';
 import './XIT/CHECK';
-import './XIT/CONTS';
+import './XIT/CONTS/CONTS';
 import './XIT/CXTS';
 import './XIT/DEBUG';
 import './XIT/FIN';

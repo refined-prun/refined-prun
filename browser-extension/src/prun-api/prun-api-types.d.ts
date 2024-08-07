@@ -132,35 +132,29 @@ declare module PrunApi {
     total?: CurrencyAmount;
   }
 
-  export enum ContractParty {
-    Customer = 'CUSTOMER',
-    Provider = 'PROVIDER',
-  }
+  export type ContractParty = 'CUSTOMER' | 'PROVIDER';
 
-  export enum ContractConditionStatus {
-    Fulfilled = 'FULFILLED',
-    Pending = 'PENDING',
-  }
+  export type ContractConditionStatus = 'PENDING' | 'FULFILLED';
 
-  export enum ContractConditionType {
-    BaseConstruction = 'BASE_CONSTRUCTION',
-    ComexPurchasePickup = 'COMEX_PURCHASE_PICKUP',
-    Delivery = 'DELIVERY',
-    DeliveryShipment = 'DELIVERY_SHIPMENT',
-    Exploration = 'EXPLORATION',
-    FinishFlight = 'FINISH_FLIGHT',
-    LoanInstallment = 'LOAN_INSTALLMENT',
-    LoanPayout = 'LOAN_PAYOUT',
-    Payment = 'PAYMENT',
-    PickupShipment = 'PICKUP_SHIPMENT',
-    PlaceOrder = 'PLACE_ORDER',
-    ProductionOrderCompleted = 'PRODUCTION_ORDER_COMPLETED',
-    ProductionRun = 'PRODUCTION_RUN',
-    Provision = 'PROVISION',
-    ProvisionShipment = 'PROVISION_SHIPMENT',
-    Reputation = 'REPUTATION',
-    StartFlight = 'START_FLIGHT',
-  }
+  export type ContractConditionType =
+    | 'BASE_CONSTRUCTION'
+    | 'COMEX_PURCHASE_PICKUP'
+    | 'DELIVERY'
+    | 'DELIVERY_SHIPMENT'
+    | 'EXPLORATION'
+    | 'FINISH_FLIGHT'
+    | 'LOAN_INSTALLMENT'
+    | 'LOAN_PAYOUT'
+    | 'PAYMENT'
+    | 'PICKUP_SHIPMENT'
+    | 'PLACE_ORDER'
+    | 'PRODUCTION_ORDER_COMPLETED'
+    | 'PRODUCTION_RUN'
+    | 'PROVISION'
+    | 'PROVISION_SHIPMENT'
+    | 'REPUTATION'
+    | 'START_FLIGHT'
+    | 'POWER';
 
   export interface ContractPartner {
     id?: string;
@@ -185,13 +179,14 @@ declare module PrunApi {
     Logistics = 'LOGISTICS',
   }
 
-  export enum ContractStatus {
-    Cancelled = 'CANCELLED',
-    Fulfilled = 'FULFILLED',
-    PartiallyFulfilled = 'PARTIALLY_FULFILLED',
-    Rejected = 'REJECTED',
-    Terminated = 'TERMINATED',
-  }
+  export type ContractStatus =
+    | 'OPEN'
+    | 'CLOSED'
+    | 'CANCELLED'
+    | 'FULFILLED'
+    | 'PARTIALLY_FULFILLED'
+    | 'REJECTED'
+    | 'TERMINATED';
 
   export interface ExchangeEntity {
     id: string;

@@ -3,6 +3,7 @@ import tsEslint from 'typescript-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintReactPlugin from 'eslint-plugin-react';
 import eslintReactHooksPlugin from 'eslint-plugin-react-hooks';
+import babelParser from '@babel/eslint-parser';
 
 let preactConfig = tsEslint.config(
   {
@@ -10,22 +11,26 @@ let preactConfig = tsEslint.config(
       react: {
         rules: eslintReactPlugin.rules,
       },
+      'react-hooks': eslintReactHooksPlugin,
     },
-    rules: eslintReactPlugin.configs.recommended.rules,
+    rules: {
+      ...eslintReactPlugin.configs.recommended.rules,
+      ...eslintReactHooksPlugin.configs.recommended.rules,
+    },
     languageOptions: { parserOptions: eslintReactPlugin.configs.recommended.parserOptions },
   },
   {
-    plugins: {
-      'react-hooks': eslintReactHooksPlugin,
-    },
-    rules: eslintReactHooksPlugin.configs.recommended.rules,
-  },
-  {
     languageOptions: {
+      parser: babelParser,
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
         },
+        babelOptions: {
+          presets: ['@babel/preset-react'],
+        },
+        ecmaVersion: 'latest',
+        sourceType: 'module',
       },
     },
 
@@ -174,7 +179,7 @@ export default tsEslint.config(
         chrome: 'readonly',
       },
     },
-    ignores: ['eslint.config.js', 'browser-extension/manifest.js'],
+    ignores: ['eslint.config.js', 'babel.config.js', 'browser-extension/manifest.js'],
     rules: {
       'import/no-unresolved': 'off',
     },

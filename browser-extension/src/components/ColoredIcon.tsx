@@ -1,13 +1,13 @@
 import prun from '@src/prun-api/prun';
-import { showBuffer } from '@src/util';
 import PrunCss from '@src/prun-ui/prun-css';
 import { h } from 'preact';
 
 interface Props {
   ticker: string;
+  onClick: () => void;
 }
 
-export default function ColoredIcon({ ticker }: Props) {
+export default function ColoredIcon({ ticker, onClick }: Props) {
   let name: string;
   let category: string;
   if (ticker === 'SHPT') {
@@ -23,8 +23,6 @@ export default function ColoredIcon({ ticker }: Props) {
     background: categoryColors[category][0],
     color: categoryColors[category][1],
   };
-
-  const onClick = () => showBuffer(`MAT ${ticker.toUpperCase()}`);
 
   return (
     <div class={PrunCss.ColoredIcon.container} style={style} title={name} onClick={onClick}>

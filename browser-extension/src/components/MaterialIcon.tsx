@@ -3,6 +3,7 @@ import PrunCss from '@src/prun-ui/prun-css';
 import classNames from 'classnames';
 import { h } from 'preact';
 import ColoredIcon from '@src/components/ColoredIcon';
+import { showBuffer } from '@src/util';
 
 interface Props {
   ticker: string;
@@ -11,7 +12,7 @@ interface Props {
 }
 
 export default function MaterialIcon({ amount, small, ticker }: Props) {
-  const classes = classNames(PrunCss.MaterialIcon.container, {
+  const classes = classNames('rprun-MaterialIcon__container', PrunCss.MaterialIcon.container, {
     'rprun-mat-element-small': small,
     'rprun-mat-element-large': !small,
   });
@@ -31,9 +32,11 @@ export default function MaterialIcon({ amount, small, ticker }: Props) {
     );
   }
 
+  const onClick = () => showBuffer(`MAT ${ticker.toUpperCase()}`);
+
   return (
     <div class={classes}>
-      <ColoredIcon ticker={ticker} />
+      <ColoredIcon ticker={ticker} onClick={onClick} />
       {amountElement}
     </div>
   );
