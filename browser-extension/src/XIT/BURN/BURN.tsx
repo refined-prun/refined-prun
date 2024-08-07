@@ -11,6 +11,7 @@ import BurnSection from '@src/XIT/BURN/BurnSection';
 import SettingsButton from '@src/XIT/BURN/SettingsButton';
 import { _$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/prun-ui/prun-css';
+import features from '@src/feature-registry';
 
 function BURN(props: { parameters: string[] }) {
   const { parameters } = props;
@@ -178,14 +179,21 @@ function burnPlanetSort(a, b) {
   return comparePlanets(a.planetName, b.planetName);
 }
 
-xit.add({
-  command: 'BURN',
-  name: parameters => {
-    if (parameters[1] && !parameters[2]) {
-      return `ENHANCED BURN - ${parameters[1].toUpperCase()}`;
-    }
+function init() {
+  xit.add({
+    command: 'BURN',
+    name: parameters => {
+      if (parameters[1] && !parameters[2]) {
+        return `ENHANCED BURN - ${parameters[1].toUpperCase()}`;
+      }
 
-    return 'ENHANCED BURN';
-  },
-  component: parameters => <BURN parameters={parameters} />,
+      return 'ENHANCED BURN';
+    },
+    component: parameters => <BURN parameters={parameters} />,
+  });
+}
+
+features.add({
+  id: 'xit-burn',
+  init,
 });

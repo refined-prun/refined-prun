@@ -25,8 +25,9 @@ import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import cx from '@src/prun-api/cx';
 import { averageCX, calculateFinancials, getPrice, interpretCX } from '@src/financials';
+import features from '@src/feature-registry';
 
-export class Finances {
+class Finances {
   private tile: HTMLElement;
   private parameters: string[];
   private pmmgSettings;
@@ -1105,8 +1106,15 @@ function burnProductionSort(a, b) {
   return a[1] - a[2] < b[1] - b[2] ? 1 : -1;
 }
 
-xit.add({
-  command: ['FIN', 'FINANCE', 'FINANCES'],
-  name: 'FINANCES',
-  component: createXitAdapter(Finances),
+function init() {
+  xit.add({
+    command: ['FIN', 'FINANCE', 'FINANCES'],
+    name: 'FINANCES',
+    component: createXitAdapter(Finances),
+  });
+}
+
+features.add({
+  id: 'xit-fin',
+  init,
 });

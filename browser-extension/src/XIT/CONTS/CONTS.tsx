@@ -3,6 +3,7 @@ import { h } from 'preact';
 import { selectContracts } from '@src/store/database/selectors';
 import useDatabase from '@src/hooks/use-database';
 import ContractRow from '@src/XIT/CONTS/ContractRow';
+import features from '@src/feature-registry';
 
 function CONTS() {
   const contracts = useDatabase(selectContracts);
@@ -56,8 +57,15 @@ function compareContracts(a: PrunApi.Contract, b: PrunApi.Contract) {
   return (a.date?.timestamp ?? 0) - (b.date?.timestamp ?? 0);
 }
 
-xit.add({
-  command: ['CONTS', 'CONTRACTS'],
-  name: 'ACTIVE CONTRACTS',
-  component: () => <CONTS />,
+function init() {
+  xit.add({
+    command: ['CONTS', 'CONTRACTS'],
+    name: 'ACTIVE CONTRACTS',
+    component: () => <CONTS />,
+  });
+}
+
+features.add({
+  id: 'xit-conts',
+  init,
 });

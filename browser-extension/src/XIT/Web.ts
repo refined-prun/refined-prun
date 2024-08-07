@@ -1,6 +1,7 @@
 import { clearChildren } from '../util';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import features from '@src/feature-registry';
 
 export class PrUN {
   private tile: HTMLElement;
@@ -30,10 +31,17 @@ export class PrUN {
   }
 }
 
-xit.add({
-  command: 'PRUN',
-  name: 'PRUN-CEPTION',
-  component: createXitAdapter(PrUN),
+function initPrun() {
+  xit.add({
+    command: 'PRUN',
+    name: 'PRUN-CEPTION',
+    component: createXitAdapter(PrUN),
+  });
+}
+
+features.add({
+  id: 'xit-prun',
+  init: initPrun,
 });
 
 export class Prosperity {
@@ -71,10 +79,17 @@ export class Prosperity {
   }
 }
 
-xit.add({
-  command: 'PROSPERITY',
-  name: 'PROSPERITY',
-  component: createXitAdapter(Prosperity),
+function initProsperity() {
+  xit.add({
+    command: 'PROSPERITY',
+    name: 'PROSPERITY',
+    component: createXitAdapter(Prosperity),
+  });
+}
+
+features.add({
+  id: 'xit-prosperity',
+  init: initProsperity,
 });
 
 export class Sheets {
@@ -114,10 +129,17 @@ export class Sheets {
   }
 }
 
-xit.add({
-  command: ['SHEET', 'SHEETS'],
-  name: 'GOOGLE SHEETS',
-  component: createXitAdapter(Sheets),
+function initSheets() {
+  xit.add({
+    command: ['SHEET', 'SHEETS'],
+    name: 'GOOGLE SHEETS',
+    component: createXitAdapter(Sheets),
+  });
+}
+
+features.add({
+  id: 'xit-sheet',
+  init: initSheets,
 });
 
 /* // All Discord server stuff is broken. Changes to widgetbot? Not many people seem to use it so I'll remove it for the time being.
@@ -201,10 +223,17 @@ export class Wiki {
   }
 }
 
-xit.add({
-  command: 'WIKI',
-  name: 'PRUN WIKI',
-  component: createXitAdapter(Wiki),
+function initWiki() {
+  xit.add({
+    command: 'WIKI',
+    name: 'PRUN WIKI',
+    component: createXitAdapter(Wiki),
+  });
+}
+
+features.add({
+  id: 'xit-wiki',
+  init: initWiki,
 });
 
 export class PrunPlanner {
@@ -242,10 +271,17 @@ export class PrunPlanner {
   }
 }
 
-xit.add({
-  command: ['PLANNER', 'PLAN', 'PRUNPLANNER'],
-  name: 'PRUN PLANNER',
-  component: createXitAdapter(PrunPlanner),
+function initPlanner() {
+  xit.add({
+    command: ['PLANNER', 'PLAN', 'PRUNPLANNER'],
+    name: 'PRUN PLANNER',
+    component: createXitAdapter(PrunPlanner),
+  });
+}
+
+features.add({
+  id: 'xit-planner',
+  init: initPlanner,
 });
 
 export class Map {
@@ -276,8 +312,15 @@ export class Map {
   }
 }
 
-xit.add({
-  command: 'MAP',
-  name: "Taiyi's Map",
-  component: createXitAdapter(Map),
+function initMap() {
+  xit.add({
+    command: 'MAP',
+    name: "Taiyi's Map",
+    component: createXitAdapter(Map),
+  });
+}
+
+features.add({
+  id: 'xit-map',
+  init: initMap,
 });

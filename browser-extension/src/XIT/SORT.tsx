@@ -12,8 +12,9 @@ import {
 import { Style } from '../Style';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import features from '@src/feature-registry';
 
-export class Sort {
+class Sort {
   private tile: HTMLElement;
   private parameters: string[];
   private pmmgSettings;
@@ -329,8 +330,15 @@ function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: a
   greyStripes.appendChild(makePopupSpacer(tile, overlapDiv));
 }
 
-xit.add({
-  command: 'SORT',
-  name: 'SORTING OPTIONS',
-  component: createXitAdapter(Sort),
+function init() {
+  xit.add({
+    command: 'SORT',
+    name: 'SORTING OPTIONS',
+    component: createXitAdapter(Sort),
+  });
+}
+
+features.add({
+  id: 'xit-sort',
+  init,
 });

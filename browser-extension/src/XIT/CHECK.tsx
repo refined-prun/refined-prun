@@ -18,8 +18,9 @@ import { NonProductionBuildings } from '../GameProperties';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import user from '@src/store/user';
+import features from '@src/feature-registry';
 
-export class Checklists {
+class Checklists {
   private tile: HTMLElement;
   private parameters: string[];
   public pmmgResult;
@@ -861,8 +862,15 @@ function checkSort(a, b) {
   return a.checkInfo.created > b.checkInfo.created ? 1 : -1;
 }
 
-xit.add({
-  command: ['CHECK', 'CHECKLIST', 'CHECKLISTS'],
-  name: 'CHECKLIST',
-  component: createXitAdapter(Checklists),
+function init() {
+  xit.add({
+    command: ['CHECK', 'CHECKLIST', 'CHECKLISTS'],
+    name: 'CHECKLIST',
+    component: createXitAdapter(Checklists),
+  });
+}
+
+features.add({
+  id: 'xit-check',
+  init,
 });

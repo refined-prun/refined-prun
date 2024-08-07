@@ -3,9 +3,10 @@ import { NonProductionBuildings } from '../GameProperties';
 import user from '@src/store/user';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import features from '@src/feature-registry';
 
 // This entire module is really, really messy and needs to be rewritten.
-export class Repairs {
+class Repairs {
   private tile: HTMLElement;
   private parameters: string[];
   private pmmgSettings;
@@ -441,8 +442,15 @@ function buildingSort(a, b) {
   return a[1]['condition'] > b[1]['condition'] ? 1 : -1;
 }
 
-xit.add({
-  command: 'REPAIRS',
-  name: 'REPAIRS',
-  component: createXitAdapter(Repairs),
+function init() {
+  xit.add({
+    command: 'REPAIRS',
+    name: 'REPAIRS',
+    component: createXitAdapter(Repairs),
+  });
+}
+
+features.add({
+  id: 'xit-repairs',
+  init,
 });

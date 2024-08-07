@@ -2,8 +2,9 @@ import { createTextSpan, clearChildren, createLink } from '../util';
 import { Style } from '../Style';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import features from '@src/feature-registry';
 
-export class Help {
+class Help {
   private tile: HTMLElement;
   public name = 'HELP';
   private parameters;
@@ -358,8 +359,15 @@ function createTextDiv(contentText) {
   return textDiv;
 }
 
-xit.add({
-  command: 'HELP',
-  name: 'HELP',
-  component: createXitAdapter(Help),
+function init() {
+  xit.add({
+    command: 'HELP',
+    name: 'HELP',
+    component: createXitAdapter(Help),
+  });
+}
+
+features.add({
+  id: 'xit-help',
+  init,
 });

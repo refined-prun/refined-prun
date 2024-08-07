@@ -24,6 +24,7 @@ import { ExchangeTickersReverse, NonProductionBuildings } from '../GamePropertie
 import user from '@src/store/user';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import features from '@src/feature-registry';
 
 export class Execute {
   private tile: HTMLElement;
@@ -1892,16 +1893,23 @@ function generatePrettyName(action) {
   return name;
 }
 
-xit.add({
-  command: ['ACT', 'ACTION'],
-  name: parameters => {
-    if (parameters.length === 0) {
-      return 'ACTION PACKAGES';
-    }
-    if (parameters[1].toUpperCase() == 'GEN') {
-      return 'GENERATE ACTION PACKAGE';
-    }
-    return 'EXECUTE ACTION PACKAGE';
-  },
-  component: createXitAdapter(Execute),
+function init() {
+  xit.add({
+    command: ['ACT', 'ACTION'],
+    name: parameters => {
+      if (parameters.length === 0) {
+        return 'ACTION PACKAGES';
+      }
+      if (parameters[1].toUpperCase() == 'GEN') {
+        return 'GENERATE ACTION PACKAGE';
+      }
+      return 'EXECUTE ACTION PACKAGE';
+    },
+    component: createXitAdapter(Execute),
+  });
+}
+
+features.add({
+  id: 'xit-act',
+  init,
 });

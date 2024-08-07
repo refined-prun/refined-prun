@@ -11,8 +11,9 @@ import {
 import { Style } from '../Style';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import features from '@src/feature-registry';
 
-export class Notes {
+class Notes {
   private tile: HTMLDivElement;
   private parameters: string[];
   public name = 'NOTE';
@@ -280,8 +281,15 @@ function renderNoteText(note: NoteStructure, noteText: string): void {
   });
 }
 
-xit.add({
-  command: ['NOTE', 'NOTES'],
-  name: 'NOTE',
-  component: createXitAdapter(Notes),
+function init() {
+  xit.add({
+    command: ['NOTE', 'NOTES'],
+    name: 'NOTE',
+    component: createXitAdapter(Notes),
+  });
+}
+
+features.add({
+  id: 'xit-note',
+  init,
 });

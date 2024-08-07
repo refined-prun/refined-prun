@@ -2,6 +2,7 @@ import './START.css';
 import { Link } from '@src/components/Link';
 import { h } from 'preact';
 import xit from './xit-registry';
+import features from '@src/feature-registry';
 
 function START() {
   return (
@@ -38,8 +39,15 @@ function START() {
   );
 }
 
-xit.add({
-  command: 'START',
-  name: 'PMMG INTRODUCTION',
-  component: () => <START />,
+function init() {
+  xit.add({
+    command: 'START',
+    name: 'PMMG INTRODUCTION',
+    component: () => <START />,
+  });
+}
+
+features.add({
+  id: 'xit-start',
+  init,
 });

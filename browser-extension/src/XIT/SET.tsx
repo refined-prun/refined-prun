@@ -11,8 +11,9 @@ import {
 import { Style, WithStyles } from '../Style';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import features from '@src/feature-registry';
 
-export class Settings {
+class Settings {
   private tile: HTMLElement;
   public parameters: string[];
   private pmmgSettings;
@@ -746,8 +747,15 @@ function makeToggleButton(on: string, off: string, f: () => void, state: boolean
   return toggle;
 }
 
-xit.add({
-  command: ['SET', 'SETTINGS'],
-  name: 'RPRUN SETTINGS',
-  component: createXitAdapter(Settings),
+function init() {
+  xit.add({
+    command: ['SET', 'SETTINGS'],
+    name: 'RPRUN SETTINGS',
+    component: createXitAdapter(Settings),
+  });
+}
+
+features.add({
+  id: 'xit-set',
+  init,
 });

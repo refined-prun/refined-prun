@@ -14,8 +14,9 @@ import {
 import { Style } from '../Style';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import features from '@src/feature-registry';
 
-export class CommandLists {
+class CommandLists {
   private tile: HTMLElement;
   private parameters: string[];
   public name = 'COMMAND LIST';
@@ -327,8 +328,15 @@ function createEditInterface(tile, result, parameters, settings: any[] = [], lis
   return;
 }
 
-xit.add({
-  command: ['LIST', 'LISTS'],
-  name: 'COMMAND LIST',
-  component: createXitAdapter(CommandLists),
+function init() {
+  xit.add({
+    command: ['LIST', 'LISTS'],
+    name: 'COMMAND LIST',
+    component: createXitAdapter(CommandLists),
+  });
+}
+
+features.add({
+  id: 'xit-list',
+  init,
 });

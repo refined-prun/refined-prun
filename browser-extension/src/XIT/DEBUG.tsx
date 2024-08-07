@@ -5,8 +5,9 @@ import { $$ } from 'select-dom';
 import PrunCss from '@src/prun-ui/prun-css';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import features from '@src/feature-registry';
 
-export class Debug {
+class Debug {
   private tile: HTMLElement;
   private parameters: string[];
   private pmmgSettings;
@@ -161,8 +162,15 @@ function downloadPrunCssClasses() {
   downloadFile(json, 'prun-css-classes.json', false);
 }
 
-xit.add({
-  command: 'DEBUG',
-  name: 'DEBUG',
-  component: createXitAdapter(Debug),
+function init() {
+  xit.add({
+    command: 'DEBUG',
+    name: 'DEBUG',
+    component: createXitAdapter(Debug),
+  });
+}
+
+features.add({
+  id: 'xit-debug',
+  init,
 });

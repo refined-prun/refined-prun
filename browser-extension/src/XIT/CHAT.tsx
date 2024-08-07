@@ -1,8 +1,9 @@
 import { clearChildren, XITWebRequest, hourFormatter, dateFormatter } from '../util';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import features from '@src/feature-registry';
 
-export class FIOChat {
+class FIOChat {
   private tile;
   private parameters;
 
@@ -103,8 +104,15 @@ function Chat_post(chatDiv, parameters, jsondata) {
   return;
 }
 
-xit.add({
-  command: 'CHAT',
-  name: 'FIO Chat',
-  component: createXitAdapter(FIOChat),
+function init() {
+  xit.add({
+    command: 'CHAT',
+    name: 'FIO Chat',
+    component: createXitAdapter(FIOChat),
+  });
+}
+
+features.add({
+  id: 'xit-chat',
+  init,
 });

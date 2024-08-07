@@ -6,8 +6,9 @@ import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import cx from '@src/prun-api/cx';
 import database from '@src/store/database/database';
 import { selectContractsTotal, selectCxosTotal, selectFxosTotal } from '@src/store/database/selectors';
+import features from '@src/feature-registry';
 
-export class DataHealth {
+class DataHealth {
   private tile: HTMLElement;
   public parameters: string[];
   public pmmgSettings;
@@ -155,8 +156,15 @@ function createTableRow(parameter, value) {
   return row;
 }
 
-xit.add({
-  command: 'HEALTH',
-  name: 'DATA HEALTH',
-  component: createXitAdapter(DataHealth),
+function init() {
+  xit.add({
+    command: 'HEALTH',
+    name: 'DATA HEALTH',
+    component: createXitAdapter(DataHealth),
+  });
+}
+
+features.add({
+  id: 'xit-health',
+  init,
 });

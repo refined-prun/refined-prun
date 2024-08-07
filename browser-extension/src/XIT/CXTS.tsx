@@ -6,6 +6,8 @@ import { useEffect } from 'preact/compat';
 import { showBuffer } from '@src/util';
 import useDatabase from '@src/hooks/use-database';
 import { selectCxos } from '@src/store/database/selectors';
+import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
+import features from '@src/feature-registry';
 
 interface Entry {
   order: PrunApi.CXOrder;
@@ -175,8 +177,15 @@ function formatPrice(x: string) {
   return x.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-xit.add({
-  command: ['CXTS'],
-  name: 'COMMODITY EXCHANGE TRADES',
-  component: () => <CXTS />,
+function init() {
+  xit.add({
+    command: ['CXTS'],
+    name: 'COMMODITY EXCHANGE TRADES',
+    component: () => <CXTS />,
+  });
+}
+
+features.add({
+  id: 'xit-cxts',
+  init,
 });
