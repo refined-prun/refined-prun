@@ -1,114 +1,96 @@
-import { clearChildren, XITWebRequest, hourFormatter, dateFormatter } from '../util';
+import { hourFormatter, dateFormatter } from '../util';
 import xit from './xit-registry';
-import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
+import { h } from 'preact';
+import { useEffect, useState } from 'preact/compat';
+import { Loading } from '@src/components/Loading';
 
-class FIOChat {
-  private tile;
-  private parameters;
-
-  public name = 'FIO Chat';
-
-  constructor(tile, parameters) {
-    this.tile = tile;
-    this.parameters = parameters;
-  }
-
-  create_buffer() {
-    clearChildren(this.tile);
-    if (this.parameters.length < 2) {
-      this.tile.textContent = 'Error! Not Enough Parameters!';
-    }
-
-    XITWebRequest(
-      this.tile,
-      this.parameters,
-      Chat_post,
-      `https://rest.fnar.net/chat/display/${this.parameters[1]}`,
-      'GET',
-      undefined,
-      undefined,
-    );
-    return;
-  }
-
-  update_buffer() {
-    // Nothing to update
-  }
-
-  destroy_buffer() {
-    // Nothing constantly running so nothing to destroy
-  }
+interface ChatMessage {
+  MessageTimestamp: number;
+  MessageType: 'CHAT' | 'JOINED' | 'LEFT';
+  UserName: string;
+  MessageText: string;
 }
 
-function Chat_post(chatDiv, parameters, jsondata) {
-  if (jsondata == undefined || jsondata == null) {
-    return;
+function CHAT(props: { parameters: string[] }) {
+  const { parameters } = props;
+  const parameter = parameters[1];
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [data, setData] = useState([] as ChatMessage[]);
+  useEffect(() => {
+    fetch(`https://rest.fnar.net/chat/display/${parameter}`)
+      .then(response => response.json())
+      .then(data => {
+        setIsLoaded(true);
+        setData(data);
+      });
+  }, [parameter]);
+
+  if (!isLoaded) {
+    return <Loading />;
   }
-  let chatData;
-  try {
-    chatData = JSON.parse(jsondata);
-  } catch (SyntaxError) {
-    chatDiv.textContent = 'Error! Could Not Load Data!';
-    return;
-  }
-  const titleDiv = document.createElement('div');
-  titleDiv.textContent = `${parameters[1]} Global Site Owners`;
-  titleDiv.classList.add('title');
-  chatDiv.appendChild(titleDiv);
 
-  chatData.forEach(chat => {
-    const chatLine = document.createElement('div');
-    chatLine.classList.add('chat-line');
-    chatDiv.appendChild(chatLine);
-
-    const timeDateDiv = document.createElement('div');
-
-    const dateDiv = document.createElement('div');
-    timeDateDiv.appendChild(dateDiv);
-    dateDiv.textContent = dateFormatter.format(new Date(chat['MessageTimestamp']));
-    dateDiv.classList.add('time-date');
-
-    const timeDiv = document.createElement('div');
-    timeDateDiv.appendChild(timeDiv);
-    timeDiv.textContent = hourFormatter.format(new Date(chat['MessageTimestamp']));
-    timeDiv.classList.add('time-date');
-    timeDiv.style.color = '#999999';
-
-    chatLine.appendChild(timeDateDiv);
-
-    const nameDiv = document.createElement('div');
-    chatLine.appendChild(nameDiv);
-    nameDiv.classList.add('chat-name');
-
-    const messageDiv = document.createElement('div');
-    chatLine.appendChild(messageDiv);
-    messageDiv.classList.add('chat-message');
-
-    switch (chat['MessageType']) {
-      case 'CHAT':
-        nameDiv.textContent = chat['UserName'];
-        messageDiv.textContent = chat['MessageText'];
+  const lines: h.JSX.Element[] = [];
+  for (const messageData of data) {
+    const parts: h.JSX.Element[] = [];
+    switch (messageData.MessageType) {
+      case 'CHAT': {
+        parts.push(<div class="chat-name">{messageData.UserName}</div>);
+        parts.push(<div class="chat-message">{messageData.MessageText}</div>);
         break;
-      case 'JOINED':
-        messageDiv.textContent = `${chat['UserName']} joined.`;
-        messageDiv.style.fontStyle = 'italic';
+      }
+      case 'JOINED': {
+        parts.push(<div class="chat-name" />);
+        parts.push(
+          <div class="chat-message" style={{ fontStyle: 'italic' }}>
+            {messageData.UserName} joined.
+          </div>,
+        );
         break;
-      case 'LEFT':
-        messageDiv.textContent = `${chat['UserName']} left.`;
-        messageDiv.style.fontStyle = 'italic';
+      }
+      case 'LEFT': {
+        parts.push(<div class="chat-name" />);
+        parts.push(
+          <div class="chat-message" style={{ fontStyle: 'italic' }}>
+            {messageData.UserName} left.
+          </div>,
+        );
         break;
+      }
     }
-    return;
-  });
-  return;
+
+    lines.push(
+      <div class="chat-line">
+        <div>
+          <div class="time-date">{dateFormatter.format(new Date(messageData.MessageTimestamp))}</div>
+          <div class="time-date" style={{ color: '#999999' }}>
+            {hourFormatter.format(new Date(messageData.MessageTimestamp))}
+          </div>
+        </div>
+        {parts}
+      </div>,
+    );
+  }
+
+  return (
+    <div style={{ height: '100%', flexGrow: 1, paddingTop: '4px' }}>
+      <div class="title">{parameter} Global Site Owners</div>
+      {lines}
+    </div>
+  );
 }
 
 function init() {
   xit.add({
     command: 'CHAT',
-    name: 'FIO Chat',
-    component: createXitAdapter(FIOChat),
+    name: 'FIO CHAT',
+    component: parameters => {
+      if (parameters.length < 2) {
+        return <div>Error! Not Enough Parameters!</div>;
+      }
+
+      return <CHAT parameters={parameters} />;
+    },
   });
 }
 
