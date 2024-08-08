@@ -1,11 +1,12 @@
-import cxosAdapter from '@src/store/database/cxos';
-import { State } from '@src/store/database/database';
-import fxosAdapter from '@src/store/database/fxos';
-import contractAdapter from '@src/store/database/contracts';
-import shipsAdapter from '@src/store/database/ships';
-import cxobAdapter from '@src/store/database/cxob';
+import { State } from '@src/prun-api/data/store';
+import { contractsAdapter } from '@src/prun-api/data/contracts';
+import { cxobAdapter } from '@src/prun-api/data/cxob';
+import { cxosAdapter } from '@src/prun-api/data/cxos';
+import { fxosAdapter } from '@src/prun-api/data/fxos';
+import { shipsAdapter } from '@src/prun-api/data/ships';
 
-const contracts = contractAdapter.getSelectors((s: State) => s.contracts);
+export const selectContractsFetched = (s: State) => s.contracts.fetched;
+const contracts = contractsAdapter.getSelectors((s: State) => s.contracts);
 export const selectContracts = contracts.selectAll;
 export const selectContractById = contracts.selectById;
 export const selectContractsTotal = contracts.selectTotal;

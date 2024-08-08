@@ -2,8 +2,8 @@ import cx from '@src/fio/cx';
 import { getLocalStorage, setSettings } from '@src/util';
 import { Consumption } from '@src/GameProperties';
 import user from '@src/store/user';
-import { selectContracts, selectCxos, selectFxos } from '@src/store/database/selectors';
-import database from '@src/store/database/database';
+import { store } from '@src/prun-api/data/store';
+import { selectContracts, selectCxos, selectFxos } from '@src/prun-api/data/selectors';
 
 // Actually recording and processing the financials once they are received through BackgroundRunner.
 export function calculateFinancials(webData, result, loop) {
@@ -17,7 +17,7 @@ export function calculateFinancials(webData, result, loop) {
     return;
   }
 
-  const databaseState = database.getState();
+  const storeState = store.getState();
 
   result['PMMGExtended']['last_fin_recording'] = Date.now();
   setSettings(result);
@@ -125,7 +125,7 @@ export function calculateFinancials(webData, result, loop) {
   // Handle contracts
   let contractValue = 0;
   let contractLiability = 0;
-  const validContracts = selectContracts(databaseState).filter(c => !invalidContractStatus.includes(c['status']));
+  const validContracts = selectContracts(storeState).filter(c => !invalidContractStatus.includes(c['status']));
 
   for (const contract of validContracts) {
     const party = contract['party'];
@@ -182,7 +182,7 @@ export function calculateFinancials(webData, result, loop) {
   let cxBuyValue = 0;
   let cxSellValue = 0;
 
-  for (const order of selectCxos(databaseState)) {
+  for (const order of selectCxos(storeState)) {
     if (order.status == 'FILLED') {
       continue;
     }
@@ -204,7 +204,7 @@ export function calculateFinancials(webData, result, loop) {
   // Handle FXOS
   let fxBuyValue = 0;
   let fxSellValue = 0;
-  for (const order of selectFxos(databaseState)) {
+  for (const order of selectFxos(storeState)) {
     if (order.status == 'FILLED') {
       continue;
     }

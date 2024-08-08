@@ -25,8 +25,8 @@ import user from '@src/store/user';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
-import { selectCxobByTicker } from '@src/store/database/selectors';
-import database from '@src/store/database/database';
+import { store } from '@src/prun-api/data/store';
+import { selectCxobByTicker } from '@src/prun-api/data/selectors';
 
 export class Execute {
   private tile: HTMLElement;
@@ -1206,7 +1206,7 @@ function parseActionPackage(rawActionPackage, messageBox) {
         const cxTicker = `${mat}.${action.exchange}`;
         let amount = parsedGroup[mat];
 
-        const orderBook = selectCxobByTicker(database.getState(), cxTicker);
+        const orderBook = selectCxobByTicker(store.getState(), cxTicker);
         if (orderBook && Date.now() - orderBook.timestamp < 900000) {
           // Check for existance and timestamp of data
           if (orderBook.sellingOrders.length == 0) {

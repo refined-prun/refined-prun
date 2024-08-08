@@ -4,8 +4,8 @@ import user from '@src/store/user';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
-import { selectShips } from '@src/store/database/selectors';
-import database from '@src/store/database/database';
+import { store } from '@src/prun-api/data/store';
+import { selectShips } from '@src/prun-api/data/selectors';
 
 // This entire module is really, really messy and needs to be rewritten.
 class Repairs {
@@ -31,8 +31,7 @@ class Repairs {
       return;
     }
 
-    const databaseState = database.getState();
-    const ships = selectShips(databaseState);
+    const ships = selectShips(store.getState());
 
     // Generate repairs screen for all things
     if (this.parameters.length < 2) {

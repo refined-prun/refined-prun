@@ -1,8 +1,8 @@
 import { Module } from '../ModuleRunner';
 import { createTextSpan, genericCleanup, createContractDict } from '../util';
 import { Selector } from '../Selector';
-import { selectContracts } from '@src/store/database/selectors';
-import database from '@src/store/database/database';
+import { store } from '@src/prun-api/data/store';
+import { selectContracts } from '@src/prun-api/data/selectors';
 
 export class PendingContracts implements Module {
   private tag = 'pb-pending-contracts';
@@ -14,7 +14,7 @@ export class PendingContracts implements Module {
   run() {
     const contractLines = Array.from(document.querySelectorAll(Selector.SidebarContract)) as HTMLElement[]; // All the contract lines
 
-    const contracts = selectContracts(database.getState());
+    const contracts = selectContracts(store.getState());
     if (contractLines.length > 0 && contracts.length > 0) {
       const contractdict = {};
 

@@ -8,7 +8,7 @@ import user, {
   StorageEntry,
   WarehouseSiteEntry,
 } from '@src/store/user';
-import database from '@src/store/database/database';
+import { store } from '@src/prun-api/data/store';
 
 let companyContext: string | undefined;
 
@@ -26,17 +26,24 @@ export async function listenPrunApi() {
 }
 
 function processEvent(packet: PrunApi.Packet) {
+  if (__DEV__) {
+    performance.mark(`${packet.messageType}-START`);
+  }
+
   if (__DEV__ && packet.messageType !== 'ACTION_COMPLETED') {
     console.log(packet);
   }
-
-  database.update(packet);
 
   switch (packet.messageType) {
     case 'ACTION_COMPLETED': {
       const message = packet.payload.message;
       if (message) {
         processEvent(message);
+        const storeAction = {
+          type: message.messageType,
+          data: message.payload,
+        };
+        store.dispatch(storeAction);
       }
       break;
     }
@@ -275,5 +282,10 @@ function processEvent(packet: PrunApi.Packet) {
       prun.systems.applyApiPayload(packet.payload);
       break;
     }
+  }
+
+  if (__DEV__) {
+    performance.mark(`${packet.messageType}-END`);
+    performance.measure(packet.messageType, `${packet.messageType}-START`, `${packet.messageType}-END`);
   }
 }

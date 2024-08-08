@@ -9,8 +9,8 @@ import { useLayoutEffect, useRef } from 'preact/compat';
 import classNames from 'classnames';
 import descendantPresent from '@src/utils/descendant-present';
 import { _$$ } from '@src/utils/get-element-by-class-name';
-import useDatabase from '@src/hooks/use-database';
-import { selectCxobByTicker } from '@src/store/database/selectors';
+import usePrunData from '@src/hooks/use-prun-data';
+import { selectCxobByTicker } from '@src/prun-api/data/selectors';
 
 async function onBufferCreated(buffer: PrunBuffer) {
   if (!buffer.parameter) {
@@ -32,7 +32,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
 }
 
 function OrderBook(props: { ticker: string }) {
-  const orderInfo = useDatabase(s => selectCxobByTicker(s, props.ticker));
+  const orderInfo = usePrunData(s => selectCxobByTicker(s, props.ticker));
 
   const offers = (orderInfo?.sellingOrders ?? [])
     .slice()
@@ -107,7 +107,7 @@ function OrderBook(props: { ticker: string }) {
   );
 }
 
-function OrderRow(props: { order: PrunApi.COMEX_BROKER_DATA.Order; type: 'offer' | 'request' }) {
+function OrderRow(props: { order: PrunApi.CXBrokerOrder; type: 'offer' | 'request' }) {
   const { order, type } = props;
   const ownOrderClass = {
     'rprun-cxpo-order-column--own-order': order.amount && order.trader.id === user.company.id,

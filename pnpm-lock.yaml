@@ -108,6 +108,9 @@ importers:
       engine.io-parser:
         specifier: ^5.2.3
         version: 5.2.3
+      immer:
+        specifier: ^10.1.1
+        version: 10.1.1
       math-expression-evaluator:
         specifier: ^2.0.5
         version: 2.0.5

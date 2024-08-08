@@ -4,9 +4,9 @@ import user from '@src/store/user';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import cx from '@src/fio/cx';
-import database from '@src/store/database/database';
-import { selectContractsTotal, selectCxosTotal, selectFxosTotal } from '@src/store/database/selectors';
 import features from '@src/feature-registry';
+import { store } from '@src/prun-api/data/store';
+import { selectContractsTotal, selectCxosTotal, selectFxosTotal } from '@src/prun-api/data/selectors';
 
 class DataHealth {
   private tile: HTMLElement;
@@ -23,7 +23,7 @@ class DataHealth {
   create_buffer() {
     clearChildren(this.tile);
 
-    const databaseState = database.getState();
+    const storeState = store.getState();
 
     // Construct table for health of base data
     const baseTitle = createTextSpan('Bases');
@@ -107,13 +107,13 @@ class DataHealth {
     const numProduction = user.production.length;
     otherTable.appendChild(createTableRow('Production Sites', numProduction));
 
-    const contracts = selectContractsTotal(databaseState);
+    const contracts = selectContractsTotal(storeState);
     otherTable.appendChild(createTableRow('Contracts', contracts));
 
-    const cxos = selectCxosTotal(databaseState);
+    const cxos = selectCxosTotal(storeState);
     otherTable.appendChild(createTableRow('CXOS', cxos));
 
-    const fxos = selectFxosTotal(databaseState);
+    const fxos = selectFxosTotal(storeState);
     otherTable.appendChild(createTableRow('FXOS', fxos));
 
     otherTable.appendChild(createTableRow('Currency', user.currency.length > 0));

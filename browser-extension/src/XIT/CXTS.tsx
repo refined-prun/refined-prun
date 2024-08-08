@@ -4,9 +4,9 @@ import PrunCss from '@src/prun-ui/prun-css';
 import prun from '@src/prun-api/prun';
 import { useEffect } from 'preact/compat';
 import { showBuffer } from '@src/util';
-import useDatabase from '@src/hooks/use-database';
-import { selectCxos } from '@src/store/database/selectors';
 import features from '@src/feature-registry';
+import usePrunData from '@src/hooks/use-prun-data';
+import { selectCxos } from '@src/prun-api/data/selectors';
 
 interface Entry {
   order: PrunApi.CXOrder;
@@ -19,7 +19,7 @@ function CXTS() {
     showBuffer('CXOS 9999', true, true);
   }, []);
 
-  const orders = useDatabase(selectCxos);
+  const orders = usePrunData(selectCxos);
 
   const entries: Entry[] = [];
   for (const order of orders) {
