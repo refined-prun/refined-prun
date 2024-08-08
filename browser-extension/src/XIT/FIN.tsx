@@ -23,7 +23,7 @@ import system from '@src/system';
 import user from '@src/store/user';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
-import cx from '@src/prun-api/cx';
+import cx from '@src/fio/cx';
 import { averageCX, calculateFinancials, getPrice, interpretCX } from '@src/financials';
 import features from '@src/feature-registry';
 

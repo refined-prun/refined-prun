@@ -1,4 +1,4 @@
-import cx from '@src/prun-api/cx';
+import cx from '@src/fio/cx';
 import { getLocalStorage, setSettings } from '@src/util';
 import { Consumption } from '@src/GameProperties';
 import user from '@src/store/user';

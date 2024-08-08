@@ -3,7 +3,7 @@ import { TextColors } from '../Style';
 import user from '@src/store/user';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
-import cx from '@src/prun-api/cx';
+import cx from '@src/fio/cx';
 import database from '@src/store/database/database';
 import { selectContractsTotal, selectCxosTotal, selectFxosTotal } from '@src/store/database/selectors';
 import features from '@src/feature-registry';

@@ -1,5 +1,5 @@
 import { listenPrunApi } from '@src/prun-api/prun-api-listener';
-import { preloadFioResponses } from '@src/prun-api/fio-api';
+import { preloadFioResponses } from '@src/fio/fio-api';
 import prun from '@src/prun-api/prun';
 
 export async function initializePrunApi() {

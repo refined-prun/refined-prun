@@ -19,7 +19,7 @@ import { loadPrunCss } from '@src/prun-ui/prun-css';
 import { applyXITParameters } from '@src/XIT/xit-commands';
 
 import './refined-prun.css';
-import cx from '@src/prun-api/cx';
+import cx from '@src/fio/cx';
 import { calculateFinancials } from '@src/financials';
 
 // The main function that initializes everything
