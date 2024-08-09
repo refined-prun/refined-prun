@@ -3,7 +3,9 @@ import { getLocalStorage, setSettings } from '@src/util';
 import { Consumption } from '@src/GameProperties';
 import user from '@src/store/user';
 import { store } from '@src/prun-api/data/store';
-import { selectContracts, selectCxos, selectFxos } from '@src/prun-api/data/selectors';
+import { selectContracts } from '@src/prun-api/data/contracts';
+import { selectCxos } from '@src/prun-api/data/cxos';
+import { selectFxos } from '@src/prun-api/data/fxos';
 
 // Actually recording and processing the financials once they are received through BackgroundRunner.
 export function calculateFinancials(webData, result, loop) {

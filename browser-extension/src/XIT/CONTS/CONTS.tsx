@@ -3,7 +3,7 @@ import { h } from 'preact';
 import ContractRow from '@src/XIT/CONTS/ContractRow';
 import features from '@src/feature-registry';
 import usePrunData from '@src/hooks/use-prun-data';
-import { selectContracts, selectContractsFetched } from '@src/prun-api/data/selectors';
+import { selectContracts, selectContractsFetched } from '@src/prun-api/data/contracts';
 import { Loading } from '@src/components/Loading';
 
 function CONTS() {

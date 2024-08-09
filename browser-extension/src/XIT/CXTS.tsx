@@ -6,7 +6,7 @@ import { useEffect } from 'preact/compat';
 import { showBuffer } from '@src/util';
 import features from '@src/feature-registry';
 import usePrunData from '@src/hooks/use-prun-data';
-import { selectCxos } from '@src/prun-api/data/selectors';
+import { selectCxos } from '@src/prun-api/data/cxos';
 
 interface Entry {
   order: PrunApi.CXOrder;

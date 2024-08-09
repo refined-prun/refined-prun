@@ -1,5 +1,6 @@
 import { createEntitySlice } from '@src/prun-api/data/utils';
 import { createEntityAdapter } from '@reduxjs/toolkit';
+import { State } from '@src/prun-api/data/store';
 
 export const shipsAdapter = createEntityAdapter<PrunApi.Ship>();
 
@@ -14,3 +15,6 @@ const slice = createEntitySlice(shipsAdapter, {
 });
 
 export const shipsReducer = slice.reducer;
+
+const selectors = shipsAdapter.getSelectors((s: State) => s.ships);
+export const selectShips = selectors.selectAll;

@@ -26,7 +26,7 @@ import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
 import { store } from '@src/prun-api/data/store';
-import { selectCxobByTicker } from '@src/prun-api/data/selectors';
+import { selectCxobByTicker } from '@src/prun-api/data/cxob';
 
 export class Execute {
   private tile: HTMLElement;

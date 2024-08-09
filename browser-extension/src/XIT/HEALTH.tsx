@@ -6,7 +6,9 @@ import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import cx from '@src/fio/cx';
 import features from '@src/feature-registry';
 import { store } from '@src/prun-api/data/store';
-import { selectContractsTotal, selectCxosTotal, selectFxosTotal } from '@src/prun-api/data/selectors';
+import { selectContractsTotal } from '@src/prun-api/data/contracts';
+import { selectCxosTotal } from '@src/prun-api/data/cxos';
+import { selectFxosTotal } from '@src/prun-api/data/fxos';
 
 class DataHealth {
   private tile: HTMLElement;

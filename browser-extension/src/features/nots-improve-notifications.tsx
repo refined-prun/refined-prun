@@ -6,7 +6,7 @@ import buffers from '@src/prun-ui/prun-buffers';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
 import { h } from 'dom-chef';
 import { store } from '@src/prun-api/data/store';
-import { selectShips } from '@src/prun-api/data/selectors';
+import { selectShips } from '@src/prun-api/data/ships';
 
 function onBufferReady(buffer: PrunBuffer) {
   const notifications = buffer.frame.getElementsByClassName(PrunCss.AlertListItem.content);

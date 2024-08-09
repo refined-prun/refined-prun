@@ -1,5 +1,6 @@
 import { createEntitySlice } from '@src/prun-api/data/utils';
 import { createEntityAdapter } from '@reduxjs/toolkit';
+import { State } from '@src/prun-api/data/store';
 
 export const fxosAdapter = createEntityAdapter<PrunApi.FXOrder>();
 
@@ -20,3 +21,7 @@ const slice = createEntitySlice(fxosAdapter, {
 });
 
 export const fxosReducer = slice.reducer;
+
+const selectors = fxosAdapter.getSelectors((s: State) => s.fxos);
+export const selectFxos = selectors.selectAll;
+export const selectFxosTotal = selectors.selectTotal;

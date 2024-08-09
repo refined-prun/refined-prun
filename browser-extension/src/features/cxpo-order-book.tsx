@@ -10,7 +10,7 @@ import classNames from 'classnames';
 import descendantPresent from '@src/utils/descendant-present';
 import { _$$ } from '@src/utils/get-element-by-class-name';
 import usePrunData from '@src/hooks/use-prun-data';
-import { selectCxobByTicker } from '@src/prun-api/data/selectors';
+import { selectCxobByTicker } from '@src/prun-api/data/cxob';
 
 async function onBufferCreated(buffer: PrunBuffer) {
   if (!buffer.parameter) {

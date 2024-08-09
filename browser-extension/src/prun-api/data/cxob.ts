@@ -1,5 +1,6 @@
 import { createEntitySlice } from '@src/prun-api/data/utils';
 import { createEntityAdapter } from '@reduxjs/toolkit';
+import { State } from '@src/prun-api/data/store';
 
 type Entity = PrunApi.CXBroker & { timestamp: number };
 
@@ -17,3 +18,6 @@ const slice = createEntitySlice(cxobAdapter, {
 });
 
 export const cxobReducer = slice.reducer;
+
+const selectors = cxobAdapter.getSelectors((s: State) => s.cxob);
+export const selectCxobByTicker = selectors.selectById;

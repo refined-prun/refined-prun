@@ -5,7 +5,7 @@ import PartnerLink from '@src/XIT/CONTS/PartnerLink';
 import ConditionList from '@src/XIT/CONTS/ConditionList';
 import { isPartnerCondition, isSelfCondition } from '@src/XIT/CONTS/utils';
 import usePrunData from '@src/hooks/use-prun-data';
-import { selectContractById } from '@src/prun-api/data/selectors';
+import { selectContractById } from '@src/prun-api/data/contracts';
 
 export default function ContractRow(props: { id: string }) {
   const contract = usePrunData(s => selectContractById(s, props.id));

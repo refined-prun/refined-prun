@@ -2,7 +2,7 @@ import { Module } from '../ModuleRunner';
 import { createTextSpan, genericCleanup, createContractDict } from '../util';
 import { Selector } from '../Selector';
 import { store } from '@src/prun-api/data/store';
-import { selectContracts } from '@src/prun-api/data/selectors';
+import { selectContracts } from '@src/prun-api/data/contracts';
 
 export class PendingContracts implements Module {
   private tag = 'pb-pending-contracts';

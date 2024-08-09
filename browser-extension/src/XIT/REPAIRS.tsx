@@ -5,7 +5,7 @@ import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
 import { store } from '@src/prun-api/data/store';
-import { selectShips } from '@src/prun-api/data/selectors';
+import { selectShips } from '@src/prun-api/data/ships';
 
 // This entire module is really, really messy and needs to be rewritten.
 class Repairs {

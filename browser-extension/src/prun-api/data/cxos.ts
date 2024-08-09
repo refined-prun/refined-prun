@@ -1,5 +1,6 @@
 import { createEntitySlice } from '@src/prun-api/data/utils';
 import { createEntityAdapter } from '@reduxjs/toolkit';
+import { State } from '@src/prun-api/data/store';
 
 export const cxosAdapter = createEntityAdapter<PrunApi.CXOrder>();
 
@@ -20,3 +21,7 @@ const slice = createEntitySlice(cxosAdapter, {
 });
 
 export const cxosReducer = slice.reducer;
+
+const selectors = cxosAdapter.getSelectors((s: State) => s.cxos);
+export const selectCxos = selectors.selectAll;
+export const selectCxosTotal = selectors.selectTotal;

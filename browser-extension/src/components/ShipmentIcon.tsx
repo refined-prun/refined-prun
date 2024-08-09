@@ -5,7 +5,7 @@ import { h } from 'preact';
 import ColoredIcon from '@src/components/ColoredIcon';
 import { showBuffer } from '@src/util';
 import usePrunData from '@src/hooks/use-prun-data';
-import { selectContractById } from '@src/prun-api/data/selectors';
+import { selectContractById } from '@src/prun-api/data/contracts';
 
 interface Props {
   contractId: string;
