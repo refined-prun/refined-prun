@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { h } from 'preact';
 import ColoredIcon from '@src/components/ColoredIcon';
 import { showBuffer } from '@src/util';
-import usePrunData from '@src/hooks/use-prun-data';
+import usePrunSelector from '@src/hooks/use-prun-selector';
 import { selectContractById } from '@src/prun-api/data/contracts';
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function ShipmentIcon({ small, contractId }: Props) {
-  const contract = usePrunData(s => selectContractById(s, contractId));
+  const contract = usePrunSelector(selectContractById, contractId);
 
   const classes = classNames('rprun-MaterialIcon__container', PrunCss.MaterialIcon.container, {
     'rprun-mat-element-small': small,

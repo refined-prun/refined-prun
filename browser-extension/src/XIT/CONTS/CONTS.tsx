@@ -2,13 +2,13 @@ import xit from '../xit-registry';
 import { h } from 'preact';
 import ContractRow from '@src/XIT/CONTS/ContractRow';
 import features from '@src/feature-registry';
-import usePrunData from '@src/hooks/use-prun-data';
+import usePrunSelector from '@src/hooks/use-prun-selector';
 import { selectContracts, selectContractsFetched } from '@src/prun-api/data/contracts';
 import { Loading } from '@src/components/Loading';
 
 function CONTS() {
-  const fetched = usePrunData(selectContractsFetched);
-  const contracts = usePrunData(selectContracts);
+  const fetched = usePrunSelector(selectContractsFetched);
+  const contracts = usePrunSelector(selectContracts);
 
   if (!fetched) {
     return <Loading />;

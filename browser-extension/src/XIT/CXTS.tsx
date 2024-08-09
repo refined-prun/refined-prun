@@ -5,7 +5,7 @@ import prun from '@src/prun-api/prun';
 import { useEffect } from 'preact/compat';
 import { showBuffer } from '@src/util';
 import features from '@src/feature-registry';
-import usePrunData from '@src/hooks/use-prun-data';
+import usePrunSelector from '@src/hooks/use-prun-selector';
 import { selectCxos } from '@src/prun-api/data/cxos';
 
 interface Entry {
@@ -19,7 +19,7 @@ function CXTS() {
     showBuffer('CXOS 9999', true, true);
   }, []);
 
-  const orders = usePrunData(selectCxos);
+  const orders = usePrunSelector(selectCxos);
 
   const entries: Entry[] = [];
   for (const order of orders) {

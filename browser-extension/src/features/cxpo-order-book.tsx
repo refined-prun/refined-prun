@@ -9,7 +9,7 @@ import { useLayoutEffect, useRef } from 'preact/compat';
 import classNames from 'classnames';
 import descendantPresent from '@src/utils/descendant-present';
 import { _$$ } from '@src/utils/get-element-by-class-name';
-import usePrunData from '@src/hooks/use-prun-data';
+import usePrunSelector from '@src/hooks/use-prun-selector';
 import { selectCxobByTicker } from '@src/prun-api/data/cxob';
 
 async function onBufferCreated(buffer: PrunBuffer) {
@@ -32,7 +32,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
 }
 
 function OrderBook(props: { ticker: string }) {
-  const orderInfo = usePrunData(s => selectCxobByTicker(s, props.ticker));
+  const orderInfo = usePrunSelector(selectCxobByTicker, props.ticker);
 
   const offers = (orderInfo?.sellingOrders ?? [])
     .slice()
