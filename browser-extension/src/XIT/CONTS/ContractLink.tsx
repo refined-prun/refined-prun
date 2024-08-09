@@ -1,22 +1,18 @@
 import { h } from 'preact';
-import { TextColors } from '@src/Style';
 import { Link } from '@src/components/Link';
 import { isFactionContract, isPartnerCondition } from '@src/XIT/CONTS/utils';
 
 export default function ContractLink(props: { contract: PrunApi.Contract }) {
   const { contract } = props;
 
-  const isFaction = isFactionContract(contract);
-  const icons: h.JSX.Element[] = [];
-  if (isActionable(contract)) {
-    icons.push(<span style={{ color: TextColors.Failure, fontWeight: 'bold' }}>❗</span>);
-  }
+  const actionMark = isActionable(contract) ? '❗' : '';
   const linkStyle = {
-    display: isFaction ? 'inline' : 'block',
+    display: isFactionContract(contract) ? 'inline' : 'block',
   };
   return (
     <Link command={`CONT ${contract.localId}`} style={linkStyle}>
-      {icons} {contract.name || contract.localId}
+      {actionMark}
+      {contract.name || contract.localId}
     </Link>
   );
 }
