@@ -34,16 +34,28 @@ function processEvent(packet: PrunApi.Packet) {
     console.log(packet);
   }
 
+  if (packet.messageType === 'ACTION_COMPLETED') {
+    const message = packet.payload?.message;
+    if (message) {
+      const storeAction = {
+        type: message.messageType,
+        data: message.payload,
+      };
+      store.dispatch(storeAction);
+    }
+  } else {
+    const storeAction = {
+      type: packet.messageType,
+      data: packet.payload,
+    };
+    store.dispatch(storeAction);
+  }
+
   switch (packet.messageType) {
     case 'ACTION_COMPLETED': {
       const message = packet.payload.message;
       if (message) {
         processEvent(message);
-        const storeAction = {
-          type: message.messageType,
-          data: message.payload,
-        };
-        store.dispatch(storeAction);
       }
       break;
     }
