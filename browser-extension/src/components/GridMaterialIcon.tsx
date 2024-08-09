@@ -1,7 +1,7 @@
-import prun from '@src/prun-api/prun';
 import { h } from 'preact';
 import GridItemView from '@src/components/GridItemView';
 import MaterialIcon from '@src/components/MaterialIcon';
+import { getMaterialNameByTicker } from '@src/prun-ui/material-names';
 
 interface Props {
   ticker: string;
@@ -17,8 +17,7 @@ export default function GridMaterialIcon({ amount, small, text, ticker }: Props)
   } else if (ticker === 'SHPT') {
     name = 'Shipment';
   } else {
-    const material = prun.materials.get(ticker);
-    name = material?.displayName ?? '???';
+    name = getMaterialNameByTicker(ticker) ?? '???';
   }
 
   return (

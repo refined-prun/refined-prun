@@ -1,5 +1,4 @@
 import './nots-improve-notifications.css';
-import prun from '@src/prun-api/prun';
 import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
@@ -7,6 +6,7 @@ import { observeDescendantListChanged } from '@src/utils/mutation-observer';
 import { h } from 'dom-chef';
 import { store } from '@src/prun-api/data/store';
 import { selectShips } from '@src/prun-api/data/ships';
+import { getTickerByMaterialName } from '@src/prun-ui/material-names';
 
 function onBufferReady(buffer: PrunBuffer) {
   const notifications = buffer.frame.getElementsByClassName(PrunCss.AlertListItem.content);
@@ -58,7 +58,7 @@ function processNotification(element: Element) {
           .replace(/ have been/, '')
           .replace(/ units? of/, '');
         const match = newText.match(/ ([A-z -]+) produced/)?.[1];
-        const ticker = prun.materials.getTickerByName(match);
+        const ticker = getTickerByMaterialName(match);
         if (match && ticker) {
           newText = newText.replace(new RegExp(match), ticker);
         }
@@ -66,7 +66,7 @@ function processNotification(element: Element) {
       }
       case 'trade': {
         const match = newText.match(/your ([A-z -]+) order/)?.[1];
-        const ticker = prun.materials.getTickerByName(match);
+        const ticker = getTickerByMaterialName(match);
         if (match && ticker) {
           newText = newText.replace(new RegExp(match), ticker);
         }
@@ -75,7 +75,7 @@ function processNotification(element: Element) {
       case 'order filled': {
         newText = newText.replace(/ Commodity Exchange/, '');
         const match = newText.match(/([A-z -]+) order/)?.[1];
-        const ticker = prun.materials.getTickerByName(match);
+        const ticker = getTickerByMaterialName(match);
         if (match && ticker) {
           newText = newText.replace(new RegExp(match), ticker);
         }

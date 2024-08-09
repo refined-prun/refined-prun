@@ -2,7 +2,9 @@ import { Module } from '../ModuleRunner';
 import { Selector } from '../Selector';
 import { CurrencySymbols } from '../GameProperties';
 import { createTextSpan, genericCleanup } from '../util';
-import prun from '@src/prun-api/prun';
+import { selectMaterialByTicker } from '@src/prun-api/data/materials';
+import { store } from '@src/prun-api/data/store';
+import { getTickerByMaterialName } from '@src/prun-ui/material-names';
 
 export class PostLM implements Module {
   private cleanups: Array<() => void> = [];
@@ -67,12 +69,12 @@ export class PostLM implements Module {
         const calculatePricePerUnit = () => {
           const amount = parseInt(amountInput.value, 10);
           const total = parseFloat(totalPriceInput.value);
-          const ticker = prun.materials.getTickerByName(commodity.value);
-          if (ticker === undefined) {
+          const ticker = getTickerByMaterialName(commodity.value);
+          if (!ticker) {
             return;
           }
-          const matInfo = prun.materials.get(ticker);
-          if (matInfo === undefined) {
+          const matInfo = selectMaterialByTicker(store.getState(), ticker);
+          if (!matInfo) {
             return;
           }
           const currency = currencyInput.value;

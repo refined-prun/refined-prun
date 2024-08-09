@@ -1,6 +1,8 @@
-import prun from '@src/prun-api/prun';
 import PrunCss from '@src/prun-ui/prun-css';
 import { h } from 'preact';
+import usePrunSelector from '@src/hooks/use-prun-selector';
+import { selectCategoryById, selectMaterialByTicker } from '@src/prun-api/data/materials';
+import { getMaterialNameByTicker } from '@src/prun-ui/material-names';
 
 interface Props {
   ticker: string;
@@ -10,13 +12,14 @@ interface Props {
 export default function ColoredIcon({ ticker, onClick }: Props) {
   let name: string;
   let category: string;
+  const material = usePrunSelector(selectMaterialByTicker, ticker);
+  const materialCategory = usePrunSelector(selectCategoryById, material?.category ?? '');
   if (ticker === 'SHPT') {
     name = 'Shipment';
     category = 'shipment';
   } else {
-    const material = prun.materials.get(ticker);
-    name = material?.displayName ?? '???';
-    category = material?.category.name ?? 'unknown';
+    name = getMaterialNameByTicker(ticker) ?? '???';
+    category = materialCategory?.name ?? 'unknown';
   }
 
   const style = {

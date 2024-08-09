@@ -1,12 +1,12 @@
 import xit from './xit-registry';
 import { h } from 'preact';
 import PrunCss from '@src/prun-ui/prun-css';
-import prun from '@src/prun-api/prun';
 import { useEffect } from 'preact/compat';
 import { showBuffer } from '@src/util';
 import features from '@src/feature-registry';
 import usePrunSelector from '@src/hooks/use-prun-selector';
 import { selectCxos } from '@src/prun-api/data/cxos';
+import { Link } from '@src/components/Link';
 
 interface Entry {
   order: PrunApi.CXOrder;
@@ -44,7 +44,7 @@ function CXTS() {
   const accumulatedTotals: { [currency: string]: number } = {};
 
   for (const { order, trade, timestamp } of entries) {
-    const mat = prun.materials.get(order.material.ticker);
+    const mat = order.material;
     if (!mat) {
       continue;
     }
@@ -117,7 +117,7 @@ function CXTS() {
           </span>
         </td>
         <td>
-          <span>{mat.displayName}</span>
+          <Link command={`CO ${trade.partner.code}`}>{trade.partner.name}</Link>
         </td>
         <td class={PrunCss.ComExOrdersTable.number}>{trade.amount}</td>
         <td class={PrunCss.ComExOrdersTable.number}>
@@ -137,7 +137,7 @@ function CXTS() {
           <th>Time</th>
           <th>Type</th>
           <th>Ticker</th>
-          <th>Material</th>
+          <th>Partner</th>
           <th>Amount</th>
           <th>Price</th>
           <th>Total</th>

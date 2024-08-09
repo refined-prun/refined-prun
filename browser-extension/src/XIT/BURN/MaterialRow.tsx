@@ -2,19 +2,24 @@ import useReactive from '@src/hooks/use-reactive';
 import { settings } from '@src/store/settings';
 import classNames from 'classnames';
 import MaterialIcon from '@src/components/MaterialIcon';
-import prun from '@src/prun-api/prun';
 import { h } from 'preact';
 import { PlanetBurn } from '@src/XIT/BURN/BURN';
+import { getMaterialNameByTicker } from '@src/prun-ui/material-names';
 
-export default function MaterialRow(props: { ticker: string; isMultiplanet: boolean; burn: PlanetBurn; dispSettings }) {
-  const { ticker, isMultiplanet, burn, dispSettings } = props;
+export default function MaterialRow(props: {
+  material: PrunApi.Material;
+  isMultiplanet: boolean;
+  burn: PlanetBurn;
+  dispSettings;
+}) {
+  const { material, isMultiplanet, burn, dispSettings } = props;
   const { red, yellow, resupply } = useReactive(() => ({
     red: settings.burn.red,
     yellow: settings.burn.yellow,
     resupply: settings.burn.resupply,
   }));
 
-  const matBurn = burn.burn[ticker];
+  const matBurn = burn.burn[material.ticker];
   const burnDays = matBurn.DaysLeft;
   const production = matBurn.DailyAmount;
   const invAmount = matBurn.Inventory ?? 0;
@@ -58,10 +63,10 @@ export default function MaterialRow(props: { ticker: string; isMultiplanet: bool
   return (
     <tr>
       <td style={materialColumnStyle}>
-        <MaterialIcon small ticker={ticker} />
+        <MaterialIcon small ticker={material.ticker} />
       </td>
       <td>
-        <span style={{ fontWeight: 'bold' }}>{prun.materials.get(ticker)?.displayName}</span>
+        <span style={{ fontWeight: 'bold' }}>{getMaterialNameByTicker(material.ticker)}</span>
       </td>
       <td>
         <span>{consText} / Day</span>

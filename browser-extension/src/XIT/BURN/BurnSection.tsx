@@ -1,9 +1,10 @@
 import useReactive from '@src/hooks/use-reactive';
-import { h } from 'preact';
-import { CategorySort } from '@src/util';
+import { Fragment, h } from 'preact';
 import { PlanetBurn } from '@src/XIT/BURN/BURN';
 import PlanetHeader from '@src/XIT/BURN/PlanetHeader';
 import MaterialRow from '@src/XIT/BURN/MaterialRow';
+import usePrunSelector from '@src/hooks/use-prun-selector';
+import { selectMaterialsByTickers, sortMaterials } from '@src/prun-api/data/materials';
 
 export default function BurnSection(props: { isMultiplanet: boolean; burn: PlanetBurn; dispSettings }) {
   const { isMultiplanet, burn, dispSettings } = props;
@@ -23,25 +24,29 @@ export default function BurnSection(props: { isMultiplanet: boolean; burn: Plane
   };
 
   if (isMultiplanet) {
-    rows.push(<PlanetHeader key={burn.planetName} burn={burn} minimized={isMinimized} onClick={onHeaderClick} />);
+    rows.push(<PlanetHeader burn={burn} minimized={isMinimized} onClick={onHeaderClick} />);
   }
 
   if (!isMinimized) {
-    const burnMaterials = Object.keys(burn.burn);
-    burnMaterials.sort(CategorySort);
-
-    for (const ticker of burnMaterials) {
-      rows.push(
-        <MaterialRow
-          key={ticker}
-          ticker={ticker}
-          isMultiplanet={isMultiplanet}
-          burn={burn}
-          dispSettings={dispSettings}
-        />,
-      );
-    }
+    rows.push(<MaterialList isMultiplanet={isMultiplanet} burn={burn} dispSettings={dispSettings} />);
   }
 
   return <tbody>{rows}</tbody>;
+}
+
+function MaterialList(props: { isMultiplanet: boolean; burn: PlanetBurn; dispSettings }) {
+  const { isMultiplanet, burn, dispSettings } = props;
+
+  const materials = usePrunSelector(selectMaterialsByTickers, Object.keys(burn.burn))
+    .filter(x => x)
+    .map(x => x!);
+  const sortedMaterials = usePrunSelector(sortMaterials, materials);
+
+  return (
+    <>
+      {sortedMaterials.map(x => (
+        <MaterialRow key={x.id} material={x} isMultiplanet={isMultiplanet} burn={burn} dispSettings={dispSettings} />
+      ))}
+    </>
+  );
 }

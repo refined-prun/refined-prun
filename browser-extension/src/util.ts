@@ -9,6 +9,9 @@ import PrunCss from '@src/prun-ui/prun-css';
 import observeReadyElementsByClassName from '@src/utils/mutation-observer';
 import onetime from 'onetime';
 import { dot } from '@src/utils/dot';
+import { store } from '@src/prun-api/data/store';
+import { selectCategoryById, selectMaterialByTicker } from '@src/prun-api/data/materials';
+import { getMaterialNameByTicker } from '@src/prun-ui/material-names';
 
 export const hourFormatter = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
 
@@ -269,16 +272,6 @@ export function findBurnAmount(ticker, inventory) {
   return 0;
 }
 
-// Sort tickers by their material category
-export function CategorySort(tickerA: string, tickerB: string) {
-  const categoryA = prun.materials.get(tickerA)?.category.name;
-  const categoryB = prun.materials.get(tickerB)?.category.name;
-  if (!categoryA || !categoryB) {
-    return 0;
-  }
-  return categoryA.localeCompare(categoryB);
-}
-
 // Find the data corresponding to a planet in an array of FIO inventory/burn data
 export function findCorrespondingPlanet(planet, data, needBase?) {
   if (!data || !planet) {
@@ -426,12 +419,13 @@ export function createMaterialElement(
   small: boolean = false,
   building?,
 ) {
-  const material = prun.materials.get(ticker);
+  const state = store.getState();
+  const material = selectMaterialByTicker(state, ticker);
   if (!material && ticker != 'SHPT' && !building) {
     return null;
   } // Return nothing if the material isn't recognized
-  const name = material?.displayName || 'Shipment'; // The full name of the material (Basic Bulkhead)
-  const category = material?.category.name || 'shipment'; // The category of the material
+  const name = getMaterialNameByTicker(ticker) ?? 'Shipment'; // The full name of the material (Basic Bulkhead)
+  const category = material ? selectCategoryById(state, material.category).name : 'shipment'; // The category of the material
 
   const matText = createTextSpan(ticker, className); // The ticker text in the middle
   matText.classList.add(...WithStyles(Style.MatText)); // Apply styles
@@ -1419,19 +1413,6 @@ class PopupRow {
       }
     }
   }
-}
-
-// Sorts materials by element category then by ticker. Works with Array.sort
-export function materialSort(tickerA?: string | null, tickerB?: string | null): number {
-  const materialA = prun.materials.get(tickerA);
-  const materialB = prun.materials.get(tickerB);
-  if (!materialA || !materialB) {
-    return 0;
-  }
-
-  const categoryA = materialA.category.name;
-  const categoryB = materialB.category.name;
-  return categoryA == categoryB ? materialA.ticker.localeCompare(materialB.ticker) : categoryA.localeCompare(categoryB);
 }
 
 export async function loadLocalFile(path: string) {

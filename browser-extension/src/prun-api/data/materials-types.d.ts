@@ -19,4 +19,10 @@ declare module PrunApi {
     material: Material;
     amount: number;
   }
+
+  export interface MaterialCategory {
+    name: string;
+    id: string;
+    materials: Material[];
+  }
 }

@@ -1,4 +1,4 @@
-import { clearChildren, createTextSpan, createMaterialElement, createLink, XITWebRequest, materialSort } from '../util';
+import { clearChildren, createTextSpan, createMaterialElement, createLink, XITWebRequest } from '../util';
 import xit from './xit-registry';
 import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
@@ -243,7 +243,8 @@ function FIOInv_allDisplay(tile, parameters, jsondata) {
 function fioMatsAlphabetSort(itemA: any, itemB: any) {
   const tickerA = itemA['MaterialTicker'];
   const tickerB = itemB['MaterialTicker'];
-  return materialSort(tickerA, tickerB);
+  // TODO
+  return tickerA === tickerB ? 0 : 0;
 }
 
 function init() {

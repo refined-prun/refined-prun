@@ -470,11 +470,5 @@ declare module PrunApi {
     export interface Payload {
       categories: MaterialCategory[];
     }
-
-    export interface MaterialCategory {
-      name: string;
-      id: string;
-      materials: Material[];
-    }
   }
 }

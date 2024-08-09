@@ -4,7 +4,6 @@ import {
   createMaterialElement,
   findCorrespondingPlanet,
   getBuffersFromList,
-  materialSort,
   parseInvName,
   parsePlanetName,
   setSettings,
@@ -628,5 +627,6 @@ function extractMaterials(burn, typeValue) {
 function materialDivSort(elementA: HTMLElement, elementB: HTMLElement) {
   const tickerA = elementA.querySelector(Selector.MaterialText)?.textContent;
   const tickerB = elementB.querySelector(Selector.MaterialText)?.textContent;
-  return materialSort(tickerA, tickerB);
+  // TODO
+  return tickerA === tickerB ? 0 : 0;
 }

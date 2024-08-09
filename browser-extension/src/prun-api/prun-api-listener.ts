@@ -286,10 +286,6 @@ function processEvent(packet: PrunApi.Packet) {
       user.currency = packet.payload.currencyAccounts.map(x => x.currencyBalance);
       break;
     }
-    case 'WORLD_MATERIAL_CATEGORIES': {
-      prun.materials.applyApiPayload(packet.payload);
-      break;
-    }
     case 'SYSTEM_STARS_DATA': {
       prun.systems.applyApiPayload(packet.payload);
       break;
