@@ -74,24 +74,13 @@ declare module PrunApi {
     id?: string;
     name: string;
     code?: null | string;
-    _type: ContractPartnerType;
-    _proxy_key: string;
     agentId?: string;
     countryId?: string;
     countryCode?: string;
     type?: ContractPartnerTypeEnum;
   }
 
-  export enum ContractPartnerType {
-    Company = 'company',
-    CountryAgent = 'country-agent',
-  }
-
-  export enum ContractPartnerTypeEnum {
-    Exploration = 'EXPLORATION',
-    Governance = 'GOVERNANCE',
-    Logistics = 'LOGISTICS',
-  }
+  export type ContractPartnerTypeEnum = 'EXPLORATION' | 'GOVERNANCE' | 'LOGISTICS';
 
   export type ContractStatus =
     | 'OPEN'

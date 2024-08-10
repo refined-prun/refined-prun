@@ -14,11 +14,7 @@ declare module PrunApi {
     name: string;
   }
 
-  export enum AddressLineType {
-    system = 'SYSTEM',
-    station = 'STATION',
-    planet = 'PLANET',
-  }
+  export type AddressLineType = 'SYSTEM' | 'STATION' | 'PLANET';
 
   export interface DateTime {
     timestamp: number;
