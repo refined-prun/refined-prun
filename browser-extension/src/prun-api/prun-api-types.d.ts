@@ -52,8 +52,7 @@ declare module PrunApi {
     | SYSTEM_STARS_DATA.Packet
     | USER_DATA.Packet
     | WAREHOUSE_STORAGES.Packet
-    | WORKFORCE_WORKFORCES.Packet
-    | WORLD_MATERIAL_CATEGORIES.Packet;
+    | WORKFORCE_WORKFORCES.Packet;
 
   declare module ACTION_COMPLETED {
     export type Packet = PrunPacket<'ACTION_COMPLETED', Payload>;
@@ -461,14 +460,6 @@ declare module PrunApi {
       Health = 'HEALTH',
       Tools = 'TOOLS',
       Water = 'WATER',
-    }
-  }
-
-  declare module WORLD_MATERIAL_CATEGORIES {
-    export type Packet = PrunPacket<'WORLD_MATERIAL_CATEGORIES', Payload>;
-
-    export interface Payload {
-      categories: MaterialCategory[];
     }
   }
 }
