@@ -20,6 +20,19 @@ Chart.register(LineController, LineElement, PointElement, LinearScale, Title, To
 
 type AxisType = 'linear' | 'logarithmic' | 'category' | 'time';
 
+function calculateMovingAverage(data: number[], windowSize: number) {
+  const movingAverage: (number | null)[] = [];
+
+  for (let i = 0; i < data.length; i++) {
+    const start = Math.max(i - windowSize + 1, 0);
+    const windowData = data.slice(start, i + 1);
+    const sum = windowData.reduce((acc, val) => acc + val, 0);
+    movingAverage.push(sum / windowData.length);
+  }
+
+  return movingAverage;
+}
+
 export function generateLineGraph(
   xdata: Array<number | string | Date>,
   ydata: number[],
@@ -36,6 +49,7 @@ export function generateLineGraph(
   const graph: HTMLCanvasElement = document.createElement('canvas');
   graph.width = plotWidth;
   graph.height = plotHeight;
+  const movingAverageData = calculateMovingAverage(ydata, 3);
 
   const ctx = graph.getContext('2d') as CanvasRenderingContext2D;
 
@@ -49,6 +63,17 @@ export function generateLineGraph(
           data: ydata,
           borderColor: '#f7a600',
           fill: false,
+          pointRadius: 0.5,
+          pointBackgroundColor: '#f7a600',
+          showLine: false,
+        },
+        {
+          label: undefined,
+          data: movingAverageData,
+          borderColor: '#f7a600',
+          fill: false,
+          pointRadius: 0,
+          pointHitRadius: 0,
         },
       ],
     },
@@ -109,7 +134,29 @@ export function generateLineGraph(
         },
         tooltip: {
           mode: 'nearest',
+          axis: 'x',
           intersect: false,
+          callbacks: {
+            label(context): string | void {
+              let label = context.dataset.label || '';
+
+              if (label) {
+                label += ': ';
+              }
+              if (context.parsed.y !== null) {
+                label += new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 2,
+                })
+                  .format(context.parsed.y)
+                  .replace('$', yprefix);
+              }
+              return label;
+            },
+          },
+          filter: tooltip => tooltip.datasetIndex === 0,
         },
       },
       elements: {
