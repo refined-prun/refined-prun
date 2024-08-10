@@ -88,7 +88,7 @@ function BURN(props: { parameters: string[] }) {
             <th style={{ paddingTop: 0 }}>Production</th>
             <th style={{ paddingTop: 0 }}>Inv</th>
             <th style={{ paddingTop: 0 }}>Amt. Needed</th>
-            <th style={{ paddingTop: 0 }}>Burn</th>
+            <th style={{ paddingTop: 0 }}>Days</th>
           </tr>
         </thead>
         {sections}

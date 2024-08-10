@@ -296,48 +296,6 @@
   background-color: rgba(63, 162, 222, 0.15);
 }
 
-td.burn-green {
-  background-color: #345034 !important;
-  color: #9fbb9f;
-}
-
-tr:hover td.burn-green {
-  background-color: #506c50 !important;
-}
-
-td.burn-yellow {
-  background-color: #836e24 !important;
-  color: #f6df94;
-}
-
-tr:hover td.burn-yellow {
-  background-color: #9f8a40 !important;
-}
-
-td.burn-red {
-  background-color: #5a3130 !important;
-  color: #c59c9b;
-}
-
-tr:hover td.burn-red {
-  background-color: #764d4c !important;
-}
-
-td.burn-green-no-hover {
-  background-color: #345034 !important;
-  color: #9fbb9f;
-}
-
-td.burn-yellow-no-hover {
-  background-color: #836e24 !important;
-  color: #f6df94;
-}
-
-td.burn-red-no-hover {
-  background-color: #5a3130 !important;
-  color: #c59c9b;
-}
-
 .inv-header {
   display: inline;
   padding: 2px 8px;
