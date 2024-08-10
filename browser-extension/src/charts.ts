@@ -21,11 +21,16 @@ Chart.register(LineController, LineElement, PointElement, LinearScale, Title, To
 type AxisType = 'linear' | 'logarithmic' | 'category' | 'time';
 
 function calculateMovingAverage(data: number[], windowSize: number) {
+  if (data.length <= windowSize) {
+    return data;
+  }
+
   const movingAverage: (number | null)[] = [];
 
   for (let i = 0; i < data.length; i++) {
-    const start = Math.max(i - windowSize + 1, 0);
-    const windowData = data.slice(start, i + 1);
+    const start = Math.max(i - windowSize / 2 + 1, 0);
+    const end = Math.min(i + windowSize / 2 + 1, data.length);
+    const windowData = data.slice(start, end);
     const sum = windowData.reduce((acc, val) => acc + val, 0);
     movingAverage.push(sum / windowData.length);
   }
@@ -49,7 +54,7 @@ export function generateLineGraph(
   const graph: HTMLCanvasElement = document.createElement('canvas');
   graph.width = plotWidth;
   graph.height = plotHeight;
-  const movingAverageData = calculateMovingAverage(ydata, 3);
+  const movingAverageData = calculateMovingAverage(ydata, 10);
 
   const ctx = graph.getContext('2d') as CanvasRenderingContext2D;
 
