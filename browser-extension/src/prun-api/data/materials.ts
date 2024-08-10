@@ -32,11 +32,12 @@ export const selectCategoryById = materialCategorySelectors.selectById;
 const selectMaterialTickerMap = createSelector(materialSelectors.selectAll, materials => {
   const map: Map<string, PrunApi.Material> = new Map();
   for (const material of materials) {
-    map.set(material.ticker, material);
+    map.set(material.ticker.toUpperCase(), material);
   }
   return map;
 });
-export const selectMaterialByTicker = (state: State, ticker: string) => selectMaterialTickerMap(state).get(ticker);
+export const selectMaterialByTicker = (state: State, ticker: string) =>
+  selectMaterialTickerMap(state).get(ticker.toUpperCase());
 export const selectMaterialsByTickers = (state: State, tickers: string[]) =>
   tickers.map(x => selectMaterialByTicker(state, x));
 
