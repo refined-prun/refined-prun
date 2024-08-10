@@ -5,7 +5,7 @@ import { State } from '@src/prun-api/data/store';
 export const materialsAdapter = createEntityAdapter<PrunApi.Material>();
 export const materialCategoriesAdapter = createEntityAdapter<PrunApi.MaterialCategory>();
 
-const materialsSlice = createSlice({
+const slice = createSlice({
   name: 'materials',
   initialState: {
     categories: materialCategoriesAdapter.getInitialState(),
@@ -24,7 +24,7 @@ const materialsSlice = createSlice({
     }),
 });
 
-export const materialsReducer = materialsSlice.reducer;
+export const materialsReducer = slice.reducer;
 
 const materialCategorySelectors = materialCategoriesAdapter.getSelectors((s: State) => s.materials.categories);
 const materialSelectors = materialsAdapter.getSelectors((s: State) => s.materials.materials);

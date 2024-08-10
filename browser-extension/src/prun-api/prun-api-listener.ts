@@ -42,8 +42,9 @@ function processEvent(packet: PrunApi.Packet) {
         data: message.payload,
       };
       store.dispatch(storeAction);
+      message['dispatched'] = true;
     }
-  } else {
+  } else if (!packet['dispatched']) {
     const storeAction = {
       type: packet.messageType,
       data: packet.payload,
