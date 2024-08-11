@@ -12,7 +12,7 @@ declare module PrunApi {
     tradeStore: boolean;
     rank: number;
     locked: boolean;
-    type: string;
+    type: StoreType;
   }
 
   export interface StoreItem {
@@ -22,4 +22,6 @@ declare module PrunApi {
     weight: number;
     volume: number;
   }
+
+  declare type StoreType = 'STORE' | 'WAREHOUSE_STORE' | 'SHIP_STORE' | 'STL_FUEL_STORE' | 'FTL_FUEL_STORE';
 }

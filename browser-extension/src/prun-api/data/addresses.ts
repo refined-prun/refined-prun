@@ -1,7 +1,8 @@
 import { caseReducers } from '@src/prun-api/data/utils';
 import { createSlice } from '@reduxjs/toolkit';
+import { State } from '@src/prun-api/data/store';
 
-type SliceState = Record<string, PrunApi.Address>;
+type SliceState = Record<string, PrunApi.Address | null | undefined>;
 
 const slice = createSlice({
   name: 'addresses',
@@ -9,6 +10,14 @@ const slice = createSlice({
   reducers: {},
   extraReducers: builder =>
     caseReducers(builder, {
+      SHIP_SHIPS(state, data: { ships: PrunApi.Ship[] }) {
+        for (const ship of data.ships) {
+          state[ship.id] = ship.address;
+        }
+      },
+      SHIP_DATA(state, data: PrunApi.Ship) {
+        state[data.id] = data.address;
+      },
       SITE_SITES(state, data: { sites: PrunApi.Site[] }) {
         for (const storage of data.sites) {
           state[storage.siteId] = storage.address;
@@ -29,3 +38,25 @@ const slice = createSlice({
 });
 
 export const addressesReducer = slice.reducer;
+
+export const getPlanetNaturalIdFromAddress = (address: PrunApi.Address) => {
+  return getPlanetLineFromAddress(address)?.entity.naturalId;
+};
+
+export const getPlanetNameFromAddress = (address: PrunApi.Address) => {
+  return getPlanetLineFromAddress(address)?.entity.name;
+};
+
+const getPlanetLineFromAddress = (address: PrunApi.Address) => {
+  const entry: PrunApi.AddressLine = address.lines[1];
+  if (entry?.type === 'PLANET') {
+    return entry;
+  }
+
+  return address.lines.find(x => x.type === 'PLANET');
+};
+
+export const selectPlanetNaturalIdByAddress = (state: State, address: string) => {
+  const entry = state.addresses[address];
+  return entry ? getPlanetNaturalIdFromAddress(entry) : undefined;
+};

@@ -1,6 +1,6 @@
 import { h } from 'preact';
-import { PlanetBurn } from '@src/XIT/BURN/BURN';
 import DaysCell from '@src/XIT/BURN/DaysCell';
+import { PlanetBurn } from '@src/burn';
 
 export default function PlanetHeader(props: { burn: PlanetBurn; minimized: boolean; onClick: () => void }) {
   const { burn, minimized, onClick } = props;

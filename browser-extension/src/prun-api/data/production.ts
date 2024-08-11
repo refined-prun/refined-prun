@@ -1,5 +1,6 @@
 import { caseReducers } from '@src/prun-api/data/utils';
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { State } from '@src/prun-api/data/store';
 
 export const linesAdapter = createEntityAdapter<PrunApi.ProductionLine>();
 
@@ -7,7 +8,7 @@ const slice = createSlice({
   name: 'production',
   initialState: {
     lines: linesAdapter.getInitialState(),
-    bySiteId: {} as Record<string, PrunApi.ProductionLine[]>,
+    bySiteId: {} as Record<string, PrunApi.ProductionLine[] | undefined>,
   },
   reducers: {},
   extraReducers: builder =>
@@ -47,3 +48,5 @@ const slice = createSlice({
 });
 
 export const productionReducer = slice.reducer;
+
+export const selectProductionLinesBySiteId = (state: State, siteId: string) => state.production.bySiteId[siteId];

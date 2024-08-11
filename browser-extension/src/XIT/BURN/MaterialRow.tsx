@@ -2,9 +2,9 @@ import useReactive from '@src/hooks/use-reactive';
 import { settings } from '@src/store/settings';
 import MaterialIcon from '@src/components/MaterialIcon';
 import { h } from 'preact';
-import { PlanetBurn } from '@src/XIT/BURN/BURN';
 import { getMaterialNameByTicker } from '@src/prun-ui/material-names';
 import DaysCell from '@src/XIT/BURN/DaysCell';
+import { PlanetBurn } from '@src/burn';
 
 export default function MaterialRow(props: {
   material: PrunApi.Material;

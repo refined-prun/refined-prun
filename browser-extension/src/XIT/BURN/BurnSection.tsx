@@ -1,10 +1,10 @@
 import useReactive from '@src/hooks/use-reactive';
 import { Fragment, h } from 'preact';
-import { PlanetBurn } from '@src/XIT/BURN/BURN';
 import PlanetHeader from '@src/XIT/BURN/PlanetHeader';
 import MaterialRow from '@src/XIT/BURN/MaterialRow';
 import usePrunSelector from '@src/hooks/use-prun-selector';
 import { selectMaterialsByTickers, sortMaterials } from '@src/prun-api/data/materials';
+import { PlanetBurn } from '@src/burn';
 
 export default function BurnSection(props: { isMultiplanet: boolean; burn: PlanetBurn; dispSettings }) {
   const { isMultiplanet, burn, dispSettings } = props;

@@ -11,7 +11,7 @@ import { productionReducer } from '@src/prun-api/data/production';
 import { shipsReducer } from '@src/prun-api/data/ships';
 import { sitesReducer } from '@src/prun-api/data/sites';
 import { starsReducer } from '@src/prun-api/data/stars';
-import { storesReducer } from '@src/prun-api/data/stores';
+import { storageReducer } from '@src/prun-api/data/storage';
 import { warehousesReducer } from '@src/prun-api/data/warehouses';
 import { workforcesReducer } from '@src/prun-api/data/workforces';
 
@@ -30,14 +30,16 @@ export const store = configureStore({
     ships: shipsReducer,
     sites: sitesReducer,
     stars: starsReducer,
-    stores: storesReducer,
+    storage: storageReducer,
     warehouses: warehousesReducer,
     workforces: workforcesReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
+      thunk: false,
       immutableCheck: false,
       serializableCheck: false,
+      actionCreatorCheck: false,
     }),
 });
 

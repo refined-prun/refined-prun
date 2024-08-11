@@ -1,30 +1,27 @@
-import { BurnValues, calculateBurn, comparePlanets, findCorrespondingPlanet, showBuffer } from '@src/util';
-import prun from '@src/prun-api/prun';
+import { comparePlanets } from '@src/util';
 import xit from '../xit-registry';
 import { settings } from '@src/store/settings';
-import user from '@src/store/user';
 import { h } from 'preact';
-import { Planet } from '@src/prun-api/prun-planets';
-import useReactive from '@src/hooks/use-reactive';
-import { useRef } from 'preact/compat';
+import { useMemo } from 'preact/compat';
 import BurnSection from '@src/XIT/BURN/BurnSection';
 import SettingsButton from '@src/XIT/BURN/SettingsButton';
 import { _$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
+import { State } from '@src/prun-api/data/store';
+import { selectSiteByPlanetNaturalIdOrName, selectSitesEntities } from '@src/prun-api/data/sites';
+import usePrunSelector from '@src/hooks/use-prun-selector';
+import { createBurnSelector, PlanetBurn } from '@src/burn';
+import { createSelector } from '@reduxjs/toolkit';
 
 function BURN(props: { parameters: string[] }) {
   const { parameters } = props;
-  const requestedData = useRef(new Set() as Set<string>);
-  const planetBurn = useReactive(() =>
-    internalCalculateBurn(parameters, id => {
-      if (requestedData.current.has(id)) {
-        return;
-      }
-      requestedData.current.add(id);
-      showBuffer(`BS ${id}`, true, true);
-    }),
-  );
+
+  const sitesSelector = useMemo(() => createSitesSelector(parameters), [parameters]);
+  const sites = usePrunSelector(sitesSelector);
+
+  const burnsSelector = useMemo(() => createBurnSelectorForSites(sites), [sites]);
+  const planetBurn = usePrunSelector(burnsSelector);
 
   const screenNameElem = _$(PrunCss.ScreenControls.currentScreenName);
   const screenName = screenNameElem ? screenNameElem.textContent : '';
@@ -97,86 +94,52 @@ function BURN(props: { parameters: string[] }) {
   );
 }
 
-export interface PlanetBurn {
-  burn: BurnValues;
-  planetName: string;
+function createSitesSelector(parameters: string[]) {
+  if (parameters.length === 1 || parameters[1].toLowerCase() == 'all') {
+    return createSelector(selectSitesEntities, sites => Object.values(sites) as PrunApi.Site[]);
+  }
+
+  const selectors = parameters.slice(1).map(x => (state: State) => selectSiteByPlanetNaturalIdOrName(state, x));
+  return createSelector(selectors, (...sites) => sites.filter((x): x is PrunApi.Site => x !== undefined));
 }
 
-function internalCalculateBurn(parameters: string[], requestData: (id: string) => void) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const planetBurn = [] as PlanetBurn[];
-  const planets = [] as Planet[];
+function createBurnSelectorForSites(sites: PrunApi.Site[]) {
+  return createSelector(sites.map(createBurnSelector), processBurn);
+}
 
-  if (parameters.length > 2 && parameters[1].toLowerCase() != 'all') {
-    for (let i = 1; i < parameters.length; i++) {
-      const planet = prun.planets.get(parameters[i]);
-      if (planet) {
-        planets.push(planet);
-      }
-    }
-  } else {
-    for (const site of user.sites.filter(x => x.type === 'BASE')) {
-      const planet = prun.planets.get(site.PlanetNaturalId);
-      if (planet) {
-        planets.push(planet);
-      }
-    }
+function processBurn(...burn: (PlanetBurn | undefined)[]) {
+  const filtered = burn.filter((x): x is PlanetBurn => x !== undefined);
+  filtered.sort((a, b) => comparePlanets(a.planetName, b.planetName));
+
+  if (filtered.length <= 1) {
+    return filtered;
   }
 
-  for (const planet of planets) {
-    const production = findCorrespondingPlanet(planet.name, user.production);
-    const workforce = findCorrespondingPlanet(planet.name, user.workforce);
-    const inv = findCorrespondingPlanet(planet.name, user.storage, true);
-    if (!production || !workforce) {
-      requestData(planet.naturalId);
-      continue;
-    }
-
-    planetBurn.push({ burn: calculateBurn(production, workforce, inv), planetName: planet.name });
-  }
-
-  // If more than 1 planet, make "overall" category
-  if (planetBurn.length > 1) {
-    const overallBurn = {};
-    for (const burn of planetBurn) {
-      for (const mat of Object.keys(burn.burn)) {
-        if (overallBurn[mat]) {
-          overallBurn[mat].DailyAmount += burn.burn[mat].DailyAmount;
-          overallBurn[mat].Inventory += burn.burn[mat].Inventory;
-        } else {
-          overallBurn[mat] = {};
-          overallBurn[mat].DailyAmount = burn.burn[mat].DailyAmount;
-          overallBurn[mat].Inventory = burn.burn[mat].Inventory;
-        }
-      }
-    }
-
-    for (const mat of Object.keys(overallBurn)) {
-      if (overallBurn[mat].DailyAmount >= 0) {
-        overallBurn[mat].DaysLeft = 1000;
+  const overallBurn = {};
+  for (const burn of filtered) {
+    for (const mat of Object.keys(burn.burn)) {
+      if (overallBurn[mat]) {
+        overallBurn[mat].DailyAmount += burn.burn[mat].DailyAmount;
+        overallBurn[mat].Inventory += burn.burn[mat].Inventory;
       } else {
-        overallBurn[mat].DaysLeft = -overallBurn[mat].Inventory / overallBurn[mat].DailyAmount;
+        overallBurn[mat] = {};
+        overallBurn[mat].DailyAmount = burn.burn[mat].DailyAmount;
+        overallBurn[mat].Inventory = burn.burn[mat].Inventory;
       }
     }
-
-    planetBurn.push({ burn: overallBurn, planetName: 'Overall' });
   }
 
-  planetBurn.sort(burnPlanetSort);
-
-  return planetBurn;
-}
-
-// Sort entries in planetBurn like the game does it
-function burnPlanetSort(a, b) {
-  if (a.planetName == 'Overall') {
-    return 1;
-  }
-  if (b.planetName == 'Overall') {
-    return -1;
+  for (const mat of Object.keys(overallBurn)) {
+    if (overallBurn[mat].DailyAmount >= 0) {
+      overallBurn[mat].DaysLeft = 1000;
+    } else {
+      overallBurn[mat].DaysLeft = -overallBurn[mat].Inventory / overallBurn[mat].DailyAmount;
+    }
   }
 
-  return comparePlanets(a.planetName, b.planetName);
+  filtered.push({ burn: overallBurn, planetName: 'Overall' });
+
+  return filtered;
 }
 
 function init() {
