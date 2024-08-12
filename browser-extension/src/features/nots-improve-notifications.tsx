@@ -3,10 +3,10 @@ import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
-import { h } from 'dom-chef';
 import { store } from '@src/prun-api/data/store';
 import { selectShips } from '@src/prun-api/data/ships';
 import { getTickerByMaterialName } from '@src/prun-ui/material-names';
+import { widgetBefore } from '@src/utils/vue-mount';
 
 function onBufferReady(buffer: PrunBuffer) {
   const notifications = buffer.frame.getElementsByClassName(PrunCss.AlertListItem.content);
@@ -43,8 +43,9 @@ function processNotification(element: Element) {
       continue;
     }
 
-    textElement.before(
-      <div className="rprun-notification-type" style={{ color: search[2] }}>
+    widgetBefore(
+      textElement,
+      <div class="rprun-notification-type" style={{ color: search[2] }}>
         {search[1].toUpperCase()}
       </div>,
     );
@@ -101,7 +102,9 @@ function processNotification(element: Element) {
       }
       case 'cogc':
       case 'chamber of global commerce': {
-        newText = newText.replace(/ a new economic program/, '').replace(/ Advertising Campaign:/, '');
+        newText = newText
+          .replace(/ a new economic program/, '')
+          .replace(/ Advertising Campaign:/, '');
         break;
       }
       case 'population infrastructure project': {

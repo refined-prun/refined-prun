@@ -4,6 +4,7 @@ import { addressesReducer } from '@src/prun-api/data/addresses';
 import { contractsReducer } from '@src/prun-api/data/contracts';
 import { cxobReducer } from '@src/prun-api/data/cxob';
 import { cxosReducer } from '@src/prun-api/data/cxos';
+import { flightsReducer } from '@src/prun-api/data/flights';
 import { fxosReducer } from '@src/prun-api/data/fxos';
 import { materialsReducer } from '@src/prun-api/data/materials';
 import { planetsReducer } from '@src/prun-api/data/planets';
@@ -23,6 +24,7 @@ export const store = configureStore({
     contracts: contractsReducer,
     cxob: cxobReducer,
     cxos: cxosReducer,
+    flights: flightsReducer,
     fxos: fxosReducer,
     materials: materialsReducer,
     planets: planetsReducer,

@@ -1,4 +1,4 @@
-declare module PrunApi {
+declare namespace PrunApi {
   export interface Warehouse {
     warehouseId: string;
     storeId: string;

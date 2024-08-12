@@ -1,0 +1,48 @@
+<script setup lang="ts">
+import user from '@src/store/user';
+import PrunCss from '@src/prun-ui/prun-css';
+import { computed, PropType } from 'vue';
+
+const props = defineProps({
+  order: {
+    type: Object as PropType<PrunApi.CXBrokerOrder>,
+    required: true,
+  },
+  request: Boolean,
+});
+
+const ownOrderClass = computed(() => ({
+  'rprun-cxpo-order-column--own-order':
+    props.order.amount && props.order.trader.id === user.company.id,
+}));
+const amount = computed(() => (props.order.amount ? props.order.amount.toFixed(0) : '∞'));
+const amountClass = computed(() => [PrunCss.ComExOrderBookPanel.amount, ownOrderClass.value]);
+const price = computed(() => props.order.limit.amount.toFixed(2));
+const priceClass = computed(() => [
+  props.request ? PrunCss.ComExOrderBookPanel.requestPrice : PrunCss.ComExOrderBookPanel.offerPrice,
+  ownOrderClass.value,
+  'rprun-cxpo-order-column--price',
+]);
+</script>
+
+<template>
+  <tr>
+    <td :class="amountClass">{{ amount }}</td>
+    <td :class="priceClass" :style="{ padding: '2px' }">
+      {{ price }}
+    </td>
+  </tr>
+</template>
+
+<style scoped>
+table tbody td.rprun-cxpo-order-column--own-order {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/*
+  Override left/right padding from vanilla class
+*/
+table tbody td.rprun-cxpo-order-column--price {
+  padding: 2px;
+}
+</style>

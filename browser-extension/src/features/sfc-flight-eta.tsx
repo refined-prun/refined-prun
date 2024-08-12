@@ -1,9 +1,9 @@
 import { convertDurationToETA, parseDuration } from '../util';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
-import { h } from 'dom-chef';
 import { $$ } from 'select-dom';
 import { _$$ } from '@src/utils/get-element-by-class-name';
+import { widgetAppend } from '@src/utils/vue-mount';
 
 const tag = 'rprun-sfc-eta';
 
@@ -23,7 +23,7 @@ function updateBuffer(buffer: PrunBuffer) {
     if (etaData.textContent != '') {
       const duration = parseDuration(etaData.textContent);
       const eta = convertDurationToETA(duration + currentTime);
-      etaData.appendChild(<span className={tag}> ({eta})</span>);
+      widgetAppend(etaData, () => <span class={tag}> ({eta})</span>);
       currentTime += duration;
     }
   }
@@ -33,7 +33,7 @@ function updateBuffer(buffer: PrunBuffer) {
     if (firstEtaData) {
       if (firstEtaData.textContent != '') {
         const totalEta = convertDurationToETA(currentTime);
-        firstEtaData.appendChild(<span className={tag}> ({totalEta})</span>);
+        widgetAppend(firstEtaData, () => <span class={tag}> ({totalEta})</span>);
       }
     }
   }

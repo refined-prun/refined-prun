@@ -1,7 +1,6 @@
 import { changeValue } from '../util';
 import xit from './xit-registry';
 import features from '@src/feature-registry';
-import { h } from 'preact';
 import { _$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/prun-ui/prun-css';
 import observeReadyElementsByClassName from '@src/utils/mutation-observer';
@@ -39,7 +38,7 @@ function onSelectorReady(selector: HTMLDivElement) {
 function isValidUrl(url: string) {
   try {
     return Boolean(new URL(url));
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -115,7 +114,9 @@ function initSheets() {
       for (let i = 2; i < parameters.length; i++) {
         url += `_${parameters[i]}`;
       }
-      return <WEB parameters={['', `https://docs.google.com/spreadsheets/d/${url}/edit?usp=sharing`]} />;
+      return (
+        <WEB parameters={['', `https://docs.google.com/spreadsheets/d/${url}/edit?usp=sharing`]} />
+      );
     },
   });
 }

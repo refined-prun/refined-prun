@@ -1,4 +1,4 @@
-declare module PrunApi {
+declare namespace PrunApi {
   export interface Contract {
     id: string;
     localId: string;

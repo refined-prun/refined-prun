@@ -10,7 +10,6 @@ import {
 } from '../util';
 import { Style } from '../Style';
 import xit from './xit-registry';
-import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
 
 class Notes {
@@ -158,11 +157,16 @@ function generateNotesTable(notesStorage: { [p: string]: any }, tile: HTMLDivEle
     deleteButton.textContent = 'DELETE';
 
     deleteButton.addEventListener('click', () => {
-      showWarningDialog(tile, `Are you sure you want to delete the note "${noteName}"?`, 'Confirm', () => {
-        saveNote(noteName, null).then(() => {
-          row.remove();
-        });
-      });
+      showWarningDialog(
+        tile,
+        `Are you sure you want to delete the note "${noteName}"?`,
+        'Confirm',
+        () => {
+          saveNote(noteName, null).then(() => {
+            row.remove();
+          });
+        },
+      );
     });
     buttonsColumn.append(deleteButton);
   });
@@ -285,7 +289,7 @@ function init() {
   xit.add({
     command: ['NOTE', 'NOTES'],
     name: 'NOTE',
-    component: createXitAdapter(Notes),
+    module: Notes,
   });
 }
 

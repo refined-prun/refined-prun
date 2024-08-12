@@ -18,3 +18,6 @@ export const shipsReducer = slice.reducer;
 
 const selectors = shipsAdapter.getSelectors((s: State) => s.ships);
 export const selectShips = selectors.selectAll;
+
+export const selectShipByRegistration = (s: State, registration: string) =>
+  selectShips(s).find(x => x.registration === registration);

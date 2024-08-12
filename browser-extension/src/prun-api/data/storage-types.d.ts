@@ -1,4 +1,4 @@
-declare module PrunApi {
+declare namespace PrunApi {
   export interface Store {
     id: string;
     addressableId: string;
@@ -23,5 +23,10 @@ declare module PrunApi {
     volume: number;
   }
 
-  declare type StoreType = 'STORE' | 'WAREHOUSE_STORE' | 'SHIP_STORE' | 'STL_FUEL_STORE' | 'FTL_FUEL_STORE';
+  declare type StoreType =
+    | 'STORE'
+    | 'WAREHOUSE_STORE'
+    | 'SHIP_STORE'
+    | 'STL_FUEL_STORE'
+    | 'FTL_FUEL_STORE';
 }

@@ -1,7 +1,6 @@
 import { createTextSpan, clearChildren, createLink } from '../util';
 import { Style } from '../Style';
 import xit from './xit-registry';
-import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
 
 class Help {
@@ -48,25 +47,49 @@ class Help {
     createTableRow(body, ['LM Unit Prices', 'Displays per unit prices on the local market.']);
     createTableRow(body, ['LM Posting Unit Prices', 'Displaces per unit prices when posting ads.']);
     createTableRow(body, ['Contract Drafts', 'Displays per unit prices when creating CONTD.']);
-    createTableRow(body, ['Order ETAs', 'Displays the date and time when production orders are complete.']);
+    createTableRow(body, [
+      'Order ETAs',
+      'Displays the date and time when production orders are complete.',
+    ]);
     createTableRow(body, ['Flight ETAs', 'Displays the arrival time when planning a flight.']);
     createTableRow(body, ['Fleet ETAs', 'Displays the arrival time of your fleet.']);
     createTableRow(body, ['Queue Load', 'Queue Percent Display.']);
-    createTableRow(body, ['Consumable Timers', 'Adds the number of days of consumables left to WF buffers.']);
+    createTableRow(body, [
+      'Consumable Timers',
+      'Adds the number of days of consumables left to WF buffers.',
+    ]);
     createTableRow(body, ['Notifications', 'Shortens and color codes notifications.']);
     createTableRow(body, ['Screen Unpack', 'Unpacks the list of screens to the top bar.']);
     createTableRow(body, ['Image Creator', 'Loads images and GIFs into chats.']);
     createTableRow(body, ['Inventory Organizer', 'Allows for custom sorting of inventories.']);
-    createTableRow(body, ['Command Correcter', 'Allows for planet names in stock commands (Montem, Promitor, etc.)']);
-    createTableRow(body, ['Sidebar', 'Allows the user to customize the left sidebar in XIT SETTINGS.']);
-    createTableRow(body, ['Pending Contracts', 'Displays the name of the other party in pending contracts.']);
+    createTableRow(body, [
+      'Command Correcter',
+      'Allows for planet names in stock commands (Montem, Promitor, etc.)',
+    ]);
+    createTableRow(body, [
+      'Sidebar',
+      'Allows the user to customize the left sidebar in XIT SETTINGS.',
+    ]);
+    createTableRow(body, [
+      'Pending Contracts',
+      'Displays the name of the other party in pending contracts.',
+    ]);
     createTableRow(body, ['Compacted UI', 'Minimizes unused portions of the UI']);
     createTableRow(body, ['Header Minimizer', 'Allows minimizing contract and CX headers.']);
-    createTableRow(body, ['CXOB Name Highlighter', 'Highlights your company name in CXOB buffers.']);
+    createTableRow(body, [
+      'CXOB Name Highlighter',
+      'Highlights your company name in CXOB buffers.',
+    ]);
     createTableRow(body, ['CXPO Order Book', 'Adds CXOB information to CXPO buffers.']);
-    createTableRow(body, ['Icon Markers', 'Allows small icons to be attached in the lower left corner of materials.']);
+    createTableRow(body, [
+      'Icon Markers',
+      'Allows small icons to be attached in the lower left corner of materials.',
+    ]);
     createTableRow(body, ['Toggle Chat Delete', 'Allows hiding the chat delete button.']);
-    createTableRow(body, ['Color Schemes', 'Changes the colors used on material icons. Set in XIT SETTINGS.']);
+    createTableRow(body, [
+      'Color Schemes',
+      'Changes the colors used on material icons. Set in XIT SETTINGS.',
+    ]);
     createTableRow(body, [
       'Advanced Mode',
       'Hides many pieces of information further minimizing the UI. For experienced users only.',
@@ -236,7 +259,11 @@ class Help {
     body = document.createElement('tbody');
     table.appendChild(body);
 
-    createTableRow(body, ['Seeing green buffers', 'PMMG is crashing', 'Contact PiBoy314 on Discord']);
+    createTableRow(body, [
+      'Seeing green buffers',
+      'PMMG is crashing',
+      'Contact PiBoy314 on Discord',
+    ]);
     createTableRow(body, [
       'Data not scanning in',
       "PMMG's listener is becoming detached.",
@@ -363,7 +390,7 @@ function init() {
   xit.add({
     command: 'HELP',
     name: 'HELP',
-    component: createXitAdapter(Help),
+    module: Help,
   });
 }
 

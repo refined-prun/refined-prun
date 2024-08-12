@@ -22,7 +22,6 @@ import { generateLineGraph, generatePieChart } from '../charts';
 import system from '@src/system';
 import user from '@src/store/user';
 import xit from './xit-registry';
-import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import cx from '@src/fio/cx';
 import { averageCX, calculateFinancials, getPrice, interpretCX } from '@src/financials';
 import features from '@src/feature-registry';
@@ -48,7 +47,8 @@ class Finances {
       // If not recording financial info, show screen with checkbox to enable
       // Create a header explaining the situation
       const header = document.createElement('h3');
-      header.textContent = 'You are not recording daily financial data, would you like to enable recording?';
+      header.textContent =
+        'You are not recording daily financial data, would you like to enable recording?';
       header.style.textAlign = 'center';
       header.style.width = '100%';
       this.tile.appendChild(header);
@@ -94,7 +94,13 @@ class Finances {
     }
 
     // Get stored financial data
-    getLocalStorage('PMMG-Finance', chooseScreen, [this.tile, this.parameters, this.pmmgSettings, this.webData, this]);
+    getLocalStorage('PMMG-Finance', chooseScreen, [
+      this.tile,
+      this.parameters,
+      this.pmmgSettings,
+      this.webData,
+      this,
+    ]);
     return;
   }
 
@@ -171,11 +177,16 @@ function chooseScreen(finResult, params) {
   }
 
   // Create settings screen
-  if (parameters[1] && (parameters[1].toLowerCase() == 'settings' || parameters[1].toLowerCase() == 'set')) {
+  if (
+    parameters[1] &&
+    (parameters[1].toLowerCase() == 'settings' || parameters[1].toLowerCase() == 'set')
+  ) {
     // Create option for choosing pricing
     const pricingHeader = document.createElement('h3');
     pricingHeader.appendChild(document.createTextNode('Pricing Scheme'));
-    pricingHeader.appendChild(createToolTip('Select a pricing scheme to calculate financials.', 'right'));
+    pricingHeader.appendChild(
+      createToolTip('Select a pricing scheme to calculate financials.', 'right'),
+    );
     pricingHeader.classList.add(...Style.SidebarSectionHead);
     tile.appendChild(pricingHeader);
 
@@ -210,11 +221,15 @@ function chooseScreen(finResult, params) {
       (priceSelect.children[0] as HTMLOptionElement).selected = true;
     } else if (PricingSchemes[pmmgSettings['PMMGExtended']['pricing_scheme']]) {
       (
-        priceSelect.children[PricingSchemes[pmmgSettings['PMMGExtended']['pricing_scheme']]] as HTMLOptionElement
+        priceSelect.children[
+          PricingSchemes[pmmgSettings['PMMGExtended']['pricing_scheme']]
+        ] as HTMLOptionElement
       ).selected = true;
     } else {
       (
-        priceSelect.children[CustomSchemes[pmmgSettings['PMMGExtended']['pricing_scheme']]] as HTMLOptionElement
+        priceSelect.children[
+          CustomSchemes[pmmgSettings['PMMGExtended']['pricing_scheme']]
+        ] as HTMLOptionElement
       ).selected = true;
     }
 
@@ -283,7 +298,8 @@ function chooseScreen(finResult, params) {
     backupPriceSelect.style.marginLeft = '4px';
     // Listen for change to pricing scheme, update settings accordingly
     backupPriceSelect.addEventListener('change', () => {
-      pmmgSettings['PMMGExtended']['backup_pricing_scheme'] = backupPriceSelect.selectedOptions[0].value;
+      pmmgSettings['PMMGExtended']['backup_pricing_scheme'] =
+        backupPriceSelect.selectedOptions[0].value;
       setSettings(pmmgSettings);
     });
 
@@ -303,7 +319,8 @@ function chooseScreen(finResult, params) {
       urlInput.value = pmmgSettings['PMMGExtended']['fin_spreadsheet'];
     }
     urlInput.addEventListener('input', () => {
-      pmmgSettings['PMMGExtended']['fin_spreadsheet'] = urlInput.value == '' ? undefined : urlInput.value;
+      pmmgSettings['PMMGExtended']['fin_spreadsheet'] =
+        urlInput.value == '' ? undefined : urlInput.value;
       setSettings(pmmgSettings);
     });
 
@@ -322,14 +339,18 @@ function chooseScreen(finResult, params) {
       sheetInput.value = pmmgSettings['PMMGExtended']['fin_sheet_name'];
     }
     sheetInput.addEventListener('input', () => {
-      pmmgSettings['PMMGExtended']['fin_sheet_name'] = sheetInput.value == '' ? undefined : sheetInput.value;
+      pmmgSettings['PMMGExtended']['fin_sheet_name'] =
+        sheetInput.value == '' ? undefined : sheetInput.value;
       setSettings(pmmgSettings);
     });
 
     // Table summarizing prices
     const resultDiv = document.createElement('div');
     spreadsheetDiv.appendChild(resultDiv);
-    if (pmmgSettings['PMMGExtended']['fin_spreadsheet'] && pmmgSettings['PMMGExtended']['fin_sheet_name']) {
+    if (
+      pmmgSettings['PMMGExtended']['fin_spreadsheet'] &&
+      pmmgSettings['PMMGExtended']['fin_sheet_name']
+    ) {
       const sheetID = pmmgSettings['PMMGExtended']['fin_spreadsheet'].match(/\/d\/([^/]+)/);
       if (sheetID && sheetID[1]) {
         drawGSTable(resultDiv, webData['custom_prices']);
@@ -339,7 +360,9 @@ function chooseScreen(finResult, params) {
     // Create option to import/export data
     const importHeader = document.createElement('h3');
     importHeader.appendChild(document.createTextNode('Import/Export Data'));
-    importHeader.appendChild(createToolTip('Import or export financial data to a json file.', 'right'));
+    importHeader.appendChild(
+      createToolTip('Import or export financial data to a json file.', 'right'),
+    );
     importHeader.classList.add(...Style.SidebarSectionHead);
     tile.appendChild(importHeader);
 
@@ -394,7 +417,7 @@ function chooseScreen(finResult, params) {
 
           setSettings({ 'PMMG-Finance': finResult });
           errorTextBox.style.display = 'none';
-        } catch (ex) {
+        } catch {
           console.log('PMMG: Error encountered processing file!');
           errorTextBox.style.display = 'inline-block';
         }
@@ -469,7 +492,9 @@ function chooseScreen(finResult, params) {
         finResult['History'][i][2] +
         finResult['History'][i][3] -
         finResult['History'][i][4];
-      equityColumn.appendChild(createTextSpan(equity.toLocaleString(undefined, { maximumFractionDigits: 0 })));
+      equityColumn.appendChild(
+        createTextSpan(equity.toLocaleString(undefined, { maximumFractionDigits: 0 })),
+      );
       row.appendChild(equityColumn);
 
       const deleteColumn = document.createElement('td');
@@ -477,13 +502,18 @@ function chooseScreen(finResult, params) {
         createSmallButton(
           'delete',
           index => {
-            showWarningDialog(tile, 'Are you sure you want to delete this datapoint?', 'Confirm', () => {
-              // That's a lot of nested stuff...
+            showWarningDialog(
+              tile,
+              'Are you sure you want to delete this datapoint?',
+              'Confirm',
+              () => {
+                // That's a lot of nested stuff...
 
-              finResult['History'].splice(index, 1);
-              setSettings({ 'PMMG-Finance': finResult });
-              finObj.create_buffer();
-            });
+                finResult['History'].splice(index, 1);
+                setSettings({ 'PMMG-Finance': finResult });
+                finObj.create_buffer();
+              },
+            );
           },
           [i],
         ),
@@ -494,7 +524,9 @@ function chooseScreen(finResult, params) {
     // Create option for clearing data
     const clearHeader = document.createElement('h3');
     clearHeader.appendChild(document.createTextNode('Clear All Data'));
-    clearHeader.appendChild(createToolTip('Clear all current and historical financial data.', 'right'));
+    clearHeader.appendChild(
+      createToolTip('Clear all current and historical financial data.', 'right'),
+    );
     clearHeader.classList.add(...Style.SidebarSectionHead);
     tile.appendChild(clearHeader);
 
@@ -624,7 +656,9 @@ function chooseScreen(finResult, params) {
     dataPoints.style.display = 'block';
     if (finResult['History']) {
       const oldestDate = new Date(finResult['History'][0][0]);
-      const oldestDateElem = createTextSpan(`Oldest data recorded on ${dateYearFormatter.format(oldestDate)}`);
+      const oldestDateElem = createTextSpan(
+        `Oldest data recorded on ${dateYearFormatter.format(oldestDate)}`,
+      );
       infoDiv.appendChild(oldestDateElem);
       oldestDateElem.style.marginTop = '5px';
       oldestDateElem.style.display = 'block';
@@ -670,7 +704,11 @@ function chooseScreen(finResult, params) {
       ),
     );
     tile.appendChild(
-      createFinancialTextBox(currency + Math.round(lastEquity).toLocaleString(), 'Equity', TextColors.Standard),
+      createFinancialTextBox(
+        currency + Math.round(lastEquity).toLocaleString(),
+        'Equity',
+        TextColors.Standard,
+      ),
     );
     tile.appendChild(
       createFinancialTextBox(
@@ -688,7 +726,10 @@ function chooseScreen(finResult, params) {
     i++;
 
     const prevEquity =
-      finResult['History'][i][1] + finResult['History'][i][2] + finResult['History'][i][3] - finResult['History'][i][4];
+      finResult['History'][i][1] +
+      finResult['History'][i][2] +
+      finResult['History'][i][3] -
+      finResult['History'][i][4];
     const profit = Math.round(lastEquity - prevEquity);
     const color = profit > 0 ? TextColors.Success : TextColors.Failure;
     tile.appendChild(createFinancialTextBox(currency + profit.toLocaleString(), 'Profit', color));
@@ -723,7 +764,9 @@ function chooseScreen(finResult, params) {
       for (const point of inv) {
         const tableElem = document.createElement('td');
         row.appendChild(tableElem);
-        tableElem.appendChild(createTextSpan(point.toLocaleString(undefined, { maximumFractionDigits: 0 })));
+        tableElem.appendChild(
+          createTextSpan(point.toLocaleString(undefined, { maximumFractionDigits: 0 })),
+        );
         tableElem.style.textAlign = 'right';
       }
     });
@@ -736,7 +779,14 @@ function chooseScreen(finResult, params) {
       const width = tileDims.width > 10 ? tileDims.width - 10 : 10;
       const height = tileDims.height > 10 ? tileDims.height - 10 : 10;
       tile.appendChild(graphDiv);
-      const graph = generateGraph(parameters[2], finResult, locationsArray, currency, width, height);
+      const graph = generateGraph(
+        parameters[2],
+        finResult,
+        locationsArray,
+        currency,
+        width,
+        height,
+      );
       if (!graph) {
         graphDiv.appendChild(createTextSpan('Error! Not a valid graph type!'));
         return;
@@ -930,7 +980,8 @@ function chooseScreen(finResult, params) {
     );
     tile.appendChild(
       createFinancialTextBox(
-        currency + (totalProduced - totalConsumed).toLocaleString(undefined, { maximumFractionDigits: 0 }),
+        currency +
+          (totalProduced - totalConsumed).toLocaleString(undefined, { maximumFractionDigits: 0 }),
         'Daily Profit',
         totalProduced - totalConsumed > 0 ? TextColors.Success : TextColors.Failure,
       ),
@@ -969,17 +1020,23 @@ function chooseScreen(finResult, params) {
 
       const producedElem = document.createElement('td');
       row.appendChild(producedElem);
-      producedElem.appendChild(createTextSpan(inv[1].toLocaleString(undefined, { maximumFractionDigits: 0 })));
+      producedElem.appendChild(
+        createTextSpan(inv[1].toLocaleString(undefined, { maximumFractionDigits: 0 })),
+      );
       producedElem.style.textAlign = 'right';
 
       const consumedElem = document.createElement('td');
       row.appendChild(consumedElem);
-      consumedElem.appendChild(createTextSpan(inv[2].toLocaleString(undefined, { maximumFractionDigits: 0 })));
+      consumedElem.appendChild(
+        createTextSpan(inv[2].toLocaleString(undefined, { maximumFractionDigits: 0 })),
+      );
       consumedElem.style.textAlign = 'right';
 
       const profitElem = document.createElement('td');
       row.appendChild(profitElem);
-      profitElem.appendChild(createTextSpan((inv[1] - inv[2]).toLocaleString(undefined, { maximumFractionDigits: 0 })));
+      profitElem.appendChild(
+        createTextSpan((inv[1] - inv[2]).toLocaleString(undefined, { maximumFractionDigits: 0 })),
+      );
       profitElem.style.color = inv[1] - inv[2] > 0 ? TextColors.Success : TextColors.Failure;
       profitElem.style.textAlign = 'right';
     });
@@ -1110,7 +1167,7 @@ function init() {
   xit.add({
     command: ['FIN', 'FINANCE', 'FINANCES'],
     name: 'FINANCES',
-    component: createXitAdapter(Finances),
+    module: Finances,
   });
 }
 

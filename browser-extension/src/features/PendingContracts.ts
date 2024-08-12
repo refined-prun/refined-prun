@@ -12,7 +12,9 @@ export class PendingContracts implements Module {
   }
 
   run() {
-    const contractLines = Array.from(document.querySelectorAll(Selector.SidebarContract)) as HTMLElement[]; // All the contract lines
+    const contractLines = Array.from(
+      document.querySelectorAll(Selector.SidebarContract),
+    ) as HTMLElement[]; // All the contract lines
 
     const contracts = selectContracts(store.getState());
     if (contractLines.length > 0 && contracts.length > 0) {
@@ -36,7 +38,9 @@ export class PendingContracts implements Module {
           let partnercode = contractdict[contractID].partner.name; // Label with partner's name
           if (partnercode.length > 17) {
             // Unless unknown or too long, then use company code
-            partnercode = contractdict[contractID].partner.code || contractdict[contractID].partner.name.split(' ')[0];
+            partnercode =
+              contractdict[contractID].partner.code ||
+              contractdict[contractID].partner.name.split(' ')[0];
           }
           const nameSpan = createTextSpan(`${partnercode}`, this.tag); // Add it to the row
           nameSpan.style.width = '100px';

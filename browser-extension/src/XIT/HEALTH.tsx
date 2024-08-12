@@ -2,7 +2,6 @@ import { clearChildren, createTable, createTextSpan } from '../util';
 import { TextColors } from '../Style';
 import user from '@src/store/user';
 import xit from './xit-registry';
-import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import cx from '@src/fio/cx';
 import features from '@src/feature-registry';
 import { store } from '@src/prun-api/data/store';
@@ -162,7 +161,7 @@ function init() {
   xit.add({
     command: 'HEALTH',
     name: 'DATA HEALTH',
-    component: createXitAdapter(DataHealth),
+    module: DataHealth,
   });
 }
 

@@ -53,7 +53,7 @@ export function parseBurnName(text: string) {
       return match[1];
     }
     return null;
-  } catch (TypeError) {
+  } catch {
     return text;
   }
 }

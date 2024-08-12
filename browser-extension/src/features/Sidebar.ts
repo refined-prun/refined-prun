@@ -6,14 +6,29 @@ import { genericCleanup, showBuffer, createTextSpan } from '../util';
 export class Sidebar implements Module {
   private tag = 'pb-sidebar';
   private buttons;
-  private defaultButtons = ['BS', 'CONT', 'COM', 'CORP', 'CXL', 'FIN', 'FLT', 'INV', 'MAP', 'PROD', 'LEAD', 'CMDS'];
+  private defaultButtons = [
+    'BS',
+    'CONT',
+    'COM',
+    'CORP',
+    'CXL',
+    'FIN',
+    'FLT',
+    'INV',
+    'MAP',
+    'PROD',
+    'LEAD',
+    'CMDS',
+  ];
 
   constructor(buttons) {
     this.buttons = buttons;
   }
 
   cleanup(full: boolean = false) {
-    full && genericCleanup(this.tag);
+    if (full) {
+      genericCleanup(this.tag);
+    }
   }
 
   run() {
@@ -51,7 +66,10 @@ export class Sidebar implements Module {
       }
       if (!enabled) {
         (Array.from(sidebar.children) as HTMLElement[]).forEach(child => {
-          if (child.firstChild != null && (child.firstChild.textContent || '').toUpperCase() === defaultButton) {
+          if (
+            child.firstChild != null &&
+            (child.firstChild.textContent || '').toUpperCase() === defaultButton
+          ) {
             child.classList.add('hidden-element');
             (Array.from(child.children) as HTMLElement[]).forEach(childChild => {
               childChild.classList.add('hidden-element');
@@ -60,7 +78,9 @@ export class Sidebar implements Module {
         });
       }
     });
-    if ((sidebar.children[sidebar.children.length - 1] as HTMLElement).classList.contains(this.tag)) {
+    if (
+      (sidebar.children[sidebar.children.length - 1] as HTMLElement).classList.contains(this.tag)
+    ) {
       //console.log(sidebar.children[sidebar.children.length-1])
       return;
     }

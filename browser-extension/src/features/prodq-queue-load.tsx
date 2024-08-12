@@ -1,10 +1,10 @@
 import { parseDuration } from '../util';
 import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
-import { h } from 'dom-chef';
 import PrunCss from '@src/prun-ui/prun-css';
 import { $$ } from 'select-dom';
 import { _$$ } from '@src/utils/get-element-by-class-name';
+import { widgetAppend } from '@src/utils/vue-mount';
 
 function updateBuffer(buffer: PrunBuffer) {
   if (!buffer.frame.isConnected) {
@@ -28,7 +28,7 @@ function updateBuffer(buffer: PrunBuffer) {
       const percent = ((eta / totalTime) * 100).toFixed(2);
       const textField = $$('td', row)[6];
       if (textField && eta > 0) {
-        textField.appendChild(<span className={tag}> {percent}%</span>);
+        widgetAppend(textField, () => <span class={tag}> {percent}%</span>);
       }
     }
   }

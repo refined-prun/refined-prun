@@ -59,7 +59,7 @@ export class OrderETAs implements Module {
                 );
               }
             }
-          } catch (TypeError) {
+          } catch {
             /* empty */
           }
         } else {

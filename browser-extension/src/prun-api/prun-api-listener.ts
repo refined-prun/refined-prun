@@ -175,7 +175,9 @@ function processEvent(packet: PrunApi.Packet) {
           }
         } else if (store.name) {
           // Ship store
-          const matchingShipStoreIndex = user.storage.findIndex(item => item.addressableId === store.addressableId);
+          const matchingShipStoreIndex = user.storage.findIndex(
+            item => item.addressableId === store.addressableId,
+          );
 
           const customStore: StorageEntry = {
             ...store,
@@ -256,8 +258,14 @@ function processEvent(packet: PrunApi.Packet) {
             halted: order.halted,
             productionFee: order.productionFee,
             recurring: order.recurring,
-            inputs: order.inputs.map(x => ({ MaterialTicker: x.material.ticker, Amount: x.amount })),
-            outputs: order.outputs.map(x => ({ MaterialTicker: x.material.ticker, Amount: x.amount })),
+            inputs: order.inputs.map(x => ({
+              MaterialTicker: x.material.ticker,
+              Amount: x.amount,
+            })),
+            outputs: order.outputs.map(x => ({
+              MaterialTicker: x.material.ticker,
+              Amount: x.amount,
+            })),
           };
 
           prodLine.orders.push(orderInfo);
@@ -295,6 +303,10 @@ function processEvent(packet: PrunApi.Packet) {
 
   if (__DEV__) {
     performance.mark(`${packet.messageType}-END`);
-    performance.measure(packet.messageType, `${packet.messageType}-START`, `${packet.messageType}-END`);
+    performance.measure(
+      packet.messageType,
+      `${packet.messageType}-START`,
+      `${packet.messageType}-END`,
+    );
   }
 }

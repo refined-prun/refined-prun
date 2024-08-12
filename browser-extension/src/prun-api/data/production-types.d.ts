@@ -1,4 +1,4 @@
-declare module PrunApi {
+declare namespace PrunApi {
   export interface ProductionLine {
     id: string;
     siteId: string;

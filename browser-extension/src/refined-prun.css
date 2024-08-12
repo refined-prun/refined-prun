@@ -252,42 +252,6 @@
   padding: 5px;
 }
 
-.chat-line {
-  width: 100%;
-  display: grid;
-  grid-template-columns: minmax(8em, 1fr) minmax(8em, 4fr) minmax(8em, 15fr);
-  grid-column-gap: 1px;
-  font-size: 11px;
-  line-height: 1.1;
-}
-
-.time-date {
-  color: #444444;
-  display: inline-block;
-  padding: 2px 5px;
-  padding-right: 0px;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.chat-name {
-  display: inline-block;
-  text-align: right;
-  color: #999999;
-  text-overflow: ellipsis;
-  padding: 2px 5px;
-  border-right: 1px solid #999999;
-}
-
-.chat-message {
-  display: inline-block;
-  text-align: left;
-  color: #bbbbbb;
-  word-break: break-word;
-  padding: 2px 5px;
-}
-
 .fin-title {
   display: block;
   font-size: 12px;

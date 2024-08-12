@@ -1,9 +1,9 @@
 import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
 import { showBuffer } from '@src/util';
-import { h } from 'dom-chef';
 import PrunCss from '@src/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
+import { widgetBefore } from '@src/utils/vue-mount';
 
 async function onBufferCreated(buffer: PrunBuffer) {
   if (!buffer.firstActivation) {
@@ -11,9 +11,9 @@ async function onBufferCreated(buffer: PrunBuffer) {
   }
 
   const splitControls = await descendantPresent(buffer.frame, PrunCss.TileControls.splitControls);
-  const button = (
+  widgetBefore(splitControls.children[0], () => (
     <div
-      className="button-upper-right"
+      class="button-upper-right"
       style={{
         marginTop: __CHROME__ ? '3px' : '-3px',
         fontSize: __CHROME__ ? '16px' : '20px',
@@ -23,9 +23,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
       onClick={() => showBuffer(buffer.fullCommand)}>
       ↗
     </div>
-  );
-
-  splitControls.children[0].before(button);
+  ));
 }
 
 export function init() {

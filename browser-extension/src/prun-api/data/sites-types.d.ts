@@ -1,4 +1,4 @@
-declare module PrunApi {
+declare namespace PrunApi {
   export interface Site {
     siteId: string;
     address: Address;
@@ -41,13 +41,23 @@ declare module PrunApi {
     quantities: MaterialAmount[];
   }
 
-  export declare type BuildOptionType = 'CORE' | 'HABITATION' | 'PRODUCTION' | 'RESOURCES' | 'STORAGE';
+  export declare type BuildOptionType =
+    | 'CORE'
+    | 'HABITATION'
+    | 'PRODUCTION'
+    | 'RESOURCES'
+    | 'STORAGE';
 
   export interface WorkforceCapacity {
     level: WorkforceLevel;
     capacity: number;
   }
-  export declare type WorkforceLevel = 'ENGINEER' | 'PIONEER' | 'SCIENTIST' | 'SETTLER' | 'TECHNICIAN';
+  export declare type WorkforceLevel =
+    | 'ENGINEER'
+    | 'PIONEER'
+    | 'SCIENTIST'
+    | 'SETTLER'
+    | 'TECHNICIAN';
 
   export interface Platform {
     siteId: string;

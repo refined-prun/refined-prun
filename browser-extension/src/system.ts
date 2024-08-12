@@ -3,7 +3,9 @@
 interface SystemApi {
   storage: {
     local: {
-      get(keys?: null | string | string[] | { [key: string]: any }): Promise<{ [key: string]: any }>;
+      get(
+        keys?: null | string | string[] | { [key: string]: any },
+      ): Promise<{ [key: string]: any }>;
       set(items: { [key: string]: any }): Promise<void>;
       remove(keys: string | string[]): Promise<void>;
     };

@@ -1,7 +1,6 @@
 import { decodePayload, encodePayload } from 'engine.io-parser';
 import { Decoder, Encoder } from 'socket.io-parser';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Middleware<T> = (context: string | undefined, packet: T) => boolean;
 
 export default function socketIOMiddleware<T>(middleware: Middleware<T>) {

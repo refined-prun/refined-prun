@@ -11,7 +11,6 @@ import {
 } from '../util';
 import { Style } from '../Style';
 import xit from './xit-registry';
-import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
 
 class Sort {
@@ -110,7 +109,13 @@ class Sort {
       catColumn.appendChild(createTextSpan(categories));
 
       modifyColumn.appendChild(
-        createSmallButton('edit', createAddInterface, [sortObj, tile, pmmgSettings, parameters, settings]),
+        createSmallButton('edit', createAddInterface, [
+          sortObj,
+          tile,
+          pmmgSettings,
+          parameters,
+          settings,
+        ]),
       ); // Create the edit button
       modifyColumn.appendChild(
         createSmallButton(
@@ -207,12 +212,16 @@ function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: a
         createPopupInputRow(
           `Category ${i + 1} MATs`,
           prefilled ? settings[2][i][1].join(', ') : '',
-          i == 0 ? 'A list of materials in the first category. Separate tickers by a comma. (RAT, DW, etc.)' : '',
+          i == 0
+            ? 'A list of materials in the first category. Separate tickers by a comma. (RAT, DW, etc.)'
+            : '',
         ),
       );
     }
   } else {
-    form.appendChild(createPopupInputRow('Category 1 Name', '', 'The name of the first category for materials.'));
+    form.appendChild(
+      createPopupInputRow('Category 1 Name', '', 'The name of the first category for materials.'),
+    );
     form.appendChild(
       createPopupInputRow(
         'Category 1 MATs',
@@ -239,8 +248,14 @@ function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: a
 
   addButton.addEventListener('click', () => {
     const catNumber = (form.children.length - 3) / 2;
-    form.insertBefore(createPopupInputRow(`Category ${catNumber} Name`), form.children[form.children.length - 4]);
-    form.insertBefore(createPopupInputRow(`Category ${catNumber} MATs`), form.children[form.children.length - 4]);
+    form.insertBefore(
+      createPopupInputRow(`Category ${catNumber} Name`),
+      form.children[form.children.length - 4],
+    );
+    form.insertBefore(
+      createPopupInputRow(`Category ${catNumber} MATs`),
+      form.children[form.children.length - 4],
+    );
   });
 
   //Create the burn row
@@ -284,7 +299,10 @@ function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: a
       if (!form.children[i] || !form.children[i + 1]) {
         break;
       }
-      if (getValueOfPopupRow(form.children[i]) == '' || getValueOfPopupRow(form.children[i + 1]) == '') {
+      if (
+        getValueOfPopupRow(form.children[i]) == '' ||
+        getValueOfPopupRow(form.children[i + 1]) == ''
+      ) {
         continue;
       }
       sortingInfo.push([
@@ -334,7 +352,7 @@ function init() {
   xit.add({
     command: 'SORT',
     name: 'SORTING OPTIONS',
-    component: createXitAdapter(Sort),
+    module: Sort,
   });
 }
 

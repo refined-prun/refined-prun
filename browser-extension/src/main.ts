@@ -51,7 +51,10 @@ async function mainRun() {
   }
 
   // If enhanced color scheme is selected or no color scheme is selected, appy the enhanced color scheme
-  if (result['PMMGExtended']['color_scheme'] == 'enhanced' || !result['PMMGExtended']['color_scheme']) {
+  if (
+    result['PMMGExtended']['color_scheme'] == 'enhanced' ||
+    !result['PMMGExtended']['color_scheme']
+  ) {
     appendStyle(specialTime ? RPrunStylesheet.oldColors : RPrunStylesheet.enhancedColors);
   }
   // If the icons color scheme is selected, apply it
@@ -69,7 +72,12 @@ async function mainRun() {
 
   // Start the process of getting corp prices via a web app asynchronously
   window.setTimeout(
-    () => getPrices(webData, result['PMMGExtended']['fin_spreadsheet'], result['PMMGExtended']['fin_sheet_name']),
+    () =>
+      getPrices(
+        webData,
+        result['PMMGExtended']['fin_spreadsheet'],
+        result['PMMGExtended']['fin_sheet_name'],
+      ),
     1000,
   );
 

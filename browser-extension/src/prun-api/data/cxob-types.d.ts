@@ -1,4 +1,4 @@
-declare module PrunApi {
+declare namespace PrunApi {
   export interface CXBroker {
     id: string;
     ticker: string;

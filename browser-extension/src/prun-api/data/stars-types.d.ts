@@ -1,4 +1,4 @@
-declare module PrunApi {
+declare namespace PrunApi {
   export interface Star {
     systemId: string;
     address: Address;
@@ -8,12 +8,6 @@ declare module PrunApi {
     sectorId: string;
     subSectorId: string;
     connections: string[];
-  }
-
-  export interface Position {
-    x: number;
-    y: number;
-    z: number;
   }
 
   declare type StarType = 'A' | 'B' | 'F' | 'G' | 'K' | 'M' | 'O';

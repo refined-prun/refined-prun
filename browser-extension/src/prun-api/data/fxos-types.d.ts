@@ -1,4 +1,4 @@
-declare module PrunApi {
+declare namespace PrunApi {
   export interface FXOrder {
     id: string;
     type: FXOrderType;

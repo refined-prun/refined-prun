@@ -1,8 +1,8 @@
 import { CurrencySymbols } from '@src/GameProperties';
 import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
-import { h } from 'dom-chef';
 import observeReadyElementsByClassName from '@src/utils/mutation-observer';
+import { widgetAfter } from '@src/utils/vue-mount';
 
 function onAdTextReady(element: HTMLDivElement) {
   // Test if the text matches that of a shipping ad
@@ -22,12 +22,12 @@ function onAdTextReady(element: HTMLDivElement) {
   const perItem = (totalCents / amount / 100).toFixed(2);
   for (const child of Array.from(element.childNodes)) {
     if (child.nodeValue && child.nodeValue.slice(1) in CurrencySymbols) {
-      child.after(
+      widgetAfter(child as Element, () => (
         <span>
           {' '}
           ({perItem}/{unit})
-        </span>,
-      );
+        </span>
+      ));
     }
   }
 }

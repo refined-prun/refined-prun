@@ -1,11 +1,13 @@
-import { h } from 'dom-chef';
 import { css } from 'code-tag';
 import onetime from 'onetime';
 import { ParseSelector } from 'typed-query-selector/parser.js';
 
 import getCallerID from './caller-id.js';
 
-type ObserverListener<ExpectedElement extends Element> = (element: ExpectedElement, options: SignalAsOptions) => void;
+type ObserverListener<ExpectedElement extends Element> = (
+  element: ExpectedElement,
+  options: SignalAsOptions,
+) => void;
 
 const animation = 'rprun-selector-observer';
 const getListener =
@@ -30,7 +32,9 @@ const getListener =
   };
 
 const registerAnimation = onetime((): void => {
-  document.head.append(<style>{`@keyframes ${animation} {}`}</style>);
+  const style = document.createElement('style');
+  style.textContent = `@keyframes ${animation} {}`;
+  document.head.append(style);
 });
 
 export default function observeReadyElements<
@@ -65,6 +69,11 @@ export default function observeReadyElements<
   signal?.addEventListener('abort', () => {
     rule.remove();
   });
-  const listener = getListener(seenMark, selector, callback as ObserverListener<HTMLElement>, signal);
+  const listener = getListener(
+    seenMark,
+    selector,
+    callback as ObserverListener<HTMLElement>,
+    signal,
+  );
   window.addEventListener('animationstart', listener, { signal });
 }

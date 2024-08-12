@@ -1,4 +1,4 @@
-declare module PrunApi {
+declare namespace PrunApi {
   export interface Currency {
     numericCode: number;
     code: string;
@@ -30,7 +30,7 @@ declare module PrunApi {
     | WAREHOUSE_STORAGES.Packet
     | WORKFORCE_WORKFORCES.Packet;
 
-  declare module ACTION_COMPLETED {
+  declare namespace ACTION_COMPLETED {
     export type Packet = PrunPacket<'ACTION_COMPLETED', Payload>;
 
     export interface Payload {
@@ -40,7 +40,7 @@ declare module PrunApi {
     }
   }
 
-  declare module USER_DATA {
+  declare namespace USER_DATA {
     export type Packet = PrunPacket<'USER_DATA', Payload>;
 
     export interface Payload {
@@ -75,7 +75,7 @@ declare module PrunApi {
     }
   }
 
-  declare module ACCOUNTING_CASH_BALANCES {
+  declare namespace ACCOUNTING_CASH_BALANCES {
     export type Packet = PrunPacket<'ACCOUNTING_CASH_BALANCES', Payload>;
 
     export interface Payload {
@@ -92,7 +92,7 @@ declare module PrunApi {
     }
   }
 
-  declare module COMPANY_DATA {
+  declare namespace COMPANY_DATA {
     export type Packet = PrunPacket<'COMPANY_DATA', Payload>;
 
     export interface Payload {
@@ -161,7 +161,7 @@ declare module PrunApi {
     }
   }
 
-  declare module PRODUCTION_SITE_PRODUCTION_LINES {
+  declare namespace PRODUCTION_SITE_PRODUCTION_LINES {
     export type Packet = PrunPacket<'PRODUCTION_SITE_PRODUCTION_LINES', Payload>;
 
     export interface Payload {
@@ -235,7 +235,7 @@ declare module PrunApi {
     }
   }
 
-  declare module SITE_SITES {
+  declare namespace SITE_SITES {
     export type Packet = PrunPacket<'SITE_SITES', Payload>;
 
     export interface Payload {
@@ -331,7 +331,7 @@ declare module PrunApi {
     }
   }
 
-  declare module STORAGE_CHANGE {
+  declare namespace STORAGE_CHANGE {
     export type Packet = PrunPacket<'STORAGE_CHANGE', Payload>;
 
     export interface Payload {
@@ -339,7 +339,7 @@ declare module PrunApi {
     }
   }
 
-  declare module STORAGE_STORAGES {
+  declare namespace STORAGE_STORAGES {
     export type Packet = PrunPacket<'STORAGE_STORAGES', Payload>;
 
     export interface Payload {
@@ -347,7 +347,7 @@ declare module PrunApi {
     }
   }
 
-  declare module SYSTEM_STARS_DATA {
+  declare namespace SYSTEM_STARS_DATA {
     export type Packet = PrunPacket<'SYSTEM_STARS_DATA', Payload>;
 
     export interface Payload {
@@ -374,7 +374,7 @@ declare module PrunApi {
     export type StarType = 'A' | 'B' | 'F' | 'G' | 'K' | 'M' | 'O';
   }
 
-  declare module WAREHOUSE_STORAGES {
+  declare namespace WAREHOUSE_STORAGES {
     export type Packet = PrunPacket<'WAREHOUSE_STORAGES', Payload>;
 
     export interface Payload {
@@ -402,7 +402,7 @@ declare module PrunApi {
     }
   }
 
-  declare module WORKFORCE_WORKFORCES {
+  declare namespace WORKFORCE_WORKFORCES {
     export type Packet = PrunPacket<'WORKFORCE_WORKFORCES', Payload>;
 
     export interface Payload {

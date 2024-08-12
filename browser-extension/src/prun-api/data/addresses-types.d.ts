@@ -1,4 +1,4 @@
-declare module PrunApi {
+declare namespace PrunApi {
   export interface Address {
     lines: AddressLine[];
   }
@@ -6,6 +6,7 @@ declare module PrunApi {
   export interface AddressLine {
     entity: AddressEntity;
     type: AddressLineType;
+    orbit?: AddressOrbit;
   }
 
   export interface AddressEntity {
@@ -14,5 +15,13 @@ declare module PrunApi {
     name: string;
   }
 
-  export type AddressLineType = 'SYSTEM' | 'STATION' | 'PLANET';
+  export interface AddressOrbit {
+    semiMajorAxis: number;
+    eccentricity: number;
+    inclination: number;
+    rightAscension: number;
+    periapsis: number;
+  }
+
+  export type AddressLineType = 'SYSTEM' | 'STATION' | 'PLANET' | 'ORBIT';
 }

@@ -19,12 +19,12 @@ import './features/reload-page-on-websocket-disconnect';
 import './XIT/xit-commands';
 
 import './XIT/ACT';
-import './XIT/BURN/BURN';
-import './XIT/CALC';
-import './XIT/CHAT';
+import './XIT/BURN/BURN.vue';
+import './XIT/CALC.vue';
+import './XIT/CHAT.vue';
 import './XIT/CHECK';
-import './XIT/CONTS/CONTS';
-import './XIT/CXTS';
+import './XIT/CONTS/CONTS.vue';
+import './XIT/CXTS/CXTS.vue';
 import './XIT/DEBUG';
 import './XIT/FIN';
 import './XIT/HEALTH';
@@ -35,7 +35,7 @@ import './XIT/NOTE';
 import './XIT/REPAIRS';
 import './XIT/SET';
 import './XIT/SORT';
-import './XIT/START';
+import './XIT/START.vue';
 import './XIT/WEB';
 
 import './main';

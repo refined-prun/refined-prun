@@ -26,7 +26,9 @@ const slice = createSlice({
 
 export const materialsReducer = slice.reducer;
 
-const materialCategorySelectors = materialCategoriesAdapter.getSelectors((s: State) => s.materials.categories);
+const materialCategorySelectors = materialCategoriesAdapter.getSelectors(
+  (s: State) => s.materials.categories,
+);
 const materialSelectors = materialsAdapter.getSelectors((s: State) => s.materials.materials);
 export const selectCategoryById = materialCategorySelectors.selectById;
 const selectMaterialTickerMap = createSelector(materialSelectors.selectAll, materials => {
@@ -46,6 +48,8 @@ export const sortMaterials = (state: State, materials: PrunApi.Material[]) => {
   return materials.slice().sort((a, b) => {
     const categoryA = categories[a.category].name;
     const categoryB = categories[b.category].name;
-    return categoryA === categoryB ? a.ticker.localeCompare(b.ticker) : categoryA.localeCompare(categoryB);
+    return categoryA === categoryB
+      ? a.ticker.localeCompare(b.ticker)
+      : categoryA.localeCompare(categoryB);
   });
 };

@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ActionReducerMapBuilder, createSlice, Draft, EntityAdapter, EntityId, EntityState } from '@reduxjs/toolkit';
+import {
+  ActionReducerMapBuilder,
+  createSlice,
+  Draft,
+  EntityAdapter,
+  EntityId,
+  EntityState,
+} from '@reduxjs/toolkit';
 
 type CaseReducer<T> = (state: Draft<T>, data: any) => NoInfer<T> | void | Draft<NoInfer<T>>;
 
@@ -14,7 +21,10 @@ export function caseReducers<T>(builder: ActionReducerMapBuilder<T>, cases: Case
 
 type FetchingEntityState<T, Id extends EntityId> = EntityState<T, Id> & { fetched: boolean };
 
-export function createEntitySlice<T>(adapter: EntityAdapter<T, string>, cases: Cases<FetchingEntityState<T, string>>) {
+export function createEntitySlice<T>(
+  adapter: EntityAdapter<T, string>,
+  cases: Cases<FetchingEntityState<T, string>>,
+) {
   return createSlice({
     name: 'entity-slice',
     initialState: {

@@ -5,9 +5,9 @@ import PrunCss from '@src/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
 import { _$ } from '@src/utils/get-element-by-class-name';
 import xit from '@src/XIT/xit-registry';
-import { render } from 'preact';
-import { appendRootFragment } from '@src/utils/create-root-fragment';
-import { h } from 'dom-chef';
+import { createApp } from 'vue';
+import XITContainer from '@src/XIT/XITContainer.vue';
+import LegacyXITAdapter from '@src/XIT/LegacyXITAdapter.vue';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let xitArgs: any;
@@ -53,7 +53,8 @@ async function onBufferCreated(buffer: PrunBuffer) {
     return;
   }
 
-  const container = <div className="rprun-XIT-container" />;
+  const container = document.createElement('div');
+  container.className = 'rprun-XIT-container';
   greenScreen.appendChild(container);
 
   const xitCommand = xit.get(command);
@@ -65,8 +66,30 @@ async function onBufferCreated(buffer: PrunBuffer) {
   _$(PrunCss.TileFrame.title, frame)!.textContent =
     typeof xitCommand.name === 'string' ? xitCommand.name : xitCommand.name(parameters);
 
-  const vNode = xitCommand.component(parameters);
-  render(vNode, appendRootFragment(container, 'div'));
+  if (xitCommand.module) {
+    // eslint-disable-next-line vue/one-component-per-file
+    createApp(LegacyXITAdapter, {
+      module: (container: HTMLDivElement) => {
+        const args = getXitArgs();
+        return new xitCommand.module!(
+          container,
+          parameters,
+          args.pmmgSettings,
+          args.webData,
+          args.modules,
+        );
+      },
+    }).mount(container);
+  } else {
+    // eslint-disable-next-line vue/one-component-per-file
+    createApp(XITContainer, {
+      buffer: xitCommand.vueComponent,
+      parameters: parameters,
+    }).mount(container);
+  }
+
+  //const vNode = xitCommand.component(parameters);
+  //render(vNode, appendRootFragment(container, 'div'));
 }
 
 export function init() {

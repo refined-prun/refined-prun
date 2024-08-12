@@ -4,6 +4,10 @@ import libAssetsPlugin from '@laynezh/vite-plugin-lib-assets';
 import makeManifestPlugin from './dev-tools/make-manifest-plugin';
 import { watchPublicPlugin, watchRebuildPlugin } from '@refined-prun/hmr';
 import { disableChunksPlugin } from './dev-tools/disable-chunks-plugin';
+import vue from '@vitejs/plugin-vue';
+import vueJsx from '@vitejs/plugin-vue-jsx';
+import vueDevTools from 'vite-plugin-vue-devtools';
+import { createHash } from 'crypto';
 
 const rootDir = resolve(__dirname);
 const srcDir = resolve(rootDir, 'src');
@@ -22,6 +26,9 @@ export default defineConfig({
     },
   },
   plugins: [
+    vue(),
+    vueJsx(),
+    vueDevTools(),
     disableChunksPlugin(['src/system.ts']),
     libAssetsPlugin({
       outputPath: outDir,
@@ -66,6 +73,11 @@ export default defineConfig({
       },
     },
   },
+  css: {
+    modules: {
+      generateScopedName: sanitizeModuleClassname,
+    },
+  },
   define: {
     __FIREFOX__: process.env.__FIREFOX__ === 'true',
     __CHROME__: process.env.__FIREFOX__ !== 'true',
@@ -73,3 +85,27 @@ export default defineConfig({
     'process.env.NODE_ENV': isDev ? `"development"` : `"production"`,
   },
 });
+
+function sanitizeModuleClassname(name: string, filename: string | undefined): string {
+  if (typeof filename !== 'string') {
+    throw new Error('The filename must be string and cannot be undefined.');
+  }
+
+  const parts = filename.split('?')[0].split('/');
+  const lastSegment = parts.pop();
+
+  if (!lastSegment) {
+    throw new Error('Filename must include a valid file name.');
+  }
+
+  const baseFilename = lastSegment.replace(/(\.vue|\.module)?(\.\w+)$/, '');
+
+  const classname = `${baseFilename}__${name}`;
+  const hash = getHash(`${classname}`);
+
+  return `RP_${classname}___${hash}`;
+}
+
+function getHash(input: string): string {
+  return createHash('sha256').update(input).digest('hex').slice(0, 7);
+}

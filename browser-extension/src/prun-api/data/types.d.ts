@@ -1,4 +1,4 @@
-declare module PrunApi {
+declare namespace PrunApi {
   export interface DateTime {
     timestamp: number;
   }
@@ -10,5 +10,11 @@ declare module PrunApi {
   export interface CurrencyAmount {
     currency: string;
     amount: number;
+  }
+
+  export interface Position {
+    x: number;
+    y: number;
+    z: number;
   }
 }

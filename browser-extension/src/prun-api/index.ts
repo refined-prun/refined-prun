@@ -9,5 +9,10 @@ export async function initializePrunApi() {
 }
 
 export async function loadGameData() {
-  await Promise.allSettled([prun.systems.load(), prun.planets.load(), loadFallbackPlanetData(), loadMaterialNames()]);
+  await Promise.allSettled([
+    prun.systems.load(),
+    prun.planets.load(),
+    loadFallbackPlanetData(),
+    loadMaterialNames(),
+  ]);
 }

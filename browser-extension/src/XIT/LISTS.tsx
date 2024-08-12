@@ -13,7 +13,6 @@ import {
 } from '../util';
 import { Style } from '../Style';
 import xit from './xit-registry';
-import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
 
 class CommandLists {
@@ -249,7 +248,11 @@ function createEditInterface(tile, result, parameters, settings: any[] = [], lis
   if (prefilled) {
     for (let i = 0; i < settings.length; i++) {
       form.appendChild(
-        createPopupInputRow(`Link ${i + 1} Label`, settings[i][0], i == 0 ? 'The label of the first link.' : ''),
+        createPopupInputRow(
+          `Link ${i + 1} Label`,
+          settings[i][0],
+          i == 0 ? 'The label of the first link.' : '',
+        ),
       );
       form.appendChild(
         createPopupInputRow(
@@ -261,7 +264,13 @@ function createEditInterface(tile, result, parameters, settings: any[] = [], lis
     }
   } else {
     form.appendChild(createPopupInputRow('Link 1 Label', '', 'The label of the first link.'));
-    form.appendChild(createPopupInputRow('Link 1 Command', '', 'The command opened by the first link (ex: CX NC1)'));
+    form.appendChild(
+      createPopupInputRow(
+        'Link 1 Command',
+        '',
+        'The command opened by the first link (ex: CX NC1)',
+      ),
+    );
   }
 
   const addRow = document.createElement('div');
@@ -282,8 +291,14 @@ function createEditInterface(tile, result, parameters, settings: any[] = [], lis
 
   addButton.addEventListener('click', () => {
     const catNumber = form.children.length / 2;
-    form.insertBefore(createPopupInputRow(`Link ${catNumber} Label`), form.children[form.children.length - 2]);
-    form.insertBefore(createPopupInputRow(`Link ${catNumber} Command`), form.children[form.children.length - 2]);
+    form.insertBefore(
+      createPopupInputRow(`Link ${catNumber} Label`),
+      form.children[form.children.length - 2],
+    );
+    form.insertBefore(
+      createPopupInputRow(`Link ${catNumber} Command`),
+      form.children[form.children.length - 2],
+    );
   });
 
   const saveRow = document.createElement('div');
@@ -309,10 +324,16 @@ function createEditInterface(tile, result, parameters, settings: any[] = [], lis
       if (!form.children[i] || !form.children[i + 1]) {
         break;
       }
-      if (getValueOfPopupRow(form.children[i]) == '' || getValueOfPopupRow(form.children[i + 1]) == '') {
+      if (
+        getValueOfPopupRow(form.children[i]) == '' ||
+        getValueOfPopupRow(form.children[i + 1]) == ''
+      ) {
         continue;
       }
-      commandInfo.push([getValueOfPopupRow(form.children[i]), getValueOfPopupRow(form.children[i + 1])]);
+      commandInfo.push([
+        getValueOfPopupRow(form.children[i]),
+        getValueOfPopupRow(form.children[i + 1]),
+      ]);
     }
 
     tile.removeChild(overlapDiv);
@@ -332,7 +353,7 @@ function init() {
   xit.add({
     command: ['LIST', 'LISTS'],
     name: 'COMMAND LIST',
-    component: createXitAdapter(CommandLists),
+    module: CommandLists,
   });
 }
 

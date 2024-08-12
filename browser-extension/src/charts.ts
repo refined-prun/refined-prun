@@ -16,7 +16,16 @@ import 'chartjs-adapter-date-fns';
 import { format } from 'date-fns';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-Chart.register(LineController, LineElement, PointElement, LinearScale, Title, Tooltip, CategoryScale, TimeScale);
+Chart.register(
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  Title,
+  Tooltip,
+  CategoryScale,
+  TimeScale,
+);
 
 type AxisType = 'linear' | 'logarithmic' | 'category' | 'time';
 
@@ -175,7 +184,16 @@ export function generateLineGraph(
   return graph;
 }
 
-const DefaultColors = ['#004564', '#005b76', '#007079', '#00846c', '#009552', '#67a22e', '#ada900', '#f7a600'];
+const DefaultColors = [
+  '#004564',
+  '#005b76',
+  '#007079',
+  '#00846c',
+  '#009552',
+  '#67a22e',
+  '#ada900',
+  '#f7a600',
+];
 
 Chart.register(PieController, ArcElement, Tooltip, Legend, CategoryScale);
 

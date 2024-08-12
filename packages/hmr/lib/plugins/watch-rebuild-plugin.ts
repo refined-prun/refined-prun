@@ -77,7 +77,9 @@ export function watchRebuildPlugin(config: PluginConfig): PluginOption {
           const devFileName = fileName.replace('.js', '_dev.js');
           fs.writeFileSync(path.resolve(outputDir, devFileName), module.code);
           module.code =
-            importStatement(hmrFileName, serviceWorker) + '\n' + importStatement(devFileName, serviceWorker);
+            importStatement(hmrFileName, serviceWorker) +
+            '\n' +
+            importStatement(devFileName, serviceWorker);
         }
       }
     },

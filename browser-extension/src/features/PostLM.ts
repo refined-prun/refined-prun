@@ -21,7 +21,9 @@ export class PostLM implements Module {
 
   run() {
     Array.from(document.querySelectorAll(Selector.LMPostForm)).forEach(form => {
-      const type = Array.from(form.getElementsByClassName('StaticInput__static___Vpn1u0n forms__static___a4biDi4'));
+      const type = Array.from(
+        form.getElementsByClassName('StaticInput__static___Vpn1u0n forms__static___a4biDi4'),
+      );
       let shipping = false;
       for (const elem of type) {
         if (elem.textContent == 'SHIPPING') {
@@ -96,10 +98,13 @@ export class PostLM implements Module {
             displayElement.textContent = `${(amount * weightvolume).toLocaleString(undefined, {
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
-            })} ${unit} | ${currencySymbol}${(total / (amount * weightvolume)).toLocaleString(undefined, {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })} / ${unit}`;
+            })} ${unit} | ${currencySymbol}${(total / (amount * weightvolume)).toLocaleString(
+              undefined,
+              {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              },
+            )} / ${unit}`;
           }
         };
         calculatePricePerUnit();

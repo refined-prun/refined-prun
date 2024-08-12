@@ -13,9 +13,15 @@ import { store } from '@src/prun-api/data/store';
 import { selectCategoryById, selectMaterialByTicker } from '@src/prun-api/data/materials';
 import { getMaterialNameByTicker } from '@src/prun-ui/material-names';
 
-export const hourFormatter = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
+export const hourFormatter = new Intl.DateTimeFormat(undefined, {
+  hour: '2-digit',
+  minute: '2-digit',
+});
 
-export const dateFormatter = new Intl.DateTimeFormat(undefined, { month: '2-digit', day: '2-digit' });
+export const dateFormatter = new Intl.DateTimeFormat(undefined, {
+  month: '2-digit',
+  day: '2-digit',
+});
 
 export const dateYearFormatter = new Intl.DateTimeFormat(undefined, {
   month: '2-digit',
@@ -28,13 +34,19 @@ export function createContextButtonRow(buttonAbbreviations, buttonLabels, button
   const contextBar = document.createElement('div');
   contextBar.classList.add(...Style.ContextBar);
 
-  if (!(buttonAbbreviations.length == buttonLabels.length && buttonLabels.length == buttonLinks.length)) {
+  if (
+    !(
+      buttonAbbreviations.length == buttonLabels.length && buttonLabels.length == buttonLinks.length
+    )
+  ) {
     // Mismatch parameter lengths
     return contextBar;
   }
 
   for (let i = 0; i < buttonAbbreviations.length; i++) {
-    contextBar.appendChild(createContextButton(buttonAbbreviations[i], buttonLabels[i], buttonLinks[i]));
+    contextBar.appendChild(
+      createContextButton(buttonAbbreviations[i], buttonLabels[i], buttonLinks[i]),
+    );
   }
 
   return contextBar;
@@ -316,7 +328,7 @@ export function parseInvName(text) {
       return match[1];
     }
     return null;
-  } catch (TypeError) {
+  } catch {
     return null;
   }
 }
@@ -329,7 +341,7 @@ export function parsePlanetName(text) {
       return match[1];
     }
     return null;
-  } catch (TypeError) {
+  } catch {
     return null;
   }
 }
@@ -366,7 +378,15 @@ export function setSettings(result) {
  * @param header - A dictionary with 2 key-value pairs "HeaderName": name of header, "HeaderValue": value of header
  * @param content - The content to send in the HttpRequest
  */
-export function XITWebRequest(tile, parameters, callbackFunction, url, requestType: string = 'GET', header?, content?) {
+export function XITWebRequest(
+  tile,
+  parameters,
+  callbackFunction,
+  url,
+  requestType: string = 'GET',
+  header?,
+  content?,
+) {
   const xhr = new XMLHttpRequest();
   xhr.ontimeout = function () {
     tile.textContent = 'Error! Data Could Not Be Loaded! Timed Out!';
@@ -546,7 +566,10 @@ const setupShowBufferTracking = onetime(() => {
 // Change the value of a new buffer box
 export function changeValue(input, value) {
   // Get the property descriptor for the input element's value property
-  const propDescriptor = Object.getOwnPropertyDescriptor(window['HTMLInputElement'].prototype, 'value');
+  const propDescriptor = Object.getOwnPropertyDescriptor(
+    window['HTMLInputElement'].prototype,
+    'value',
+  );
   // Return if the property descriptor is undefined
   if (propDescriptor == undefined) {
     return;
@@ -571,7 +594,10 @@ export function changeValue(input, value) {
 // Change the value of a select box
 export function changeSelectValue(input, value) {
   // Get the property descriptor for the input element's value property
-  const propDescriptor = Object.getOwnPropertyDescriptor(window['HTMLSelectElement'].prototype, 'value');
+  const propDescriptor = Object.getOwnPropertyDescriptor(
+    window['HTMLSelectElement'].prototype,
+    'value',
+  );
   // Return if the property descriptor is undefined
   if (propDescriptor == undefined) {
     return;
@@ -596,25 +622,27 @@ export function changeSelectValue(input, value) {
 // Remove all elements added in the last run with a class name
 export function genericCleanup(className: string = 'prun-remove-js') {
   Array.from(document.getElementsByClassName(className)).forEach(elem => {
-    elem.parentNode && elem.parentNode.removeChild(elem);
+    elem.parentNode?.removeChild(elem);
     return;
   });
   return;
 }
 
 export function genericUnhide(className: string = 'prun-remove-js') {
-  (<HTMLElement[]>Array.from(document.getElementsByClassName(`${className}-hidden`))).forEach((elem: HTMLElement) => {
-    elem.style.display = '';
-    elem.classList.remove(`${className}-hidden`);
-    return;
-  });
+  (<HTMLElement[]>Array.from(document.getElementsByClassName(`${className}-hidden`))).forEach(
+    (elem: HTMLElement) => {
+      elem.style.display = '';
+      elem.classList.remove(`${className}-hidden`);
+      return;
+    },
+  );
   return;
 }
 
 // Remove all elements from an HTML Element added in the last run with a class name
 export function targetedCleanup(className: string, element: Element) {
   Array.from(element.getElementsByClassName(className)).forEach(elem => {
-    elem.parentNode && elem.parentNode.removeChild(elem);
+    elem.parentNode?.removeChild(elem);
     return;
   });
   return;
@@ -662,7 +690,13 @@ export function createEmptyTableRow(colspan, text) {
 
 // Get elements that match an XPath
 export function getElementsByXPath(xpath: string): Array<Node> {
-  const result = document.evaluate(xpath, document, null, XPathResult.ANY_UNORDERED_NODE_TYPE, null);
+  const result = document.evaluate(
+    xpath,
+    document,
+    null,
+    XPathResult.ANY_UNORDERED_NODE_TYPE,
+    null,
+  );
 
   const output: Array<Node> = [];
 
@@ -672,7 +706,7 @@ export function getElementsByXPath(xpath: string): Array<Node> {
       output.push(node);
       node = result.iterateNext();
     }
-  } catch (e) {
+  } catch {
     // ignored
   }
   return output;
@@ -932,7 +966,9 @@ export function calculateBurn(production, workforce, inventory) {
       materialBurn.Inventory += item.Amount;
       if (item.Amount != 0) {
         materialBurn.DaysLeft =
-          materialBurn.DailyAmount > 0 ? 1000 : Math.floor(-materialBurn.Inventory / materialBurn.DailyAmount);
+          materialBurn.DailyAmount > 0
+            ? 1000
+            : Math.floor(-materialBurn.Inventory / materialBurn.DailyAmount);
       }
     }
   }
@@ -1030,7 +1066,17 @@ export function showSuccessDialog(tile, message: string = 'Action succeeded!') {
   return;
 }
 
-export function drawLineChart(xData, yData, xSize, ySize, xLabel?, yLabel?, lineColor?, isDates?, currencySymbol?) {
+export function drawLineChart(
+  xData,
+  yData,
+  xSize,
+  ySize,
+  xLabel?,
+  yLabel?,
+  lineColor?,
+  isDates?,
+  currencySymbol?,
+) {
   let i;
   const canvas = document.createElement('canvas');
   canvas.height = ySize;
@@ -1047,7 +1093,8 @@ export function drawLineChart(xData, yData, xSize, ySize, xLabel?, yLabel?, line
   const maxY = Math.max(...yData);
 
   const zeroX =
-    (xLabel ? 25 : 0) + context.measureText(maxY.toLocaleString(undefined, { maximumFractionDigits: 0 })).width;
+    (xLabel ? 25 : 0) +
+    context.measureText(maxY.toLocaleString(undefined, { maximumFractionDigits: 0 })).width;
   const zeroY = yLabel ? ySize - 23 : ySize;
 
   // Draw labels
@@ -1106,7 +1153,9 @@ export function drawLineChart(xData, yData, xSize, ySize, xLabel?, yLabel?, line
     value =
       Math.round(value / Math.pow(10, Math.floor(Math.log10(value)) - 3)) *
       Math.pow(10, Math.floor(Math.log10(value)) - 3);
-    const text = (currencySymbol ? currencySymbol : '') + value.toLocaleString(undefined, { maximumFractionDigits: 0 });
+    const text =
+      (currencySymbol ? currencySymbol : '') +
+      value.toLocaleString(undefined, { maximumFractionDigits: 0 });
     const textInfo = context.measureText(text);
     context.font = '10px Droid Sans';
     context.fillStyle = '#999';

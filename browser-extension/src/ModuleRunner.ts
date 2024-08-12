@@ -4,7 +4,7 @@ import { Selector } from './Selector';
 import { saveSettings, Settings } from './Settings';
 
 export interface Module {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any,no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   run(buffers: any[]);
 
   cleanup();
@@ -41,7 +41,10 @@ export class ModuleRunner {
       return;
     }
     this.modules.forEach(mp => {
-      if (result['PMMGExtended']['disabled'] && result['PMMGExtended']['disabled'].includes(mp.name)) {
+      if (
+        result['PMMGExtended']['disabled'] &&
+        result['PMMGExtended']['disabled'].includes(mp.name)
+      ) {
         mp.enabled = false;
       }
     });
@@ -98,7 +101,10 @@ export class ModuleRunner {
 
     // For each module, run it, clean it, and measure its performance
     this.modules.map(entry => {
-      if (entry.enabled && (!entry.module.frequency || this.iteration % entry.module.frequency == 0)) {
+      if (
+        entry.enabled &&
+        (!entry.module.frequency || this.iteration % entry.module.frequency == 0)
+      ) {
         const t0 = performance.now();
         entry.module.cleanup();
         const cleanupTime = performance.now() - t0;

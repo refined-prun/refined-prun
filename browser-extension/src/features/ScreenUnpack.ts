@@ -10,8 +10,10 @@ export class ScreenUnpack implements Module {
   private eventAbortSignal = new AbortController();
 
   cleanup(full: boolean = false) {
-    full && genericCleanup(this.tag);
-    full && this.eventAbortSignal.abort();
+    if (full) {
+      genericCleanup(this.tag);
+      this.eventAbortSignal.abort();
+    }
   }
 
   constructor(exclusions: string[] | undefined = undefined) {
@@ -39,7 +41,8 @@ export class ScreenUnpack implements Module {
 
     // Highlight the current screen
     const screenNameElem = document.querySelector(Selector.ScreenName);
-    const screenName = screenNameElem && screenNameElem.textContent ? screenNameElem.textContent : '';
+    const screenName =
+      screenNameElem && screenNameElem.textContent ? screenNameElem.textContent : '';
     this.updateHighlight(screenName);
   }
 

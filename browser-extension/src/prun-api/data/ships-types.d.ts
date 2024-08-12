@@ -1,4 +1,4 @@
-declare module PrunApi {
+declare namespace PrunApi {
   export interface Ship {
     id: string;
     idShipStore: string;
@@ -9,7 +9,7 @@ declare module PrunApi {
     commissioningTime: DateTime;
     blueprintNaturalId: string;
     address: Address | null;
-    flightId: string;
+    flightId: string | null;
     acceleration: number;
     thrust: number;
     mass: number;

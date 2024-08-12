@@ -1,7 +1,10 @@
 import { caseReducers } from '@src/prun-api/data/utils';
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { State } from '@src/prun-api/data/store';
-import { getPlanetNameFromAddress, getPlanetNaturalIdFromAddress } from '@src/prun-api/data/addresses';
+import {
+  getPlanetNameFromAddress,
+  getPlanetNaturalIdFromAddress,
+} from '@src/prun-api/data/addresses';
 
 export const sitesAdapter = createEntityAdapter<PrunApi.Site, string>({
   selectId: x => x.siteId,
@@ -52,7 +55,8 @@ export const selectSiteById = selectors.selectById;
 export const selectSitesEntities = selectors.selectEntities;
 
 export const selectSiteByPlanetNaturalIdOrName = (state: State, naturalIdOrName: string) =>
-  selectSiteByPlanetNaturalId(state, naturalIdOrName) ?? selectSiteByPlanetName(state, naturalIdOrName);
+  selectSiteByPlanetNaturalId(state, naturalIdOrName) ??
+  selectSiteByPlanetName(state, naturalIdOrName);
 export const selectSiteByPlanetNaturalId = (state: State, naturalId: string) =>
   state.sites.byPlanetNaturalId[naturalId.toLowerCase()];
 export const selectSiteByPlanetName = (state: State, naturalId: string) =>

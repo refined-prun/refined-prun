@@ -74,7 +74,14 @@ export const Exchanges = {
   'Hubur Commodity Exchange': 'HUB',
   'Arclight Commodity Exchange': 'ARC',
 };
-export const ExchangeTickers = { ANT: 'AI1', BEN: 'CI1', MOR: 'NC1', HRT: 'IC1', HUB: 'NC2', ARC: 'CI2' };
+export const ExchangeTickers = {
+  ANT: 'AI1',
+  BEN: 'CI1',
+  MOR: 'NC1',
+  HRT: 'IC1',
+  HUB: 'NC2',
+  ARC: 'CI2',
+};
 export const ExchangeTickersReverse = {
   AI1: 'ANT',
   CI1: 'BEN',
@@ -92,7 +99,19 @@ export const Stations = {
   'Arclight Station': 'ARC',
 };
 
-export const NonProductionBuildings = ['CM', 'HB1', 'HB2', 'HB3', 'HB4', 'HB5', 'HBB', 'HBC', 'HBL', 'HBM', 'STO'];
+export const NonProductionBuildings = [
+  'CM',
+  'HB1',
+  'HB2',
+  'HB3',
+  'HB4',
+  'HB5',
+  'HBB',
+  'HBC',
+  'HBL',
+  'HBM',
+  'STO',
+];
 
 export const FriendlyNames = {
   LocalMarketAds: 'LM Unit Prices',

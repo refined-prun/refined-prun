@@ -1,6 +1,9 @@
 import observeDocumentMutations from '@src/utils/document-mutation-observer';
 
-type ObserverListener<ExpectedElement extends Element> = (element: ExpectedElement, options: SignalAsOptions) => void;
+type ObserverListener<ExpectedElement extends Element> = (
+  element: ExpectedElement,
+  options: SignalAsOptions,
+) => void;
 
 export default function observeReadyElementsByClassName<ExpectedElement extends Element>(
   classNames: string,
@@ -56,7 +59,10 @@ export function observeChildListChanged<T extends Node>(target: T, callback: (ta
   observer.observe(target, { childList: true });
 }
 
-export function observeDescendantListChanged<T extends Node>(target: T, callback: (target: T) => void) {
+export function observeDescendantListChanged<T extends Node>(
+  target: T,
+  callback: (target: T) => void,
+) {
   callback(target);
   const observer = new MutationObserver(() => callback(target));
   observer.observe(target, { childList: true, subtree: true });

@@ -232,7 +232,11 @@ function sortInventory(inventory, sortOptions, result, tag, screenName, planetNa
           result,
           sortOptions,
           settings[0],
-          findIfActive(result['PMMGExtended']['selected_sorting'], screenName + planetName, settings[0]),
+          findIfActive(
+            result['PMMGExtended']['selected_sorting'],
+            screenName + planetName,
+            settings[0],
+          ),
           screenName + planetName,
           inventory,
         ),
@@ -284,7 +288,11 @@ function sortInventory(inventory, sortOptions, result, tag, screenName, planetNa
       toggleIndicator.innerHTML = SortingTriangleHTML;
       toggleIndicator.style.marginLeft = '2px';
       option.appendChild(toggleIndicator);
-    } else if (option.firstChild && option.firstChild.textContent != activeSort && option.children[1]) {
+    } else if (
+      option.firstChild &&
+      option.firstChild.textContent != activeSort &&
+      option.children[1]
+    ) {
       // If the button does not correspond to the active sort, remove the arrow or circle
       if (option.classList.contains('pb-toggle')) {
         option.removeChild(option.children[1]); // Remove the circle
@@ -301,7 +309,9 @@ function sortInventory(inventory, sortOptions, result, tag, screenName, planetNa
     return;
   } // No sorting to do, stock option selected
 
-  const materials = Array.from(inventory.querySelectorAll(Selector.FullMaterialIcon)) as HTMLElement[]; // Get all the material elements
+  const materials = Array.from(
+    inventory.querySelectorAll(Selector.FullMaterialIcon),
+  ) as HTMLElement[]; // Get all the material elements
   materials.sort(materialDivSort); // Sort the material elements by category primarily, then by ticker secondarily
 
   let sorted = [] as string[]; // A list of all the material tickers already sorted into categories
@@ -336,7 +346,9 @@ function sortInventory(inventory, sortOptions, result, tag, screenName, planetNa
           if (!matElement) {
             return;
           }
-          const matQuantityElem = matElement.querySelector(Selector.MaterialQuantity) as HTMLElement;
+          const matQuantityElem = matElement.querySelector(
+            Selector.MaterialQuantity,
+          ) as HTMLElement;
           if (matQuantityElem) {
             matQuantityElem.style.color = '#cc0000';
           }

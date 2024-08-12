@@ -49,4 +49,5 @@ const slice = createSlice({
 
 export const productionReducer = slice.reducer;
 
-export const selectProductionLinesBySiteId = (state: State, siteId: string) => state.production.bySiteId[siteId];
+export const selectProductionLinesBySiteId = (state: State, siteId: string) =>
+  state.production.bySiteId[siteId];

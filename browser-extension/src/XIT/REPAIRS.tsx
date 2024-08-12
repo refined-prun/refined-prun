@@ -2,7 +2,6 @@ import { clearChildren, createTextSpan, setSettings } from '../util';
 import { NonProductionBuildings } from '../GameProperties';
 import user from '@src/store/user';
 import xit from './xit-registry';
-import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
 import { store } from '@src/prun-api/data/store';
 import { selectShips } from '@src/prun-api/data/ships';
@@ -114,12 +113,30 @@ class Repairs {
 
       const body = document.createElement('tbody');
       table.appendChild(body);
-      generateGeneralRepairScreen(body, matDiv, buildings, ships, thresholdInput, offsetInput, true, false);
+      generateGeneralRepairScreen(
+        body,
+        matDiv,
+        buildings,
+        ships,
+        thresholdInput,
+        offsetInput,
+        true,
+        false,
+      );
 
       thresholdInput.addEventListener('input', () => {
         clearChildren(body);
 
-        generateGeneralRepairScreen(body, matDiv, buildings, ships, thresholdInput, offsetInput, true, false);
+        generateGeneralRepairScreen(
+          body,
+          matDiv,
+          buildings,
+          ships,
+          thresholdInput,
+          offsetInput,
+          true,
+          false,
+        );
         pmmgSettings['PMMGExtended']['repair_threshold'] = thresholdInput.value || '70';
         setSettings(pmmgSettings);
       });
@@ -127,7 +144,16 @@ class Repairs {
       offsetInput.addEventListener('input', () => {
         clearChildren(body);
 
-        generateGeneralRepairScreen(body, matDiv, buildings, ships, thresholdInput, offsetInput, true, false);
+        generateGeneralRepairScreen(
+          body,
+          matDiv,
+          buildings,
+          ships,
+          thresholdInput,
+          offsetInput,
+          true,
+          false,
+        );
         pmmgSettings['PMMGExtended']['repair_offset'] = offsetInput.value || '0';
         setSettings(pmmgSettings);
       });
@@ -143,7 +169,8 @@ class Repairs {
       for (const site of user.sites) {
         if (
           site.type == 'BASE' &&
-          (site['PlanetName'].toUpperCase() == screenName || site['PlanetNaturalId'].toUpperCase() == screenName) &&
+          (site['PlanetName'].toUpperCase() == screenName ||
+            site['PlanetNaturalId'].toUpperCase() == screenName) &&
           site.buildings
         ) {
           site.buildings.forEach(building => {
@@ -274,7 +301,16 @@ class Repairs {
   }
 }
 
-function generateGeneralRepairScreen(body, matDiv, buildings, ships, thresholdInput, offsetInput, isGlobal, shipsOnly) {
+function generateGeneralRepairScreen(
+  body,
+  matDiv,
+  buildings,
+  ships,
+  thresholdInput,
+  offsetInput,
+  isGlobal,
+  shipsOnly,
+) {
   // Buildings is an array of type: [planetName, buildingInfo]
   const materials = {};
 
@@ -349,7 +385,9 @@ function generateGeneralRepairScreen(body, matDiv, buildings, ships, thresholdIn
 
       Object.keys(buildingMaterials).forEach(ticker => {
         const amount =
-          adjustedDate > 180 ? buildingMaterials[ticker] : Math.ceil((buildingMaterials[ticker] * adjustedDate) / 180); // This isn't quite right, but will be off by only 1 MCG at most
+          adjustedDate > 180
+            ? buildingMaterials[ticker]
+            : Math.ceil((buildingMaterials[ticker] * adjustedDate) / 180); // This isn't quite right, but will be off by only 1 MCG at most
 
         if (materials[ticker]) {
           materials[ticker] += amount;
@@ -448,7 +486,7 @@ function init() {
   xit.add({
     command: 'REPAIRS',
     name: 'REPAIRS',
-    component: createXitAdapter(Repairs),
+    module: Repairs,
   });
 }
 

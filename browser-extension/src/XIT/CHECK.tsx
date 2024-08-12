@@ -16,7 +16,6 @@ import {
 import { Style, TextColors } from '../Style';
 import { NonProductionBuildings } from '../GameProperties';
 import xit from './xit-registry';
-import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import user from '@src/store/user';
 import features from '@src/feature-registry';
 
@@ -112,11 +111,15 @@ function generateCheckTable(result, tile) {
 
     // Add the incomplete and duedate columns
     const incompleteElem = document.createElement('td');
-    incompleteElem.appendChild(createTextSpan(incomplete.toLocaleString(undefined, { maximumFractionDigits: 0 })));
+    incompleteElem.appendChild(
+      createTextSpan(incomplete.toLocaleString(undefined, { maximumFractionDigits: 0 })),
+    );
     row.appendChild(incompleteElem);
 
     const duedateElem = document.createElement('td');
-    duedateElem.appendChild(createTextSpan(duedate ? dateYearFormatter.format(new Date(duedate)) : '--')); // -- or -? Best way to signify no value?
+    duedateElem.appendChild(
+      createTextSpan(duedate ? dateYearFormatter.format(new Date(duedate)) : '--'),
+    ); // -- or -? Best way to signify no value?
     if (duedate && duedate < Date.now()) {
       duedateElem.style.color = TextColors.Failure;
     }
@@ -245,7 +248,12 @@ function displayChecklist(tile, checkName) {
 // Generate the popup to add or edit a checklist
 function generateEditPopup(tile, checklist, info?) {
   if (!info) {
-    info = { type: 'Text', completed: false, id: generateRandomHexSequence(8), created: Date.now() }; // The information defining the checklist item
+    info = {
+      type: 'Text',
+      completed: false,
+      id: generateRandomHexSequence(8),
+      created: Date.now(),
+    }; // The information defining the checklist item
   }
   const popup = new Popup(tile, 'Checklist Item Editor');
 
@@ -292,11 +300,14 @@ function generateEditPopup(tile, checklist, info?) {
   ]);
 
   // Delete row (present on all)
-  popup.addPopupRow('button', 'DELETE', 'DELETE', 'Delete the current checklist item.', deleteChecklistItem, [
-    popup,
-    info,
-    checklist,
-  ]);
+  popup.addPopupRow(
+    'button',
+    'DELETE',
+    'DELETE',
+    'Delete the current checklist item.',
+    deleteChecklistItem,
+    [popup, info, checklist],
+  );
   popup.getRowByName('DELETE').rowInput.classList.remove(Style.ButtonPrimary);
   popup.getRowByName('DELETE').rowInput.classList.add(Style.ButtonDanger);
 
@@ -347,7 +358,14 @@ function updatePopupInfo(junk, params) {
         planetNames.push(planetNames.indexOf(info['planet']));
       }
 
-      popup.addPopupRow('dropdown', 'Planet', planetNames, 'The base to resupply.', updatePopupInfo, [popup, info]);
+      popup.addPopupRow(
+        'dropdown',
+        'Planet',
+        planetNames,
+        'The base to resupply.',
+        updatePopupInfo,
+        [popup, info],
+      );
       popup.addPopupRow(
         'number',
         'Days',
@@ -364,7 +382,10 @@ function updatePopupInfo(junk, params) {
         planetNames.push(planetNames.indexOf(info['planet']));
       }
 
-      popup.addPopupRow('dropdown', 'Planet', planetNames, 'The base to repair.', updatePopupInfo, [popup, info]);
+      popup.addPopupRow('dropdown', 'Planet', planetNames, 'The base to repair.', updatePopupInfo, [
+        popup,
+        info,
+      ]);
       popup.addPopupRow(
         'number',
         'Threshold',
@@ -414,7 +435,10 @@ function updatePopupInfo(junk, params) {
   }
 
   info['type'] = typeValue;
-  info['duedate'] = popup.rows[1].rowInput.value == '' ? undefined : new Date(popup.rows[1].rowInput.value).getTime();
+  info['duedate'] =
+    popup.rows[1].rowInput.value == ''
+      ? undefined
+      : new Date(popup.rows[1].rowInput.value).getTime();
   info['recurring'] = popup.rows[2].rowInput.value == '' ? undefined : popup.rows[2].rowInput.value;
   return junk;
 }
@@ -773,7 +797,12 @@ class CheckItem {
     this.checkInfo.completed = !this.checkInfo.completed;
     this.checkCircle.innerHTML = this.checkInfo.completed ? filledCircle : unfilledCircle;
 
-    getLocalStorage('PMMG-Checklists', updateStoredChecklists, [this.checkInfo, this.checklist, false, this.isChild]);
+    getLocalStorage('PMMG-Checklists', updateStoredChecklists, [
+      this.checkInfo,
+      this.checklist,
+      false,
+      this.isChild,
+    ]);
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const thisObject = this;
@@ -789,22 +818,26 @@ class CheckItem {
 
         if (thisObject.checkInfo.isChild) {
           const parentIndex = result['PMMG-Checklists'][thisObject.checklist.name].findIndex(
-            obj => obj.children && obj.children.findIndex(obj2 => obj2.id == thisObject.checkInfo.id) != -1,
+            obj =>
+              obj.children &&
+              obj.children.findIndex(obj2 => obj2.id == thisObject.checkInfo.id) != -1,
           );
           const childIndex =
             parentIndex == -1
               ? -1
-              : result['PMMG-Checklists'][thisObject.checklist.name][parentIndex].children.findIndex(
-                  obj => obj.id == thisObject.checkInfo.id,
-                );
+              : result['PMMG-Checklists'][thisObject.checklist.name][
+                  parentIndex
+                ].children.findIndex(obj => obj.id == thisObject.checkInfo.id);
           completed =
             childIndex != -1 &&
-            result['PMMG-Checklists'][thisObject.checklist.name][parentIndex].children[childIndex].completed;
+            result['PMMG-Checklists'][thisObject.checklist.name][parentIndex].children[childIndex]
+              .completed;
         } else {
           const index = result['PMMG-Checklists'][thisObject.checklist.name].findIndex(
             obj => obj.id == thisObject.checkInfo.id,
           );
-          completed = index != -1 && result['PMMG-Checklists'][thisObject.checklist.name][index].completed;
+          completed =
+            index != -1 && result['PMMG-Checklists'][thisObject.checklist.name][index].completed;
         }
 
         if (completed) {
@@ -866,7 +899,7 @@ function init() {
   xit.add({
     command: ['CHECK', 'CHECKLIST', 'CHECKLISTS'],
     name: 'CHECKLIST',
-    component: createXitAdapter(Checklists),
+    module: Checklists,
   });
 }
 

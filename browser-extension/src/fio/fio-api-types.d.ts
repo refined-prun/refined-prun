@@ -1,4 +1,4 @@
-declare module FioApi {
+declare namespace FioApi {
   export interface PlanetShort {
     PlanetNaturalId: string;
     PlanetName: string;

@@ -127,7 +127,9 @@ export function calculateFinancials(webData, result, loop) {
   // Handle contracts
   let contractValue = 0;
   let contractLiability = 0;
-  const validContracts = selectContracts(storeState).filter(c => !invalidContractStatus.includes(c['status']));
+  const validContracts = selectContracts(storeState).filter(
+    c => !invalidContractStatus.includes(c['status']),
+  );
 
   for (const contract of validContracts) {
     const party = contract['party'];

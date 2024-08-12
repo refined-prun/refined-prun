@@ -33,7 +33,7 @@ export function getPrices(webData, sheetURL, sheetName) {
           webData['custom_prices'][price[0]] = price[1];
         });
         console.log(webData['custom_prices']);
-      } catch (SyntaxError) {
+      } catch {
         console.log('PMMG: Bad Data from Custom Prices');
       }
     }

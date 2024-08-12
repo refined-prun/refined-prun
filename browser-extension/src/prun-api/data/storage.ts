@@ -31,4 +31,5 @@ const selectStorageAddressMap = createSelector(selectors.selectAll, stores => {
   return map;
 });
 
-export const selectStorageByAddress = (state: State, address: string) => selectStorageAddressMap(state).get(address);
+export const selectStorageByAddress = (state: State, address: string) =>
+  selectStorageAddressMap(state).get(address);

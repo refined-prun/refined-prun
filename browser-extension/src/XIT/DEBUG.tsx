@@ -1,11 +1,10 @@
 import { downloadFile, clearChildren, XITWebRequest } from '../util';
 import { Style } from '../Style';
-import { h } from 'dom-chef';
 import { $$ } from 'select-dom';
 import PrunCss from '@src/prun-ui/prun-css';
 import xit from './xit-registry';
-import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
+import { widgetAppend } from '@src/utils/vue-mount';
 
 class Debug {
   private tile: HTMLElement;
@@ -39,9 +38,13 @@ class Debug {
       ),
     );
     downloadButtons.appendChild(
-      createDownloadButton(this.webData, 'Download All Web Data', `pmmg-web-data${Date.now().toString()}.json`),
+      createDownloadButton(
+        this.webData,
+        'Download All Web Data',
+        `pmmg-web-data${Date.now().toString()}.json`,
+      ),
     );
-    downloadButtons.appendChild(createDownloadPrunCssClassesButton());
+    createDownloadPrunCssClassesButton(downloadButtons);
     const endpointLabel = document.createElement('div');
     endpointLabel.textContent = 'Get FIO Endpoint (ex: /infrastructure/Proxion)';
     endpointLabel.style.display = 'block';
@@ -87,7 +90,7 @@ class Debug {
 function Debug_post(tile, parameters, jsondata) {
   try {
     console.log(JSON.parse(jsondata));
-  } catch (ex) {
+  } catch {
     /* empty */
   }
   downloadFile(jsondata, `fio-endpoint${Date.now().toString()}.json`, false);
@@ -109,11 +112,11 @@ function createDownloadButton(data, buttonName, fileName) {
   return downloadButton;
 }
 
-function createDownloadPrunCssClassesButton() {
+function createDownloadPrunCssClassesButton(container: HTMLElement) {
   const classes = [PrunCss.Button.btn, PrunCss.Button.primary].join(' ');
-  return (
+  return widgetAppend(container, () => (
     <button
-      className={classes}
+      class={classes}
       style={{
         display: 'block',
         marginLeft: '4px',
@@ -122,7 +125,7 @@ function createDownloadPrunCssClassesButton() {
       onClick={downloadPrunCssClasses}>
       Export CSS classes
     </button>
-  );
+  ));
 }
 
 function downloadPrunCssClasses() {
@@ -166,7 +169,7 @@ function init() {
   xit.add({
     command: 'DEBUG',
     name: 'DEBUG',
-    component: createXitAdapter(Debug),
+    module: Debug,
   });
 }
 

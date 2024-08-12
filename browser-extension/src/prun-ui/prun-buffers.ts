@@ -25,7 +25,9 @@ function reconciliate() {
     }
   }
 
-  const frameElements = document.getElementsByClassName(PrunCss.TileFrame.frame) as HTMLCollectionOf<HTMLDivElement>;
+  const frameElements = document.getElementsByClassName(
+    PrunCss.TileFrame.frame,
+  ) as HTMLCollectionOf<HTMLDivElement>;
   if (frameElements.length === activeBuffers.length) {
     return;
   }

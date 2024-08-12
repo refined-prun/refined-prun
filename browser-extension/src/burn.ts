@@ -5,7 +5,10 @@ import { selectStorageByAddress } from '@src/prun-api/data/storage';
 import { showBuffer } from '@src/util';
 import { createSelector } from '@reduxjs/toolkit';
 import { selectSiteById } from '@src/prun-api/data/sites';
-import { getPlanetNameFromAddress, getPlanetNaturalIdFromAddress } from '@src/prun-api/data/addresses';
+import {
+  getPlanetNameFromAddress,
+  getPlanetNaturalIdFromAddress,
+} from '@src/prun-api/data/addresses';
 
 export interface MaterialBurn {
   DailyAmount: number;
@@ -50,7 +53,11 @@ export function createBurnSelector(siteOrId: PrunApi.Site | string) {
   );
 }
 
-function calc(production: PrunApi.ProductionLine[], workforces: PrunApi.Workforce[], storage: PrunApi.Store[]) {
+function calc(
+  production: PrunApi.ProductionLine[],
+  workforces: PrunApi.Workforce[],
+  storage: PrunApi.Store[],
+) {
   const burnDict: BurnValues = {};
 
   for (const line of production) {
@@ -130,14 +137,16 @@ function calc(production: PrunApi.ProductionLine[], workforces: PrunApi.Workforc
 
   for (const inventory of storage) {
     for (const item of inventory.items) {
-      const materialBurn = burnDict[item.quantity.material.ticker];
+      const materialBurn = burnDict[item.quantity?.material.ticker];
       if (!materialBurn) {
         continue;
       }
       materialBurn.Inventory += item.quantity.amount;
       if (item.quantity.amount != 0) {
         materialBurn.DaysLeft =
-          materialBurn.DailyAmount > 0 ? 1000 : Math.floor(-materialBurn.Inventory / materialBurn.DailyAmount);
+          materialBurn.DailyAmount > 0
+            ? 1000
+            : Math.floor(-materialBurn.Inventory / materialBurn.DailyAmount);
       }
     }
   }

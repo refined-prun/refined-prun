@@ -1,4 +1,4 @@
-declare module PrunApi {
+declare namespace PrunApi {
   export interface CXOrder {
     id: string;
     exchange: ExchangeEntity;

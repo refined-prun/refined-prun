@@ -8,4 +8,8 @@ type BuildCompletionMessage = { type: 'build_complete'; id: string };
 
 export type SerializedMessage = string;
 
-export type WebSocketMessage = UpdateCompleteMessage | UpdateRequestMessage | BuildCompletionMessage | PingMessage;
+export type WebSocketMessage =
+  | UpdateCompleteMessage
+  | UpdateRequestMessage
+  | BuildCompletionMessage
+  | PingMessage;

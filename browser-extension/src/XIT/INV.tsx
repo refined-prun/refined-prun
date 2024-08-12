@@ -1,6 +1,11 @@
-import { clearChildren, createTextSpan, createMaterialElement, createLink, XITWebRequest } from '../util';
+import {
+  clearChildren,
+  createTextSpan,
+  createMaterialElement,
+  createLink,
+  XITWebRequest,
+} from '../util';
 import xit from './xit-registry';
-import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
 
 class FIOInventory {
@@ -73,7 +78,7 @@ function FIOInv_post(tile, parameters, jsondata) {
   let inventoryData;
   try {
     inventoryData = JSON.parse(jsondata);
-  } catch (SyntaxError) {
+  } catch {
     tile.textContent = 'Error! Could Not Load Data!';
     return;
   }
@@ -170,7 +175,7 @@ function FIOInv_getAllStorages(tile, parameters, jsondata) {
   let userJSON;
   try {
     userJSON = JSON.parse(jsondata);
-  } catch (SyntaxError) {
+  } catch {
     tile.textContent = 'Error! Bad Data from FIO!';
   }
   const usernames = [] as string[];
@@ -197,7 +202,7 @@ function FIOInv_allDisplay(tile, parameters, jsondata) {
   let groupData = [];
   try {
     groupData = JSON.parse(jsondata);
-  } catch (SyntaxError) {
+  } catch {
     tile.textContent = 'Error! Bad Data from FIO!';
   }
   const titleDiv = document.createElement('div');
@@ -251,7 +256,7 @@ function init() {
   xit.add({
     command: 'INV',
     name: 'FIO INVENTORY',
-    component: createXitAdapter(FIOInventory),
+    module: FIOInventory,
   });
 }
 

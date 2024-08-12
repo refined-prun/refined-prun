@@ -1,4 +1,4 @@
-declare module PrunUI {
+declare namespace PrunUI {
   export interface CssClasses {
     ActionBar: ActionBar;
     ActionConfirmationOverlay: ActionConfirmationOverlay;

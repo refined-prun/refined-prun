@@ -10,7 +10,6 @@ import {
 } from '../util';
 import { Style, WithStyles } from '../Style';
 import xit from './xit-registry';
-import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
 
 class Settings {
@@ -58,7 +57,10 @@ class Settings {
       const specialLabel = document.createElement('h3');
       specialLabel.appendChild(createTextSpan('Opt Out of Future Surprises'));
       specialLabel.appendChild(
-        createToolTip('No fun! Embrace the chaos. Will disable any further April 1st or other shenanigans.', 'right'),
+        createToolTip(
+          'No fun! Embrace the chaos. Will disable any further April 1st or other shenanigans.',
+          'right',
+        ),
       );
       specialLabel.classList.add(...Style.SidebarSectionHead);
       specialLabel.style.marginBottom = '4px';
@@ -77,7 +79,9 @@ class Settings {
 
     const enhancedColorHeader = document.createElement('h3');
     enhancedColorHeader.appendChild(document.createTextNode('Color Scheme'));
-    enhancedColorHeader.appendChild(createToolTip('Select a color scheme to customize material icons.', 'right'));
+    enhancedColorHeader.appendChild(
+      createToolTip('Select a color scheme to customize material icons.', 'right'),
+    );
     enhancedColorHeader.classList.add(...Style.SidebarSectionHead);
     tile.appendChild(enhancedColorHeader);
 
@@ -96,7 +100,10 @@ class Settings {
     colorSelect.classList.add('select');
     colorSelect.style.marginLeft = '4px';
 
-    if (pmmgSettings['PMMGExtended']['color_scheme'] == 'enhanced' || !pmmgSettings['PMMGExtended']['color_scheme']) {
+    if (
+      pmmgSettings['PMMGExtended']['color_scheme'] == 'enhanced' ||
+      !pmmgSettings['PMMGExtended']['color_scheme']
+    ) {
       (colorSelect.children[0] as HTMLOptionElement).selected = true;
     } else if (pmmgSettings['PMMGExtended']['color_scheme'] == 'icons') {
       (colorSelect.children[1] as HTMLOptionElement).selected = true;
@@ -105,7 +112,8 @@ class Settings {
     }
     colorSelect.style.display = 'inline-block';
     colorSelect.addEventListener('change', () => {
-      pmmgSettings['PMMGExtended']['color_scheme'] = colorSelect.selectedOptions[0].value || undefined;
+      pmmgSettings['PMMGExtended']['color_scheme'] =
+        colorSelect.selectedOptions[0].value || undefined;
       setSettings(pmmgSettings);
     });
     colorDiv.appendChild(colorSelect);
@@ -114,7 +122,9 @@ class Settings {
     const finDiv = document.createElement('div');
     const finLabel = document.createElement('h3');
     finLabel.appendChild(createTextSpan('Enable Financial Recording'));
-    finLabel.appendChild(createToolTip('Record financial info daily. Open XIT FIN for more info.', 'right'));
+    finLabel.appendChild(
+      createToolTip('Record financial info daily. Open XIT FIN for more info.', 'right'),
+    );
     finLabel.classList.add(...Style.SidebarSectionHead);
     finLabel.style.marginBottom = '4px';
     finDiv.appendChild(finLabel);
@@ -194,9 +204,12 @@ class Settings {
     redDiv.appendChild(createTextSpan('Red Threshold: '));
     const redIn = document.createElement('input');
     redIn.type = 'number';
-    redIn.value = (pmmgSettings['PMMGExtended']['burn_thresholds'] || [3])[0].toLocaleString(undefined, {
-      maximumFractionDigits: 0,
-    });
+    redIn.value = (pmmgSettings['PMMGExtended']['burn_thresholds'] || [3])[0].toLocaleString(
+      undefined,
+      {
+        maximumFractionDigits: 0,
+      },
+    );
     redDiv.appendChild(redIn);
     redIn.classList.add('input-text');
     redIn.style.width = '50px';
@@ -210,9 +223,12 @@ class Settings {
     yelDiv.appendChild(createTextSpan('Yellow Threshold: '));
     const yelIn = document.createElement('input');
     yelIn.type = 'number';
-    yelIn.value = (pmmgSettings['PMMGExtended']['burn_thresholds'] || [3, 7])[1].toLocaleString(undefined, {
-      maximumFractionDigits: 0,
-    });
+    yelIn.value = (pmmgSettings['PMMGExtended']['burn_thresholds'] || [3, 7])[1].toLocaleString(
+      undefined,
+      {
+        maximumFractionDigits: 0,
+      },
+    );
     yelDiv.appendChild(yelIn);
     yelIn.classList.add('input-text');
     yelIn.style.width = '50px';
@@ -320,7 +336,8 @@ class Settings {
     const apiInput = document.createElement('input');
     apiInput.value = pmmgSettings['PMMGExtended']['apikey'] || '';
     apiInput.addEventListener('input', () => {
-      pmmgSettings['PMMGExtended']['apikey'] = !apiInput.value || apiInput.value == '' ? undefined : apiInput.value;
+      pmmgSettings['PMMGExtended']['apikey'] =
+        !apiInput.value || apiInput.value == '' ? undefined : apiInput.value;
       setSettings(pmmgSettings);
     });
     apiInput.classList.add('input-text');
@@ -332,7 +349,10 @@ class Settings {
     const screenUnpackHeader = document.createElement('h3');
     screenUnpackHeader.appendChild(document.createTextNode('Screen Unpack Exclusions'));
     screenUnpackHeader.appendChild(
-      createToolTip('List screens to be excluded from screen unpack. Separate screens with a comma.', 'right'),
+      createToolTip(
+        'List screens to be excluded from screen unpack. Separate screens with a comma.',
+        'right',
+      ),
     );
     screenUnpackHeader.classList.add(...Style.SidebarSectionHead);
     tile.appendChild(screenUnpackHeader);
@@ -355,7 +375,10 @@ class Settings {
     const moduleSettingsHeader = document.createElement('h3');
     moduleSettingsHeader.appendChild(document.createTextNode('Toggle Features'));
     moduleSettingsHeader.appendChild(
-      createToolTip('Toggle features on and off. The yellow X cleans up any stray elements.', 'right'),
+      createToolTip(
+        'Toggle features on and off. The yellow X cleans up any stray elements.',
+        'right',
+      ),
     );
     moduleSettingsHeader.classList.add(...Style.SidebarSectionHead);
     tile.appendChild(moduleSettingsHeader);
@@ -473,7 +496,7 @@ class Settings {
             const fileOutput = JSON.parse(e.target.result as string);
             setSettings(fileOutput);
             errorTextBox.style.display = 'none';
-          } catch (ex) {
+          } catch {
             console.log('PMMG: Error encountered processing file!');
             errorTextBox.style.display = 'inline-block';
           }
@@ -496,7 +519,7 @@ class Settings {
             const fileOutput = JSON.parse(e.target.result as string);
             setSettings(fileOutput);
             errorTextBox.style.display = 'none';
-          } catch (ex) {
+          } catch {
             console.log('PMMG: Error encountered processing file!');
             errorTextBox.style.display = 'inline-block';
           }
@@ -525,7 +548,7 @@ class Settings {
 
             setSettings({ 'PMMG-Finance': finResult });
             errorTextBox.style.display = 'none';
-          } catch (ex) {
+          } catch {
             console.log('PMMG: Error encountered processing file!');
             errorTextBox.style.display = 'inline-block';
           }
@@ -548,7 +571,7 @@ class Settings {
             const fileOutput = JSON.parse(e.target.result as string);
             setSettings(fileOutput);
             errorTextBox.style.display = 'none';
-          } catch (ex) {
+          } catch {
             console.log('PMMG: Error encountered processing file!');
             errorTextBox.style.display = 'inline-block';
           }
@@ -751,7 +774,7 @@ function init() {
   xit.add({
     command: ['SET', 'SETTINGS'],
     name: 'RPRUN SETTINGS',
-    component: createXitAdapter(Settings),
+    module: Settings,
   });
 }
 

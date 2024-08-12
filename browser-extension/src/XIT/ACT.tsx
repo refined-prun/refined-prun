@@ -23,12 +23,11 @@ import { Selector } from '../Selector';
 import { ExchangeTickersReverse, NonProductionBuildings } from '../GameProperties';
 import user from '@src/store/user';
 import xit from './xit-registry';
-import { createXitAdapter } from '@src/XIT/LegacyXitAdapter';
 import features from '@src/feature-registry';
 import { store } from '@src/prun-api/data/store';
 import { selectCxobByTicker } from '@src/prun-api/data/cxob';
 
-export class Execute {
+class Execute {
   private tile: HTMLElement;
   public parameters: string[];
   public pmmgSettings;
@@ -186,7 +185,7 @@ async function createSummaryScreen(tile, parentBuffer) {
               importRow.row.classList.add(...Style.FormError);
               return;
             }
-          } catch (SyntaxError) {
+          } catch {
             importRow.row.classList.add(...Style.FormError);
             return;
           }
@@ -213,7 +212,7 @@ async function createSummaryScreen(tile, parentBuffer) {
                   setSettings({ 'PMMG-Action': storedActions });
                   popup.destroy();
                   parentBuffer.create_buffer();
-                } catch (ex) {
+                } catch {
                   importRow.row.classList.add(...Style.FormError);
                   return;
                 }
@@ -245,7 +244,9 @@ async function createSummaryScreen(tile, parentBuffer) {
   const packageNames = Object.keys(storedActions);
 
   if (packageNames.length == 0) {
-    table.appendChild(createEmptyTableRow(4, 'No action packages found. Click above to create one'));
+    table.appendChild(
+      createEmptyTableRow(4, 'No action packages found. Click above to create one'),
+    );
   }
 
   packageNames.forEach(name => {
@@ -291,14 +292,19 @@ async function createSummaryScreen(tile, parentBuffer) {
     cmdColumn.appendChild(deleteButton);
     row.appendChild(cmdColumn);
     deleteButton.addEventListener('click', () => {
-      showWarningDialog(tile, 'Are you sure you want to delete this action package?', 'Confirm', async () => {
-        storageValue = await getLocalStoragePromise('PMMG-Action');
-        storedActions = storageValue['PMMG-Action'] || {};
+      showWarningDialog(
+        tile,
+        'Are you sure you want to delete this action package?',
+        'Confirm',
+        async () => {
+          storageValue = await getLocalStoragePromise('PMMG-Action');
+          storedActions = storageValue['PMMG-Action'] || {};
 
-        delete storedActions[name];
-        setSettings({ 'PMMG-Action': storedActions });
-        parentBuffer.create_buffer();
-      });
+          delete storedActions[name];
+          setSettings({ 'PMMG-Action': storedActions });
+          parentBuffer.create_buffer();
+        },
+      );
     });
 
     table.appendChild(row);
@@ -471,10 +477,15 @@ class GenerateScreen {
 
       // Add delete button functionality
       deleteButton.addEventListener('click', () => {
-        showWarningDialog(thisObj.tile, 'Are you sure you want to delete this group?', 'Confirm', () => {
-          thisObj.groups.splice(groupIndex, 1);
-          thisObj.generateGroupForm();
-        });
+        showWarningDialog(
+          thisObj.tile,
+          'Are you sure you want to delete this group?',
+          'Confirm',
+          () => {
+            thisObj.groups.splice(groupIndex, 1);
+            thisObj.generateGroupForm();
+          },
+        );
       });
 
       // Add edit button functionality
@@ -495,7 +506,14 @@ class GenerateScreen {
       undefined,
       ['Resupply', 'Repair', 'Manual'],
     );
-    const newGroupAdd = this.createFormRow(this.groupSection, 'button', 'command', 'Add Group', 'addGroup', 'ADD');
+    const newGroupAdd = this.createFormRow(
+      this.groupSection,
+      'button',
+      'command',
+      'Add Group',
+      'addGroup',
+      'ADD',
+    );
 
     // Add method for adding a new group with default values
     newGroupAdd.addEventListener('click', () => {
@@ -616,27 +634,39 @@ class GenerateScreen {
         }
 
         // Row for adding more material rows above
-        popup.addPopupRow('button', 'Add Material', 'ADD', 'Add a new material to the group.', () => {
-          const newMatRow = popup.addPopupRow(
-            'text',
-            `Material Ticker #${(numMaterials + 1).toLocaleString()}`,
-            undefined,
-            undefined,
-            undefined,
-          );
-          const newAmtRow = popup.addPopupRow(
-            'number',
-            `Material Amount #${(numMaterials + 1).toLocaleString()}`,
-            undefined,
-            undefined,
-            undefined,
-          );
-          numMaterials++;
+        popup.addPopupRow(
+          'button',
+          'Add Material',
+          'ADD',
+          'Add a new material to the group.',
+          () => {
+            const newMatRow = popup.addPopupRow(
+              'text',
+              `Material Ticker #${(numMaterials + 1).toLocaleString()}`,
+              undefined,
+              undefined,
+              undefined,
+            );
+            const newAmtRow = popup.addPopupRow(
+              'number',
+              `Material Amount #${(numMaterials + 1).toLocaleString()}`,
+              undefined,
+              undefined,
+              undefined,
+            );
+            numMaterials++;
 
-          // Move rows above save rows
-          popup.form.insertBefore(newMatRow.row, popup.form.children[popup.form.children.length - 4]);
-          popup.form.insertBefore(newAmtRow.row, popup.form.children[popup.form.children.length - 3]);
-        });
+            // Move rows above save rows
+            popup.form.insertBefore(
+              newMatRow.row,
+              popup.form.children[popup.form.children.length - 4],
+            );
+            popup.form.insertBefore(
+              newAmtRow.row,
+              popup.form.children[popup.form.children.length - 3],
+            );
+          },
+        );
         break;
       }
     }
@@ -747,7 +777,9 @@ class GenerateScreen {
       switch (action.type) {
         case 'CX Buy':
           if (action.group && action.exchange) {
-            contentColumn.appendChild(createTextSpan(`Buying group ${action.group} from ${action.exchange}`));
+            contentColumn.appendChild(
+              createTextSpan(`Buying group ${action.group} from ${action.exchange}`),
+            );
           } else {
             contentColumn.appendChild(createTextSpan('--'));
           }
@@ -770,10 +802,15 @@ class GenerateScreen {
 
       // Add delete button functionality
       deleteButton.addEventListener('click', () => {
-        showWarningDialog(thisObj.tile, 'Are you sure you want to delete this action?', 'Confirm', () => {
-          thisObj.actions.splice(actionIndex, 1);
-          thisObj.generateActionForm();
-        });
+        showWarningDialog(
+          thisObj.tile,
+          'Are you sure you want to delete this action?',
+          'Confirm',
+          () => {
+            thisObj.actions.splice(actionIndex, 1);
+            thisObj.generateActionForm();
+          },
+        );
       });
 
       // Add edit button functionality
@@ -794,7 +831,14 @@ class GenerateScreen {
       undefined,
       ['CX Buy'],
     );
-    const newActionAdd = this.createFormRow(this.actionSection, 'button', 'command', 'Add Action', 'addAction', 'ADD');
+    const newActionAdd = this.createFormRow(
+      this.actionSection,
+      'button',
+      'command',
+      'Add Action',
+      'addAction',
+      'ADD',
+    );
 
     // Add method for adding a new group with default values
     newActionAdd.addEventListener('click', () => {
@@ -818,7 +862,9 @@ class GenerateScreen {
     switch (action.type) {
       case 'CX Buy': {
         // Add group dropdown
-        const groupNames = this.groups.filter(obj => obj.name && obj.name !== '').map(obj => obj.name);
+        const groupNames = this.groups
+          .filter(obj => obj.name && obj.name !== '')
+          .map(obj => obj.name);
         // Add index of selected option to end of list because of poor design decisions in popup class
         if (action.group && groupNames.indexOf(action.group)) {
           groupNames.push(groupNames.indexOf(action.group));
@@ -983,7 +1029,14 @@ class GenerateScreen {
     this.saveSection.appendChild(sectionTitle);
 
     // Add save button
-    const saveButton = this.createFormRow(this.saveSection, 'button', 'command', 'Save', 'saveButton', 'SAVE');
+    const saveButton = this.createFormRow(
+      this.saveSection,
+      'button',
+      'command',
+      'Save',
+      'saveButton',
+      'SAVE',
+    );
 
     // Add action listener to save button
     saveButton.addEventListener('click', async () => {
@@ -996,7 +1049,11 @@ class GenerateScreen {
         // Remove old action package under previous name to prevent proliferation with name changes
         storedActions[thisObj.globalAttributes.name] = undefined;
       }
-      const actionPackage = { groups: thisObj.groups, actions: thisObj.actions, global: thisObj.globalAttributes };
+      const actionPackage = {
+        groups: thisObj.groups,
+        actions: thisObj.actions,
+        global: thisObj.globalAttributes,
+      };
       storedActions[thisObj.globalAttributes.name] = actionPackage;
       setSettings({ 'PMMG-Action': storedActions });
 
@@ -1006,13 +1063,27 @@ class GenerateScreen {
     });
 
     // Add open button
-    const openButton = this.createFormRow(this.saveSection, 'button', 'command', 'Open', 'openButton', 'OPEN');
+    const openButton = this.createFormRow(
+      this.saveSection,
+      'button',
+      'command',
+      'Open',
+      'openButton',
+      'OPEN',
+    );
     openButton.addEventListener('click', () => {
       showBuffer(`XIT ACTION_${thisObj.globalAttributes.name.split(' ').join('_')}`);
     });
 
     // Add help button
-    const helpButton = this.createFormRow(this.saveSection, 'button', 'command', 'Help', 'helpButton', 'HELP');
+    const helpButton = this.createFormRow(
+      this.saveSection,
+      'button',
+      'command',
+      'Help',
+      'helpButton',
+      'HELP',
+    );
     helpButton.addEventListener('click', () => {
       showBuffer('XIT HELP_ACTION');
     });
@@ -1248,7 +1319,12 @@ function parseActionPackage(rawActionPackage, messageBox) {
           }
 
           // Check against price limit
-          if (action.priceLimits && action.priceLimits[mat] && price > action.priceLimits[mat] && !action.buyPartial) {
+          if (
+            action.priceLimits &&
+            action.priceLimits[mat] &&
+            price > action.priceLimits[mat] &&
+            !action.buyPartial
+          ) {
             addMessage(messageBox, `Error: Price above limit on ${cxTicker}`);
             error = true;
             return;
@@ -1264,7 +1340,11 @@ function parseActionPackage(rawActionPackage, messageBox) {
             addMessage(messageBox, `Error: Not enough materials on ${cxTicker}`);
             error = true;
             return;
-          } else if (!price && (!action.priceLimits || !action.priceLimits[mat]) && orderBook.supply > 0) {
+          } else if (
+            !price &&
+            (!action.priceLimits || !action.priceLimits[mat]) &&
+            orderBook.supply > 0
+          ) {
             // If fine with buying partial, buy the entire stock
             price = orderBook.sellingOrders[orderBook.sellingOrders.length - 1].limit.amount;
             amount = orderBook.supply;
@@ -1491,7 +1571,9 @@ async function createExecuteScreen(tile, packageName) {
   validateButton.addEventListener('click', () => {
     addMessage(messageBox, '', true);
     const actionPackage = parseActionPackage(rawActionPackage, messageBox);
-    actionPackage.valid && validateAction(actionPackage, messageBox);
+    if (actionPackage.valid) {
+      validateAction(actionPackage, messageBox);
+    }
   });
 
   // Execute the action!
@@ -1791,7 +1873,8 @@ function executeAction(
         }
       } else {
         const feedback =
-          buffer.querySelector(Selector.ActionFeedbackMain) || buffer.querySelector(Selector.ActionConfirmationMessage);
+          buffer.querySelector(Selector.ActionFeedbackMain) ||
+          buffer.querySelector(Selector.ActionConfirmationMessage);
         if (!feedback || !feedback.textContent) {
           addMessage(messageBox, 'Error: An error was encountered but could not be read');
         } else {
@@ -1860,7 +1943,9 @@ function undoButtonMove(button, resetStyles) {
 // Monitor for success/failure in action
 function monitorStatus(buffer, callback) {
   const onMutationsObserved = function () {
-    const dismiss = buffer.querySelector(Selector.ActionDismiss) || buffer.querySelector(Selector.ActionConfirmation);
+    const dismiss =
+      buffer.querySelector(Selector.ActionDismiss) ||
+      buffer.querySelector(Selector.ActionConfirmation);
     if (dismiss) {
       observer.disconnect();
       callback(dismiss);
@@ -1908,7 +1993,7 @@ function init() {
       }
       return 'EXECUTE ACTION PACKAGE';
     },
-    component: createXitAdapter(Execute),
+    module: Execute,
   });
 }
 

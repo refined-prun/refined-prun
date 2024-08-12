@@ -109,7 +109,10 @@ function minimizeHeaders(buffer, minByDefault, tag) {
     return;
   });
 
-  headers[0].parentElement.insertBefore(createHeaderRow('Minimize', minimizeButton, tag), headers[0]);
+  headers[0].parentElement.insertBefore(
+    createHeaderRow('Minimize', minimizeButton, tag),
+    headers[0],
+  );
   return;
 }
 
