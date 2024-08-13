@@ -3,8 +3,7 @@ import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
-import { store } from '@src/prun-api/data/store';
-import { selectShips } from '@src/prun-api/data/ships';
+import { shipsStore } from '@src/prun-api/data/ships';
 import { getTickerByMaterialName } from '@src/prun-ui/material-names';
 import { widgetBefore } from '@src/utils/vue-mount';
 
@@ -43,12 +42,11 @@ function processNotification(element: Element) {
       continue;
     }
 
-    widgetBefore(
-      textElement,
+    widgetBefore(textElement, () => (
       <div class="rprun-notification-type" style={{ color: search[2] }}>
         {search[1].toUpperCase()}
-      </div>,
-    );
+      </div>
+    ));
     let newText = textContent;
     newText = newText.replace(/Chamber of Global Commerce/, 'COGC');
     switch (search[0]) {
@@ -93,7 +91,7 @@ function processNotification(element: Element) {
       case 'arrived at': {
         newText = newText.replace(/its destination /, '');
         const match = newText.match(/AVI-[0-9A-Z]{5}/)?.[0];
-        const ships = selectShips(store.getState());
+        const ships = shipsStore.all.value;
         const ship = ships.find(x => x.registration === match && x.name);
         if (match && ship) {
           newText = newText.replace(match, ship.name);

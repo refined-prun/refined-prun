@@ -1,26 +1,23 @@
-import { createEntitySlice } from '@src/prun-api/data/utils';
-import { createEntityAdapter, createSelector } from '@reduxjs/toolkit';
-import { State } from '@src/prun-api/data/store';
+import { createEntityStore } from '@src/prun-api/data/create-entity-store';
+import { messages } from '@src/prun-api/data/api-messages';
+import { computed } from 'vue';
 
-export const storesAdapter = createEntityAdapter<PrunApi.Store>();
+const store = createEntityStore<PrunApi.Store>();
+const state = store.state;
 
-const slice = createEntitySlice(storesAdapter, {
-  STORAGE_STORAGES(state, data: { stores: PrunApi.Store[] }) {
-    storesAdapter.setAll(state, data.stores);
-    state.fetched = true;
+messages({
+  STORAGE_STORAGES(data: { stores: PrunApi.Store[] }) {
+    store.setAll(data.stores);
+    store.setFetched();
   },
-  STORAGE_CHANGE(state, data: { stores: PrunApi.Store[] }) {
-    storesAdapter.setMany(state, data.stores);
+  STORAGE_CHANGE(data: { stores: PrunApi.Store[] }) {
+    store.setMany(data.stores);
   },
 });
 
-export const storageReducer = slice.reducer;
-
-const selectors = storesAdapter.getSelectors((state: State) => state.storage);
-
-const selectStorageAddressMap = createSelector(selectors.selectAll, stores => {
+const byAddress = computed(() => {
   const map = new Map<string, PrunApi.Store[]>();
-  for (const store of stores) {
+  for (const store of state.all.value) {
     let byAddress = map.get(store.addressableId);
     if (!byAddress) {
       byAddress = [];
@@ -31,5 +28,7 @@ const selectStorageAddressMap = createSelector(selectors.selectAll, stores => {
   return map;
 });
 
-export const selectStorageByAddress = (state: State, address: string) =>
-  selectStorageAddressMap(state).get(address);
+export const storagesStore = {
+  ...state,
+  getByAddress: (address?: string | null) => (address ? byAddress.value.get(address) : undefined),
+};

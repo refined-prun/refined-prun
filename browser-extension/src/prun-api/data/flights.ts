@@ -1,24 +1,22 @@
-import { createEntitySlice } from '@src/prun-api/data/utils';
-import { createEntityAdapter } from '@reduxjs/toolkit';
-import { State } from '@src/prun-api/data/store';
+import { createEntityStore } from '@src/prun-api/data/create-entity-store';
+import { messages } from '@src/prun-api/data/api-messages';
 
-export const flightsAdapter = createEntityAdapter<PrunApi.Flight>();
+const store = createEntityStore<PrunApi.Flight>();
+const state = store.state;
 
-const slice = createEntitySlice(flightsAdapter, {
-  SHIP_FLIGHT_FLIGHTS(state, data: { flights: PrunApi.Flight[] }) {
-    flightsAdapter.setAll(state, data.flights);
-    state.fetched = true;
+messages({
+  SHIP_FLIGHT_FLIGHTS(data: { flights: PrunApi.Flight[] }) {
+    store.setAll(data.flights);
+    store.setFetched();
   },
-  SHIP_FLIGHT_FLIGHT(state, data: PrunApi.Flight) {
-    flightsAdapter.setOne(state, data);
+  SHIP_FLIGHT_FLIGHT(data: PrunApi.Flight) {
+    store.setOne(data);
   },
-  SHIP_FLIGHT_FLIGHT_ENDED(state, data: PrunApi.Flight) {
-    flightsAdapter.removeOne(state, data.id);
+  SHIP_FLIGHT_FLIGHT_ENDED(data: PrunApi.Flight) {
+    store.removeOne(data.id);
   },
 });
 
-export const flightsReducer = slice.reducer;
-
-const selectors = flightsAdapter.getSelectors((s: State) => s.flights);
-
-export const selectFlightById = selectors.selectById;
+export const flightsStore = {
+  ...state,
+};

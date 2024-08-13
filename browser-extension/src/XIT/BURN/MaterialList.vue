@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import usePrunSelector from '@src/hooks/use-prun-selector';
-import { selectMaterialsByTickers, sortMaterials } from '@src/prun-api/data/materials';
+import { materialsStore, sortMaterials } from '@src/prun-api/data/materials';
 import { computed, PropType } from 'vue';
 import { PlanetBurn } from '@src/burn';
 import MaterialRow from '@src/XIT/BURN/MaterialRow.vue';
@@ -17,14 +16,14 @@ const props = defineProps({
   },
 });
 
-const materials = usePrunSelector(s => selectMaterialsByTickers(s, Object.keys(props.burn.burn)));
-const filtered = computed(() =>
-  materials.value
+const materials = computed(() => Object.keys(props.burn.burn).map(materialsStore.getByTicker));
+const sorted = computed(() => {
+  const filtered = materials.value
     .slice()
     .filter(x => x)
-    .map(x => x!),
-);
-const sorted = usePrunSelector(s => sortMaterials(s, filtered.value));
+    .map(x => x!);
+  return sortMaterials(filtered);
+});
 </script>
 
 <template>

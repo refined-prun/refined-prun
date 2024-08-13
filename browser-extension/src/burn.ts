@@ -1,10 +1,8 @@
-import { State } from '@src/prun-api/data/store';
-import { selectProductionLinesBySiteId } from '@src/prun-api/data/production';
-import { selectWorkforceBySiteId } from '@src/prun-api/data/workforces';
-import { selectStorageByAddress } from '@src/prun-api/data/storage';
+import { productionStore } from '@src/prun-api/data/production';
+import { workforcesStore } from '@src/prun-api/data/workforces';
+import { storagesStore } from '@src/prun-api/data/storage';
 import { showBuffer } from '@src/util';
-import { createSelector } from '@reduxjs/toolkit';
-import { selectSiteById } from '@src/prun-api/data/sites';
+import { sitesStore } from '@src/prun-api/data/sites';
 import {
   getPlanetNameFromAddress,
   getPlanetNaturalIdFromAddress,
@@ -28,29 +26,25 @@ export interface PlanetBurn {
 
 const requestedData: Set<string> = new Set();
 
-export function createBurnSelector(siteOrId: PrunApi.Site | string) {
-  const id = typeof siteOrId === 'string' ? siteOrId : siteOrId.siteId;
-  return createSelector(
-    (state: State) => selectSiteById(state, id),
-    (state: State) => selectWorkforceBySiteId(state, id),
-    (state: State) => selectProductionLinesBySiteId(state, id),
-    (state: State) => selectStorageByAddress(state, id),
-    (site, workforce, production, storage) => {
-      if (!workforce || !production) {
-        if (!requestedData.has(site.siteId)) {
-          requestedData.add(site.siteId);
-          const naturalId = getPlanetNaturalIdFromAddress(site.address);
-          showBuffer(`BS ${naturalId}`, true, true);
-        }
-        return undefined;
-      }
+export function getPlanetBurn(siteOrId: PrunApi.Site | string) {
+  const site = typeof siteOrId === 'string' ? sitesStore.getById(siteOrId)! : siteOrId;
+  const id = site.siteId;
+  const workforce = workforcesStore.getById(id)?.workforces;
+  const production = productionStore.getBySiteId(id);
+  const storage = storagesStore.getByAddress(id);
+  if (!workforce || !production) {
+    if (!requestedData.has(site.siteId)) {
+      requestedData.add(site.siteId);
+      const naturalId = getPlanetNaturalIdFromAddress(site.address);
+      showBuffer(`BS ${naturalId}`, true, true);
+    }
+    return undefined;
+  }
 
-      return {
-        planetName: getPlanetNameFromAddress(site.address),
-        burn: calc(production, workforce, storage ?? []),
-      } as PlanetBurn;
-    },
-  );
+  return {
+    planetName: getPlanetNameFromAddress(site.address),
+    burn: calc(production, workforce, storage ?? []),
+  } as PlanetBurn;
 }
 
 function calc(

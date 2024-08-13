@@ -1,53 +1,66 @@
-import { caseReducers } from '@src/prun-api/data/utils';
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { State } from '@src/prun-api/data/store';
+import { createEntityStore } from '@src/prun-api/data/create-entity-store';
+import { messages } from '@src/prun-api/data/api-messages';
+import { computed } from 'vue';
 
-export const linesAdapter = createEntityAdapter<PrunApi.ProductionLine>();
+const store = createEntityStore<PrunApi.ProductionLine>();
+const state = store.state;
 
-const slice = createSlice({
-  name: 'production',
-  initialState: {
-    lines: linesAdapter.getInitialState(),
-    bySiteId: {} as Record<string, PrunApi.ProductionLine[] | undefined>,
+messages({
+  PRODUCTION_SITE_PRODUCTION_LINES(data: {
+    siteId: string;
+    productionLines: PrunApi.ProductionLine[];
+  }) {
+    store.setMany(data.productionLines);
   },
-  reducers: {},
-  extraReducers: builder =>
-    caseReducers(builder, {
-      PRODUCTION_SITE_PRODUCTION_LINES(
-        state,
-        data: {
-          siteId: string;
-          productionLines: PrunApi.ProductionLine[];
-        },
-      ) {
-        linesAdapter.setAll(state.lines, data.productionLines);
-        state.bySiteId[data.siteId] = data.productionLines;
-      },
-      PRODUCTION_ORDER_ADDED(state, data: PrunApi.ProductionOrder) {
-        const line = state.lines.entities[data.productionLineId];
-        if (!line) {
-          return;
-        }
-        line.orders.push(data);
-      },
-      PRODUCTION_ORDER_UPDATED(state, data: PrunApi.ProductionOrder) {
-        const line = state.lines.entities[data.productionLineId];
-        if (!line) {
-          return;
-        }
-        line.orders = line.orders.map(x => (x.id === data.id ? data : x));
-      },
-      PRODUCTION_ORDER_REMOVED(state, data: { orderId: string; productionLineId: string }) {
-        const line = state.lines.entities[data.productionLineId];
-        if (!line) {
-          return;
-        }
-        line.orders = line.orders.filter(x => x.id !== data.orderId);
-      },
-    }),
+  PRODUCTION_ORDER_ADDED(data: PrunApi.ProductionOrder) {
+    const line = state.entities[data.productionLineId];
+    if (!line) {
+      return;
+    }
+
+    state.entities[data.productionLineId] = {
+      ...line,
+      orders: [...line.orders, data],
+    };
+  },
+  PRODUCTION_ORDER_UPDATED(data: PrunApi.ProductionOrder) {
+    const line = state.entities[data.productionLineId];
+    if (!line) {
+      return;
+    }
+
+    state.entities[data.productionLineId] = {
+      ...line,
+      orders: line.orders.map(x => (x.id === data.id ? data : x)),
+    };
+  },
+  PRODUCTION_ORDER_REMOVED(data: { orderId: string; productionLineId: string }) {
+    const line = state.entities[data.productionLineId];
+    if (!line) {
+      return;
+    }
+
+    state.entities[data.productionLineId] = {
+      ...line,
+      orders: line.orders.filter(x => x.id !== data.orderId),
+    };
+  },
 });
 
-export const productionReducer = slice.reducer;
+const bySiteId = computed(() => {
+  const map = new Map<string, PrunApi.ProductionLine[]>();
+  for (const line of state.all.value) {
+    let lines = map.get(line.siteId);
+    if (!lines) {
+      lines = [];
+      map.set(line.siteId, lines);
+    }
+    lines.push(line);
+  }
+  return map;
+});
 
-export const selectProductionLinesBySiteId = (state: State, siteId: string) =>
-  state.production.bySiteId[siteId];
+export const productionStore = {
+  ...state,
+  getBySiteId: (siteId?: string | null) => (siteId ? bySiteId.value.get(siteId) : undefined),
+};

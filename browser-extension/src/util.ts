@@ -9,9 +9,9 @@ import PrunCss from '@src/prun-ui/prun-css';
 import observeReadyElementsByClassName from '@src/utils/mutation-observer';
 import onetime from 'onetime';
 import { dot } from '@src/utils/dot';
-import { store } from '@src/prun-api/data/store';
-import { selectCategoryById, selectMaterialByTicker } from '@src/prun-api/data/materials';
+import { materialsStore } from '@src/prun-api/data/materials';
 import { getMaterialNameByTicker } from '@src/prun-ui/material-names';
+import { materialCategoriesStore } from '@src/prun-api/data/material-categories';
 
 export const hourFormatter = new Intl.DateTimeFormat(undefined, {
   hour: '2-digit',
@@ -439,13 +439,12 @@ export function createMaterialElement(
   small: boolean = false,
   building?,
 ) {
-  const state = store.getState();
-  const material = selectMaterialByTicker(state, ticker);
+  const material = materialsStore.getByTicker(ticker);
   if (!material && ticker != 'SHPT' && !building) {
     return null;
   } // Return nothing if the material isn't recognized
   const name = getMaterialNameByTicker(ticker) ?? 'Shipment'; // The full name of the material (Basic Bulkhead)
-  const category = material ? selectCategoryById(state, material.category).name : 'shipment'; // The category of the material
+  const category = material ? materialCategoriesStore.getById(material.category)!.name : 'shipment'; // The category of the material
 
   const matText = createTextSpan(ticker, className); // The ticker text in the middle
   matText.classList.add(...WithStyles(Style.MatText)); // Apply styles

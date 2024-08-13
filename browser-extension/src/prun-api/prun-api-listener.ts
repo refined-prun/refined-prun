@@ -8,7 +8,7 @@ import user, {
   StorageEntry,
   WarehouseSiteEntry,
 } from '@src/store/user';
-import { store } from '@src/prun-api/data/store';
+import { dispatch } from '@src/prun-api/data/api-messages';
 
 let companyContext: string | undefined;
 
@@ -41,7 +41,7 @@ function processEvent(packet: PrunApi.Packet) {
         type: message.messageType,
         data: message.payload,
       };
-      store.dispatch(storeAction);
+      dispatch(storeAction);
       message['dispatched'] = true;
     }
   } else if (!packet['dispatched']) {
@@ -49,7 +49,7 @@ function processEvent(packet: PrunApi.Packet) {
       type: packet.messageType,
       data: packet.payload,
     };
-    store.dispatch(storeAction);
+    dispatch(storeAction);
   }
 
   switch (packet.messageType) {

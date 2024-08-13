@@ -27,15 +27,12 @@ export default {};
 
 <script setup lang="ts">
 import SettingsButton from '@src/XIT/BURN/SettingsButton.vue';
-import usePrunSelector from '@src/hooks/use-prun-selector';
 import { _$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/prun-ui/prun-css';
 import { settings } from '@src/store/settings';
 import { computed } from 'vue';
-import { createSelector } from '@reduxjs/toolkit';
-import { selectSiteByPlanetNaturalIdOrName, selectSitesEntities } from '@src/prun-api/data/sites';
-import { State } from '@src/prun-api/data/store';
-import { createBurnSelector, PlanetBurn } from '@src/burn';
+import { sitesStore } from '@src/prun-api/data/sites';
+import { getPlanetBurn, PlanetBurn } from '@src/burn';
 import { comparePlanets } from '@src/util';
 import BurnSection from '@src/XIT/BURN/BurnSection.vue';
 
@@ -46,36 +43,27 @@ const props = defineProps({
   },
 });
 
-const sitesSelector = computed(() => createSitesSelector(props.parameters));
-const sites = usePrunSelector(s => sitesSelector.value(s));
-
-const burnsSelector = computed(() => createBurnSelectorForSites(sites.value));
-const planetBurn = usePrunSelector(s => burnsSelector.value(s));
-
-function createSitesSelector(parameters: string[]) {
+const sites = computed(() => {
+  const parameters = props.parameters;
   if (parameters.length === 1 || parameters[1].toLowerCase() == 'all') {
-    return createSelector(selectSitesEntities, sites => Object.values(sites) as PrunApi.Site[]);
+    return sitesStore.all.value;
   }
 
-  const selectors = parameters
+  return parameters
     .slice(1)
-    .map(x => (state: State) => selectSiteByPlanetNaturalIdOrName(state, x));
-  return createSelector(selectors, (...sites) =>
-    sites.filter((x): x is PrunApi.Site => x !== undefined),
-  );
-}
+    .map(x => sitesStore.getByPlanetNaturalIdOrName(x))
+    .filter(x => x)
+    .map(x => x!);
+});
 
-function createBurnSelectorForSites(sites: PrunApi.Site[]) {
-  return createSelector(sites.map(createBurnSelector), processBurn);
-}
-
-function processBurn(...burn: (PlanetBurn | undefined)[]) {
+const planetBurn = computed(() => {
+  const burn = sites.value.map(getPlanetBurn);
   const filtered = burn.filter((x): x is PlanetBurn => x !== undefined);
-  filtered.sort((a, b) => comparePlanets(a.planetName, b.planetName));
-
   if (filtered.length <= 1) {
     return filtered;
   }
+
+  filtered.sort((a, b) => comparePlanets(a.planetName, b.planetName));
 
   const overallBurn = {};
   for (const burn of filtered) {
@@ -102,7 +90,7 @@ function processBurn(...burn: (PlanetBurn | undefined)[]) {
   filtered.push({ burn: overallBurn, planetName: 'Overall' });
 
   return filtered;
-}
+});
 
 const screenNameElem = _$(PrunCss.ScreenControls.currentScreenName);
 const screenName = screenNameElem ? screenNameElem.textContent : '';

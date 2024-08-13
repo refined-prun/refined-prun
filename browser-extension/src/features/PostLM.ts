@@ -2,8 +2,7 @@ import { Module } from '../ModuleRunner';
 import { Selector } from '../Selector';
 import { CurrencySymbols } from '../GameProperties';
 import { createTextSpan, genericCleanup } from '../util';
-import { selectMaterialByTicker } from '@src/prun-api/data/materials';
-import { store } from '@src/prun-api/data/store';
+import { materialsStore } from '@src/prun-api/data/materials';
 import { getTickerByMaterialName } from '@src/prun-ui/material-names';
 
 export class PostLM implements Module {
@@ -75,7 +74,7 @@ export class PostLM implements Module {
           if (!ticker) {
             return;
           }
-          const matInfo = selectMaterialByTicker(store.getState(), ticker);
+          const matInfo = materialsStore.getByTicker(ticker);
           if (!matInfo) {
             return;
           }

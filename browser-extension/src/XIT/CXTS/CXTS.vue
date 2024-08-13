@@ -21,8 +21,7 @@ export default {};
 
 <script setup lang="ts">
 import { showBuffer } from '@src/util';
-import usePrunSelector from '@src/hooks/use-prun-selector';
-import { selectCxos } from '@src/prun-api/data/cxos';
+import { cxosStore } from '@src/prun-api/data/cxos';
 import { computed } from 'vue';
 import DateRow from '@src/XIT/CXTS/DateRow.vue';
 import TradeRow from '@src/XIT/CXTS/TradeRow.vue';
@@ -30,7 +29,7 @@ import { sameDay } from '@src/XIT/CXTS/utils';
 
 showBuffer('CXOS', true, true);
 
-const orders = usePrunSelector(selectCxos);
+const orders = cxosStore.all;
 
 interface OrderTrade {
   order: PrunApi.CXOrder;

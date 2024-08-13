@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import ColoredIcon from '@src/components/ColoredIcon.vue';
-import usePrunSelector from '@src/hooks/use-prun-selector';
-import { selectContractById } from '@src/prun-api/data/contracts';
+import { contractsStore } from '@src/prun-api/data/contracts';
 import PrunCss from '@src/prun-ui/prun-css';
 import { showBuffer } from '@src/util';
 import { computed, useCssModule } from 'vue';
@@ -15,7 +14,7 @@ const props = defineProps({
 });
 
 const $style = useCssModule();
-const contract = usePrunSelector(s => selectContractById(s, props.contractId));
+const contract = computed(() => contractsStore.getById(props.contractId));
 
 const containerClasses = computed(() => [
   PrunCss.MaterialIcon.container,
@@ -26,7 +25,7 @@ const containerClasses = computed(() => [
   },
 ]);
 
-const onClick = () => showBuffer(`CONT ${contract.value.localId}`);
+const onClick = () => showBuffer(`CONT ${contract.value?.localId}`);
 </script>
 
 <template>

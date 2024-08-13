@@ -3,8 +3,7 @@ import { NonProductionBuildings } from '../GameProperties';
 import user from '@src/store/user';
 import xit from './xit-registry';
 import features from '@src/feature-registry';
-import { store } from '@src/prun-api/data/store';
-import { selectShips } from '@src/prun-api/data/ships';
+import { shipsStore } from '@src/prun-api/data/ships';
 
 // This entire module is really, really messy and needs to be rewritten.
 class Repairs {
@@ -30,7 +29,7 @@ class Repairs {
       return;
     }
 
-    const ships = selectShips(store.getState());
+    const ships = shipsStore.all.value;
 
     // Generate repairs screen for all things
     if (this.parameters.length < 2) {

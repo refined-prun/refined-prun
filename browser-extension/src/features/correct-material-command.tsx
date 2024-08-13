@@ -3,8 +3,7 @@ import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import observeReadyElementsByClassName from '@src/utils/mutation-observer';
 import { _$ } from '@src/utils/get-element-by-class-name';
-import { selectMaterialByTicker } from '@src/prun-api/data/materials';
-import { store } from '@src/prun-api/data/store';
+import { materialsStore } from '@src/prun-api/data/materials';
 
 const correctableCommands = new Set(['CXM', 'CXOB', 'CXP', 'CXPC', 'CXPO', 'MAT']);
 
@@ -22,7 +21,7 @@ export function onSelectorReady(selector: HTMLDivElement) {
       return;
     }
 
-    const material = selectMaterialByTicker(store.getState(), parameter);
+    const material = materialsStore.getByTicker(parameter);
     if (!material) {
       return;
     }

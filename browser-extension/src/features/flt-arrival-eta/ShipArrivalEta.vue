@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import usePrunSelector from '@src/hooks/use-prun-selector';
-import { selectShipByRegistration } from '@src/prun-api/data/ships';
 import { computed } from 'vue';
-import { selectFlightById } from '@src/prun-api/data/flights';
+import { shipsStore } from '@src/prun-api/data/ships';
+import { flightsStore } from '@src/prun-api/data/flights';
 import { hourFormatter } from '@src/util';
 
 const props = defineProps({
@@ -13,18 +12,14 @@ const props = defineProps({
   },
 });
 
-const ship = usePrunSelector(s =>
-  props.shipRegistration ? selectShipByRegistration(s, props.shipRegistration) : undefined,
-);
-const flight = usePrunSelector(s =>
-  ship.value?.flightId ? selectFlightById(s, ship.value?.flightId) : undefined,
-);
+const ship = computed(() => shipsStore.getByRegistration(props.shipRegistration));
+const flight = computed(() => flightsStore.getById(ship.value?.flightId));
+const eta = computed(() => calculateEta(flight.value?.arrival.timestamp));
 
-const eta = computed(() =>
-  flight.value ? calculateEta(flight.value.arrival.timestamp) : undefined,
-);
-
-function calculateEta(timestamp: number) {
+function calculateEta(timestamp: number | undefined) {
+  if (!timestamp) {
+    return undefined;
+  }
   const eta = new Date(timestamp);
   const now = new Date();
   const diffTime = Math.abs(eta.getTime() - now.getTime());

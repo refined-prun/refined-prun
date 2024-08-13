@@ -1,6 +1,5 @@
-import { createEntitySlice } from '@src/prun-api/data/utils';
-import { createEntityAdapter } from '@reduxjs/toolkit';
-import { State } from '@src/prun-api/data/store';
+import { createEntityStore } from '@src/prun-api/data/create-entity-store';
+import { messages } from '@src/prun-api/data/api-messages';
 
 interface Entity {
   address: PrunApi.Address;
@@ -8,21 +7,18 @@ interface Entity {
   workforces: PrunApi.Workforce[];
 }
 
-export const workforcesAdapter = createEntityAdapter<Entity, string>({
-  selectId: x => x.siteId,
+const store = createEntityStore<Entity>(x => x.siteId);
+const state = store.state;
+
+messages({
+  WORKFORCE_WORKFORCES(data: Entity) {
+    store.setOne(data);
+  },
+  WORKFORCE_WORKFORCES_UPDATED(data: Entity) {
+    store.setOne(data);
+  },
 });
 
-const slice = createEntitySlice(workforcesAdapter, {
-  WORKFORCE_WORKFORCES(state, data: Entity) {
-    workforcesAdapter.setOne(state, data);
-  },
-  WORKFORCE_WORKFORCES_UPDATED(state, data: Entity) {
-    workforcesAdapter.setOne(state, data);
-  },
-});
-
-export const workforcesReducer = slice.reducer;
-
-const selectors = workforcesAdapter.getSelectors((s: State) => s.workforces);
-export const selectWorkforceBySiteId = (state: State, address: string) =>
-  selectors.selectById(state, address)?.workforces;
+export const workforcesStore = {
+  ...state,
+};

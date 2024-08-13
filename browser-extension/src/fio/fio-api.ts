@@ -1,6 +1,7 @@
 import prun from '@src/prun-api/prun';
 import { loadFallbackFioResponse } from '@src/prun-api/fallback-files';
-import { store } from '@src/prun-api/data/store';
+import { planetsStore } from '@src/prun-api/data/planets';
+import { dispatch } from '@src/prun-api/data/api-messages';
 
 export function preloadFioResponses() {
   loadAllPlanets();
@@ -10,20 +11,20 @@ async function loadAllPlanets() {
   const response = await fetch('https://rest.fnar.net/planet/allplanets');
   const json = (await response.json()) as FioApi.AllPlanetsShort;
   prun.planets.applyFioResponse(json);
-  dispatch(json);
+  dispatchFioResponse(json);
 }
 
 export async function loadFallbackPlanetData() {
   const fallbackResponse = await loadFallbackFioResponse<FioApi.AllPlanetsShort>('allplanets');
-  if (store.getState().planets.fetched) {
+  if (planetsStore.fetched.value) {
     return;
   }
 
-  dispatch(fallbackResponse);
+  dispatchFioResponse(fallbackResponse);
 }
 
-function dispatch(response: FioApi.AllPlanetsShort) {
-  store.dispatch({
+function dispatchFioResponse(response: FioApi.AllPlanetsShort) {
+  dispatch({
     type: 'FIO_PLANET_DATA',
     data: {
       planets: response.map(x => ({

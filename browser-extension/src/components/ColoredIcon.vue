@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import usePrunSelector from '@src/hooks/use-prun-selector';
-import { selectCategoryById, selectMaterialByTicker } from '@src/prun-api/data/materials';
+import { materialsStore } from '@src/prun-api/data/materials';
 import { getMaterialNameByTicker } from '@src/prun-ui/material-names';
 import PrunCss from '@src/prun-ui/prun-css';
-import { PropType } from 'vue';
+import { computed, PropType } from 'vue';
+import { materialCategoriesStore } from '@src/prun-api/data/material-categories';
 
 const props = defineProps({
   ticker: {
@@ -18,10 +18,8 @@ const props = defineProps({
 
 let name: string;
 let category: string;
-const material = usePrunSelector(s => selectMaterialByTicker(s, props.ticker));
-const materialCategory = usePrunSelector(s =>
-  selectCategoryById(s, material.value?.category ?? ''),
-);
+const material = computed(() => materialsStore.getByTicker(props.ticker));
+const materialCategory = computed(() => materialCategoriesStore.getById(material.value?.category));
 if (props.ticker === 'SHPT') {
   name = 'Shipment';
   category = 'shipment';

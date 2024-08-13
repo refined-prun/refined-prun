@@ -1,50 +1,35 @@
-import { caseReducers } from '@src/prun-api/data/utils';
-import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
-import { State } from '@src/prun-api/data/store';
+import { createEntityStore } from '@src/prun-api/data/create-entity-store';
+import { messages } from '@src/prun-api/data/api-messages';
+import { computed } from 'vue';
+import { materialCategoriesStore } from '@src/prun-api/data/material-categories';
 
-export const materialsAdapter = createEntityAdapter<PrunApi.Material>();
-export const materialCategoriesAdapter = createEntityAdapter<PrunApi.MaterialCategory>();
+const store = createEntityStore<PrunApi.Material>();
+const state = store.state;
 
-const slice = createSlice({
-  name: 'materials',
-  initialState: {
-    categories: materialCategoriesAdapter.getInitialState(),
-    materials: materialsAdapter.getInitialState(),
-    fetched: false,
+messages({
+  WORLD_MATERIAL_CATEGORIES(data: { categories: PrunApi.MaterialCategory[] }) {
+    const materials = data.categories.flatMap(x => x.materials);
+    store.setAll(materials);
+    store.setFetched();
   },
-  reducers: {},
-  extraReducers: builder =>
-    caseReducers(builder, {
-      WORLD_MATERIAL_CATEGORIES(state, data: { categories: PrunApi.MaterialCategory[] }) {
-        materialCategoriesAdapter.setAll(state.categories, data.categories);
-        const materials = data.categories.flatMap(x => x.materials);
-        materialsAdapter.setAll(state.materials, materials);
-        state.fetched = true;
-      },
-    }),
 });
 
-export const materialsReducer = slice.reducer;
-
-const materialCategorySelectors = materialCategoriesAdapter.getSelectors(
-  (s: State) => s.materials.categories,
-);
-const materialSelectors = materialsAdapter.getSelectors((s: State) => s.materials.materials);
-export const selectCategoryById = materialCategorySelectors.selectById;
-const selectMaterialTickerMap = createSelector(materialSelectors.selectAll, materials => {
-  const map: Map<string, PrunApi.Material> = new Map();
-  for (const material of materials) {
+const byTicker = computed(() => {
+  const map = new Map<string, PrunApi.Material>();
+  for (const material of state.all.value) {
     map.set(material.ticker.toUpperCase(), material);
   }
   return map;
 });
-export const selectMaterialByTicker = (state: State, ticker: string) =>
-  selectMaterialTickerMap(state).get(ticker.toUpperCase());
-export const selectMaterialsByTickers = (state: State, tickers: string[]) =>
-  tickers.map(x => selectMaterialByTicker(state, x));
 
-export const sortMaterials = (state: State, materials: PrunApi.Material[]) => {
-  const categories = materialCategorySelectors.selectEntities(state);
+export const materialsStore = {
+  ...state,
+  getByTicker: (ticker?: string | null) =>
+    ticker ? byTicker.value.get(ticker.toUpperCase()) : undefined,
+};
+
+export const sortMaterials = (materials: PrunApi.Material[]) => {
+  const categories = materialCategoriesStore.entities;
   return materials.slice().sort((a, b) => {
     const categoryA = categories[a.category].name;
     const categoryB = categories[b.category].name;

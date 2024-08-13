@@ -1,24 +1,19 @@
-import { createEntitySlice } from '@src/prun-api/data/utils';
-import { createEntityAdapter } from '@reduxjs/toolkit';
-import { State } from '@src/prun-api/data/store';
+import { createEntityStore } from '@src/prun-api/data/create-entity-store';
+import { messages } from '@src/prun-api/data/api-messages';
 
-export const contractsAdapter = createEntityAdapter<PrunApi.Contract>();
+const store = createEntityStore<PrunApi.Contract>();
+const state = store.state;
 
-const slice = createEntitySlice(contractsAdapter, {
-  CONTRACTS_CONTRACTS(state, data: { contracts: PrunApi.Contract[] }) {
-    contractsAdapter.setAll(state, data.contracts);
-    state.fetched = true;
+messages({
+  CONTRACTS_CONTRACTS(data: { contracts: PrunApi.Contract[] }) {
+    store.setAll(data.contracts);
+    store.setFetched();
   },
-  CONTRACTS_CONTRACT(state, data: PrunApi.Contract) {
-    contractsAdapter.setOne(state, data);
+  CONTRACTS_CONTRACT(data: PrunApi.Contract) {
+    store.setOne(data);
   },
 });
 
-export const contractsReducer = slice.reducer;
-
-const selectors = contractsAdapter.getSelectors((s: State) => s.contracts);
-export const selectContracts = selectors.selectAll;
-export const selectContractById = selectors.selectById;
-export const selectContractsTotal = selectors.selectTotal;
-
-export const selectContractsFetched = (s: State) => s.contracts.fetched;
+export const contractsStore = {
+  ...state,
+};

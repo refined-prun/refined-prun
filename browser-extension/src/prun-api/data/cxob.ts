@@ -1,23 +1,28 @@
-import { createEntitySlice } from '@src/prun-api/data/utils';
-import { createEntityAdapter } from '@reduxjs/toolkit';
-import { State } from '@src/prun-api/data/store';
+import { createEntityStore } from '@src/prun-api/data/create-entity-store';
+import { messages } from '@src/prun-api/data/api-messages';
 
 type Entity = PrunApi.CXBroker & { timestamp: number };
 
-export const cxobAdapter = createEntityAdapter<Entity, string>({
-  selectId: (x: Entity) => x.ticker,
-});
+const store = createEntityStore<Entity>(x => x.ticker);
+const state = store.state;
 
-const slice = createEntitySlice(cxobAdapter, {
-  COMEX_BROKER_DATA(state, data: PrunApi.CXBroker) {
-    cxobAdapter.setOne(state, {
+messages({
+  COMEX_BROKER_DATA(data: PrunApi.CXBroker) {
+    store.setOne({
       ...data,
       timestamp: Date.now(),
     });
   },
 });
 
-export const cxobReducer = slice.reducer;
+const {
+  // Store id is ticker, so remove getById to not confuse people.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getById,
+  ...filteredState
+} = state;
 
-const selectors = cxobAdapter.getSelectors((s: State) => s.cxob);
-export const selectCxobByTicker = selectors.selectById;
+export const cxobStore = {
+  ...filteredState,
+  getByTicker: state.getById,
+};

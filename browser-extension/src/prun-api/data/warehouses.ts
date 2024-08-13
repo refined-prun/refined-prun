@@ -1,18 +1,19 @@
-import { createEntitySlice } from '@src/prun-api/data/utils';
-import { createEntityAdapter } from '@reduxjs/toolkit';
+import { createEntityStore } from '@src/prun-api/data/create-entity-store';
+import { messages } from '@src/prun-api/data/api-messages';
 
-export const warehousesAdapter = createEntityAdapter<PrunApi.Warehouse, string>({
-  selectId: x => x.storeId,
+const store = createEntityStore<PrunApi.Warehouse>(x => x.storeId);
+const state = store.state;
+
+messages({
+  WAREHOUSE_STORAGES(data: { storages: PrunApi.Warehouse[] }) {
+    store.setAll(data.storages);
+    store.setFetched();
+  },
+  WAREHOUSE_STORAGE(data: PrunApi.Warehouse) {
+    store.setOne(data);
+  },
 });
 
-const slice = createEntitySlice(warehousesAdapter, {
-  WAREHOUSE_STORAGES(state, data: { storages: PrunApi.Warehouse[] }) {
-    warehousesAdapter.setAll(state, data.storages);
-    state.fetched = true;
-  },
-  WAREHOUSE_STORAGE(state, data: PrunApi.Warehouse) {
-    warehousesAdapter.setOne(state, data);
-  },
-});
-
-export const warehousesReducer = slice.reducer;
+export const warehousesStore = {
+  ...state,
+};

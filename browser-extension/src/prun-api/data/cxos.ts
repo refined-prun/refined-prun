@@ -1,27 +1,25 @@
-import { createEntitySlice } from '@src/prun-api/data/utils';
-import { createEntityAdapter } from '@reduxjs/toolkit';
-import { State } from '@src/prun-api/data/store';
+import { createEntityStore } from '@src/prun-api/data/create-entity-store';
+import { messages } from '@src/prun-api/data/api-messages';
 
-export const cxosAdapter = createEntityAdapter<PrunApi.CXOrder>();
+const store = createEntityStore<PrunApi.CXOrder>();
+const state = store.state;
 
-const slice = createEntitySlice(cxosAdapter, {
-  COMEX_TRADER_ORDERS(state, data: { orders: PrunApi.CXOrder[] }) {
-    cxosAdapter.setAll(state, data.orders);
-    state.fetched = true;
+messages({
+  COMEX_TRADER_ORDERS(data: { orders: PrunApi.CXOrder[] }) {
+    store.setAll(data.orders);
+    store.setFetched();
   },
-  COMEX_TRADER_ORDER_ADDED(state, data: PrunApi.CXOrder) {
-    cxosAdapter.addOne(state, data);
+  COMEX_TRADER_ORDER_ADDED(data: PrunApi.CXOrder) {
+    store.addOne(data);
   },
-  COMEX_TRADER_ORDER_UPDATED(state, data: PrunApi.CXOrder) {
-    cxosAdapter.setOne(state, data);
+  COMEX_TRADER_ORDER_UPDATED(data: PrunApi.CXOrder) {
+    store.setOne(data);
   },
-  COMEX_TRADER_ORDER_REMOVED(state, data: { orderId: string }) {
-    cxosAdapter.removeOne(state, data.orderId);
+  COMEX_TRADER_ORDER_REMOVED(data: { orderId: string }) {
+    store.removeOne(data.orderId);
   },
 });
 
-export const cxosReducer = slice.reducer;
-
-const selectors = cxosAdapter.getSelectors((s: State) => s.cxos);
-export const selectCxos = selectors.selectAll;
-export const selectCxosTotal = selectors.selectTotal;
+export const cxosStore = {
+  ...state,
+};

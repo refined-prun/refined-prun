@@ -24,8 +24,7 @@ import { ExchangeTickersReverse, NonProductionBuildings } from '../GamePropertie
 import user from '@src/store/user';
 import xit from './xit-registry';
 import features from '@src/feature-registry';
-import { store } from '@src/prun-api/data/store';
-import { selectCxobByTicker } from '@src/prun-api/data/cxob';
+import { cxobStore } from '@src/prun-api/data/cxob';
 
 class Execute {
   private tile: HTMLElement;
@@ -1277,7 +1276,7 @@ function parseActionPackage(rawActionPackage, messageBox) {
         const cxTicker = `${mat}.${action.exchange}`;
         let amount = parsedGroup[mat];
 
-        const orderBook = selectCxobByTicker(store.getState(), cxTicker);
+        const orderBook = cxobStore.getByTicker(cxTicker);
         if (orderBook && Date.now() - orderBook.timestamp < 900000) {
           // Check for existance and timestamp of data
           if (orderBook.sellingOrders.length == 0) {

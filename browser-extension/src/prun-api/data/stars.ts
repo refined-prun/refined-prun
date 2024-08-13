@@ -1,15 +1,16 @@
-import { createEntitySlice } from '@src/prun-api/data/utils';
-import { createEntityAdapter } from '@reduxjs/toolkit';
+import { messages } from '@src/prun-api/data/api-messages';
+import { createEntityStore } from '@src/prun-api/data/create-entity-store';
 
-export const starsAdapter = createEntityAdapter<PrunApi.Star, string>({
-  selectId: x => x.systemId,
-});
+const store = createEntityStore<PrunApi.Star>(x => x.systemId);
+const state = store.state;
 
-const slice = createEntitySlice(starsAdapter, {
-  SYSTEM_STARS_DATA(state, data: { stars: PrunApi.Star[] }) {
-    starsAdapter.setAll(state, data.stars);
-    state.fetched = true;
+messages({
+  SYSTEM_STARS_DATA(data: { stars: PrunApi.Star[] }) {
+    store.setAll(data.stars);
+    store.setFetched();
   },
 });
 
-export const starsReducer = slice.reducer;
+export const starsStore = {
+  ...state,
+};

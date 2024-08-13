@@ -1,27 +1,25 @@
-import { createEntitySlice } from '@src/prun-api/data/utils';
-import { createEntityAdapter } from '@reduxjs/toolkit';
-import { State } from '@src/prun-api/data/store';
+import { createEntityStore } from '@src/prun-api/data/create-entity-store';
+import { messages } from '@src/prun-api/data/api-messages';
 
-export const fxosAdapter = createEntityAdapter<PrunApi.FXOrder>();
+const store = createEntityStore<PrunApi.FXOrder>();
+const state = store.state;
 
-const slice = createEntitySlice(fxosAdapter, {
-  FOREX_TRADER_ORDERS(state, data: { orders: PrunApi.FXOrder[] }) {
-    fxosAdapter.setAll(state, data.orders);
-    state.fetched = true;
+messages({
+  FOREX_TRADER_ORDERS(data: { orders: PrunApi.FXOrder[] }) {
+    store.setAll(data.orders);
+    store.setFetched();
   },
-  FOREX_TRADER_ORDER_ADDED(state, data: PrunApi.FXOrder) {
-    fxosAdapter.addOne(state, data);
+  FOREX_TRADER_ORDER_ADDED(data: PrunApi.FXOrder) {
+    store.addOne(data);
   },
-  FOREX_TRADER_ORDER_UPDATED(state, data: PrunApi.FXOrder) {
-    fxosAdapter.setOne(state, data);
+  FOREX_TRADER_ORDER_UPDATED(data: PrunApi.FXOrder) {
+    store.setOne(data);
   },
-  FOREX_TRADER_ORDER_REMOVED(state, data: { orderId: string }) {
-    fxosAdapter.removeOne(state, data.orderId);
+  FOREX_TRADER_ORDER_REMOVED(data: { orderId: string }) {
+    store.removeOne(data.orderId);
   },
 });
 
-export const fxosReducer = slice.reducer;
-
-const selectors = fxosAdapter.getSelectors((s: State) => s.fxos);
-export const selectFxos = selectors.selectAll;
-export const selectFxosTotal = selectors.selectTotal;
+export const fxosStore = {
+  ...state,
+};

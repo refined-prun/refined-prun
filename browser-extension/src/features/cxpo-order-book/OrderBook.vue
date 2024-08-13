@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect } from 'vue';
-import usePrunSelector from '@src/hooks/use-prun-selector';
-import { selectCxobByTicker } from '@src/prun-api/data/cxob';
+import { cxobStore } from '@src/prun-api/data/cxob';
 import OrderRow from '@src/features/cxpo-order-book/OrderRow.vue';
 import PrunCss from '@src/prun-ui/prun-css';
 
@@ -12,7 +11,7 @@ const props = defineProps({
   },
 });
 
-const orderInfo = usePrunSelector(s => selectCxobByTicker(s, props.ticker));
+const orderInfo = computed(() => cxobStore.getByTicker(props.ticker));
 
 const offers = computed(() => (orderInfo.value?.sellingOrders ?? []).slice().reverse());
 const requests = computed(() => orderInfo.value?.buyingOrders ?? []);

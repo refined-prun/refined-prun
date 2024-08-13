@@ -21,15 +21,13 @@ export default {};
 
 <script setup lang="ts">
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
-import usePrunSelector from '@src/hooks/use-prun-selector';
-import { selectContracts, selectContractsFetched } from '@src/prun-api/data/contracts';
+import { contractsStore } from '@src/prun-api/data/contracts';
 import { computed } from 'vue';
 import ContractRow from '@src/XIT/CONTS/ContractRow.vue';
 
-const fetched = usePrunSelector(selectContractsFetched);
-const contracts = usePrunSelector(selectContracts);
-
-const filtered = computed(() => contracts.value.filter(shouldShowContract).sort(compareContracts));
+const filtered = computed(() =>
+  contractsStore.all.value.filter(shouldShowContract).sort(compareContracts),
+);
 
 function shouldShowContract(contract: PrunApi.Contract) {
   switch (contract.status) {
@@ -50,7 +48,7 @@ function compareContracts(a: PrunApi.Contract, b: PrunApi.Contract) {
 </script>
 
 <template>
-  <LoadingSpinner v-if="!fetched" />
+  <LoadingSpinner v-if="!contractsStore.fetched" />
   <table v-else>
     <thead>
       <tr>
