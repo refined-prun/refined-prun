@@ -29,19 +29,43 @@ Chart.register(
 
 type AxisType = 'linear' | 'logarithmic' | 'category' | 'time';
 
-function calculateMovingAverage(data: number[], windowSize: number) {
-  if (data.length <= windowSize) {
-    return data;
+function calculateMovingAverage(data: number[], factor: number) {
+  if (factor < 0 || factor > 1) {
+    throw new Error('Factor must be between 0 and 1');
   }
 
-  const movingAverage: (number | null)[] = [];
+  factor = Math.min(Math.max(factor, 0), 1);
+  const windowSize = Math.max(Math.floor(factor * data.length), 1);
+  const halfWindow = Math.floor(windowSize / 2);
+  const movingAverage: number[] = [];
 
-  for (let i = 0; i < data.length; i++) {
-    const start = Math.max(i - windowSize / 2 + 1, 0);
-    const end = Math.min(i + windowSize / 2 + 1, data.length);
-    const windowData = data.slice(start, end);
-    const sum = windowData.reduce((acc, val) => acc + val, 0);
-    movingAverage.push(sum / windowData.length);
+  movingAverage.push(data[0]);
+
+  let sum = data[0];
+  let start = 0;
+  let end = 0;
+
+  for (let i = 1; i < data.length; i++) {
+    let chunkStart = i - halfWindow;
+    let chunkEnd = i + halfWindow;
+
+    if (chunkStart < 0) {
+      chunkEnd += chunkStart;
+      chunkStart = 0;
+    } else if (chunkEnd >= data.length) {
+      chunkStart += chunkEnd - data.length + 1;
+      chunkEnd = data.length - 1;
+    }
+
+    while (chunkStart > start) {
+      sum -= data[start++];
+    }
+
+    while (chunkEnd > end) {
+      sum += data[++end];
+    }
+
+    movingAverage.push(sum / (end - start + 1));
   }
 
   return movingAverage;
@@ -63,7 +87,7 @@ export function generateLineGraph(
   const graph: HTMLCanvasElement = document.createElement('canvas');
   graph.width = plotWidth;
   graph.height = plotHeight;
-  const movingAverageData = calculateMovingAverage(ydata, 10);
+  const movingAverageData = calculateMovingAverage(ydata, 0.2);
 
   const ctx = graph.getContext('2d') as CanvasRenderingContext2D;
 
