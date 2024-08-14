@@ -6,6 +6,7 @@ import { useCssModule } from 'vue';
 import ColoredIcon from '@src/components/ColoredIcon.vue';
 import { materialsStore } from '@src/prun-api/data/materials';
 import { materialCategoriesStore } from '@src/prun-api/data/material-categories';
+import { getMaterialNameByTicker } from '@src/prun-ui/material-names';
 
 const props = defineProps({
   ticker: {
@@ -25,7 +26,7 @@ const $style = useCssModule();
 const material = computed(() => materialsStore.getByTicker(props.ticker));
 const materialCategory = computed(() => materialCategoriesStore.getById(material.value?.category));
 
-const name = computed(() => material.value?.name ?? 'unknown');
+const name = computed(() => getMaterialNameByTicker(material.value?.ticker) ?? 'Unknown');
 const colors = computed(() => {
   const colors = categoryColors[materialCategory.value?.name ?? ''] ?? categoryColors['unknown'];
   return {
