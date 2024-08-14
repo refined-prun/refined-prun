@@ -43,104 +43,110 @@ export function getPlanetBurn(siteOrId: PrunApi.Site | string) {
 
   return {
     planetName: getPlanetNameFromAddress(site.address),
-    burn: calc(production, workforce, storage ?? []),
+    burn: calculatePlanetBurn(production, workforce, storage ?? []),
   } as PlanetBurn;
 }
 
-function calc(
-  production: PrunApi.ProductionLine[],
-  workforces: PrunApi.Workforce[],
-  storage: PrunApi.Store[],
+export function calculatePlanetBurn(
+  production: PrunApi.ProductionLine[] | undefined,
+  workforces: PrunApi.Workforce[] | undefined,
+  storage: PrunApi.Store[] | undefined,
 ) {
   const burnDict: BurnValues = {};
 
-  for (const line of production) {
-    const numLines = line.capacity;
-    let hasRecurring = false;
-    let totalDuration = 0;
-    for (const order of line.orders) {
-      if (!order.started) {
-        // Only account for orders in the queue.
-        hasRecurring = hasRecurring || order.recurring;
-      }
-    }
-    for (const order of line.orders) {
-      if (!order.started && (!hasRecurring || order.recurring)) {
-        // Only account for orders in the queue.
-        totalDuration += order.duration.millis;
-      }
-    }
-    totalDuration /= 86400000; // Convert to days
-
-    for (const order of line.orders) {
-      if (!order.started && (!hasRecurring || order.recurring)) {
-        for (const mat of order.outputs) {
-          const materialBurn = burnDict[mat.material.ticker];
-          if (materialBurn) {
-            materialBurn.DailyAmount += (mat.amount * numLines) / totalDuration;
-          } else {
-            burnDict[mat.material.ticker] = {
-              DailyAmount: (mat.amount * numLines) / totalDuration,
-              Inventory: 0,
-              DaysLeft: 0,
-              Type: 'output',
-            };
-          }
+  if (production) {
+    for (const line of production) {
+      const numLines = line.capacity;
+      let hasRecurring = false;
+      let totalDuration = 0;
+      for (const order of line.orders) {
+        if (!order.started) {
+          // Only account for orders in the queue.
+          hasRecurring = hasRecurring || order.recurring;
         }
-        for (const mat of order.inputs) {
-          const materialBurn = burnDict[mat.material.ticker];
-          if (materialBurn) {
-            materialBurn.DailyAmount -= (mat.amount * numLines) / totalDuration;
-            if (materialBurn.Type == 'output') {
-              materialBurn.Type = 'input';
+      }
+      for (const order of line.orders) {
+        if (!order.started && (!hasRecurring || order.recurring)) {
+          // Only account for orders in the queue.
+          totalDuration += order.duration.millis;
+        }
+      }
+      totalDuration /= 86400000; // Convert to days
+
+      for (const order of line.orders) {
+        if (!order.started && (!hasRecurring || order.recurring)) {
+          for (const mat of order.outputs) {
+            const materialBurn = burnDict[mat.material.ticker];
+            if (materialBurn) {
+              materialBurn.DailyAmount += (mat.amount * numLines) / totalDuration;
+            } else {
+              burnDict[mat.material.ticker] = {
+                DailyAmount: (mat.amount * numLines) / totalDuration,
+                Inventory: 0,
+                DaysLeft: 0,
+                Type: 'output',
+              };
             }
-          } else {
-            burnDict[mat.material.ticker] = {
-              DailyAmount: (-mat.amount * numLines) / totalDuration,
-              Inventory: 0,
-              DaysLeft: 0,
-              Type: 'input',
-            };
+          }
+          for (const mat of order.inputs) {
+            const materialBurn = burnDict[mat.material.ticker];
+            if (materialBurn) {
+              materialBurn.DailyAmount -= (mat.amount * numLines) / totalDuration;
+              if (materialBurn.Type == 'output') {
+                materialBurn.Type = 'input';
+              }
+            } else {
+              burnDict[mat.material.ticker] = {
+                DailyAmount: (-mat.amount * numLines) / totalDuration,
+                Inventory: 0,
+                DaysLeft: 0,
+                Type: 'input',
+              };
+            }
           }
         }
       }
     }
   }
 
-  for (const tier of workforces) {
-    if (tier.population <= 1) {
-      // Don't count the bugged workforce with one population.
-      continue;
-    }
-    for (const need of tier.needs) {
-      const ticker = need.material.ticker;
-      const materialBurn = burnDict[ticker];
-      if (materialBurn) {
-        materialBurn.DailyAmount -= need.unitsPerInterval;
-        materialBurn.Type = 'workforce';
-      } else {
-        burnDict[ticker] = {
-          DailyAmount: -need.unitsPerInterval,
-          Inventory: 0,
-          DaysLeft: 0,
-          Type: 'workforce',
-        };
-      }
-    }
-  }
-
-  for (const inventory of storage) {
-    for (const item of inventory.items) {
-      const materialBurn = burnDict[item.quantity?.material.ticker];
-      if (!materialBurn) {
+  if (workforces) {
+    for (const tier of workforces) {
+      if (tier.population <= 1) {
+        // Don't count the bugged workforce with one population.
         continue;
       }
-      materialBurn.Inventory += item.quantity.amount;
-      if (item.quantity.amount != 0) {
-        materialBurn.DaysLeft =
-          materialBurn.DailyAmount > 0
-            ? 1000
-            : Math.floor(-materialBurn.Inventory / materialBurn.DailyAmount);
+      for (const need of tier.needs) {
+        const ticker = need.material.ticker;
+        const materialBurn = burnDict[ticker];
+        if (materialBurn) {
+          materialBurn.DailyAmount -= need.unitsPerInterval;
+          materialBurn.Type = 'workforce';
+        } else {
+          burnDict[ticker] = {
+            DailyAmount: -need.unitsPerInterval,
+            Inventory: 0,
+            DaysLeft: 0,
+            Type: 'workforce',
+          };
+        }
+      }
+    }
+  }
+
+  if (storage) {
+    for (const inventory of storage) {
+      for (const item of inventory.items) {
+        const materialBurn = burnDict[item.quantity?.material.ticker];
+        if (!materialBurn) {
+          continue;
+        }
+        materialBurn.Inventory += item.quantity.amount;
+        if (item.quantity.amount != 0) {
+          materialBurn.DaysLeft =
+            materialBurn.DailyAmount > 0
+              ? 1000
+              : Math.floor(-materialBurn.Inventory / materialBurn.DailyAmount);
+        }
       }
     }
   }

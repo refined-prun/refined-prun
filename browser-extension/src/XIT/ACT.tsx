@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-this-alias */
 import {
-  calculateBurn,
   changeValue,
   clearChildren,
   comparePlanets,
@@ -25,6 +24,11 @@ import user from '@src/store/user';
 import xit from './xit-registry';
 import features from '@src/feature-registry';
 import { cxobStore } from '@src/prun-api/data/cxob';
+import { workforcesStore } from '@src/prun-api/data/workforces';
+import { productionStore } from '@src/prun-api/data/production';
+import { storagesStore } from '@src/prun-api/data/storage';
+import { sitesStore } from '@src/prun-api/data/sites';
+import { calculatePlanetBurn } from '@src/burn';
 
 class Execute {
   private tile: HTMLElement;
@@ -1395,12 +1399,13 @@ function parseGroup(group, messageBox, errorFlag) {
     // Array of tickers to exclude
     const exclusions = group.exclusions || [];
 
-    const planetProduction = findCorrespondingPlanet(group.planet, user.production);
-    const planetWorkforce = findCorrespondingPlanet(group.planet, user.workforce);
-    const planetInv = findCorrespondingPlanet(group.planet, user.storage, true);
+    const site = sitesStore.getByPlanetName(group.planet);
+    const planetWorkforce = workforcesStore.getById(site?.siteId)?.workforces;
+    const planetProduction = productionStore.getBySiteId(site?.siteId);
+    const planetInv = storagesStore.getByAddress(site?.siteId);
 
     if (planetProduction && planetWorkforce && planetInv) {
-      const planetBurn = calculateBurn(planetProduction, planetWorkforce, planetInv); // The planet burn data
+      const planetBurn = calculatePlanetBurn(planetProduction, planetWorkforce, planetInv); // The planet burn data
 
       Object.keys(planetBurn).forEach(mat => {
         if (planetBurn[mat].DailyAmount < 0) {

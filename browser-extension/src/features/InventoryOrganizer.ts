@@ -1,8 +1,6 @@
 import { Module } from '../ModuleRunner';
 import {
-  calculateBurn,
   createMaterialElement,
-  findCorrespondingPlanet,
   getBuffersFromList,
   parseInvName,
   parsePlanetName,
@@ -13,7 +11,11 @@ import {
 import { Selector } from '../Selector';
 import { Style } from '../Style';
 import { SortingTriangleHTML } from '../GameProperties';
-import user from '@src/store/user';
+import { sitesStore } from '@src/prun-api/data/sites';
+import { workforcesStore } from '@src/prun-api/data/workforces';
+import { calculatePlanetBurn } from '@src/burn';
+import { productionStore } from '@src/prun-api/data/production';
+import { storagesStore } from '@src/prun-api/data/storage';
 
 /**
  * Sort inventory into custom categories
@@ -72,13 +74,17 @@ export class InventoryOrganizer implements Module {
       const planetNameElem = buffer.querySelector(Selector.BufferLink); // Get the human-friendly name of the planet (element)
       const planetName = planetNameElem ? parsePlanetName(planetNameElem.textContent) : ''; // Get the text out of it
 
-      let burn;
-      if (findCorrespondingPlanet(planetName, user.workforce)) {
-        const workforce = findCorrespondingPlanet(planetName, user.workforce);
-        const production = findCorrespondingPlanet(planetName, user.production);
-        const inventory = findCorrespondingPlanet(planetName, user.storage);
+      const site = sitesStore.getByPlanetName(planetName);
+      if (!site) {
+        return;
+      }
 
-        burn = calculateBurn(production, workforce, inventory);
+      const workforce = workforcesStore.getById(site.siteId)?.workforces;
+      const production = productionStore.getBySiteId(site.siteId);
+      const stores = storagesStore.getByAddress(site.siteId);
+      let burn;
+      if (workforce) {
+        burn = calculatePlanetBurn(production, workforce, stores);
       }
       const inventory = buffer.querySelector(Selector.Inventory); // The inventory element containing all the materials
       if (!inventory || !inventory.parentElement) {

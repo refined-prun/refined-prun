@@ -9,7 +9,6 @@ import {
   Popup,
   showWarningDialog,
   findCorrespondingPlanet,
-  calculateBurn,
   showBuffer,
   dateYearFormatter,
 } from '../util';
@@ -18,6 +17,10 @@ import { NonProductionBuildings } from '../GameProperties';
 import xit from './xit-registry';
 import user from '@src/store/user';
 import features from '@src/feature-registry';
+import { sitesStore } from '@src/prun-api/data/sites';
+import { workforcesStore } from '@src/prun-api/data/workforces';
+import { productionStore } from '@src/prun-api/data/production';
+import { calculatePlanetBurn } from '@src/burn';
 
 class Checklists {
   private tile: HTMLElement;
@@ -475,10 +478,11 @@ function addChecklistItem(params) {
         info['days'] == '1' ? 'day' : 'days'
       } of consumables.`;
 
-      const planetWorkforce = findCorrespondingPlanet(info['planet'], user.workforce);
-      const planetProduction = findCorrespondingPlanet(info['planet'], user.production);
+      const site = sitesStore.getByPlanetName(info['planet']);
+      const planetWorkforce = workforcesStore.getById(site?.siteId)?.workforces;
+      const planetProduction = productionStore.getBySiteId(site?.siteId);
 
-      const burn = calculateBurn(planetProduction, planetWorkforce, null);
+      const burn = calculatePlanetBurn(planetProduction, planetWorkforce, undefined);
 
       info['children'] = []; // This also resets previous children, I think this is fine/good?
       Object.keys(burn).forEach(mat => {
