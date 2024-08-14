@@ -16,6 +16,16 @@ const props = defineProps({
 const $style = useCssModule();
 const contract = computed(() => contractsStore.getById(props.contractId));
 
+const destination = computed(() => {
+  const deliveryCondition = contract.value?.conditions.find(x => x.type === 'DELIVERY_SHIPMENT');
+  const destination = deliveryCondition?.destination?.lines[1];
+  if (!destination) {
+    return undefined;
+  }
+
+  return destination.type === 'PLANET' ? destination.entity.name : destination.entity.naturalId;
+});
+
 const containerClasses = computed(() => [
   PrunCss.MaterialIcon.container,
   $style.container,
@@ -25,12 +35,22 @@ const containerClasses = computed(() => [
   },
 ]);
 
+const background = 'linear-gradient(135deg, #030303, #181818)';
+const color = '#7f7f7f';
+
 const onClick = () => showBuffer(`CONT ${contract.value?.localId}`);
 </script>
 
 <template>
   <div :class="containerClasses">
-    <ColoredIcon ticker="SHPT" :on-click="onClick" />
+    <ColoredIcon
+      label="SHPT"
+      title="Shipment"
+      :detail="destination"
+      :background="background"
+      :color="color"
+      :class="$style.icon"
+      @click="onClick" />
   </div>
 </template>
 
@@ -44,10 +64,10 @@ const onClick = () => showBuffer(`CONT ${contract.value?.localId}`);
   width: 48px;
 }
 
-.large div.ColoredIcon__container___djaR4r2 {
+.large div.icon {
   height: 48px;
   width: 48px;
-  font-size: 15.84px;
+  font-size: 16px;
   cursor: pointer;
 }
 
