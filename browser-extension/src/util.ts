@@ -3,7 +3,6 @@ import { Selector } from './Selector';
 import { Stations } from './GameProperties';
 import { CategoryColors, DefaultColors, Style, WithStyles } from './Style';
 import system from '@src/system';
-import prun from '@src/prun-api/prun';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/prun-ui/prun-css';
 import observeReadyElementsByClassName from '@src/utils/mutation-observer';
@@ -12,6 +11,8 @@ import { dot } from '@src/utils/dot';
 import { materialsStore } from '@src/prun-api/data/materials';
 import { getMaterialNameByTicker } from '@src/prun-ui/material-names';
 import { materialCategoriesStore } from '@src/prun-api/data/material-categories';
+import { planetsStore } from '@src/prun-api/data/planets';
+import { getStarNaturalId, starsStore } from '@src/prun-api/data/stars';
 
 export const hourFormatter = new Intl.DateTimeFormat(undefined, {
   hour: '2-digit',
@@ -309,8 +310,9 @@ export function findCorrespondingPlanet(planet, data, needBase?) {
     } else if (
       planet &&
       data[i]['PlanetNaturalId'] &&
-      prun.planets.get(planet) &&
-      prun.planets.get(planet) === prun.planets.get(data[i]['PlanetNaturalId']) &&
+      planetsStore.getByIdOrName(planet) &&
+      planetsStore.getByIdOrName(planet) ===
+        planetsStore.getByIdOrName(data[i]['PlanetNaturalId']) &&
       (!needBase || data[i]['type'] == 'STORE' || data[i]['type'] == 'BASE')
     ) {
       // When planet name isn't in the payload, convert it to natural ID
@@ -1474,8 +1476,8 @@ export async function loadLocalJson(path: string) {
 
 // A function to compare two planets (to be used in .sort() functions)
 export function comparePlanets(idOrNameA: string, idOrNameB: string) {
-  const planetA = prun.planets.get(idOrNameA);
-  const planetB = prun.planets.get(idOrNameB);
+  const planetA = planetsStore.getByIdOrName(idOrNameA);
+  const planetB = planetsStore.getByIdOrName(idOrNameB);
   if (!planetA) {
     return 1;
   }
@@ -1486,8 +1488,8 @@ export function comparePlanets(idOrNameA: string, idOrNameB: string) {
     return 0;
   }
 
-  const systemA = prun.systems.getByPlanet(planetA);
-  const systemB = prun.systems.getByPlanet(planetB);
+  const systemA = starsStore.getByPlanetNaturalId(planetA.naturalId);
+  const systemB = starsStore.getByPlanetNaturalId(planetB.naturalId);
   if (!systemA) {
     return 1;
   }
@@ -1496,8 +1498,8 @@ export function comparePlanets(idOrNameA: string, idOrNameB: string) {
   }
 
   if (systemA !== systemB) {
-    const isSystemANamed = systemA.name !== systemA.naturalId;
-    const isSystemBNamed = systemB.name !== systemB.naturalId;
+    const isSystemANamed = systemA.name !== getStarNaturalId(systemA);
+    const isSystemBNamed = systemB.name !== getStarNaturalId(systemB);
 
     if (isSystemANamed && !isSystemBNamed) {
       return -1;

@@ -1,9 +1,9 @@
 import { changeValue } from '../util';
 import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
-import prun from '@src/prun-api/prun';
 import observeReadyElementsByClassName from '@src/utils/mutation-observer';
 import { _$ } from '@src/utils/get-element-by-class-name';
+import { planetsStore } from '@src/prun-api/data/planets';
 
 const correctableCommands = new Set([
   'ADM',
@@ -35,7 +35,7 @@ function onSelectorReady(selector: HTMLDivElement) {
       return;
     }
 
-    const planet = prun.planets.getByName(commandParts[1]);
+    const planet = planetsStore.getByName(commandParts[1]);
     if (!planet) {
       return;
     }

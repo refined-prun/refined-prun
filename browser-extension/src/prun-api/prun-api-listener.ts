@@ -1,5 +1,4 @@
 import socketIOMiddleware from './socket-io-middleware';
-import prun from '@src/prun-api/prun';
 import user, {
   BaseSiteEntry,
   ProductionLineEntry,
@@ -293,10 +292,6 @@ function processEvent(packet: PrunApi.Packet) {
     }
     case 'ACCOUNTING_CASH_BALANCES': {
       user.currency = packet.payload.currencyAccounts.map(x => x.currencyBalance);
-      break;
-    }
-    case 'SYSTEM_STARS_DATA': {
-      prun.systems.applyApiPayload(packet.payload);
       break;
     }
   }

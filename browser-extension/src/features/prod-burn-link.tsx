@@ -3,7 +3,7 @@ import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
 import descendantPresent from '@src/utils/descendant-present';
 import PrunCss from '@src/prun-ui/prun-css';
-import prun from '@src/prun-api/prun';
+import { getStarNaturalId, starsStore } from '@src/prun-api/data/stars';
 
 async function onBufferCreated(buffer: PrunBuffer) {
   if (!buffer.firstActivation) {
@@ -43,9 +43,9 @@ export function parseBurnName(text: string) {
     }
     // Named system unnamed planet
     match = text.match(/([A-z ]*) ([A-z]) Production/);
-    const system = prun.systems.getByName(match?.[1]);
+    const system = starsStore.getByName(match?.[1]);
     if (system) {
-      return system.naturalId + match![2].toLowerCase();
+      return getStarNaturalId(system) + match![2].toLowerCase();
     }
     // Unnamed system named planet
     match = text.match(/[A-Z]{2}-[0-9]{3} - ([A-z ]*) Production/);

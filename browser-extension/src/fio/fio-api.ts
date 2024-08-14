@@ -1,4 +1,3 @@
-import prun from '@src/prun-api/prun';
 import { loadFallbackFioResponse } from '@src/prun-api/fallback-files';
 import { planetsStore } from '@src/prun-api/data/planets';
 import { dispatch } from '@src/prun-api/data/api-messages';
@@ -10,7 +9,6 @@ export function preloadFioResponses() {
 async function loadAllPlanets() {
   const response = await fetch('https://rest.fnar.net/planet/allplanets');
   const json = (await response.json()) as FioApi.AllPlanetsShort;
-  prun.planets.applyFioResponse(json);
   dispatchFioResponse(json);
 }
 
