@@ -5,6 +5,7 @@ import './features/cxob-highlight-own-orders';
 import './features/cxpo-order-book';
 import './features/cxpo-shorten-names';
 import './features/flt-arrival-eta';
+import './features/inv-add-shipment-detail';
 import './features/nots-improve-notifications';
 import './features/sfc-flight-eta';
 import './features/prod-burn-link';

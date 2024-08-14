@@ -6,7 +6,7 @@ import { showBuffer } from '@src/util';
 import { computed, useCssModule } from 'vue';
 
 const props = defineProps({
-  contractId: {
+  shipmentId: {
     type: String,
     required: true,
   },
@@ -14,17 +14,8 @@ const props = defineProps({
 });
 
 const $style = useCssModule();
-const contract = computed(() => contractsStore.getById(props.contractId));
-
-const destination = computed(() => {
-  const deliveryCondition = contract.value?.conditions.find(x => x.type === 'DELIVERY_SHIPMENT');
-  const destination = deliveryCondition?.destination?.lines[1];
-  if (!destination) {
-    return undefined;
-  }
-
-  return destination.type === 'PLANET' ? destination.entity.name : destination.entity.naturalId;
-});
+const contract = computed(() => contractsStore.getContractByShipmentId(props.shipmentId));
+const destination = computed(() => contractsStore.getDestinationByShipmentId(props.shipmentId));
 
 const containerClasses = computed(() => [
   PrunCss.MaterialIcon.container,

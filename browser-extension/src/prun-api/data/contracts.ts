@@ -14,6 +14,52 @@ messages({
   },
 });
 
+function getContractByShipmentId(id?: string | undefined) {
+  if (!id) {
+    return undefined;
+  }
+
+  for (const contract of state.all.value) {
+    const condition = contract.conditions.find(
+      x => x.type === 'DELIVERY_SHIPMENT' && x.shipmentItemId?.startsWith(id),
+    );
+    if (condition) {
+      return contract;
+    }
+  }
+
+  return undefined;
+}
+
+function getDeliveryConditionByShipmentId(id?: string | undefined) {
+  if (!id) {
+    return undefined;
+  }
+
+  for (const contract of state.all.value) {
+    const condition = contract.conditions.find(
+      x => x.type === 'DELIVERY_SHIPMENT' && x.shipmentItemId?.startsWith(id),
+    );
+    if (condition) {
+      return condition;
+    }
+  }
+
+  return undefined;
+}
+
+function getDestinationByShipmentId(id?: string | undefined) {
+  const deliveryCondition = getDeliveryConditionByShipmentId(id);
+  const destination = deliveryCondition?.destination?.lines[1];
+  if (!destination) {
+    return undefined;
+  }
+
+  return destination.type === 'PLANET' ? destination.entity.name : destination.entity.naturalId;
+}
+
 export const contractsStore = {
   ...state,
+  getContractByShipmentId,
+  getDestinationByShipmentId,
 };

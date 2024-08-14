@@ -462,9 +462,9 @@ declare namespace PrunUI {
   }
 
   export interface BuildingIcon {
-    container?: string;
-    tickerContainer?: string;
-    ticker?: string;
+    container: string;
+    tickerContainer: string;
+    ticker: string;
     typeIntro: string;
     typeLarge: string;
     typeLarger: string;
@@ -474,10 +474,10 @@ declare namespace PrunUI {
     typeVeryLarge: string;
     typeVerySmall: string;
     typeVeryVeryLarge: string;
-    buildingList?: string;
-    building?: string;
-    labelContainer?: string;
-    label?: string;
+    buildingList: string;
+    building: string;
+    labelContainer: string;
+    label: string;
   }
 
   export interface BuildingInformation {

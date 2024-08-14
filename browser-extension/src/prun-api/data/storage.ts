@@ -7,11 +7,16 @@ const state = store.state;
 
 messages({
   STORAGE_STORAGES(data: { stores: PrunApi.Store[] }) {
-    store.setAll(data.stores);
+    store.setMany(data.stores);
     store.setFetched();
   },
   STORAGE_CHANGE(data: { stores: PrunApi.Store[] }) {
     store.setMany(data.stores);
+  },
+  STORAGE_REMOVED(data: { storeIds: string[] }) {
+    for (const id of data.storeIds) {
+      store.removeOne(id);
+    }
   },
 });
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import PrunCss from '@src/prun-ui/prun-css';
 import { computed } from 'vue';
+import ColoredIconDetail from '@src/components/ColoredIconDetail.vue';
 
 const props = defineProps({
   label: {
@@ -36,13 +37,7 @@ const style = computed(() => ({
   <div :class="PrunCss.ColoredIcon.container" :style="style" :title="title">
     <div :class="PrunCss.ColoredIcon.labelContainer">
       <span :class="PrunCss.ColoredIcon.label">{{ label }}</span>
-      <span v-if="detail" :class="$style.detail">{{ detail.substring(0, 7) }}</span>
+      <ColoredIconDetail :detail="detail" />
     </div>
   </div>
 </template>
-
-<style module>
-.detail {
-  font-size: 0.65em;
-}
-</style>

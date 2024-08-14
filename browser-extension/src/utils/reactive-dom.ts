@@ -6,3 +6,10 @@ export function refTextContent(element: Element) {
   observer.observe(element, { childList: true, subtree: true, characterData: true });
   return textContent;
 }
+
+export function refAttributeValue(element: Element, name: string) {
+  const value = ref(element.getAttribute(name));
+  const observer = new MutationObserver(() => (value.value = element.getAttribute(name)));
+  observer.observe(element, { attributes: true });
+  return value;
+}
