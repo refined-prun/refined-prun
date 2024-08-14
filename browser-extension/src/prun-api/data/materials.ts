@@ -1,7 +1,7 @@
 import { createEntityStore } from '@src/prun-api/data/create-entity-store';
 import { messages } from '@src/prun-api/data/api-messages';
-import { computed } from 'vue';
 import { materialCategoriesStore } from '@src/prun-api/data/material-categories';
+import { createMapGetter } from '@src/prun-api/data/create-map-getter';
 
 const store = createEntityStore<PrunApi.Material>();
 const state = store.state;
@@ -14,18 +14,11 @@ messages({
   },
 });
 
-const byTicker = computed(() => {
-  const map = new Map<string, PrunApi.Material>();
-  for (const material of state.all.value) {
-    map.set(material.ticker.toUpperCase(), material);
-  }
-  return map;
-});
+const getByTicker = createMapGetter(state.all, x => x.ticker);
 
 export const materialsStore = {
   ...state,
-  getByTicker: (ticker?: string | null) =>
-    ticker ? byTicker.value.get(ticker.toUpperCase()) : undefined,
+  getByTicker: (value?: string | null) => getByTicker(value?.toUpperCase()),
 };
 
 export const sortMaterials = (materials: PrunApi.Material[]) => {

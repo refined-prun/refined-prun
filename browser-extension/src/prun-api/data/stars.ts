@@ -1,6 +1,6 @@
 import { messages } from '@src/prun-api/data/api-messages';
 import { createEntityStore } from '@src/prun-api/data/create-entity-store';
-import { computed } from 'vue';
+import { createMapGetter } from '@src/prun-api/data/create-map-getter';
 
 const store = createEntityStore<PrunApi.Star>(x => x.systemId);
 const state = store.state;
@@ -20,33 +20,13 @@ export function getStarName(star: PrunApi.Star) {
   return star.address.lines[0].entity.name;
 }
 
-const byNaturalId = computed(() => {
-  const map = new Map<string, PrunApi.Star>();
-  for (const star of state.all.value) {
-    map.set(getStarNaturalId(star), star);
-  }
-  return map;
-});
-
-const byName = computed(() => {
-  const map = new Map<string, PrunApi.Star>();
-  for (const star of state.all.value) {
-    map.set(getStarName(star), star);
-  }
-  return map;
-});
-
-function getByNaturalId(id?: string | undefined) {
-  return id ? byNaturalId.value.get(id) : undefined;
-}
-
-function getByName(name?: string | undefined) {
-  return name ? byName.value.get(name) : undefined;
-}
+const getByNaturalId = createMapGetter(state.all, getStarNaturalId);
+const getByName = createMapGetter(state.all, getStarName);
+const getByPlanetNaturalId = (id?: string | null) => getByNaturalId(id?.slice(0, -1));
 
 export const starsStore = {
   ...state,
   getByNaturalId,
   getByName,
-  getByPlanetNaturalId: (id?: string | undefined) => getByNaturalId(id?.slice(0, -1)),
+  getByPlanetNaturalId,
 };

@@ -1,6 +1,6 @@
 import { createEntityStore } from '@src/prun-api/data/create-entity-store';
 import { messages } from '@src/prun-api/data/api-messages';
-import { computed } from 'vue';
+import { createGroupMapGetter } from '@src/prun-api/data/create-map-getter';
 
 const store = createEntityStore<PrunApi.Store>();
 const state = store.state;
@@ -20,20 +20,9 @@ messages({
   },
 });
 
-const byAddress = computed(() => {
-  const map = new Map<string, PrunApi.Store[]>();
-  for (const store of state.all.value) {
-    let byAddress = map.get(store.addressableId);
-    if (!byAddress) {
-      byAddress = [];
-      map.set(store.addressableId, byAddress);
-    }
-    byAddress.push(store);
-  }
-  return map;
-});
+const getByAddress = createGroupMapGetter(state.all, x => x.addressableId);
 
 export const storagesStore = {
   ...state,
-  getByAddress: (address?: string | null) => (address ? byAddress.value.get(address) : undefined),
+  getByAddress,
 };

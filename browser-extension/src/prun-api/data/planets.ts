@@ -1,6 +1,6 @@
 import { createEntityStore } from '@src/prun-api/data/create-entity-store';
 import { messages } from '@src/prun-api/data/api-messages';
-import { computed } from 'vue';
+import { createMapGetter } from '@src/prun-api/data/create-map-getter';
 
 interface Planet {
   naturalId: string;
@@ -17,17 +17,11 @@ messages({
   },
 });
 
-const byPlanetName = computed(() => {
-  const map = new Map<string, Planet>();
-  for (const planet of state.all.value) {
-    map.set(planet.name, planet);
-  }
-  return map;
-});
+const getByName = createMapGetter(state.all, x => x.name);
+const getByIdOrName = (idOrName?: string | null) => state.getById(idOrName) ?? getByName(idOrName);
 
 export const planetsStore = {
   ...state,
-  getByName: (name?: string | undefined) => (name ? byPlanetName.value.get(name) : undefined),
-  getByIdOrName: (idOrName?: string | undefined) =>
-    planetsStore.getById(idOrName) ?? planetsStore.getByName(idOrName),
+  getByName,
+  getByIdOrName,
 };

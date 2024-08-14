@@ -1,9 +1,10 @@
 import { createEntityStore } from '@src/prun-api/data/create-entity-store';
 import { messages } from '@src/prun-api/data/api-messages';
+import { createMapGetter } from '@src/prun-api/data/create-map-getter';
 
 type Entity = PrunApi.CXBroker & { timestamp: number };
 
-const store = createEntityStore<Entity>(x => x.ticker);
+const store = createEntityStore<Entity>();
 const state = store.state;
 
 messages({
@@ -15,14 +16,9 @@ messages({
   },
 });
 
-const {
-  // Store id is ticker, so remove getById to not confuse people.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getById,
-  ...filteredState
-} = state;
+const getByTicker = createMapGetter(state.all, x => x.ticker);
 
 export const cxobStore = {
-  ...filteredState,
-  getByTicker: state.getById,
+  ...state,
+  getByTicker: (value?: string | null) => getByTicker(value?.toUpperCase()),
 };

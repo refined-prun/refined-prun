@@ -1,5 +1,6 @@
 import { messages } from '@src/prun-api/data/api-messages';
 import { createEntityStore } from '@src/prun-api/data/create-entity-store';
+import { createMapGetter } from '@src/prun-api/data/create-map-getter';
 
 const store = createEntityStore<PrunApi.Ship>();
 const state = store.state;
@@ -14,9 +15,7 @@ messages({
   },
 });
 
-function getByRegistration(registration?: string | null) {
-  return state.all.value.find(x => x.registration === registration);
-}
+const getByRegistration = createMapGetter(state.all, x => x.registration);
 
 export const shipsStore = {
   ...state,

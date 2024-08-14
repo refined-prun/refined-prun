@@ -4,7 +4,7 @@ import {
 } from '@src/prun-api/data/addresses';
 import { createEntityStore } from '@src/prun-api/data/create-entity-store';
 import { messages } from '@src/prun-api/data/api-messages';
-import { computed } from 'vue';
+import { createMapGetter } from '@src/prun-api/data/create-map-getter';
 
 const store = createEntityStore<PrunApi.Site>(x => x.siteId);
 const state = store.state;
@@ -20,29 +20,18 @@ messages({
   },
 });
 
-const byPlanetNaturalId = computed(() => {
-  const map = new Map<string, PrunApi.Site>();
-  for (const site of state.all.value) {
-    const id = getPlanetNaturalIdFromAddress(site.address)!.toLowerCase();
-    map.set(id, site);
-  }
-  return map;
-});
+const getByPlanetNaturalId = createMapGetter(state.all, x =>
+  getPlanetNaturalIdFromAddress(x.address)!.toLowerCase(),
+);
 
-const byPlanetName = computed(() => {
-  const map = new Map<string, PrunApi.Site>();
-  for (const site of state.all.value) {
-    const id = getPlanetNameFromAddress(site.address)!.toLowerCase();
-    map.set(id, site);
-  }
-  return map;
-});
+const getByPlanetName = createMapGetter(state.all, x =>
+  getPlanetNameFromAddress(x.address)!.toLowerCase(),
+);
 
 export const sitesStore = {
   ...state,
   getByPlanetNaturalIdOrName: (naturalIdOrName?: string | null) =>
     sitesStore.getByPlanetNaturalId(naturalIdOrName) ?? sitesStore.getByPlanetName(naturalIdOrName),
-  getByPlanetNaturalId: (naturalId?: string | null) =>
-    naturalId ? byPlanetNaturalId.value.get(naturalId) : undefined,
-  getByPlanetName: (name?: string | null) => (name ? byPlanetName.value.get(name) : undefined),
+  getByPlanetNaturalId: (value?: string | null) => getByPlanetNaturalId(value?.toLowerCase()),
+  getByPlanetName: (value?: string | null) => getByPlanetName(value?.toLowerCase()),
 };

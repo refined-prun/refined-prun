@@ -1,6 +1,6 @@
 import { createEntityStore } from '@src/prun-api/data/create-entity-store';
 import { messages } from '@src/prun-api/data/api-messages';
-import { computed } from 'vue';
+import { createGroupMapGetter } from '@src/prun-api/data/create-map-getter';
 
 const store = createEntityStore<PrunApi.ProductionLine>();
 const state = store.state;
@@ -47,20 +47,9 @@ messages({
   },
 });
 
-const bySiteId = computed(() => {
-  const map = new Map<string, PrunApi.ProductionLine[]>();
-  for (const line of state.all.value) {
-    let lines = map.get(line.siteId);
-    if (!lines) {
-      lines = [];
-      map.set(line.siteId, lines);
-    }
-    lines.push(line);
-  }
-  return map;
-});
+const getBySiteId = createGroupMapGetter(state.all, x => x.siteId);
 
 export const productionStore = {
   ...state,
-  getBySiteId: (siteId?: string | null) => (siteId ? bySiteId.value.get(siteId) : undefined),
+  getBySiteId,
 };
