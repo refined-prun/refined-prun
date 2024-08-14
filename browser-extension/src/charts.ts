@@ -30,12 +30,12 @@ Chart.register(
 type AxisType = 'linear' | 'logarithmic' | 'category' | 'time';
 
 function calculateMovingAverage(data: number[], factor: number) {
-  if (factor < 0 || factor > 1) {
-    throw new Error('Factor must be between 0 and 1');
-  }
-
   factor = Math.min(Math.max(factor, 0), 1);
   const windowSize = Math.max(Math.floor(factor * data.length), 1);
+  if (windowSize === 1) {
+    return data;
+  }
+
   const halfWindow = Math.floor(windowSize / 2);
   const movingAverage: number[] = [];
 
@@ -55,6 +55,9 @@ function calculateMovingAverage(data: number[], factor: number) {
     } else if (chunkEnd >= data.length) {
       chunkStart += chunkEnd - data.length + 1;
       chunkEnd = data.length - 1;
+      if (chunkStart === chunkEnd) {
+        chunkStart = chunkEnd - 1;
+      }
     }
 
     while (chunkStart > start) {
