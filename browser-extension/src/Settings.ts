@@ -10,7 +10,7 @@ const defaultSettings = {
 export type Settings = typeof defaultSettings & { [key: string]: any };
 const settingsKey = 'PMMGExtended';
 
-export async function loadSettings() {
+export async function loadLegacySettings() {
   let data = await loadDataFromStorage();
   if (data[settingsKey] === undefined) {
     data = structuredClone(defaultSettings);

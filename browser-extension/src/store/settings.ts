@@ -1,25 +1,38 @@
-import { reactive } from 'vue';
+import { reactive, watch } from 'vue';
+import system from '@src/system';
 
 export const settings = reactive({
   burn: {
     red: 3,
     yellow: 7,
     resupply: 16,
-    buffers: {
-      '01.MAINBURNALL': {
-        red: true,
-        yellow: true,
-        green: true,
-        inf: false,
-        minimized: {
-          Hephaestus: true,
-          Nike: true,
-          Harmonia: true,
-          Elon: true,
-          Promitor: true,
-          Overall: true,
-        },
-      },
-    },
+    buffers: {},
   },
 });
+
+const key = 'rprun-settings';
+
+export async function loadSettings() {
+  const savedSettings = await system.storage.local.get(key);
+  if (savedSettings[key]) {
+    console.log(savedSettings[key]);
+    Object.assign(settings, savedSettings[key]);
+  }
+  let saveQueued = false;
+
+  watch(
+    settings,
+    () => {
+      if (!saveQueued) {
+        queueMicrotask(() => {
+          void system.storage.local.set({
+            [key]: settings,
+          });
+          saveQueued = false;
+        });
+        saveQueued = true;
+      }
+    },
+    { deep: true },
+  );
+}

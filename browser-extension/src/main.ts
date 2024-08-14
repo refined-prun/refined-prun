@@ -12,7 +12,7 @@ import { CompactUI } from '@src/features/CompactUI';
 import { AdvancedMode } from '@src/features/AdvancedMode';
 import { IconMarkers } from '@src/features/IconMarkers';
 import { PostLM } from '@src/features/PostLM';
-import { loadSettings, Settings } from './Settings';
+import { loadLegacySettings, Settings } from './Settings';
 import features from '@src/feature-registry';
 import { initializePrunApi, loadGameData } from '@src/prun-api';
 import { loadPrunCss } from '@src/prun-ui/prun-css';
@@ -21,6 +21,7 @@ import { applyXITParameters } from '@src/XIT/xit-commands';
 import './refined-prun.css';
 import cx from '@src/fio/cx';
 import { calculateFinancials } from '@src/financials';
+import { loadSettings } from '@src/store/settings';
 
 // The main function that initializes everything
 async function mainRun() {
@@ -30,7 +31,8 @@ async function mainRun() {
 
   let result: Settings;
   try {
-    result = await loadSettings();
+    result = await loadLegacySettings();
+    await loadSettings();
   } catch (e) {
     console.error('PMMG: Failed to load settings');
     throw e;
