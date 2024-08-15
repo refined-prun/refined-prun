@@ -288,6 +288,7 @@ function processEvent(packet: PrunApi.Packet) {
     case 'COMPANY_DATA': {
       user.company.name = packet.payload.name;
       user.company.id = packet.payload.id;
+      user.company.code = packet.payload.code;
       break;
     }
     case 'ACCOUNTING_CASH_BALANCES': {

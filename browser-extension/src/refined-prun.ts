@@ -8,6 +8,7 @@ import './features/flt-arrival-eta';
 import './features/inv-add-shipment-detail';
 import './features/nots-improve-notifications';
 import './features/sfc-flight-eta';
+import './features/clickable-apex-logo';
 import './features/prod-burn-link';
 import './features/prodq-queue-load';
 import './features/header-calculator-button';

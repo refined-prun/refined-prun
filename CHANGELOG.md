@@ -5,6 +5,7 @@ New features:
 - SHPT icons now have a destination label on them
 - XIT CONTS now displays a ! mark for contracts with unfulfilled own conditions
 - XIT CONTS now displays SHPT for contracts with shipment condition
+- Clicking on APEX logo now opens company information
 
 Changes:
 - Implemented the real-time updates of XIT buffers and added features. Goodbye refresh button!
