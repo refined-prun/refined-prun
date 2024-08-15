@@ -3,6 +3,14 @@ import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import { widgetAfter } from '@src/utils/vue-mount';
+import buffers from '@src/prun-ui/prun-buffers';
+
+function onBufferReady(buffer: PrunBuffer) {
+  observeReadyElementsByClassName(PrunCss.CommodityAd.text, {
+    baseElement: buffer.frame,
+    callback: onAdTextReady,
+  });
+}
 
 function onAdTextReady(element: HTMLDivElement) {
   // Test if the text matches that of a shipping ad
@@ -33,10 +41,10 @@ function onAdTextReady(element: HTMLDivElement) {
 }
 
 export function init() {
-  observeReadyElementsByClassName(PrunCss.CommodityAd.text, onAdTextReady);
+  buffers.observe('LM', onBufferReady);
 }
 
 void features.add({
-  id: 'shipping-per-unit-price',
+  id: 'lm-shipping-per-unit-price',
   init,
 });
