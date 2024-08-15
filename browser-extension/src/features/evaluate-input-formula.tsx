@@ -1,24 +1,18 @@
 import { changeValue } from '../util';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
-import { observeDescendantListChanged } from '@src/utils/mutation-observer';
+import { observeReadyElementsByTagName } from '@src/utils/mutation-observer';
 import Mexp from 'math-expression-evaluator';
 import { materialsStore } from '@src/prun-api/data/materials';
 
 const mexp = new Mexp();
 
 function onBufferCreated(buffer: PrunBuffer) {
-  const appliedInputs: WeakSet<HTMLInputElement> = new WeakSet();
-  const inputs = buffer.frame.getElementsByTagName('input');
-  observeDescendantListChanged(buffer.frame, () => {
-    for (let i = 0; i < inputs.length; i++) {
-      const input = inputs[i];
-      if (appliedInputs.has(input)) {
-        continue;
-      }
-      appliedInputs.add(input);
+  observeReadyElementsByTagName('input', {
+    baseElement: buffer.frame,
+    callback: input => {
       input.addEventListener('keyup', e => onKeyUp(input, e));
-    }
+    },
   });
 }
 

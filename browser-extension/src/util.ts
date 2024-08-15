@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Selector } from './Selector';
-import { Stations } from './GameProperties';
 import { CategoryColors, DefaultColors, Style, WithStyles } from './Style';
 import system from '@src/system';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/prun-ui/prun-css';
-import observeReadyElementsByClassName from '@src/utils/mutation-observer';
+import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import onetime from 'onetime';
 import { dot } from '@src/utils/dot';
 import { materialsStore } from '@src/prun-api/data/materials';

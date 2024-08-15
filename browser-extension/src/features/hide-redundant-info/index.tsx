@@ -1,9 +1,10 @@
 import './style.css';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
-import observeReadyElementsByClassName, {
+import {
+  observeReadyElementsByClassName,
   observeReadyElementsByTagName,
-} from '../../utils/mutation-observer';
+} from '@src/utils/mutation-observer';
 import PrunCss from '@src/prun-ui/prun-css';
 import { Stations } from '@src/GameProperties';
 import { widgetAfter } from '@src/utils/vue-mount';

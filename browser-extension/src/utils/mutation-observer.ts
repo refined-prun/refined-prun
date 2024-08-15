@@ -8,7 +8,7 @@ interface ObserveOptions<ExpectedElement extends Element> {
   baseElement: Element | Document;
 }
 
-export default function observeReadyElementsByClassName<
+export function observeReadyElementsByClassName<
   Selector extends string,
   Selected extends Element = ParseSelector<Selector, HTMLElement>,
 >(classNames: Selector, callbackOrOptions: ObserverListener<Selected> | ObserveOptions<Selected>) {

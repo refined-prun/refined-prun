@@ -1,7 +1,7 @@
 import { changeValue } from '../util';
 import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
-import observeReadyElementsByClassName from '@src/utils/mutation-observer';
+import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import { _$ } from '@src/utils/get-element-by-class-name';
 import { materialsStore } from '@src/prun-api/data/materials';
 

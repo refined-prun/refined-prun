@@ -1,7 +1,7 @@
 import { CurrencySymbols } from '@src/GameProperties';
 import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
-import observeReadyElementsByClassName from '@src/utils/mutation-observer';
+import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import { widgetAfter } from '@src/utils/vue-mount';
 
 function onAdTextReady(element: HTMLDivElement) {

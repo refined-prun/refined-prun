@@ -1,6 +1,6 @@
 import features from '@src/feature-registry';
 import PrunCss from '@src/prun-ui/prun-css';
-import observeReadyElementsByClassName from '@src/utils/mutation-observer';
+import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 
 let appLoaded = false;
 

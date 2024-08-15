@@ -7,23 +7,18 @@ import { computed, reactive } from 'vue';
 import { contractsStore } from '@src/prun-api/data/contracts';
 import { widgetAppend } from '@src/utils/vue-mount';
 import ColoredIconDetail from '@src/components/ColoredIconDetail.vue';
+import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 
 async function onBufferCreated(buffer: PrunBuffer) {
-  const icons = buffer.frame.getElementsByClassName(PrunCss.ColoredIcon.container);
-  const seenIcons = new WeakSet<Element>();
-  const observer = new MutationObserver(() => {
-    for (const icon of icons) {
-      if (seenIcons.has(icon)) {
-        continue;
-      }
-
-      seenIcons.add(icon);
-      const container = _$(PrunCss.ColoredIcon.labelContainer, icon);
+  observeReadyElementsByClassName(PrunCss.ColoredIcon.container, {
+    baseElement: buffer.frame,
+    callback: element => {
+      const container = _$(PrunCss.ColoredIcon.labelContainer, element);
       if (!container) {
-        continue;
+        return;
       }
 
-      const attribute = refAttributeValue(icon, 'title');
+      const attribute = refAttributeValue(element, 'title');
       const detail = computed(() => {
         const regex = /Shipment\s+#([a-zA-Z0-9]+)/;
         const match = attribute.value?.match(regex);
@@ -42,9 +37,8 @@ async function onBufferCreated(buffer: PrunBuffer) {
           detail,
         }),
       );
-    }
+    },
   });
-  observer.observe(buffer.frame, { childList: true, subtree: true });
 }
 
 export function init() {

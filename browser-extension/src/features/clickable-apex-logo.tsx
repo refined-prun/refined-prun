@@ -1,5 +1,5 @@
 import './clickable-apex-logo.css';
-import observeReadyElementsByClassName from '../utils/mutation-observer';
+import { observeReadyElementsByClassName } from '../utils/mutation-observer';
 import PrunCss from '../prun-ui/prun-css';
 import features from '../feature-registry';
 import { showBuffer } from '@src/util';
