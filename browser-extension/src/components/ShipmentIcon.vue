@@ -14,7 +14,7 @@ const props = defineProps({
 });
 
 const $style = useCssModule();
-const contract = computed(() => contractsStore.getContractByShipmentId(props.shipmentId));
+const contract = computed(() => contractsStore.getByShipmentId(props.shipmentId));
 const destination = computed(() => contractsStore.getDestinationByShipmentId(props.shipmentId));
 
 const containerClasses = computed(() => [

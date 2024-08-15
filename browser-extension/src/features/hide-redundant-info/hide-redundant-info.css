@@ -1,5 +1,4 @@
 /* Hide redundant columns */
-/* noinspection CssMissingComma */
 [rprun-hide-redundant-info]
 :is(
   /* Exchange */
@@ -12,7 +11,6 @@ tr > *:first-child {
 }
 
 /* Hide redundant elements in Ship Fuel Store */
-/* noinspection CssMissingComma */
 [rprun-hide-redundant-info]
 div[data-rp-command='SHPF']
 :is(

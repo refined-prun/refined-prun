@@ -840,13 +840,6 @@ export function createSmallButton(label, clickFunction, parameters) {
   return button;
 }
 
-export function createContractDict(contracts, contractdict) {
-  for (let i = 0; i < contracts.length; i++) {
-    const element = contracts[i];
-    contractdict[element['localId']] = element;
-  }
-}
-
 // Create a warning dialog with a confirmation button before running the callback function with the passed parameters
 export function showWarningDialog(
   tile,

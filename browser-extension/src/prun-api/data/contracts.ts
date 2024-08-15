@@ -1,5 +1,6 @@
 import { createEntityStore } from '@src/prun-api/data/create-entity-store';
 import { messages } from '@src/prun-api/data/api-messages';
+import { createMapGetter } from '@src/prun-api/data/create-map-getter';
 
 const store = createEntityStore<PrunApi.Contract>();
 const state = store.state;
@@ -14,7 +15,13 @@ messages({
   },
 });
 
-function getContractByShipmentId(id?: string | undefined) {
+const getByLocalId = createMapGetter(
+  state.all,
+  x => x.localId.toUpperCase(),
+  x => x.toUpperCase(),
+);
+
+function getByShipmentId(id?: string | undefined) {
   if (!id) {
     return undefined;
   }
@@ -60,6 +67,7 @@ function getDestinationByShipmentId(id?: string | undefined) {
 
 export const contractsStore = {
   ...state,
-  getContractByShipmentId,
+  getByLocalId,
+  getByShipmentId,
   getDestinationByShipmentId,
 };

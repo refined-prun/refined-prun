@@ -19,6 +19,7 @@ import './features/correct-planet-command';
 import './features/evaluate-input-formula';
 import './features/shipping-per-unit-price';
 import './features/reload-page-on-websocket-disconnect';
+import './features/pending-contracts-add-details';
 import './XIT/xit-commands';
 
 import './XIT/ACT';

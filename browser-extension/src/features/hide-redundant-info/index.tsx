@@ -1,4 +1,4 @@
-import './style.css';
+import './hide-redundant-info.css';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
 import {

@@ -1,0 +1,18 @@
+[rprun-pending-contracts-add-details]
+.Sidebar__contract___J0gmlzN
+.Link__link___fa4mmMA {
+  display: none;
+}
+
+[rprun-pending-contracts-add-details]
+.Sidebar__contractId___Lg85TRZ {
+  flex-shrink: 0;
+  width: 65px;
+  color: #3fa2de;
+  cursor: pointer;
+}
+
+[rprun-pending-contracts-add-details]
+.Sidebar__contractId___Lg85TRZ:hover {
+  color: #f7a600;
+}
