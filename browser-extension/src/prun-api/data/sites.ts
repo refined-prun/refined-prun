@@ -20,18 +20,24 @@ messages({
   },
 });
 
-const getByPlanetNaturalId = createMapGetter(state.all, x =>
-  getPlanetNaturalIdFromAddress(x.address)!.toLowerCase(),
+const getByPlanetNaturalId = createMapGetter(
+  state.all,
+  x => getPlanetNaturalIdFromAddress(x.address)!.toLowerCase(),
+  x => x.toLowerCase(),
 );
 
-const getByPlanetName = createMapGetter(state.all, x =>
-  getPlanetNameFromAddress(x.address)!.toLowerCase(),
+const getByPlanetName = createMapGetter(
+  state.all,
+  x => getPlanetNameFromAddress(x.address)!.toLowerCase(),
+  x => x.toLowerCase(),
 );
+
+const getByPlanetNaturalIdOrName = (value?: string | null) =>
+  getByPlanetNaturalId(value) ?? getByPlanetName(value);
 
 export const sitesStore = {
   ...state,
-  getByPlanetNaturalIdOrName: (naturalIdOrName?: string | null) =>
-    sitesStore.getByPlanetNaturalId(naturalIdOrName) ?? sitesStore.getByPlanetName(naturalIdOrName),
-  getByPlanetNaturalId: (value?: string | null) => getByPlanetNaturalId(value?.toLowerCase()),
-  getByPlanetName: (value?: string | null) => getByPlanetName(value?.toLowerCase()),
+  getByPlanetNaturalId,
+  getByPlanetName,
+  getByPlanetNaturalIdOrName,
 };

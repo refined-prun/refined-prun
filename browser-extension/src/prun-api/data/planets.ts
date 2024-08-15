@@ -7,7 +7,7 @@ interface Planet {
   name: string;
 }
 
-const store = createEntityStore<Planet>(x => x.naturalId);
+const store = createEntityStore<Planet>(x => x.naturalId.toLowerCase());
 const state = store.state;
 
 messages({
@@ -17,11 +17,23 @@ messages({
   },
 });
 
-const getByName = createMapGetter(state.all, x => x.name);
-const getByIdOrName = (idOrName?: string | null) => state.getById(idOrName) ?? getByName(idOrName);
+const getById = createMapGetter(
+  state.all,
+  x => x.naturalId.toLowerCase(),
+  x => x.toLowerCase(),
+);
+
+const getByName = createMapGetter(
+  state.all,
+  x => x.name.toLowerCase(),
+  x => x.toLowerCase(),
+);
+
+const getByIdOrName = (value?: string | null) => getById(value) ?? getByName(value);
 
 export const planetsStore = {
   ...state,
+  getById,
   getByName,
   getByIdOrName,
 };

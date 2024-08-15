@@ -15,7 +15,11 @@ messages({
   },
 });
 
-const getByRegistration = createMapGetter(state.all, x => x.registration);
+const getByRegistration = createMapGetter(
+  state.all,
+  x => x.registration.toLowerCase(),
+  x => x.toLowerCase(),
+);
 
 export const shipsStore = {
   ...state,

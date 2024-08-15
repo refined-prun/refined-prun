@@ -14,11 +14,15 @@ messages({
   },
 });
 
-const getByTicker = createMapGetter(state.all, x => x.ticker);
+const getByTicker = createMapGetter(
+  state.all,
+  x => x.ticker,
+  x => x.toUpperCase(),
+);
 
 export const materialsStore = {
   ...state,
-  getByTicker: (value?: string | null) => getByTicker(value?.toUpperCase()),
+  getByTicker,
 };
 
 export const sortMaterials = (materials: PrunApi.Material[]) => {
