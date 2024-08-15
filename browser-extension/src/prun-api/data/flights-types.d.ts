@@ -14,7 +14,7 @@ declare namespace PrunApi {
   }
 
   export interface FlightSegment {
-    type: string;
+    type: SegmentType;
     origin: Address;
     departure: DateTime;
     destination: Address;
@@ -35,4 +35,6 @@ declare namespace PrunApi {
     semiMajorAxis: number;
     semiMinorAxis: number;
   }
+
+  declare type SegmentType = 'TAKE_OFF' | 'LANDING' | 'DEPARTURE' | 'APPROACH' | 'JUMP' | 'CHARGE';
 }

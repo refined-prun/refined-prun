@@ -9,7 +9,6 @@ import { InventoryOrganizer } from '@src/features/InventoryOrganizer';
 import { HeaderMinimizer } from '@src/features/HeaderMinimizer';
 import { PendingContracts } from '@src/features/PendingContracts';
 import { CompactUI } from '@src/features/CompactUI';
-import { AdvancedMode } from '@src/features/AdvancedMode';
 import { IconMarkers } from '@src/features/IconMarkers';
 import { PostLM } from '@src/features/PostLM';
 import { loadLegacySettings, Settings } from './Settings';
@@ -99,7 +98,6 @@ async function mainRun() {
     new InventoryOrganizer(result),
     new ScreenUnpack(result['PMMGExtended']['unpack_exceptions']),
     new HeaderMinimizer(result['PMMGExtended']['minimize_by_default']),
-    new AdvancedMode(result['PMMGExtended']['advanced_mode']),
     new Sidebar(result['PMMGExtended']['sidebar']),
     new PendingContracts(),
     new CompactUI(result),

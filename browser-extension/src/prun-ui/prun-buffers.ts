@@ -62,6 +62,7 @@ function activateFrame(frame: HTMLDivElement, anchor: Element) {
     parameter: indexOfSpace > 0 ? fullCommand.slice(indexOfSpace + 1) : undefined,
     firstActivation: true,
   };
+  frame.setAttribute('data-rp-command', buffer.command);
   activateBuffer(buffer);
 
   observeChildListChanged(anchor, () => {

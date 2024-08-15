@@ -189,22 +189,6 @@ export function parseDuration(duration) {
 }
 
 /**
- * Shorten planet names
- * @param text
- * @returns {string}
- */
-export function cleanPlanetName(text: string) {
-  text = text.replace(/\s*\([^)]*\)/, ''); // Clear parenthesis
-  text = text.replace(/(\d)\s+(?=[a-zA-Z])/, '$1'); // Clear space between system and planet
-  text = text.replace(/.*\s-\s/, ''); // Clear system name in named systems
-
-  if (Stations[text]) {
-    text = Stations[text];
-  }
-  return text;
-}
-
-/**
  * Create a span with the given text
  * @param text
  * @param className

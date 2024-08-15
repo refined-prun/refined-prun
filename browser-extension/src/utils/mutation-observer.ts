@@ -1,42 +1,69 @@
 import observeDocumentMutations from '@src/utils/document-mutation-observer';
+import type { ParseSelector } from 'typed-query-selector/parser';
 
-type ObserverListener<ExpectedElement extends Element> = (
-  element: ExpectedElement,
-  options: SignalAsOptions,
-) => void;
+type ObserverListener<ExpectedElement extends Element> = (element: ExpectedElement) => void;
 
-export default function observeReadyElementsByClassName<ExpectedElement extends Element>(
-  classNames: string,
-  callback: ObserverListener<ExpectedElement>,
-  { signal }: SignalAsOptions = {},
+interface ObserveOptions<ExpectedElement extends Element> {
+  callback: ObserverListener<ExpectedElement>;
+  baseElement: Element | Document;
+}
+
+export default function observeReadyElementsByClassName<
+  Selector extends string,
+  Selected extends Element = ParseSelector<Selector, HTMLElement>,
+>(classNames: Selector, callbackOrOptions: ObserverListener<Selected> | ObserveOptions<Selected>) {
+  const { baseElement, callback } = getObserverOptions(callbackOrOptions);
+  const elements = baseElement.getElementsByClassName(classNames) as HTMLCollectionOf<Selected>;
+  observeHtmlCollectionChanged(baseElement, elements, callback);
+}
+
+export function observeReadyElementsByTagName<
+  Selector extends string,
+  Selected extends Element = ParseSelector<Selector, HTMLElement>,
+>(tagName: Selector, callbackOrOptions: ObserverListener<Selected> | ObserveOptions<Selected>) {
+  const { baseElement, callback } = getObserverOptions(callbackOrOptions);
+  const elements = baseElement.getElementsByTagName(tagName) as HTMLCollectionOf<Selected>;
+  observeHtmlCollectionChanged(baseElement, elements, callback);
+}
+
+function getObserverOptions<T extends Element>(
+  callbackOrOptions: ObserverListener<T> | ObserveOptions<T>,
 ) {
-  if (signal?.aborted) {
-    return;
+  if (typeof callbackOrOptions === 'function') {
+    return {
+      callback: callbackOrOptions,
+      baseElement: document,
+    } as ObserveOptions<T>;
   }
 
-  const elements = document.getElementsByClassName(classNames) as HTMLCollectionOf<ExpectedElement>;
-  const seenElements = new WeakSet<ExpectedElement>();
-  observeDocumentMutations(() => {
-    if (signal?.aborted) {
-      return true;
-    }
+  return callbackOrOptions;
+}
 
+export function observeHtmlCollectionChanged<T extends Element>(
+  baseElement: Element | Document,
+  elements: HTMLCollectionOf<T>,
+  callback: ObserverListener<T>,
+) {
+  const seenElements = new WeakSet<T>();
+  const checkElements = () => {
     for (let i = 0; i < elements.length; i++) {
       const element = elements[i];
       if (!seenElements.has(element)) {
         seenElements.add(element);
         try {
-          callback(element, { signal });
+          callback(element);
         } catch (e) {
           console.error(e);
-        }
-        if (signal?.aborted) {
-          return true;
         }
       }
     }
     return false;
-  });
+  };
+  if (baseElement === document) {
+    observeDocumentMutations(checkElements);
+  } else {
+    observeDescendantListChanged(baseElement, checkElements);
+  }
 }
 
 export function observeChildren(target: Element, callback: (node: Node) => void) {
