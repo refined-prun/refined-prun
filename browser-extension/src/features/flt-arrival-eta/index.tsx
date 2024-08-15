@@ -1,29 +1,29 @@
-import { $ } from 'select-dom';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
-import { observeChildListChanged, observeChildren } from '@src/utils/mutation-observer';
+import {
+  observeChildListChanged,
+  observeReadyElementsByTagName,
+} from '@src/utils/mutation-observer';
 import { widgetAppend } from '@src/utils/vue-mount';
 import ShipArrivalEta from '@src/features/flt-arrival-eta/ShipArrivalEta.vue';
 import { refTextContent } from '@src/utils/reactive-dom';
 import { reactive } from 'vue';
 
-function observeBuffer(frame: HTMLDivElement) {
-  const tbody = $('table > tbody', frame);
-  if (tbody === undefined) {
-    if (frame.isConnected) {
-      requestAnimationFrame(() => observeBuffer(frame));
-    }
-    return;
-  }
-
-  observeChildren(tbody, observeRow);
+function onBufferReady(buffer: PrunBuffer) {
+  observeReadyElementsByTagName('tbody', {
+    baseElement: buffer.frame,
+    callback: onTableReady,
+  });
 }
 
-function observeRow(row: Node) {
-  if (!(row instanceof HTMLTableRowElement)) {
-    return;
-  }
+function onTableReady(table: HTMLTableSectionElement) {
+  observeReadyElementsByTagName('tr', {
+    baseElement: table,
+    callback: onRowReady,
+  });
+}
 
+function onRowReady(row: HTMLTableRowElement) {
   const etaColumn = row.children[7];
   const { instance } = widgetAppend(
     etaColumn,
@@ -39,12 +39,8 @@ function observeRow(row: Node) {
   });
 }
 
-function onBufferCreated(buffer: PrunBuffer) {
-  observeBuffer(buffer.frame);
-}
-
 function init() {
-  buffers.observe('FLT', onBufferCreated);
+  buffers.observe('FLT', onBufferReady);
 }
 
 void features.add({
