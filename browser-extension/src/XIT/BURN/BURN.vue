@@ -135,39 +135,37 @@ function onInfClick() {
 </script>
 
 <template>
-  <div :style="{ height: '100%', flexGrow: 1, paddingTop: '4px' }">
+  <div :style="{ paddingTop: '4px' }">
     <div :style="{ display: 'flex' }">
-      <div :style="{ display: 'flex' }">
-        <SettingsButton
-          text="RED"
-          :width="22.025"
-          :toggled="dispSettings.red"
-          :on-click="onRedClick" />
-        <SettingsButton
-          text="YELLOW"
-          :width="40.483"
-          :toggled="dispSettings.yellow"
-          :on-click="onYellowClick" />
-        <SettingsButton
-          text="GREEN"
-          :width="34.65"
-          :toggled="dispSettings.green"
-          :on-click="onGreenClick" />
-        <SettingsButton
-          text="INF"
-          :width="19.6"
-          :toggled="dispSettings.inf"
-          :on-click="onInfClick" />
-      </div>
+      <SettingsButton
+        text="RED"
+        :width="22.025"
+        :toggled="dispSettings.red"
+        :on-click="onRedClick" />
+      <SettingsButton
+        text="YELLOW"
+        :width="40.483"
+        :toggled="dispSettings.yellow"
+        :on-click="onYellowClick" />
+      <SettingsButton
+        text="GREEN"
+        :width="34.65"
+        :toggled="dispSettings.green"
+        :on-click="onGreenClick" />
+      <SettingsButton
+        text="INF"
+        :width="19.6"
+        :toggled="dispSettings.inf"
+        :on-click="onInfClick" />
     </div>
     <table>
       <thead>
         <tr>
-          <th colSpan="2" :style="{ paddingTop: 0 }"> Needs </th>
-          <th :style="{ paddingTop: 0 }">Production</th>
-          <th :style="{ paddingTop: 0 }">Inv</th>
-          <th :style="{ paddingTop: 0 }">Amt. Needed</th>
-          <th :style="{ paddingTop: 0 }">Days</th>
+          <th colSpan="2"> Needs </th>
+          <th>Production</th>
+          <th>Inv</th>
+          <th>Needed</th>
+          <th>Days</th>
         </tr>
       </thead>
       <BurnSection

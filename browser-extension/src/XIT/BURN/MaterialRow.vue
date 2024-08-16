@@ -64,7 +64,7 @@ const needAmt = computed(() =>
 </script>
 
 <template>
-  <tr v-if="isVisible">
+  <tr :class="{ [$style.collapse]: !isVisible }">
     <td :style="materialColumnStyle">
       <MaterialIcon small :ticker="material.ticker" />
     </td>
@@ -83,3 +83,9 @@ const needAmt = computed(() =>
     <DaysCell :days="days" />
   </tr>
 </template>
+
+<style module>
+.collapse {
+  visibility: collapse;
+}
+</style>

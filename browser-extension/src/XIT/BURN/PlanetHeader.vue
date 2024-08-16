@@ -28,11 +28,8 @@ const days = computed(() => {
 
 <template>
   <tr :class="$style.row">
-    <td
-      colspan="5"
-      :style="{ display: 'table-cell', backgroundColor: 'rgba(1, 1, 1, 0)' }"
-      class="title">
-      <div class="pb-burn-minimize" @click="onClick">{{ minimized ? '+' : '-' }}</div>
+    <td colspan="5" :class="$style.cell">
+      <span :class="$style.minimize" @click="onClick">{{ minimized ? '+' : '-' }}</span>
       <span>{{ burn.planetName }}</span>
     </td>
     <DaysCell :days="days" />
@@ -42,5 +39,17 @@ const days = computed(() => {
 <style module>
 .row {
   border-bottom: 1px solid #2b485a;
+}
+
+.cell {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.minimize {
+  display: inline-block;
+  width: 26px;
+  text-align: center;
+  cursor: pointer;
 }
 </style>

@@ -36,10 +36,14 @@ const onHeaderClick = () => {
 <template>
   <tbody>
     <PlanetHeader :burn="burn" :minimized="isMinimized" :on-click="onHeaderClick" />
-    <MaterialList
-      v-if="!isMinimized"
-      :is-multiplanet="isMultiplanet"
-      :burn="burn"
-      :disp-settings="dispSettings" />
+  </tbody>
+  <tbody :class="{ [$style.collapse]: isMinimized }">
+    <MaterialList :is-multiplanet="isMultiplanet" :burn="burn" :disp-settings="dispSettings" />
   </tbody>
 </template>
+
+<style module>
+.collapse {
+  visibility: collapse;
+}
+</style>

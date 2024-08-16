@@ -87,13 +87,6 @@
   color: #222;
 }
 
-.pb-burn-minimize {
-  display: inline-block;
-  width: 26px;
-  text-align: center;
-  cursor: pointer;
-}
-
 .notes-wrapper .title.note-title {
   padding-top: 5px;
 }
