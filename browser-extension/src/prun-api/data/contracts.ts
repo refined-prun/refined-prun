@@ -45,7 +45,9 @@ function getDeliveryConditionByShipmentId(id?: string | undefined) {
 
   for (const contract of state.all.value) {
     const condition = contract.conditions.find(
-      x => x.type === 'DELIVERY_SHIPMENT' && x.shipmentItemId?.startsWith(id),
+      x =>
+        x.type === 'DELIVERY_SHIPMENT' &&
+        x.shipmentItemId?.toLowerCase().startsWith(id.toLowerCase()),
     );
     if (condition) {
       return condition;
