@@ -1,6 +1,7 @@
 import { createEntityStore } from '@src/prun-api/data/create-entity-store';
 import { messages } from '@src/prun-api/data/api-messages';
 import { createGroupMapGetter } from '@src/prun-api/data/create-map-getter';
+import { createRequestGetter, request } from '@src/prun-api/data/request-hooks';
 
 const store = createEntityStore<PrunApi.ProductionLine>();
 const state = store.state;
@@ -47,7 +48,10 @@ messages({
   },
 });
 
-const getBySiteId = createGroupMapGetter(state.all, x => x.siteId);
+const getBySiteId = createRequestGetter(
+  createGroupMapGetter(state.all, x => x.siteId),
+  x => request.production(x),
+);
 
 export const productionStore = {
   ...state,

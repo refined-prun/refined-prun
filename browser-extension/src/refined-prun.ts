@@ -1,3 +1,5 @@
+import './request-hooks';
+
 import './features/com-add-images';
 import './features/com-hide-delete-button';
 import './features/com-hide-join-leave';

@@ -1,12 +1,8 @@
 import { productionStore } from '@src/prun-api/data/production';
 import { workforcesStore } from '@src/prun-api/data/workforces';
 import { storagesStore } from '@src/prun-api/data/storage';
-import { showBuffer } from '@src/util';
 import { sitesStore } from '@src/prun-api/data/sites';
-import {
-  getPlanetNameFromAddress,
-  getPlanetNaturalIdFromAddress,
-} from '@src/prun-api/data/addresses';
+import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 
 export interface MaterialBurn {
   DailyAmount: number;
@@ -24,8 +20,6 @@ export interface PlanetBurn {
   burn: BurnValues;
 }
 
-const requestedData: Set<string> = new Set();
-
 export function getPlanetBurn(siteOrId: PrunApi.Site | string) {
   const site = typeof siteOrId === 'string' ? sitesStore.getById(siteOrId)! : siteOrId;
   const id = site.siteId;
@@ -33,11 +27,6 @@ export function getPlanetBurn(siteOrId: PrunApi.Site | string) {
   const production = productionStore.getBySiteId(id);
   const storage = storagesStore.getByAddress(id);
   if (!workforce || !production) {
-    if (!requestedData.has(site.siteId)) {
-      requestedData.add(site.siteId);
-      const naturalId = getPlanetNaturalIdFromAddress(site.address);
-      showBuffer(`BS ${naturalId}`, true, true);
-    }
     return undefined;
   }
 

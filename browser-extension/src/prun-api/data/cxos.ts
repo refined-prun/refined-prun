@@ -1,5 +1,7 @@
 import { createEntityStore } from '@src/prun-api/data/create-entity-store';
 import { messages } from '@src/prun-api/data/api-messages';
+import { request } from '@src/prun-api/data/request-hooks';
+import { computed } from 'vue';
 
 const store = createEntityStore<PrunApi.CXOrder>();
 const state = store.state;
@@ -20,6 +22,18 @@ messages({
   },
 });
 
+const all = (() => {
+  const all = state.all;
+  return computed(() => {
+    if (!state.fetched.value) {
+      request.cxos();
+    }
+
+    return all.value;
+  });
+})();
+
 export const cxosStore = {
   ...state,
+  all,
 };
