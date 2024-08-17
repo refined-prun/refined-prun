@@ -82,7 +82,6 @@ const user = reactive({
   storage: [] as StorageEntry[],
   workforce: [] as WorkforceEntry[],
   production: [] as ProductionSiteEntry[],
-  currency: [] as PrunApi.CurrencyAmount[],
 });
 
 export default user;

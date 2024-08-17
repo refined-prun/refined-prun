@@ -7,6 +7,7 @@ import features from '@src/feature-registry';
 import { contractsStore } from '@src/prun-api/data/contracts';
 import { cxosStore } from '@src/prun-api/data/cxos';
 import { fxosStore } from '@src/prun-api/data/fxos';
+import { balancesStore } from '@src/prun-api/data/balances';
 
 class DataHealth {
   private tile: HTMLElement;
@@ -114,7 +115,7 @@ class DataHealth {
     const fxos = fxosStore.all.value.length;
     otherTable.appendChild(createTableRow('FXOS', fxos));
 
-    otherTable.appendChild(createTableRow('Currency', user.currency.length > 0));
+    otherTable.appendChild(createTableRow('Currency', balancesStore.all.value.length > 0));
 
     const cxPriceAge = cx.prices
       ? `${((Date.now() - cx.prices.Age) / 3600000).toFixed(0)}h`

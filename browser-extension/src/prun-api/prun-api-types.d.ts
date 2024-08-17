@@ -18,7 +18,6 @@ declare namespace PrunApi {
   }
 
   export type Packet =
-    | ACCOUNTING_CASH_BALANCES.Packet
     | ACTION_COMPLETED.Packet
     | COMPANY_DATA.Packet
     | PRODUCTION_SITE_PRODUCTION_LINES.Packet
@@ -72,23 +71,6 @@ declare namespace PrunApi {
       type: string;
       creation: DateTime;
       actionRoles: string[];
-    }
-  }
-
-  declare namespace ACCOUNTING_CASH_BALANCES {
-    export type Packet = PrunPacket<'ACCOUNTING_CASH_BALANCES', Payload>;
-
-    export interface Payload {
-      ownCurrency: Currency;
-      currencyAccounts: CurrencyAccount[];
-    }
-
-    export interface CurrencyAccount {
-      category: string;
-      type: number;
-      number: number;
-      bookBalance: CurrencyAmount;
-      currencyBalance: CurrencyAmount;
     }
   }
 

@@ -5,6 +5,7 @@ import user from '@src/store/user';
 import { contractsStore } from '@src/prun-api/data/contracts';
 import { cxosStore } from '@src/prun-api/data/cxos';
 import { fxosStore } from '@src/prun-api/data/fxos';
+import { balancesStore } from '@src/prun-api/data/balances';
 
 // Actually recording and processing the financials once they are received through BackgroundRunner.
 export function calculateFinancials(webData, result, loop) {
@@ -53,7 +54,7 @@ export function calculateFinancials(webData, result, loop) {
   // Get currencies
   finSnapshot['Currencies'] = [];
 
-  for (const currency of user.currency) {
+  for (const currency of balancesStore.all.value) {
     finSnapshot['Currencies'].push([currency.currency, Math.round(currency.amount * 100) / 100]);
   }
 

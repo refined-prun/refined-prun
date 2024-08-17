@@ -291,10 +291,6 @@ function processEvent(packet: PrunApi.Packet) {
       user.company.code = packet.payload.code;
       break;
     }
-    case 'ACCOUNTING_CASH_BALANCES': {
-      user.currency = packet.payload.currencyAccounts.map(x => x.currencyBalance);
-      break;
-    }
   }
 
   if (__DEV__) {
