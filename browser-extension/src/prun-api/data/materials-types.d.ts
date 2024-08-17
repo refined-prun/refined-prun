@@ -14,7 +14,13 @@ declare namespace PrunApi {
     amount: number;
   }
 
-  export interface MaterialAmountWithValue {
+  export interface MaterialAmountLimit {
+    material: Material;
+    amount: number;
+    limit: number;
+  }
+
+  export interface MaterialAmountValue {
     value: CurrencyAmount;
     material: Material;
     amount: number;

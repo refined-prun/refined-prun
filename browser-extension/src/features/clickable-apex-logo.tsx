@@ -3,11 +3,11 @@ import { observeReadyElementsByClassName } from '../utils/mutation-observer';
 import PrunCss from '../prun-ui/prun-css';
 import features from '../feature-registry';
 import { showBuffer } from '@src/util';
-import user from '@src/store/user';
+import { companyStore } from '@src/prun-api/data/company';
 
 function onLogoReady(logo: HTMLDivElement) {
   logo.addEventListener('click', () => {
-    showBuffer(`CO ${user.company.code}`);
+    showBuffer(`CO ${companyStore.code}`);
   });
 }
 

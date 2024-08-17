@@ -24,8 +24,8 @@ declare namespace PrunApi {
   export interface ProductionOrder {
     id: string;
     productionLineId: string;
-    inputs: MaterialAmountWithValue[];
-    outputs: MaterialAmountWithValue[];
+    inputs: MaterialAmountValue[];
+    outputs: MaterialAmountValue[];
     created: DateTime;
     started: DateTime | null;
     completion: DateTime | null;

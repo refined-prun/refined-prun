@@ -285,12 +285,6 @@ function processEvent(packet: PrunApi.Packet) {
       }
       break;
     }
-    case 'COMPANY_DATA': {
-      user.company.name = packet.payload.name;
-      user.company.id = packet.payload.id;
-      user.company.code = packet.payload.code;
-      break;
-    }
   }
 
   if (__DEV__) {

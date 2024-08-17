@@ -73,11 +73,6 @@ export interface SiteBuilding {
 }
 
 const user = reactive({
-  company: {
-    name: '',
-    code: '',
-    id: '',
-  },
   sites: [] as (BaseSiteEntry | WarehouseSiteEntry)[],
   storage: [] as StorageEntry[],
   workforce: [] as WorkforceEntry[],

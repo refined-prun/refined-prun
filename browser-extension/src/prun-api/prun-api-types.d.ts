@@ -19,7 +19,6 @@ declare namespace PrunApi {
 
   export type Packet =
     | ACTION_COMPLETED.Packet
-    | COMPANY_DATA.Packet
     | PRODUCTION_SITE_PRODUCTION_LINES.Packet
     | SITE_SITES.Packet
     | STORAGE_CHANGE.Packet
@@ -74,75 +73,6 @@ declare namespace PrunApi {
     }
   }
 
-  declare namespace COMPANY_DATA {
-    export type Packet = PrunPacket<'COMPANY_DATA', Payload>;
-
-    export interface Payload {
-      id: string;
-      name: string;
-      code: string;
-      countryId: string;
-      startingProfile: string;
-      startingLocation: Address;
-      ratingReport: RatingReport;
-      headquarters: Headquarters;
-      representation: Representation;
-    }
-
-    export interface Headquarters {
-      address: Address;
-      level: number;
-      basePermits: number;
-      usedBasePermits: number;
-      inventory: Inventory;
-      additionalBasePermits: number;
-      additionalProductionQueueSlots: number;
-      nextRelocationTime: null;
-      relocationLocked: boolean;
-      efficiencyGains: EfficiencyGain[];
-      efficiencyGainsNextLevel: EfficiencyGain[];
-    }
-
-    export interface EfficiencyGain {
-      category: string;
-      gain: number;
-    }
-
-    export interface Inventory {
-      items: Item[];
-    }
-
-    export interface Item {
-      material: Material;
-      amount: number;
-      limit: number;
-    }
-
-    export interface RatingReport {
-      overallRating: string;
-      contractCount: number;
-      earliestContract: EarliestContract;
-    }
-
-    export interface EarliestContract {
-      timestamp: number | null;
-    }
-
-    export interface Representation {
-      currentLevel: number;
-      costNextLevel: RepresentationLevel;
-      contributedNextLevel: RepresentationLevel;
-      leftNextLevel: RepresentationLevel;
-      contributedTotal: RepresentationLevel;
-      contributors: unknown[];
-    }
-
-    export interface RepresentationLevel {
-      amount: number;
-      currency: string;
-    }
-  }
-
   declare namespace PRODUCTION_SITE_PRODUCTION_LINES {
     export type Packet = PrunPacket<'PRODUCTION_SITE_PRODUCTION_LINES', Payload>;
 
@@ -176,8 +106,8 @@ declare namespace PrunApi {
     export interface Order {
       id: string;
       productionLineId: string;
-      inputs: MaterialAmountWithValue[];
-      outputs: MaterialAmountWithValue[];
+      inputs: MaterialAmountValue[];
+      outputs: MaterialAmountValue[];
       created: DateTime;
       started: DateTime | null;
       completion: DateTime | null;

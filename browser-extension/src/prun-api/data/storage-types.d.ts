@@ -16,7 +16,7 @@ declare namespace PrunApi {
   }
 
   export interface StoreItem {
-    quantity: MaterialAmountWithValue;
+    quantity: MaterialAmountValue;
     id: string;
     type: string;
     weight: number;

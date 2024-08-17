@@ -1,7 +1,7 @@
 import './cxob-highlight-own-orders.css';
-import user from '@src/store/user';
 import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
+import { companyStore } from '@src/prun-api/data/company';
 
 const className = 'rprun-cxob-own-order-highlight';
 
@@ -9,7 +9,7 @@ function onBufferCreated(buffer: PrunBuffer) {
   const rows = buffer.frame.getElementsByTagName('tr');
   const observer = new MutationObserver(() => {
     for (const row of Array.from(rows)) {
-      if (row.firstChild?.textContent === user.company.name) {
+      if (row.firstChild?.textContent === companyStore.name) {
         row.classList.add(className);
       } else {
         row.classList.remove(className);

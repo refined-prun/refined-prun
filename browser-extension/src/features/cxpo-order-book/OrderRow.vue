@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import user from '@src/store/user';
 import PrunCss from '@src/prun-ui/prun-css';
 import { computed, PropType } from 'vue';
+import { companyStore } from '@src/prun-api/data/company';
 
 const props = defineProps({
   order: {
@@ -13,7 +13,7 @@ const props = defineProps({
 
 const ownOrderClass = computed(() => ({
   'rprun-cxpo-order-column--own-order':
-    props.order.amount && props.order.trader.id === user.company.id,
+    props.order.amount && props.order.trader.id === companyStore.id,
 }));
 const amount = computed(() => (props.order.amount ? props.order.amount.toFixed(0) : '∞'));
 const amountClass = computed(() => [PrunCss.ComExOrderBookPanel.amount, ownOrderClass.value]);
