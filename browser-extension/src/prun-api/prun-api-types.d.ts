@@ -17,11 +17,7 @@ declare namespace PrunApi {
     payload: K;
   }
 
-  export type Packet =
-    | ACTION_COMPLETED.Packet
-    | SITE_SITES.Packet
-    | SYSTEM_STARS_DATA.Packet
-    | USER_DATA.Packet;
+  export type Packet = ACTION_COMPLETED.Packet | SYSTEM_STARS_DATA.Packet | USER_DATA.Packet;
 
   declare namespace ACTION_COMPLETED {
     export type Packet = PrunPacket<'ACTION_COMPLETED', Payload>;
@@ -65,102 +61,6 @@ declare namespace PrunApi {
       type: string;
       creation: DateTime;
       actionRoles: string[];
-    }
-  }
-
-  declare namespace SITE_SITES {
-    export type Packet = PrunPacket<'SITE_SITES', Payload>;
-
-    export interface Payload {
-      sites: Site[];
-    }
-
-    export interface Site {
-      siteId: string;
-      address: Address;
-      founded: DateTime;
-      platforms: Platform[];
-      buildOptions: BuildOptions;
-      area: number;
-      investedPermits: number;
-      maximumPermits: number;
-    }
-
-    export interface BuildOptions {
-      options: Option[];
-    }
-
-    export interface Option {
-      id: string;
-      name: string;
-      area: number;
-      ticker: string;
-      expertiseCategory: ExpertiseCategory | null;
-      needsFertileSoil: boolean;
-      type: OptionType;
-      workforceCapacities: WorkforceCapacity[];
-      materials: Materials;
-    }
-
-    export enum ExpertiseCategory {
-      Agriculture = 'AGRICULTURE',
-      Chemistry = 'CHEMISTRY',
-      Construction = 'CONSTRUCTION',
-      Electronics = 'ELECTRONICS',
-      FoodIndustries = 'FOOD_INDUSTRIES',
-      FuelRefining = 'FUEL_REFINING',
-      Manufacturing = 'MANUFACTURING',
-      Metallurgy = 'METALLURGY',
-      ResourceExtraction = 'RESOURCE_EXTRACTION',
-    }
-
-    export interface Materials {
-      quantities: MaterialAmount[];
-    }
-
-    export enum OptionType {
-      Core = 'CORE',
-      Habitation = 'HABITATION',
-      Production = 'PRODUCTION',
-      Resources = 'RESOURCES',
-      Storage = 'STORAGE',
-    }
-
-    export interface WorkforceCapacity {
-      level: Level;
-      capacity: number;
-    }
-
-    export enum Level {
-      Engineer = 'ENGINEER',
-      Pioneer = 'PIONEER',
-      Scientist = 'SCIENTIST',
-      Settler = 'SETTLER',
-      Technician = 'TECHNICIAN',
-    }
-
-    export interface Platform {
-      siteId: string;
-      id: string;
-      module: Module;
-      area: number;
-      creationTime: DateTime;
-      reclaimableMaterials: MaterialAmount[];
-      repairMaterials: MaterialAmount[];
-      repairMaterials24: MaterialAmount[];
-      repairMaterials48: MaterialAmount[];
-      bookValue: CurrencyAmount;
-      condition: number;
-      lastRepair: DateTime | null;
-    }
-
-    export interface Module {
-      id: string;
-      platformId: string;
-      reactorId: string;
-      reactorName: string;
-      reactorTicker: string;
-      type: OptionType;
     }
   }
 

@@ -7,7 +7,6 @@ import {
   createLink,
   createTable,
   createTextSpan,
-  findCorrespondingPlanet,
   getBuffers,
   getBuffersFromList,
   getLocalStoragePromise,
@@ -20,14 +19,13 @@ import {
 import { Style } from '../Style';
 import { Selector } from '../Selector';
 import { ExchangeTickersReverse, NonProductionBuildings } from '../GameProperties';
-import user from '@src/store/user';
 import xit from './xit-registry';
 import features from '@src/feature-registry';
 import { cxobStore } from '@src/prun-api/data/cxob';
 import { workforcesStore } from '@src/prun-api/data/workforces';
 import { productionStore } from '@src/prun-api/data/production';
 import { storagesStore } from '@src/prun-api/data/storage';
-import { sitesStore } from '@src/prun-api/data/sites';
+import { getBuildingLastRepair, sitesStore } from '@src/prun-api/data/sites';
 import { calculatePlanetBurn } from '@src/burn';
 import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 import { warehousesStore } from '@src/prun-api/data/warehouses';
@@ -585,9 +583,10 @@ class GenerateScreen {
       case 'Repair': {
         // Get list of planets
         const possiblePlanets = [] as any[];
-        user.sites.forEach(planet => {
-          if (planet.PlanetName && planet.type == 'BASE') {
-            possiblePlanets.push(planet.PlanetName);
+        sitesStore.all.value.forEach(planet => {
+          const name = getPlanetNameFromAddress(planet.address);
+          if (name) {
+            possiblePlanets.push(name);
           }
         });
 
@@ -1443,15 +1442,15 @@ function parseGroup(group, messageBox, errorFlag) {
     const threshold = isNaN(parseFloat(group.days)) ? 0 : parseFloat(group.days); // The threshold to start repairing buildings [days]
     const advanceDays = isNaN(parseFloat(group.advanceDays)) ? 0 : parseFloat(group.advanceDays); // The number of days forward looking
 
-    const planetSite = findCorrespondingPlanet(group.planet, user.sites, true);
+    const planetSite = sitesStore.getByPlanetName(group.planet);
 
-    if (planetSite && planetSite.buildings) {
-      planetSite.buildings.forEach(building => {
-        if (NonProductionBuildings.includes(building['buildingTicker'])) {
+    if (planetSite && planetSite.platforms) {
+      planetSite.platforms.forEach(building => {
+        if (NonProductionBuildings.includes(building.module.reactorTicker)) {
           return;
         }
 
-        const date = (new Date().getTime() - building.lastRepair) / 86400000;
+        const date = (new Date().getTime() - getBuildingLastRepair(building)) / 86400000;
 
         if (date + advanceDays < threshold) {
           return;

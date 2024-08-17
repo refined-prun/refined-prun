@@ -8,16 +8,14 @@ import {
   createLink,
   Popup,
   showWarningDialog,
-  findCorrespondingPlanet,
   showBuffer,
   dateYearFormatter,
 } from '../util';
 import { Style, TextColors } from '../Style';
 import { NonProductionBuildings } from '../GameProperties';
 import xit from './xit-registry';
-import user from '@src/store/user';
 import features from '@src/feature-registry';
-import { sitesStore } from '@src/prun-api/data/sites';
+import { getBuildingLastRepair, sitesStore } from '@src/prun-api/data/sites';
 import { workforcesStore } from '@src/prun-api/data/workforces';
 import { productionStore } from '@src/prun-api/data/production';
 import { calculatePlanetBurn } from '@src/burn';
@@ -381,7 +379,7 @@ function updatePopupInfo(junk, params) {
     } else if (typeValue == 'Repair') {
       planetNames = [] as any[];
 
-      planetNames = user.sites.filter(site => site.type == 'BASE').map(site => site.PlanetName);
+      planetNames = sitesStore.all.value.map(site => getPlanetNameFromAddress(site.address)!);
       if (info['planet'] && planetNames.includes(info['planet']) && planetNames.length !== 1) {
         planetNames.push(planetNames.indexOf(info['planet']));
       }
@@ -506,13 +504,13 @@ function addChecklistItem(params) {
 
       const mats = {};
 
-      const site = findCorrespondingPlanet(info['planet'], user.sites, true);
+      const site = sitesStore.getByPlanetName(info['planet']);
       info['children'] = []; // This also resets previous children
-      if (site.buildings) {
-        site.buildings.forEach(building => {
+      if (site?.platforms) {
+        site.platforms.forEach(building => {
           if (
-            !NonProductionBuildings.includes(building.buildingTicker) &&
-            Date.now() - building.lastRepair > parseFloat(info.days) * 86400000
+            !NonProductionBuildings.includes(building.module.reactorTicker) &&
+            Date.now() - getBuildingLastRepair(building) > parseFloat(info.days) * 86400000
           ) {
             // Old enough
             building.repairMaterials.forEach(mat => {

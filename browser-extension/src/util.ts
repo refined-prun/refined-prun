@@ -188,43 +188,6 @@ export function createFinancialTextBox(
   return box;
 }
 
-// Find the data corresponding to a planet in an array of FIO inventory/burn data
-export function findCorrespondingPlanet(planet, data, needBase?) {
-  if (!data || !planet) {
-    return undefined;
-  }
-  for (let i = 0; i < data.length; i++) {
-    if (
-      planet &&
-      data[i]['PlanetNaturalId'] &&
-      data[i]['PlanetNaturalId'].toLowerCase() == planet.toLowerCase() &&
-      (!needBase || data[i]['type'] == 'STORE' || data[i]['type'] == 'BASE')
-    ) {
-      // If the natural ID matches: XX-000x
-      return data[i];
-    } else if (
-      planet &&
-      data[i]['PlanetName'] &&
-      data[i]['PlanetName'].toLowerCase() == planet.toLowerCase() &&
-      (!needBase || data[i]['type'] == 'STORE' || data[i]['type'] == 'BASE')
-    ) {
-      // If the planet name matches
-      return data[i];
-    } else if (
-      planet &&
-      data[i]['PlanetNaturalId'] &&
-      planetsStore.getByIdOrName(planet) &&
-      planetsStore.getByIdOrName(planet) ===
-        planetsStore.getByIdOrName(data[i]['PlanetNaturalId']) &&
-      (!needBase || data[i]['type'] == 'STORE' || data[i]['type'] == 'BASE')
-    ) {
-      // When planet name isn't in the payload, convert it to natural ID
-      return data[i];
-    }
-  }
-  return undefined;
-}
-
 // Parse the inventory name on inventory buffers
 export function parseInvName(text) {
   try {

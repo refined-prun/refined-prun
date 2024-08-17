@@ -35,6 +35,9 @@ const getByPlanetName = createMapGetter(
 const getByPlanetNaturalIdOrName = (value?: string | null) =>
   getByPlanetNaturalId(value) ?? getByPlanetName(value);
 
+export const getBuildingLastRepair = (building: PrunApi.Platform) =>
+  building.lastRepair?.timestamp ?? building.creationTime.timestamp;
+
 export const sitesStore = {
   ...state,
   getByPlanetNaturalId,

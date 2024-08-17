@@ -1,5 +1,4 @@
 import socketIOMiddleware from './socket-io-middleware';
-import user, { BaseSiteEntry } from '@src/store/user';
 import { dispatch } from '@src/prun-api/data/api-messages';
 
 let companyContext: string | undefined;
@@ -55,36 +54,6 @@ function processEvent(packet: PrunApi.Packet) {
     case 'USER_DATA': {
       const context = packet.payload.contexts.find(x => x.type === 'COMPANY');
       companyContext = context?.id ?? companyContext;
-      break;
-    }
-    case 'SITE_SITES': {
-      user.sites = user.sites.filter(item => item.type !== 'BASE');
-
-      for (const site of packet.payload.sites) {
-        const siteData: BaseSiteEntry = {
-          PlanetName: site.address.lines[1].entity.name,
-          PlanetNaturalId: site.address.lines[1].entity.naturalId,
-          siteId: site.siteId,
-          buildings: [],
-          type: 'BASE',
-        };
-
-        for (const building of site.platforms) {
-          const buildingTicker = building.module.reactorTicker;
-
-          const lastRepair = building.lastRepair?.timestamp ?? building.creationTime.timestamp;
-
-          siteData.buildings.push({
-            buildingTicker,
-            lastRepair,
-            condition: building.condition,
-            reclaimableMaterials: building.reclaimableMaterials,
-            repairMaterials: building.repairMaterials,
-          });
-        }
-
-        user.sites.push(siteData);
-      }
       break;
     }
   }

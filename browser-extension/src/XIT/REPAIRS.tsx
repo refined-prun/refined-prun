@@ -1,9 +1,13 @@
 import { clearChildren, createTextSpan, setSettings } from '../util';
 import { NonProductionBuildings } from '../GameProperties';
-import user from '@src/store/user';
 import xit from './xit-registry';
 import features from '@src/feature-registry';
 import { shipsStore } from '@src/prun-api/data/ships';
+import { sitesStore } from '@src/prun-api/data/sites';
+import {
+  getPlanetNameFromAddress,
+  getPlanetNaturalIdFromAddress,
+} from '@src/prun-api/data/addresses';
 
 // This entire module is really, really messy and needs to be rewritten.
 class Repairs {
@@ -23,7 +27,7 @@ class Repairs {
     const pmmgSettings = this.pmmgSettings;
 
     clearChildren(this.tile);
-    if (user.sites.length === 0) {
+    if (sitesStore.all.value.length === 0) {
       this.tile.textContent = 'Loading Repair Data...';
       this.tile.id = 'pmmg-reload';
       return;
@@ -99,13 +103,10 @@ class Repairs {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const buildings = [] as any[];
-      for (const site of user.sites) {
-        if (site.type != 'BASE') {
-          continue;
-        }
-
-        for (const build of site.buildings) {
-          buildings.push([site['PlanetName'], build]);
+      for (const site of sitesStore.all.value) {
+        for (const build of site.platforms) {
+          const name = getPlanetNameFromAddress(site.address);
+          buildings.push([name, build]);
         }
       }
       buildings.sort(buildingSort);
@@ -165,14 +166,14 @@ class Repairs {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const siteData = [] as any[];
-      for (const site of user.sites) {
+      for (const site of sitesStore.all.value) {
+        const name = getPlanetNameFromAddress(site.address)!;
+        const naturalId = getPlanetNaturalIdFromAddress(site.address)!;
         if (
-          site.type == 'BASE' &&
-          (site['PlanetName'].toUpperCase() == screenName ||
-            site['PlanetNaturalId'].toUpperCase() == screenName) &&
-          site.buildings
+          (name.toUpperCase() == screenName || naturalId.toUpperCase() == screenName) &&
+          site.platforms
         ) {
-          site.buildings.forEach(building => {
+          site.platforms.forEach(building => {
             siteData.push([this.parameters[1], building]);
           });
         }

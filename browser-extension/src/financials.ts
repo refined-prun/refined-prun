@@ -1,7 +1,6 @@
 import cx from '@src/fio/cx';
 import { getLocalStorage, setSettings } from '@src/util';
 import { Consumption } from '@src/GameProperties';
-import user from '@src/store/user';
 import { contractsStore } from '@src/prun-api/data/contracts';
 import { cxosStore } from '@src/prun-api/data/cxos';
 import { fxosStore } from '@src/prun-api/data/fxos';
@@ -103,10 +102,7 @@ export function calculateFinancials(webData, result, loop) {
     }
   }
   // Put together building value
-  for (const location of user.sites) {
-    if (location.type != 'BASE') {
-      continue;
-    }
+  for (const location of sitesStore.all.value) {
     let value = 0;
     location['buildings'].forEach(building => {
       building['reclaimableMaterials'].forEach(mat => {
@@ -123,7 +119,8 @@ export function calculateFinancials(webData, result, loop) {
     if (value == 0) {
       continue;
     }
-    finSnapshot['Buildings'].push([location.PlanetName, Math.round(value * 100) / 100]);
+    const name = getPlanetNameFromAddress(location.address);
+    finSnapshot['Buildings'].push([name, Math.round(value * 100) / 100]);
   }
 
   // Handle contracts
