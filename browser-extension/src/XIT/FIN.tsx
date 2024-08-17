@@ -777,9 +777,6 @@ function chooseScreen(finResult, params) {
     if (parameters[2]) {
       const graphDiv = document.createElement('div');
       graphDiv.style.margin = '5px';
-      const tileDims = tile.getBoundingClientRect();
-      const width = tileDims.width > 10 ? tileDims.width - 10 : 10;
-      const height = tileDims.height > 10 ? tileDims.height - 10 : 10;
       tile.appendChild(graphDiv);
       const type = parameters[2].toLowerCase();
       if (type === 'history') {

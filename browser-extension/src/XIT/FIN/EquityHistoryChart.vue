@@ -229,8 +229,6 @@ onMounted(() => {
   resizeObserver.observe(container);
 });
 
-const containerStyle = computed(() => ({ position: 'relative', width: `${chartWidth.value}px` }));
-
 const formatPercent = new Intl.NumberFormat('default', {
   style: 'percent',
   minimumFractionDigits: 0,
