@@ -63,7 +63,7 @@ function downloadCss() {
 </script>
 
 <template>
-  <div :style="{ height: '100%', flexGrow: 1, paddingTop: '4px' }">
+  <div :style="{ paddingTop: '4px' }">
     <DebugButton @click="downloadCss">Export CSS classes</DebugButton>
   </div>
 </template>

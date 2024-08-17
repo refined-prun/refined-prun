@@ -59,7 +59,7 @@ const otherData = computed(() => [
 </script>
 
 <template>
-  <div ref="container" :style="{ height: '100%', flexGrow: 1, paddingTop: '4px' }">
+  <div :style="{ paddingTop: '4px' }">
     <span class="title">Bases</span>
     <table>
       <thead>
