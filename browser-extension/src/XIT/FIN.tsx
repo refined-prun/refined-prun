@@ -9,7 +9,6 @@ import {
   createToolTip,
   dateYearFormatter,
   downloadFile,
-  findCorrespondingPlanet,
   getLocalStorage,
   hourFormatter,
   setSettings,
@@ -19,7 +18,6 @@ import {
 import { Style, TextColors } from '../Style';
 import { Consumption, CurrencySymbols } from '../GameProperties';
 import system from '@src/system';
-import user from '@src/store/user';
 import xit from './xit-registry';
 import cx from '@src/fio/cx';
 import { averageCX, calculateFinancials, getPrice, interpretCX } from '@src/financials';
@@ -27,6 +25,10 @@ import features from '@src/feature-registry';
 import { widgetAppend } from '@src/utils/vue-mount';
 import EquityHistoryChart from '@src/XIT/FIN/EquityHistoryChart.vue';
 import PieChart from '@src/XIT/FIN/PieChart.vue';
+import { workforcesStore } from '@src/prun-api/data/workforces';
+import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
+import { productionStore } from '@src/prun-api/data/production';
+import { sitesStore } from '@src/prun-api/data/sites';
 
 class Finances {
   private tile: HTMLElement;
@@ -838,14 +840,16 @@ function chooseScreen(finResult, params) {
     tile.id = 'pmmg-load-success';
 
     const planets = [] as string[];
-    user.workforce.forEach(workforce => {
-      if (workforce.PlanetName && !planets.includes(workforce.PlanetName)) {
-        planets.push(workforce.PlanetName);
+    workforcesStore.all.value.forEach(workforce => {
+      const name = getPlanetNameFromAddress(workforce.address);
+      if (name && !planets.includes(name)) {
+        planets.push(name);
       }
     });
-    user.production.forEach(production => {
-      if (production.PlanetName && !planets.includes(production.PlanetName)) {
-        planets.push(production.PlanetName);
+    productionStore.all.value.forEach(production => {
+      const name = getPlanetNameFromAddress(production.address);
+      if (name && !planets.includes(name)) {
+        planets.push(name);
       }
     });
 
@@ -853,8 +857,13 @@ function chooseScreen(finResult, params) {
     let totalProduced = 0;
     let totalConsumed = 0;
     planets.forEach(planet => {
-      const planetProduction = findCorrespondingPlanet(planet, user.production);
-      const planetWorkforce = findCorrespondingPlanet(planet, user.workforce);
+      const site = sitesStore.getByPlanetName(planet);
+      if (!site) {
+        return;
+      }
+
+      const planetProduction = productionStore.getBySiteId(site.siteId);
+      const planetWorkforce = workforcesStore.getById(site.siteId);
 
       const planetFinances = [] as any[];
       planetFinances.push(planet);
@@ -862,7 +871,7 @@ function chooseScreen(finResult, params) {
       let consumed = 0;
 
       if (planetWorkforce) {
-        planetWorkforce.workforce.forEach(tier => {
+        planetWorkforce.workforces.forEach(tier => {
           tier.needs.forEach(need => {
             consumed +=
               getPrice(
@@ -878,8 +887,8 @@ function chooseScreen(finResult, params) {
 
       let isRecurring = false;
 
-      if (planetProduction && planetProduction.lines) {
-        planetProduction.lines.forEach(line => {
+      if (planetProduction) {
+        planetProduction.forEach(line => {
           line.orders.forEach(order => {
             if (order.recurring) {
               isRecurring = true;
@@ -887,11 +896,11 @@ function chooseScreen(finResult, params) {
           });
         });
 
-        planetProduction.lines.forEach(line => {
+        planetProduction.forEach(line => {
           let totalDuration = 0;
           line.orders.forEach(order => {
             if (!order.started && (!isRecurring || order.recurring)) {
-              totalDuration += order.duration || Infinity;
+              totalDuration += order.duration.millis || Infinity;
             }
           });
 
@@ -903,10 +912,10 @@ function chooseScreen(finResult, params) {
                     cxPrices,
                     webData['custom_prices'],
                     pmmgSettings['PMMGExtended']['pricing_scheme'],
-                    mat.MaterialTicker,
+                    mat.material.ticker,
                     priceBasket,
                   ) *
-                    mat.Amount *
+                    mat.amount *
                     86400000 *
                     line.capacity) /
                   totalDuration;
@@ -918,10 +927,10 @@ function chooseScreen(finResult, params) {
                     cxPrices,
                     webData['custom_prices'],
                     pmmgSettings['PMMGExtended']['pricing_scheme'],
-                    mat.MaterialTicker,
+                    mat.material.ticker,
                     priceBasket,
                   ) *
-                    mat.Amount *
+                    mat.amount *
                     86400000 *
                     line.capacity) /
                   totalDuration;

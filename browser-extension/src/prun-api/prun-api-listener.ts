@@ -1,12 +1,5 @@
 import socketIOMiddleware from './socket-io-middleware';
-import user, {
-  BaseSiteEntry,
-  ProductionLineEntry,
-  ProductionOrderEntry,
-  ProductionSiteEntry,
-  StorageEntry,
-  WarehouseSiteEntry,
-} from '@src/store/user';
+import user, { BaseSiteEntry, StorageEntry, WarehouseSiteEntry } from '@src/store/user';
 import { dispatch } from '@src/prun-api/data/api-messages';
 
 let companyContext: string | undefined;
@@ -226,63 +219,6 @@ function processEvent(packet: PrunApi.Packet) {
         user.workforce.push(workforceInfo);
       }
 
-      break;
-    }
-    case 'PRODUCTION_SITE_PRODUCTION_LINES': {
-      const matchIndex = user.production.findIndex(item => item.siteId === packet.payload.siteId);
-
-      const siteInfo: ProductionSiteEntry = {
-        PlanetName: '',
-        PlanetNaturalId: '',
-        lines: [],
-        siteId: packet.payload.siteId,
-      };
-      for (const line of packet.payload.productionLines) {
-        const prodLine: ProductionLineEntry = {
-          PlanetName: line.address.lines[1].entity.name,
-          PlanetNaturalId: line.address.lines[1].entity.naturalId,
-          capacity: line.capacity,
-          condition: line.condition,
-          efficiency: line.efficiency,
-          efficiencyFactors: line.efficiencyFactors,
-          type: line.type,
-          orders: [],
-        };
-
-        for (const order of line.orders) {
-          const orderInfo: ProductionOrderEntry = {
-            completed: order.completed,
-            started: order.started ? order.started.timestamp : order.started,
-            duration: order.duration ? order.duration.millis : Infinity, // Did this null value kill stuff down the line?
-            halted: order.halted,
-            productionFee: order.productionFee,
-            recurring: order.recurring,
-            inputs: order.inputs.map(x => ({
-              MaterialTicker: x.material.ticker,
-              Amount: x.amount,
-            })),
-            outputs: order.outputs.map(x => ({
-              MaterialTicker: x.material.ticker,
-              Amount: x.amount,
-            })),
-          };
-
-          prodLine.orders.push(orderInfo);
-        }
-
-        siteInfo.lines.push(prodLine);
-      }
-
-      if (siteInfo.lines[0]) {
-        siteInfo.PlanetName = siteInfo.lines[0].PlanetName;
-        siteInfo.PlanetNaturalId = siteInfo.lines[0].PlanetNaturalId;
-      }
-
-      if (matchIndex != -1) {
-        user.production[matchIndex] = siteInfo;
-      } else {
-        user.production.push(siteInfo);
-      }
       break;
     }
   }

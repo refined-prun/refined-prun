@@ -7,35 +7,6 @@ export interface WorkforceEntry {
   siteId: string;
 }
 
-export interface ProductionSiteEntry {
-  PlanetName: string;
-  PlanetNaturalId: string;
-  lines: ProductionLineEntry[];
-  siteId: string;
-}
-
-export interface ProductionLineEntry {
-  PlanetName: string;
-  PlanetNaturalId: string;
-  capacity: number;
-  condition: number;
-  efficiency: number;
-  efficiencyFactors: PrunApi.PRODUCTION_SITE_PRODUCTION_LINES.EfficiencyFactor[];
-  type: string;
-  orders: ProductionOrderEntry[];
-}
-
-export interface ProductionOrderEntry {
-  completed: number;
-  started: number | null;
-  duration: number;
-  halted: boolean;
-  productionFee: PrunApi.CurrencyAmount;
-  recurring: boolean;
-  inputs: { MaterialTicker: string; Amount: number }[];
-  outputs: { MaterialTicker: string; Amount: number }[];
-}
-
 export interface StorageEntry extends PrunApi.Store {
   items: StoreItem[];
   PlanetName?: string;
@@ -76,7 +47,6 @@ const user = reactive({
   sites: [] as (BaseSiteEntry | WarehouseSiteEntry)[],
   storage: [] as StorageEntry[],
   workforce: [] as WorkforceEntry[],
-  production: [] as ProductionSiteEntry[],
 });
 
 export default user;
