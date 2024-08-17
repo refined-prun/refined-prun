@@ -1,6 +1,5 @@
 import { clearChildren, createTable, createTextSpan } from '../util';
 import { TextColors } from '../Style';
-import user from '@src/store/user';
 import xit from './xit-registry';
 import cx from '@src/fio/cx';
 import features from '@src/feature-registry';
@@ -8,6 +7,12 @@ import { contractsStore } from '@src/prun-api/data/contracts';
 import { cxosStore } from '@src/prun-api/data/cxos';
 import { fxosStore } from '@src/prun-api/data/fxos';
 import { balancesStore } from '@src/prun-api/data/balances';
+import { sitesStore } from '@src/prun-api/data/sites';
+import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
+import { workforcesStore } from '@src/prun-api/data/workforces';
+import { productionStore } from '@src/prun-api/data/production';
+import { storagesStore } from '@src/prun-api/data/storage';
+import { warehousesStore } from '@src/prun-api/data/warehouses';
 
 class DataHealth {
   private tile: HTMLElement;
@@ -32,34 +37,13 @@ class DataHealth {
     const baseBody = createTable(this.tile, ['Planet', 'Workforce', 'Production', 'Storage']);
     const baseInfo = {};
 
-    for (const site of user.sites.filter(x => x.type === 'BASE')) {
-      if (site.PlanetName) {
-        baseInfo[site.PlanetName] = [false, false, false];
-      }
-    }
-
-    for (const workforce of user.workforce) {
-      if (workforce.PlanetName && !baseInfo[workforce.PlanetName]) {
-        baseInfo[workforce.PlanetName] = [true, false, false];
-      } else if (workforce.PlanetName) {
-        baseInfo[workforce.PlanetName][0] = true;
-      }
-    }
-
-    for (const production of user.production) {
-      if (production.PlanetName && !baseInfo[production.PlanetName]) {
-        baseInfo[production.PlanetName] = [false, true, false];
-      } else if (production.PlanetName) {
-        baseInfo[production.PlanetName][1] = true;
-      }
-    }
-
-    for (const storage of user.storage) {
-      if (storage.PlanetName && storage.type == 'STORE' && !baseInfo[storage.PlanetName]) {
-        baseInfo[storage.PlanetName] = [false, false, true];
-      } else if (storage.PlanetName && storage.type == 'STORE') {
-        baseInfo[storage.PlanetName][2] = true;
-      }
+    for (const site of sitesStore.all.value) {
+      const name = getPlanetNameFromAddress(site.address)!;
+      baseInfo[name] = [
+        workforcesStore.getById(site.siteId),
+        productionStore.getBySiteId(site.siteId),
+        storagesStore.getByAddress(site.siteId),
+      ];
     }
 
     Object.keys(baseInfo).forEach(planet => {
@@ -85,25 +69,27 @@ class DataHealth {
     this.tile.appendChild(otherTitle);
     const otherTable = createTable(this.tile, ['Parameter', 'Value']);
 
-    const numBaseSites = user.sites.filter(item => item.type === 'BASE').length;
+    const numBaseSites = sitesStore.all.value.length;
     otherTable.appendChild(createTableRow('Base Sites', numBaseSites));
 
-    const numWarehouseSites = user.sites.filter(item => item.type !== 'BASE').length;
+    const numWarehouseSites = warehousesStore.all.value.length;
     otherTable.appendChild(createTableRow('Warehouse Sites', numWarehouseSites));
 
-    const numBaseStores = user.storage.filter(item => item.type === 'STORE').length;
+    const numBaseStores = storagesStore.all.value.filter(x => x.type === 'STORE').length;
     otherTable.appendChild(createTableRow('Base Stores', numBaseStores));
 
-    const numWarehouseStores = user.storage.filter(item => item.type === 'WAREHOUSE_STORE').length;
+    const numWarehouseStores = storagesStore.all.value.filter(
+      x => x.type === 'WAREHOUSE_STORE',
+    ).length;
     otherTable.appendChild(createTableRow('Warehouse Stores', numWarehouseStores));
 
-    const numShipStores = user.storage.filter(item => item.type === 'SHIP_STORE').length;
+    const numShipStores = storagesStore.all.value.filter(x => x.type === 'SHIP_STORE').length;
     otherTable.appendChild(createTableRow('Ship Stores', numShipStores));
 
-    const numWorkforces = user.workforce.length;
+    const numWorkforces = workforcesStore.all.value.length;
     otherTable.appendChild(createTableRow('Workforces', numWorkforces));
 
-    const numProduction = user.production.length;
+    const numProduction = productionStore.all.value.length;
     otherTable.appendChild(createTableRow('Production Sites', numProduction));
 
     const contracts = contractsStore.all.value.length;
