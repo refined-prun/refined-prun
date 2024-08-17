@@ -164,7 +164,7 @@ const categoryColors = {
       :background="colors.background"
       :color="colors.color"
       @click="onClick" />
-    <div v-if="amount" :class="PrunCss.MaterialIcon.indicatorContainer">
+    <div v-if="amount" :class="PrunCss.MaterialIcon.indicatorContainer" @click="onClick">
       <div :class="amountClasses">{{ amount }}</div>
     </div>
   </div>
