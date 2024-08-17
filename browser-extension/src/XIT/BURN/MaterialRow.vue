@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { getMaterialNameByTicker } from '@src/prun-ui/material-names';
 import { settings } from '@src/store/settings';
 import { computed, PropType } from 'vue';
 import { PlanetBurn } from '@src/burn';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import DaysCell from '@src/XIT/BURN/DaysCell.vue';
+import PrunCss from '@src/prun-ui/prun-css';
+import { showBuffer } from '@src/util';
 
 const props = defineProps({
   material: {
@@ -74,19 +75,20 @@ const needVolume = computed(() =>
 <template>
   <tr :class="{ [$style.collapse]: !isVisible }">
     <td :style="materialColumnStyle">
-      <MaterialIcon small :ticker="material.ticker" />
-    </td>
-    <td>
-      <span :style="{ fontWeight: 'bold' }">{{ getMaterialNameByTicker(material.ticker) }}</span>
+      <MaterialIcon small :ticker="material.ticker" :amount="invAmount" />
     </td>
     <td>
       <span>{{ consText }} / day</span>
     </td>
     <td>
-      <span>{{ invAmount }}</span>
+      <span>{{ isNaN(needAmt) ? '0' : needAmt.toFixed(0) }}</span>
     </td>
     <td>
-      <span>{{ isNaN(needAmt) ? '0' : needAmt.toFixed(0) }}</span>
+      <div
+        :class="[PrunCss.Button.btn, PrunCss.Button.dark, PrunCss.Button.darkInline]"
+        @click="showBuffer(`CXM ${material.ticker}`)">
+        CXM
+      </div>
     </td>
     <td>
       <span>{{ needWeight.toFixed(2) }}t</span>

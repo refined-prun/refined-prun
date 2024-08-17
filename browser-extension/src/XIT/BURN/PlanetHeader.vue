@@ -51,7 +51,7 @@ function sumNeed(property: (x: PrunApi.Material) => number) {
 
 <template>
   <tr :class="$style.row">
-    <td colspan="5" :class="$style.cell">
+    <td colspan="4" :class="$style.cell">
       <span :class="$style.minimize" @click="onClick">{{ minimized ? '+' : '-' }}</span>
       <span>{{ burn.planetName }}</span>
     </td>
