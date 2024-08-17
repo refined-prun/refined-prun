@@ -79,7 +79,7 @@ function cleanFLT(buffer: PrunBuffer) {
 }
 
 function cleanINV(buffer: PrunBuffer) {
-  // Only clean INV buffers with no other parameters
+  // Only clean the main INV buffer
   if (buffer.parameter) {
     return;
   }
