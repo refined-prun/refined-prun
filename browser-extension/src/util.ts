@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Selector } from './Selector';
-import { CategoryColors, DefaultColors, Style, WithStyles } from './Style';
+import { CategoryColors, Style, WithStyles } from './Style';
 import system from '@src/system';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/prun-ui/prun-css';
@@ -29,29 +29,6 @@ export const dateYearFormatter = new Intl.DateTimeFormat(undefined, {
   year: 'numeric',
 });
 
-// Add context buttons. (Append returned object to empty tile)
-export function createContextButtonRow(buttonAbbreviations, buttonLabels, buttonLinks) {
-  const contextBar = document.createElement('div');
-  contextBar.classList.add(...Style.ContextBar);
-
-  if (
-    !(
-      buttonAbbreviations.length == buttonLabels.length && buttonLabels.length == buttonLinks.length
-    )
-  ) {
-    // Mismatch parameter lengths
-    return contextBar;
-  }
-
-  for (let i = 0; i < buttonAbbreviations.length; i++) {
-    contextBar.appendChild(
-      createContextButton(buttonAbbreviations[i], buttonLabels[i], buttonLinks[i]),
-    );
-  }
-
-  return contextBar;
-}
-
 export function createContextButton(buttonAbbreviation, buttonLabel, buttonLink) {
   const contextButton = document.createElement('div');
   contextButton.classList.add(...Style.ContextButton);
@@ -76,38 +53,6 @@ export function createContextButton(buttonAbbreviation, buttonLabel, buttonLink)
   });
 
   return contextButton;
-}
-
-export function createSettingsButton(text, width, toggled, f) {
-  const button = document.createElement('span');
-  const bar = document.createElement('div');
-  if (toggled) {
-    bar.classList.add(...Style.SettingsBarToggled);
-  } else {
-    bar.classList.add(...Style.SettingsBarUntoggled);
-  }
-  const textBox = document.createElement('div');
-  textBox.classList.add(...Style.SettingsText);
-  textBox.textContent = text;
-  button.classList.add(...Style.SettingsButton);
-  bar.style.width = `${width}px`;
-  bar.style.maxWidth = `${width}px`;
-  bar.style.height = '2px';
-  button.appendChild(bar);
-  button.appendChild(textBox);
-  button.addEventListener('click', () => {
-    if (toggled) {
-      bar.classList.remove(...Style.SettingsBarToggled);
-      bar.classList.add(...Style.SettingsBarUntoggled);
-      toggled = false;
-    } else {
-      bar.classList.remove(...Style.SettingsBarUntoggled);
-      bar.classList.add(...Style.SettingsBarToggled);
-      toggled = true;
-    }
-    f();
-  });
-  return button;
 }
 
 // Download a file containing fileData with fileName
@@ -142,11 +87,6 @@ export function createSelectOption(optionLabel, optionValue, rightAlign?) {
   return option;
 }
 
-/**
- * parse a duration into an actual ETA string
- * @param duration
- * @returns {string}
- */
 export function convertDurationToETA(parsedSeconds) {
   const eta = new Date();
   const now = new Date();
@@ -246,26 +186,6 @@ export function createFinancialTextBox(
   box.appendChild(secondaryTextDiv);
 
   return box;
-}
-
-// For a material ticker and FIO inventory payload, find the amount of that material in the inventory
-export function findInventoryAmount(ticker, inventory) {
-  for (let i = 0; i < inventory['Inventory'].length; i++) {
-    if (inventory['Inventory'][i]['MaterialTicker'] == ticker) {
-      return inventory['Inventory'][i]['MaterialAmount'];
-    }
-  }
-  return 0;
-}
-
-// For a material ticker and FIO inventory payload, find the amount of that material consumed by worker consumption
-export function findBurnAmount(ticker, inventory) {
-  for (let i = 0; i < inventory['WorkforceConsumption'].length; i++) {
-    if (inventory['WorkforceConsumption'][i]['MaterialTicker'] == ticker) {
-      return inventory['WorkforceConsumption'][i]['DailyAmount'];
-    }
-  }
-  return 0;
 }
 
 // Find the data corresponding to a planet in an array of FIO inventory/burn data
@@ -402,9 +322,7 @@ export function XITWebRequest(
 export function getSpecial() {
   const now = new Date();
   const edtTime = new Date(now.getTime() + now.getTimezoneOffset() * 60000 - 3600000 * 4);
-  const specialTime = edtTime.getDate() == 1 && edtTime.getMonth() == 3;
-  //const specialTime = edtTime.getDate() == 28 && edtTime.getMonth() == 2;
-  return specialTime;
+  return edtTime.getDate() == 1 && edtTime.getMonth() == 3;
 }
 
 /**
@@ -575,51 +493,12 @@ export function changeValue(input, value) {
   input.dispatchEvent(inputEvent);
 }
 
-// Change the value of a select box
-export function changeSelectValue(input, value) {
-  // Get the property descriptor for the input element's value property
-  const propDescriptor = Object.getOwnPropertyDescriptor(
-    window['HTMLSelectElement'].prototype,
-    'value',
-  );
-  // Return if the property descriptor is undefined
-  if (propDescriptor == undefined) {
-    return;
-  }
-  // Get the native input value setter
-  const nativeInputValueSetter = propDescriptor.set;
-  // Return if the native input value setter is undefined
-  if (nativeInputValueSetter == undefined) {
-    return;
-  }
-  // Call the native input value setter with the input element and the new value
-  nativeInputValueSetter.call(input, value);
-
-  // Create a new input event
-  const inputEvent = document.createEvent('Event');
-  // Initialize the event as an "input" event, bubbling and cancelable
-  inputEvent.initEvent('input', true, true);
-  // Dispatch the event to the input element
-  input.dispatchEvent(inputEvent);
-}
-
 // Remove all elements added in the last run with a class name
 export function genericCleanup(className: string = 'prun-remove-js') {
   Array.from(document.getElementsByClassName(className)).forEach(elem => {
     elem.parentNode?.removeChild(elem);
     return;
   });
-  return;
-}
-
-export function genericUnhide(className: string = 'prun-remove-js') {
-  (<HTMLElement[]>Array.from(document.getElementsByClassName(`${className}-hidden`))).forEach(
-    (elem: HTMLElement) => {
-      elem.style.display = '';
-      elem.classList.remove(`${className}-hidden`);
-      return;
-    },
-  );
   return;
 }
 
@@ -652,11 +531,9 @@ export function getBuffers(bufferCode: string): HTMLElement[] {
 
 // Return all matching buffers from prefound buffer list
 export function getBuffersFromList(bufferCode: string, buffers: any[]): any[] {
-  const matchingBuffers = buffers
+  return buffers
     .filter(([firstElement]) => firstElement.toLowerCase().startsWith(bufferCode.toLowerCase()))
     .map(([, secondElement]) => secondElement);
-
-  return matchingBuffers;
 }
 
 export function createEmptyTableRow(colspan, text) {
@@ -670,56 +547,6 @@ export function createEmptyTableRow(colspan, text) {
   line.appendChild(textColumn);
 
   return line;
-}
-
-// Get elements that match an XPath
-export function getElementsByXPath(xpath: string): Array<Node> {
-  const result = document.evaluate(
-    xpath,
-    document,
-    null,
-    XPathResult.ANY_UNORDERED_NODE_TYPE,
-    null,
-  );
-
-  const output: Array<Node> = [];
-
-  try {
-    let node = result.iterateNext();
-    while (node) {
-      output.push(node);
-      node = result.iterateNext();
-    }
-  } catch {
-    // ignored
-  }
-  return output;
-}
-
-// Sort type is: alph, alphRev
-export function sortTable(table: HTMLTableElement, column: number, sortType: string) {
-  const sorter = [] as any[];
-  if (table.children[1] == null) {
-    return;
-  }
-  const rows = Array.from(table.children[1].children);
-  for (let i = 0; i < rows.length; i++) {
-    const item = rows[i].children[column];
-    if (item == null || item.firstChild == null) {
-      break;
-    }
-    sorter.push([item.firstChild.textContent, rows[i]]);
-  }
-  if (sortType == 'alph') {
-    sorter.sort(tableSortAlph);
-  }
-  sorter.forEach(item => {
-    table.children[1].insertBefore(table.children[1].children[0], item[1]);
-  });
-}
-
-function tableSortAlph(a, b) {
-  return a[0].localeCompare(b[0]);
 }
 
 // Create a table in the style of PrUN
@@ -928,184 +755,6 @@ export function showSuccessDialog(tile, message: string = 'Action succeeded!') {
   });
 
   return;
-}
-
-export function drawLineChart(
-  xData,
-  yData,
-  xSize,
-  ySize,
-  xLabel?,
-  yLabel?,
-  lineColor?,
-  isDates?,
-  currencySymbol?,
-) {
-  let i;
-  const canvas = document.createElement('canvas');
-  canvas.height = ySize;
-  canvas.width = xSize;
-
-  const context = canvas.getContext('2d');
-  if (!context) {
-    return null;
-  }
-
-  const minX = Math.min(...xData);
-  const maxX = Math.max(...xData);
-  const minY = Math.min(...yData);
-  const maxY = Math.max(...yData);
-
-  const zeroX =
-    (xLabel ? 25 : 0) +
-    context.measureText(maxY.toLocaleString(undefined, { maximumFractionDigits: 0 })).width;
-  const zeroY = yLabel ? ySize - 23 : ySize;
-
-  // Draw labels
-  if (xLabel) {
-    const xLabelInfo = context.measureText(xLabel);
-    context.font = '12px Droid Sans';
-    context.fillStyle = '#eee';
-    context.fillText(xLabel, xSize / 2 + zeroX / 2 - xLabelInfo.width / 2, ySize);
-  }
-  if (yLabel) {
-    context.save();
-    context.font = '12px Droid Sans';
-    context.fillStyle = '#eee';
-    context.translate(10, ySize / 2 + 10);
-    context.rotate(-Math.PI / 2);
-    context.fillText(yLabel, 0, 0);
-    context.restore();
-  }
-
-  // Draw data
-  const scaleX = (xSize - zeroX) / (maxX - minX);
-  const scaleY = zeroY / (maxY - minY);
-
-  for (i = 0; i < xData.length - 1; i++) {
-    context.beginPath();
-    context.moveTo((xData[i] - minX) * scaleX + zeroX, zeroY - (yData[i] - minY) * scaleY);
-    context.lineTo((xData[i + 1] - minX) * scaleX + zeroX, zeroY - (yData[i + 1] - minY) * scaleY);
-    context.strokeStyle = lineColor ? lineColor : '#f7a600';
-    context.stroke();
-  }
-
-  // Draw axes
-  context.beginPath();
-  context.strokeStyle = '#bbb';
-  context.moveTo(zeroX, zeroY);
-  context.lineTo(xSize, zeroY);
-  context.stroke();
-
-  context.beginPath();
-  context.moveTo(zeroX, zeroY);
-  context.lineTo(zeroX, 0);
-  context.stroke();
-
-  // Draw data labels
-  for (i = 0; i < 10; i++) {
-    const text = isDates
-      ? dateFormatter.format(new Date(((maxX - minX) * i) / 10 + minX))
-      : (((maxX - minX) * i) / 10 + minX).toLocaleString(undefined, { maximumFractionDigits: 2 });
-    context.font = '10px Droid Sans';
-    context.fillStyle = '#999';
-    context.fillText(text, ((xSize - zeroX) * i) / 10 + zeroX, ySize - 12);
-  }
-
-  for (i = 0; i <= 5; i++) {
-    let value = ((maxY - minY) * i) / 5 + minY;
-    value =
-      Math.round(value / Math.pow(10, Math.floor(Math.log10(value)) - 3)) *
-      Math.pow(10, Math.floor(Math.log10(value)) - 3);
-    const text =
-      (currencySymbol ? currencySymbol : '') +
-      value.toLocaleString(undefined, { maximumFractionDigits: 0 });
-    const textInfo = context.measureText(text);
-    context.font = '10px Droid Sans';
-    context.fillStyle = '#999';
-    context.fillText(text, zeroX - textInfo.width - 2, (-(zeroY - 8) * i) / 5 + zeroY);
-  }
-
-  return canvas;
-}
-
-export function drawPieChart(data, size, text?, colors?) {
-  let i;
-  const pieSize = size / 2 - 12;
-  const centerX = size * 1.5;
-  const centerY = size / 2 + 12;
-  let angle = 0;
-  let sum = 0;
-  data.forEach(point => {
-    sum += point;
-  });
-  const canvas = document.createElement('canvas');
-  canvas.height = size + 24;
-  canvas.width = size * 3;
-
-  const context = canvas.getContext('2d');
-  if (!context) {
-    return null;
-  }
-
-  for (i = 0; i < data.length; i++) {
-    const pieAngle = (data[i] / sum) * 2 * Math.PI;
-    context.beginPath();
-    context.arc(centerX, centerY, pieSize, angle, angle + pieAngle);
-    context.stroke();
-    angle += pieAngle;
-
-    context.lineTo(centerX, centerY);
-
-    if (colors) {
-      context.fillStyle = colors[i] || '#00ff00';
-    } else {
-      context.fillStyle =
-        i == data.length - 1 && data.length % DefaultColors.length == 1 && data.length > 1
-          ? DefaultColors[1]
-          : DefaultColors[i % DefaultColors.length];
-    }
-    context.fill();
-  }
-  if (!text) {
-    return canvas;
-  }
-
-  angle = 0;
-  let minX = centerX - pieSize;
-  let maxX = centerX + pieSize;
-  for (i = 0; i < data.length; i++) {
-    const pieAngle = (data[i] / sum) * 2 * Math.PI;
-    const percent = ` - ${((data[i] / sum) * 100).toLocaleString(undefined, { maximumFractionDigits: 0 })}%`;
-    const textInfo = context.measureText(text[i] + percent);
-
-    if (pieAngle < 0.3 && data.length > 5) {
-      continue;
-    }
-
-    let startX = centerX + (Math.cos(angle + pieAngle / 2) * size) / 2;
-    const startY = centerY + (Math.sin(angle + pieAngle / 2) * size) / 2 + 4;
-
-    if (startX - textInfo.width < minX) {
-      minX = startX - textInfo.width;
-    } else if (startX + textInfo.width > maxX) {
-      maxX = startX + textInfo.width;
-    }
-
-    if (angle + pieAngle / 2 > Math.PI / 2 && angle + pieAngle / 2 < (Math.PI * 3) / 2) {
-      startX -= textInfo.width;
-    }
-
-    context.font = '12px Droid Sans';
-    context.fillStyle = '#eee';
-    context.fillText(text[i] + percent, startX, startY);
-
-    angle += pieAngle;
-  }
-
-  canvas.style.marginLeft = `${(minX > 0 ? -minX + 5 : 5).toString()}px`;
-  canvas.style.marginRight = `${(maxX - 2 * size + 5).toString()}px`;
-  return canvas;
 }
 
 /**

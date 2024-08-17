@@ -17,7 +17,6 @@ export const Style = {
   ],
 
   // Context bar styles
-  ContextBar: ['ContextControls__container___dzDODeW'],
   ContextButton: [
     'ContextControls__item____QDkFMH',
     'fonts__font-regular___Sxp1xjo',
@@ -47,20 +46,9 @@ export const Style = {
 
   // More misc styles
   RadioButton: ['RadioItem__container___CSczqmG'],
-  SettingsButton: ['RadioItem__container___CSczqmG', 'RadioItem__containerHorizontal____trlXDo'],
   RadioButtonUnToggled: ['RadioItem__indicator___QzQtjhA'],
-  SettingsBarUntoggled: [
-    'RadioItem__indicator___QzQtjhA',
-    'RadioItem__indicatorHorizontal___SwtwTIh',
-  ],
   RadioButtonToggled: [
     'RadioItem__indicator___QzQtjhA',
-    'RadioItem__active___CDscOQV',
-    'effects__shadowPrimary___EbXJQor',
-  ],
-  SettingsBarToggled: [
-    'RadioItem__indicator___QzQtjhA',
-    'RadioItem__indicatorHorizontal___SwtwTIh',
     'RadioItem__active___CDscOQV',
     'effects__shadowPrimary___EbXJQor',
   ],
@@ -68,12 +56,6 @@ export const Style = {
     'RadioItem__value___Yd1Gt1T',
     'fonts__font-regular___Sxp1xjo',
     'type__type-small___pMQhMQO',
-  ],
-  SettingsText: [
-    'RadioItem__value___Yd1Gt1T',
-    'fonts__font-regular___Sxp1xjo',
-    'type__type-small___pMQhMQO',
-    'RadioItem__valueHorizontal___D5AXJ9P',
   ],
   ScreenUnderlineUntoggled: [
     'HeadItem__indicatorPrimary___rx46qOB',
@@ -189,16 +171,6 @@ export const Style = {
     'fonts__font-regular___Sxp1xjo',
     'type__type-regular___k8nHUfI',
   ],
-
-  // CXOB Styles
-  CXOBAmount: ['ComExOrderBookPanel__amount___EoNHTID'],
-  CXOBOffer: ['ComExOrderBookPanel__offerPrice___kisxczh', 'ComExOrderBookPanel__amount___EoNHTID'],
-  CXOBSpread: ['ComExOrderBookPanel__spread___GIYNNWd'],
-  CXOBEmpty: ['ComExOrderBookPanel__empty___yl28RaU'],
-  CXOBRequest: [
-    'ComExOrderBookPanel__requestPrice___ZTEgYCz',
-    'ComExOrderBookPanel__amount___EoNHTID',
-  ],
 };
 
 // A function to apply multiple classes to an element in one go
@@ -213,25 +185,6 @@ export const TextColors = {
   Standard: '#bbbbbb',
   Yellow: '#f7a600',
 };
-
-/*export const DefaultColors = [
-	"#591e00",
-	"#7b3d00",
-	"#b46d00",
-	"#f7a600",
-	"#ffcf40",
-	"#fbe4af"
-]*/
-export const DefaultColors = [
-  '#004564',
-  '#005b76',
-  '#007079',
-  '#00846c',
-  '#009552',
-  '#67a22e',
-  '#ada900',
-  '#f7a600',
-];
 
 // The default category colors used in PrUN
 export const CategoryColors = {
