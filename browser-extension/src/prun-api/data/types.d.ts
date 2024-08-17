@@ -17,4 +17,17 @@ declare namespace PrunApi {
     y: number;
     z: number;
   }
+
+  export interface Currency {
+    numericCode: number;
+    code: string;
+    name: string;
+    decimals: number;
+  }
+
+  export interface ExchangeEntity {
+    id: string;
+    name: string;
+    code: string;
+  }
 }
