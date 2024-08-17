@@ -201,26 +201,6 @@ function processEvent(packet: PrunApi.Packet) {
       }
       break;
     }
-    case 'WORKFORCE_WORKFORCES': {
-      const matchIndex = user.workforce.findIndex(item => item.siteId === packet.payload.siteId);
-      const planetId = packet.payload.address.lines[1].entity.naturalId;
-      const planetName = packet.payload.address.lines[1].entity.name;
-
-      const workforceInfo = {
-        PlanetName: planetName,
-        PlanetNaturalId: planetId,
-        workforce: packet.payload.workforces,
-        siteId: packet.payload.siteId,
-      };
-
-      if (matchIndex != -1) {
-        user.workforce[matchIndex] = workforceInfo;
-      } else {
-        user.workforce.push(workforceInfo);
-      }
-
-      break;
-    }
   }
 
   if (__DEV__) {

@@ -29,6 +29,7 @@ import { productionStore } from '@src/prun-api/data/production';
 import { storagesStore } from '@src/prun-api/data/storage';
 import { sitesStore } from '@src/prun-api/data/sites';
 import { calculatePlanetBurn } from '@src/burn';
+import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 
 class Execute {
   private tile: HTMLElement;
@@ -540,9 +541,10 @@ class GenerateScreen {
       case 'Resupply': {
         // Get list of planets
         const possiblePlanets = [] as any[];
-        user.workforce.forEach(planet => {
-          if (planet.PlanetName) {
-            possiblePlanets.push(planet.PlanetName);
+        workforcesStore.all.value.forEach(planet => {
+          const name = getPlanetNameFromAddress(planet.address);
+          if (name) {
+            possiblePlanets.push(name);
           }
         });
 

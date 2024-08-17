@@ -21,6 +21,7 @@ import { sitesStore } from '@src/prun-api/data/sites';
 import { workforcesStore } from '@src/prun-api/data/workforces';
 import { productionStore } from '@src/prun-api/data/production';
 import { calculatePlanetBurn } from '@src/burn';
+import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 
 class Checklists {
   private tile: HTMLElement;
@@ -355,7 +356,7 @@ function updatePopupInfo(junk, params) {
       // Add in the planet row
       planetNames = [] as any[];
 
-      planetNames = user.workforce.map(planet => planet.PlanetName);
+      planetNames = workforcesStore.all.value.map(x => getPlanetNameFromAddress(x.address)!);
 
       if (info['planet'] && planetNames.includes(info['planet']) && planetNames.length !== 1) {
         planetNames.push(planetNames.indexOf(info['planet']));

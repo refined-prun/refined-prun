@@ -24,8 +24,7 @@ declare namespace PrunApi {
     | STORAGE_STORAGES.Packet
     | SYSTEM_STARS_DATA.Packet
     | USER_DATA.Packet
-    | WAREHOUSE_STORAGES.Packet
-    | WORKFORCE_WORKFORCES.Packet;
+    | WAREHOUSE_STORAGES.Packet;
 
   declare namespace ACTION_COMPLETED {
     export type Packet = PrunPacket<'ACTION_COMPLETED', Payload>;
@@ -236,43 +235,6 @@ declare namespace PrunApi {
       id?: string;
       code?: string;
       name?: string;
-    }
-  }
-
-  declare namespace WORKFORCE_WORKFORCES {
-    export type Packet = PrunPacket<'WORKFORCE_WORKFORCES', Payload>;
-
-    export interface Payload {
-      address: Address;
-      siteId: string;
-      workforces: Workforce[];
-    }
-
-    export interface Workforce {
-      level: string;
-      population: number;
-      reserve: number;
-      capacity: number;
-      required: number;
-      satisfaction: number;
-      needs: Need[];
-    }
-
-    export interface Need {
-      category: NeedCategory;
-      essential: boolean;
-      material: Material;
-      satisfaction: number;
-      unitsPerInterval: number;
-      unitsPer100: number;
-    }
-
-    export enum NeedCategory {
-      Clothing = 'CLOTHING',
-      Food = 'FOOD',
-      Health = 'HEALTH',
-      Tools = 'TOOLS',
-      Water = 'WATER',
     }
   }
 }

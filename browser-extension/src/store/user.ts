@@ -1,12 +1,5 @@
 import { reactive } from 'vue';
 
-export interface WorkforceEntry {
-  PlanetName: string;
-  PlanetNaturalId: string;
-  workforce: PrunApi.WORKFORCE_WORKFORCES.Workforce[];
-  siteId: string;
-}
-
 export interface StorageEntry extends PrunApi.Store {
   items: StoreItem[];
   PlanetName?: string;
@@ -46,7 +39,6 @@ export interface SiteBuilding {
 const user = reactive({
   sites: [] as (BaseSiteEntry | WarehouseSiteEntry)[],
   storage: [] as StorageEntry[],
-  workforce: [] as WorkforceEntry[],
 });
 
 export default user;
