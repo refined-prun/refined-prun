@@ -18,13 +18,15 @@ import {
 } from '../util';
 import { Style, TextColors } from '../Style';
 import { Consumption, CurrencySymbols } from '../GameProperties';
-import { generateLineGraph, generatePieChart } from '../charts';
 import system from '@src/system';
 import user from '@src/store/user';
 import xit from './xit-registry';
 import cx from '@src/fio/cx';
 import { averageCX, calculateFinancials, getPrice, interpretCX } from '@src/financials';
 import features from '@src/feature-registry';
+import { widgetAppend } from '@src/utils/vue-mount';
+import EquityHistoryChart from '@src/XIT/FIN/EquityHistoryChart.vue';
+import PieChart from '@src/XIT/FIN/PieChart.vue';
 
 class Finances {
   private tile: HTMLElement;
@@ -779,20 +781,17 @@ function chooseScreen(finResult, params) {
       const width = tileDims.width > 10 ? tileDims.width - 10 : 10;
       const height = tileDims.height > 10 ? tileDims.height - 10 : 10;
       tile.appendChild(graphDiv);
-      const graph = generateGraph(
-        parameters[2],
-        finResult,
-        locationsArray,
-        currency,
-        width,
-        height,
-      );
-      if (!graph) {
+      const type = parameters[2].toLowerCase();
+      if (type === 'history') {
+        appendLineChart(graphDiv, finResult, currency, false);
+      } else if (type === 'assetpie') {
+        appendAssetPie(graphDiv, finResult);
+      } else if (type === 'locationspie') {
+        appendLocationsPie(graphDiv, locationsArray);
+      } else {
         graphDiv.appendChild(createTextSpan('Error! Not a valid graph type!'));
         return;
       }
-      graphDiv.appendChild(graph);
-      return;
     }
     if (finResult['History'].length == 0) {
       return;
@@ -809,16 +808,11 @@ function chooseScreen(finResult, params) {
     historyDiv.style.marginTop = '10px';
     tile.appendChild(historyDiv);
 
-    const linePlot = generateGraph('history', finResult, locationsArray, currency);
-    if (!linePlot) {
-      return;
-    }
-    linePlot.style.cursor = 'pointer';
-    linePlot.addEventListener('click', () => {
-      showBuffer('XIT FIN_CHART_HISTORY');
-    });
-
-    historyDiv.appendChild(linePlot);
+    appendLineChart(historyDiv, finResult, currency, true);
+    // linePlot.style.cursor = 'pointer';
+    // linePlot.addEventListener('click', () => {
+    //   showBuffer('XIT FIN_CHART_HISTORY');
+    // });
 
     const pieHeader = document.createElement('h3');
     pieHeader.appendChild(document.createTextNode('Asset Breakdown'));
@@ -829,28 +823,18 @@ function chooseScreen(finResult, params) {
     pieDiv.style.margin = '5px';
     tile.appendChild(pieDiv);
 
-    // Pie chart of current financial split
-    const pieCanvas = generateGraph('assetpie', finResult, locationsArray, currency);
-    if (!pieCanvas) {
-      return;
-    }
-    pieCanvas.style.cursor = 'pointer';
-    pieCanvas.style.marginRight = '-25px';
-    pieCanvas.addEventListener('click', () => {
-      showBuffer('XIT FIN_CHART_ASSETPIE');
-    });
-    pieDiv.appendChild(pieCanvas);
+    appendAssetPie(pieDiv, finResult);
+    // pieCanvas.style.cursor = 'pointer';
+    // pieCanvas.style.marginRight = '-25px';
+    // pieCanvas.addEventListener('click', () => {
+    //   showBuffer('XIT FIN_CHART_ASSETPIE');
+    // });
 
-    // Pie chart of where fixed/current assets are located
-    const locPieCanvas = generateGraph('locationspie', finResult, locationsArray, currency);
-    if (!locPieCanvas) {
-      return;
-    }
-    locPieCanvas.style.cursor = 'pointer';
-    locPieCanvas.addEventListener('click', () => {
-      showBuffer('XIT FIN_CHART_LOCATIONSPIE');
-    });
-    pieDiv.appendChild(locPieCanvas);
+    appendLocationsPie(pieDiv, locationsArray);
+    // locPieCanvas.style.cursor = 'pointer';
+    // locPieCanvas.addEventListener('click', () => {
+    //   showBuffer('XIT FIN_CHART_LOCATIONSPIE');
+    // });
   } else if (parameters[1].toLowerCase() == 'production' || parameters[1].toLowerCase() == 'prod') {
     // Revenue/profit derived from burn dat
     tile.textContent = '';
@@ -1070,55 +1054,45 @@ function drawGSTable(resultDiv, prices) {
   });
 }
 
-function generateGraph(graphType, finResult, locationsArray, currency, width = 400, height = 200) {
-  switch (graphType.toLowerCase()) {
-    case 'history': {
-      const dateData = [] as any[];
-      const finData = [] as any[];
+function appendLineChart(container: Element, finResult, currency, maintainAspectRatio) {
+  const dateData = [] as any[];
+  const finData = [] as any[];
 
-      finResult['History'].forEach(entry => {
-        if (entry[1] + entry[2] + entry[3] - entry[4] == 0) {
-          return;
-        }
+  finResult['History'].forEach(entry => {
+    if (entry[1] + entry[2] + entry[3] - entry[4] == 0) {
+      return;
+    }
 
-        dateData.push(new Date(entry[0]).toISOString());
-        finData.push(Number((entry[1] + entry[2] + entry[3] - entry[4]).toPrecision(4)));
-      });
-      return generateLineGraph(
-        dateData,
-        finData,
-        'Date',
-        'Equity',
-        width,
-        height,
-        'time',
-        'linear',
-        '',
-        currency,
-        'dd/MM',
-      );
-    }
-    case 'assetpie': {
-      const latestReport = finResult['History'][finResult['History'].length - 1];
-      return generatePieChart(
-        ['Fixed', 'Current', 'Liquid'],
-        [latestReport[1], latestReport[2], latestReport[3]],
-        width,
-        height,
-      );
-    }
-    case 'locationspie': {
-      const locationNames = [] as any[];
-      const locationValue = [] as any[];
-      locationsArray.forEach(location => {
-        locationNames.push(location[0]);
-        locationValue.push(location[1] + location[2] + location[3]);
-      });
+    dateData.push(new Date(entry[0]).toISOString());
+    finData.push(Number((entry[1] + entry[2] + entry[3] - entry[4]).toPrecision(4)));
+  });
+  widgetAppend(container, EquityHistoryChart, {
+    xdata: dateData,
+    ydata: finData,
+    yprefix: currency,
+    maintainAspectRatio,
+  });
+}
 
-      return generatePieChart(locationNames, locationValue, width, height);
-    }
-  }
-  return null;
+function appendAssetPie(container: Element, finResult) {
+  const latestReport = finResult['History'][finResult['History'].length - 1];
+  widgetAppend(container, PieChart, {
+    labelData: ['Fixed', 'Current', 'Liquid'],
+    numericalData: [latestReport[1], latestReport[2], latestReport[3]],
+  });
+}
+
+function appendLocationsPie(container: Element, locationsArray) {
+  const locationNames = [] as any[];
+  const locationValue = [] as any[];
+  locationsArray.forEach(location => {
+    locationNames.push(location[0]);
+    locationValue.push(location[1] + location[2] + location[3]);
+  });
+  widgetAppend(container, PieChart, {
+    labelData: locationNames,
+    numericalData: locationValue,
+  });
 }
 
 function clearData(result) {

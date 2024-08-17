@@ -131,6 +131,9 @@ importers:
       vue:
         specifier: ^3.4.37
         version: 3.4.37(typescript@5.4.5)
+      vue-chartjs:
+        specifier: ^5.3.1
+        version: 5.3.1(chart.js@4.4.3)(vue@3.4.37(typescript@5.4.5))
       webextension-polyfill:
         specifier: ^0.12.0
         version: 0.12.0
@@ -2207,6 +2210,12 @@ packages:
 
   vscode-uri@3.0.8:
     resolution: {integrity: sha512-AyFQ0EVmsOZOlAnxoFOGOq1SQDWAB7C6aqMGS23svWAllfOaxbuFvcT8D1i8z3Gyn8fraVeZNNmN6e9bxxXkKw==}
+
+  vue-chartjs@5.3.1:
+    resolution: {integrity: sha512-rZjqcHBxKiHrBl0CIvcOlVEBwRhpWAVf6rDU3vUfa7HuSRmGtCslc0Oc8m16oAVuk0erzc1FCtH1VCriHsrz+A==}
+    peerDependencies:
+      chart.js: ^4.1.1
+      vue: ^3.0.0-0 || ^2.7.0
 
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
@@ -4339,6 +4348,11 @@ snapshots:
       terser: 5.31.1
 
   vscode-uri@3.0.8: {}
+
+  vue-chartjs@5.3.1(chart.js@4.4.3)(vue@3.4.37(typescript@5.4.5)):
+    dependencies:
+      chart.js: 4.4.3
+      vue: 3.4.37(typescript@5.4.5)
 
   vue-demi@0.14.10(vue@3.4.37(typescript@5.4.5)):
     dependencies:
