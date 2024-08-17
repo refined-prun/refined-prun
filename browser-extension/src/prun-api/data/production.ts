@@ -13,6 +13,9 @@ messages({
   }) {
     store.setMany(data.productionLines);
   },
+  PRODUCTION_PRODUCTION_LINE_UPDATED(data: PrunApi.ProductionLine) {
+    store.setOne(data);
+  },
   PRODUCTION_ORDER_ADDED(data: PrunApi.ProductionOrder) {
     const line = state.entities[data.productionLineId];
     if (!line) {
