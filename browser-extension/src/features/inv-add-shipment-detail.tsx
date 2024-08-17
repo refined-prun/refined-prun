@@ -42,7 +42,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
 }
 
 export function init() {
-  buffers.observe(['INV', 'SHIPI'], onBufferCreated);
+  buffers.observe(['INV', 'SHPI'], onBufferCreated);
 }
 
 void features.add({
