@@ -6,6 +6,9 @@ import { contractsStore } from '@src/prun-api/data/contracts';
 import { cxosStore } from '@src/prun-api/data/cxos';
 import { fxosStore } from '@src/prun-api/data/fxos';
 import { balancesStore } from '@src/prun-api/data/balances';
+import { storagesStore } from '@src/prun-api/data/storage';
+import { sitesStore } from '@src/prun-api/data/sites';
+import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 
 // Actually recording and processing the financials once they are received through BackgroundRunner.
 export function calculateFinancials(webData, result, loop) {
@@ -62,23 +65,24 @@ export function calculateFinancials(webData, result, loop) {
   finSnapshot['Inventory'] = [];
   finSnapshot['Buildings'] = [];
 
-  for (const location of user.storage) {
+  for (const location of storagesStore.all.value) {
     let value = 0;
 
-    location['items'].forEach(mat => {
+    location.items.forEach(mat => {
       value +=
         getPrice(
           cxPrices,
           webData['custom_prices'],
           result['PMMGExtended']['pricing_scheme'],
-          mat.MaterialTicker,
+          mat.quantity.material.ticker,
           priceBasket,
-        ) * mat.Amount;
+        ) * mat.quantity.amount;
     });
 
     let name;
     if (location.type == 'STORE' || location.type == 'WAREHOUSE_STORE') {
-      name = location.PlanetName;
+      const site = sitesStore.getById(location.addressableId);
+      name = getPlanetNameFromAddress(site?.address);
     } else {
       name = location.name;
     }

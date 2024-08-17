@@ -20,11 +20,8 @@ declare namespace PrunApi {
   export type Packet =
     | ACTION_COMPLETED.Packet
     | SITE_SITES.Packet
-    | STORAGE_CHANGE.Packet
-    | STORAGE_STORAGES.Packet
     | SYSTEM_STARS_DATA.Packet
-    | USER_DATA.Packet
-    | WAREHOUSE_STORAGES.Packet;
+    | USER_DATA.Packet;
 
   declare namespace ACTION_COMPLETED {
     export type Packet = PrunPacket<'ACTION_COMPLETED', Payload>;
@@ -167,22 +164,6 @@ declare namespace PrunApi {
     }
   }
 
-  declare namespace STORAGE_CHANGE {
-    export type Packet = PrunPacket<'STORAGE_CHANGE', Payload>;
-
-    export interface Payload {
-      stores: Store[];
-    }
-  }
-
-  declare namespace STORAGE_STORAGES {
-    export type Packet = PrunPacket<'STORAGE_STORAGES', Payload>;
-
-    export interface Payload {
-      stores: Store[];
-    }
-  }
-
   declare namespace SYSTEM_STARS_DATA {
     export type Packet = PrunPacket<'SYSTEM_STARS_DATA', Payload>;
 
@@ -208,33 +189,5 @@ declare namespace PrunApi {
     }
 
     export type StarType = 'A' | 'B' | 'F' | 'G' | 'K' | 'M' | 'O';
-  }
-
-  declare namespace WAREHOUSE_STORAGES {
-    export type Packet = PrunPacket<'WAREHOUSE_STORAGES', Payload>;
-
-    export interface Payload {
-      storages: Storage[];
-    }
-
-    export interface Storage {
-      warehouseId: string;
-      storeId: string;
-      units: number;
-      weightCapacity: number;
-      volumeCapacity: number;
-      nextPayment: DateTime;
-      fee: CurrencyAmount;
-      feeCollector: FeeCollector;
-      status: string;
-      address: Address;
-    }
-
-    export interface FeeCollector {
-      currency?: Currency;
-      id?: string;
-      code?: string;
-      name?: string;
-    }
   }
 }

@@ -30,6 +30,7 @@ import { storagesStore } from '@src/prun-api/data/storage';
 import { sitesStore } from '@src/prun-api/data/sites';
 import { calculatePlanetBurn } from '@src/burn';
 import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
+import { warehousesStore } from '@src/prun-api/data/warehouses';
 
 class Execute {
   private tile: HTMLElement;
@@ -1218,11 +1219,12 @@ function parseActionPackage(rawActionPackage, messageBox) {
   const CXInvs = {};
   ['AI1', 'CI1', 'CI2', 'IC1', 'NC1', 'NC2'].forEach(ticker => {
     CXInvs[ticker] = {};
-    const inv = findCorrespondingPlanet(ExchangeTickersReverse[ticker], user.storage, false);
+    const warehouse = warehousesStore.getByNaturalId(ExchangeTickersReverse[ticker]);
+    const inv = storagesStore.getById(warehouse?.storeId);
 
     if (inv) {
       inv.items.forEach(mat => {
-        CXInvs[ticker][mat.MaterialTicker] = mat.Amount;
+        CXInvs[ticker][mat.quantity.material.ticker] = mat.quantity.amount;
       });
     }
   });

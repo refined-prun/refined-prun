@@ -36,15 +36,19 @@ export const addressesStore = {
   ...state,
 };
 
-export const getPlanetNaturalIdFromAddress = (address: PrunApi.Address) => {
+export const getPlanetNaturalIdFromAddress = (address?: PrunApi.Address | undefined) => {
   return getPlanetLineFromAddress(address)?.entity.naturalId;
 };
 
-export const getPlanetNameFromAddress = (address: PrunApi.Address) => {
+export const getPlanetNameFromAddress = (address?: PrunApi.Address | undefined) => {
   return getPlanetLineFromAddress(address)?.entity.name;
 };
 
-const getPlanetLineFromAddress = (address: PrunApi.Address) => {
+const getPlanetLineFromAddress = (address?: PrunApi.Address | undefined) => {
+  if (!address) {
+    return undefined;
+  }
+
   const entry: PrunApi.AddressLine = address.lines[1];
   if (entry?.type === 'PLANET') {
     return entry;
