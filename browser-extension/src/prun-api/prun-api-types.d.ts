@@ -17,7 +17,7 @@ declare namespace PrunApi {
     payload: K;
   }
 
-  export type Packet = ACTION_COMPLETED.Packet | SYSTEM_STARS_DATA.Packet | USER_DATA.Packet;
+  export type Packet = ACTION_COMPLETED.Packet | SYSTEM_STARS_DATA.Packet;
 
   declare namespace ACTION_COMPLETED {
     export type Packet = PrunPacket<'ACTION_COMPLETED', Payload>;
@@ -26,41 +26,6 @@ declare namespace PrunApi {
       actionId: string;
       status: number;
       message: PrunApi.Packet | null;
-    }
-  }
-
-  declare namespace USER_DATA {
-    export type Packet = PrunPacket<'USER_DATA', Payload>;
-
-    export interface Payload {
-      id: string;
-      username: string;
-      subscriptionLevel: string;
-      subscriptionExpiry: DateTime;
-      highestTier: null;
-      team: boolean;
-      moderator: boolean;
-      pioneer: boolean;
-      perks: unknown[];
-      created: DateTime;
-      companyId: string;
-      systemNamingRights: number;
-      planetNamingRights: number;
-      isPayingUser: boolean;
-      isModeratorChat: boolean;
-      mutedUsers: unknown[];
-      blacklistedUsers: unknown[];
-      isMuted: boolean;
-      discardedNotifications: unknown[];
-      contexts: Context[];
-      preferredLocale: string;
-    }
-
-    export interface Context {
-      id: string;
-      type: string;
-      creation: DateTime;
-      actionRoles: string[];
     }
   }
 

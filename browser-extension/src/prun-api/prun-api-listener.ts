@@ -1,12 +1,11 @@
 import socketIOMiddleware from './socket-io-middleware';
 import { dispatch } from '@src/prun-api/data/api-messages';
-
-let companyContext: string | undefined;
+import { companyContextId } from '@src/prun-api/data/user-data';
 
 export async function listenPrunApi() {
   socketIOMiddleware<PrunApi.Packet>((context, payload) => {
     try {
-      if (context === companyContext || !companyContext || !context) {
+      if (context === companyContextId.value || !companyContextId.value || !context) {
         processEvent(payload);
       }
     } catch (error) {
@@ -49,11 +48,6 @@ function processEvent(packet: PrunApi.Packet) {
       if (message) {
         processEvent(message);
       }
-      break;
-    }
-    case 'USER_DATA': {
-      const context = packet.payload.contexts.find(x => x.type === 'COMPANY');
-      companyContext = context?.id ?? companyContext;
       break;
     }
   }
