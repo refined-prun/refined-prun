@@ -61,6 +61,14 @@ const needAmt = computed(() =>
     ? 0
     : (days.value - settings.burn.resupply) * production.value,
 );
+
+const needWeight = computed(() =>
+  needAmt.value && !isNaN(needAmt.value) ? needAmt.value * props.material.weight : 0,
+);
+
+const needVolume = computed(() =>
+  needAmt.value && !isNaN(needAmt.value) ? needAmt.value * props.material.volume : 0,
+);
 </script>
 
 <template>
@@ -72,13 +80,18 @@ const needAmt = computed(() =>
       <span :style="{ fontWeight: 'bold' }">{{ getMaterialNameByTicker(material.ticker) }}</span>
     </td>
     <td>
-      <span>{{ consText }} / Day</span>
+      <span>{{ consText }} / day</span>
     </td>
     <td>
       <span>{{ invAmount }}</span>
     </td>
     <td>
       <span>{{ isNaN(needAmt) ? '0' : needAmt.toFixed(0) }}</span>
+    </td>
+    <td>
+      <span>{{ needWeight.toFixed(2) }}t</span>
+      <br />
+      <span>{{ needVolume.toFixed(2) }}m³</span>
     </td>
     <DaysCell :days="days" />
   </tr>

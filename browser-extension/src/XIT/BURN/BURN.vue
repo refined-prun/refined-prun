@@ -161,10 +161,11 @@ function onInfClick() {
     <table>
       <thead>
         <tr>
-          <th colSpan="2"> Needs </th>
-          <th>Production</th>
+          <th colSpan="2">Needs</th>
+          <th>Delta</th>
           <th>Inv</th>
           <th>Needed</th>
+          <th>Load</th>
           <th>Days</th>
         </tr>
       </thead>
