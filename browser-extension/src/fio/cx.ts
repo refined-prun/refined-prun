@@ -1,3 +1,5 @@
+import { shallowReactive } from 'vue';
+
 async function fetchPrices() {
   const url = 'https://rest.fnar.net/exchange/all';
   const response = await fetch(url);
@@ -19,7 +21,7 @@ async function fetchPrices() {
     cxPrices.Average[ticker] = priceData.PriceAverage;
   }
 
-  newPrices.Age = Date.now();
+  cx.age = Date.now();
   cx.prices = newPrices;
 }
 
@@ -54,9 +56,10 @@ interface MaterialPrices {
   [ticker: string]: number | undefined | null;
 }
 
-const cx = {
+const cx = shallowReactive({
   fetchPrices,
   prices: undefined as Prices | undefined,
-};
+  age: 0,
+});
 
 export default cx;

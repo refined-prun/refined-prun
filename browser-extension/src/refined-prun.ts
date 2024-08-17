@@ -33,7 +33,7 @@ import './XIT/CONTS/CONTS.vue';
 import './XIT/CXTS/CXTS.vue';
 import './XIT/DEBUG';
 import './XIT/FIN';
-import './XIT/HEALTH';
+import './XIT/HEALTH.vue';
 import './XIT/HELP';
 import './XIT/INV';
 import './XIT/LISTS';
