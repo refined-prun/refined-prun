@@ -26,7 +26,7 @@ export default {};
 </script>
 
 <script setup lang="ts">
-import SettingsButton from '@src/XIT/BURN/SettingsButton.vue';
+import FilterButton from '@src/XIT/BURN/FilterButton.vue';
 import { _$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/prun-ui/prun-css';
 import { settings } from '@src/store/settings';
@@ -112,51 +112,15 @@ const dispSettings = computed(() => {
 const isMultiplanet = computed(
   () => props.parameters.length > 2 || props.parameters[1].toLowerCase() == 'all',
 );
-
-function onRedClick() {
-  dispSettings.value.red = !dispSettings.value.red;
-  // setSettings(pmmgSettings);
-}
-
-function onYellowClick() {
-  dispSettings.value.yellow = !dispSettings.value.yellow;
-  // setSettings(pmmgSettings);
-}
-
-function onGreenClick() {
-  dispSettings.value.green = !dispSettings.value.green;
-  //setSettings(pmmgSettings);
-}
-
-function onInfClick() {
-  dispSettings.value.inf = !dispSettings.value.inf;
-  //setSettings(pmmgSettings);
-}
 </script>
 
 <template>
   <div :style="{ paddingTop: '4px' }">
-    <div :style="{ display: 'flex' }">
-      <SettingsButton
-        text="RED"
-        :width="22.025"
-        :toggled="dispSettings.red"
-        :on-click="onRedClick" />
-      <SettingsButton
-        text="YELLOW"
-        :width="40.483"
-        :toggled="dispSettings.yellow"
-        :on-click="onYellowClick" />
-      <SettingsButton
-        text="GREEN"
-        :width="34.65"
-        :toggled="dispSettings.green"
-        :on-click="onGreenClick" />
-      <SettingsButton
-        text="INF"
-        :width="19.6"
-        :toggled="dispSettings.inf"
-        :on-click="onInfClick" />
+    <div :class="$style.filters">
+      <FilterButton v-model="dispSettings.red">RED</FilterButton>
+      <FilterButton v-model="dispSettings.yellow">YELLOW</FilterButton>
+      <FilterButton v-model="dispSettings.green">GREEN</FilterButton>
+      <FilterButton v-model="dispSettings.inf">INF</FilterButton>
     </div>
     <table>
       <thead>
@@ -179,4 +143,10 @@ function onInfClick() {
   </div>
 </template>
 
-<style scoped></style>
+<style module>
+.filters {
+  display: flex;
+  padding-left: 5px;
+  gap: 10px;
+}
+</style>

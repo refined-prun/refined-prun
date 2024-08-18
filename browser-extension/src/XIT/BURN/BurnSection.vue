@@ -28,8 +28,6 @@ const onHeaderClick = () => {
   } else {
     dispSettings.value.minimized[props.burn.planetName] = true;
   }
-
-  //setSettings(pmmgSettings);
 };
 </script>
 
