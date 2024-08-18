@@ -67,16 +67,20 @@ export function calculateFinancials(webData, result, loop) {
   for (const location of storagesStore.all.value) {
     let value = 0;
 
-    location.items.forEach(mat => {
+    for (const mat of location.items) {
+      const quantity = mat.quantity;
+      if (!quantity) {
+        continue;
+      }
       value +=
         getPrice(
           cxPrices,
           webData['custom_prices'],
           result['PMMGExtended']['pricing_scheme'],
-          mat.quantity.material.ticker,
+          quantity.material.ticker,
           priceBasket,
-        ) * mat.quantity.amount;
-    });
+        ) * quantity.amount;
+    }
 
     let name;
     if (location.type == 'STORE' || location.type == 'WAREHOUSE_STORE') {
@@ -104,8 +108,8 @@ export function calculateFinancials(webData, result, loop) {
   // Put together building value
   for (const location of sitesStore.all.value) {
     let value = 0;
-    location['buildings'].forEach(building => {
-      building['reclaimableMaterials'].forEach(mat => {
+    location.platforms.forEach(building => {
+      building.reclaimableMaterials.forEach(mat => {
         value +=
           getPrice(
             cxPrices,
@@ -127,18 +131,18 @@ export function calculateFinancials(webData, result, loop) {
   let contractValue = 0;
   let contractLiability = 0;
   const validContracts = contractsStore.all.value.filter(
-    c => !invalidContractStatus.includes(c['status']),
+    c => !invalidContractStatus.includes(c.status),
   );
 
   for (const contract of validContracts) {
-    const party = contract['party'];
+    const party = contract.party;
     //console.log(party)
     contract['conditions'].forEach(condition => {
-      if (condition['status'] == 'FULFILLED') {
+      if (condition.status == 'FULFILLED') {
         return;
       }
-      if (condition['type'] == 'DELIVERY' || condition['type'] == 'PROVISION') {
-        if (condition['party'] == party) {
+      if (condition.type == 'DELIVERY' || condition.type == 'PROVISION') {
+        if (condition.party == party) {
           contractLiability +=
             getPrice(
               cxPrices,
@@ -157,20 +161,20 @@ export function calculateFinancials(webData, result, loop) {
               priceBasket,
             ) * condition.quantity!.amount;
         }
-      } else if (condition['type'] == 'PAYMENT') {
-        if (condition['party'] == party) {
+      } else if (condition.type == 'PAYMENT') {
+        if (condition.party == party) {
           contractLiability += condition.amount!.amount;
         } else {
           contractValue += condition.amount!.amount;
         }
-      } else if (condition['type'] == 'LOAN_INSTALLMENT') {
-        if (condition['party'] == party) {
+      } else if (condition.type == 'LOAN_INSTALLMENT') {
+        if (condition.party == party) {
           contractLiability += condition.interest!.amount + condition.repayment!.amount;
         } else {
           contractValue += condition.interest!.amount + condition.repayment!.amount;
         }
-      } else if (condition['type'] == 'LOAN_PAYOUT') {
-        if (condition['party'] == party) {
+      } else if (condition.type == 'LOAN_PAYOUT') {
+        if (condition.party == party) {
           contractLiability += condition.amount!.amount;
         } else {
           contractValue += condition.amount!.amount;

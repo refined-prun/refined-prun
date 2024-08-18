@@ -125,12 +125,16 @@ export function calculatePlanetBurn(
   if (storage) {
     for (const inventory of storage) {
       for (const item of inventory.items) {
-        const materialBurn = burnDict[item.quantity?.material.ticker];
+        const quantity = item.quantity;
+        if (!quantity) {
+          continue;
+        }
+        const materialBurn = burnDict[quantity.material.ticker];
         if (!materialBurn) {
           continue;
         }
-        materialBurn.Inventory += item.quantity.amount;
-        if (item.quantity.amount != 0) {
+        materialBurn.Inventory += quantity.amount;
+        if (quantity.amount != 0) {
           materialBurn.DaysLeft =
             materialBurn.DailyAmount > 0
               ? 1000
