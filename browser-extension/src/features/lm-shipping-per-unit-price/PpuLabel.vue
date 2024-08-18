@@ -1,0 +1,73 @@
+<script setup lang="ts">
+import { getTickerByMaterialName } from '@src/prun-ui/material-names';
+import { materialsStore } from '@src/prun-api/data/materials';
+import { CurrencySymbols } from '@src/GameProperties';
+import { computed } from 'vue';
+
+const props = defineProps({
+  materialName: {
+    type: String,
+    required: true,
+  },
+  amountInput: {
+    type: String,
+    required: true,
+  },
+  totalPriceInput: {
+    type: String,
+    required: true,
+  },
+  currencyInput: {
+    type: String,
+    required: true,
+  },
+});
+
+const material = computed(() => {
+  const ticker = getTickerByMaterialName(props.materialName);
+  return materialsStore.getByTicker(ticker);
+});
+
+const unit = computed(() => {
+  if (!material.value) {
+    return undefined;
+  }
+  const weight = material.value.weight;
+  const volume = material.value.volume;
+  return weight >= volume ? { symbol: 't', size: weight } : { symbol: 'm³', size: volume };
+});
+
+const amount = computed(() => {
+  const amount = parseInt(props.amountInput, 10);
+  return isFinite(amount) ? amount : undefined;
+});
+
+const totalSize = computed(() => {
+  if (unit.value && amount.value) {
+    return (amount.value * unit.value.size).toFixed(0);
+  }
+
+  return `-- `;
+});
+
+const totalPrice = computed(() => {
+  const totalPrice = parseInt(props.totalPriceInput, 10);
+  return isFinite(totalPrice) ? totalPrice : undefined;
+});
+
+const perUnit = computed(() => {
+  if (unit.value && amount.value && totalPrice.value) {
+    return (totalPrice.value / (amount.value * unit.value.size)).toFixed(0);
+  }
+
+  return '--';
+});
+
+const currency = computed(() => {
+  return CurrencySymbols[props.currencyInput] ?? '';
+});
+</script>
+
+<template>
+  <span>{{ totalSize }} {{ unit?.symbol }} | {{ currency }}{{ perUnit }}/{{ unit?.symbol }}</span>
+</template>

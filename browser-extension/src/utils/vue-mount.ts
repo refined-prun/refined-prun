@@ -5,6 +5,7 @@ type Data = Record<string, unknown>;
 
 export function widgetAppend(parent: Element, component: Component, rootProps?: Data | null) {
   const fragment = document.createDocumentFragment();
+  // eslint-disable-next-line vue/one-component-per-file
   const widget = createApp({ render: () => h(component, rootProps) });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const instance = widget.mount(fragment as any);
@@ -15,7 +16,8 @@ export function widgetAppend(parent: Element, component: Component, rootProps?: 
 
 export function widgetAfter(sibling: Element, component: Component, rootProps?: Data | null) {
   const fragment = document.createDocumentFragment();
-  const widget = createApp(component, rootProps);
+  // eslint-disable-next-line vue/one-component-per-file
+  const widget = createApp({ render: () => h(component, rootProps) });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const instance = widget.mount(fragment as any);
   onElementDisconnected(sibling.parentElement!, () => widget.unmount());
@@ -25,7 +27,8 @@ export function widgetAfter(sibling: Element, component: Component, rootProps?: 
 
 export function widgetBefore(sibling: Element, component: Component, rootProps?: Data | null) {
   const fragment = document.createDocumentFragment();
-  const widget = createApp(component, rootProps);
+  // eslint-disable-next-line vue/one-component-per-file
+  const widget = createApp({ render: () => h(component, rootProps) });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const instance = widget.mount(fragment as any);
   onElementDisconnected(sibling.parentElement!, () => widget.unmount());

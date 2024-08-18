@@ -9,7 +9,6 @@ import { InventoryOrganizer } from '@src/features/InventoryOrganizer';
 import { HeaderMinimizer } from '@src/features/HeaderMinimizer';
 import { CompactUI } from '@src/features/CompactUI';
 import { IconMarkers } from '@src/features/IconMarkers';
-import { PostLM } from '@src/features/PostLM';
 import { loadLegacySettings, Settings } from './Settings';
 import features from '@src/feature-registry';
 import { initializePrunApi, loadGameData } from '@src/prun-api';
@@ -100,7 +99,6 @@ async function mainRun() {
     new Sidebar(result['PMMGExtended']['sidebar']),
     new CompactUI(result),
     new IconMarkers(),
-    new PostLM(),
   ];
   applyXITParameters(result, webData, modules);
   await features.init();
