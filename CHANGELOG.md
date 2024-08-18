@@ -7,6 +7,7 @@ New features:
 - XIT CONTS now displays SHPT for contracts with shipment condition
 - Clicking on APEX logo now opens company information
 - BURN redesign
+- BUYING/SELLING LM ads are now highlighted green/red
 
 Changes:
 - Implemented the real-time updates of XIT buffers and added features. Goodbye refresh button!
