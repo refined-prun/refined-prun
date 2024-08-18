@@ -8,6 +8,7 @@ import './features/cxpo-order-book';
 import './features/cxpo-shorten-names';
 import './features/flt-arrival-eta';
 import './features/inv-add-shipment-detail';
+import './features/lm-add-material-icons';
 import './features/lm-buy-sell-highlight';
 import './features/lm-shipping-per-unit-price';
 import './features/nots-improve-notifications';

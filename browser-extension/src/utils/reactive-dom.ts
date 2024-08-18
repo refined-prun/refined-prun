@@ -1,13 +1,13 @@
 import { Ref, ref } from 'vue';
 
-export function refTextContent(element: Element) {
+export function refTextContent(element: Node) {
   const textContent = ref(element.textContent);
   const observer = new MutationObserver(() => (textContent.value = element.textContent));
   observer.observe(element, { childList: true, subtree: true, characterData: true });
   return textContent;
 }
 
-export function refValue(element: Element & { value: string }) {
+export function refValue(element: Node & { value: string }) {
   return refAnimationFrame(element, x => x.value);
 }
 
@@ -18,7 +18,7 @@ export function refAttributeValue(element: Element, name: string) {
   return value;
 }
 
-export function refAnimationFrame<T extends Element, K>(element: T, getter: (x: T) => K) {
+export function refAnimationFrame<T extends Node, K>(element: T, getter: (x: T) => K) {
   const value = ref(getter(element));
   const update = () => {
     if (element.isConnected) {
