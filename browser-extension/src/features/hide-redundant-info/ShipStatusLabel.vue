@@ -32,6 +32,7 @@ const labels = {
   DEPARTURE: '↗',
   CHARGE: '±',
   JUMP: '⟿',
+  TRANSIT: '⟶',
   APPROACH: '↘',
   LANDING: '↓',
 };

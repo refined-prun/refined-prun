@@ -36,5 +36,12 @@ declare namespace PrunApi {
     semiMinorAxis: number;
   }
 
-  declare type SegmentType = 'TAKE_OFF' | 'LANDING' | 'DEPARTURE' | 'APPROACH' | 'JUMP' | 'CHARGE';
+  declare type SegmentType =
+    | 'TAKE_OFF'
+    | 'LANDING'
+    | 'DEPARTURE'
+    | 'APPROACH'
+    | 'TRANSIT'
+    | 'JUMP'
+    | 'CHARGE';
 }
