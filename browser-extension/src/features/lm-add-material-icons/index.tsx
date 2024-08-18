@@ -25,7 +25,7 @@ function onContainerReady(element: HTMLDivElement) {
 
   const amountNode = adText.childNodes[1];
   const amountText = amountNode.textContent;
-  const regex = /(\d+)\s+[\w\s]+\((\w+)\)/;
+  const regex = /(\d+)\s+[\w-\s]+\((\w+)\)/;
 
   const ticker = amountText?.match(regex)?.[2];
   const amount = (() => {
