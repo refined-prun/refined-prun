@@ -13,6 +13,9 @@ messages({
   }) {
     store.setMany(data.productionLines);
   },
+  PRODUCTION_PRODUCTION_LINE_ADDED(data: PrunApi.ProductionLine) {
+    store.setOne(data);
+  },
   PRODUCTION_PRODUCTION_LINE_UPDATED(data: PrunApi.ProductionLine) {
     store.setOne(data);
   },
