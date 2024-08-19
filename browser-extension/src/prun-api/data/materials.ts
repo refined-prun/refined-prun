@@ -14,11 +14,26 @@ messages({
   },
 });
 
-const getByTicker = createMapGetter(
-  state.all,
-  x => x.ticker,
-  x => x.toUpperCase(),
-);
+const getByTicker = (() => {
+  const getter = createMapGetter(
+    state.all,
+    x => x.ticker,
+    x => x.toUpperCase(),
+  );
+
+  return (value?: string | null) => {
+    if (!value) {
+      return undefined;
+    }
+
+    // Extract ticker from MAT.CX
+    const dotIndex = value.indexOf('.');
+    if (dotIndex >= 0) {
+      return getter(value.substring(0, dotIndex));
+    }
+    return getter(value);
+  };
+})();
 
 export const materialsStore = {
   ...state,
