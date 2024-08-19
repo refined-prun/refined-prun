@@ -12,6 +12,7 @@ import { getMaterialNameByTicker } from '@src/prun-ui/material-names';
 import { materialCategoriesStore } from '@src/prun-api/data/material-categories';
 import { planetsStore } from '@src/prun-api/data/planets';
 import { getStarNaturalId, starsStore } from '@src/prun-api/data/stars';
+import { Stations } from '@src/GameProperties';
 
 export const hourFormatter = new Intl.DateTimeFormat(undefined, {
   hour: '2-digit',
@@ -1004,4 +1005,18 @@ export function comparePlanets(idOrNameA: string, idOrNameB: string) {
     : planetA.naturalId > planetB.naturalId
       ? 1
       : -1;
+}
+
+export function extractPlanetName(text?: string | null) {
+  if (!text) {
+    return undefined;
+  }
+  text = text
+    // Clear parenthesis
+    .replace(/\s*\([^)]*\)/, '')
+    // Clear space between system and planet
+    .replace(/(\d)\s+(?=[a-zA-Z])/, '$1')
+    // Clear system name in named systems
+    .replace(/.*\s-\s/, '');
+  return Stations[text] ?? text;
 }

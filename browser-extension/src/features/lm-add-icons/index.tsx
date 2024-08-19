@@ -2,9 +2,10 @@ import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import buffers from '@src/prun-ui/prun-buffers';
-import { _$ } from '@src/utils/get-element-by-class-name';
+import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import { widgetBefore } from '@src/utils/vue-mount';
-import LMMaterialIcon from '@src/features/lm-add-material-icons/LMMaterialIcon.vue';
+import LMMaterialIcon from './LMMaterialIcon.vue';
+import LMShipmentIcon from './LMShipmentIcon.vue';
 
 function onLMBufferReady(buffer: PrunBuffer) {
   observeReadyElementsByClassName(PrunCss.CommodityAd.container, {
@@ -13,16 +14,30 @@ function onLMBufferReady(buffer: PrunBuffer) {
   });
 }
 
-function onContainerReady(element: HTMLDivElement) {
-  const adText = _$(PrunCss.CommodityAd.text, element);
+function onContainerReady(container: HTMLDivElement) {
+  const adText = _$(PrunCss.CommodityAd.text, container);
   if (!adText) {
     return;
   }
   const type = adText.firstChild?.nodeValue;
-  if (type !== 'BUYING' && type !== 'SELLING') {
+  if (type === 'SHIPPING') {
+    processShipment(container, adText);
+  }
+  if (type === 'BUYING' || type === 'SELLING') {
+    processTrade(container, adText);
+  }
+}
+
+function processShipment(container: Element, adText: Element) {
+  const link = _$$(PrunCss.Link.link, adText)[1] as HTMLDivElement;
+  if (!link) {
     return;
   }
 
+  widgetBefore(container.firstElementChild!, LMShipmentIcon);
+}
+
+function processTrade(container: Element, adText: Element) {
   const amountNode = adText.childNodes[1];
   const amountText = amountNode.textContent;
   const regex = /(\d+)\s+[\w-\s]+\((\w+)\)/;
@@ -37,11 +52,10 @@ function onContainerReady(element: HTMLDivElement) {
     return isFinite(amount) ? amount : undefined;
   })();
 
-  amountNode.textContent = ' @ ';
+  amountNode.textContent = ` ${amount} @ `;
 
-  widgetBefore(element.firstElementChild!, LMMaterialIcon, {
+  widgetBefore(container.firstElementChild!, LMMaterialIcon, {
     ticker,
-    amount,
   });
 }
 
@@ -50,6 +64,6 @@ export function init() {
 }
 
 void features.add({
-  id: 'lm-add-material-icons',
+  id: 'lm-add-icons',
   init,
 });

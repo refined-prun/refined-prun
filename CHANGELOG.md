@@ -8,6 +8,7 @@ New features:
 - Clicking on APEX logo now opens company information
 - BURN redesign
 - BUYING/SELLING LM ads are now highlighted green/red
+- LM remove redundant info
 
 Changes:
 - Implemented the real-time updates of XIT buffers and added features. Goodbye refresh button!

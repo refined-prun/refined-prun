@@ -20,5 +20,6 @@ defineProps({
 <style module>
 .icon {
   flex-shrink: 0;
+  height: 16px;
 }
 </style>

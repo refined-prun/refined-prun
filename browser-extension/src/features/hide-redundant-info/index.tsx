@@ -6,11 +6,13 @@ import {
   observeReadyElementsByTagName,
 } from '@src/utils/mutation-observer';
 import PrunCss from '@src/prun-ui/prun-css';
-import { Stations } from '@src/GameProperties';
 import { widgetAfter } from '@src/utils/vue-mount';
 import { reactive } from 'vue';
 import { refTextContent } from '@src/utils/reactive-dom';
 import ShipStatusLabel from '@src/features/hide-redundant-info/ShipStatusLabel.vue';
+import { extractPlanetName } from '@src/util';
+import { _$$ } from '@src/utils/get-element-by-class-name';
+import { planetsStore } from '@src/prun-api/data/planets';
 
 function cleanCOGCPEX(buffer: PrunBuffer) {
   // Replace 'view details/vote' with 'vote'
@@ -54,7 +56,7 @@ function cleanFLT(buffer: PrunBuffer) {
     baseElement: buffer.frame,
     callback: link => {
       if (link.textContent) {
-        link.textContent = cleanPlanetName(link.textContent);
+        link.textContent = extractPlanetName(link.textContent);
       }
     },
   });
@@ -89,7 +91,7 @@ function cleanINV(buffer: PrunBuffer) {
     baseElement: buffer.frame,
     callback: link => {
       if (link.textContent) {
-        link.textContent = cleanPlanetName(link.textContent);
+        link.textContent = extractPlanetName(link.textContent);
       }
     },
   });
@@ -108,17 +110,6 @@ function cleanINV(buffer: PrunBuffer) {
   });
 }
 
-function cleanPlanetName(text: string) {
-  text = text
-    // Clear parenthesis
-    .replace(/\s*\([^)]*\)/, '')
-    // Clear space between system and planet
-    .replace(/(\d)\s+(?=[a-zA-Z])/, '$1')
-    // Clear system name in named systems
-    .replace(/.*\s-\s/, '');
-  return Stations[text] ?? text;
-}
-
 const cleanINVNames = {
   'Cargo hold': 'Ship',
   'Base storage': 'Base',
@@ -127,10 +118,68 @@ const cleanINVNames = {
   'FTL fuel tank': 'FTL',
 };
 
+function cleanLM(buffer: PrunBuffer) {
+  observeReadyElementsByClassName(PrunCss.CommodityAd.text, {
+    baseElement: buffer.frame,
+    callback: ad => {
+      if (ad.firstChild?.textContent === 'SHIPPING') {
+        cleanShipmentAd(buffer, ad);
+      }
+      for (const node of ad.childNodes) {
+        if (!node.textContent) {
+          continue;
+        }
+
+        node.textContent = node.textContent.replace('.00', '');
+        node.textContent = node.textContent
+          .replace(' for ', '')
+          .replace('delivery', '')
+          .replace('collection', '')
+          .replace(' within ', ' in ')
+          .replace('for delivery within', 'in');
+        node.textContent = node.textContent.replace(/(\d+)\s+days*/i, '$1d');
+      }
+      cleanContractType(ad);
+    },
+  });
+}
+
+function cleanShipmentAd(buffer: PrunBuffer, ad: HTMLElement) {
+  // Shorten planet names
+  const links = _$$(PrunCss.Link.link, ad) as HTMLDivElement[];
+  const parameter = buffer.parameter;
+  for (const link of links) {
+    const planetName = extractPlanetName(link.textContent);
+    const planet = planetsStore.getByIdOrName(planetName);
+    if (parameter === planetName || parameter === planet?.naturalId) {
+      // Hide 'from' links from shipment ads on the same planet/station.
+      link.previousSibling!.textContent = '';
+      link.style.display = 'none';
+      continue;
+    }
+    link.textContent = planetName;
+  }
+}
+
+function cleanContractType(ad: HTMLElement) {
+  switch (ad.firstChild?.textContent) {
+    case 'SHIPPING':
+      ad.firstChild.textContent = '';
+      break;
+    case 'BUYING':
+      ad.firstChild.textContent = 'BUY';
+      break;
+    case 'SELLING':
+      ad.firstChild.textContent = 'SELL';
+      break;
+  }
+}
+
 export function init() {
   buffers.observe('COGCPEX', cleanCOGCPEX);
   buffers.observe('FLT', cleanFLT);
   buffers.observe('INV', cleanINV);
+  buffers.observe('LM', cleanLM);
 }
 
 void features.add({

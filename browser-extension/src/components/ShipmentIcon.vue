@@ -8,14 +8,20 @@ import { computed, useCssModule } from 'vue';
 const props = defineProps({
   shipmentId: {
     type: String,
-    required: true,
+    default: undefined,
+  },
+  destination: {
+    type: String,
+    default: undefined,
   },
   small: Boolean,
 });
 
 const $style = useCssModule();
 const contract = computed(() => contractsStore.getByShipmentId(props.shipmentId));
-const destination = computed(() => contractsStore.getDestinationByShipmentId(props.shipmentId));
+const destination = computed(
+  () => props.destination ?? contractsStore.getDestinationByShipmentId(props.shipmentId),
+);
 
 const containerClasses = computed(() => [
   PrunCss.MaterialIcon.container,
@@ -29,7 +35,12 @@ const containerClasses = computed(() => [
 const background = 'linear-gradient(135deg, #030303, #181818)';
 const color = '#7f7f7f';
 
-const onClick = () => showBuffer(`CONT ${contract.value?.localId}`);
+const onClick = () => {
+  if (!contract.value) {
+    return;
+  }
+  showBuffer(`CONT ${contract.value?.localId}`);
+};
 </script>
 
 <template>
