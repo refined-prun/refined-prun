@@ -7,6 +7,10 @@ const store = createEntityStore<PrunApi.ProductionLine>();
 const state = store.state;
 
 messages({
+  PRODUCTION_PRODUCTION_LINES(data: { productionLines: PrunApi.ProductionLine[] }) {
+    store.setAll(data.productionLines);
+    store.setFetched();
+  },
   PRODUCTION_SITE_PRODUCTION_LINES(data: {
     siteId: string;
     productionLines: PrunApi.ProductionLine[];
