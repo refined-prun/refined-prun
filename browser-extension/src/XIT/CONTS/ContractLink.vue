@@ -16,6 +16,10 @@ const linkStyle = computed(() => ({
 }));
 
 function isActionable(contract: PrunApi.Contract) {
+  if (isFactionContract(contract)) {
+    return false;
+  }
+
   if (contract.party === 'CUSTOMER' && contract.status === 'OPEN') {
     return true;
   }
