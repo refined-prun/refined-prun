@@ -7,7 +7,12 @@
     "paths": {
       "@root/*": ["./*"],
       "@src/*": ["src/*"]
-    }
+    },
+    "lib": [
+      "DOM",
+      "WebWorker",
+      "ESNext"
+    ]
   },
   "include": [
     "src/**/*.ts",
