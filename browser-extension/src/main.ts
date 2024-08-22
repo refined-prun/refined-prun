@@ -7,7 +7,6 @@ import { ScreenUnpack } from '@src/features/ScreenUnpack';
 import { Sidebar } from '@src/features/Sidebar';
 import { InventoryOrganizer } from '@src/features/InventoryOrganizer';
 import { HeaderMinimizer } from '@src/features/HeaderMinimizer';
-import { CompactUI } from '@src/features/CompactUI';
 import { IconMarkers } from '@src/features/IconMarkers';
 import { loadLegacySettings, Settings } from './Settings';
 import features from '@src/feature-registry';
@@ -97,7 +96,6 @@ async function mainRun() {
     new ScreenUnpack(result['PMMGExtended']['unpack_exceptions']),
     new HeaderMinimizer(result['PMMGExtended']['minimize_by_default']),
     new Sidebar(result['PMMGExtended']['sidebar']),
-    new CompactUI(result),
     new IconMarkers(),
   ];
   applyXITParameters(result, webData, modules);

@@ -8,6 +8,7 @@ export const settings = reactive({
     resupply: 16,
     buffers: {},
   },
+  repairThreshold: 60,
 });
 
 const key = 'rprun-settings';
@@ -15,7 +16,6 @@ const key = 'rprun-settings';
 export async function loadSettings() {
   const savedSettings = await system.storage.local.get(key);
   if (savedSettings[key]) {
-    console.log(savedSettings[key]);
     Object.assign(settings, savedSettings[key]);
   }
   let saveQueued = false;

@@ -14,6 +14,7 @@ import './features/lm-hide-rating';
 import './features/lm-shipping-per-unit-price';
 import './features/nots-improve-notifications';
 import './features/sfc-flight-eta';
+import './features/compact-ui';
 import './features/clickable-apex-logo';
 import './features/prod-burn-link';
 import './features/prodq-queue-load';
