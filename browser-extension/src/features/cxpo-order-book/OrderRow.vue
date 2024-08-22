@@ -12,7 +12,7 @@ const props = defineProps({
 });
 
 const ownOrderClass = computed(() => ({
-  'rprun-cxpo-order-column--own-order':
+  'rp-cxpo-order-column--own-order':
     props.order.amount && props.order.trader.id === companyStore.id,
 }));
 const amount = computed(() => (props.order.amount ? props.order.amount.toFixed(0) : '∞'));
@@ -21,7 +21,7 @@ const price = computed(() => props.order.limit.amount.toFixed(2));
 const priceClass = computed(() => [
   props.request ? PrunCss.ComExOrderBookPanel.requestPrice : PrunCss.ComExOrderBookPanel.offerPrice,
   ownOrderClass.value,
-  'rprun-cxpo-order-column--price',
+  'rp-cxpo-order-column--price',
 ]);
 </script>
 
@@ -35,14 +35,14 @@ const priceClass = computed(() => [
 </template>
 
 <style scoped>
-table tbody td.rprun-cxpo-order-column--own-order {
+table tbody td.rp-cxpo-order-column--own-order {
   background: rgba(255, 255, 255, 0.15);
 }
 
 /*
   Override left/right padding from vanilla class
 */
-table tbody td.rprun-cxpo-order-column--price {
+table tbody td.rp-cxpo-order-column--price {
   padding: 2px;
 }
 </style>

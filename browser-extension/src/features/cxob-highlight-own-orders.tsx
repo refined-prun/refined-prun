@@ -3,7 +3,7 @@ import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
 import { companyStore } from '@src/prun-api/data/company';
 
-const className = 'rprun-cxob-own-order-highlight';
+const className = 'rp-cxob-own-order-highlight';
 
 function onBufferCreated(buffer: PrunBuffer) {
   const rows = buffer.frame.getElementsByTagName('tr');

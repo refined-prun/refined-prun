@@ -27,7 +27,7 @@ export const settings = reactive({
   ],
 });
 
-const key = 'rprun-settings';
+const key = 'rp-settings';
 
 export async function loadSettings() {
   const savedSettings = await system.storage.local.get(key);

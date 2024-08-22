@@ -73,7 +73,7 @@ async function initializeFeature(feature: FeatureDescriptor, signal: AbortSignal
   }
   if (result) {
     if (feature.attribute) {
-      document.documentElement.setAttribute(`rprun-${feature.id}`, '');
+      document.documentElement.setAttribute(`rp-${feature.id}`, '');
     }
     log.info('✅', feature.id);
   }

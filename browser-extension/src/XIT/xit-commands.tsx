@@ -54,7 +54,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
   }
 
   const container = document.createElement('div');
-  container.className = 'rprun-XIT-container';
+  container.className = 'rp-XIT-container';
   greenScreen.appendChild(container);
 
   const xitCommand = xit.get(command);

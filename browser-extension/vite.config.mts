@@ -103,7 +103,7 @@ function sanitizeModuleClassname(name: string, filename: string | undefined): st
   const classname = `${baseFilename}__${name}`;
   const hash = getHash(`${classname}`);
 
-  return `RP_${classname}___${hash}`;
+  return `rp-${classname}___${hash}`;
 }
 
 function getHash(input: string): string {

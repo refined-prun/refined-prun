@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 type SocketIOProxyMessageType =
-  | 'rprun-socket-io-listener-ready'
-  | 'rprun-socket-io-message'
-  | 'rprun-socket-io-message-apply';
+  | 'rp-socket-io-listener-ready'
+  | 'rp-socket-io-message'
+  | 'rp-socket-io-message-apply';
 
 interface SocketIOProxyMessage {
   type: SocketIOProxyMessageType;

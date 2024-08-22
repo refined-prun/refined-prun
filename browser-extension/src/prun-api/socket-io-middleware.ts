@@ -8,12 +8,12 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
     if (event.source !== window) {
       return;
     }
-    if (event.data.type === 'rprun-socket-io-message') {
+    if (event.data.type === 'rp-socket-io-message') {
       const message = event.data;
       const data = processMessage(message, middleware);
       window.postMessage(
         <SocketIOProxyMessage>{
-          type: 'rprun-socket-io-message-apply',
+          type: 'rp-socket-io-message-apply',
           id: message.id,
           data,
         },
@@ -24,7 +24,7 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
 
   window.postMessage(
     {
-      type: 'rprun-socket-io-listener-ready',
+      type: 'rp-socket-io-listener-ready',
     },
     '*',
   );

@@ -25,7 +25,7 @@ import PrunLink from '@src/components/PrunLink.vue';
 
 <template>
   <div :class="$style.container">
-    <h1 class="rprun-XIT-title" :style="{ paddingLeft: '0' }">
+    <h1 class="rp-XIT-title" :style="{ paddingLeft: '0' }">
       Thank you for using PMMG Extended!
     </h1>
     <p>This is a short tutorial on how to get the most out of the extension.</p>

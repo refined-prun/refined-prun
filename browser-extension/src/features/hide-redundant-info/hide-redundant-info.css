@@ -1,5 +1,5 @@
 /* Hide redundant columns */
-[rprun-hide-redundant-info]
+[rp-hide-redundant-info]
 :is(
   /* Exchange */
   div[data-rp-command='CXOS'],
@@ -11,7 +11,7 @@ tr > *:first-child {
 }
 
 /* Hide redundant elements in Ship Fuel Store */
-[rprun-hide-redundant-info]
+[rp-hide-redundant-info]
 div[data-rp-command='SHPF']
 :is(
   /* Sort options */

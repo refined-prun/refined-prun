@@ -1,11 +1,11 @@
 /* Completely overlay green screen to prevent visual artifacts*/
-.rprun-XIT-container {
+.rp-XIT-container {
   width: 100%;
   height: 100%;
   background-color: #222;
 }
 
-.rprun-XIT-title {
+.rp-XIT-title {
   font-weight: bold;
   display: block;
   font-size: 16px;

@@ -9,7 +9,7 @@ type ObserverListener<ExpectedElement extends Element> = (
   options: SignalAsOptions,
 ) => void;
 
-const animation = 'rprun-selector-observer';
+const animation = 'rp-selector-observer';
 const getListener =
   <Selector extends string, ExpectedElement extends ParseSelector<Selector, HTMLElement>>(
     seenMark: string,
@@ -50,7 +50,7 @@ export default function observeReadyElements<
   }
 
   const selector = String(selectors); // Array#toString() creates a comma-separated string
-  const seenMark = `rprun-seen-${getCallerID()}`;
+  const seenMark = `rp-seen-${getCallerID()}`;
 
   registerAnimation();
 

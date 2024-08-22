@@ -5,7 +5,7 @@ import { $$ } from 'select-dom';
 import { _$$ } from '@src/utils/get-element-by-class-name';
 import { widgetAppend } from '@src/utils/vue-mount';
 
-const tag = 'rprun-sfc-eta';
+const tag = 'rp-sfc-eta';
 
 function updateBuffer(buffer: PrunBuffer) {
   if (!buffer.frame.isConnected) {

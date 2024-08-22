@@ -11,7 +11,7 @@ function updateBuffer(buffer: PrunBuffer) {
     return;
   }
 
-  const tag = 'rprun-prod-queue-load';
+  const tag = 'rp-prod-queue-load';
   for (const element of _$$(tag, buffer.frame)) {
     element.remove();
   }

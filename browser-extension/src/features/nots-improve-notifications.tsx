@@ -43,7 +43,7 @@ function processNotification(element: Element) {
     }
 
     widgetBefore(textElement, () => (
-      <div class="rprun-notification-type" style={{ color: search[2] }}>
+      <div class="rp-notification-type" style={{ color: search[2] }}>
         {search[1].toUpperCase()}
       </div>
     ));

@@ -25,7 +25,7 @@ export function clearBuildingLists(buffer: HTMLDivElement) {
     return;
   }
   setTimeout(() => clearBuildingLists(buffer), 1000);
-  const tag = 'rprun-compact-ui';
+  const tag = 'rp-compact-ui';
   const nameElem = _$(PrunCss.SectionList.container, buffer);
   if (!nameElem || !nameElem.textContent) {
     return;

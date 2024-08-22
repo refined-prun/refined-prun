@@ -1,7 +1,7 @@
-[rprun-lm-hide-rating] div[data-rp-command='LM'] .RatingIcon__container___wMamsNH {
+[rp-lm-hide-rating] div[data-rp-command='LM'] .RatingIcon__container___wMamsNH {
   display: none;
 }
 
-[rprun-lm-hide-rating] div[data-rp-command='LM'] .CommodityAd__text___xJQmJNa {
+[rp-lm-hide-rating] div[data-rp-command='LM'] .CommodityAd__text___xJQmJNa {
   padding-left: 5px;
 }

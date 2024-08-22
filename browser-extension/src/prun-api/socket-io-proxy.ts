@@ -29,14 +29,14 @@
     if (event.source !== window) {
       return;
     }
-    if (event.data.type === 'rprun-socket-io-listener-ready') {
+    if (event.data.type === 'rp-socket-io-listener-ready') {
       listenerReady = true;
       for (const event of queuedMessages) {
         forwardMessage(event);
       }
       queuedMessages = [];
     }
-    if (event.data.type === 'rprun-socket-io-message-apply') {
+    if (event.data.type === 'rp-socket-io-message-apply') {
       applyMessage(event.data);
     }
   });
@@ -80,7 +80,7 @@
     pendingCallbacks.set(message.id, message);
     window.postMessage(
       <SocketIOProxyMessage>{
-        type: 'rprun-socket-io-message',
+        type: 'rp-socket-io-message',
         id: message.id,
         data: message.websocket?.event.data ?? message.xhr?.data,
         context: message.context,
