@@ -20,50 +20,33 @@ export default {};
 </script>
 
 <script setup lang="ts">
-import { $$ } from 'select-dom';
 import { downloadFile } from '@src/util';
 import DebugButton from '@src/XIT/DEBUG/DebugButton.vue';
+import PrunCss from '@src/prun-ui/prun-css';
 
-function downloadCss() {
-  const classes: string[] = [];
-  const styles = $$('style', document.head);
-  for (const style of styles) {
-    const text = style.textContent;
-    if (!text) {
-      continue;
-    }
-    const matches = text.match(/[\w-]+__[\w-]+___[\w-]+/g);
-    for (const match of matches ?? []) {
-      classes.push(match);
-    }
+function downloadCssDefinition() {
+  function capitalize(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
-  classes.sort();
-  const result = {};
-  for (const cssClass of classes) {
-    const camelize = (s: string) => s.replace(/-./g, x => x[1].toUpperCase());
-    const parts = cssClass.replace('.', '').replace('___', '_').replace('__', '_').split('_');
-    const parent = camelize(parts[0]);
-    if (parent === '') {
-      continue;
-    }
-    const child = camelize(parts[1]);
-    let parentObject = result[parent];
-    if (parentObject === undefined) {
-      parentObject = {};
-      result[parent] = parentObject;
-    }
-    if (parentObject[child] !== undefined) {
-      continue;
-    }
-    parentObject[child] = cssClass.replace('.', '');
+
+  let definition = `export interface CssClasses {\n`;
+  for (const key of Object.keys(PrunCss)) {
+    definition += `  ${key}: ${capitalize(key)};\n`;
   }
-  const json = JSON.stringify(result, undefined, 2);
-  downloadFile(json, 'prun-css-classes.json', false);
+  definition += '}\n';
+  for (const key of Object.keys(PrunCss)) {
+    definition += `\ninterface ${capitalize(key)} {\n`;
+    for (const childKey of Object.keys(PrunCss[key])) {
+      definition += `  ${childKey}: string;\n`;
+    }
+    definition += `}\n`;
+  }
+  downloadFile(definition, 'prun-css-types.ts', false);
 }
 </script>
 
 <template>
   <div :style="{ paddingTop: '4px' }">
-    <DebugButton @click="downloadCss">Export CSS classes</DebugButton>
+    <DebugButton @click="downloadCssDefinition">Export prun-css-types.ts</DebugButton>
   </div>
 </template>

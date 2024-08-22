@@ -33,7 +33,8 @@ async function mainRun() {
     throw e;
   }
 
-  await Promise.allSettled([loadPrunCss(), loadGameData(), waitUntilPrunLoaded()]);
+  await Promise.allSettled([loadGameData(), waitUntilPrunLoaded()]);
+  loadPrunCss();
 
   // Detect what date it is for... no reason.
   const specialTime = getSpecial() && !result['PMMGExtended']['surprises_opt_out'];
