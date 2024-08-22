@@ -1,4 +1,3 @@
-import '../cxpo-order-book.css';
 import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
 import PrunCss from '@src/prun-ui/prun-css';
