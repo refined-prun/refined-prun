@@ -9,6 +9,22 @@ export const settings = reactive({
     buffers: {},
   },
   repairThreshold: 60,
+  sidebar: [
+    ['BS', 'BS'],
+    ['CONT', 'CONTS'],
+    ['COM', 'COM'],
+    ['CORP', 'CORP'],
+    ['CXL', 'CXL'],
+    ['FIN', 'FIN'],
+    ['FLT', 'FLT'],
+    ['INV', 'INV'],
+    ['MAP', 'MAP'],
+    ['PROD', 'PROD'],
+    ['LEAD', 'LEAD'],
+    ['CMDS', 'CMDS'],
+    ['SET', 'XIT SETTINGS'],
+    ['HELP', 'XIT HELP'],
+  ],
 });
 
 const key = 'rprun-settings';

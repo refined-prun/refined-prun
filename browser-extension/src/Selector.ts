@@ -11,7 +11,6 @@ export const Selector = {
   ProdQueue: "div[class~='SiteProductionLines__column____s3cTk7']",
   BufferPanel: "div[class~='ScrollView__view___ovf59Tk']",
   ScreenControls: 'TOUR_TARGET_SCREEN_CONTROLS',
-  LeftSidebar: 'TOUR_TARGET_SIDEBAR_LEFT_02',
   ScreenName: "span[class~='ScreenControls__currentScreenName___I2sIYag']",
   MaterialIconSelector: "div[class~='GridItemView__image___yMoKOZV']",
   BufferLink: "span[class~='Link__link___fa4mmMA']",

@@ -4,7 +4,6 @@ import { getPrices } from './BackgroundRunner';
 import { getSpecial } from './util';
 import { appendStyle, RPrunStylesheet } from './Style';
 import { ScreenUnpack } from '@src/features/ScreenUnpack';
-import { Sidebar } from '@src/features/Sidebar';
 import { InventoryOrganizer } from '@src/features/InventoryOrganizer';
 import { HeaderMinimizer } from '@src/features/HeaderMinimizer';
 import { IconMarkers } from '@src/features/IconMarkers';
@@ -95,7 +94,6 @@ async function mainRun() {
     new InventoryOrganizer(result),
     new ScreenUnpack(result['PMMGExtended']['unpack_exceptions']),
     new HeaderMinimizer(result['PMMGExtended']['minimize_by_default']),
-    new Sidebar(result['PMMGExtended']['sidebar']),
     new IconMarkers(),
   ];
   applyXITParameters(result, webData, modules);
