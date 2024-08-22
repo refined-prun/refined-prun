@@ -1,18 +1,14 @@
 import './clickable-apex-logo.css';
 import { observeReadyElementsByClassName } from '../utils/mutation-observer';
-import PrunCss from '../prun-ui/prun-css';
-import features from '../feature-registry';
+import PrunCss from '@src/prun-ui/prun-css';
+import features from '@src/feature-registry';
 import { showBuffer } from '@src/util';
 import { companyStore } from '@src/prun-api/data/company';
 
-function onLogoReady(logo: HTMLDivElement) {
-  logo.addEventListener('click', () => {
-    showBuffer(`CO ${companyStore.code}`);
-  });
-}
-
 export function init() {
-  observeReadyElementsByClassName(PrunCss.Frame.logo, onLogoReady);
+  observeReadyElementsByClassName(PrunCss.Frame.logo, logo =>
+    logo.addEventListener('click', () => showBuffer(`CO ${companyStore.code}`)),
+  );
 }
 
 void features.add({
