@@ -34,15 +34,13 @@ class Finances {
   private tile: HTMLElement;
   private parameters: string[];
   private pmmgSettings;
-  private webData;
 
   public name = 'FINANCES';
 
-  constructor(tile, parameters, pmmgSettings, webData) {
+  constructor(tile, parameters, pmmgSettings) {
     this.tile = tile;
     this.parameters = parameters;
     this.pmmgSettings = pmmgSettings;
-    this.webData = webData;
   }
 
   create_buffer() {
@@ -102,7 +100,6 @@ class Finances {
       this.tile,
       this.parameters,
       this.pmmgSettings,
-      this.webData,
       this,
     ]);
     return;
@@ -120,22 +117,20 @@ class Finances {
 // Draw the correct screen based on the parameters (should split out into multiple functions probably)
 function chooseScreen(finResult, params) {
   let i;
-  // Params consists of [tile, parameters, pmmgSettings, webData]
   finResult = finResult['PMMG-Finance'];
-  if (!params[0] || !params[1] || !params[2] || !params[3]) {
+  if (!params[0] || !params[1] || !params[2]) {
     return;
   }
   const tile = params[0];
   const parameters = params[1];
   const pmmgSettings = params[2];
-  const webData = params[3];
-  const finObj = params[4];
+  const finObj = params[3];
 
   // Determine the array of CX prices to use
   let CX = 'AI1';
   let priceType = 'Average';
   if (pmmgSettings['PMMGExtended']['pricing_scheme']) {
-    const interpreted = interpretCX(pmmgSettings['PMMGExtended']['pricing_scheme'], pmmgSettings);
+    const interpreted = interpretCX(pmmgSettings['PMMGExtended']['pricing_scheme']);
     CX = interpreted[0];
     priceType = interpreted[1];
   }
@@ -211,16 +206,10 @@ function chooseScreen(finResult, params) {
       priceSelect.appendChild(createSelectOption(name, name));
     });
 
-    // Add custom options
-    Object.keys(CustomSchemes).forEach(name => {
-      priceSelect.appendChild(createSelectOption(name, name));
-    });
-
     // Set value to what is in settings
     if (
       !pmmgSettings['PMMGExtended']['pricing_scheme'] ||
-      (!PricingSchemes[pmmgSettings['PMMGExtended']['pricing_scheme']] &&
-        !CustomSchemes[pmmgSettings['PMMGExtended']['pricing_scheme']])
+      !PricingSchemes[pmmgSettings['PMMGExtended']['pricing_scheme']]
     ) {
       (priceSelect.children[0] as HTMLOptionElement).selected = true;
     } else if (PricingSchemes[pmmgSettings['PMMGExtended']['pricing_scheme']]) {
@@ -229,137 +218,18 @@ function chooseScreen(finResult, params) {
           PricingSchemes[pmmgSettings['PMMGExtended']['pricing_scheme']]
         ] as HTMLOptionElement
       ).selected = true;
-    } else {
-      (
-        priceSelect.children[
-          CustomSchemes[pmmgSettings['PMMGExtended']['pricing_scheme']]
-        ] as HTMLOptionElement
-      ).selected = true;
     }
 
     priceSelect.classList.add('select');
     priceSelect.style.marginLeft = '4px';
 
-    // Create a div for Custom (Spreadsheet) option. Only visible if custom spreadsheet option is selected
-    const spreadsheetDiv = document.createElement('div');
-    if (pmmgSettings['PMMGExtended']['pricing_scheme'] != 'Custom (Spreadsheet)') {
-      spreadsheetDiv.style.display = 'none';
-    }
-
     // Detect if changed to custom spreadsheet. Show or hide div accordingly
     priceSelect.addEventListener('change', () => {
       pmmgSettings['PMMGExtended']['pricing_scheme'] = priceSelect.selectedOptions[0].value;
       setSettings(pmmgSettings);
-      switch (priceSelect.selectedOptions[0].value) {
-        case 'Custom (Spreadsheet)':
-          spreadsheetDiv.style.display = 'block';
-          break;
-        default:
-          spreadsheetDiv.style.display = 'none';
-      }
     });
 
     priceDiv.appendChild(priceSelect);
-
-    tile.appendChild(spreadsheetDiv);
-
-    // Create options for importing from spreadsheet
-
-    // Set back up prices in case spreadsheet does not have a price for material
-    const backupDiv = document.createElement('div');
-    backupDiv.style.marginTop = '8px';
-    const backupPriceLabel = createTextSpan('Back Up Pricing Scheme:');
-    backupPriceLabel.style.marginBottom = '4px';
-    backupDiv.appendChild(backupPriceLabel);
-    spreadsheetDiv.appendChild(backupDiv);
-
-    const backupPriceSelect = document.createElement('select');
-    backupDiv.appendChild(backupPriceSelect);
-
-    backupPriceSelect.name = 'backup-price-select';
-    backupPriceSelect.id = 'backup-price-select';
-
-    // Only add options for CXs
-    Object.keys(PricingSchemes).forEach(name => {
-      backupPriceSelect.appendChild(createSelectOption(name, name));
-    });
-
-    // Set according to previous settings
-    if (
-      !pmmgSettings['PMMGExtended']['backup_pricing_scheme'] ||
-      !PricingSchemes[pmmgSettings['PMMGExtended']['backup_pricing_scheme']]
-    ) {
-      (backupPriceSelect.children[0] as HTMLOptionElement).selected = true;
-    } else {
-      (
-        backupPriceSelect.children[
-          PricingSchemes[pmmgSettings['PMMGExtended']['backup_pricing_scheme']]
-        ] as HTMLOptionElement
-      ).selected = true;
-    }
-
-    backupPriceSelect.classList.add('select');
-    backupPriceSelect.style.marginLeft = '4px';
-    // Listen for change to pricing scheme, update settings accordingly
-    backupPriceSelect.addEventListener('change', () => {
-      pmmgSettings['PMMGExtended']['backup_pricing_scheme'] =
-        backupPriceSelect.selectedOptions[0].value;
-      setSettings(pmmgSettings);
-    });
-
-    // Spreadsheet URL entry
-    const urlDiv = document.createElement('div');
-    spreadsheetDiv.appendChild(urlDiv);
-
-    const urlLabel = createTextSpan('Spreadsheet URL:');
-    //urlLabel.style.marginBottom = "4px";
-    urlDiv.appendChild(urlLabel);
-
-    const urlInput = document.createElement('input');
-    urlInput.classList.add('input-text');
-    urlDiv.appendChild(urlInput);
-    urlInput.style.marginLeft = '4px';
-    if (pmmgSettings['PMMGExtended']['fin_spreadsheet']) {
-      urlInput.value = pmmgSettings['PMMGExtended']['fin_spreadsheet'];
-    }
-    urlInput.addEventListener('input', () => {
-      pmmgSettings['PMMGExtended']['fin_spreadsheet'] =
-        urlInput.value == '' ? undefined : urlInput.value;
-      setSettings(pmmgSettings);
-    });
-
-    // Sheet name entry
-    const sheetDiv = document.createElement('div');
-    spreadsheetDiv.appendChild(sheetDiv);
-    const sheetLabel = createTextSpan('Sheet Name:');
-    sheetLabel.style.marginBottom = '4px';
-    sheetDiv.appendChild(sheetLabel);
-
-    const sheetInput = document.createElement('input');
-    sheetDiv.appendChild(sheetInput);
-    sheetInput.classList.add('input-text');
-    sheetInput.style.marginLeft = '4px';
-    if (pmmgSettings['PMMGExtended']['fin_sheet_name']) {
-      sheetInput.value = pmmgSettings['PMMGExtended']['fin_sheet_name'];
-    }
-    sheetInput.addEventListener('input', () => {
-      pmmgSettings['PMMGExtended']['fin_sheet_name'] =
-        sheetInput.value == '' ? undefined : sheetInput.value;
-      setSettings(pmmgSettings);
-    });
-
-    // Table summarizing prices
-    const resultDiv = document.createElement('div');
-    spreadsheetDiv.appendChild(resultDiv);
-    if (
-      pmmgSettings['PMMGExtended']['fin_spreadsheet'] &&
-      pmmgSettings['PMMGExtended']['fin_sheet_name']
-    ) {
-      const sheetID = pmmgSettings['PMMGExtended']['fin_spreadsheet'].match(/\/d\/([^/]+)/);
-      if (sheetID && sheetID[1]) {
-        drawGSTable(resultDiv, webData['custom_prices']);
-      }
-    }
 
     // Create option to import/export data
     const importHeader = document.createElement('h3');
@@ -463,7 +333,7 @@ function chooseScreen(finResult, params) {
     tile.appendChild(addButton);
 
     addButton.addEventListener('click', () => {
-      calculateFinancials(webData, pmmgSettings, true);
+      calculateFinancials(pmmgSettings, true);
       finObj.create_buffer();
     });
 
@@ -876,7 +746,6 @@ function chooseScreen(finResult, params) {
             consumed +=
               getPrice(
                 cxPrices,
-                webData['custom_prices'],
                 pmmgSettings['PMMGExtended']['pricing_scheme'],
                 need.material.ticker,
                 priceBasket,
@@ -910,7 +779,6 @@ function chooseScreen(finResult, params) {
                 consumed +=
                   (getPrice(
                     cxPrices,
-                    webData['custom_prices'],
                     pmmgSettings['PMMGExtended']['pricing_scheme'],
                     mat.material.ticker,
                     priceBasket,
@@ -925,7 +793,6 @@ function chooseScreen(finResult, params) {
                 produced +=
                   (getPrice(
                     cxPrices,
-                    webData['custom_prices'],
                     pmmgSettings['PMMGExtended']['pricing_scheme'],
                     mat.material.ticker,
                     priceBasket,
@@ -1033,33 +900,6 @@ function chooseScreen(finResult, params) {
   }
 }
 
-function drawGSTable(resultDiv, prices) {
-  if (!prices) {
-    resultDiv.appendChild(createTextSpan('Error! No Prices Found!'));
-  }
-
-  const tbody = createTable(resultDiv, ['Ticker', 'Price']);
-  Object.keys(prices).forEach(mat => {
-    const row = document.createElement('tr');
-    const matElem = document.createElement('td');
-    row.appendChild(matElem);
-    matElem.appendChild(createTextSpan(mat));
-
-    const priceElem = document.createElement('td');
-    row.appendChild(priceElem);
-    priceElem.appendChild(
-      createTextSpan(
-        prices[mat].toLocaleString(undefined, {
-          maximumFractionDigits: 2,
-          minimumFractionDigits: 2,
-        }),
-      ),
-    );
-
-    tbody.appendChild(row);
-  });
-}
-
 function appendLineChart(container: Element, finResult, currency, maintainAspectRatio) {
   const dateData = [] as any[];
   const finData = [] as any[];
@@ -1128,11 +968,6 @@ const PricingSchemes = {
   'NC2 AVG': 15,
   'NC2 ASK': 16,
   'NC2 BID': 17,
-};
-
-const CustomSchemes = {
-  'Custom (Spreadsheet)': 18,
-  //	"Price Basket": 19
 };
 
 function financialSort(a, b) {

@@ -16,15 +16,13 @@ class Settings {
   private tile: HTMLElement;
   public parameters: string[];
   private pmmgSettings;
-  public webData;
   private modules;
   public name = 'PMMG SETTINGS';
 
-  constructor(tile, parameters, pmmgSettings, webData, modules) {
+  constructor(tile, parameters, pmmgSettings, modules) {
     this.tile = tile;
     this.parameters = parameters;
     this.pmmgSettings = pmmgSettings;
-    this.webData = webData;
     this.modules = modules;
   }
 

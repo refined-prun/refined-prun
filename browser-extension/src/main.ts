@@ -1,6 +1,5 @@
 import { ModuleRunner } from './ModuleRunner';
 import { OrderETAs } from '@src/features/OrderETAs';
-import { getPrices } from './BackgroundRunner';
 import { getSpecial } from './util';
 import { appendStyle, RPrunStylesheet } from './Style';
 import { ScreenUnpack } from '@src/features/ScreenUnpack';
@@ -65,20 +64,6 @@ async function mainRun() {
     appendStyle(RPrunStylesheet.advanced);
   }
 
-  // All asynchronous web data put in as keys into this dictionary
-  const webData = {};
-
-  // Start the process of getting corp prices via a web app asynchronously
-  window.setTimeout(
-    () =>
-      getPrices(
-        webData,
-        result['PMMGExtended']['fin_spreadsheet'],
-        result['PMMGExtended']['fin_sheet_name'],
-      ),
-    1000,
-  );
-
   setTimeout(cx.fetchPrices, 1000);
 
   // Do FIN recording
@@ -88,7 +73,7 @@ async function mainRun() {
       Date.now() - result['PMMGExtended']['last_fin_recording'] > 64800000)
   ) {
     // 72000000
-    window.setTimeout(() => calculateFinancials(webData, result, true), 1000);
+    window.setTimeout(() => calculateFinancials(result, true), 1000);
   }
   const modules = [
     new OrderETAs(),
@@ -97,7 +82,7 @@ async function mainRun() {
     new HeaderMinimizer(result['PMMGExtended']['minimize_by_default']),
     new IconMarkers(),
   ];
-  applyXITParameters(result, webData, modules);
+  applyXITParameters(result, modules);
   await features.init();
   const runner = new ModuleRunner(modules, result);
 

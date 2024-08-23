@@ -13,9 +13,8 @@ import LegacyXITAdapter from '@src/XIT/LegacyXITAdapter.vue';
 let xitArgs: any;
 export const getXitArgs = () => xitArgs;
 
-export function applyXITParameters(pmmgSettings, webData, modules) {
+export function applyXITParameters(pmmgSettings, modules) {
   xitArgs = {
-    webData,
     modules,
     pmmgSettings,
   };
@@ -71,13 +70,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
     createApp(LegacyXITAdapter, {
       module: (container: HTMLDivElement) => {
         const args = getXitArgs();
-        return new xitCommand.module!(
-          container,
-          parameters,
-          args.pmmgSettings,
-          args.webData,
-          args.modules,
-        );
+        return new xitCommand.module!(container, parameters, args.pmmgSettings, args.modules);
       },
     }).mount(container);
   } else {

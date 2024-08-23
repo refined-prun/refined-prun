@@ -28,4 +28,5 @@ Known bugs:
 - XIT FIN shows null for stations
 - FLT ship status can be wonky sometimes
 
-Absent features:
+Removed features:
+- Custom pricing scheme from Google Sheets for XIT FIN

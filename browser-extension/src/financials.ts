@@ -10,14 +10,14 @@ import { sitesStore } from '@src/prun-api/data/sites';
 import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 
 // Actually recording and processing the financials once they are received through BackgroundRunner.
-export function calculateFinancials(webData, result, loop) {
+export function calculateFinancials(result, loop) {
   // Wait until contracts and prices are in
   if (loop) {
     if (cx.prices) {
-      window.setTimeout(() => calculateFinancials(webData, result, false), 100);
+      window.setTimeout(() => calculateFinancials(result, false), 100);
       return;
     }
-    window.setTimeout(() => calculateFinancials(webData, result, true), 50);
+    window.setTimeout(() => calculateFinancials(result, true), 50);
     return;
   }
 
@@ -27,7 +27,7 @@ export function calculateFinancials(webData, result, loop) {
   let CX = 'AI1';
   let priceType = 'Average';
   if (result['PMMGExtended']['pricing_scheme']) {
-    const interpreted = interpretCX(result['PMMGExtended']['pricing_scheme'], result);
+    const interpreted = interpretCX(result['PMMGExtended']['pricing_scheme']);
     CX = interpreted[0];
     priceType = interpreted[1];
   }
@@ -75,7 +75,6 @@ export function calculateFinancials(webData, result, loop) {
       value +=
         getPrice(
           cxPrices,
-          webData['custom_prices'],
           result['PMMGExtended']['pricing_scheme'],
           quantity.material.ticker,
           priceBasket,
@@ -113,7 +112,6 @@ export function calculateFinancials(webData, result, loop) {
         value +=
           getPrice(
             cxPrices,
-            webData['custom_prices'],
             result['PMMGExtended']['pricing_scheme'],
             mat.material.ticker,
             priceBasket,
@@ -146,7 +144,6 @@ export function calculateFinancials(webData, result, loop) {
           contractLiability +=
             getPrice(
               cxPrices,
-              webData['custom_prices'],
               result['PMMGExtended']['pricing_scheme'],
               condition.quantity!.material.ticker,
               priceBasket,
@@ -155,7 +152,6 @@ export function calculateFinancials(webData, result, loop) {
           contractValue +=
             getPrice(
               cxPrices,
-              webData['custom_prices'],
               result['PMMGExtended']['pricing_scheme'],
               condition.quantity!.material.ticker,
               priceBasket,
@@ -198,7 +194,6 @@ export function calculateFinancials(webData, result, loop) {
       cxSellValue +=
         getPrice(
           cxPrices,
-          webData['custom_prices'],
           result['PMMGExtended']['pricing_scheme'],
           order.material.ticker,
           priceBasket,
@@ -271,18 +266,11 @@ function writeFinancials(result, finSnapshot) {
 
 const invalidContractStatus = ['FULFILLED', 'BREACHED', 'TERMINATED', 'CANCELLED', 'REJECTED'];
 
-export function interpretCX(CXString, result) {
+export function interpretCX(CXString) {
   let CX = 'AI1';
   let priceType = 'Average';
   switch (CXString) {
     case 'Price Basket':
-      break;
-    case 'Custom (Spreadsheet)':
-      if (result['PMMGExtended']['backup_pricing_scheme']) {
-        const data = interpretCX(result['PMMGExtended']['backup_pricing_scheme'], result);
-        CX = data[0];
-        priceType = data[1];
-      }
       break;
     default: {
       const info = CXString.split(' ');
@@ -303,10 +291,8 @@ export function interpretCX(CXString, result) {
   return [CX, priceType];
 }
 
-export function getPrice(cxPrices, customPrices, priceScheme, ticker, priceBasket) {
-  if (priceScheme == 'Custom (Spreadsheet)' && customPrices && customPrices[ticker]) {
-    return customPrices[ticker];
-  } else if (priceScheme == 'Price Basket') {
+export function getPrice(cxPrices, priceScheme, ticker, priceBasket) {
+  if (priceScheme == 'Price Basket') {
     return averageCX(cx.prices, ticker) / priceBasket;
   }
 
