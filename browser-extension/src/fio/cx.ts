@@ -21,8 +21,8 @@ async function fetchPrices() {
     cxPrices.Average[ticker] = priceData.PriceAverage;
   }
 
-  cx.age = Date.now();
-  cx.prices = newPrices;
+  cxStore.age = Date.now();
+  cxStore.prices = newPrices;
 }
 
 interface FioPrices {
@@ -56,10 +56,8 @@ interface MaterialPrices {
   [ticker: string]: number | undefined | null;
 }
 
-const cx = shallowReactive({
+export const cxStore = shallowReactive({
   fetchPrices,
   prices: undefined as Prices | undefined,
   age: 0,
 });
-
-export default cx;

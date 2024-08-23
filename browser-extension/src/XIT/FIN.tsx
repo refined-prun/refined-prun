@@ -19,7 +19,7 @@ import { Style, TextColors } from '../Style';
 import { CurrencySymbols } from '../GameProperties';
 import system from '@src/system';
 import xit from './xit-registry';
-import cx from '@src/fio/cx';
+import { cxStore } from '@src/fio/cx';
 import { calculateFinancials, FinancialSnapshot, getPrice, interpretCX } from '@src/financials';
 import features from '@src/feature-registry';
 import { widgetAppend } from '@src/utils/vue-mount';
@@ -135,10 +135,10 @@ function chooseScreen(finResult, params) {
     priceType = interpreted[1];
   }
 
-  if (!cx.prices || !cx.prices[CX]) {
+  if (!cxStore.prices || !cxStore.prices[CX]) {
     return;
   }
-  const cxPrices = cx.prices[CX]![priceType]; // Dictionary containing prices keyed to material tickers
+  const cxPrices = cxStore.prices[CX]![priceType]; // Dictionary containing prices keyed to material tickers
 
   let currency = ''; // Determine currency symbol
   switch (CX) {

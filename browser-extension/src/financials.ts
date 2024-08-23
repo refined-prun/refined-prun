@@ -1,4 +1,4 @@
-import cx from '@src/fio/cx';
+import { cxStore } from '@src/fio/cx';
 import { getLocalStorage, setSettings } from '@src/util';
 import { contractsStore } from '@src/prun-api/data/contracts';
 import { cxosStore } from '@src/prun-api/data/cxos';
@@ -25,7 +25,7 @@ export interface FinancialSnapshot {
 export function calculateFinancials(result, loop) {
   // Wait until contracts and prices are in
   if (loop) {
-    if (cx.prices) {
+    if (cxStore.prices) {
       window.setTimeout(() => calculateFinancials(result, false), 100);
       return;
     }
@@ -44,7 +44,7 @@ export function calculateFinancials(result, loop) {
     priceType = interpreted[1];
   }
 
-  const cxPrices = cx.prices![CX]![priceType];
+  const cxPrices = cxStore.prices![CX]![priceType];
 
   const finSnapshot: FinancialSnapshot = {
     Currencies: [],

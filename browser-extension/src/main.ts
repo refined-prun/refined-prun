@@ -13,7 +13,7 @@ import { loadPrunCss } from '@src/prun-ui/prun-css';
 import { applyXITParameters } from '@src/XIT/xit-commands';
 
 import './refined-prun.css';
-import cx from '@src/fio/cx';
+import { cxStore } from '@src/fio/cx';
 import { calculateFinancials } from '@src/financials';
 import { loadSettings } from '@src/store/settings';
 
@@ -64,7 +64,7 @@ async function mainRun() {
     appendStyle(RPrunStylesheet.advanced);
   }
 
-  setTimeout(cx.fetchPrices, 1000);
+  setTimeout(cxStore.fetchPrices, 1000);
 
   // Do FIN recording
   if (

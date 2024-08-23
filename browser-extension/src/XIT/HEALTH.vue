@@ -30,7 +30,7 @@ import { contractsStore } from '@src/prun-api/data/contracts';
 import { cxosStore } from '@src/prun-api/data/cxos';
 import { fxosStore } from '@src/prun-api/data/fxos';
 import { balancesStore } from '@src/prun-api/data/balances';
-import cx from '@src/fio/cx';
+import { cxStore } from '@src/fio/cx';
 import { computed } from 'vue';
 
 const bases = computed(() => {
@@ -54,7 +54,10 @@ const otherData = computed(() => [
   ['CXOS', cxosStore.all.value.length],
   ['FXOS', fxosStore.all.value.length],
   ['Currency', balancesStore.all.value.length > 0],
-  ['CX Price Age', cx.prices ? `${((Date.now() - cx.age) / 3600000).toFixed(0)}h` : false],
+  [
+    'CX Price Age',
+    cxStore.prices ? `${((Date.now() - cxStore.age) / 3600000).toFixed(0)}h` : false,
+  ],
 ]);
 </script>
 
