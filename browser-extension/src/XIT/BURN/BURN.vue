@@ -43,13 +43,16 @@ const props = defineProps({
   },
 });
 
+const isBurnAll = computed(
+  () => props.parameters.length === 1 || props.parameters[1].toLowerCase() == 'all',
+);
+
 const sites = computed(() => {
-  const parameters = props.parameters;
-  if (parameters.length === 1 || parameters[1].toLowerCase() == 'all') {
+  if (isBurnAll.value) {
     return sitesStore.all.value;
   }
 
-  return parameters
+  return props.parameters
     .slice(1)
     .map(x => sitesStore.getByPlanetNaturalIdOrName(x))
     .filter(x => x)
@@ -109,9 +112,7 @@ const dispSettings = computed(() => {
   return result;
 });
 
-const isMultiplanet = computed(
-  () => props.parameters.length > 2 || props.parameters[1].toLowerCase() == 'all',
-);
+const isMultiplanet = computed(() => props.parameters.length > 2 || isBurnAll.value);
 </script>
 
 <template>
