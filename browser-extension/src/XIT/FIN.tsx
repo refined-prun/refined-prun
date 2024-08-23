@@ -186,9 +186,9 @@ function chooseScreen(finResult, params) {
     priceSelect.id = 'price-select';
 
     // Add each CX option
-    Object.keys(PricingSchemes).forEach(name => {
+    for (const name of Object.keys(PricingSchemes)) {
       priceSelect.appendChild(createSelectOption(name, name));
-    });
+    }
 
     // Set value to what is in settings
     if (
@@ -268,10 +268,9 @@ function chooseScreen(finResult, params) {
         try {
           const fileOutput = JSON.parse(e.target.result as string);
           finResult = {};
-          Object.keys(fileOutput).forEach(key => {
+          for (const key of Object.keys(fileOutput)) {
             finResult[key] = fileOutput[key];
-            return;
-          });
+          }
 
           setSettings({ 'PMMG-Finance': finResult });
           errorTextBox.style.display = 'none';
@@ -294,9 +293,9 @@ function chooseScreen(finResult, params) {
     // When export button is pressed, download data
     exportButton.addEventListener('click', () => {
       const output = {};
-      Object.keys(finResult).forEach(key => {
+      for (const key of Object.keys(finResult)) {
         output[key] = finResult[key];
-      });
+      }
 
       downloadFile(output, `pmmg-finance${Date.now().toString()}.json`);
     });
@@ -420,28 +419,28 @@ function chooseScreen(finResult, params) {
   }
 
   const locations = {}; // Extract info on locations and their total value
-  finResult.Buildings.forEach(inv => {
+  for (const inv of finResult.Buildings) {
     if (locations[inv[0]]) {
       locations[inv[0]][0] += inv[1];
       locations[inv[0]][2] += inv[1];
     } else {
       locations[inv[0]] = [inv[1], 0, inv[1]];
     }
-  });
+  }
 
-  finResult.Buildings.forEach(inv => {
+  for (const inv of finResult.Buildings) {
     if (locations[inv[0]]) {
       locations[inv[0]][1] += inv[1];
       locations[inv[0]][2] += inv[1];
     } else {
       locations[inv[0]] = [0, inv[1], inv[1]];
     }
-  });
+  }
 
   const locationsArray = [] as any[]; // Rework into common array different screens use
-  Object.keys(locations).forEach(inv => {
+  for (const inv of Object.keys(locations)) {
     locationsArray.push([inv, locations[inv][0], locations[inv][1], locations[inv][2]]);
-  });
+  }
   locationsArray.sort(financialSort);
 
   if (!parameters[1]) {
@@ -461,7 +460,7 @@ function chooseScreen(finResult, params) {
       ['CHARTS', 'CHART'],
       ['SETTINGS', 'SETTINGS'],
     ];
-    quickButtons.forEach(label => {
+    for (const label of quickButtons) {
       const button = document.createElement('button');
       button.classList.add(...Style.Button);
       button.classList.add(...Style.ButtonPrimary);
@@ -471,7 +470,7 @@ function chooseScreen(finResult, params) {
       button.addEventListener('click', () => {
         showBuffer(`XIT FIN_${label[1]}`);
       });
-    });
+    }
 
     const chartsHeader = document.createElement('h3');
     chartsHeader.appendChild(document.createTextNode('Individual Charts'));
@@ -487,7 +486,7 @@ function chooseScreen(finResult, params) {
       ['ASSETS BY TYPE', 'ASSETPIE'],
       ['ASSETS BY LOCATION', 'LOCATIONSPIE'],
     ];
-    chartButtons.forEach(label => {
+    for (const label of chartButtons) {
       const button = document.createElement('button');
       button.classList.add(...Style.Button);
       button.classList.add(...Style.ButtonPrimary);
@@ -497,7 +496,7 @@ function chooseScreen(finResult, params) {
       button.addEventListener('click', () => {
         showBuffer(`XIT FIN_CHART_${label[1]}`);
       });
-    });
+    }
 
     const infoHeader = document.createElement('h3');
     infoHeader.appendChild(document.createTextNode('Data Info'));
@@ -550,7 +549,7 @@ function chooseScreen(finResult, params) {
       }
     }
 
-    locationsArray.forEach(inv => {
+    for (const inv of locationsArray) {
       const row = document.createElement('tr');
       tbody.appendChild(row);
 
@@ -567,7 +566,7 @@ function chooseScreen(finResult, params) {
         );
         tableElem.style.textAlign = 'right';
       }
-    });
+    }
   } else if (parameters[1].toLowerCase() == 'chart' || parameters[1].toLowerCase() == 'charts') {
     // Some charts summarizing finances
     if (parameters[2]) {
@@ -634,26 +633,26 @@ function chooseScreen(finResult, params) {
     tile.id = 'pmmg-load-success';
 
     const planets = [] as string[];
-    workforcesStore.all.value.forEach(workforce => {
+    for (const workforce of workforcesStore.all.value) {
       const name = getPlanetNameFromAddress(workforce.address);
       if (name && !planets.includes(name)) {
         planets.push(name);
       }
-    });
-    productionStore.all.value.forEach(production => {
+    }
+    for (const production of productionStore.all.value) {
       const name = getPlanetNameFromAddress(production.address);
       if (name && !planets.includes(name)) {
         planets.push(name);
       }
-    });
+    }
 
     const burnFinances = [] as any[][];
     let totalProduced = 0;
     let totalConsumed = 0;
-    planets.forEach(planet => {
+    for (const planet of planets) {
       const site = sitesStore.getByPlanetName(planet);
       if (!site) {
-        return;
+        continue;
       }
 
       const planetProduction = productionStore.getBySiteId(site.siteId);
@@ -665,54 +664,48 @@ function chooseScreen(finResult, params) {
       let consumed = 0;
 
       if (planetWorkforce) {
-        planetWorkforce.workforces.forEach(tier => {
-          tier.needs.forEach(need => {
+        for (const tier of planetWorkforce.workforces) {
+          for (const need of tier.needs) {
             consumed += getPrice(cxPrices, need.material.ticker) * need.unitsPerInterval;
-          });
-        });
+          }
+        }
       }
 
       let isRecurring = false;
 
       if (planetProduction) {
-        planetProduction.forEach(line => {
-          line.orders.forEach(order => {
-            if (order.recurring) {
-              isRecurring = true;
-            }
-          });
-        });
+        isRecurring = planetProduction.some(x => x.orders.some(y => y.recurring));
 
-        planetProduction.forEach(line => {
+        for (const line of planetProduction) {
           let totalDuration = 0;
-          line.orders.forEach(order => {
+          for (const order of line.orders) {
             if (!order.started && (!isRecurring || order.recurring)) {
               totalDuration += order.duration.millis || Infinity;
             }
-          });
+          }
 
-          line.orders.forEach(order => {
+          for (const order of line.orders) {
             if (!order.started && (!isRecurring || order.recurring)) {
-              order.inputs.forEach(mat => {
+              for (const mat of order.inputs) {
                 consumed +=
                   (getPrice(cxPrices, mat.material.ticker) *
                     mat.amount *
                     86400000 *
                     line.capacity) /
                   totalDuration;
-              });
+              }
 
-              order.outputs.forEach(mat => {
+              for (const mat of order.outputs) {
                 produced +=
                   (getPrice(cxPrices, mat.material.ticker) *
                     mat.amount *
                     86400000 *
                     line.capacity) /
                   totalDuration;
-              });
+              }
             }
-          });
-        });
+          }
+        }
       }
 
       planetFinances.push(produced);
@@ -721,7 +714,7 @@ function chooseScreen(finResult, params) {
       totalConsumed += consumed;
 
       burnFinances.push(planetFinances);
-    });
+    }
 
     const tileHeader = document.createElement('h2');
     tileHeader.title = 'Production Overview';
@@ -772,9 +765,9 @@ function chooseScreen(finResult, params) {
 
     burnFinances.sort(burnProductionSort);
 
-    burnFinances.forEach(inv => {
+    for (const inv of burnFinances) {
       if (inv[1] == 0 && inv[2] == 0) {
-        return;
+        continue;
       }
       const row = document.createElement('tr');
       tbody.appendChild(row);
@@ -804,7 +797,7 @@ function chooseScreen(finResult, params) {
       );
       profitElem.style.color = inv[1] - inv[2] > 0 ? TextColors.Success : TextColors.Failure;
       profitElem.style.textAlign = 'right';
-    });
+    }
   }
 }
 
@@ -812,14 +805,14 @@ function appendLineChart(container: Element, finResult, currency, maintainAspect
   const dateData = [] as any[];
   const finData = [] as any[];
 
-  finResult.History.forEach(entry => {
+  for (const entry of finResult.History) {
     if (entry[1] + entry[2] + entry[3] - entry[4] == 0) {
-      return;
+      continue;
     }
 
     dateData.push(new Date(entry[0]).toISOString());
     finData.push(Number((entry[1] + entry[2] + entry[3] - entry[4]).toPrecision(4)));
-  });
+  }
   widgetAppend(container, EquityHistoryChart, {
     xdata: dateData,
     ydata: finData,
@@ -839,10 +832,10 @@ function appendAssetPie(container: Element, finResult) {
 function appendLocationsPie(container: Element, locationsArray) {
   const locationNames = [] as any[];
   const locationValue = [] as any[];
-  locationsArray.forEach(location => {
+  for (const location of locationsArray) {
     locationNames.push(location[0]);
     locationValue.push(location[1] + location[2] + location[3]);
-  });
+  }
   widgetAppend(container, PieChart, {
     labelData: locationNames,
     numericalData: locationValue,
