@@ -2,7 +2,7 @@ import { createEntityStore } from '@src/prun-api/data/create-entity-store';
 import { messages } from '@src/prun-api/data/api-messages';
 import { createMapGetter } from '@src/prun-api/data/create-map-getter';
 
-const store = createEntityStore<PrunApi.Warehouse>(x => x.storeId);
+const store = createEntityStore<PrunApi.Warehouse>(x => x.warehouseId);
 const state = store.state;
 
 messages({

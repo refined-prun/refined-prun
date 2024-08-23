@@ -7,6 +7,7 @@ import { balancesStore } from '@src/prun-api/data/balances';
 import { storagesStore } from '@src/prun-api/data/storage';
 import { sitesStore } from '@src/prun-api/data/sites';
 import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
+import { warehousesStore } from '@src/prun-api/data/warehouses';
 
 export interface FinancialSnapshot {
   Currencies: [string, number][];
@@ -89,17 +90,19 @@ export function calculateFinancials(cx?: string, priceType?: string) {
       value += getPrice(cxPrices, quantity.material.ticker) * quantity.amount;
     }
 
-    let name: string;
-    if (location.type == 'STORE' || location.type == 'WAREHOUSE_STORE') {
-      const site = sitesStore.getById(location.addressableId);
-      name = getPlanetNameFromAddress(site?.address)!;
-    } else {
-      name = location.name!;
-    }
-
     if (value == 0) {
       continue;
     }
+
+    let name: string | undefined;
+    if (location.type == 'STORE') {
+      const site = sitesStore.getById(location.addressableId);
+      name = getPlanetNameFromAddress(site?.address)!;
+    } else if (location.type == 'WAREHOUSE_STORE') {
+      const warehouse = warehousesStore.getById(location.addressableId);
+      name = getPlanetNameFromAddress(warehouse?.address)!;
+    }
+    name ??= location.name!;
 
     let isMatch = false; // Consolidate multiple storages down into one (warehouses + bases or cargo + stl + ftl tanks)
     for (const inv of finSnapshot.Inventory) {
