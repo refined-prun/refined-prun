@@ -50,9 +50,9 @@ const getPlanetLineFromAddress = (address?: PrunApi.Address | undefined) => {
   }
 
   const entry: PrunApi.AddressLine = address.lines[1];
-  if (entry?.type === 'PLANET') {
+  if (entry?.type === 'PLANET' || entry?.type === 'STATION') {
     return entry;
   }
 
-  return address.lines.find(x => x.type === 'PLANET');
+  return address.lines.find(x => x.type === 'PLANET' || x.type === 'STATION');
 };

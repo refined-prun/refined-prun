@@ -6,7 +6,7 @@ import { sitesStore } from '@src/prun-api/data/sites';
 import { getPrice } from '@src/financials';
 import FinHeader from '@src/XIT/FIN/FinHeader.vue';
 import { computed } from 'vue';
-import { formatAmount } from '@src/XIT/FIN/utils';
+import { formatAmount, formatNumber } from '@src/XIT/FIN/utils';
 import KeyFigures from '@src/XIT/FIN/KeyFigures.vue';
 import { cxStore } from '@src/fio/cx';
 import PrunCss from '@src/prun-ui/prun-css';
@@ -74,10 +74,10 @@ const entries = computed<ProductionEntry[]>(() => {
     const margin = profit / consumed;
     entries.push({
       name: getPlanetNameFromAddress(site.address)!,
-      produced: produced,
-      consumed: consumed,
-      profit: produced - consumed,
-      margin: margin,
+      produced,
+      consumed,
+      profit,
+      margin,
     });
   }
 
@@ -96,10 +96,6 @@ const figures = computed(() => {
     { name: 'Daily Profit', value: formatAmount(totalProfit.value) },
   ];
 });
-
-function formatNumber(value: number) {
-  return value.toLocaleString(undefined, { maximumFractionDigits: 0 });
-}
 
 function formatPercents(value: number) {
   return value.toLocaleString(undefined, { style: 'percent', maximumFractionDigits: 2 });

@@ -18,7 +18,12 @@ import { CurrencySymbols } from '@src/GameProperties';
 import system from '@src/system';
 import xit from '../xit-registry';
 import { cxStore } from '@src/fio/cx';
-import { recordFinancials, FinancialSnapshot, interpretCX } from '@src/financials';
+import {
+  recordFinancials,
+  FinancialSnapshot,
+  interpretCX,
+  calculateFinancials,
+} from '@src/financials';
 import features from '@src/feature-registry';
 import { widgetAppend } from '@src/utils/vue-mount';
 import EquityHistoryChart from './EquityHistoryChart.vue';
@@ -71,6 +76,7 @@ function chooseScreen(finResult, params) {
     return;
   }
 
+  finResult = calculateFinancials();
   let currency = ''; // Determine currency symbol
   switch (CX) {
     case 'AI1':
@@ -379,43 +385,6 @@ function chooseScreen(finResult, params) {
     parameters[1].toLowerCase() == 'sum'
   ) {
     widgetAppend(tile, SUMMARY);
-
-    const breakdownHeader = document.createElement('h2');
-    breakdownHeader.title = 'Financial Breakdown';
-    breakdownHeader.textContent = 'Inventory Breakdown';
-    breakdownHeader.classList.add('fin-title');
-    tile.appendChild(breakdownHeader);
-
-    const tbody = createTable(tile, ['Name', 'Fixed Assets', 'Current Assets', 'Total Assets']);
-
-    const table = tbody.parentElement;
-    if (table) {
-      const topRow = table.querySelector('thead > tr');
-      if (topRow) {
-        for (i = 1; i < topRow.children.length; i++) {
-          (topRow.children[i] as HTMLElement).style.textAlign = 'right';
-        }
-      }
-    }
-
-    for (const inv of locationsArray) {
-      const row = document.createElement('tr');
-      tbody.appendChild(row);
-
-      const firstTableElem = document.createElement('td');
-      row.appendChild(firstTableElem);
-      firstTableElem.appendChild(createTextSpan(inv[0]));
-      inv.shift();
-
-      for (const point of inv) {
-        const tableElem = document.createElement('td');
-        row.appendChild(tableElem);
-        tableElem.appendChild(
-          createTextSpan(point.toLocaleString(undefined, { maximumFractionDigits: 0 })),
-        );
-        tableElem.style.textAlign = 'right';
-      }
-    }
   } else if (parameters[1].toLowerCase() == 'chart' || parameters[1].toLowerCase() == 'charts') {
     // Some charts summarizing finances
     if (parameters[2]) {
