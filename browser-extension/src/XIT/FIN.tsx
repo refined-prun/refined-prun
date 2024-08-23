@@ -20,7 +20,7 @@ import { CurrencySymbols } from '../GameProperties';
 import system from '@src/system';
 import xit from './xit-registry';
 import cx from '@src/fio/cx';
-import { calculateFinancials, getPrice, interpretCX } from '@src/financials';
+import { calculateFinancials, FinancialSnapshot, getPrice, interpretCX } from '@src/financials';
 import features from '@src/feature-registry';
 import { widgetAppend } from '@src/utils/vue-mount';
 import EquityHistoryChart from '@src/XIT/FIN/EquityHistoryChart.vue';
@@ -117,7 +117,7 @@ class Finances {
 // Draw the correct screen based on the parameters (should split out into multiple functions probably)
 function chooseScreen(finResult, params) {
   let i;
-  finResult = finResult['PMMG-Finance'];
+  finResult = finResult['PMMG-Finance'] as FinancialSnapshot;
   if (!params[0] || !params[1] || !params[2]) {
     return;
   }
@@ -329,15 +329,15 @@ function chooseScreen(finResult, params) {
 
     const tbody = createTable(tile, ['Date', 'Equity', 'Delete']);
 
-    for (i = 0; i < finResult['History'].length; i++) {
+    for (i = 0; i < finResult.History.length; i++) {
       const row = document.createElement('tr');
       tbody.appendChild(row);
 
       const dateColumn = document.createElement('td');
       dateColumn.appendChild(
         createTextSpan(
-          `${hourFormatter.format(new Date(finResult['History'][i][0]))} on ${dateYearFormatter.format(
-            new Date(finResult['History'][i][0]),
+          `${hourFormatter.format(new Date(finResult.History[i][0]))} on ${dateYearFormatter.format(
+            new Date(finResult.History[i][0]),
           )}`,
         ),
       );
@@ -345,10 +345,10 @@ function chooseScreen(finResult, params) {
 
       const equityColumn = document.createElement('td');
       const equity =
-        finResult['History'][i][1] +
-        finResult['History'][i][2] +
-        finResult['History'][i][3] -
-        finResult['History'][i][4];
+        finResult.History[i][1] +
+        finResult.History[i][2] +
+        finResult.History[i][3] -
+        finResult.History[i][4];
       equityColumn.appendChild(
         createTextSpan(equity.toLocaleString(undefined, { maximumFractionDigits: 0 })),
       );
@@ -366,7 +366,7 @@ function chooseScreen(finResult, params) {
               () => {
                 // That's a lot of nested stuff...
 
-                finResult['History'].splice(index, 1);
+                finResult.History.splice(index, 1);
                 setSettings({ 'PMMG-Finance': finResult });
                 finObj.create_buffer();
               },
@@ -419,7 +419,7 @@ function chooseScreen(finResult, params) {
   }
 
   const locations = {}; // Extract info on locations and their total value
-  finResult['Buildings'].forEach(inv => {
+  finResult.Buildings.forEach(inv => {
     if (locations[inv[0]]) {
       locations[inv[0]][0] += inv[1];
       locations[inv[0]][2] += inv[1];
@@ -428,7 +428,7 @@ function chooseScreen(finResult, params) {
     }
   });
 
-  finResult['Inventory'].forEach(inv => {
+  finResult.Buildings.forEach(inv => {
     if (locations[inv[0]]) {
       locations[inv[0]][1] += inv[1];
       locations[inv[0]][2] += inv[1];
@@ -507,12 +507,12 @@ function chooseScreen(finResult, params) {
     tile.appendChild(infoDiv);
     infoDiv.style.margin = '5px';
     const dataPoints = createTextSpan(
-      `${(finResult['History'] ? finResult['History'].length : 0).toLocaleString()} data points recorded`,
+      `${(finResult.History ? finResult.History.length : 0).toLocaleString()} data points recorded`,
     );
     infoDiv.appendChild(dataPoints);
     dataPoints.style.display = 'block';
-    if (finResult['History']) {
-      const oldestDate = new Date(finResult['History'][0][0]);
+    if (finResult.History) {
+      const oldestDate = new Date(finResult.History[0][0]);
       const oldestDateElem = createTextSpan(
         `Oldest data recorded on ${dateYearFormatter.format(oldestDate)}`,
       );
@@ -520,7 +520,7 @@ function chooseScreen(finResult, params) {
       oldestDateElem.style.marginTop = '5px';
       oldestDateElem.style.display = 'block';
 
-      const newestDate = new Date(finResult['History'][finResult['History'].length - 1][0]);
+      const newestDate = new Date(finResult.History[finResult.History.length - 1][0]);
       const newestDateElem = createTextSpan(
         `Latest data recorded at ${hourFormatter.format(newestDate)} on ${dateYearFormatter.format(newestDate)}`,
       );
@@ -530,7 +530,7 @@ function chooseScreen(finResult, params) {
     }
   } else if (parameters[1].toLowerCase() == 'summary' || parameters[1].toLowerCase() == 'sum') {
     // Summary financial screen (like FIN)
-    const lastReading = finResult['History'][finResult['History'].length - 1];
+    const lastReading = finResult.History[finResult.History.length - 1];
 
     const lastEquity = lastReading[1] + lastReading[2] + lastReading[3] - lastReading[4];
     const tileHeader = document.createElement('h2');
@@ -575,18 +575,18 @@ function chooseScreen(finResult, params) {
       ),
     );
 
-    for (i = finResult['History'].length - 1; i >= 0; i--) {
-      if (lastReading[0] - finResult['History'][i][0] > 86400000 * 7) {
+    for (i = finResult.History.length - 1; i >= 0; i--) {
+      if (lastReading[0] - finResult.History[i][0] > 86400000 * 7) {
         break;
       }
     }
     i++;
 
     const prevEquity =
-      finResult['History'][i][1] +
-      finResult['History'][i][2] +
-      finResult['History'][i][3] -
-      finResult['History'][i][4];
+      finResult.History[i][1] +
+      finResult.History[i][2] +
+      finResult.History[i][3] -
+      finResult.History[i][4];
     const profit = Math.round(lastEquity - prevEquity);
     const color = profit > 0 ? TextColors.Success : TextColors.Failure;
     tile.appendChild(createFinancialTextBox(currency + profit.toLocaleString(), 'Profit', color));
@@ -645,7 +645,7 @@ function chooseScreen(finResult, params) {
         return;
       }
     }
-    if (finResult['History'].length == 0) {
+    if (finResult.History.length == 0) {
       return;
     }
 
@@ -871,7 +871,7 @@ function appendLineChart(container: Element, finResult, currency, maintainAspect
   const dateData = [] as any[];
   const finData = [] as any[];
 
-  finResult['History'].forEach(entry => {
+  finResult.History.forEach(entry => {
     if (entry[1] + entry[2] + entry[3] - entry[4] == 0) {
       return;
     }
@@ -888,7 +888,7 @@ function appendLineChart(container: Element, finResult, currency, maintainAspect
 }
 
 function appendAssetPie(container: Element, finResult) {
-  const latestReport = finResult['History'][finResult['History'].length - 1];
+  const latestReport = finResult.History[finResult.History.length - 1];
   widgetAppend(container, PieChart, {
     labelData: ['Fixed', 'Current', 'Liquid'],
     numericalData: [latestReport[1], latestReport[2], latestReport[3]],

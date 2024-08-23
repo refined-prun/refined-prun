@@ -8,6 +8,19 @@ import { storagesStore } from '@src/prun-api/data/storage';
 import { sitesStore } from '@src/prun-api/data/sites';
 import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 
+export interface FinancialSnapshot {
+  Currencies: [string, number][];
+  Inventory: [string, number][];
+  Buildings: [string, number][];
+  ContractValue: number;
+  ContractLiability: number;
+  CXBuy: number;
+  CXSell: number;
+  FXBuy: number;
+  FXSell: number;
+  History: number[];
+}
+
 // Actually recording and processing the financials once they are received through BackgroundRunner.
 export function calculateFinancials(result, loop) {
   // Wait until contracts and prices are in
@@ -33,20 +46,24 @@ export function calculateFinancials(result, loop) {
 
   const cxPrices = cx.prices![CX]![priceType];
 
-  // Now we have the data, find financial value
-  const finSnapshot = {};
-
-  // Get currencies
-  finSnapshot['Currencies'] = [];
+  const finSnapshot: FinancialSnapshot = {
+    Currencies: [],
+    Inventory: [],
+    Buildings: [],
+    ContractValue: 0,
+    ContractLiability: 0,
+    CXBuy: 0,
+    CXSell: 0,
+    FXBuy: 0,
+    FXSell: 0,
+    History: [0, 0, 0, 0, 0],
+  };
 
   for (const currency of balancesStore.all.value) {
-    finSnapshot['Currencies'].push([currency.currency, Math.round(currency.amount * 100) / 100]);
+    finSnapshot.Currencies.push([currency.currency, Math.round(currency.amount * 100) / 100]);
   }
 
-  // Put together inventory value
-  finSnapshot['Inventory'] = [];
-  finSnapshot['Buildings'] = [];
-
+  // Inventory
   for (const location of storagesStore.all.value) {
     let value = 0;
 
@@ -58,12 +75,12 @@ export function calculateFinancials(result, loop) {
       value += getPrice(cxPrices, quantity.material.ticker) * quantity.amount;
     }
 
-    let name;
+    let name: string;
     if (location.type == 'STORE' || location.type == 'WAREHOUSE_STORE') {
       const site = sitesStore.getById(location.addressableId);
-      name = getPlanetNameFromAddress(site?.address);
+      name = getPlanetNameFromAddress(site?.address)!;
     } else {
-      name = location.name;
+      name = location.name!;
     }
 
     if (value == 0) {
@@ -71,29 +88,30 @@ export function calculateFinancials(result, loop) {
     }
 
     let isMatch = false; // Consolidate multiple storages down into one (warehouses + bases or cargo + stl + ftl tanks)
-    finSnapshot['Inventory'].forEach(inv => {
+    for (const inv of finSnapshot.Inventory) {
       if (inv[0] == name) {
         isMatch = true;
         inv[1] += Math.round(value * 100) / 100;
       }
-    });
+    }
     if (!isMatch) {
-      finSnapshot['Inventory'].push([name, Math.round(value * 100) / 100]);
+      finSnapshot.Inventory.push([name, Math.round(value * 100) / 100]);
     }
   }
-  // Put together building value
+
+  // Buildings
   for (const location of sitesStore.all.value) {
     let value = 0;
-    location.platforms.forEach(building => {
-      building.reclaimableMaterials.forEach(mat => {
+    for (const building of location.platforms) {
+      for (const mat of building.reclaimableMaterials) {
         value += getPrice(cxPrices, mat.material.ticker) * mat.amount;
-      });
-    });
+      }
+    }
     if (value == 0) {
       continue;
     }
-    const name = getPlanetNameFromAddress(location.address);
-    finSnapshot['Buildings'].push([name, Math.round(value * 100) / 100]);
+    const name = getPlanetNameFromAddress(location.address)!;
+    finSnapshot.Buildings.push([name, Math.round(value * 100) / 100]);
   }
 
   // Handle contracts
@@ -106,9 +124,9 @@ export function calculateFinancials(result, loop) {
   for (const contract of validContracts) {
     const party = contract.party;
     //console.log(party)
-    contract['conditions'].forEach(condition => {
+    for (const condition of contract.conditions) {
       if (condition.status == 'FULFILLED') {
-        return;
+        continue;
       }
       if (condition.type == 'DELIVERY' || condition.type == 'PROVISION') {
         if (condition.party == party) {
@@ -137,10 +155,10 @@ export function calculateFinancials(result, loop) {
           contractValue += condition.amount!.amount;
         }
       }
-    });
+    }
   }
-  finSnapshot['ContractValue'] = Math.round(contractValue * 100) / 100;
-  finSnapshot['ContractLiability'] = Math.round(contractLiability * 100) / 100;
+  finSnapshot.ContractValue = Math.round(contractValue * 100) / 100;
+  finSnapshot.ContractLiability = Math.round(contractLiability * 100) / 100;
 
   // Handle CXOS
   let cxBuyValue = 0;
@@ -173,31 +191,30 @@ export function calculateFinancials(result, loop) {
     }
   }
 
-  finSnapshot['CXBuy'] = Math.round(cxBuyValue * 100) / 100;
-  finSnapshot['CXSell'] = Math.round(cxSellValue * 100) / 100;
-  finSnapshot['FXBuy'] = Math.round(fxBuyValue * 100) / 100;
-  finSnapshot['FXSell'] = Math.round(fxSellValue * 100) / 100;
+  finSnapshot.CXBuy = Math.round(cxBuyValue * 100) / 100;
+  finSnapshot.CXSell = Math.round(cxSellValue * 100) / 100;
+  finSnapshot.FXBuy = Math.round(fxBuyValue * 100) / 100;
+  finSnapshot.FXSell = Math.round(fxSellValue * 100) / 100;
 
   let liquid = 0;
-  finSnapshot['Currencies'].forEach(currency => {
+  for (const currency of finSnapshot.Currencies) {
     liquid += currency[1];
-  });
+  }
   liquid += cxBuyValue + fxBuyValue + fxSellValue;
 
   let fixed = 0;
-  finSnapshot['Buildings'].forEach(inv => {
+  for (const inv of finSnapshot.Buildings) {
     fixed += inv[1];
-  });
+  }
 
   let current = cxSellValue + contractValue;
-  finSnapshot['Inventory'].forEach(inv => {
+  for (const inv of finSnapshot.Inventory) {
     current += inv[1];
-  });
+  }
 
   const liabilities = contractLiability;
-  //console.log(finSnapshot);
   // History stored as [time, fixed, current, liquid, liabilities]
-  finSnapshot['History'] = [
+  finSnapshot.History = [
     Date.now(),
     Math.round(fixed * 100) / 100,
     Math.round(current * 100) / 100,
@@ -207,14 +224,14 @@ export function calculateFinancials(result, loop) {
   getLocalStorage('PMMG-Finance', writeFinancials, finSnapshot);
 }
 
-function writeFinancials(result, finSnapshot) {
+function writeFinancials(result, finSnapshot: FinancialSnapshot) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let history = [] as any[];
   if (result['PMMG-Finance'] && result['PMMG-Finance']['History']) {
     history = result['PMMG-Finance']['History'];
   }
-  history.push(finSnapshot['History']);
-  finSnapshot['History'] = history;
+  history.push(finSnapshot.History);
+  finSnapshot.History = history;
   result['PMMG-Finance'] = finSnapshot;
   setSettings(result);
 }
@@ -241,20 +258,4 @@ export function interpretCX(CXString) {
 
 export function getPrice(cxPrices, ticker) {
   return cxPrices[ticker] || 0;
-}
-
-export function averageCX(prices, ticker) {
-  const CXs = ['AI1', 'NC1', 'IC1', 'CI1'];
-
-  let cxCount = 0;
-  let price = 0;
-
-  CXs.forEach(cx => {
-    if (prices[cx]['Average'][ticker]) {
-      cxCount++;
-      price += prices[cx]['Average'][ticker];
-    }
-  });
-
-  return cxCount == 0 ? 0 : price / cxCount;
 }
