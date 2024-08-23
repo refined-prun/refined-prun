@@ -13,19 +13,19 @@ import {
   setSettings,
   showBuffer,
   showWarningDialog,
-} from '../util';
-import { Style } from '../Style';
-import { CurrencySymbols } from '../GameProperties';
+} from '@src/util';
+import { Style } from '@src/Style';
+import { CurrencySymbols } from '@src/GameProperties';
 import system from '@src/system';
-import xit from './xit-registry';
+import xit from '../xit-registry';
 import { cxStore } from '@src/fio/cx';
 import { recordFinancials, FinancialSnapshot, interpretCX } from '@src/financials';
 import features from '@src/feature-registry';
 import { widgetAppend } from '@src/utils/vue-mount';
-import EquityHistoryChart from '@src/XIT/FIN/EquityHistoryChart.vue';
-import PieChart from '@src/XIT/FIN/PieChart.vue';
-import SUMMARY from '@src/XIT/FIN/SUMMARY.vue';
-import PROD from '@src/XIT/FIN/PROD.vue';
+import EquityHistoryChart from './EquityHistoryChart.vue';
+import PieChart from './PieChart.vue';
+import SUMMARY from './SUMMARY.vue';
+import PROD from './PROD.vue';
 
 class Finances {
   private tile: HTMLElement;

@@ -37,7 +37,7 @@ import './XIT/CHECK';
 import './XIT/CONTS/CONTS.vue';
 import './XIT/CXTS/CXTS.vue';
 import './XIT/DEBUG/DEBUG.vue';
-import './XIT/FIN';
+import './XIT/FIN/FIN';
 import './XIT/HEALTH.vue';
 import './XIT/HELP';
 import './XIT/INV';
