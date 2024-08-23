@@ -11,7 +11,6 @@ import {
   getLocalStorage,
   hourFormatter,
   setSettings,
-  showBuffer,
   showWarningDialog,
 } from '@src/util';
 import { Style } from '@src/Style';
@@ -359,7 +358,7 @@ function chooseScreen(finResult, params) {
     }
   }
 
-  for (const inv of finResult.Buildings) {
+  for (const inv of finResult.Inventory) {
     if (locations[inv[0]]) {
       locations[inv[0]][1] += inv[1];
       locations[inv[0]][2] += inv[1];
@@ -374,92 +373,11 @@ function chooseScreen(finResult, params) {
   }
   locationsArray.sort(financialSort);
 
-  if (!parameters[1]) {
-    // Base finances screen
-    const quickHeader = document.createElement('h3');
-    quickHeader.appendChild(document.createTextNode('Quick Links'));
-    quickHeader.classList.add(...Style.SidebarSectionHead);
-    tile.appendChild(quickHeader);
-
-    const quickDiv = document.createElement('div');
-    quickDiv.style.marginLeft = '5px';
-    tile.appendChild(quickDiv);
-
-    const quickButtons = [
-      ['SUMMARY', 'SUMMARY'],
-      ['PRODUCTION', 'PRODUCTION'],
-      ['CHARTS', 'CHART'],
-      ['SETTINGS', 'SETTINGS'],
-    ];
-    for (const label of quickButtons) {
-      const button = document.createElement('button');
-      button.classList.add(...Style.Button);
-      button.classList.add(...Style.ButtonPrimary);
-      button.style.marginBottom = '5px';
-      button.textContent = label[0];
-      quickDiv.appendChild(button);
-      button.addEventListener('click', () => {
-        showBuffer(`XIT FIN_${label[1]}`);
-      });
-    }
-
-    const chartsHeader = document.createElement('h3');
-    chartsHeader.appendChild(document.createTextNode('Individual Charts'));
-    chartsHeader.classList.add(...Style.SidebarSectionHead);
-    tile.appendChild(chartsHeader);
-
-    const chartsDiv = document.createElement('div');
-    chartsDiv.style.marginLeft = '5px';
-    tile.appendChild(chartsDiv);
-
-    const chartButtons = [
-      ['EQUITY HISTORY', 'HISTORY'],
-      ['ASSETS BY TYPE', 'ASSETPIE'],
-      ['ASSETS BY LOCATION', 'LOCATIONSPIE'],
-    ];
-    for (const label of chartButtons) {
-      const button = document.createElement('button');
-      button.classList.add(...Style.Button);
-      button.classList.add(...Style.ButtonPrimary);
-      button.style.marginBottom = '5px';
-      button.textContent = label[0];
-      chartsDiv.appendChild(button);
-      button.addEventListener('click', () => {
-        showBuffer(`XIT FIN_CHART_${label[1]}`);
-      });
-    }
-
-    const infoHeader = document.createElement('h3');
-    infoHeader.appendChild(document.createTextNode('Data Info'));
-    infoHeader.classList.add(...Style.SidebarSectionHead);
-    tile.appendChild(infoHeader);
-
-    const infoDiv = document.createElement('div');
-    tile.appendChild(infoDiv);
-    infoDiv.style.margin = '5px';
-    const dataPoints = createTextSpan(
-      `${(finResult.History ? finResult.History.length : 0).toLocaleString()} data points recorded`,
-    );
-    infoDiv.appendChild(dataPoints);
-    dataPoints.style.display = 'block';
-    if (finResult.History) {
-      const oldestDate = new Date(finResult.History[0][0]);
-      const oldestDateElem = createTextSpan(
-        `Oldest data recorded on ${dateYearFormatter.format(oldestDate)}`,
-      );
-      infoDiv.appendChild(oldestDateElem);
-      oldestDateElem.style.marginTop = '5px';
-      oldestDateElem.style.display = 'block';
-
-      const newestDate = new Date(finResult.History[finResult.History.length - 1][0]);
-      const newestDateElem = createTextSpan(
-        `Latest data recorded at ${hourFormatter.format(newestDate)} on ${dateYearFormatter.format(newestDate)}`,
-      );
-      infoDiv.appendChild(newestDateElem);
-      newestDateElem.style.marginTop = '5px';
-      newestDateElem.style.display = 'block';
-    }
-  } else if (parameters[1].toLowerCase() == 'summary' || parameters[1].toLowerCase() == 'sum') {
+  if (
+    !parameters[1] ||
+    parameters[1].toLowerCase() == 'summary' ||
+    parameters[1].toLowerCase() == 'sum'
+  ) {
     widgetAppend(tile, SUMMARY);
 
     const breakdownHeader = document.createElement('h2');

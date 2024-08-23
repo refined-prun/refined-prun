@@ -101,6 +101,10 @@ function formatNumber(value: number) {
   return value.toLocaleString(undefined, { maximumFractionDigits: 0 });
 }
 
+function formatPercents(value: number) {
+  return value.toLocaleString(undefined, { style: 'percent', maximumFractionDigits: 2 });
+}
+
 function profitClass(value: number) {
   return {
     [PrunCss.ColoredValue.positive]: value > 0,
@@ -120,6 +124,7 @@ function profitClass(value: number) {
         <th>Produced</th>
         <th>Consumed</th>
         <th>Profit</th>
+        <th>Margin</th>
       </tr>
     </thead>
     <tbody>
@@ -127,7 +132,8 @@ function profitClass(value: number) {
         <td>{{ entry.name }}</td>
         <td>{{ formatNumber(entry.produced) }}</td>
         <td>{{ formatNumber(entry.consumed) }}</td>
-        <td :class="profitClass(entry.profit)">{{ formatNumber(entry.profit) }}</td>
+        <td>{{ formatNumber(entry.profit) }}</td>
+        <td :class="profitClass(entry.margin)">{{ formatPercents(entry.margin) }}</td>
       </tr>
     </tbody>
   </table>
