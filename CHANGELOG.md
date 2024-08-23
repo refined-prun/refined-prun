@@ -20,3 +20,12 @@ Fixes:
 - Properly intercept all PrUn server-client messages, preventing data loss
 - Reduced the amount of UI updates
 - Improved UI responsiveness
+
+---
+
+Known bugs:
+- LM ad list will display incorrect data if an ad added/removed/accepted. Please reopen the screen with LM on change
+- XIT FIN shows null for stations
+- FLT ship status can be wonky sometimes
+
+Absent features:
