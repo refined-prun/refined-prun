@@ -1,7 +1,7 @@
-import { CurrencySymbols } from '@src/GameProperties';
+import { settings } from '@src/store/settings';
 
 export function formatAmount(amount: number) {
-  return CurrencySymbols.AIC + Math.round(amount).toLocaleString();
+  return settings.fin.currency + Math.round(amount).toLocaleString();
 }
 
 export function formatNumber(value: number) {

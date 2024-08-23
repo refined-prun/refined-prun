@@ -8,6 +8,9 @@ export const settings = reactive({
     resupply: 16,
     buffers: {},
   },
+  fin: {
+    currency: '₳',
+  },
   repairThreshold: 60,
   sidebar: [
     ['BS', 'BS'],
