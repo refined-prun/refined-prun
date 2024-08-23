@@ -16,11 +16,11 @@ import {
   showWarningDialog,
 } from '../util';
 import { Style, TextColors } from '../Style';
-import { Consumption, CurrencySymbols } from '../GameProperties';
+import { CurrencySymbols } from '../GameProperties';
 import system from '@src/system';
 import xit from './xit-registry';
 import cx from '@src/fio/cx';
-import { averageCX, calculateFinancials, getPrice, interpretCX } from '@src/financials';
+import { calculateFinancials, getPrice, interpretCX } from '@src/financials';
 import features from '@src/feature-registry';
 import { widgetAppend } from '@src/utils/vue-mount';
 import EquityHistoryChart from '@src/XIT/FIN/EquityHistoryChart.vue';
@@ -139,23 +139,6 @@ function chooseScreen(finResult, params) {
     return;
   }
   const cxPrices = cx.prices[CX]![priceType]; // Dictionary containing prices keyed to material tickers
-
-  // Calculate price basket
-  const weights = { PIO: 0.7435, SET: 0.1954, TEC: 0.0444, ENG: 0.0132, SCI: 0.0035 };
-
-  let priceBasket = 0;
-
-  Object.keys(Consumption).forEach(workforce => {
-    let tierCost = 0;
-    Object.keys(Consumption[workforce]).forEach(mat => {
-      tierCost += averageCX(cx.prices, mat) * Consumption[workforce][mat];
-    });
-
-    priceBasket += tierCost * weights[workforce];
-  });
-
-  priceBasket /= 2030.55; // Normalize by prices on 12/27/2023
-  //console.log(priceBasket);
 
   let currency = ''; // Determine currency symbol
   switch (CX) {
@@ -743,13 +726,7 @@ function chooseScreen(finResult, params) {
       if (planetWorkforce) {
         planetWorkforce.workforces.forEach(tier => {
           tier.needs.forEach(need => {
-            consumed +=
-              getPrice(
-                cxPrices,
-                pmmgSettings['PMMGExtended']['pricing_scheme'],
-                need.material.ticker,
-                priceBasket,
-              ) * need.unitsPerInterval;
+            consumed += getPrice(cxPrices, need.material.ticker) * need.unitsPerInterval;
           });
         });
       }
@@ -777,12 +754,7 @@ function chooseScreen(finResult, params) {
             if (!order.started && (!isRecurring || order.recurring)) {
               order.inputs.forEach(mat => {
                 consumed +=
-                  (getPrice(
-                    cxPrices,
-                    pmmgSettings['PMMGExtended']['pricing_scheme'],
-                    mat.material.ticker,
-                    priceBasket,
-                  ) *
+                  (getPrice(cxPrices, mat.material.ticker) *
                     mat.amount *
                     86400000 *
                     line.capacity) /
@@ -791,12 +763,7 @@ function chooseScreen(finResult, params) {
 
               order.outputs.forEach(mat => {
                 produced +=
-                  (getPrice(
-                    cxPrices,
-                    pmmgSettings['PMMGExtended']['pricing_scheme'],
-                    mat.material.ticker,
-                    priceBasket,
-                  ) *
+                  (getPrice(cxPrices, mat.material.ticker) *
                     mat.amount *
                     86400000 *
                     line.capacity) /

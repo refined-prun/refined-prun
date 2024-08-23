@@ -1,6 +1,5 @@
 import cx from '@src/fio/cx';
 import { getLocalStorage, setSettings } from '@src/util';
-import { Consumption } from '@src/GameProperties';
 import { contractsStore } from '@src/prun-api/data/contracts';
 import { cxosStore } from '@src/prun-api/data/cxos';
 import { fxosStore } from '@src/prun-api/data/fxos';
@@ -34,22 +33,6 @@ export function calculateFinancials(result, loop) {
 
   const cxPrices = cx.prices![CX]![priceType];
 
-  // Calculate price basket
-  const weights = { PIO: 0.7435, SET: 0.1954, TEC: 0.0444, ENG: 0.0132, SCI: 0.0035 };
-
-  let priceBasket = 0;
-
-  Object.keys(Consumption).forEach(workforce => {
-    let tierCost = 0;
-    Object.keys(Consumption[workforce]).forEach(mat => {
-      tierCost += averageCX(cx.prices, mat) * Consumption[workforce][mat];
-    });
-
-    priceBasket += tierCost * weights[workforce];
-  });
-
-  priceBasket /= 2030.55; // Normalize by prices on 12/27/2023
-
   // Now we have the data, find financial value
   const finSnapshot = {};
 
@@ -72,13 +55,7 @@ export function calculateFinancials(result, loop) {
       if (!quantity) {
         continue;
       }
-      value +=
-        getPrice(
-          cxPrices,
-          result['PMMGExtended']['pricing_scheme'],
-          quantity.material.ticker,
-          priceBasket,
-        ) * quantity.amount;
+      value += getPrice(cxPrices, quantity.material.ticker) * quantity.amount;
     }
 
     let name;
@@ -109,13 +86,7 @@ export function calculateFinancials(result, loop) {
     let value = 0;
     location.platforms.forEach(building => {
       building.reclaimableMaterials.forEach(mat => {
-        value +=
-          getPrice(
-            cxPrices,
-            result['PMMGExtended']['pricing_scheme'],
-            mat.material.ticker,
-            priceBasket,
-          ) * mat.amount;
+        value += getPrice(cxPrices, mat.material.ticker) * mat.amount;
       });
     });
     if (value == 0) {
@@ -142,20 +113,10 @@ export function calculateFinancials(result, loop) {
       if (condition.type == 'DELIVERY' || condition.type == 'PROVISION') {
         if (condition.party == party) {
           contractLiability +=
-            getPrice(
-              cxPrices,
-              result['PMMGExtended']['pricing_scheme'],
-              condition.quantity!.material.ticker,
-              priceBasket,
-            ) * condition.quantity!.amount;
+            getPrice(cxPrices, condition.quantity!.material.ticker) * condition.quantity!.amount;
         } else {
           contractValue +=
-            getPrice(
-              cxPrices,
-              result['PMMGExtended']['pricing_scheme'],
-              condition.quantity!.material.ticker,
-              priceBasket,
-            ) * condition.quantity!.amount;
+            getPrice(cxPrices, condition.quantity!.material.ticker) * condition.quantity!.amount;
         }
       } else if (condition.type == 'PAYMENT') {
         if (condition.party == party) {
@@ -191,13 +152,7 @@ export function calculateFinancials(result, loop) {
     }
 
     if (order.type == 'SELLING') {
-      cxSellValue +=
-        getPrice(
-          cxPrices,
-          result['PMMGExtended']['pricing_scheme'],
-          order.material.ticker,
-          priceBasket,
-        ) * order.amount;
+      cxSellValue += getPrice(cxPrices, order.material.ticker) * order.amount;
     } else {
       cxBuyValue += order.limit.amount * order.amount;
     }
@@ -267,35 +222,24 @@ function writeFinancials(result, finSnapshot) {
 const invalidContractStatus = ['FULFILLED', 'BREACHED', 'TERMINATED', 'CANCELLED', 'REJECTED'];
 
 export function interpretCX(CXString) {
-  let CX = 'AI1';
   let priceType = 'Average';
-  switch (CXString) {
-    case 'Price Basket':
+  const info = CXString.split(' ');
+  const CX = info[0];
+  switch (info[1]) {
+    case 'AVG':
+      priceType = 'Average';
       break;
-    default: {
-      const info = CXString.split(' ');
-      CX = info[0];
-      switch (info[1]) {
-        case 'AVG':
-          priceType = 'Average';
-          break;
-        case 'ASK':
-          priceType = 'AskPrice';
-          break;
-        case 'BID':
-          priceType = 'BidPrice';
-          break;
-      }
-    }
+    case 'ASK':
+      priceType = 'AskPrice';
+      break;
+    case 'BID':
+      priceType = 'BidPrice';
+      break;
   }
   return [CX, priceType];
 }
 
-export function getPrice(cxPrices, priceScheme, ticker, priceBasket) {
-  if (priceScheme == 'Price Basket') {
-    return averageCX(cx.prices, ticker) / priceBasket;
-  }
-
+export function getPrice(cxPrices, ticker) {
   return cxPrices[ticker] || 0;
 }
 
