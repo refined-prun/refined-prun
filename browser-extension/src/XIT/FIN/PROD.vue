@@ -4,12 +4,12 @@ import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 import { productionStore } from '@src/prun-api/data/production';
 import { sitesStore } from '@src/prun-api/data/sites';
 import { getPrice } from '@src/financials';
-import { TextColors } from '@src/Style';
 import FinHeader from '@src/XIT/FIN/FinHeader.vue';
 import { computed } from 'vue';
 import { formatAmount } from '@src/XIT/FIN/utils';
 import KeyFigures from '@src/XIT/FIN/KeyFigures.vue';
 import { cxStore } from '@src/fio/cx';
+import PrunCss from '@src/prun-ui/prun-css';
 
 interface ProductionEntry {
   name: string;
@@ -101,9 +101,10 @@ function formatNumber(value: number) {
   return value.toLocaleString(undefined, { maximumFractionDigits: 0 });
 }
 
-function profitStyle(value: number) {
+function profitClass(value: number) {
   return {
-    color: value > 0 ? TextColors.Success : TextColors.Failure,
+    [PrunCss.ColoredValue.positive]: value > 0,
+    [PrunCss.ColoredValue.negative]: value < 0,
   };
 }
 </script>
@@ -126,7 +127,7 @@ function profitStyle(value: number) {
         <td>{{ entry.name }}</td>
         <td>{{ formatNumber(entry.produced) }}</td>
         <td>{{ formatNumber(entry.consumed) }}</td>
-        <td :style="profitStyle(entry.profit)">{{ formatNumber(entry.profit) }}</td>
+        <td :class="profitClass(entry.profit)">{{ formatNumber(entry.profit) }}</td>
       </tr>
     </tbody>
   </table>

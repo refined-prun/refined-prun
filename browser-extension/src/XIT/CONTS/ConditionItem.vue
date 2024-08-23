@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, PropType } from 'vue';
-import { TextColors } from '@src/Style';
 import { friendlyConditionText, isConditionFulfilled } from '@src/XIT/CONTS/utils';
+import PrunCss from '@src/prun-ui/prun-css';
 
 const props = defineProps({
   condition: {
@@ -11,13 +11,16 @@ const props = defineProps({
 });
 
 const isFulfilled = computed(() => isConditionFulfilled(props.condition));
-const color = computed(() => (isFulfilled.value ? TextColors.Success : TextColors.Failure));
+const iconClass = computed(() => ({
+  [PrunCss.ColoredValue.positive]: isFulfilled.value,
+  [PrunCss.ColoredValue.negative]: !isFulfilled.value,
+}));
 const icon = computed(() => (isFulfilled.value ? '✓' : '✗'));
 </script>
 
 <template>
   <div>
-    <span :style="{ color, fontWeight: 'bold' }">{{ icon }}&nbsp;</span>
+    <span :class="iconClass" :style="{ fontWeight: 'bold' }">{{ icon }}&nbsp;</span>
     <span>{{ friendlyConditionText(condition.type) }}</span>
   </div>
 </template>

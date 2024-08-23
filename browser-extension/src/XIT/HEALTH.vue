@@ -32,6 +32,7 @@ import { fxosStore } from '@src/prun-api/data/fxos';
 import { balancesStore } from '@src/prun-api/data/balances';
 import { cxStore } from '@src/fio/cx';
 import { computed } from 'vue';
+import PrunCss from '@src/prun-ui/prun-css';
 
 const bases = computed(() => {
   return sitesStore.all.value.map(site => ({
@@ -59,6 +60,9 @@ const otherData = computed(() => [
     cxStore.prices ? `${((Date.now() - cxStore.age) / 3600000).toFixed(0)}h` : false,
   ],
 ]);
+
+const positive = PrunCss.ColoredValue.positive;
+const negative = PrunCss.ColoredValue.negative;
 </script>
 
 <template>
@@ -76,12 +80,12 @@ const otherData = computed(() => [
       <tbody>
         <tr v-for="base in bases" :key="base.name">
           <td>{{ base.name }}</td>
-          <td v-if="base.workforce" :class="$style.success">✓</td>
-          <td v-else :class="$style.failure">✗</td>
-          <td v-if="base.production" :class="$style.success">✓</td>
-          <td v-else :class="$style.failure">✗</td>
-          <td v-if="base.storage" :class="$style.success">✓</td>
-          <td v-else :class="$style.failure">✗</td>
+          <td v-if="base.workforce" :class="positive">✓</td>
+          <td v-else :class="negative">✗</td>
+          <td v-if="base.production" :class="positive">✓</td>
+          <td v-else :class="negative">✗</td>
+          <td v-if="base.storage" :class="positive">✓</td>
+          <td v-else :class="negative">✗</td>
         </tr>
       </tbody>
     </table>
@@ -97,8 +101,8 @@ const otherData = computed(() => [
         <tr v-for="(other, i) in otherData" :key="i">
           <td>{{ other[0] }}</td>
           <td>
-            <span v-if="other[1] === true" :class="$style.success">✓</span>
-            <span v-else-if="other[1] === false" :class="$style.failure">✗</span>
+            <span v-if="other[1] === true" :class="positive">✓</span>
+            <span v-else-if="other[1] === false" :class="negative">✗</span>
             <template v-else>{{ other[1] }}</template>
           </td>
         </tr>
@@ -106,13 +110,3 @@ const otherData = computed(() => [
     </table>
   </div>
 </template>
-
-<style module>
-.success {
-  color: #5cb85c;
-}
-
-.failure {
-  color: #d9534f;
-}
-</style>
