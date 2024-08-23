@@ -1,4 +1,4 @@
-import { shallowRef } from 'vue';
+import { ref } from 'vue';
 import { messages } from '@src/prun-api/data/api-messages';
 
 interface Payload {
@@ -6,11 +6,23 @@ interface Payload {
   currencyAccounts: PrunApi.CurrencyAccount[];
 }
 
-const all = shallowRef<PrunApi.CurrencyAmount[]>([]);
+const all = ref<PrunApi.CurrencyAmount[]>([]);
 
 messages({
   ACCOUNTING_CASH_BALANCES(data: Payload) {
     all.value = data.currencyAccounts.map(x => x.currencyBalance);
+  },
+  ACCOUNTING_BOOKINGS(data: { items: PrunApi.BookingItem[] }) {
+    for (const item of data.items) {
+      if (item.accountCategory !== 'LIQUID_ASSETS' && item.accountType !== 1800) {
+        continue;
+      }
+
+      const account = all.value.find(x => x.currency === item.balance.currency);
+      if (account) {
+        account.amount = item.balance.amount;
+      }
+    }
   },
 });
 

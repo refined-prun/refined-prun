@@ -18,33 +18,41 @@ export interface FinancialSnapshot {
   CXSell: number;
   FXBuy: number;
   FXSell: number;
+  Totals: {
+    Fixed: number;
+    Current: number;
+    Liquid: number;
+    Liabilities: number;
+  };
   History: number[];
 }
 
 // Actually recording and processing the financials once they are received through BackgroundRunner.
-export function calculateFinancials(result, loop) {
-  // Wait until contracts and prices are in
-  if (loop) {
-    if (cxStore.prices) {
-      window.setTimeout(() => calculateFinancials(result, false), 100);
-      return;
-    }
-    window.setTimeout(() => calculateFinancials(result, true), 50);
+export function recordFinancials(result) {
+  if (!cxStore.prices) {
+    window.setTimeout(() => recordFinancials(result), 50);
     return;
   }
 
   result['PMMGExtended']['last_fin_recording'] = Date.now();
   setSettings(result);
 
-  let CX = 'AI1';
+  let cx = 'AI1';
   let priceType = 'Average';
   if (result['PMMGExtended']['pricing_scheme']) {
     const interpreted = interpretCX(result['PMMGExtended']['pricing_scheme']);
-    CX = interpreted[0];
+    cx = interpreted[0];
     priceType = interpreted[1];
   }
 
-  const cxPrices = cxStore.prices![CX]![priceType];
+  const finSnapshot = calculateFinancials(cx, priceType);
+  getLocalStorage('PMMG-Finance', writeFinancials, finSnapshot);
+}
+
+export function calculateFinancials(cx?: string, priceType?: string) {
+  cx ??= 'AI1';
+  priceType ??= 'Average';
+  const cxPrices = cxStore.prices![cx]![priceType];
 
   const finSnapshot: FinancialSnapshot = {
     Currencies: [],
@@ -56,6 +64,12 @@ export function calculateFinancials(result, loop) {
     CXSell: 0,
     FXBuy: 0,
     FXSell: 0,
+    Totals: {
+      Fixed: 0,
+      Current: 0,
+      Liquid: 0,
+      Liabilities: 0,
+    },
     History: [0, 0, 0, 0, 0],
   };
 
@@ -221,7 +235,11 @@ export function calculateFinancials(result, loop) {
     Math.round(liquid * 100) / 100,
     Math.round(liabilities * 100) / 100,
   ];
-  getLocalStorage('PMMG-Finance', writeFinancials, finSnapshot);
+  finSnapshot.Totals.Fixed = fixed;
+  finSnapshot.Totals.Current = current;
+  finSnapshot.Totals.Liquid = liquid;
+  finSnapshot.Totals.Liabilities = liabilities;
+  return finSnapshot;
 }
 
 function writeFinancials(result, finSnapshot: FinancialSnapshot) {

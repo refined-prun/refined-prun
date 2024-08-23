@@ -20,7 +20,7 @@ import { CurrencySymbols } from '../GameProperties';
 import system from '@src/system';
 import xit from './xit-registry';
 import { cxStore } from '@src/fio/cx';
-import { calculateFinancials, FinancialSnapshot, getPrice, interpretCX } from '@src/financials';
+import { recordFinancials, FinancialSnapshot, getPrice, interpretCX } from '@src/financials';
 import features from '@src/feature-registry';
 import { widgetAppend } from '@src/utils/vue-mount';
 import EquityHistoryChart from '@src/XIT/FIN/EquityHistoryChart.vue';
@@ -29,6 +29,7 @@ import { workforcesStore } from '@src/prun-api/data/workforces';
 import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 import { productionStore } from '@src/prun-api/data/production';
 import { sitesStore } from '@src/prun-api/data/sites';
+import SUMMARY from '@src/XIT/FIN/SUMMARY.vue';
 
 class Finances {
   private tile: HTMLElement;
@@ -316,7 +317,7 @@ function chooseScreen(finResult, params) {
     tile.appendChild(addButton);
 
     addButton.addEventListener('click', () => {
-      calculateFinancials(pmmgSettings, true);
+      recordFinancials(pmmgSettings);
       finObj.create_buffer();
     });
 
@@ -529,67 +530,7 @@ function chooseScreen(finResult, params) {
       newestDateElem.style.display = 'block';
     }
   } else if (parameters[1].toLowerCase() == 'summary' || parameters[1].toLowerCase() == 'sum') {
-    // Summary financial screen (like FIN)
-    const lastReading = finResult.History[finResult.History.length - 1];
-
-    const lastEquity = lastReading[1] + lastReading[2] + lastReading[3] - lastReading[4];
-    const tileHeader = document.createElement('h2');
-    tileHeader.title = 'Financial Overview';
-    tileHeader.textContent = 'Key Figures';
-    tileHeader.classList.add('fin-title');
-    tile.appendChild(tileHeader);
-
-    tile.appendChild(
-      createFinancialTextBox(
-        currency + Math.round(lastReading[1]).toLocaleString(),
-        'Fixed Assets',
-        TextColors.Standard,
-      ),
-    );
-    tile.appendChild(
-      createFinancialTextBox(
-        currency + Math.round(lastReading[2]).toLocaleString(),
-        'Current Assets',
-        TextColors.Standard,
-      ),
-    );
-    tile.appendChild(
-      createFinancialTextBox(
-        currency + Math.round(lastReading[3]).toLocaleString(),
-        'Liquid Assets',
-        TextColors.Standard,
-      ),
-    );
-    tile.appendChild(
-      createFinancialTextBox(
-        currency + Math.round(lastEquity).toLocaleString(),
-        'Equity',
-        TextColors.Standard,
-      ),
-    );
-    tile.appendChild(
-      createFinancialTextBox(
-        currency + Math.round(lastReading[4]).toLocaleString(),
-        'Liabilities',
-        TextColors.Standard,
-      ),
-    );
-
-    for (i = finResult.History.length - 1; i >= 0; i--) {
-      if (lastReading[0] - finResult.History[i][0] > 86400000 * 7) {
-        break;
-      }
-    }
-    i++;
-
-    const prevEquity =
-      finResult.History[i][1] +
-      finResult.History[i][2] +
-      finResult.History[i][3] -
-      finResult.History[i][4];
-    const profit = Math.round(lastEquity - prevEquity);
-    const color = profit > 0 ? TextColors.Success : TextColors.Failure;
-    tile.appendChild(createFinancialTextBox(currency + profit.toLocaleString(), 'Profit', color));
+    widgetAppend(tile, SUMMARY);
 
     const breakdownHeader = document.createElement('h2');
     breakdownHeader.title = 'Financial Breakdown';

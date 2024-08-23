@@ -14,7 +14,7 @@ import { applyXITParameters } from '@src/XIT/xit-commands';
 
 import './refined-prun.css';
 import { cxStore } from '@src/fio/cx';
-import { calculateFinancials } from '@src/financials';
+import { recordFinancials } from '@src/financials';
 import { loadSettings } from '@src/store/settings';
 
 // The main function that initializes everything
@@ -73,7 +73,7 @@ async function mainRun() {
       Date.now() - result['PMMGExtended']['last_fin_recording'] > 64800000)
   ) {
     // 72000000
-    window.setTimeout(() => calculateFinancials(result, true), 1000);
+    window.setTimeout(() => recordFinancials(result), 1000);
   }
   const modules = [
     new OrderETAs(),
