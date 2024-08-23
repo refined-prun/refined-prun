@@ -127,16 +127,6 @@ class Settings {
     finLabel.style.marginBottom = '4px';
     finDiv.appendChild(finLabel);
 
-    const finCheckbox = document.createElement('input');
-    finCheckbox.type = 'checkbox';
-    finCheckbox.checked = pmmgSettings['PMMGExtended']['recording_financials'] != false;
-    finDiv.appendChild(finCheckbox);
-    tile.appendChild(finDiv);
-    finCheckbox.addEventListener('click', () => {
-      pmmgSettings['PMMGExtended']['recording_financials'] = finCheckbox.checked;
-      setSettings(pmmgSettings);
-    });
-
     const minDiv = document.createElement('div');
     const minLabel = document.createElement('h3');
     minLabel.appendChild(createTextSpan('Minimize Headers by Default'));

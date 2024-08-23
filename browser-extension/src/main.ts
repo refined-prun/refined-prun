@@ -68,9 +68,8 @@ async function mainRun() {
 
   // Do FIN recording
   if (
-    result['PMMGExtended']['recording_financials'] != false &&
-    (!result['PMMGExtended']['last_fin_recording'] ||
-      Date.now() - result['PMMGExtended']['last_fin_recording'] > 64800000)
+    !result['PMMGExtended']['last_fin_recording'] ||
+    Date.now() - result['PMMGExtended']['last_fin_recording'] > 64800000
   ) {
     // 72000000
     window.setTimeout(() => recordFinancials(result), 1000);

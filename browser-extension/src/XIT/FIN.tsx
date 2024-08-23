@@ -36,8 +36,6 @@ class Finances {
   private parameters: string[];
   private pmmgSettings;
 
-  public name = 'FINANCES';
-
   constructor(tile, parameters, pmmgSettings) {
     this.tile = tile;
     this.parameters = parameters;
@@ -46,72 +44,12 @@ class Finances {
 
   create_buffer() {
     clearChildren(this.tile);
-    if (this.pmmgSettings['PMMGExtended']['recording_financials'] == false) {
-      // If not recording financial info, show screen with checkbox to enable
-      // Create a header explaining the situation
-      const header = document.createElement('h3');
-      header.textContent =
-        'You are not recording daily financial data, would you like to enable recording?';
-      header.style.textAlign = 'center';
-      header.style.width = '100%';
-      this.tile.appendChild(header);
-
-      // Div holding the checkbox
-      const checkboxDiv = document.createElement('div');
-      checkboxDiv.style.alignItems = 'center';
-      checkboxDiv.style.display = 'flex';
-      checkboxDiv.style.justifyContent = 'center';
-      checkboxDiv.style.paddingBottom = '5px';
-      this.tile.appendChild(checkboxDiv);
-
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.style.display = 'inline-block';
-      checkboxDiv.appendChild(checkbox);
-
-      const label = document.createElement('div');
-      label.textContent = 'Enable Recording (Refresh needed to take effect)';
-      label.style.display = 'inline-block';
-      label.style.marginTop = '2px';
-      checkboxDiv.appendChild(label);
-
-      const explainDiv = document.createElement('div');
-      explainDiv.style.padding = '5px';
-      this.tile.appendChild(explainDiv);
-      explainDiv.appendChild(
-        createTextSpan(
-          'PMMG can record your finances (using FIO data) to provide a more accurate estimate than the in-game FIN screen. The data is pulled at most every 24 hours and is stored locally like your other settings. You can access all the information from the XIT FIN buffer.',
-        ),
-      );
-
-      // Declare class parameters in static context
-      const pmmgSettings = this.pmmgSettings;
-
-      // Flip the settings when checkbox is checked
-      checkbox.addEventListener('click', () => {
-        pmmgSettings['PMMGExtended']['recording_financials'] = checkbox.checked;
-        setSettings(pmmgSettings);
-      });
-
-      return;
-    }
-
-    // Get stored financial data
     getLocalStorage('PMMG-Finance', chooseScreen, [
       this.tile,
       this.parameters,
       this.pmmgSettings,
       this,
     ]);
-    return;
-  }
-
-  update_buffer() {
-    // Nothing to update
-  }
-
-  destroy_buffer() {
-    // Nothing constantly running so nothing to destroy
   }
 }
 
