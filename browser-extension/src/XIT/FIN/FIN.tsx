@@ -76,7 +76,10 @@ function chooseScreen(finResult, params) {
     return;
   }
 
-  finResult = calculateFinancials();
+  finResult = {
+    ...calculateFinancials(),
+    History: finResult.History,
+  };
   let currency = ''; // Determine currency symbol
   switch (CX) {
     case 'AI1':
