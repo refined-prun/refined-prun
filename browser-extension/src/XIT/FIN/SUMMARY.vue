@@ -2,8 +2,8 @@
 import { computed } from 'vue';
 import { calculateFinancials } from '@src/financials';
 import KeyFigures from '@src/XIT/FIN/KeyFigures.vue';
-import { CurrencySymbols } from '@src/GameProperties';
 import FinHeader from '@src/XIT/FIN/FinHeader.vue';
+import { formatAmount } from '@src/XIT/FIN/utils';
 
 const finResult = computed(() => calculateFinancials());
 const equity = computed(() => {
@@ -21,10 +21,6 @@ const figures = computed(() => {
     { name: 'Liabilities', value: formatAmount(totals.Liabilities) },
   ];
 });
-
-function formatAmount(amount: number) {
-  return CurrencySymbols.AIC + Math.round(amount).toLocaleString();
-}
 </script>
 
 <template>

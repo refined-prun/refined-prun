@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   clearChildren,
-  createFinancialTextBox,
   createSelectOption,
   createSmallButton,
   createTable,
@@ -15,21 +14,18 @@ import {
   showBuffer,
   showWarningDialog,
 } from '../util';
-import { Style, TextColors } from '../Style';
+import { Style } from '../Style';
 import { CurrencySymbols } from '../GameProperties';
 import system from '@src/system';
 import xit from './xit-registry';
 import { cxStore } from '@src/fio/cx';
-import { recordFinancials, FinancialSnapshot, getPrice, interpretCX } from '@src/financials';
+import { recordFinancials, FinancialSnapshot, interpretCX } from '@src/financials';
 import features from '@src/feature-registry';
 import { widgetAppend } from '@src/utils/vue-mount';
 import EquityHistoryChart from '@src/XIT/FIN/EquityHistoryChart.vue';
 import PieChart from '@src/XIT/FIN/PieChart.vue';
-import { workforcesStore } from '@src/prun-api/data/workforces';
-import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
-import { productionStore } from '@src/prun-api/data/production';
-import { sitesStore } from '@src/prun-api/data/sites';
 import SUMMARY from '@src/XIT/FIN/SUMMARY.vue';
+import PROD from '@src/XIT/FIN/PROD.vue';
 
 class Finances {
   private tile: HTMLElement;
@@ -67,17 +63,14 @@ function chooseScreen(finResult, params) {
 
   // Determine the array of CX prices to use
   let CX = 'AI1';
-  let priceType = 'Average';
   if (pmmgSettings['PMMGExtended']['pricing_scheme']) {
     const interpreted = interpretCX(pmmgSettings['PMMGExtended']['pricing_scheme']);
     CX = interpreted[0];
-    priceType = interpreted[1];
   }
 
   if (!cxStore.prices || !cxStore.prices[CX]) {
     return;
   }
-  const cxPrices = cxStore.prices[CX]![priceType]; // Dictionary containing prices keyed to material tickers
 
   let currency = ''; // Determine currency symbol
   switch (CX) {
@@ -566,176 +559,7 @@ function chooseScreen(finResult, params) {
     //   showBuffer('XIT FIN_CHART_LOCATIONSPIE');
     // });
   } else if (parameters[1].toLowerCase() == 'production' || parameters[1].toLowerCase() == 'prod') {
-    // Revenue/profit derived from burn dat
-    tile.textContent = '';
-    tile.id = 'pmmg-load-success';
-
-    const planets = [] as string[];
-    for (const workforce of workforcesStore.all.value) {
-      const name = getPlanetNameFromAddress(workforce.address);
-      if (name && !planets.includes(name)) {
-        planets.push(name);
-      }
-    }
-    for (const production of productionStore.all.value) {
-      const name = getPlanetNameFromAddress(production.address);
-      if (name && !planets.includes(name)) {
-        planets.push(name);
-      }
-    }
-
-    const burnFinances = [] as any[][];
-    let totalProduced = 0;
-    let totalConsumed = 0;
-    for (const planet of planets) {
-      const site = sitesStore.getByPlanetName(planet);
-      if (!site) {
-        continue;
-      }
-
-      const planetProduction = productionStore.getBySiteId(site.siteId);
-      const planetWorkforce = workforcesStore.getById(site.siteId);
-
-      const planetFinances = [] as any[];
-      planetFinances.push(planet);
-      let produced = 0;
-      let consumed = 0;
-
-      if (planetWorkforce) {
-        for (const tier of planetWorkforce.workforces) {
-          for (const need of tier.needs) {
-            consumed += getPrice(cxPrices, need.material.ticker) * need.unitsPerInterval;
-          }
-        }
-      }
-
-      let isRecurring = false;
-
-      if (planetProduction) {
-        isRecurring = planetProduction.some(x => x.orders.some(y => y.recurring));
-
-        for (const line of planetProduction) {
-          let totalDuration = 0;
-          for (const order of line.orders) {
-            if (!order.started && (!isRecurring || order.recurring)) {
-              totalDuration += order.duration.millis || Infinity;
-            }
-          }
-
-          for (const order of line.orders) {
-            if (!order.started && (!isRecurring || order.recurring)) {
-              for (const mat of order.inputs) {
-                consumed +=
-                  (getPrice(cxPrices, mat.material.ticker) *
-                    mat.amount *
-                    86400000 *
-                    line.capacity) /
-                  totalDuration;
-              }
-
-              for (const mat of order.outputs) {
-                produced +=
-                  (getPrice(cxPrices, mat.material.ticker) *
-                    mat.amount *
-                    86400000 *
-                    line.capacity) /
-                  totalDuration;
-              }
-            }
-          }
-        }
-      }
-
-      planetFinances.push(produced);
-      planetFinances.push(consumed);
-      totalProduced += produced;
-      totalConsumed += consumed;
-
-      burnFinances.push(planetFinances);
-    }
-
-    const tileHeader = document.createElement('h2');
-    tileHeader.title = 'Production Overview';
-    tileHeader.textContent = 'Production Overview';
-    tileHeader.classList.add('fin-title');
-    tile.appendChild(tileHeader);
-
-    tile.appendChild(
-      createFinancialTextBox(
-        currency + totalProduced.toLocaleString(undefined, { maximumFractionDigits: 0 }),
-        'Daily Produced',
-        TextColors.Standard,
-      ),
-    );
-    tile.appendChild(
-      createFinancialTextBox(
-        currency + totalConsumed.toLocaleString(undefined, { maximumFractionDigits: 0 }),
-        'Daily Consumed',
-        TextColors.Standard,
-      ),
-    );
-    tile.appendChild(
-      createFinancialTextBox(
-        currency +
-          (totalProduced - totalConsumed).toLocaleString(undefined, { maximumFractionDigits: 0 }),
-        'Daily Profit',
-        totalProduced - totalConsumed > 0 ? TextColors.Success : TextColors.Failure,
-      ),
-    );
-
-    const planetHeader = document.createElement('h2');
-    planetHeader.title = 'Planet Breakdown';
-    planetHeader.textContent = 'Planet Breakdown';
-    planetHeader.classList.add('fin-title');
-    tile.appendChild(planetHeader);
-
-    const tbody = createTable(tile, ['Name', 'Produced', 'Consumed', 'Profit']);
-
-    const table = tbody.parentElement;
-    if (table) {
-      const topRow = table.querySelector('thead > tr');
-      if (topRow) {
-        for (i = 1; i < topRow.children.length; i++) {
-          (topRow.children[i] as HTMLElement).style.textAlign = 'right';
-        }
-      }
-    }
-
-    burnFinances.sort(burnProductionSort);
-
-    for (const inv of burnFinances) {
-      if (inv[1] == 0 && inv[2] == 0) {
-        continue;
-      }
-      const row = document.createElement('tr');
-      tbody.appendChild(row);
-
-      const firstTableElem = document.createElement('td');
-      row.appendChild(firstTableElem);
-      firstTableElem.appendChild(createTextSpan(inv[0]));
-
-      const producedElem = document.createElement('td');
-      row.appendChild(producedElem);
-      producedElem.appendChild(
-        createTextSpan(inv[1].toLocaleString(undefined, { maximumFractionDigits: 0 })),
-      );
-      producedElem.style.textAlign = 'right';
-
-      const consumedElem = document.createElement('td');
-      row.appendChild(consumedElem);
-      consumedElem.appendChild(
-        createTextSpan(inv[2].toLocaleString(undefined, { maximumFractionDigits: 0 })),
-      );
-      consumedElem.style.textAlign = 'right';
-
-      const profitElem = document.createElement('td');
-      row.appendChild(profitElem);
-      profitElem.appendChild(
-        createTextSpan((inv[1] - inv[2]).toLocaleString(undefined, { maximumFractionDigits: 0 })),
-      );
-      profitElem.style.color = inv[1] - inv[2] > 0 ? TextColors.Success : TextColors.Failure;
-      profitElem.style.textAlign = 'right';
-    }
+    widgetAppend(tile, PROD);
   }
 }
 
@@ -811,10 +635,6 @@ const PricingSchemes = {
 
 function financialSort(a, b) {
   return a[3] < b[3] ? 1 : -1;
-}
-
-function burnProductionSort(a, b) {
-  return a[1] - a[2] < b[1] - b[2] ? 1 : -1;
 }
 
 function init() {
