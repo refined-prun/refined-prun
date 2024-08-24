@@ -10,10 +10,16 @@ import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 import { warehousesStore } from '@src/prun-api/data/warehouses';
 import system from '@src/system';
 
+interface LocationSnapshot {
+  name: string;
+  fixed: number;
+  current: number;
+  total: number;
+}
+
 export interface FinancialSnapshot {
+  locations: LocationSnapshot[];
   Currencies: [string, number][];
-  Inventory: [string, number][];
-  Buildings: [string, number][];
   ContractValue: number;
   ContractLiability: number;
   CXBuy: number;
@@ -49,7 +55,6 @@ async function saveFinHistory(snapshot: FinancialSnapshot) {
     Math.round(snapshot.Totals.Liquid * 100) / 100,
     Math.round(snapshot.Totals.Liabilities * 100) / 100,
   ]);
-  savedSettings[storageKey] = snapshot;
   savedSettings[storageKey].History = finHistory;
   await system.storage.local.set(savedSettings);
 }
@@ -81,10 +86,9 @@ export function calculateFinancials(cx?: string, priceType?: string) {
   priceType ??= 'Average';
   const cxPrices = cxStore.prices![cx]![priceType];
 
-  const finSnapshot: FinancialSnapshot = {
+  const snapshot: FinancialSnapshot = {
+    locations: [],
     Currencies: [],
-    Inventory: [],
-    Buildings: [],
     ContractValue: 0,
     ContractLiability: 0,
     CXBuy: 0,
@@ -100,63 +104,71 @@ export function calculateFinancials(cx?: string, priceType?: string) {
   };
 
   for (const currency of balancesStore.all.value) {
-    finSnapshot.Currencies.push([currency.currency, Math.round(currency.amount * 100) / 100]);
+    snapshot.Currencies.push([currency.currency, Math.round(currency.amount * 100) / 100]);
+  }
+
+  function getLocation(name: string) {
+    let location = snapshot.locations.find(x => x.name === name);
+    if (!location) {
+      location = {
+        name,
+        fixed: 0,
+        current: 0,
+        total: 0,
+      };
+      snapshot.locations.push(location);
+    }
+    return location;
   }
 
   // Inventory
-  for (const location of storagesStore.all.value) {
+  for (const store of storagesStore.all.value) {
     let value = 0;
 
-    for (const mat of location.items) {
-      const quantity = mat.quantity;
-      if (!quantity) {
-        continue;
-      }
-      value += getPrice(cxPrices, quantity.material.ticker) * quantity.amount;
+    const items = store.items.map(x => x.quantity!).filter(x => x);
+    for (const item of items) {
+      value += getPrice(cxPrices, item.material.ticker) * item.amount;
     }
 
-    if (value == 0) {
+    if (value === 0) {
       continue;
     }
 
     let name: string | undefined;
-    if (location.type == 'STORE') {
-      const site = sitesStore.getById(location.addressableId);
+    if (store.type == 'STORE') {
+      const site = sitesStore.getById(store.addressableId);
       name = getPlanetNameFromAddress(site?.address)!;
-    } else if (location.type == 'WAREHOUSE_STORE') {
-      const warehouse = warehousesStore.getById(location.addressableId);
+    } else if (store.type == 'WAREHOUSE_STORE') {
+      const warehouse = warehousesStore.getById(store.addressableId);
       name = getPlanetNameFromAddress(warehouse?.address)!;
     }
-    name ??= location.name!;
+    name ??= store.name!;
 
-    let isMatch = false; // Consolidate multiple storages down into one (warehouses + bases or cargo + stl + ftl tanks)
-    for (const inv of finSnapshot.Inventory) {
-      if (inv[0] == name) {
-        isMatch = true;
-        inv[1] += Math.round(value * 100) / 100;
-      }
-    }
-    if (!isMatch) {
-      finSnapshot.Inventory.push([name, Math.round(value * 100) / 100]);
-    }
+    const location = getLocation(name);
+    location.current += value;
+    location.total += value;
   }
 
   // Buildings
-  for (const location of sitesStore.all.value) {
+  for (const site of sitesStore.all.value) {
     let value = 0;
-    for (const building of location.platforms) {
+    for (const building of site.platforms) {
       for (const mat of building.reclaimableMaterials) {
         value += getPrice(cxPrices, mat.material.ticker) * mat.amount;
       }
     }
-    if (value == 0) {
+    if (value === 0) {
       continue;
     }
-    const name = getPlanetNameFromAddress(location.address)!;
-    finSnapshot.Buildings.push([name, Math.round(value * 100) / 100]);
+    const name = getPlanetNameFromAddress(site.address)!;
+    const location = getLocation(name);
+    location.fixed += value;
+    location.total += value;
   }
 
-  // Handle contracts
+  snapshot.locations.sort((a, b) => b.total - a.total);
+
+  // Contracts
   let contractValue = 0;
   let contractLiability = 0;
   const validContracts = contractsStore.all.value.filter(
@@ -165,44 +177,45 @@ export function calculateFinancials(cx?: string, priceType?: string) {
 
   for (const contract of validContracts) {
     const party = contract.party;
-    //console.log(party)
     for (const condition of contract.conditions) {
       if (condition.status == 'FULFILLED') {
         continue;
       }
-      if (condition.type == 'DELIVERY' || condition.type == 'PROVISION') {
-        if (condition.party == party) {
-          contractLiability +=
-            getPrice(cxPrices, condition.quantity!.material.ticker) * condition.quantity!.amount;
-        } else {
-          contractValue +=
-            getPrice(cxPrices, condition.quantity!.material.ticker) * condition.quantity!.amount;
+      let total = 0;
+
+      switch (condition.type) {
+        case 'DELIVERY':
+        case 'PROVISION': {
+          const ticker = condition.quantity!.material.ticker;
+          const amount = condition.quantity!.amount;
+          total = getPrice(cxPrices, ticker) * amount;
+          break;
         }
-      } else if (condition.type == 'PAYMENT') {
-        if (condition.party == party) {
-          contractLiability += condition.amount!.amount;
-        } else {
-          contractValue += condition.amount!.amount;
+        case 'PAYMENT': {
+          total = condition.amount!.amount;
+          break;
         }
-      } else if (condition.type == 'LOAN_INSTALLMENT') {
-        if (condition.party == party) {
-          contractLiability += condition.interest!.amount + condition.repayment!.amount;
-        } else {
-          contractValue += condition.interest!.amount + condition.repayment!.amount;
+        case 'LOAN_INSTALLMENT': {
+          total = condition.interest!.amount + condition.repayment!.amount;
+          break;
         }
-      } else if (condition.type == 'LOAN_PAYOUT') {
-        if (condition.party == party) {
-          contractLiability += condition.amount!.amount;
-        } else {
-          contractValue += condition.amount!.amount;
+        case 'LOAN_PAYOUT': {
+          total = condition.amount!.amount;
+          break;
         }
+      }
+
+      if (condition.party == party) {
+        contractLiability += total;
+      } else {
+        contractValue += total;
       }
     }
   }
-  finSnapshot.ContractValue = Math.round(contractValue * 100) / 100;
-  finSnapshot.ContractLiability = Math.round(contractLiability * 100) / 100;
+  snapshot.ContractValue = contractValue;
+  snapshot.ContractLiability = contractLiability;
 
-  // Handle CXOS
+  // CXOS
   let cxBuyValue = 0;
   let cxSellValue = 0;
 
@@ -218,7 +231,7 @@ export function calculateFinancials(cx?: string, priceType?: string) {
     }
   }
 
-  // Handle FXOS
+  // FXOS
   let fxBuyValue = 0;
   let fxSellValue = 0;
   for (const order of fxosStore.all.value) {
@@ -233,33 +246,32 @@ export function calculateFinancials(cx?: string, priceType?: string) {
     }
   }
 
-  finSnapshot.CXBuy = Math.round(cxBuyValue * 100) / 100;
-  finSnapshot.CXSell = Math.round(cxSellValue * 100) / 100;
-  finSnapshot.FXBuy = Math.round(fxBuyValue * 100) / 100;
-  finSnapshot.FXSell = Math.round(fxSellValue * 100) / 100;
+  snapshot.CXBuy = cxBuyValue;
+  snapshot.CXSell = cxSellValue;
+  snapshot.FXBuy = fxBuyValue;
+  snapshot.FXSell = fxSellValue;
 
   let liquid = 0;
-  for (const currency of finSnapshot.Currencies) {
+  for (const currency of snapshot.Currencies) {
     liquid += currency[1];
   }
   liquid += cxBuyValue + fxBuyValue + fxSellValue;
 
-  let fixed = 0;
-  for (const inv of finSnapshot.Buildings) {
-    fixed += inv[1];
-  }
+  const fixed = Object.values(snapshot.locations)
+    .map(x => x.fixed)
+    .reduce((a, b) => a + b, 0);
 
   let current = cxSellValue + contractValue;
-  for (const inv of finSnapshot.Inventory) {
-    current += inv[1];
-  }
+  current += Object.values(snapshot.locations)
+    .map(x => x.current)
+    .reduce((a, b) => a + b, 0);
 
   const liabilities = contractLiability;
-  finSnapshot.Totals.Fixed = fixed;
-  finSnapshot.Totals.Current = current;
-  finSnapshot.Totals.Liquid = liquid;
-  finSnapshot.Totals.Liabilities = liabilities;
-  return finSnapshot;
+  snapshot.Totals.Fixed = fixed;
+  snapshot.Totals.Current = current;
+  snapshot.Totals.Liquid = liquid;
+  snapshot.Totals.Liabilities = liabilities;
+  return snapshot;
 }
 
 const invalidContractStatus = ['FULFILLED', 'BREACHED', 'TERMINATED', 'CANCELLED', 'REJECTED'];

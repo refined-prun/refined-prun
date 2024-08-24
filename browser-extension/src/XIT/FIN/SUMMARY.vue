@@ -21,34 +21,6 @@ const figures = computed(() => {
     { name: 'Liabilities', value: formatAmount(totals.Liabilities) },
   ];
 });
-
-interface InventoryEntry {
-  name: string;
-  fixed: number;
-  current: number;
-  total: number;
-}
-
-const entries = computed<InventoryEntry[]>(() => {
-  const buildings = finResult.value.Buildings;
-  const inventory = finResult.value.Inventory;
-  const locations = new Set<string>([...buildings.map(x => x[0]), ...inventory.map(x => x[0])]);
-  const entries: InventoryEntry[] = [];
-  for (const name of locations) {
-    const fixed = buildings.find(x => x[0] === name)?.[1] ?? 0;
-    const current = inventory.find(x => x[0] === name)?.[1] ?? 0;
-    const total = fixed + current;
-    entries.push({
-      name,
-      fixed,
-      current,
-      total,
-    });
-  }
-
-  entries.sort((a, b) => b.total - a.total);
-  return entries;
-});
 </script>
 
 <template>
@@ -66,11 +38,11 @@ const entries = computed<InventoryEntry[]>(() => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="entry in entries" :key="entry.name">
-          <td>{{ entry.name }}</td>
-          <td>{{ formatNumber(entry.fixed) }}</td>
-          <td>{{ formatNumber(entry.current) }}</td>
-          <td>{{ formatNumber(entry.total) }}</td>
+        <tr v-for="location in finResult.locations" :key="location.name">
+          <td>{{ location.name }}</td>
+          <td>{{ formatNumber(location.fixed) }}</td>
+          <td>{{ formatNumber(location.current) }}</td>
+          <td>{{ formatNumber(location.total) }}</td>
         </tr>
       </tbody>
     </table>

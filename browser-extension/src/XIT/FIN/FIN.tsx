@@ -322,31 +322,6 @@ function chooseScreen(tile, parameters, pmmgSettings, finObj) {
     return;
   }
 
-  const locations = {}; // Extract info on locations and their total value
-  for (const inv of finResult.Buildings) {
-    if (locations[inv[0]]) {
-      locations[inv[0]][0] += inv[1];
-      locations[inv[0]][2] += inv[1];
-    } else {
-      locations[inv[0]] = [inv[1], 0, inv[1]];
-    }
-  }
-
-  for (const inv of finResult.Inventory) {
-    if (locations[inv[0]]) {
-      locations[inv[0]][1] += inv[1];
-      locations[inv[0]][2] += inv[1];
-    } else {
-      locations[inv[0]] = [0, inv[1], inv[1]];
-    }
-  }
-
-  const locationsArray = [] as any[]; // Rework into common array different screens use
-  for (const inv of Object.keys(locations)) {
-    locationsArray.push([inv, locations[inv][0], locations[inv][1], locations[inv][2]]);
-  }
-  locationsArray.sort(financialSort);
-
   if (
     !parameters[1] ||
     parameters[1].toLowerCase() == 'summary' ||
@@ -365,7 +340,7 @@ function chooseScreen(tile, parameters, pmmgSettings, finObj) {
       } else if (type === 'assetpie') {
         appendAssetPie(graphDiv, finResult);
       } else if (type === 'locationspie') {
-        appendLocationsPie(graphDiv, locationsArray);
+        appendLocationsPie(graphDiv, finResult);
       } else {
         graphDiv.appendChild(createTextSpan('Error! Not a valid graph type!'));
         return;
@@ -408,7 +383,7 @@ function chooseScreen(tile, parameters, pmmgSettings, finObj) {
     //   showBuffer('XIT FIN_CHART_ASSETPIE');
     // });
 
-    appendLocationsPie(pieDiv, locationsArray);
+    appendLocationsPie(pieDiv, finResult);
     // locPieCanvas.style.cursor = 'pointer';
     // locPieCanvas.addEventListener('click', () => {
     //   showBuffer('XIT FIN_CHART_LOCATIONSPIE');
@@ -445,16 +420,10 @@ function appendAssetPie(container: Element, finResult: FinancialSnapshot) {
   });
 }
 
-function appendLocationsPie(container: Element, locationsArray) {
-  const locationNames = [] as any[];
-  const locationValue = [] as any[];
-  for (const location of locationsArray) {
-    locationNames.push(location[0]);
-    locationValue.push(location[1] + location[2] + location[3]);
-  }
+function appendLocationsPie(container: Element, snapshot: FinancialSnapshot) {
   widgetAppend(container, PieChart, {
-    labelData: locationNames,
-    numericalData: locationValue,
+    labelData: snapshot.locations.map(x => x.name),
+    numericalData: snapshot.locations.map(x => x.total),
   });
 }
 
