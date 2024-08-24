@@ -8,6 +8,8 @@ import xit from '@src/XIT/xit-registry';
 import { createApp } from 'vue';
 import XITContainer from '@src/XIT/XITContainer.vue';
 import LegacyXITAdapter from '@src/XIT/LegacyXITAdapter.vue';
+import { widgetAfter } from '@src/utils/vue-mount';
+import ContextControls from '@src/components/ContextControls.vue';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let xitArgs: any;
@@ -65,6 +67,14 @@ async function onBufferCreated(buffer: PrunBuffer) {
   _$(PrunCss.TileFrame.title, frame)!.textContent =
     typeof xitCommand.name === 'string' ? xitCommand.name : xitCommand.name(parameters);
 
+  if (xitCommand.contextItems) {
+    const items = xitCommand.contextItems(parameters);
+    if (items.length > 0) {
+      const header = _$(PrunCss.TileFrame.header, frame)!;
+      widgetAfter(header, ContextControls, { items });
+    }
+  }
+
   if (xitCommand.module) {
     // eslint-disable-next-line vue/one-component-per-file
     createApp(LegacyXITAdapter, {
@@ -80,9 +90,6 @@ async function onBufferCreated(buffer: PrunBuffer) {
       parameters: parameters,
     }).mount(container);
   }
-
-  //const vNode = xitCommand.component(parameters);
-  //render(vNode, appendRootFragment(container, 'div'));
 }
 
 export function init() {

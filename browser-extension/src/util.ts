@@ -30,32 +30,6 @@ export const dateYearFormatter = new Intl.DateTimeFormat(undefined, {
   year: 'numeric',
 });
 
-export function createContextButton(buttonAbbreviation, buttonLabel, buttonLink) {
-  const contextButton = document.createElement('div');
-  contextButton.classList.add(...Style.ContextButton);
-
-  const contextSpan1 = document.createElement('span');
-  const contextSpan2 = createTextSpan(buttonAbbreviation);
-
-  contextSpan2.classList.add(...Style.ContextCommand);
-
-  contextSpan1.appendChild(contextSpan2);
-  contextButton.appendChild(contextSpan1);
-
-  const contextLabel = createTextSpan(`: ${buttonLabel}`);
-  contextLabel.classList.add(...Style.ContextLabel);
-
-  contextButton.appendChild(contextLabel);
-
-  const link = buttonLink;
-
-  contextButton.addEventListener('click', () => {
-    showBuffer(link);
-  });
-
-  return contextButton;
-}
-
 // Download a file containing fileData with fileName
 export function downloadFile(fileData, fileName, isJSON: boolean = true) {
   const blob = new Blob([isJSON ? JSON.stringify(fileData) : fileData], { type: 'text/plain' });

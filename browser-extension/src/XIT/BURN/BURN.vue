@@ -1,12 +1,18 @@
 <script lang="ts">
 import xit from '@src/XIT/xit-registry';
 import BURN from '@src/XIT/BURN/BURN.vue';
+import { sitesStore } from '@src/prun-api/data/sites';
+import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 
 xit.add({
   command: 'BURN',
   name: parameters => {
     if (parameters[1] && !parameters[2]) {
-      return `ENHANCED BURN - ${parameters[1].toUpperCase()}`;
+      const site = sitesStore.getByPlanetNaturalIdOrName(parameters[1]);
+      if (site) {
+        const name = getPlanetNameFromAddress(site.address);
+        return `ENHANCED BURN - ${name}`;
+      }
     }
 
     return 'ENHANCED BURN';
@@ -23,7 +29,6 @@ import { _$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/prun-ui/prun-css';
 import { settings } from '@src/store/settings';
 import { computed } from 'vue';
-import { sitesStore } from '@src/prun-api/data/sites';
 import { getPlanetBurn, PlanetBurn } from '@src/burn';
 import { comparePlanets } from '@src/util';
 import BurnSection from '@src/XIT/BURN/BurnSection.vue';

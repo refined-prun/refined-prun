@@ -326,20 +326,24 @@ const PricingSchemes = {
 xit.add({
   command: ['FIN'],
   name: 'Financial overview',
+  contextItems: () => [{ cmd: 'XIT FINPR' }, { cmd: 'XIT FINCH' }, { cmd: 'XIT FINSET' }],
   component: () => FIN,
 });
 xit.add({
   command: ['FINCH'],
   name: 'Financial Charts',
+  contextItems: () => [{ cmd: 'XIT FIN' }, { cmd: 'XIT FINPR' }, { cmd: 'XIT FINSET' }],
   component: () => FINCH,
 });
 xit.add({
   command: ['FINPR'],
   name: 'Profitability Report',
+  contextItems: () => [{ cmd: 'XIT FIN' }, { cmd: 'XIT FINCH' }, { cmd: 'XIT FINSET' }],
   component: () => FINPR,
 });
 xit.add({
   command: ['FINSET'],
   name: 'Financial Settings',
+  contextItems: () => [{ cmd: 'XIT FIN' }, { cmd: 'XIT FINCH' }, { cmd: 'XIT FINPR' }],
   module: Finances,
 });

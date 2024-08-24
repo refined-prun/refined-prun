@@ -5,10 +5,16 @@ export interface XITModule {
   create_buffer();
 }
 
+interface ContextItem {
+  cmd: string;
+  label?: string;
+}
+
 interface CommandDescriptor {
   command: Arrayable<string>;
   name: string | ((parameters: string[]) => string);
   component?: (parameters: string[]) => Component;
+  contextItems?: (parameters: string[]) => ContextItem[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   module?: new (...args: any[]) => XITModule;
 }
