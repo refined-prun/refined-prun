@@ -14,7 +14,6 @@ import {
 import { Style, TextColors } from '../Style';
 import { NonProductionBuildings } from '../GameProperties';
 import xit from './xit-registry';
-import features from '@src/feature-registry';
 import { getBuildingLastRepair, sitesStore } from '@src/prun-api/data/sites';
 import { workforcesStore } from '@src/prun-api/data/workforces';
 import { productionStore } from '@src/prun-api/data/production';
@@ -898,15 +897,8 @@ function checkSort(a, b) {
   return a.checkInfo.created > b.checkInfo.created ? 1 : -1;
 }
 
-function init() {
-  xit.add({
-    command: ['CHECK', 'CHECKLIST', 'CHECKLISTS'],
-    name: 'CHECKLIST',
-    module: Checklists,
-  });
-}
-
-features.add({
-  id: 'xit-check',
-  init,
+xit.add({
+  command: ['CHECK', 'CHECKLIST', 'CHECKLISTS'],
+  name: 'CHECKLIST',
+  module: Checklists,
 });

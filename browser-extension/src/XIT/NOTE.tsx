@@ -10,7 +10,6 @@ import {
 } from '../util';
 import { Style } from '../Style';
 import xit from './xit-registry';
-import features from '@src/feature-registry';
 
 class Notes {
   private tile: HTMLDivElement;
@@ -285,15 +284,8 @@ function renderNoteText(note: NoteStructure, noteText: string): void {
   });
 }
 
-function init() {
-  xit.add({
-    command: ['NOTE', 'NOTES'],
-    name: 'NOTE',
-    module: Notes,
-  });
-}
-
-features.add({
-  id: 'xit-note',
-  init,
+xit.add({
+  command: ['NOTE', 'NOTES'],
+  name: 'NOTE',
+  module: Notes,
 });

@@ -1,19 +1,11 @@
 <script lang="ts">
 import xit from '@src/XIT/xit-registry';
-import features from '@src/feature-registry';
 import CXTS from '@src/XIT/CXTS/CXTS.vue';
 
-function init() {
-  xit.add({
-    command: ['CXTS'],
-    name: 'COMMODITY EXCHANGE TRADES',
-    vueComponent: CXTS,
-  });
-}
-
-features.add({
-  id: 'xit-cxts',
-  init,
+xit.add({
+  command: ['CXTS'],
+  name: 'COMMODITY EXCHANGE TRADES',
+  component: () => CXTS,
 });
 
 export default {};

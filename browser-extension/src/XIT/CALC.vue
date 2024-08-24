@@ -1,19 +1,11 @@
 <script lang="ts">
 import xit from './xit-registry';
-import features from '@src/feature-registry';
 import CALC from '@src/XIT/CALC.vue';
 
-function init() {
-  xit.add({
-    command: ['CALC', 'CALCULATOR'],
-    name: 'CALCULATOR',
-    vueComponent: CALC,
-  });
-}
-
-features.add({
-  id: 'xit-calc',
-  init,
+xit.add({
+  command: ['CALC', 'CALCULATOR'],
+  name: 'CALCULATOR',
+  component: () => CALC,
 });
 
 export default {};

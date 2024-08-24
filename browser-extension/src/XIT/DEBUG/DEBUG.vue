@@ -1,19 +1,11 @@
 <script lang="ts">
 import xit from '@src/XIT/xit-registry.js';
-import features from '@src/feature-registry.js';
 import DEBUG from '@src/XIT/DEBUG/DEBUG.vue';
 
-function init() {
-  xit.add({
-    command: 'DEBUG',
-    name: 'DEBUG',
-    vueComponent: DEBUG,
-  });
-}
-
-features.add({
-  id: 'xit-debug',
-  init,
+xit.add({
+  command: 'DEBUG',
+  name: 'DEBUG',
+  component: () => DEBUG,
 });
 
 export default {};

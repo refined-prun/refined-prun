@@ -55,14 +55,14 @@ function prunAtob(input: string) {
   }
   return atob(base64);
 }
+xit.add({
+  command: 'WEB',
+  name: 'WEB PAGE',
+  component: () => WEB,
+});
 
 function init() {
   observeReadyElementsByClassName(PrunCss.Tile.selector, onSelectorReady);
-  xit.add({
-    command: 'WEB',
-    name: 'WEB PAGE',
-    component: parameters => <WEB parameters={parameters} />,
-  });
 }
 
 features.add({
@@ -70,60 +70,39 @@ features.add({
   init,
 });
 
-function initPrun() {
-  xit.add({
-    command: 'PRUN',
-    name: 'PRUN-CEPTION',
-    component: () => <WEB parameters={['', 'https://apex.prosperousuniverse.com/#/']} />,
-  });
-}
-
-features.add({
-  id: 'xit-prun',
-  init: initPrun,
+xit.add({
+  command: 'PRUN',
+  name: 'PRUN-CEPTION',
+  component: () => <WEB parameters={['', 'https://apex.prosperousuniverse.com/#/']} />,
 });
 
-function initProsperity() {
-  xit.add({
-    command: 'PROSPERITY',
-    name: 'PROSPERITY',
-    component: parameters => {
-      let url = 'https://prosperity-prun.netlify.app/';
-      if (parameters.length == 3) {
-        url += `?from=${parameters[1]}&to=${parameters[2]}`;
-      }
-      return <WEB parameters={['', url]} />;
-    },
-  });
-}
-
-features.add({
-  id: 'xit-prosperity',
-  init: initProsperity,
+xit.add({
+  command: 'PROSPERITY',
+  name: 'PROSPERITY',
+  component: parameters => {
+    let url = 'https://prosperity-prun.netlify.app/';
+    if (parameters.length == 3) {
+      url += `?from=${parameters[1]}&to=${parameters[2]}`;
+    }
+    return <WEB parameters={['', url]} />;
+  },
 });
 
-function initSheets() {
-  xit.add({
-    command: ['SHEET', 'SHEETS'],
-    name: 'GOOGLE SHEETS',
-    component: parameters => {
-      if (parameters.length < 2) {
-        return <div>Error! Not Enough Parameters!</div>;
-      }
-      let url = parameters[1];
-      for (let i = 2; i < parameters.length; i++) {
-        url += `_${parameters[i]}`;
-      }
-      return (
-        <WEB parameters={['', `https://docs.google.com/spreadsheets/d/${url}/edit?usp=sharing`]} />
-      );
-    },
-  });
-}
-
-features.add({
-  id: 'xit-sheet',
-  init: initSheets,
+xit.add({
+  command: ['SHEET', 'SHEETS'],
+  name: 'GOOGLE SHEETS',
+  component: parameters => {
+    if (parameters.length < 2) {
+      return <div>Error! Not Enough Parameters!</div>;
+    }
+    let url = parameters[1];
+    for (let i = 2; i < parameters.length; i++) {
+      url += `_${parameters[i]}`;
+    }
+    return (
+      <WEB parameters={['', `https://docs.google.com/spreadsheets/d/${url}/edit?usp=sharing`]} />
+    );
+  },
 });
 
 /* // All Discord server stuff is broken. Changes to widgetbot? Not many people seem to use it so I'll remove it for the time being.
@@ -174,53 +153,32 @@ export function Discord_pre(tile, parameters)
 */
 
 // Wiki iframe not working right now. Refuses to connect
-function initWiki() {
-  xit.add({
-    command: 'WIKI',
-    name: 'PRUN WIKI',
-    component: parameters => {
-      const url =
-        parameters[1] && parameters[1].toLowerCase() == 'resources'
-          ? 'https://handbook.apex.prosperousuniverse.com/wiki/community-resources/index.html'
-          : 'https://handbook.apex.prosperousuniverse.com/wiki/index.html';
-      return <WEB parameters={['', url]} />;
-    },
-  });
-}
-
-features.add({
-  id: 'xit-wiki',
-  init: initWiki,
+xit.add({
+  command: 'WIKI',
+  name: 'PRUN WIKI',
+  component: parameters => {
+    const url =
+      parameters[1] && parameters[1].toLowerCase() == 'resources'
+        ? 'https://handbook.apex.prosperousuniverse.com/wiki/community-resources/index.html'
+        : 'https://handbook.apex.prosperousuniverse.com/wiki/index.html';
+    return <WEB parameters={['', url]} />;
+  },
 });
 
-function initPlanner() {
-  xit.add({
-    command: ['PLANNER', 'PLAN', 'PRUNPLANNER'],
-    name: 'PRUN PLANNER',
-    component: parameters => {
-      let url = 'https://prunplanner.org';
-      for (let i = 1; i < parameters.length; i++) {
-        url += `/${parameters[i]}`;
-      }
-      return <WEB parameters={['', url]} />;
-    },
-  });
-}
-
-features.add({
-  id: 'xit-planner',
-  init: initPlanner,
+xit.add({
+  command: ['PLANNER', 'PLAN', 'PRUNPLANNER'],
+  name: 'PRUN PLANNER',
+  component: parameters => {
+    let url = 'https://prunplanner.org';
+    for (let i = 1; i < parameters.length; i++) {
+      url += `/${parameters[i]}`;
+    }
+    return <WEB parameters={['', url]} />;
+  },
 });
 
-function initMap() {
-  xit.add({
-    command: 'MAP',
-    name: "Taiyi's Map",
-    component: () => <WEB parameters={['', 'https://universemap.duckdns.org/']} />,
-  });
-}
-
-features.add({
-  id: 'xit-map',
-  init: initMap,
+xit.add({
+  command: 'MAP',
+  name: "Taiyi's Map",
+  component: () => <WEB parameters={['', 'https://universemap.duckdns.org/']} />,
 });

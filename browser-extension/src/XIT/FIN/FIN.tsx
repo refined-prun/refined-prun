@@ -16,7 +16,6 @@ import system from '@src/system';
 import xit from '../xit-registry';
 import { cxStore } from '@src/fio/cx';
 import { recordFinancials, interpretCX, calculateFinancials, finHistory } from '@src/financials';
-import features from '@src/feature-registry';
 import FIN from './FIN.vue';
 import FINCH from './FINCH.vue';
 import FINPR from './FINPR.vue';
@@ -324,30 +323,23 @@ const PricingSchemes = {
   'NC2 BID': 17,
 };
 
-function init() {
-  xit.add({
-    command: ['FIN'],
-    name: 'Financial overview',
-    vueComponent: FIN,
-  });
-  xit.add({
-    command: ['FINCH'],
-    name: 'Financial Charts',
-    vueComponent: FINCH,
-  });
-  xit.add({
-    command: ['FINPR'],
-    name: 'Profitability Report',
-    vueComponent: FINPR,
-  });
-  xit.add({
-    command: ['FINSET'],
-    name: 'Financial Settings',
-    module: Finances,
-  });
-}
-
-features.add({
-  id: 'xit-fin',
-  init,
+xit.add({
+  command: ['FIN'],
+  name: 'Financial overview',
+  component: () => FIN,
+});
+xit.add({
+  command: ['FINCH'],
+  name: 'Financial Charts',
+  component: () => FINCH,
+});
+xit.add({
+  command: ['FINPR'],
+  name: 'Profitability Report',
+  component: () => FINPR,
+});
+xit.add({
+  command: ['FINSET'],
+  name: 'Financial Settings',
+  module: Finances,
 });

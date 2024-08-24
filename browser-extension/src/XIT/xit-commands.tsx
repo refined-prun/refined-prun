@@ -73,10 +73,10 @@ async function onBufferCreated(buffer: PrunBuffer) {
         return new xitCommand.module!(container, parameters, args.pmmgSettings, args.modules);
       },
     }).mount(container);
-  } else {
+  } else if (xitCommand.component) {
     // eslint-disable-next-line vue/one-component-per-file
     createApp(XITContainer, {
-      buffer: xitCommand.vueComponent,
+      buffer: xitCommand.component(parameters),
       parameters: parameters,
     }).mount(container);
   }

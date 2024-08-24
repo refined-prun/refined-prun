@@ -1,25 +1,17 @@
 <script lang="ts">
 import xit from '@src/XIT/xit-registry';
-import features from '@src/feature-registry';
 import BURN from '@src/XIT/BURN/BURN.vue';
 
-function init() {
-  xit.add({
-    command: 'BURN',
-    name: parameters => {
-      if (parameters[1] && !parameters[2]) {
-        return `ENHANCED BURN - ${parameters[1].toUpperCase()}`;
-      }
+xit.add({
+  command: 'BURN',
+  name: parameters => {
+    if (parameters[1] && !parameters[2]) {
+      return `ENHANCED BURN - ${parameters[1].toUpperCase()}`;
+    }
 
-      return 'ENHANCED BURN';
-    },
-    vueComponent: BURN,
-  });
-}
-
-features.add({
-  id: 'xit-burn',
-  init,
+    return 'ENHANCED BURN';
+  },
+  component: () => BURN,
 });
 
 export default {};

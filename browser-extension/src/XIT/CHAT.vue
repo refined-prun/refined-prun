@@ -1,19 +1,11 @@
 <script lang="ts">
 import xit from '@src/XIT/xit-registry';
-import features from '@src/feature-registry';
 import CHAT from '@src/XIT/CHAT.vue';
 
-function init() {
-  xit.add({
-    command: 'CHAT',
-    name: 'FIO CHAT',
-    vueComponent: CHAT,
-  });
-}
-
-features.add({
-  id: 'xit-chat',
-  init,
+xit.add({
+  command: 'CHAT',
+  name: 'FIO CHAT',
+  component: () => CHAT,
 });
 
 export default {};

@@ -1,7 +1,6 @@
 import { createTextSpan, clearChildren, createLink } from '../util';
 import { Style } from '../Style';
 import xit from './xit-registry';
-import features from '@src/feature-registry';
 
 class Help {
   private tile: HTMLElement;
@@ -386,15 +385,8 @@ function createTextDiv(contentText) {
   return textDiv;
 }
 
-function init() {
-  xit.add({
-    command: 'HELP',
-    name: 'HELP',
-    module: Help,
-  });
-}
-
-features.add({
-  id: 'xit-help',
-  init,
+xit.add({
+  command: 'HELP',
+  name: 'HELP',
+  module: Help,
 });

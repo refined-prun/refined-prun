@@ -20,7 +20,6 @@ import { Style } from '../Style';
 import { Selector } from '../Selector';
 import { ExchangeTickersReverse, NonProductionBuildings } from '../GameProperties';
 import xit from './xit-registry';
-import features from '@src/feature-registry';
 import { cxobStore } from '@src/prun-api/data/cxob';
 import { workforcesStore } from '@src/prun-api/data/workforces';
 import { productionStore } from '@src/prun-api/data/production';
@@ -1988,23 +1987,16 @@ function generatePrettyName(action) {
   return name;
 }
 
-function init() {
-  xit.add({
-    command: ['ACT', 'ACTION'],
-    name: parameters => {
-      if (parameters.length === 0) {
-        return 'ACTION PACKAGES';
-      }
-      if (parameters[1].toUpperCase() == 'GEN') {
-        return 'GENERATE ACTION PACKAGE';
-      }
-      return 'EXECUTE ACTION PACKAGE';
-    },
-    module: Execute,
-  });
-}
-
-features.add({
-  id: 'xit-act',
-  init,
+xit.add({
+  command: ['ACT', 'ACTION'],
+  name: parameters => {
+    if (parameters.length === 0) {
+      return 'ACTION PACKAGES';
+    }
+    if (parameters[1].toUpperCase() == 'GEN') {
+      return 'GENERATE ACTION PACKAGE';
+    }
+    return 'EXECUTE ACTION PACKAGE';
+  },
+  module: Execute,
 });

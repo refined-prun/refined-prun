@@ -1,19 +1,11 @@
 <script lang="ts">
 import xit from '@src/XIT/xit-registry';
-import features from '@src/feature-registry';
 import START from '@src/XIT/START.vue';
 
-function init() {
-  xit.add({
-    command: 'START',
-    name: 'PMMG INTRODUCTION',
-    vueComponent: START,
-  });
-}
-
-features.add({
-  id: 'xit-start',
-  init,
+xit.add({
+  command: 'START',
+  name: 'PMMG INTRODUCTION',
+  component: () => START,
 });
 
 export default {};

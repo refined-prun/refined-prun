@@ -6,7 +6,6 @@ import {
   XITWebRequest,
 } from '../util';
 import xit from './xit-registry';
-import features from '@src/feature-registry';
 
 class FIOInventory {
   private tile: HTMLElement;
@@ -252,15 +251,8 @@ function fioMatsAlphabetSort(itemA: any, itemB: any) {
   return tickerA === tickerB ? 0 : 0;
 }
 
-function init() {
-  xit.add({
-    command: 'INV',
-    name: 'FIO INVENTORY',
-    module: FIOInventory,
-  });
-}
-
-features.add({
-  id: 'xit-inv',
-  init,
+xit.add({
+  command: 'INV',
+  name: 'FIO INVENTORY',
+  module: FIOInventory,
 });

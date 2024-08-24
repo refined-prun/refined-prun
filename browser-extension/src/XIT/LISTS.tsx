@@ -13,7 +13,6 @@ import {
 } from '../util';
 import { Style } from '../Style';
 import xit from './xit-registry';
-import features from '@src/feature-registry';
 
 class CommandLists {
   private tile: HTMLElement;
@@ -349,15 +348,8 @@ function createEditInterface(tile, result, parameters, settings: any[] = [], lis
   return;
 }
 
-function init() {
-  xit.add({
-    command: ['LIST', 'LISTS'],
-    name: 'COMMAND LIST',
-    module: CommandLists,
-  });
-}
-
-features.add({
-  id: 'xit-list',
-  init,
+xit.add({
+  command: ['LIST', 'LISTS'],
+  name: 'COMMAND LIST',
+  module: CommandLists,
 });

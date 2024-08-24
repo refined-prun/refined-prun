@@ -1,19 +1,11 @@
 <script lang="ts">
 import xit from '@src/XIT/xit-registry';
-import features from '@src/feature-registry';
 import CONTS from '@src/XIT/CONTS/CONTS.vue';
 
-function init() {
-  xit.add({
-    command: ['CONTS', 'CONTRACTS'],
-    name: 'ACTIVE CONTRACTS',
-    vueComponent: CONTS,
-  });
-}
-
-features.add({
-  id: 'xit-conts',
-  init,
+xit.add({
+  command: ['CONTS', 'CONTRACTS'],
+  name: 'ACTIVE CONTRACTS',
+  component: () => CONTS,
 });
 
 export default {};

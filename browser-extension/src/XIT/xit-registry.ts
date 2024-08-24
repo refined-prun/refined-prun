@@ -8,7 +8,7 @@ export interface XITModule {
 interface CommandDescriptor {
   command: Arrayable<string>;
   name: string | ((parameters: string[]) => string);
-  vueComponent?: Component;
+  component?: (parameters: string[]) => Component;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   module?: new (...args: any[]) => XITModule;
 }

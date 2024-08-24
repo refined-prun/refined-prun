@@ -11,7 +11,6 @@ import {
 } from '../util';
 import { Style } from '../Style';
 import xit from './xit-registry';
-import features from '@src/feature-registry';
 
 class Sort {
   private tile: HTMLElement;
@@ -348,15 +347,8 @@ function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: a
   greyStripes.appendChild(makePopupSpacer(tile, overlapDiv));
 }
 
-function init() {
-  xit.add({
-    command: 'SORT',
-    name: 'SORTING OPTIONS',
-    module: Sort,
-  });
-}
-
-features.add({
-  id: 'xit-sort',
-  init,
+xit.add({
+  command: 'SORT',
+  name: 'SORTING OPTIONS',
+  module: Sort,
 });

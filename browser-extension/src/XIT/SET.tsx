@@ -10,7 +10,6 @@ import {
 } from '../util';
 import { Style, WithStyles } from '../Style';
 import xit from './xit-registry';
-import features from '@src/feature-registry';
 
 class Settings {
   private tile: HTMLElement;
@@ -758,15 +757,8 @@ function makeToggleButton(on: string, off: string, f: () => void, state: boolean
   return toggle;
 }
 
-function init() {
-  xit.add({
-    command: ['SET', 'SETTINGS'],
-    name: 'RPRUN SETTINGS',
-    module: Settings,
-  });
-}
-
-features.add({
-  id: 'xit-set',
-  init,
+xit.add({
+  command: ['SET', 'SETTINGS'],
+  name: 'RPRUN SETTINGS',
+  module: Settings,
 });

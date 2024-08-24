@@ -1,19 +1,11 @@
 <script lang="ts">
 import xit from '@src/XIT/xit-registry';
-import features from '@src/feature-registry';
 import HEALTH from '@src/XIT/HEALTH.vue';
 
-function init() {
-  xit.add({
-    command: 'HEALTH',
-    name: 'DATA HEALTH',
-    vueComponent: HEALTH,
-  });
-}
-
-features.add({
-  id: 'xit-health',
-  init,
+xit.add({
+  command: 'HEALTH',
+  name: 'DATA HEALTH',
+  component: () => HEALTH,
 });
 
 export default {};

@@ -1,7 +1,6 @@
 import { clearChildren, createTextSpan, setSettings } from '../util';
 import { NonProductionBuildings } from '../GameProperties';
 import xit from './xit-registry';
-import features from '@src/feature-registry';
 import { shipsStore } from '@src/prun-api/data/ships';
 import { sitesStore } from '@src/prun-api/data/sites';
 import {
@@ -482,15 +481,8 @@ function buildingSort(a, b) {
   return a[1]['condition'] > b[1]['condition'] ? 1 : -1;
 }
 
-function init() {
-  xit.add({
-    command: 'REPAIRS',
-    name: 'REPAIRS',
-    module: Repairs,
-  });
-}
-
-features.add({
-  id: 'xit-repairs',
-  init,
+xit.add({
+  command: 'REPAIRS',
+  name: 'REPAIRS',
+  module: Repairs,
 });
