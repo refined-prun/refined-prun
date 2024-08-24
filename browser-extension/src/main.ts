@@ -72,7 +72,7 @@ async function mainRun() {
     Date.now() - result['PMMGExtended']['last_fin_recording'] > 64800000
   ) {
     // 72000000
-    window.setTimeout(() => recordFinancials(result), 1000);
+    window.setTimeout(() => recordFinancials(result), 5000);
   }
   const modules = [
     new OrderETAs(),
