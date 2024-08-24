@@ -10,6 +10,7 @@ import { formatAmount, formatNumber } from '@src/XIT/FIN/utils';
 import KeyFigures from '@src/XIT/FIN/KeyFigures.vue';
 import { cxStore } from '@src/fio/cx';
 import PrunCss from '@src/prun-ui/prun-css';
+import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 
 interface ProductionEntry {
   name: string;
@@ -71,7 +72,7 @@ const entries = computed<ProductionEntry[]>(() => {
     }
 
     const profit = produced - consumed;
-    const margin = profit / consumed;
+    const margin = consumed !== 0 ? profit / consumed : 0;
     entries.push({
       name: getPlanetNameFromAddress(site.address)!,
       produced,
@@ -110,29 +111,32 @@ function profitClass(value: number) {
 </script>
 
 <template>
-  <FinHeader>Production Overview</FinHeader>
-  <KeyFigures :figures="figures" />
-  <FinHeader>Breakdown by Planet</FinHeader>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Produced</th>
-        <th>Consumed</th>
-        <th>Profit</th>
-        <th>Margin</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="entry in entries" :key="entry.name">
-        <td>{{ entry.name }}</td>
-        <td>{{ formatNumber(entry.produced) }}</td>
-        <td>{{ formatNumber(entry.consumed) }}</td>
-        <td>{{ formatNumber(entry.profit) }}</td>
-        <td :class="profitClass(entry.margin)">{{ formatPercents(entry.margin) }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <LoadingSpinner v-if="!cxStore.prices" />
+  <div v-else>
+    <FinHeader>Production Overview</FinHeader>
+    <KeyFigures :figures="figures" />
+    <FinHeader>Breakdown by Planet</FinHeader>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Produced</th>
+          <th>Consumed</th>
+          <th>Profit</th>
+          <th>Margin</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="entry in entries" :key="entry.name">
+          <td>{{ entry.name }}</td>
+          <td>{{ formatNumber(entry.produced) }}</td>
+          <td>{{ formatNumber(entry.consumed) }}</td>
+          <td>{{ formatNumber(entry.profit) }}</td>
+          <td :class="profitClass(entry.margin)">{{ formatPercents(entry.margin) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <style scoped>

@@ -4,6 +4,8 @@ import { calculateFinancials } from '@src/financials';
 import KeyFigures from '@src/XIT/FIN/KeyFigures.vue';
 import FinHeader from '@src/XIT/FIN/FinHeader.vue';
 import { formatAmount, formatNumber } from '@src/XIT/FIN/utils';
+import LoadingSpinner from '@src/components/LoadingSpinner.vue';
+import { cxStore } from '@src/fio/cx';
 
 const finResult = computed(() => calculateFinancials());
 const equity = computed(() => {
@@ -24,7 +26,8 @@ const figures = computed(() => {
 </script>
 
 <template>
-  <div>
+  <LoadingSpinner v-if="!cxStore.prices" />
+  <div v-else>
     <FinHeader>Key Figures</FinHeader>
     <KeyFigures :figures="figures" />
     <FinHeader>Inventory Breakdown</FinHeader>
