@@ -1,5 +1,5 @@
 import { cxStore } from '@src/fio/cx';
-import { getLocalStorage, setSettings } from '@src/util';
+import { setSettings } from '@src/util';
 import { contractsStore } from '@src/prun-api/data/contracts';
 import { cxosStore } from '@src/prun-api/data/cxos';
 import { fxosStore } from '@src/prun-api/data/fxos';
@@ -8,6 +8,7 @@ import { storagesStore } from '@src/prun-api/data/storage';
 import { sitesStore } from '@src/prun-api/data/sites';
 import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 import { warehousesStore } from '@src/prun-api/data/warehouses';
+import system from '@src/system';
 
 export interface FinancialSnapshot {
   Currencies: [string, number][];
@@ -25,7 +26,32 @@ export interface FinancialSnapshot {
     Liquid: number;
     Liabilities: number;
   };
-  History: number[];
+}
+
+// History stored as [time, fixed, current, liquid, liabilities]
+export const finHistory: number[][] = [];
+
+const storageKey = 'PMMG-Finance';
+
+export async function loadFinHistory() {
+  const savedSettings = await system.storage.local.get(storageKey);
+  const savedHistory = savedSettings[storageKey]?.History ?? [];
+  finHistory.length = 0;
+  finHistory.push(...savedHistory);
+}
+
+async function saveFinHistory(snapshot: FinancialSnapshot) {
+  const savedSettings = await system.storage.local.get(storageKey);
+  finHistory.push([
+    Date.now(),
+    Math.round(snapshot.Totals.Fixed * 100) / 100,
+    Math.round(snapshot.Totals.Current * 100) / 100,
+    Math.round(snapshot.Totals.Liquid * 100) / 100,
+    Math.round(snapshot.Totals.Liabilities * 100) / 100,
+  ]);
+  savedSettings[storageKey] = snapshot;
+  savedSettings[storageKey].History = finHistory;
+  await system.storage.local.set(savedSettings);
 }
 
 // Actually recording and processing the financials once they are received through BackgroundRunner.
@@ -47,7 +73,7 @@ export function recordFinancials(result) {
   }
 
   const finSnapshot = calculateFinancials(cx, priceType);
-  getLocalStorage('PMMG-Finance', writeFinancials, finSnapshot);
+  void saveFinHistory(finSnapshot);
 }
 
 export function calculateFinancials(cx?: string, priceType?: string) {
@@ -71,7 +97,6 @@ export function calculateFinancials(cx?: string, priceType?: string) {
       Liquid: 0,
       Liabilities: 0,
     },
-    History: [0, 0, 0, 0, 0],
   };
 
   for (const currency of balancesStore.all.value) {
@@ -230,31 +255,11 @@ export function calculateFinancials(cx?: string, priceType?: string) {
   }
 
   const liabilities = contractLiability;
-  // History stored as [time, fixed, current, liquid, liabilities]
-  finSnapshot.History = [
-    Date.now(),
-    Math.round(fixed * 100) / 100,
-    Math.round(current * 100) / 100,
-    Math.round(liquid * 100) / 100,
-    Math.round(liabilities * 100) / 100,
-  ];
   finSnapshot.Totals.Fixed = fixed;
   finSnapshot.Totals.Current = current;
   finSnapshot.Totals.Liquid = liquid;
   finSnapshot.Totals.Liabilities = liabilities;
   return finSnapshot;
-}
-
-function writeFinancials(result, finSnapshot: FinancialSnapshot) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let history = [] as any[];
-  if (result['PMMG-Finance'] && result['PMMG-Finance']['History']) {
-    history = result['PMMG-Finance']['History'];
-  }
-  history.push(finSnapshot.History);
-  finSnapshot.History = history;
-  result['PMMG-Finance'] = finSnapshot;
-  setSettings(result);
 }
 
 const invalidContractStatus = ['FULFILLED', 'BREACHED', 'TERMINATED', 'CANCELLED', 'REJECTED'];

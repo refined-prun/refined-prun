@@ -8,13 +8,11 @@ import {
   createToolTip,
   dateYearFormatter,
   downloadFile,
-  getLocalStorage,
   hourFormatter,
   setSettings,
   showWarningDialog,
 } from '@src/util';
 import { Style } from '@src/Style';
-import { CurrencySymbols } from '@src/GameProperties';
 import system from '@src/system';
 import xit from '../xit-registry';
 import { cxStore } from '@src/fio/cx';
@@ -23,6 +21,7 @@ import {
   FinancialSnapshot,
   interpretCX,
   calculateFinancials,
+  finHistory,
 } from '@src/financials';
 import features from '@src/feature-registry';
 import { widgetAppend } from '@src/utils/vue-mount';
@@ -30,6 +29,7 @@ import EquityHistoryChart from './EquityHistoryChart.vue';
 import PieChart from './PieChart.vue';
 import SUMMARY from './SUMMARY.vue';
 import PROD from './PROD.vue';
+import { settings } from '@src/store/settings';
 
 class Finances {
   private tile: HTMLElement;
@@ -44,26 +44,13 @@ class Finances {
 
   create_buffer() {
     clearChildren(this.tile);
-    getLocalStorage('PMMG-Finance', chooseScreen, [
-      this.tile,
-      this.parameters,
-      this.pmmgSettings,
-      this,
-    ]);
+    chooseScreen(this.tile, this.parameters, this.pmmgSettings, this);
   }
 }
 
 // Draw the correct screen based on the parameters (should split out into multiple functions probably)
-function chooseScreen(finResult, params) {
+function chooseScreen(tile, parameters, pmmgSettings, finObj) {
   let i;
-  finResult = finResult['PMMG-Finance'] as FinancialSnapshot;
-  if (!params[0] || !params[1] || !params[2]) {
-    return;
-  }
-  const tile = params[0];
-  const parameters = params[1];
-  const pmmgSettings = params[2];
-  const finObj = params[3];
 
   // Determine the array of CX prices to use
   let CX = 'AI1';
@@ -73,30 +60,14 @@ function chooseScreen(finResult, params) {
   }
 
   if (!cxStore.prices || !cxStore.prices[CX]) {
+    setTimeout(() => chooseScreen(tile, parameters, pmmgSettings, finObj), 50);
     return;
   }
 
-  finResult = {
+  let finResult = {
     ...calculateFinancials(),
-    History: finResult.History,
+    History: finHistory,
   };
-  let currency = ''; // Determine currency symbol
-  switch (CX) {
-    case 'AI1':
-      currency = CurrencySymbols.AIC;
-      break;
-    case 'CI1':
-    case 'CI2':
-      currency = CurrencySymbols.CIS;
-      break;
-    case 'NC1':
-    case 'NC2':
-      currency = CurrencySymbols.NCC;
-      break;
-    case 'IC1':
-      currency = CurrencySymbols.ICA;
-      break;
-  }
 
   // Create settings screen
   if (
@@ -206,10 +177,7 @@ function chooseScreen(finResult, params) {
         }
         try {
           const fileOutput = JSON.parse(e.target.result as string);
-          finResult = {};
-          for (const key of Object.keys(fileOutput)) {
-            finResult[key] = fileOutput[key];
-          }
+          finResult = { ...fileOutput };
 
           setSettings({ 'PMMG-Finance': finResult });
           errorTextBox.style.display = 'none';
@@ -268,26 +236,23 @@ function chooseScreen(finResult, params) {
 
     const tbody = createTable(tile, ['Date', 'Equity', 'Delete']);
 
-    for (i = 0; i < finResult.History.length; i++) {
+    for (i = 0; i < finHistory.length; i++) {
+      const item = finHistory[i];
       const row = document.createElement('tr');
       tbody.appendChild(row);
 
       const dateColumn = document.createElement('td');
       dateColumn.appendChild(
         createTextSpan(
-          `${hourFormatter.format(new Date(finResult.History[i][0]))} on ${dateYearFormatter.format(
-            new Date(finResult.History[i][0]),
+          `${hourFormatter.format(new Date(item[0]))} on ${dateYearFormatter.format(
+            new Date(item[0]),
           )}`,
         ),
       );
       row.appendChild(dateColumn);
 
       const equityColumn = document.createElement('td');
-      const equity =
-        finResult.History[i][1] +
-        finResult.History[i][2] +
-        finResult.History[i][3] -
-        finResult.History[i][4];
+      const equity = item[1] + item[2] + item[3] - item[4];
       equityColumn.appendChild(
         createTextSpan(equity.toLocaleString(undefined, { maximumFractionDigits: 0 })),
       );
@@ -305,7 +270,7 @@ function chooseScreen(finResult, params) {
               () => {
                 // That's a lot of nested stuff...
 
-                finResult.History.splice(index, 1);
+                finHistory.splice(index, 1);
                 setSettings({ 'PMMG-Finance': finResult });
                 finObj.create_buffer();
               },
@@ -396,7 +361,7 @@ function chooseScreen(finResult, params) {
       tile.appendChild(graphDiv);
       const type = parameters[2].toLowerCase();
       if (type === 'history') {
-        appendLineChart(graphDiv, finResult, currency, false);
+        appendLineChart(graphDiv, false);
       } else if (type === 'assetpie') {
         appendAssetPie(graphDiv, finResult);
       } else if (type === 'locationspie') {
@@ -406,7 +371,7 @@ function chooseScreen(finResult, params) {
         return;
       }
     }
-    if (finResult.History.length == 0) {
+    if (finHistory.length == 0) {
       return;
     }
 
@@ -421,7 +386,7 @@ function chooseScreen(finResult, params) {
     historyDiv.style.marginTop = '10px';
     tile.appendChild(historyDiv);
 
-    appendLineChart(historyDiv, finResult, currency, true);
+    appendLineChart(historyDiv, true);
     // linePlot.style.cursor = 'pointer';
     // linePlot.addEventListener('click', () => {
     //   showBuffer('XIT FIN_CHART_HISTORY');
@@ -453,11 +418,11 @@ function chooseScreen(finResult, params) {
   }
 }
 
-function appendLineChart(container: Element, finResult, currency, maintainAspectRatio) {
+function appendLineChart(container: Element, maintainAspectRatio) {
   const dateData = [] as any[];
   const finData = [] as any[];
 
-  for (const entry of finResult.History) {
+  for (const entry of finHistory) {
     if (entry[1] + entry[2] + entry[3] - entry[4] == 0) {
       continue;
     }
@@ -468,16 +433,15 @@ function appendLineChart(container: Element, finResult, currency, maintainAspect
   widgetAppend(container, EquityHistoryChart, {
     xdata: dateData,
     ydata: finData,
-    yprefix: currency,
+    yprefix: settings.fin.currency,
     maintainAspectRatio,
   });
 }
 
-function appendAssetPie(container: Element, finResult) {
-  const latestReport = finResult.History[finResult.History.length - 1];
+function appendAssetPie(container: Element, finResult: FinancialSnapshot) {
   widgetAppend(container, PieChart, {
     labelData: ['Fixed', 'Current', 'Liquid'],
-    numericalData: [latestReport[1], latestReport[2], latestReport[3]],
+    numericalData: [finResult.Totals.Fixed, finResult.Totals.Current, finResult.Totals.Liquid],
   });
 }
 

@@ -14,7 +14,7 @@ import { applyXITParameters } from '@src/XIT/xit-commands';
 
 import './refined-prun.css';
 import { cxStore } from '@src/fio/cx';
-import { recordFinancials } from '@src/financials';
+import { loadFinHistory, recordFinancials } from '@src/financials';
 import { loadSettings } from '@src/store/settings';
 
 // The main function that initializes everything
@@ -32,7 +32,7 @@ async function mainRun() {
     throw e;
   }
 
-  await Promise.allSettled([loadGameData(), waitUntilPrunLoaded()]);
+  await Promise.allSettled([loadFinHistory(), loadGameData(), waitUntilPrunLoaded()]);
   loadPrunCss();
 
   // Detect what date it is for... no reason.
