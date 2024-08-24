@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   clearChildren,
   createSelectOption,
@@ -16,20 +15,15 @@ import { Style } from '@src/Style';
 import system from '@src/system';
 import xit from '../xit-registry';
 import { cxStore } from '@src/fio/cx';
-import {
-  recordFinancials,
-  FinancialSnapshot,
-  interpretCX,
-  calculateFinancials,
-  finHistory,
-} from '@src/financials';
+import { recordFinancials, interpretCX, calculateFinancials, finHistory } from '@src/financials';
 import features from '@src/feature-registry';
 import { widgetAppend } from '@src/utils/vue-mount';
-import EquityHistoryChart from './EquityHistoryChart.vue';
-import PieChart from './PieChart.vue';
 import SUMMARY from './SUMMARY.vue';
 import PROD from './PROD.vue';
-import { settings } from '@src/store/settings';
+import CHARTS from '@src/XIT/FIN/CHARTS.vue';
+import EquityHistoryChart from '@src/XIT/FIN/EquityHistoryChart.vue';
+import AssetPieChart from '@src/XIT/FIN/AssetPieChart.vue';
+import LocationsPieChart from '@src/XIT/FIN/LocationsPieChart.vue';
 
 class Finances {
   private tile: HTMLElement;
@@ -336,11 +330,11 @@ function chooseScreen(tile, parameters, pmmgSettings, finObj) {
       tile.appendChild(graphDiv);
       const type = parameters[2].toLowerCase();
       if (type === 'history') {
-        appendLineChart(graphDiv, false);
+        widgetAppend(graphDiv, EquityHistoryChart);
       } else if (type === 'assetpie') {
-        appendAssetPie(graphDiv, finResult);
+        widgetAppend(graphDiv, AssetPieChart);
       } else if (type === 'locationspie') {
-        appendLocationsPie(graphDiv, finResult);
+        widgetAppend(graphDiv, LocationsPieChart);
       } else {
         graphDiv.appendChild(createTextSpan('Error! Not a valid graph type!'));
         return;
@@ -350,81 +344,10 @@ function chooseScreen(tile, parameters, pmmgSettings, finObj) {
       return;
     }
 
-    const lineHeader = document.createElement('h3');
-    lineHeader.appendChild(document.createTextNode('Equity History'));
-    lineHeader.classList.add(...Style.SidebarSectionHead);
-    tile.appendChild(lineHeader);
-
-    // Line chart of historical financial data
-    const historyDiv = document.createElement('div');
-    historyDiv.style.margin = '5px';
-    historyDiv.style.marginTop = '10px';
-    tile.appendChild(historyDiv);
-
-    appendLineChart(historyDiv, true);
-    // linePlot.style.cursor = 'pointer';
-    // linePlot.addEventListener('click', () => {
-    //   showBuffer('XIT FIN_CHART_HISTORY');
-    // });
-
-    const pieHeader = document.createElement('h3');
-    pieHeader.appendChild(document.createTextNode('Asset Breakdown'));
-    pieHeader.classList.add(...Style.SidebarSectionHead);
-    tile.appendChild(pieHeader);
-
-    const pieDiv = document.createElement('div');
-    pieDiv.style.margin = '5px';
-    tile.appendChild(pieDiv);
-
-    appendAssetPie(pieDiv, finResult);
-    // pieCanvas.style.cursor = 'pointer';
-    // pieCanvas.style.marginRight = '-25px';
-    // pieCanvas.addEventListener('click', () => {
-    //   showBuffer('XIT FIN_CHART_ASSETPIE');
-    // });
-
-    appendLocationsPie(pieDiv, finResult);
-    // locPieCanvas.style.cursor = 'pointer';
-    // locPieCanvas.addEventListener('click', () => {
-    //   showBuffer('XIT FIN_CHART_LOCATIONSPIE');
-    // });
+    widgetAppend(tile, CHARTS);
   } else if (parameters[1].toLowerCase() == 'production' || parameters[1].toLowerCase() == 'prod') {
     widgetAppend(tile, PROD);
   }
-}
-
-function appendLineChart(container: Element, maintainAspectRatio) {
-  const dateData = [] as any[];
-  const finData = [] as any[];
-
-  for (const entry of finHistory) {
-    if (entry[1] + entry[2] + entry[3] - entry[4] == 0) {
-      continue;
-    }
-
-    dateData.push(new Date(entry[0]).toISOString());
-    finData.push(Number((entry[1] + entry[2] + entry[3] - entry[4]).toPrecision(4)));
-  }
-  widgetAppend(container, EquityHistoryChart, {
-    xdata: dateData,
-    ydata: finData,
-    yprefix: settings.fin.currency,
-    maintainAspectRatio,
-  });
-}
-
-function appendAssetPie(container: Element, finResult: FinancialSnapshot) {
-  widgetAppend(container, PieChart, {
-    labelData: ['Fixed', 'Current', 'Liquid'],
-    numericalData: [finResult.Totals.Fixed, finResult.Totals.Current, finResult.Totals.Liquid],
-  });
-}
-
-function appendLocationsPie(container: Element, snapshot: FinancialSnapshot) {
-  widgetAppend(container, PieChart, {
-    labelData: snapshot.locations.map(x => x.name),
-    numericalData: snapshot.locations.map(x => x.total),
-  });
 }
 
 function clearData(result) {
@@ -455,10 +378,6 @@ const PricingSchemes = {
   'NC2 ASK': 16,
   'NC2 BID': 17,
 };
-
-function financialSort(a, b) {
-  return a[3] < b[3] ? 1 : -1;
-}
 
 function init() {
   xit.add({
