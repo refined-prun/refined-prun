@@ -11,6 +11,10 @@ export const settings = reactive({
   fin: {
     currency: '₳',
   },
+  pricing: {
+    exchange: 'UNIVERSE',
+    method: 'VWAP30D' as PricingMethod,
+  },
   repairThreshold: 60,
   sidebar: [
     ['BS', 'BS'],
@@ -29,6 +33,8 @@ export const settings = reactive({
     ['HELP', 'XIT HELP'],
   ],
 });
+
+type PricingMethod = 'ASK' | 'BID' | 'AVG' | 'VWAP7D' | 'VWAP30D' | string;
 
 const key = 'rp-settings';
 

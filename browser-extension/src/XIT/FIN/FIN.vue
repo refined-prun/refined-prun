@@ -26,7 +26,7 @@ const figures = computed(() => {
 </script>
 
 <template>
-  <LoadingSpinner v-if="!cxStore.prices" />
+  <LoadingSpinner v-if="!cxStore.fetched" />
   <div v-else>
     <FinHeader>Key Figures</FinHeader>
     <KeyFigures :figures="figures" />

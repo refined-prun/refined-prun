@@ -11,7 +11,6 @@ const state = store.state;
 
 messages({
   SITE_SITES(data: { sites: PrunApi.Site[] }) {
-    console.log('SITE_SITES', data);
     store.setAll(data.sites);
     store.setFetched();
   },

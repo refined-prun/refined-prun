@@ -13,7 +13,7 @@ import { loadPrunCss } from '@src/prun-ui/prun-css';
 import { applyXITParameters } from '@src/XIT/xit-commands';
 
 import './refined-prun.css';
-import { cxStore } from '@src/fio/cx';
+import { fetchPrices } from '@src/fio/cx';
 import { loadFinHistory, recordFinancials } from '@src/core/financials';
 import { loadSettings } from '@src/store/settings';
 
@@ -64,7 +64,9 @@ async function mainRun() {
     appendStyle(RPrunStylesheet.advanced);
   }
 
-  setTimeout(cxStore.fetchPrices, 1000);
+  setTimeout(fetchPrices, 1000);
+  const halfHourMs = 1800000;
+  setInterval(fetchPrices, halfHourMs);
 
   // Do FIN recording
   if (

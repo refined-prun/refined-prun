@@ -15,12 +15,7 @@ import { Style } from '@src/Style';
 import system from '@src/system';
 import xit from '../xit-registry';
 import { cxStore } from '@src/fio/cx';
-import {
-  recordFinancials,
-  interpretCX,
-  calculateFinancials,
-  finHistory,
-} from '@src/core/financials';
+import { recordFinancials, calculateFinancials, finHistory } from '@src/core/financials';
 import FIN from './FIN.vue';
 import FINCH from './FINCH.vue';
 import FINPR from './FINPR.vue';
@@ -46,14 +41,7 @@ class Finances {
 function chooseScreen(tile, parameters: string[], pmmgSettings, finObj) {
   let i;
 
-  // Determine the array of CX prices to use
-  let CX = 'AI1';
-  if (pmmgSettings['PMMGExtended']['pricing_scheme']) {
-    const interpreted = interpretCX(pmmgSettings['PMMGExtended']['pricing_scheme']);
-    CX = interpreted[0];
-  }
-
-  if (!cxStore.prices || !cxStore.prices[CX]) {
+  if (!cxStore.fetched) {
     setTimeout(() => chooseScreen(tile, parameters, pmmgSettings, finObj), 50);
     return;
   }
@@ -89,28 +77,8 @@ function chooseScreen(tile, parameters: string[], pmmgSettings, finObj) {
     priceSelect.appendChild(createSelectOption(name, name));
   }
 
-  // Set value to what is in settings
-  if (
-    !pmmgSettings['PMMGExtended']['pricing_scheme'] ||
-    !PricingSchemes[pmmgSettings['PMMGExtended']['pricing_scheme']]
-  ) {
-    (priceSelect.children[0] as HTMLOptionElement).selected = true;
-  } else if (PricingSchemes[pmmgSettings['PMMGExtended']['pricing_scheme']]) {
-    (
-      priceSelect.children[
-        PricingSchemes[pmmgSettings['PMMGExtended']['pricing_scheme']]
-      ] as HTMLOptionElement
-    ).selected = true;
-  }
-
   priceSelect.classList.add('select');
   priceSelect.style.marginLeft = '4px';
-
-  // Detect if changed to custom spreadsheet. Show or hide div accordingly
-  priceSelect.addEventListener('change', () => {
-    pmmgSettings['PMMGExtended']['pricing_scheme'] = priceSelect.selectedOptions[0].value;
-    setSettings(pmmgSettings);
-  });
 
   priceDiv.appendChild(priceSelect);
 

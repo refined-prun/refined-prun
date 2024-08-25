@@ -1,13 +1,8 @@
 import { productionStore } from '@src/prun-api/data/production';
 import { workforcesStore } from '@src/prun-api/data/workforces';
-import { getPrice } from '@src/core/financials';
-import { cxStore } from '@src/fio/cx';
+import { getPrice } from '@src/fio/cx';
 
 export function calculateSiteProfitability(siteId: string) {
-  const cx = 'AI1';
-  const priceType = 'Average';
-  const cxPrices = cxStore.prices![cx]![priceType];
-
   const production = productionStore.getBySiteId(siteId);
   const workforce = workforcesStore.getById(siteId);
   const inputs: PrunApi.MaterialAmount[] = [];
@@ -58,12 +53,12 @@ export function calculateSiteProfitability(siteId: string) {
 
   let consumed = 0;
   for (const input of inputs) {
-    consumed += getPrice(cxPrices, input.material.ticker) * input.amount;
+    consumed += getPrice(input.material.ticker) * input.amount;
   }
 
   let produced = 0;
   for (const output of outputs) {
-    produced += getPrice(cxPrices, output.material.ticker) * output.amount;
+    produced += getPrice(output.material.ticker) * output.amount;
   }
 
   const profit = produced - consumed;

@@ -47,10 +47,7 @@ const otherData = computed(() => [
   ['CXOS', cxosStore.all.value.length],
   ['FXOS', fxosStore.all.value.length],
   ['Currency', balancesStore.all.value.length > 0],
-  [
-    'CX Price Age',
-    cxStore.prices ? `${((Date.now() - cxStore.age) / 3600000).toFixed(0)}h` : false,
-  ],
+  ['CX Price Age', cxStore.fetched ? `${((Date.now() - cxStore.age) / 60000).toFixed(0)}m` : false],
 ]);
 
 const positive = PrunCss.ColoredValue.positive;

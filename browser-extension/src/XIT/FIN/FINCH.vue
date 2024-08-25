@@ -19,7 +19,7 @@ const parameter = computed(() => props.parameters[1]?.toUpperCase());
 </script>
 
 <template>
-  <LoadingSpinner v-if="!cxStore.prices" />
+  <LoadingSpinner v-if="!cxStore.fetched" />
   <div v-else-if="!parameter">
     <FinHeader>Equity History</FinHeader>
     <div

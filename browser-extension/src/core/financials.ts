@@ -1,4 +1,4 @@
-import { cxStore } from '@src/fio/cx';
+import { cxStore, getPrice } from '@src/fio/cx';
 import { setSettings } from '@src/util';
 import { contractsStore } from '@src/prun-api/data/contracts';
 import { cxosStore } from '@src/prun-api/data/cxos';
@@ -62,7 +62,7 @@ async function saveFinHistory(snapshot: FinancialSnapshot) {
 
 // Actually recording and processing the financials once they are received through BackgroundRunner.
 export function recordFinancials(result) {
-  if (!cxStore.prices) {
+  if (!cxStore.fetched) {
     window.setTimeout(() => recordFinancials(result), 50);
     return;
   }
@@ -70,23 +70,11 @@ export function recordFinancials(result) {
   result['PMMGExtended']['last_fin_recording'] = Date.now();
   setSettings(result);
 
-  let cx = 'AI1';
-  let priceType = 'Average';
-  if (result['PMMGExtended']['pricing_scheme']) {
-    const interpreted = interpretCX(result['PMMGExtended']['pricing_scheme']);
-    cx = interpreted[0];
-    priceType = interpreted[1];
-  }
-
-  const finSnapshot = calculateFinancials(cx, priceType);
+  const finSnapshot = calculateFinancials();
   void saveFinHistory(finSnapshot);
 }
 
-export function calculateFinancials(cx?: string, priceType?: string) {
-  cx ??= 'AI1';
-  priceType ??= 'Average';
-  const cxPrices = cxStore.prices![cx]![priceType];
-
+export function calculateFinancials() {
   const snapshot: FinancialSnapshot = {
     locations: [],
     Currencies: [],
@@ -128,7 +116,7 @@ export function calculateFinancials(cx?: string, priceType?: string) {
 
     const items = store.items.map(x => x.quantity!).filter(x => x);
     for (const item of items) {
-      value += getPrice(cxPrices, item.material.ticker) * item.amount;
+      value += getPrice(item.material.ticker) * item.amount;
     }
 
     if (value === 0) {
@@ -155,7 +143,7 @@ export function calculateFinancials(cx?: string, priceType?: string) {
     let value = 0;
     for (const building of site.platforms) {
       for (const mat of building.reclaimableMaterials) {
-        value += getPrice(cxPrices, mat.material.ticker) * mat.amount;
+        value += getPrice(mat.material.ticker) * mat.amount;
       }
     }
     if (value === 0) {
@@ -193,7 +181,7 @@ export function calculateFinancials(cx?: string, priceType?: string) {
         case 'PROVISION': {
           const ticker = condition.quantity!.material.ticker;
           const amount = condition.quantity!.amount;
-          total = getPrice(cxPrices, ticker) * amount;
+          total = getPrice(ticker) * amount;
           break;
         }
         case 'PAYMENT': {
@@ -230,7 +218,7 @@ export function calculateFinancials(cx?: string, priceType?: string) {
     }
 
     if (order.type == 'SELLING') {
-      cxSellValue += getPrice(cxPrices, order.material.ticker) * order.amount;
+      cxSellValue += getPrice(order.material.ticker) * order.amount;
     } else {
       cxBuyValue += order.limit.amount * order.amount;
     }
@@ -273,26 +261,4 @@ export function calculateFinancials(cx?: string, priceType?: string) {
   snapshot.Totals.Liquid = liquid;
   snapshot.Totals.Liabilities = liabilities;
   return snapshot;
-}
-
-export function interpretCX(CXString) {
-  let priceType = 'Average';
-  const info = CXString.split(' ');
-  const CX = info[0];
-  switch (info[1]) {
-    case 'AVG':
-      priceType = 'Average';
-      break;
-    case 'ASK':
-      priceType = 'AskPrice';
-      break;
-    case 'BID':
-      priceType = 'BidPrice';
-      break;
-  }
-  return [CX, priceType];
-}
-
-export function getPrice(cxPrices, ticker) {
-  return cxPrices[ticker] || 0;
 }

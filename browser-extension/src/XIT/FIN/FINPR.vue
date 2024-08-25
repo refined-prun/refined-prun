@@ -49,7 +49,11 @@ const figures = computed(() => {
 });
 
 function formatPercents(value: number) {
-  return value.toLocaleString(undefined, { style: 'percent', maximumFractionDigits: 2 });
+  return value.toLocaleString(undefined, {
+    style: 'percent',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 function profitClass(value: number) {
@@ -61,7 +65,7 @@ function profitClass(value: number) {
 </script>
 
 <template>
-  <LoadingSpinner v-if="!cxStore.prices" />
+  <LoadingSpinner v-if="!cxStore.fetched" />
   <div v-else>
     <FinHeader>Production Overview</FinHeader>
     <KeyFigures :figures="figures" />
