@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { materialsStore, sortMaterials } from '@src/prun-api/data/materials';
 import { computed, PropType } from 'vue';
-import { PlanetBurn } from '@src/burn';
+import { PlanetBurn } from '@src/core/burn';
 import MaterialRow from '@src/XIT/BURN/MaterialRow.vue';
 
 const props = defineProps({

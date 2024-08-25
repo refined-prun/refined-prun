@@ -25,7 +25,7 @@ import { workforcesStore } from '@src/prun-api/data/workforces';
 import { productionStore } from '@src/prun-api/data/production';
 import { storagesStore } from '@src/prun-api/data/storage';
 import { getBuildingLastRepair, sitesStore } from '@src/prun-api/data/sites';
-import { calculatePlanetBurn } from '@src/burn';
+import { calculatePlanetBurn } from '@src/core/burn';
 import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 import { warehousesStore } from '@src/prun-api/data/warehouses';
 

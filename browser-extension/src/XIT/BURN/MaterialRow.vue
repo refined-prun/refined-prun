@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { settings } from '@src/store/settings';
 import { computed, PropType } from 'vue';
-import { PlanetBurn } from '@src/burn';
+import { PlanetBurn } from '@src/core/burn';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import DaysCell from '@src/XIT/BURN/DaysCell.vue';
 import PrunCss from '@src/prun-ui/prun-css';

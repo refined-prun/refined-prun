@@ -13,7 +13,7 @@ import { Style } from '../Style';
 import { SortingTriangleHTML } from '../GameProperties';
 import { sitesStore } from '@src/prun-api/data/sites';
 import { workforcesStore } from '@src/prun-api/data/workforces';
-import { calculatePlanetBurn } from '@src/burn';
+import { calculatePlanetBurn } from '@src/core/burn';
 import { productionStore } from '@src/prun-api/data/production';
 import { storagesStore } from '@src/prun-api/data/storage';
 

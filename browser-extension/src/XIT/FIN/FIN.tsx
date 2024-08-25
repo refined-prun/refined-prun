@@ -15,7 +15,12 @@ import { Style } from '@src/Style';
 import system from '@src/system';
 import xit from '../xit-registry';
 import { cxStore } from '@src/fio/cx';
-import { recordFinancials, interpretCX, calculateFinancials, finHistory } from '@src/financials';
+import {
+  recordFinancials,
+  interpretCX,
+  calculateFinancials,
+  finHistory,
+} from '@src/core/financials';
 import FIN from './FIN.vue';
 import FINCH from './FINCH.vue';
 import FINPR from './FINPR.vue';

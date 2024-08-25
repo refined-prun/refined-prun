@@ -17,7 +17,7 @@ import xit from './xit-registry';
 import { getBuildingLastRepair, sitesStore } from '@src/prun-api/data/sites';
 import { workforcesStore } from '@src/prun-api/data/workforces';
 import { productionStore } from '@src/prun-api/data/production';
-import { calculatePlanetBurn } from '@src/burn';
+import { calculatePlanetBurn } from '@src/core/burn';
 import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 
 class Checklists {

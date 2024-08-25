@@ -29,7 +29,7 @@ import { _$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/prun-ui/prun-css';
 import { settings } from '@src/store/settings';
 import { computed } from 'vue';
-import { getPlanetBurn, PlanetBurn } from '@src/burn';
+import { getPlanetBurn, PlanetBurn } from '@src/core/burn';
 import { comparePlanets } from '@src/util';
 import BurnSection from '@src/XIT/BURN/BurnSection.vue';
 

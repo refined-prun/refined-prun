@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PieChart from '@src/XIT/FIN/PieChart.vue';
 import { computed } from 'vue';
-import { calculateFinancials } from '@src/financials';
+import { calculateFinancials } from '@src/core/financials';
 
 const snapshot = computed(() => calculateFinancials());
 </script>

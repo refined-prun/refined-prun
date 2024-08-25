@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { finHistory } from '@src/financials';
+import { finHistory } from '@src/core/financials';
 import { settings } from '@src/store/settings';
 import LineChart from '@src/XIT/FIN/LineChart.vue';
 

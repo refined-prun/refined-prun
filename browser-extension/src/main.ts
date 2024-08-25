@@ -14,7 +14,7 @@ import { applyXITParameters } from '@src/XIT/xit-commands';
 
 import './refined-prun.css';
 import { cxStore } from '@src/fio/cx';
-import { loadFinHistory, recordFinancials } from '@src/financials';
+import { loadFinHistory, recordFinancials } from '@src/core/financials';
 import { loadSettings } from '@src/store/settings';
 
 // The main function that initializes everything

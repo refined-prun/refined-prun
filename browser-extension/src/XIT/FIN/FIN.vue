@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { calculateFinancials } from '@src/financials';
+import { calculateFinancials } from '@src/core/financials';
 import KeyFigures from '@src/XIT/FIN/KeyFigures.vue';
 import FinHeader from '@src/XIT/FIN/FinHeader.vue';
 import { formatAmount, formatNumber } from '@src/XIT/FIN/utils';

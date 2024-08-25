@@ -3,7 +3,7 @@ import { workforcesStore } from '@src/prun-api/data/workforces';
 import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 import { productionStore } from '@src/prun-api/data/production';
 import { sitesStore } from '@src/prun-api/data/sites';
-import { getPrice } from '@src/financials';
+import { getPrice } from '@src/core/financials';
 import FinHeader from '@src/XIT/FIN/FinHeader.vue';
 import { computed } from 'vue';
 import { formatAmount, formatNumber } from '@src/XIT/FIN/utils';
