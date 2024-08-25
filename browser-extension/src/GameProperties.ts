@@ -1,41 +1,9 @@
-/**
- * A list of the material names and their corresponding ticker, weight, and volume. Makes it easier to reference FIO data
- *
- */
-
 export const CurrencySymbols = {
   CIS: '₡',
   AIC: '₳',
   NCC: '₦',
   ICA: 'ǂ',
   ECD: '€',
-};
-export const RatingColors = {
-  P: '#1b6b9c',
-  U: '#8b211e',
-  F: '#e26c37',
-  E: '#e7782b',
-  D: '#e87d28',
-  C: '#ed891c',
-  B: '#f19510',
-  A: '#f6a204',
-};
-
-export const Exchanges = {
-  'Antares Station Commodity Exchange': 'ANT',
-  'Benten Station Commodity Exchange': 'BEN',
-  'Moria Station Commodity Exchange': 'MOR',
-  'Hortus Station Commodity Exchange': 'HRT',
-  'Hubur Commodity Exchange': 'HUB',
-  'Arclight Commodity Exchange': 'ARC',
-};
-export const ExchangeTickers = {
-  ANT: 'AI1',
-  BEN: 'CI1',
-  MOR: 'NC1',
-  HRT: 'IC1',
-  HUB: 'NC2',
-  ARC: 'CI2',
 };
 export const ExchangeTickersReverse = {
   AI1: 'ANT',

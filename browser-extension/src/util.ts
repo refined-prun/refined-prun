@@ -128,41 +128,6 @@ export function createTextDiv(text, className: string = 'prun-remove-js') {
   return newSpan;
 }
 
-/**
- * Create a textbox with larger primary and smaller secondary text inside of a div
- * @param primaryText
- * @param secondaryText
- * @param primaryTextColor
- * @param className
- * @returns {HTMLDivElement}
- */
-export function createFinancialTextBox(
-  primaryText,
-  secondaryText,
-  primaryTextColor,
-  className: string = 'prun-remove-js',
-) {
-  const box = document.createElement('div');
-  box.classList.add(className);
-  box.classList.add('fin-box');
-  const primaryTextSpan = document.createElement('span');
-  primaryTextSpan.style.fontSize = '12px';
-  primaryTextSpan.style.lineHeight = '1.1';
-  primaryTextSpan.style.color = primaryTextColor;
-  primaryTextSpan.textContent = primaryText;
-  box.appendChild(primaryTextSpan);
-
-  const secondaryTextDiv = document.createElement('div');
-  secondaryTextDiv.textContent = secondaryText;
-  secondaryTextDiv.style.fontSize = '10px';
-  secondaryTextDiv.style.lineHeight = '1.1';
-  secondaryTextDiv.style.marginTop = '2px';
-  secondaryTextDiv.style.color = '#999';
-  box.appendChild(secondaryTextDiv);
-
-  return box;
-}
-
 // Parse the inventory name on inventory buffers
 export function parseInvName(text) {
   try {

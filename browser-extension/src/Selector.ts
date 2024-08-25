@@ -7,7 +7,6 @@ export const Selector = {
   BufferHeaderClass: 'TileFrame__cmd___ScBYW0n type__type-very-small___HaVMqrE',
   BufferHeader: "div[class~='TileFrame__cmd___ScBYW0n']",
   Sidebar: 'div#TOUR_TARGET_SIDEBAR_RIGHT',
-  LMPostForm: "form[class~='LocalMarketPost__form___CAVPdDE']",
   ProdQueue: "div[class~='SiteProductionLines__column____s3cTk7']",
   BufferPanel: "div[class~='ScrollView__view___ovf59Tk']",
   ScreenControls: 'TOUR_TARGET_SCREEN_CONTROLS',
