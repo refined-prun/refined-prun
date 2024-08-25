@@ -14,7 +14,8 @@
     "lint": "eslint ./",
     "lint:fix": "pnpm lint --fix",
     "prettier": "prettier . --write --ignore-path ../.prettierignore",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "analyze": "vite-bundle-visualizer --sourcemap"
   },
   "type": "module",
   "dependencies": {
