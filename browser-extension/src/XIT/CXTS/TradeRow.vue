@@ -7,7 +7,7 @@ import { fixed2, hhmmss } from '@src/utils/format';
 
 const props = defineProps({
   date: {
-    type: Object as PropType<number>,
+    type: Number,
     required: true,
   },
   order: {
