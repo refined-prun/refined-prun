@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { messages } from '@src/prun-api/data/api-messages';
 
 interface Payload {
@@ -26,6 +26,9 @@ messages({
   },
 });
 
+const currencies = computed(() => all.value.map(x => x.currency));
+
 export const balancesStore = {
   all,
+  currencies,
 };

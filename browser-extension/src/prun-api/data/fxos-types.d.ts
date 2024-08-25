@@ -11,8 +11,8 @@ declare namespace PrunApi {
   }
 
   export interface FXOrderLimit {
-    base: Currency;
-    quote: Currency;
+    base: string;
+    quote: string;
     rate: number;
     decimals: number;
   }

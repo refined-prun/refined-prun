@@ -28,6 +28,17 @@ function requestCXOS() {
   showBuffer(`CXOS`, true, true);
 }
 
+let fxos = false;
+
+function requestFXOS() {
+  if (fxos) {
+    return;
+  }
+  fxos = true;
+  showBuffer(`FXOS`, true, true);
+}
+
 request.production = requestBS;
 request.workforce = requestBS;
 request.cxos = requestCXOS;
+request.fxos = requestFXOS;

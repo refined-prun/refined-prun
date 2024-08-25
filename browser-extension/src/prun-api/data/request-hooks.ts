@@ -10,6 +10,9 @@ export const request = {
   cxos(): void {
     throw Error('Not implemented');
   },
+  fxos(): void {
+    throw Error('Not implemented');
+  },
 };
 
 export function createRequestGetter<T, K>(

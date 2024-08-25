@@ -9,6 +9,7 @@ import './features/com-hide-join-leave';
 import './features/cxob-highlight-own-orders';
 import './features/cxpo-order-book';
 import './features/cxpo-shorten-names';
+import './features/finla-exchange-deposits';
 import './features/flt-arrival-eta';
 import './features/inv-add-shipment-detail';
 import './features/lm-add-icons';

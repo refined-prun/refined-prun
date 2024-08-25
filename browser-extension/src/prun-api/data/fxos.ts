@@ -1,5 +1,7 @@
 import { createEntityStore } from '@src/prun-api/data/create-entity-store';
 import { messages } from '@src/prun-api/data/api-messages';
+import { computed } from 'vue';
+import { request } from '@src/prun-api/data/request-hooks';
 
 const store = createEntityStore<PrunApi.FXOrder>();
 const state = store.state;
@@ -20,6 +22,18 @@ messages({
   },
 });
 
+const all = (() => {
+  const all = state.all;
+  return computed(() => {
+    if (!state.fetched.value) {
+      request.fxos();
+    }
+
+    return all.value;
+  });
+})();
+
 export const fxosStore = {
   ...state,
+  all,
 };

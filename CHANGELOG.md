@@ -9,6 +9,7 @@ New features:
 - BURN redesign
 - BUYING/SELLING LM ads are now highlighted green/red
 - LM remove redundant info
+- FINLA now shows CX and FX deposits in addition to cash
 
 Changes:
 - Implemented the real-time updates of XIT buffers and added features. Goodbye refresh button!
@@ -17,6 +18,7 @@ Changes:
 - Changed custom math evaluator to https://github.com/bugwheels94/math-expression-evaluator
 
 Fixes:
+- Fixed XIT FIN incorrectly counting the value of FX orders
 - Properly intercept all PrUn server-client messages, preventing data loss
 - Reduced the amount of UI updates
 - Improved UI responsiveness

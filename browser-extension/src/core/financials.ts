@@ -2,7 +2,6 @@ import { cxStore, getPrice } from '@src/fio/cx';
 import { setSettings } from '@src/util';
 import { contractsStore } from '@src/prun-api/data/contracts';
 import { cxosStore } from '@src/prun-api/data/cxos';
-import { fxosStore } from '@src/prun-api/data/fxos';
 import { balancesStore } from '@src/prun-api/data/balances';
 import { storagesStore } from '@src/prun-api/data/storage';
 import { sitesStore } from '@src/prun-api/data/sites';
@@ -10,6 +9,7 @@ import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 import { warehousesStore } from '@src/prun-api/data/warehouses';
 import system from '@src/system';
 import { sumBy } from '@src/utils/sum-by';
+import { deposits } from '@src/core/deposits';
 
 interface LocationSnapshot {
   name: string;
@@ -20,13 +20,6 @@ interface LocationSnapshot {
 
 export interface FinancialSnapshot {
   locations: LocationSnapshot[];
-  Currencies: [string, number][];
-  ContractValue: number;
-  ContractLiability: number;
-  CXBuy: number;
-  CXSell: number;
-  FXBuy: number;
-  FXSell: number;
   Totals: {
     Fixed: number;
     Current: number;
@@ -77,13 +70,6 @@ export function recordFinancials(result) {
 export function calculateFinancials() {
   const snapshot: FinancialSnapshot = {
     locations: [],
-    Currencies: [],
-    ContractValue: 0,
-    ContractLiability: 0,
-    CXBuy: 0,
-    CXSell: 0,
-    FXBuy: 0,
-    FXSell: 0,
     Totals: {
       Fixed: 0,
       Current: 0,
@@ -91,10 +77,6 @@ export function calculateFinancials() {
       Liabilities: 0,
     },
   };
-
-  for (const currency of balancesStore.all.value) {
-    snapshot.Currencies.push([currency.currency, Math.round(currency.amount * 100) / 100]);
-  }
 
   function getLocation(name: string) {
     let location = snapshot.locations.find(x => x.name === name);
@@ -205,50 +187,18 @@ export function calculateFinancials() {
       }
     }
   }
-  snapshot.ContractValue = contractValue;
-  snapshot.ContractLiability = contractLiability;
 
   // CXOS
-  let cxBuyValue = 0;
-  let cxSellValue = 0;
-
-  for (const order of cxosStore.all.value) {
-    if (order.status == 'FILLED') {
-      continue;
-    }
-
-    if (order.type == 'SELLING') {
-      cxSellValue += getPrice(order.material.ticker) * order.amount;
-    } else {
-      cxBuyValue += order.limit.amount * order.amount;
-    }
-  }
-
-  // FXOS
-  let fxBuyValue = 0;
-  let fxSellValue = 0;
-  for (const order of fxosStore.all.value) {
-    if (order.status == 'FILLED') {
-      continue;
-    }
-
-    if (order.type == 'SELLING') {
-      fxSellValue += order.initialAmount.amount;
-    } else {
-      fxBuyValue += order.limit.rate * order.initialAmount.amount;
-    }
-  }
-
-  snapshot.CXBuy = cxBuyValue;
-  snapshot.CXSell = cxSellValue;
-  snapshot.FXBuy = fxBuyValue;
-  snapshot.FXSell = fxSellValue;
+  const sellOrders = cxosStore.all.value.filter(x => x.status !== 'FILLED' && x.type === 'SELLING');
+  const cxSellValue = sumBy(sellOrders, x => getPrice(x.material.ticker) * x.amount);
 
   let liquid = 0;
-  for (const currency of snapshot.Currencies) {
-    liquid += currency[1];
+  for (const balance of balancesStore.all.value) {
+    liquid += balance.amount;
   }
-  liquid += cxBuyValue + fxBuyValue + fxSellValue;
+  for (const deposit of deposits.value.values()) {
+    liquid += deposit.cx + deposit.fx;
+  }
 
   const fixed = sumBy(Object.values(snapshot.locations), x => x.fixed);
 
