@@ -1,5 +1,4 @@
 import { Style, WithStyles } from '../Style';
-import { Exchanges } from '../GameProperties';
 import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
@@ -15,6 +14,8 @@ import {
 import { sitesStore } from '@src/prun-api/data/sites';
 import { workforcesStore } from '@src/prun-api/data/workforces';
 import { settings } from '@src/store/settings';
+import { exchangeStore } from '@src/prun-api/data/exchanges';
+import { getPlanetNaturalIdFromAddress } from '@src/prun-api/data/addresses';
 
 function onBBLBufferCreated(buffer: PrunBuffer) {
   clearBuildingLists(buffer.frame);
@@ -196,8 +197,10 @@ function onCXOSBufferCreated(buffer: PrunBuffer) {
   observeReadyElementsByClassName(PrunCss.Link.link, {
     baseElement: buffer.frame,
     callback: link => {
-      if (link.textContent && Exchanges[link.textContent]) {
-        link.textContent = Exchanges[link.textContent];
+      const exchange = exchangeStore.getByName(link.textContent);
+      const naturalId = getPlanetNaturalIdFromAddress(exchange?.address);
+      if (naturalId) {
+        link.textContent = naturalId;
       }
     },
   });
