@@ -89,5 +89,7 @@ declare namespace PrunApi {
     | 'FULFILLED'
     | 'PARTIALLY_FULFILLED'
     | 'REJECTED'
+    | 'VIOLATED'
+    | 'BREACHED'
     | 'TERMINATED';
 }

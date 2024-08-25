@@ -171,11 +171,15 @@ export function calculateFinancials(cx?: string, priceType?: string) {
   // Contracts
   let contractValue = 0;
   let contractLiability = 0;
-  const validContracts = contractsStore.all.value.filter(
-    c => !invalidContractStatus.includes(c.status),
-  );
 
-  for (const contract of validContracts) {
+  for (const contract of contractsStore.all.value) {
+    if (
+      contract.status !== 'CLOSED' &&
+      contract.status !== 'PARTIALLY_FULFILLED' &&
+      contract.status !== 'VIOLATED'
+    ) {
+      continue;
+    }
     const party = contract.party;
     for (const condition of contract.conditions) {
       if (condition.status == 'FULFILLED') {
@@ -273,8 +277,6 @@ export function calculateFinancials(cx?: string, priceType?: string) {
   snapshot.Totals.Liabilities = liabilities;
   return snapshot;
 }
-
-const invalidContractStatus = ['FULFILLED', 'BREACHED', 'TERMINATED', 'CANCELLED', 'REJECTED'];
 
 export function interpretCX(CXString) {
   let priceType = 'Average';
