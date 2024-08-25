@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { workforcesStore } from '@src/prun-api/data/workforces';
 import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
-import { productionStore } from '@src/prun-api/data/production';
 import { sitesStore } from '@src/prun-api/data/sites';
-import { getPrice } from '@src/core/financials';
 import FinHeader from '@src/XIT/FIN/FinHeader.vue';
 import { computed } from 'vue';
 import { formatAmount, formatNumber } from '@src/XIT/FIN/utils';
@@ -11,6 +8,7 @@ import KeyFigures from '@src/XIT/FIN/KeyFigures.vue';
 import { cxStore } from '@src/fio/cx';
 import PrunCss from '@src/prun-ui/prun-css';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
+import { calculateSiteProfitability } from '@src/core/profitability';
 
 interface ProductionEntry {
   name: string;
@@ -20,65 +18,16 @@ interface ProductionEntry {
   margin: number;
 }
 
-const cxPrices = computed(() => {
-  const cx = 'AI1';
-  const priceType = 'Average';
-  return cxStore.prices![cx]![priceType];
-});
-
 const entries = computed<ProductionEntry[]>(() => {
   const entries: ProductionEntry[] = [];
   for (const site of sitesStore.all.value) {
-    const production = productionStore.getBySiteId(site.siteId);
-    const workforce = workforcesStore.getById(site.siteId);
-    let produced = 0;
-    let consumed = 0;
-
-    if (workforce) {
-      for (const tier of workforce.workforces) {
-        for (const need of tier.needs) {
-          consumed += getPrice(cxPrices.value, need.material.ticker) * need.unitsPerInterval;
-        }
-      }
-    }
-
-    let isRecurring = false;
-
-    if (production) {
-      isRecurring = production.some(x => x.orders.some(y => y.recurring));
-
-      for (const line of production) {
-        let totalDuration = 0;
-        for (const order of line.orders) {
-          if (!order.started && (!isRecurring || order.recurring)) {
-            totalDuration += order.duration.millis || Infinity;
-          }
-        }
-
-        for (const order of line.orders) {
-          if (!order.started && (!isRecurring || order.recurring)) {
-            for (const mat of order.inputs) {
-              const price = getPrice(cxPrices.value, mat.material.ticker);
-              consumed += (price * mat.amount * 86400000 * line.capacity) / totalDuration;
-            }
-
-            for (const mat of order.outputs) {
-              const price = getPrice(cxPrices.value, mat.material.ticker);
-              produced += (price * mat.amount * 86400000 * line.capacity) / totalDuration;
-            }
-          }
-        }
-      }
-    }
-
-    const profit = produced - consumed;
-    const margin = consumed !== 0 ? profit / consumed : 0;
+    const profitability = calculateSiteProfitability(site.siteId);
     entries.push({
       name: getPlanetNameFromAddress(site.address)!,
-      produced,
-      consumed,
-      profit,
-      margin,
+      produced: profitability.produced,
+      consumed: profitability.consumed,
+      profit: profitability.profit,
+      margin: profitability.margin,
     });
   }
 
