@@ -9,7 +9,7 @@ defineProps({
 });
 
 const lineChartData = computed(() => {
-  const date: string[] = [];
+  const date: number[] = [];
   const equity: number[] = [];
 
   for (const entry of finHistory) {
@@ -18,7 +18,7 @@ const lineChartData = computed(() => {
       continue;
     }
 
-    date.push(new Date(entry[0]).toISOString());
+    date.push(entry[0]);
     equity.push(Number(equityValue.toPrecision(4)));
   }
 

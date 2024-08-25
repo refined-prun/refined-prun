@@ -8,6 +8,7 @@ import { _$$ } from '@src/utils/get-element-by-class-name';
 import PpuLabel from '@src/features/lm-shipping-per-unit-price/PpuLabel.vue';
 import { reactive } from 'vue';
 import { refValue } from '@src/utils/reactive-dom';
+import { fixed2 } from '@src/utils/format';
 
 function onLMBufferReady(buffer: PrunBuffer) {
   observeReadyElementsByClassName(PrunCss.CommodityAd.text, {
@@ -29,14 +30,13 @@ function onAdTextReady(element: HTMLDivElement) {
   const totalCost = matches[3];
   const unit = weight > volume ? 't' : 'm³';
   const amount = weight > volume ? weight : volume;
-  const totalCents = parseInt(totalCost.replace(/[,.]/g, ''), 10);
-  const perItem = (totalCents / amount / 100).toFixed(2);
+  const total = parseFloat(totalCost.replace(/[,.]/g, '.'));
   for (const child of Array.from(element.childNodes)) {
     if (child.nodeValue && child.nodeValue.slice(1) in CurrencySymbols) {
       widgetAfter(child as Element, () => (
         <span>
           {' '}
-          ({perItem}/{unit})
+          ({fixed2(total / amount)}/{unit})
         </span>
       ));
     }

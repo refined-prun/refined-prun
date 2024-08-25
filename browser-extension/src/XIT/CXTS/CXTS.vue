@@ -16,18 +16,18 @@ import { cxosStore } from '@src/prun-api/data/cxos';
 import { computed } from 'vue';
 import DateRow from '@src/XIT/CXTS/DateRow.vue';
 import TradeRow from '@src/XIT/CXTS/TradeRow.vue';
-import { sameDay } from '@src/XIT/CXTS/utils';
+import dayjs from 'dayjs';
 
 const orders = cxosStore.all;
 
 interface OrderTrade {
   order: PrunApi.CXOrder;
   trade: PrunApi.CXTrade;
-  date: Date;
+  date: number;
 }
 
 interface DayTrades {
-  date: Date;
+  date: number;
   trades: OrderTrade[];
   totals: { [currency: string]: number };
 }
@@ -39,11 +39,11 @@ const days = computed(() => {
       trades.push({
         order,
         trade,
-        date: new Date(trade.time.timestamp),
+        date: trade.time.timestamp,
       });
     }
   }
-  trades.sort((a, b) => b.date.getTime() - a.date.valueOf());
+  trades.sort((a, b) => b.date - a.date);
   const days: DayTrades[] = [];
   if (trades.length === 0) {
     return days;
@@ -62,7 +62,7 @@ const days = computed(() => {
       continue;
     }
 
-    if (!sameDay(day.date, trade.date)) {
+    if (dayjs(day.date).diff(trade.date, 'day') !== 0) {
       day = {
         date: trade.date,
         trades: [],

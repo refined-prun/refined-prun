@@ -3,6 +3,7 @@ import { getTickerByMaterialName } from '@src/prun-ui/material-names';
 import { materialsStore } from '@src/prun-api/data/materials';
 import { CurrencySymbols } from '@src/GameProperties';
 import { computed } from 'vue';
+import { fixed0 } from '@src/utils/format';
 
 const props = defineProps({
   materialName: {
@@ -44,7 +45,7 @@ const amount = computed(() => {
 
 const totalSize = computed(() => {
   if (unit.value && amount.value) {
-    return (amount.value * unit.value.size).toFixed(0);
+    return fixed0(amount.value * unit.value.size);
   }
 
   return `-- `;
@@ -57,7 +58,7 @@ const totalPrice = computed(() => {
 
 const perUnit = computed(() => {
   if (unit.value && amount.value && totalPrice.value) {
-    return (totalPrice.value / (amount.value * unit.value.size)).toFixed(0);
+    return fixed0(totalPrice.value / (amount.value * unit.value.size));
   }
 
   return '--';

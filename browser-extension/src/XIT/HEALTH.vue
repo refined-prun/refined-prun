@@ -25,6 +25,7 @@ import { balancesStore } from '@src/prun-api/data/balances';
 import { cxStore } from '@src/fio/cx';
 import { computed } from 'vue';
 import PrunCss from '@src/prun-ui/prun-css';
+import { dayjsLive } from '@src/utils/dayjs';
 
 const bases = computed(() => {
   return sitesStore.all.value.map(site => ({
@@ -47,7 +48,7 @@ const otherData = computed(() => [
   ['CXOS', cxosStore.all.value.length],
   ['FXOS', fxosStore.all.value.length],
   ['Currency', balancesStore.all.value.length > 0],
-  ['CX Price Age', cxStore.fetched ? `${((Date.now() - cxStore.age) / 60000).toFixed(0)}m` : false],
+  ['Last CX Price Update', cxStore.fetched ? `${dayjsLive().to(cxStore.age)}` : false],
 ]);
 
 const positive = PrunCss.ColoredValue.positive;
@@ -79,7 +80,7 @@ const negative = PrunCss.ColoredValue.negative;
       </tbody>
     </table>
     <span class="title" style="padding-top: 10px">Other Data</span>
-    <table>
+    <table :style="{ tableLayout: 'fixed' }">
       <thead>
         <tr>
           <th>Parameter</th>

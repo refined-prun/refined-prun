@@ -16,6 +16,7 @@ import './refined-prun.css';
 import { fetchPrices } from '@src/fio/cx';
 import { loadFinHistory, recordFinancials } from '@src/core/financials';
 import { loadSettings } from '@src/store/settings';
+import dayjs from 'dayjs';
 
 // The main function that initializes everything
 async function mainRun() {
@@ -65,8 +66,7 @@ async function mainRun() {
   }
 
   setTimeout(fetchPrices, 1000);
-  const halfHourMs = 1800000;
-  setInterval(fetchPrices, halfHourMs);
+  setInterval(fetchPrices, dayjs.duration(15, 'minutes').asMilliseconds());
 
   // Do FIN recording
   if (

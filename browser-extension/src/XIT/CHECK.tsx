@@ -9,7 +9,6 @@ import {
   Popup,
   showWarningDialog,
   showBuffer,
-  dateYearFormatter,
 } from '../util';
 import { Style, TextColors } from '../Style';
 import { NonProductionBuildings } from '../GameProperties';
@@ -19,6 +18,7 @@ import { workforcesStore } from '@src/prun-api/data/workforces';
 import { productionStore } from '@src/prun-api/data/production';
 import { calculatePlanetBurn } from '@src/core/burn';
 import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
+import { mmddyyyy } from '@src/utils/format';
 
 class Checklists {
   private tile: HTMLElement;
@@ -118,9 +118,7 @@ function generateCheckTable(result, tile) {
     row.appendChild(incompleteElem);
 
     const duedateElem = document.createElement('td');
-    duedateElem.appendChild(
-      createTextSpan(duedate ? dateYearFormatter.format(new Date(duedate)) : '--'),
-    ); // -- or -? Best way to signify no value?
+    duedateElem.appendChild(createTextSpan(duedate ? mmddyyyy(duedate) : '--')); // -- or -? Best way to signify no value?
     if (duedate && duedate < Date.now()) {
       duedateElem.style.color = TextColors.Failure;
     }
@@ -744,7 +742,7 @@ class CheckItem {
 
     if (checkInfo.duedate) {
       // The due date under the name
-      let dateText = dateYearFormatter.format(new Date(checkInfo.duedate));
+      let dateText = mmddyyyy(checkInfo.duedate);
       if (checkInfo.recurring) {
         dateText += ` (every ${checkInfo.recurring.toLocaleString(undefined, { maximumFractionDigits: 1 })} day${
           checkInfo.recurring == 1 ? ')' : 's)'

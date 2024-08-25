@@ -2,7 +2,8 @@
 import { computed } from 'vue';
 import { shipsStore } from '@src/prun-api/data/ships';
 import { flightsStore } from '@src/prun-api/data/flights';
-import { hourFormatter } from '@src/util';
+import { dayjsLive } from '@src/utils/dayjs';
+import { hhmm } from '@src/utils/format';
 
 const props = defineProps({
   shipRegistration: {
@@ -14,18 +15,15 @@ const props = defineProps({
 
 const ship = computed(() => shipsStore.getByRegistration(props.shipRegistration));
 const flight = computed(() => flightsStore.getById(ship.value?.flightId));
-const eta = computed(() => calculateEta(flight.value?.arrival.timestamp));
+const eta = computed(() => formatEta(flight.value?.arrival.timestamp));
 
-function calculateEta(timestamp: number | undefined) {
+function formatEta(timestamp: number | undefined) {
   if (!timestamp) {
     return undefined;
   }
-  const eta = new Date(timestamp);
-  const now = new Date();
-  const diffTime = Math.abs(eta.getTime() - now.getTime());
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-  let ret = hourFormatter.format(eta);
+  let ret = hhmm(timestamp);
+  const diffDays = -dayjsLive().diff(timestamp, 'days');
   if (diffDays > 0) {
     ret += ` +${diffDays}d`;
   }

@@ -3,6 +3,7 @@ import { computed, ref, watchEffect } from 'vue';
 import { cxobStore } from '@src/prun-api/data/cxob';
 import OrderRow from '@src/features/cxpo-order-book/OrderRow.vue';
 import PrunCss from '@src/prun-ui/prun-css';
+import { fixed2 } from '@src/utils/format';
 
 const props = defineProps({
   ticker: {
@@ -18,7 +19,7 @@ const requests = computed(() => orderInfo.value?.buyingOrders ?? []);
 const spread = computed(() => {
   const ask = orderInfo.value?.ask?.price.amount;
   const bid = orderInfo.value?.bid?.price.amount;
-  return ask && bid ? (ask - bid).toFixed(2) : '--';
+  return ask && bid ? fixed2(ask - bid) : '--';
 });
 
 const orderBook = ref(undefined);

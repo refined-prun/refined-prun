@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, PropType } from 'vue';
 import PrunCss from '@src/prun-ui/prun-css';
-import { formatDate, formatPrice } from '@src/XIT/CXTS/utils';
+import { fixed2, mmddyyyy } from '@src/utils/format';
 
 const props = defineProps({
   date: {
-    type: Object as PropType<Date>,
+    type: Object as PropType<number>,
     required: true,
   },
   totals: {
@@ -23,14 +23,14 @@ const style = {
 const totals = computed(() => {
   return Object.keys(props.totals)
     .sort()
-    .map(key => `${formatPrice(props.totals[key].toFixed(2))} ${key}`);
+    .map(key => `${fixed2(props.totals[key])} ${key}`);
 });
 </script>
 
 <template>
   <tr>
     <td colspan="2" :style="style">
-      <span>{{ formatDate(date) }}</span>
+      <span>{{ mmddyyyy(date) }}</span>
     </td>
     <!-- This <tr> is needed so both other <tr>s are the same color -->
     <td :style="{ display: 'none' }" />

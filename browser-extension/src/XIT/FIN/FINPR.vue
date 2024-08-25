@@ -3,13 +3,14 @@ import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 import { sitesStore } from '@src/prun-api/data/sites';
 import FinHeader from '@src/XIT/FIN/FinHeader.vue';
 import { computed } from 'vue';
-import { formatAmount, formatNumber } from '@src/XIT/FIN/utils';
+import { formatAmount } from '@src/XIT/FIN/utils';
 import KeyFigures from '@src/XIT/FIN/KeyFigures.vue';
 import { cxStore } from '@src/fio/cx';
 import PrunCss from '@src/prun-ui/prun-css';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { calculateSiteProfitability } from '@src/core/profitability';
 import { sumBy } from '@src/utils/sum-by';
+import { fixed0, percent2 } from '@src/utils/format';
 
 interface ProductionEntry {
   name: string;
@@ -48,14 +49,6 @@ const figures = computed(() => {
   ];
 });
 
-function formatPercents(value: number) {
-  return value.toLocaleString(undefined, {
-    style: 'percent',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-}
-
 function profitClass(value: number) {
   return {
     [PrunCss.ColoredValue.positive]: value > 0,
@@ -83,10 +76,10 @@ function profitClass(value: number) {
       <tbody>
         <tr v-for="entry in entries" :key="entry.name">
           <td>{{ entry.name }}</td>
-          <td>{{ formatNumber(entry.produced) }}</td>
-          <td>{{ formatNumber(entry.consumed) }}</td>
-          <td>{{ formatNumber(entry.profit) }}</td>
-          <td :class="profitClass(entry.margin)">{{ formatPercents(entry.margin) }}</td>
+          <td>{{ fixed0(entry.produced) }}</td>
+          <td>{{ fixed0(entry.consumed) }}</td>
+          <td>{{ fixed0(entry.profit) }}</td>
+          <td :class="profitClass(entry.margin)">{{ percent2(entry.margin) }}</td>
         </tr>
       </tbody>
     </table>

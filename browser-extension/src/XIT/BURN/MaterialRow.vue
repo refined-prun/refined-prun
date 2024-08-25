@@ -6,6 +6,7 @@ import MaterialIcon from '@src/components/MaterialIcon.vue';
 import DaysCell from '@src/XIT/BURN/DaysCell.vue';
 import PrunCss from '@src/prun-ui/prun-css';
 import { showBuffer } from '@src/util';
+import { fixed0, fixed1, fixed2 } from '@src/utils/format';
 
 const props = defineProps({
   material: {
@@ -54,7 +55,7 @@ const materialColumnStyle = computed(() => ({
 }));
 
 const consText = computed(() =>
-  Math.abs(production.value) < 1 ? production.value.toFixed(2) : production.value.toFixed(1),
+  Math.abs(production.value) < 1 ? fixed2(production.value) : fixed1(production.value),
 );
 
 const needAmt = computed(() =>
@@ -81,7 +82,7 @@ const needVolume = computed(() =>
       <span>{{ consText }} / day</span>
     </td>
     <td>
-      <span>{{ isNaN(needAmt) ? '0' : needAmt.toFixed(0) }}</span>
+      <span>{{ isNaN(needAmt) ? '0' : fixed0(needAmt) }}</span>
     </td>
     <td>
       <div
@@ -91,9 +92,9 @@ const needVolume = computed(() =>
       </div>
     </td>
     <td>
-      <span>{{ needWeight.toFixed(2) }}t</span>
+      <span>{{ fixed2(needWeight) }}t</span>
       <br />
-      <span>{{ needVolume.toFixed(2) }}m³</span>
+      <span>{{ fixed2(needVolume) }}m³</span>
     </td>
     <DaysCell :days="days" />
   </tr>

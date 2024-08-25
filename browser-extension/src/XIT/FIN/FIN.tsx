@@ -5,9 +5,7 @@ import {
   createTable,
   createTextSpan,
   createToolTip,
-  dateYearFormatter,
   downloadFile,
-  hourFormatter,
   setSettings,
   showWarningDialog,
 } from '@src/util';
@@ -19,6 +17,7 @@ import { recordFinancials, calculateFinancials, finHistory } from '@src/core/fin
 import FIN from './FIN.vue';
 import FINCH from './FINCH.vue';
 import FINPR from './FINPR.vue';
+import { mmddyyyy, hhmm, fixed0 } from '@src/utils/format';
 
 class Finances {
   private tile: HTMLElement;
@@ -199,20 +198,12 @@ function chooseScreen(tile, parameters: string[], pmmgSettings, finObj) {
     tbody.appendChild(row);
 
     const dateColumn = document.createElement('td');
-    dateColumn.appendChild(
-      createTextSpan(
-        `${hourFormatter.format(new Date(item[0]))} on ${dateYearFormatter.format(
-          new Date(item[0]),
-        )}`,
-      ),
-    );
+    dateColumn.appendChild(createTextSpan(`${hhmm(item[0])} on ${mmddyyyy(item[0])}`));
     row.appendChild(dateColumn);
 
     const equityColumn = document.createElement('td');
     const equity = item[1] + item[2] + item[3] - item[4];
-    equityColumn.appendChild(
-      createTextSpan(equity.toLocaleString(undefined, { maximumFractionDigits: 0 })),
-    );
+    equityColumn.appendChild(createTextSpan(fixed0(equity)));
     row.appendChild(equityColumn);
 
     const deleteColumn = document.createElement('td');

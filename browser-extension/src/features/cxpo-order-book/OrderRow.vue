@@ -2,6 +2,7 @@
 import PrunCss from '@src/prun-ui/prun-css';
 import { computed, PropType } from 'vue';
 import { companyStore } from '@src/prun-api/data/company';
+import { fixed0, fixed2 } from '@src/utils/format';
 
 const props = defineProps({
   order: {
@@ -15,9 +16,9 @@ const ownOrderClass = computed(() => ({
   'rp-cxpo-order-column--own-order':
     props.order.amount && props.order.trader.id === companyStore.id,
 }));
-const amount = computed(() => (props.order.amount ? props.order.amount.toFixed(0) : '∞'));
+const amount = computed(() => (props.order.amount ? fixed0(props.order.amount) : '∞'));
 const amountClass = computed(() => [PrunCss.ComExOrderBookPanel.amount, ownOrderClass.value]);
-const price = computed(() => props.order.limit.amount.toFixed(2));
+const price = computed(() => fixed2(props.order.limit.amount));
 const priceClass = computed(() => [
   props.request ? PrunCss.ComExOrderBookPanel.requestPrice : PrunCss.ComExOrderBookPanel.offerPrice,
   ownOrderClass.value,

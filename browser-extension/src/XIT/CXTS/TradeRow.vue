@@ -2,12 +2,12 @@
 import { computed, PropType } from 'vue';
 import PrunCss from '@src/prun-ui/prun-css';
 import { showBuffer } from '@src/util';
-import { formatPrice, formatTime } from './utils';
 import PrunLink from '@src/components/PrunLink.vue';
+import { fixed2, hhmmss } from '@src/utils/format';
 
 const props = defineProps({
   date: {
-    type: Object as PropType<Date>,
+    type: Object as PropType<number>,
     required: true,
   },
   order: {
@@ -23,10 +23,10 @@ const props = defineProps({
 const total = computed(() => {
   const total =
     props.trade.price.amount * props.trade.amount * (props.order.type === 'SELLING' ? 1 : -1);
-  return formatPrice(total.toFixed(2));
+  return fixed2(total);
 });
 
-const price = computed(() => formatPrice(props.trade.price.amount.toFixed(2)));
+const price = computed(() => fixed2(props.trade.price.amount));
 const currency = computed(() => props.trade.price.currency);
 
 const typeClass = computed(() =>
@@ -42,7 +42,7 @@ const onTickerClick = () => showBuffer(`CXOB ${fullTicker.value}`);
   <tr>
     <td>
       <span :class="PrunCss.Link.link" @click="onTimeClick">
-        {{ formatTime(date) }}
+        {{ hhmmss(date) }}
       </span>
     </td>
     <td>

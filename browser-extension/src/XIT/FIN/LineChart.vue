@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { Line } from 'vue-chartjs';
-import { format } from 'date-fns';
 import { computed, onMounted, ref } from 'vue';
-import 'chartjs-adapter-date-fns';
 import {
   CategoryScale,
   Chart,
@@ -16,6 +14,7 @@ import {
   Title,
   Tooltip,
 } from 'chart.js';
+import { mmdd, percent0, fixed0 } from '@src/utils/format';
 
 Chart.register(
   LineController,
@@ -30,7 +29,7 @@ Chart.register(
 
 const props = defineProps({
   xdata: {
-    type: Array<string>,
+    type: Array<number>,
     required: true,
   },
   ydata: {
@@ -51,7 +50,6 @@ const xlabel = 'Date';
 const xtype: AxisType = 'time';
 const ytype: AxisType = 'linear';
 const xprefix = '';
-const xformat = 'dd/MM';
 
 const averageFactor = ref(0.2);
 
@@ -142,11 +140,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
       ticks: {
         color: '#999',
         callback(value: string | number) {
-          if (xtype === 'time') {
-            const dateValue = new Date(value);
-            return xprefix + format(dateValue, xformat || 'dd/MM/yyyy');
-          }
-          return xprefix + value;
+          return xtype === 'time' ? mmdd(value as number) : xprefix + value;
         },
       },
     },
@@ -167,9 +161,9 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
         color: '#999',
         callback(value: string | number) {
           if (typeof value === 'number') {
-            return `${props.yprefix + (value / 1_000_000).toFixed(0)}M`;
+            return `${fixed0(value / 1_000_000)}M`;
           }
-          return props.yprefix + value;
+          return value;
         },
       },
     },
@@ -189,16 +183,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
           if (label) {
             label += ': ';
           }
-          if (context.parsed.y !== null) {
-            label += new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 2,
-            })
-              .format(context.parsed.y)
-              .replace('$', props.yprefix);
-          }
+          label += props.yprefix + fixed0(context.parsed.y);
           return label;
         },
       },
@@ -228,16 +213,10 @@ onMounted(() => {
 
   resizeObserver.observe(container);
 });
-
-const formatPercent = new Intl.NumberFormat('default', {
-  style: 'percent',
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0,
-});
 </script>
 
 <template>
-  <div :class="$style.wide">Smoothing: {{ formatPercent.format(averageFactor) }}</div>
+  <div :class="$style.wide">Smoothing: {{ percent0(averageFactor) }}</div>
   <input
     v-model="averageFactor"
     :class="$style.wide"

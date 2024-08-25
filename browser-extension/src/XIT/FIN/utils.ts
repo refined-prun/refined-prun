@@ -1,9 +1,6 @@
 import { settings } from '@src/store/settings';
+import { fixed0 } from '@src/utils/format';
 
 export function formatAmount(amount: number) {
-  return settings.fin.currency + Math.round(amount).toLocaleString();
-}
-
-export function formatNumber(value: number) {
-  return value.toLocaleString(undefined, { maximumFractionDigits: 0 });
+  return settings.fin.currency + fixed0(amount);
 }

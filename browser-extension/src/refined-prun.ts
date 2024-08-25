@@ -1,3 +1,6 @@
+import './utils/dayjs';
+import './utils/chartjs-dayjs';
+
 import './request-hooks';
 
 import './features/com-add-images';

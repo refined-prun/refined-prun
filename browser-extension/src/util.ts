@@ -13,22 +13,7 @@ import { materialCategoriesStore } from '@src/prun-api/data/material-categories'
 import { planetsStore } from '@src/prun-api/data/planets';
 import { getStarNaturalId, starsStore } from '@src/prun-api/data/stars';
 import { Stations } from '@src/GameProperties';
-
-export const hourFormatter = new Intl.DateTimeFormat(undefined, {
-  hour: '2-digit',
-  minute: '2-digit',
-});
-
-export const dateFormatter = new Intl.DateTimeFormat(undefined, {
-  month: '2-digit',
-  day: '2-digit',
-});
-
-export const dateYearFormatter = new Intl.DateTimeFormat(undefined, {
-  month: '2-digit',
-  day: '2-digit',
-  year: 'numeric',
-});
+import { hhmm } from '@src/utils/format';
 
 // Download a file containing fileData with fileName
 export function downloadFile(fileData, fileName, isJSON: boolean = true) {
@@ -69,7 +54,7 @@ export function convertDurationToETA(parsedSeconds) {
   const diffTime = Math.abs(eta.getTime() - now.getTime());
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-  let ret = hourFormatter.format(eta);
+  let ret = hhmm(eta);
   if (diffDays > 0) {
     ret += ` +${diffDays}d`;
   }

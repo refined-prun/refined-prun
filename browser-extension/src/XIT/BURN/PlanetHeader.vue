@@ -3,6 +3,7 @@ import { computed, PropType } from 'vue';
 import DaysCell from '@src/XIT/BURN/DaysCell.vue';
 import { settings } from '@src/store/settings';
 import { materialsStore } from '@src/prun-api/data/materials';
+import { fixed2 } from '@src/utils/format';
 
 const props = defineProps({
   burn: {
@@ -56,9 +57,9 @@ function sumNeed(property: (x: PrunApi.Material) => number) {
       <span>{{ burn.planetName }}</span>
     </td>
     <td>
-      <span>{{ needWeight.toFixed(2) }}t</span>
+      <span>{{ fixed2(needWeight) }}t</span>
       <br />
-      <span>{{ needVolume.toFixed(2) }}m³</span>
+      <span>{{ fixed2(needVolume) }}m³</span>
     </td>
     <DaysCell :days="days" />
   </tr>

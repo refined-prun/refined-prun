@@ -3,9 +3,10 @@ import { computed } from 'vue';
 import { calculateFinancials } from '@src/core/financials';
 import KeyFigures from '@src/XIT/FIN/KeyFigures.vue';
 import FinHeader from '@src/XIT/FIN/FinHeader.vue';
-import { formatAmount, formatNumber } from '@src/XIT/FIN/utils';
+import { formatAmount } from '@src/XIT/FIN/utils';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { cxStore } from '@src/fio/cx';
+import { fixed0 } from '@src/utils/format';
 
 const finResult = computed(() => calculateFinancials());
 const equity = computed(() => {
@@ -43,9 +44,9 @@ const figures = computed(() => {
       <tbody>
         <tr v-for="location in finResult.locations" :key="location.name">
           <td>{{ location.name }}</td>
-          <td>{{ formatNumber(location.fixed) }}</td>
-          <td>{{ formatNumber(location.current) }}</td>
-          <td>{{ formatNumber(location.total) }}</td>
+          <td>{{ fixed0(location.fixed) }}</td>
+          <td>{{ fixed0(location.current) }}</td>
+          <td>{{ fixed0(location.total) }}</td>
         </tr>
       </tbody>
     </table>

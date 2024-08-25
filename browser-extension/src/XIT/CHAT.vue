@@ -14,7 +14,7 @@ export default {};
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
-import { dateFormatter, hourFormatter } from '../util';
+import { mmdd, hhmm } from '@src/utils/format';
 
 interface FioChatMessage {
   MessageTimestamp: number;
@@ -53,11 +53,9 @@ watchEffect(() => {
     <div class="title">{{ parameters[1] }} Global Site Owners</div>
     <div v-for="(message, i) in messages" :key="i" :class="$style.line">
       <div>
-        <div :class="$style.date">{{
-          dateFormatter.format(new Date(message.MessageTimestamp))
-        }}</div>
+        <div :class="$style.date">{{ mmdd(message.MessageTimestamp) }}</div>
         <div :class="$style.date" :style="{ color: '#999999' }">
-          {{ hourFormatter.format(new Date(message.MessageTimestamp)) }}
+          {{ hhmm(message.MessageTimestamp) }}
         </div>
       </div>
       <template v-if="message.MessageType === 'CHAT'">

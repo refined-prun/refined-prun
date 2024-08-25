@@ -6,6 +6,7 @@ import { $$ } from 'select-dom';
 import { _$$ } from '@src/utils/get-element-by-class-name';
 import { widgetAppend } from '@src/utils/vue-mount';
 import { sumBy } from '@src/utils/sum-by';
+import { percent2 } from '@src/utils/format';
 
 function updateBuffer(buffer: PrunBuffer) {
   if (!buffer.frame.isConnected) {
@@ -26,10 +27,10 @@ function updateBuffer(buffer: PrunBuffer) {
     }
     for (const row of rows) {
       const eta = getEtaFromRow(row);
-      const percent = ((eta / totalTime) * 100).toFixed(2);
+      const percent = eta / totalTime;
       const textField = $$('td', row)[6];
       if (textField && eta > 0) {
-        widgetAppend(textField, () => <span class={tag}> {percent}%</span>);
+        widgetAppend(textField, () => <span class={tag}> {percent2(percent)}</span>);
       }
     }
   }
