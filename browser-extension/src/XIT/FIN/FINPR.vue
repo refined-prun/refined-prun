@@ -9,6 +9,7 @@ import { cxStore } from '@src/fio/cx';
 import PrunCss from '@src/prun-ui/prun-css';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { calculateSiteProfitability } from '@src/core/profitability';
+import { sumBy } from '@src/utils/sum-by';
 
 interface ProductionEntry {
   name: string;
@@ -35,9 +36,9 @@ const entries = computed<ProductionEntry[]>(() => {
   return entries;
 });
 
-const totalProduced = computed(() => entries.value.map(x => x.produced).reduce((a, b) => a + b, 0));
-const totalConsumed = computed(() => entries.value.map(x => x.consumed).reduce((a, b) => a + b, 0));
-const totalProfit = computed(() => entries.value.map(x => x.profit).reduce((a, b) => a + b, 0));
+const totalProduced = computed(() => sumBy(entries, x => x.produced));
+const totalConsumed = computed(() => sumBy(entries, x => x.consumed));
+const totalProfit = computed(() => sumBy(entries, x => x.profit));
 
 const figures = computed(() => {
   return [

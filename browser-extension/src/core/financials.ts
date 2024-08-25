@@ -9,6 +9,7 @@ import { sitesStore } from '@src/prun-api/data/sites';
 import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
 import { warehousesStore } from '@src/prun-api/data/warehouses';
 import system from '@src/system';
+import { sumBy } from '@src/utils/sum-by';
 
 interface LocationSnapshot {
   name: string;
@@ -261,14 +262,10 @@ export function calculateFinancials(cx?: string, priceType?: string) {
   }
   liquid += cxBuyValue + fxBuyValue + fxSellValue;
 
-  const fixed = Object.values(snapshot.locations)
-    .map(x => x.fixed)
-    .reduce((a, b) => a + b, 0);
+  const fixed = sumBy(Object.values(snapshot.locations), x => x.fixed);
 
   let current = cxSellValue + contractValue;
-  current += Object.values(snapshot.locations)
-    .map(x => x.current)
-    .reduce((a, b) => a + b, 0);
+  current += sumBy(Object.values(snapshot.locations), x => x.current);
 
   const liabilities = contractLiability;
   snapshot.Totals.Fixed = fixed;

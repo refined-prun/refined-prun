@@ -5,6 +5,7 @@ import PrunCss from '@src/prun-ui/prun-css';
 import { $$ } from 'select-dom';
 import { _$$ } from '@src/utils/get-element-by-class-name';
 import { widgetAppend } from '@src/utils/vue-mount';
+import { sumBy } from '@src/utils/sum-by';
 
 function updateBuffer(buffer: PrunBuffer) {
   if (!buffer.frame.isConnected) {
@@ -19,7 +20,7 @@ function updateBuffer(buffer: PrunBuffer) {
   const tables = _$$(PrunCss.ProductionQueue.table, buffer.frame);
   for (const table of tables) {
     const rows = $$('tbody:nth-of-type(2) > tr', table);
-    const totalTime = rows.map(getEtaFromRow).reduce((x, y) => x + y, 0);
+    const totalTime = sumBy(rows, getEtaFromRow);
     if (totalTime === 0) {
       continue;
     }

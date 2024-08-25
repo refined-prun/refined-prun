@@ -12,6 +12,7 @@ import {
   Tooltip,
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { sumBy } from '@src/utils/sum-by';
 
 Chart.register(PieController, ArcElement, Tooltip, Legend, CategoryScale);
 
@@ -81,7 +82,7 @@ const chartOptions = computed<ChartOptions<'pie'>>(() => ({
         label(context) {
           const label = context.label || '';
           const value = context.raw as number;
-          const total = props.numericalData.reduce((a, b) => a + b, 0);
+          const total = sumBy(props.numericalData, x => x);
           const percentage = `${((value / total) * 100).toFixed(2)}%`;
           return `${label}: ${percentage}`;
         },
