@@ -10,6 +10,7 @@ New features:
 - BUYING/SELLING LM ads are now highlighted green/red
 - LM remove redundant info
 - FINLA now shows CX and FX deposits in addition to cash
+- XIT FINBS
 
 Changes:
 - Implemented the real-time updates of XIT buffers and added features. Goodbye refresh button!

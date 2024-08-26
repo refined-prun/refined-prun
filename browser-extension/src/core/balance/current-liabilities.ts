@@ -10,15 +10,15 @@ const accountsPayable = computed(() => sumAccountsPayable(selfCurrentConditions)
 
 const shortTermDebt = computed(() => sumLoanInstallments(selfCurrentConditions));
 
-const materialsPayable = computed(() => sumMaterialsPayable(selfCurrentConditions));
+const materialsToDeliver = computed(() => sumMaterialsPayable(selfCurrentConditions));
 
 const total = computed(() => {
-  return accountsPayable.value + shortTermDebt.value + materialsPayable.value;
+  return accountsPayable.value + shortTermDebt.value + materialsToDeliver.value;
 });
 
 export const currentLiabilities = {
   accountsPayable,
   shortTermDebt,
-  materialsPayable,
+  materialsToDeliver,
   total,
 };

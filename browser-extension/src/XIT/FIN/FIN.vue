@@ -6,7 +6,7 @@ import FinHeader from '@src/XIT/FIN/FinHeader.vue';
 import { formatAmount } from '@src/XIT/FIN/utils';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { cxStore } from '@src/fio/cx';
-import { fixed0, fixed2, percent2 } from '@src/utils/format';
+import { fixed0, fixed1, fixed2, percent0, percent1, percent2 } from '@src/utils/format';
 import { balance } from '@src/core/balance/balance';
 import { currentAssets } from '@src/core/balance/current-assets';
 import { nonCurrentAssets } from '@src/core/balance/non-current-assets';
@@ -15,13 +15,39 @@ import { nonCurrentLiabilities } from '@src/core/balance/non-current-liabilities
 
 const locations = computed(() => calculateLocationAssets());
 
-const acidTestRatio = computed(() => {
-  const ratio = balance.acidTestRatio.value;
-  if (ratio > 10) {
-    return '10+';
+function formatRatio(ratio: number) {
+  if (!isFinite(ratio)) {
+    return 'N/A';
+  }
+  const absRatio = Math.abs(ratio);
+  if (absRatio > 1000) {
+    return ratio > 0 ? '> 1,000' : '< -1,000';
+  }
+  if (absRatio > 100) {
+    return fixed0(ratio);
+  }
+  if (absRatio > 10) {
+    return fixed1(ratio);
   }
   return fixed2(ratio);
-});
+}
+
+function formatPercentage(ratio: number) {
+  if (!isFinite(ratio)) {
+    return 'N/A';
+  }
+  const absRatio = Math.abs(ratio);
+  if (absRatio > 10) {
+    return ratio > 0 ? '> 1,000%' : '< -1,000%';
+  }
+  if (absRatio > 1) {
+    return percent0(ratio);
+  }
+  if (absRatio > 0.1) {
+    return percent1(ratio);
+  }
+  return percent2(ratio);
+}
 
 const figures = computed(() => {
   return [
@@ -33,8 +59,10 @@ const figures = computed(() => {
     { name: 'Non-Current Liabilities', value: formatAmount(nonCurrentLiabilities.total.value) },
     { name: 'Total Liabilities', value: formatAmount(balance.totalLiabilities.value) },
     { name: 'Equity', value: formatAmount(balance.equity.value) },
-    { name: 'Debt-to-Equity Ratio', value: percent2(balance.debtToEquityRatio.value) },
-    { name: 'Acid-Test Ratio', value: acidTestRatio.value },
+    { name: 'Acid-Test Ratio', value: formatRatio(balance.acidTestRatio.value) },
+    { name: 'Working Capital Ratio', value: formatRatio(balance.workingCapitalRatio.value) },
+    { name: 'Debt Ratio', value: formatPercentage(balance.debtRatio.value) },
+    { name: 'Debt-to-Equity Ratio', value: formatRatio(balance.debtToEquityRatio.value) },
   ];
 });
 </script>

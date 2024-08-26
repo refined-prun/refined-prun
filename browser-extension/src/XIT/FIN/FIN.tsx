@@ -18,6 +18,7 @@ import FIN from './FIN.vue';
 import FINCH from './FINCH.vue';
 import FINPR from './FINPR.vue';
 import { mmddyyyy, hhmm, fixed0 } from '@src/utils/format';
+import FINBS from '@src/XIT/FIN/FINBS.vue';
 
 class Finances {
   private tile: HTMLElement;
@@ -292,6 +293,12 @@ xit.add({
   name: 'Financial overview',
   contextItems: () => [{ cmd: 'XIT FINPR' }, { cmd: 'XIT FINCH' }, { cmd: 'XIT FINSET' }],
   component: () => FIN,
+});
+xit.add({
+  command: ['FINBS'],
+  name: 'Balance Statement',
+  contextItems: () => [{ cmd: 'XIT FIN' }, { cmd: 'XIT FINPR' }, { cmd: 'XIT FINSET' }],
+  component: () => FINBS,
 });
 xit.add({
   command: ['FINCH'],

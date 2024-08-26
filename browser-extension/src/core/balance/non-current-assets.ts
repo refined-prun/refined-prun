@@ -40,14 +40,14 @@ const accountsReceivable = computed(() => sumAccountsPayable(partnerNonCurrentCo
 
 const longTermLoans = computed(() => sumLoanInstallments(partnerNonCurrentConditions));
 
-const materialsReceivable = computed(() => sumMaterialsPayable(partnerNonCurrentConditions));
+const materialsToReceive = computed(() => sumMaterialsPayable(partnerNonCurrentConditions));
 
 const total = computed(() => {
   return (
     buildingsTotal.value +
     bases.value +
     accountsReceivable.value +
-    materialsReceivable.value +
+    materialsToReceive.value +
     longTermLoans.value
   );
 });
@@ -57,7 +57,7 @@ export const nonCurrentAssets = {
   buildingsTotal,
   bases,
   accountsReceivable,
-  materialsReceivable,
+  materialsToReceive,
   longTermLoans,
   total,
 };

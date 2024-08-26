@@ -39,6 +39,12 @@ export const percent0 = new Intl.NumberFormat(undefined, {
   maximumFractionDigits: 0,
 }).format;
 
+export const percent1 = new Intl.NumberFormat(undefined, {
+  style: 'percent',
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+}).format;
+
 export const percent2 = new Intl.NumberFormat(undefined, {
   style: 'percent',
   minimumFractionDigits: 2,

@@ -98,7 +98,7 @@ const inventories = computed(() => {
 
 const inventoryTotal = computed(() => sumMapValues(inventories.value));
 
-const materialsReceivable = computed(() => sumMaterialsPayable(partnerCurrentConditions));
+const materialsToReceive = computed(() => sumMaterialsPayable(partnerCurrentConditions));
 
 const total = computed(() => {
   return (
@@ -106,7 +106,7 @@ const total = computed(() => {
     depositsTotal.value +
     marketListedMaterials.value +
     accountsReceivable.value +
-    materialsReceivable.value +
+    materialsToReceive.value +
     inventoryTotal.value
   );
 });
@@ -126,7 +126,7 @@ export const currentAssets = {
   marketListedMaterials,
   inventories,
   inventoryTotal,
-  materialsReceivable,
+  materialsToReceive,
   total,
   totalExceptLiquid,
 };
