@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import PieChart from '@src/XIT/FIN/PieChart.vue';
-import { computed } from 'vue';
-import { calculateFinancials } from '@src/core/financials';
-
-const snapshot = computed(() => calculateFinancials());
+import { currentAssets } from '@src/core/balance/current-assets';
+import { nonCurrentAssets } from '@src/core/balance/non-current-assets';
 </script>
 
 <template>
   <PieChart
-    :label-data="['Fixed', 'Current', 'Liquid']"
-    :numerical-data="[snapshot.Totals.Fixed, snapshot.Totals.Current, snapshot.Totals.Liquid]" />
+    :label-data="['Current', 'Non-Current']"
+    :numerical-data="[currentAssets.total.value, nonCurrentAssets.total.value]" />
 </template>

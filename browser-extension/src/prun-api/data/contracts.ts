@@ -1,6 +1,7 @@
 import { createEntityStore } from '@src/prun-api/data/create-entity-store';
 import { messages } from '@src/prun-api/data/api-messages';
 import { createMapGetter } from '@src/prun-api/data/create-map-getter';
+import { computed } from 'vue';
 
 const store = createEntityStore<PrunApi.Contract>();
 const state = store.state;
@@ -67,8 +68,15 @@ function getDestinationByShipmentId(id?: string | undefined) {
   return destination.type === 'PLANET' ? destination.entity.name : destination.entity.naturalId;
 }
 
+export const active = computed(() =>
+  state.all.value.filter(
+    x => x.status === 'CLOSED' || x.status === 'PARTIALLY_FULFILLED' || x.status === 'VIOLATED',
+  ),
+);
+
 export const contractsStore = {
   ...state,
+  active,
   getByLocalId,
   getByShipmentId,
   getDestinationByShipmentId,

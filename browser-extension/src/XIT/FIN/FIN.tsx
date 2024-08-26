@@ -13,7 +13,7 @@ import { Style } from '@src/Style';
 import system from '@src/system';
 import xit from '../xit-registry';
 import { cxStore } from '@src/fio/cx';
-import { recordFinancials, calculateFinancials, finHistory } from '@src/core/financials';
+import { recordFinancials, calculateLocationAssets, finHistory } from '@src/core/financials';
 import FIN from './FIN.vue';
 import FINCH from './FINCH.vue';
 import FINPR from './FINPR.vue';
@@ -46,7 +46,7 @@ function chooseScreen(tile, parameters: string[], pmmgSettings, finObj) {
   }
 
   let finResult = {
-    ...calculateFinancials(),
+    locations: calculateLocationAssets(),
     History: finHistory,
   };
 

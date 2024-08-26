@@ -1,27 +1,40 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { calculateFinancials } from '@src/core/financials';
+import { calculateLocationAssets } from '@src/core/financials';
 import KeyFigures from '@src/XIT/FIN/KeyFigures.vue';
 import FinHeader from '@src/XIT/FIN/FinHeader.vue';
 import { formatAmount } from '@src/XIT/FIN/utils';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { cxStore } from '@src/fio/cx';
-import { fixed0 } from '@src/utils/format';
+import { fixed0, fixed2, percent2 } from '@src/utils/format';
+import { balance } from '@src/core/balance/balance';
+import { currentAssets } from '@src/core/balance/current-assets';
+import { nonCurrentAssets } from '@src/core/balance/non-current-assets';
+import { currentLiabilities } from '@src/core/balance/current-liabilities';
+import { nonCurrentLiabilities } from '@src/core/balance/non-current-liabilities';
 
-const finResult = computed(() => calculateFinancials());
-const equity = computed(() => {
-  const totals = finResult.value.Totals;
-  return totals.Fixed + totals.Current + totals.Liquid - totals.Liabilities;
+const locations = computed(() => calculateLocationAssets());
+
+const acidTestRatio = computed(() => {
+  const ratio = balance.acidTestRatio.value;
+  if (ratio > 10) {
+    return '10+';
+  }
+  return fixed2(ratio);
 });
 
 const figures = computed(() => {
-  const totals = finResult.value.Totals;
   return [
-    { name: 'Fixed Assets', value: formatAmount(totals.Fixed) },
-    { name: 'Current Assets', value: formatAmount(totals.Current) },
-    { name: 'Liquid Assets', value: formatAmount(totals.Liquid) },
-    { name: 'Equity', value: formatAmount(equity.value) },
-    { name: 'Liabilities', value: formatAmount(totals.Liabilities) },
+    { name: 'Current Assets', value: formatAmount(currentAssets.total.value) },
+    { name: '(of which Liquid)', value: formatAmount(currentAssets.liquid.value) },
+    { name: 'Non-Current Assets', value: formatAmount(nonCurrentAssets.total.value) },
+    { name: 'Total Assets', value: formatAmount(balance.totalAssets.value) },
+    { name: 'Current Liabilities', value: formatAmount(currentLiabilities.total.value) },
+    { name: 'Non-Current Liabilities', value: formatAmount(nonCurrentLiabilities.total.value) },
+    { name: 'Total Liabilities', value: formatAmount(balance.totalLiabilities.value) },
+    { name: 'Equity', value: formatAmount(balance.equity.value) },
+    { name: 'Debt-to-Equity Ratio', value: percent2(balance.debtToEquityRatio.value) },
+    { name: 'Acid-Test Ratio', value: acidTestRatio.value },
   ];
 });
 </script>
@@ -36,15 +49,15 @@ const figures = computed(() => {
       <thead>
         <tr>
           <th>Name</th>
-          <th>Fixed Assets</th>
+          <th>Non-Current Assets</th>
           <th>Current Assets</th>
           <th>Total Assets</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="location in finResult.locations" :key="location.name">
+        <tr v-for="location in locations" :key="location.name">
           <td>{{ location.name }}</td>
-          <td>{{ fixed0(location.fixed) }}</td>
+          <td>{{ fixed0(location.nonCurrent) }}</td>
           <td>{{ fixed0(location.current) }}</td>
           <td>{{ fixed0(location.total) }}</td>
         </tr>

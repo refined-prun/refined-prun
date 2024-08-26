@@ -8,9 +8,13 @@ dayjs.extend(relativeTime);
 
 const refTick = ref(0);
 setInterval(() => refTick.value++, 1000);
-export const dayjsLive = () => {
+
+export const dayjsLive = () => live(dayjs());
+export const timestampLive = () => live(Date.now());
+
+function live<T>(value: T): T {
   // Touch reactive value
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _ = refTick.value;
-  return dayjs();
-};
+  return value;
+}
