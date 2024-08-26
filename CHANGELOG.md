@@ -22,6 +22,7 @@ Fixes:
 - Properly intercept all PrUn server-client messages, preventing data loss
 - Reduced the amount of UI updates
 - Improved UI responsiveness
+- remove-mobile-css-rules
 
 ---
 

@@ -30,6 +30,7 @@ import './features/correct-planet-command';
 import './features/evaluate-input-formula';
 import './features/reload-page-on-websocket-disconnect';
 import './features/pending-contracts-add-details';
+import './features/remove-mobile-css-rules';
 import './features/sidebar-buttons';
 import './XIT/xit-commands';
 
