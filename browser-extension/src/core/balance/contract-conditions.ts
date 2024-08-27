@@ -5,11 +5,13 @@ import { timestampLive } from '@src/utils/dayjs';
 import { sumBy } from '@src/utils/sum-by';
 import { castArray } from '@src/utils/cast-array';
 import { getPrice } from '@src/fio/cx';
+import { binarySearch } from '@src/utils/binary-search';
 
 interface ContractCondition {
   condition: PrunApi.ContractCondition;
   isSelf: boolean;
   deadline: number;
+  hasPendingDependencies: boolean;
 }
 
 const sortedConditions = computed(() => {
@@ -21,31 +23,12 @@ const sortedConditions = computed(() => {
         condition,
         isSelf: condition.party === contract.party,
         deadline: calculateDeadline(contract, condition),
+        hasPendingDependencies: hasPendingDependencies(contract, condition),
       });
     }
   }
   conditions.sort((a, b) => a.deadline - b.deadline);
   return conditions;
-});
-
-const accountingPeriod = dayjs.duration(1, 'week').asMilliseconds();
-
-const currentSplitIndex = computed(() => {
-  const currentSplitDate = timestampLive() + accountingPeriod;
-  const conditions = sortedConditions.value;
-  let low = 0;
-  let high = conditions.length;
-
-  while (low < high) {
-    const mid = Math.floor((low + high) / 2);
-    if (conditions[mid].deadline < currentSplitDate) {
-      low = mid + 1;
-    } else {
-      high = mid;
-    }
-  }
-
-  return low;
 });
 
 function calculateDeadline(contract: PrunApi.Contract, condition: PrunApi.ContractCondition) {
@@ -74,6 +57,23 @@ function calculateDeadline(contract: PrunApi.Contract, condition: PrunApi.Contra
 
   return latestDependency + condition.deadlineDuration.millis;
 }
+
+function hasPendingDependencies(contract: PrunApi.Contract, condition: PrunApi.ContractCondition) {
+  return condition.dependencies
+    .map(id => contract.conditions.find(x => x.id === id))
+    .some(x => x?.status !== 'FULFILLED');
+}
+
+const accountingPeriod = dayjs.duration(1, 'week').asMilliseconds();
+
+const currentSplitIndex = computed(() => {
+  const currentSplitDate = timestampLive() + accountingPeriod;
+  return binarySearch(currentSplitDate, sortedConditions.value, x => x.deadline);
+});
+
+export const selfConditions = computed(() => {
+  return sortedConditions.value.filter(x => x.isSelf);
+});
 
 export const currentConditions = computed(() => {
   return sortedConditions.value.slice(0, currentSplitIndex.value);
@@ -115,6 +115,14 @@ export function sumMaterialsPayable(conditions: Ref<ContractCondition[]>) {
   return sumConditions(
     conditions,
     ['DELIVERY', 'PROVISION'],
+    x => getPrice(x.quantity!.material.ticker) * x.quantity!.amount,
+  );
+}
+
+export function sumMaterialsPickup(conditions: Ref<ContractCondition[]>) {
+  return sumConditions(
+    computed(() => conditions.value.filter(x => !x.hasPendingDependencies)),
+    ['COMEX_PURCHASE_PICKUP'],
     x => getPrice(x.quantity!.material.ticker) * x.quantity!.amount,
   );
 }

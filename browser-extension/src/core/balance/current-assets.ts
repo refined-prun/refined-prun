@@ -8,6 +8,8 @@ import {
   sumLoanInstallments,
   sumAccountsPayable,
   sumMaterialsPayable,
+  sumMaterialsPickup,
+  selfConditions,
 } from '@src/core/balance/contract-conditions';
 import { getPrice } from '@src/fio/cx';
 import { sumMapValues } from '@src/core/balance/utils';
@@ -74,7 +76,13 @@ const marketListedMaterials = computed(() => {
   return sumBy(sellOrders, x => getPrice(x.material.ticker) * x.amount);
 });
 
-const materialsToReceive = computed(() => sumMaterialsPayable(partnerCurrentConditions));
+// After DELIVERY/PROVISION was fulfilled by partner,
+// the player must pick up the materials via COMEX_PURCHASE_PICKUP condition.
+// We'll consider these materials as a part of current assets, regardless of condition
+// deadline, since they can be picked up at any time.
+const materialsToReceive = computed(
+  () => sumMaterialsPayable(partnerCurrentConditions) + sumMaterialsPickup(selfConditions),
+);
 
 const total = computed(() => {
   return (
