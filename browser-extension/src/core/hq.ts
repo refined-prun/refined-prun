@@ -1,3 +1,5 @@
+import { clamp } from '@src/utils/clamp';
+
 type MaterialAmount = [number, string];
 type UpgradeMap = MaterialAmount[][];
 
@@ -446,22 +448,32 @@ export const hqUpgradeMaterials: UpgradeMap = [
   ],
 ];
 
-export const accumulatedHqUpgrades: UpgradeMap = [[]];
+export const maxHQLevel = hqUpgradeMaterials.length - 1;
+
+export const accumulatedHQUpgrades: UpgradeMap = [[]];
 
 for (let i = 1; i < hqUpgradeMaterials.length; i++) {
-  const previous = accumulatedHqUpgrades[i - 1];
-  const accumulated: MaterialAmount[] = [];
-  for (const [amount, ticker] of previous) {
-    accumulated.push([amount, ticker]);
+  accumulatedHQUpgrades[i] = calculateHQUpgradeMaterials(0, i);
+}
+
+export function calculateHQUpgradeMaterials(from: number, to: number) {
+  from = clamp(from, 0, maxHQLevel);
+  to = clamp(to, 0, maxHQLevel);
+  if (to <= from) {
+    return [];
   }
-  const current = hqUpgradeMaterials[i];
-  for (const [amount, ticker] of current) {
-    const existing = accumulated.find(x => x[1] === ticker);
-    if (existing) {
-      existing[0] += amount;
-    } else {
-      accumulated.push([amount, ticker]);
+
+  const accumulated: MaterialAmount[] = [];
+  for (let i = from + 1; i <= to; i++) {
+    const level = hqUpgradeMaterials[i];
+    for (const [amount, ticker] of level) {
+      const existing = accumulated.find(x => x[1] === ticker);
+      if (existing) {
+        existing[0] += amount;
+      } else {
+        accumulated.push([amount, ticker]);
+      }
     }
   }
-  accumulatedHqUpgrades[i] = accumulated;
+  return accumulated;
 }

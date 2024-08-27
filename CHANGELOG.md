@@ -11,6 +11,7 @@ New features:
 - LM remove redundant info
 - FINLA now shows CX and FX deposits in addition to cash
 - XIT FINBS
+- XIT HQUC - HQ Upgrade Calculator
 
 Changes:
 - Implemented the real-time updates of XIT buffers and added features. Goodbye refresh button!

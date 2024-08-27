@@ -45,6 +45,7 @@ import './XIT/DEBUG/DEBUG.vue';
 import './XIT/FIN/FIN';
 import './XIT/HEALTH.vue';
 import './XIT/HELP';
+import './XIT/HQUC.vue';
 import './XIT/INV';
 import './XIT/LISTS';
 import './XIT/NOTE';

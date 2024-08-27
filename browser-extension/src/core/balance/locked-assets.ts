@@ -3,8 +3,9 @@ import { companyStore } from '@src/prun-api/data/company';
 import { shipsStore } from '@src/prun-api/data/ships';
 import { getPrice } from '@src/fio/cx';
 import { blueprintsStore } from '@src/prun-api/data/blueprints';
-import { accumulatedHqUpgrades, hqUpgradeMaterials } from '@src/core/hq';
+import { accumulatedHQUpgrades, maxHQLevel } from '@src/core/hq';
 import { sumItemsValue } from '@src/core/balance/utils';
+import { clamp } from '@src/utils/clamp';
 
 const ships = computed(() => {
   let total = 0;
@@ -31,12 +32,12 @@ const ships = computed(() => {
 });
 
 const hqLevelValue = computed(() => {
-  return Math.min(companyStore.headquarters.level, hqUpgradeMaterials.length - 1);
+  return clamp(companyStore.headquarters.level, 0, maxHQLevel);
 });
 
 const hqLevel = computed(() => {
   let value = 0;
-  for (const [amount, ticker] of accumulatedHqUpgrades[hqLevelValue.value]) {
+  for (const [amount, ticker] of accumulatedHQUpgrades[hqLevelValue.value]) {
     value += getPrice(ticker) * amount;
   }
   return value;
