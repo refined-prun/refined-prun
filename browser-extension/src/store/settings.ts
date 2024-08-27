@@ -13,7 +13,7 @@ export const settings = reactive({
   },
   pricing: {
     exchange: 'UNIVERSE',
-    method: 'VWAP30D' as PricingMethod,
+    method: 'VWAP7D' as PricingMethod,
   },
   repairThreshold: 60,
   sidebar: [
