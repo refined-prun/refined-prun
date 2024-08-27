@@ -87,6 +87,10 @@ function profitClass(value: number) {
 </template>
 
 <style scoped>
+table {
+  table-layout: fixed;
+}
+
 table tr > *:not(:first-child) {
   text-align: right;
 }
