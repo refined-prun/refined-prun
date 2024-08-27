@@ -2,7 +2,7 @@ import { clearChildren, createTextSpan, setSettings } from '../util';
 import { NonProductionBuildings } from '../GameProperties';
 import xit from './xit-registry';
 import { shipsStore } from '@src/prun-api/data/ships';
-import { sitesStore } from '@src/prun-api/data/sites';
+import { getBuildingLastRepair, sitesStore } from '@src/prun-api/data/sites';
 import {
   getPlanetNameFromAddress,
   getPlanetNaturalIdFromAddress,
@@ -163,8 +163,7 @@ class Repairs {
       title.classList.add('title');
       this.tile.appendChild(title);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const siteData = [] as any[];
+      const siteData = [] as [string, PrunApi.Platform][];
       for (const site of sitesStore.all.value) {
         const name = getPlanetNameFromAddress(site.address)!;
         const naturalId = getPlanetNaturalIdFromAddress(site.address)!;
@@ -290,20 +289,12 @@ class Repairs {
     }
     return;
   }
-
-  update_buffer() {
-    // Nothing to update
-  }
-
-  destroy_buffer() {
-    // Nothing constantly running so nothing to destroy
-  }
 }
 
 function generateGeneralRepairScreen(
   body,
   matDiv,
-  buildings,
+  buildings: [string, PrunApi.Platform][],
   ships,
   thresholdInput,
   offsetInput,
@@ -323,11 +314,12 @@ function generateGeneralRepairScreen(
       const planet = buildingInfo[0];
       const building = buildingInfo[1];
 
-      if (NonProductionBuildings.includes(building['buildingTicker'])) {
+      if (NonProductionBuildings.includes(building.module.reactorTicker)) {
         return;
       }
 
-      const date = (new Date().getTime() - building.lastRepair) / 86400000;
+      const lastRepair = getBuildingLastRepair(building);
+      const date = (new Date().getTime() - lastRepair) / 86400000;
       if (date < parseFloat(thresholdInput.value || '0') - parseFloat(offsetInput.value || '0')) {
         return;
       }
@@ -339,16 +331,16 @@ function generateGeneralRepairScreen(
       let rowData;
       if (isGlobal) {
         rowData = [
-          building['buildingTicker'],
+          building.module.reactorTicker,
           planet,
           date.toLocaleString(undefined, { maximumFractionDigits: 1 }),
-          `${(building['condition'] * 100).toLocaleString(undefined, { maximumFractionDigits: 1 })}%`,
+          `${(building.condition * 100).toLocaleString(undefined, { maximumFractionDigits: 1 })}%`,
         ];
       } else {
         rowData = [
-          building['buildingTicker'],
+          building.module.reactorTicker,
           date.toLocaleString(undefined, { maximumFractionDigits: 1 }),
-          `${(building['condition'] * 100).toLocaleString(undefined, { maximumFractionDigits: 1 })}%`,
+          `${(building.condition * 100).toLocaleString(undefined, { maximumFractionDigits: 1 })}%`,
         ];
       }
 
@@ -478,11 +470,11 @@ function generateGeneralRepairScreen(
 }
 
 function buildingSort(a, b) {
-  return a[1]['condition'] > b[1]['condition'] ? 1 : -1;
+  return a[1].condition > b[1].condition ? 1 : -1;
 }
 
 xit.add({
-  command: 'REPAIRS',
+  command: ['REP', 'REPAIRS'],
   name: 'REPAIRS',
   module: Repairs,
 });
