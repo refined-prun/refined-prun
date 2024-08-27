@@ -3,6 +3,7 @@ import { currentAssets } from '@src/core/balance/current-assets';
 import { nonCurrentAssets } from '@src/core/balance/non-current-assets';
 import { currentLiabilities } from '@src/core/balance/current-liabilities';
 import { nonCurrentLiabilities } from '@src/core/balance/non-current-liabilities';
+import { lockedAssets } from '@src/core/balance/locked-assets';
 
 const totalAssets = computed(() => currentAssets.total.value + nonCurrentAssets.total.value);
 
@@ -27,6 +28,8 @@ const acidTestRatio = computed(() => {
   return quickAssets / liabilities;
 });
 
+const companyValue = computed(() => equity.value + lockedAssets.total.value);
+
 export const balance = {
   totalAssets,
   totalLiabilities,
@@ -35,4 +38,5 @@ export const balance = {
   debtRatio,
   debtToEquityRatio,
   acidTestRatio,
+  companyValue,
 };

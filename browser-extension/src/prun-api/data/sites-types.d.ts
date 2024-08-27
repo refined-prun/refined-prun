@@ -23,7 +23,7 @@ declare namespace PrunApi {
     needsFertileSoil: boolean;
     type: BuildOptionType;
     workforceCapacities: WorkforceCapacity[];
-    materials: BuildOptionMaterials;
+    materials: MaterialQuantities;
   }
 
   export declare type ExpertiseCategory =
@@ -36,10 +36,6 @@ declare namespace PrunApi {
     | 'MANUFACTURING'
     | 'METALLURGY'
     | 'RESOURCE_EXTRACTION';
-
-  export interface BuildOptionMaterials {
-    quantities: MaterialAmount[];
-  }
 
   export declare type BuildOptionType =
     | 'CORE'

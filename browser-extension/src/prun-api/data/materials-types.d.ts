@@ -14,6 +14,10 @@ declare namespace PrunApi {
     amount: number;
   }
 
+  export interface MaterialQuantities {
+    quantities: MaterialAmount[];
+  }
+
   export interface MaterialAmountLimit {
     material: Material;
     amount: number;

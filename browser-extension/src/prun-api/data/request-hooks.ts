@@ -13,6 +13,9 @@ export const request = {
   fxos(): void {
     throw Error('Not implemented');
   },
+  blueprints(): void {
+    throw Error('Not implemented');
+  },
 };
 
 export function createRequestGetter<T, K>(

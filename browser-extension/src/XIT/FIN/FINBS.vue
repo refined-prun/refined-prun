@@ -10,6 +10,7 @@ import { cxStore } from '@src/fio/cx';
 import BalanceSheetSection from '@src/XIT/FIN/BalanceSheetSection.vue';
 import PrunCss from '@src/prun-ui/prun-css';
 import { balance } from '@src/core/balance/balance';
+import { lockedAssets } from '@src/core/balance/locked-assets';
 
 interface Section {
   name: string;
@@ -59,6 +60,16 @@ const nonCurrentLiabilitiesSection = computed<Section>(() => ({
     ['Accounts Payable', nonCurrentLiabilities.accountsPayable.value],
     ['Materials to Deliver', nonCurrentLiabilities.materialsToDeliver.value],
     ['Long-Term Debt', nonCurrentLiabilities.longTermDebt.value],
+  ],
+}));
+
+const lockedAssetsSection = computed<Section>(() => ({
+  name: 'Locked Assets',
+  total: lockedAssets.total.value,
+  rows: [
+    ['Ships', lockedAssets.ships.value],
+    ['HQ Upgrades', lockedAssets.hqUpgrades.value],
+    ['APEX Representation Center', lockedAssets.apexRepresentationCenter.value],
   ],
 }));
 </script>
@@ -123,6 +134,24 @@ const nonCurrentLiabilitiesSection = computed<Section>(() => ({
       <tr :class="[PrunCss.IncomeStatementPanel.totals, $style.total]">
         <td :class="PrunCss.IncomeStatementPanel.number">Equity</td>
         <td>{{ formatAmount(balance.equity.value) }}</td>
+        <td>--</td>
+        <td>--</td>
+        <td>--</td>
+      </tr>
+    </tbody>
+    <tbody>
+      <tr>
+        <th colspan="5">COMPANY VALUE</th>
+      </tr>
+    </tbody>
+    <BalanceSheetSection
+      :name="lockedAssetsSection.name"
+      :total="lockedAssetsSection.total"
+      :rows="lockedAssetsSection.rows" />
+    <tbody>
+      <tr :class="[PrunCss.IncomeStatementPanel.totals, $style.total]">
+        <td :class="PrunCss.IncomeStatementPanel.number">Company Value</td>
+        <td>{{ formatAmount(balance.companyValue.value) }}</td>
         <td>--</td>
         <td>--</td>
         <td>--</td>

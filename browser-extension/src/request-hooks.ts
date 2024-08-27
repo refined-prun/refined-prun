@@ -38,7 +38,18 @@ function requestFXOS() {
   showBuffer(`FXOS`, true, true);
 }
 
+let blu = false;
+
+function requestBLU() {
+  if (blu) {
+    return;
+  }
+  blu = true;
+  showBuffer(`BLU`, true, true);
+}
+
 request.production = requestBS;
 request.workforce = requestBS;
 request.cxos = requestCXOS;
 request.fxos = requestFXOS;
+request.blueprints = requestBLU;
