@@ -9,9 +9,8 @@ import { cxStore } from '@src/fio/cx';
 import { fixed0, fixed1, fixed2, percent0, percent1, percent2 } from '@src/utils/format';
 import { balance } from '@src/core/balance/balance';
 import { currentAssets } from '@src/core/balance/current-assets';
-import { nonCurrentAssets } from '@src/core/balance/non-current-assets';
 import { currentLiabilities } from '@src/core/balance/current-liabilities';
-import { nonCurrentLiabilities } from '@src/core/balance/non-current-liabilities';
+import { lockedAssets } from '@src/core/balance/locked-assets';
 
 const locations = computed(() => calculateLocationAssets());
 
@@ -53,12 +52,12 @@ const figures = computed(() => {
   return [
     { name: 'Current Assets', value: formatAmount(currentAssets.total.value) },
     { name: '(of which Liquid)', value: formatAmount(currentAssets.liquid.value) },
-    { name: 'Non-Current Assets', value: formatAmount(nonCurrentAssets.total.value) },
     { name: 'Total Assets', value: formatAmount(balance.totalAssets.value) },
-    { name: 'Current Liabilities', value: formatAmount(currentLiabilities.total.value) },
-    { name: 'Non-Current Liabilities', value: formatAmount(nonCurrentLiabilities.total.value) },
-    { name: 'Total Liabilities', value: formatAmount(balance.totalLiabilities.value) },
     { name: 'Equity', value: formatAmount(balance.equity.value) },
+    { name: 'Current Liabilities', value: formatAmount(currentLiabilities.total.value) },
+    { name: 'Total Liabilities', value: formatAmount(balance.totalLiabilities.value) },
+    { name: 'Locked Assets', value: formatAmount(lockedAssets.total.value) },
+    { name: 'Company Value', value: formatAmount(balance.companyValue.value) },
     { name: 'Acid-Test Ratio', value: formatRatio(balance.acidTestRatio.value) },
     { name: 'Working Capital Ratio', value: formatRatio(balance.workingCapitalRatio.value) },
     { name: 'Debt Ratio', value: formatPercentage(balance.debtRatio.value) },
