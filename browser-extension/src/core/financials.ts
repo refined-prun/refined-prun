@@ -5,6 +5,7 @@ import { currentAssets } from '@src/core/balance/current-assets';
 import { nonCurrentAssets } from '@src/core/balance/non-current-assets';
 import { balance } from '@src/core/balance/balance';
 import { contractsStore } from '@src/prun-api/data/contracts';
+import { inventory } from '@src/core/balance/inventory';
 
 interface LocationAssets {
   name: string;
@@ -68,7 +69,7 @@ export function calculateLocationAssets() {
     return location;
   }
 
-  for (const [name, value] of currentAssets.inventories.value) {
+  for (const [name, value] of inventory.byLocation.value) {
     const location = getLocation(name);
     location.current += value;
     location.total += value;

@@ -10,8 +10,8 @@ import {
   sumMaterialsPayable,
 } from '@src/core/balance/contract-conditions';
 import { getPrice } from '@src/fio/cx';
-import { storagesStore } from '@src/prun-api/data/storage';
-import { getStoreLocationName, sumMapValues } from '@src/core/balance/utils';
+import { sumMapValues } from '@src/core/balance/utils';
+import { inventory } from '@src/core/balance/inventory';
 
 const cashTotal = computed(() => sumBy(balancesStore.all, x => x.amount));
 
@@ -74,30 +74,6 @@ const marketListedMaterials = computed(() => {
   return sumBy(sellOrders, x => getPrice(x.material.ticker) * x.amount);
 });
 
-type LocationName = string;
-
-const inventories = computed(() => {
-  const inventories = new Map<LocationName, number>();
-  for (const store of storagesStore.all.value) {
-    let value = 0;
-
-    const items = store.items.map(x => x.quantity!).filter(x => !!x);
-    for (const item of items) {
-      value += getPrice(item.material.ticker) * item.amount;
-    }
-
-    if (value === 0) {
-      continue;
-    }
-
-    const name = getStoreLocationName(store);
-    inventories.set(name, (inventories.get(name) ?? 0) + value);
-  }
-  return inventories;
-});
-
-const inventoryTotal = computed(() => sumMapValues(inventories.value));
-
 const materialsToReceive = computed(() => sumMaterialsPayable(partnerCurrentConditions));
 
 const total = computed(() => {
@@ -107,7 +83,7 @@ const total = computed(() => {
     marketListedMaterials.value +
     accountsReceivable.value +
     materialsToReceive.value +
-    inventoryTotal.value
+    inventory.total.value
   );
 });
 
@@ -124,8 +100,7 @@ export const currentAssets = {
   accountsReceivable,
   shortTermLoans,
   marketListedMaterials,
-  inventories,
-  inventoryTotal,
+  inventory: inventory.total,
   materialsToReceive,
   total,
   totalExceptLiquid,

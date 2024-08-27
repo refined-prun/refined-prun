@@ -27,7 +27,7 @@ const currentAssetsSection = computed<Section>(() => ({
     ['Accounts Receivable', currentAssets.accountsReceivable.value],
     ['Short-Term Loans', currentAssets.shortTermLoans.value],
     ['Market-Listed Materials', currentAssets.marketListedMaterials.value],
-    ['Inventory', currentAssets.inventoryTotal.value],
+    ['Inventory', currentAssets.inventory.value],
     ['Materials to Receive', currentAssets.materialsToReceive.value],
   ],
 }));
@@ -68,7 +68,8 @@ const lockedAssetsSection = computed<Section>(() => ({
   total: lockedAssets.total.value,
   rows: [
     ['Ships', lockedAssets.ships.value],
-    ['HQ Upgrades', lockedAssets.hqUpgrades.value],
+    ['HQ Levels', lockedAssets.hqLevel.value],
+    ['HQ Upgrade Inventory', lockedAssets.hqUpgradeInventory.value],
     ['APEX Representation Center', lockedAssets.apexRepresentationCenter.value],
   ],
 }));
