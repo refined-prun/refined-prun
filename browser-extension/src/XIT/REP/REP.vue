@@ -21,8 +21,9 @@ import { binarySearch } from '@src/utils/binary-search';
 import dayjs from 'dayjs';
 import { fixed1, percent1 } from '@src/utils/format';
 import { mergeMaterialAmounts, sortMaterialAmounts } from '@src/prun-api/data/materials';
-import MaterialIcon from '@src/components/MaterialIcon.vue';
-import PrunCss from '@src/prun-ui/prun-css';
+import MaterialPurchaseTable from '@src/components/MaterialPurchaseTable.vue';
+import LoadingSpinner from '@src/components/LoadingSpinner.vue';
+import { cxStore } from '@src/fio/cx';
 
 const props = defineProps({
   parameters: {
@@ -70,7 +71,8 @@ function calculateAge(lastRepair: number) {
 </script>
 
 <template>
-  <div :style="{ height: '100%', flexGrow: 1, paddingTop: '4px' }">
+  <LoadingSpinner v-if="!cxStore.fetched" />
+  <div v-else :style="{ height: '100%', flexGrow: 1, paddingTop: '4px' }">
     <span class="title">All Repairs</span>
     <div>
       <div style="display: inline">
@@ -84,14 +86,7 @@ function calculateAge(lastRepair: number) {
     </div>
 
     <span class="title" style="padding-bottom: 2px">Shopping Cart</span>
-    <div :class="PrunCss.MaterialList.container">
-      <MaterialIcon
-        v-for="material in materials"
-        :key="material.material.ticker"
-        small
-        :ticker="material.material.ticker"
-        :amount="material.amount" />
-    </div>
+    <MaterialPurchaseTable :materials="materials" />
 
     <span class="title" style="padding-top: 5px; padding-bottom: 2px">Buildings</span>
     <table>
