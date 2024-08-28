@@ -38,8 +38,8 @@ const nonCurrentAssetsSection = computed<Section>(() => ({
   rows: [
     ['Buildings', nonCurrentAssets.buildingsTotal.value],
     ['Accounts Receivable', nonCurrentAssets.accountsReceivable.value],
-    ['Materials to Receive', nonCurrentAssets.materialsToReceive.value],
     ['Long-Term Loans', nonCurrentAssets.longTermLoans.value],
+    ['Materials to Receive', nonCurrentAssets.materialsToReceive.value],
   ],
 }));
 
