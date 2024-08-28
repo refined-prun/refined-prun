@@ -24,8 +24,9 @@ const acidTestRatio = computed(() => {
     currentAssets.liquid.value +
     currentAssets.accountsReceivable.value +
     currentAssets.shortTermLoans.value;
-  const liabilities = currentLiabilities.total.value;
-  return quickAssets / liabilities;
+  const quickLiabilities =
+    currentLiabilities.accountsPayable.value + currentLiabilities.shortTermDebt.value;
+  return quickAssets / quickLiabilities;
 });
 
 const companyValue = computed(() => equity.value + lockedAssets.total.value);
