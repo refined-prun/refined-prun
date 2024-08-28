@@ -36,8 +36,8 @@ Fixes:
 
 Known bugs:
 - LM ad list will display incorrect data if an ad added/removed/accepted. Please reopen the screen with LM on change
-- XIT FIN shows null for stations
 - FLT ship status can be wonky sometimes
+- XIT buffers sometimes fail to initialize and stay green. Just switch between screens to fix it
 
 Removed features:
 - Custom pricing scheme from Google Sheets for XIT FIN
