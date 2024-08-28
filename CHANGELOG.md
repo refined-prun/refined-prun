@@ -12,8 +12,10 @@ New features:
 - FINLA now shows CX and FX deposits in addition to cash
 - XIT FINBS
 - XIT HQUC - HQ Upgrade Calculator
+- XIT REP now shows a weight/volume/cost table
 
 Changes:
+- XIT command renames: // TODO
 - Implemented the real-time updates of XIT buffers and added features. Goodbye refresh button!
 - Changed chart library to Chart.js, reducing the size of the plugin. Works on Firefox too!
 - Changed XIT calculator to https://desmos.com/scientific
