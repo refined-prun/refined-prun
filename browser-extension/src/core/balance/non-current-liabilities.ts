@@ -3,14 +3,21 @@ import {
   selfNonCurrentConditions,
   sumAccountsPayable,
   sumLoanInstallments,
-  sumMaterialsPayable,
+  sumDeliveries,
+  sumProvisions,
+  sumFactionProvisions,
 } from '@src/core/balance/contract-conditions';
 
 const accountsPayable = computed(() => sumAccountsPayable(selfNonCurrentConditions));
 
 const longTermDebt = computed(() => sumLoanInstallments(selfNonCurrentConditions));
 
-const materialsToDeliver = computed(() => sumMaterialsPayable(selfNonCurrentConditions));
+const materialsToDeliver = computed(
+  () =>
+    sumDeliveries(selfNonCurrentConditions) +
+    sumProvisions(selfNonCurrentConditions) +
+    sumFactionProvisions(selfNonCurrentConditions),
+);
 
 const total = computed(() => {
   return accountsPayable.value + longTermDebt.value + materialsToDeliver.value;

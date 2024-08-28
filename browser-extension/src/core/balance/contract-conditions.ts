@@ -1,17 +1,17 @@
 import { computed, Ref } from 'vue';
-import { contractsStore } from '@src/prun-api/data/contracts';
+import { contractsStore, isFactionContract } from '@src/prun-api/data/contracts';
 import dayjs from 'dayjs';
 import { timestampLive } from '@src/utils/dayjs';
 import { sumBy } from '@src/utils/sum-by';
-import { castArray } from '@src/utils/cast-array';
 import { getPrice } from '@src/fio/cx';
 import { binarySearch } from '@src/utils/binary-search';
 
 interface ContractCondition {
+  contract: PrunApi.Contract;
   condition: PrunApi.ContractCondition;
   isSelf: boolean;
   deadline: number;
-  hasPendingDependencies: boolean;
+  dependencies: PrunApi.ContractCondition[];
 }
 
 const sortedConditions = computed(() => {
@@ -20,10 +20,13 @@ const sortedConditions = computed(() => {
     const activeConditions = contract.conditions.filter(x => x.status !== 'FULFILLED');
     for (const condition of activeConditions) {
       conditions.push({
+        contract,
         condition,
         isSelf: condition.party === contract.party,
         deadline: calculateDeadline(contract, condition),
-        hasPendingDependencies: hasPendingDependencies(contract, condition),
+        dependencies: condition.dependencies
+          .map(id => contract.conditions.find(x => x.id === id)!)
+          .filter(x => !!x),
       });
     }
   }
@@ -56,12 +59,6 @@ function calculateDeadline(contract: PrunApi.Contract, condition: PrunApi.Contra
   }
 
   return latestDependency + condition.deadlineDuration.millis;
-}
-
-function hasPendingDependencies(contract: PrunApi.Contract, condition: PrunApi.ContractCondition) {
-  return condition.dependencies
-    .map(id => contract.conditions.find(x => x.id === id))
-    .some(x => x?.status !== 'FULFILLED');
 }
 
 const accountingPeriod = dayjs.duration(1, 'week').asMilliseconds();
@@ -106,33 +103,86 @@ export function sumAccountsPayable(conditions: Ref<ContractCondition[]>) {
 export function sumLoanInstallments(conditions: Ref<ContractCondition[]>) {
   return sumConditions(
     conditions,
-    'LOAN_INSTALLMENT',
+    ['LOAN_INSTALLMENT'],
     x => x.interest!.amount + x.repayment!.amount,
   );
 }
 
-export function sumMaterialsPayable(conditions: Ref<ContractCondition[]>) {
-  return sumConditions(
-    conditions,
-    ['DELIVERY', 'PROVISION'],
-    x => getPrice(x.quantity!.material.ticker) * x.quantity!.amount,
+export function sumDeliveries(conditions: Ref<ContractCondition[]>) {
+  return sumConditions(conditions, ['DELIVERY'], getMaterialQuantityValue);
+}
+
+export function sumProvisions(conditions: Ref<ContractCondition[]>) {
+  return sumConditions(conditions, ['PROVISION'], getMaterialQuantityValue);
+}
+
+export function sumFactionProvisions(conditions: Ref<ContractCondition[]>) {
+  // Faction Logistics contracts request materials via PROVISION_SHIPMENT
+  // contract conditions. Count them as liabilities.
+  const filtered = conditions.value.filter(
+    x => isFactionContract(x.contract) && x.condition.type === 'PROVISION_SHIPMENT',
   );
+  return sumBy(filtered, x => getMaterialQuantityValue(x.condition));
 }
 
 export function sumMaterialsPickup(conditions: Ref<ContractCondition[]>) {
-  return sumConditions(
-    computed(() => conditions.value.filter(x => !x.hasPendingDependencies)),
-    ['COMEX_PURCHASE_PICKUP'],
-    x => getPrice(x.quantity!.material.ticker) * x.quantity!.amount,
+  const filtered = conditions.value.filter(
+    x =>
+      x.condition.type === 'COMEX_PURCHASE_PICKUP' &&
+      x.dependencies.some(y => y.status !== 'FULFILLED'),
   );
+  return sumBy(filtered, x => getMaterialQuantityValue(x.condition));
+}
+
+export function sumPendingMaterialsPickup(conditions: Ref<ContractCondition[]>) {
+  const filtered = conditions.value.filter(
+    x =>
+      x.condition.type === 'COMEX_PURCHASE_PICKUP' &&
+      x.dependencies.every(y => y.status === 'FULFILLED'),
+  );
+  return sumBy(filtered, x => getMaterialQuantityValue(x.condition));
+}
+
+export function sumMaterialsShipment(conditions: Ref<ContractCondition[]>) {
+  let total = 0;
+  const filtered = conditions.value.filter(x => x.condition.type === 'DELIVERY_SHIPMENT');
+  for (const cc of filtered) {
+    const pickup = findDependency(cc.contract, cc.condition, 'PICKUP_SHIPMENT');
+    if (!pickup) {
+      continue;
+    }
+    const provision = findDependency(cc.contract, pickup, 'PROVISION_SHIPMENT');
+    if (provision?.status !== 'FULFILLED' || !provision?.quantity) {
+      continue;
+    }
+    total += getMaterialQuantityValue(provision);
+  }
+  return total;
+}
+
+function findDependency(
+  contract: PrunApi.Contract,
+  condition: PrunApi.ContractCondition,
+  type: PrunApi.ContractConditionType,
+) {
+  for (const id of condition.dependencies) {
+    const match = contract.conditions.find(x => x.id === id);
+    if (match?.type === type) {
+      return match;
+    }
+  }
+  return undefined;
 }
 
 function sumConditions(
   conditions: Ref<ContractCondition[]>,
-  types: Arrayable<PrunApi.ContractConditionType>,
+  types: PrunApi.ContractConditionType[],
   property: (item: PrunApi.ContractCondition) => number,
 ) {
-  types = castArray(types);
   const filtered = conditions.value.filter(x => types.includes(x.condition.type));
   return sumBy(filtered, x => property(x.condition));
+}
+
+function getMaterialQuantityValue(condition: PrunApi.ContractCondition) {
+  return getPrice(condition.quantity!.material.ticker) * condition.quantity!.amount;
 }

@@ -20,7 +20,12 @@ Changes:
 - Changed custom math evaluator to https://github.com/bugwheels94/math-expression-evaluator
 
 Fixes:
-- Fixed XIT FIN incorrectly counting the value of FX orders
+- Various fixes to XIT FIN balance calculations:
+  - FXOS deposit value now counted by remaining amount, instead of initial amount
+  - Blocked/Shipped materials are now included in assets
+  - Materials in "Pick up shipment" contract condition are now included in assets
+  - Materials requests in faction contracts are now included in liabilities
+  - Materials rewards in faction contracts are now included in assets
 - Properly intercept all PrUn server-client messages, preventing data loss
 - Reduced the amount of UI updates
 - Improved UI responsiveness

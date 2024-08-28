@@ -81,3 +81,7 @@ export const contractsStore = {
   getByShipmentId,
   getDestinationByShipmentId,
 };
+
+export function isFactionContract(contract: PrunApi.Contract) {
+  return !!contract.partner.countryCode;
+}

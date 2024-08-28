@@ -3,9 +3,12 @@ import { getPrice } from '@src/fio/cx';
 import { sitesStore } from '@src/prun-api/data/sites';
 import {
   partnerNonCurrentConditions,
+  selfNonCurrentConditions,
   sumAccountsPayable,
   sumLoanInstallments,
-  sumMaterialsPayable,
+  sumDeliveries,
+  sumMaterialsShipment,
+  sumMaterialsPickup,
 } from '@src/core/balance/contract-conditions';
 import { sumMapValues } from '@src/core/balance/utils';
 import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
@@ -40,7 +43,12 @@ const accountsReceivable = computed(() => sumAccountsPayable(partnerNonCurrentCo
 
 const longTermLoans = computed(() => sumLoanInstallments(partnerNonCurrentConditions));
 
-const materialsToReceive = computed(() => sumMaterialsPayable(partnerNonCurrentConditions));
+const materialsToReceive = computed(
+  () =>
+    sumDeliveries(partnerNonCurrentConditions) +
+    sumMaterialsShipment(partnerNonCurrentConditions) +
+    sumMaterialsPickup(selfNonCurrentConditions),
+);
 
 const total = computed(() => {
   return (
