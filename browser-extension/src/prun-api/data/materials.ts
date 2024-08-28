@@ -50,3 +50,27 @@ export const sortMaterials = (materials: PrunApi.Material[]) => {
       : categoryA.localeCompare(categoryB);
   });
 };
+
+export const sortMaterialAmounts = (materials: PrunApi.MaterialAmount[]) => {
+  const categories = materialCategoriesStore.entities;
+  return materials.slice().sort((a, b) => {
+    const categoryA = categories[a.material.category].name;
+    const categoryB = categories[b.material.category].name;
+    return categoryA === categoryB
+      ? a.material.ticker.localeCompare(b.material.ticker)
+      : categoryA.localeCompare(categoryB);
+  });
+};
+
+export function mergeMaterialAmounts(materials: PrunApi.MaterialAmount[]) {
+  const result: PrunApi.MaterialAmount[] = [];
+  for (const material of materials) {
+    const existing = result.find(x => x.material.ticker === material.material.ticker);
+    if (existing) {
+      existing.amount += material.amount;
+    } else {
+      result.push({ ...material });
+    }
+  }
+  return result;
+}

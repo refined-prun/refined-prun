@@ -21,6 +21,9 @@ const getByRegistration = createMapGetter(
   x => x.toLowerCase(),
 );
 
+export const getShipLastRepair = (ship: PrunApi.Ship) =>
+  ship.lastRepair?.timestamp || ship.commissioningTime.timestamp;
+
 export const shipsStore = {
   ...state,
   getByRegistration,

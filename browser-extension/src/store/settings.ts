@@ -16,6 +16,7 @@ export const settings = reactive({
     method: 'VWAP7D' as PricingMethod,
   },
   repairThreshold: 60,
+  repairOffset: 10,
   sidebar: [
     ['BS', 'BS'],
     ['CONT', 'CONTS'],

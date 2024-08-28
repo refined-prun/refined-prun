@@ -11,7 +11,6 @@ import {
   showBuffer,
 } from '../util';
 import { Style, TextColors } from '../Style';
-import { NonProductionBuildings } from '../GameProperties';
 import xit from './xit-registry';
 import { getBuildingLastRepair, sitesStore } from '@src/prun-api/data/sites';
 import { workforcesStore } from '@src/prun-api/data/workforces';
@@ -506,7 +505,7 @@ function addChecklistItem(params) {
       if (site?.platforms) {
         site.platforms.forEach(building => {
           if (
-            !NonProductionBuildings.includes(building.module.reactorTicker) &&
+            building.repairMaterials.length !== 0 &&
             Date.now() - getBuildingLastRepair(building) > parseFloat(info.days) * 86400000
           ) {
             // Old enough

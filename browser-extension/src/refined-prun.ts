@@ -49,7 +49,7 @@ import './XIT/HQUC.vue';
 import './XIT/INV';
 import './XIT/LISTS';
 import './XIT/NOTE';
-import './XIT/REPAIRS';
+import './XIT/REP/REP.vue';
 import './XIT/SET';
 import './XIT/SORT';
 import './XIT/START.vue';

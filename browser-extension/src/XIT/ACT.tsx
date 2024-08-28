@@ -18,7 +18,7 @@ import {
 } from '../util';
 import { Style } from '../Style';
 import { Selector } from '../Selector';
-import { ExchangeTickersReverse, NonProductionBuildings } from '../GameProperties';
+import { ExchangeTickersReverse } from '../GameProperties';
 import xit from './xit-registry';
 import { cxobStore } from '@src/prun-api/data/cxob';
 import { workforcesStore } from '@src/prun-api/data/workforces';
@@ -1445,7 +1445,7 @@ function parseGroup(group, messageBox, errorFlag) {
 
     if (planetSite && planetSite.platforms) {
       planetSite.platforms.forEach(building => {
-        if (NonProductionBuildings.includes(building.module.reactorTicker)) {
+        if (building.repairMaterials.length === 0) {
           return;
         }
 

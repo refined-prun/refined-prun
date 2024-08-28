@@ -23,7 +23,7 @@ declare namespace PrunApi {
     operatingTimeStl: TimeSpan;
     operatingTimeFtl: TimeSpan;
     condition: number;
-    lastRepair: number | null;
+    lastRepair: DateTime | null;
     repairMaterials: MaterialAmount[];
     status: string;
   }
