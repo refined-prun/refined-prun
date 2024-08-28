@@ -1,5 +1,6 @@
 import { shallowReactive } from 'vue';
 import { settings } from '@src/store/settings';
+import { sumBy } from '@src/utils/sum-by';
 
 export async function fetchPrices() {
   const url = 'https://refined-prun.github.io/refined-prices/all.json';
@@ -131,6 +132,18 @@ export function getPrice(ticker?: string | null) {
   }
 
   return 0;
+}
+
+export function getMaterialPrice(material: PrunApi.Material) {
+  return getPrice(material.ticker);
+}
+
+export function calcMaterialAmountPrice(amount: PrunApi.MaterialAmount) {
+  return getMaterialPrice(amount.material) * amount.amount;
+}
+
+export function sumMaterialAmountPrice(amounts: PrunApi.MaterialAmount[]) {
+  return sumBy(amounts, calcMaterialAmountPrice);
 }
 
 export const cxStore = shallowReactive({

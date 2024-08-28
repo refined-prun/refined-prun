@@ -4,7 +4,7 @@ import PrunLink from '@src/components/PrunLink.vue';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import { PropType } from 'vue';
 import { settings } from '@src/store/settings';
-import { getPrice } from '@src/fio/cx';
+import { calcMaterialAmountPrice } from '@src/fio/cx';
 
 const props = defineProps({
   materials: {
@@ -23,10 +23,6 @@ function calculateTotal(fn: (material: PrunApi.MaterialAmount) => number) {
 
 function formatPrice(price: number): string {
   return settings.fin.currency + fixed0(price);
-}
-
-function calculateCost(amount: PrunApi.MaterialAmount) {
-  return getPrice(amount.material.ticker) * amount.amount;
 }
 
 function calculateWeight(amount: PrunApi.MaterialAmount) {
@@ -52,7 +48,7 @@ function calculateVolume(amount: PrunApi.MaterialAmount) {
     <tbody>
       <tr v-for="material in materials" :key="material.material.ticker">
         <td><MaterialIcon small :ticker="material.material.ticker" :amount="material.amount" /></td>
-        <td>{{ formatPrice(calculateCost(material)) }}</td>
+        <td>{{ formatPrice(calcMaterialAmountPrice(material)) }}</td>
         <td>{{ fixed2(calculateWeight(material)) }}t</td>
         <td>{{ fixed2(calculateVolume(material)) }}m³</td>
         <td><PrunLink :command="`CXM ${material.material.ticker}`" /></td>
@@ -61,7 +57,7 @@ function calculateVolume(amount: PrunApi.MaterialAmount) {
     <tbody>
       <tr>
         <td>Total:</td>
-        <td>{{ formatPrice(calculateTotal(calculateCost)) }}</td>
+        <td>{{ formatPrice(calculateTotal(calcMaterialAmountPrice)) }}</td>
         <td>{{ fixed2(calculateTotal(calculateWeight)) }}t</td>
         <td>{{ fixed2(calculateTotal(calculateVolume)) }}m³</td>
       </tr>

@@ -1,9 +1,10 @@
 import { computed } from 'vue';
 import { storagesStore } from '@src/prun-api/data/storage';
-import { getStoreLocationName, sumItemsValue, sumMapValues } from '@src/core/balance/utils';
+import { getStoreLocationName, sumMapValues } from '@src/core/balance/utils';
 import { shipyardProjectsStore } from '@src/prun-api/data/shipyard-projects';
 import { shipyardsStore } from '@src/prun-api/data/shipyards';
 import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
+import { sumMaterialAmountPrice } from '@src/fio/cx';
 
 type LocationName = string;
 
@@ -11,7 +12,7 @@ const byLocation = computed(() => {
   const inventories = new Map<LocationName, number>();
   for (const store of storagesStore.all.value) {
     const items = store.items.map(x => x.quantity!).filter(x => !!x);
-    const value = sumItemsValue(items);
+    const value = sumMaterialAmountPrice(items);
     if (value === 0) {
       continue;
     }
@@ -20,7 +21,7 @@ const byLocation = computed(() => {
     inventories.set(name, (inventories.get(name) ?? 0) + value);
   }
   for (const project of shipyardProjectsStore.all.value.filter(x => x.status === 'CREATED')) {
-    const value = sumItemsValue(project.inventory.items);
+    const value = sumMaterialAmountPrice(project.inventory.items);
     if (value === 0) {
       continue;
     }

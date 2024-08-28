@@ -3,7 +3,7 @@ import { contractsStore, isFactionContract } from '@src/prun-api/data/contracts'
 import dayjs from 'dayjs';
 import { timestampLive } from '@src/utils/dayjs';
 import { sumBy } from '@src/utils/sum-by';
-import { getPrice } from '@src/fio/cx';
+import { calcMaterialAmountPrice } from '@src/fio/cx';
 import { binarySearch } from '@src/utils/binary-search';
 
 interface ContractCondition {
@@ -184,5 +184,5 @@ function sumConditions(
 }
 
 function getMaterialQuantityValue(condition: PrunApi.ContractCondition) {
-  return getPrice(condition.quantity!.material.ticker) * condition.quantity!.amount;
+  return calcMaterialAmountPrice(condition.quantity!);
 }

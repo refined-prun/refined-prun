@@ -1,6 +1,6 @@
 import { productionStore } from '@src/prun-api/data/production';
 import { workforcesStore } from '@src/prun-api/data/workforces';
-import { getPrice } from '@src/fio/cx';
+import { sumMaterialAmountPrice } from '@src/fio/cx';
 
 export function calculateSiteProfitability(siteId: string) {
   const production = productionStore.getBySiteId(siteId);
@@ -51,15 +51,8 @@ export function calculateSiteProfitability(siteId: string) {
     }
   }
 
-  let consumed = 0;
-  for (const input of inputs) {
-    consumed += getPrice(input.material.ticker) * input.amount;
-  }
-
-  let produced = 0;
-  for (const output of outputs) {
-    produced += getPrice(output.material.ticker) * output.amount;
-  }
+  const consumed = sumMaterialAmountPrice(inputs);
+  const produced = sumMaterialAmountPrice(outputs);
 
   const profit = produced - consumed;
   const margin = consumed !== 0 ? profit / consumed : 0;

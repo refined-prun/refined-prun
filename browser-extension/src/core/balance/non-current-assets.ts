@@ -1,5 +1,5 @@
 import { computed } from 'vue';
-import { getPrice } from '@src/fio/cx';
+import { sumMaterialAmountPrice } from '@src/fio/cx';
 import { sitesStore } from '@src/prun-api/data/sites';
 import {
   partnerNonCurrentConditions,
@@ -21,9 +21,7 @@ const buildings = computed(() => {
   for (const site of sitesStore.all.value) {
     let value = 0;
     for (const building of site.platforms) {
-      for (const mat of building.reclaimableMaterials) {
-        value += getPrice(mat.material.ticker) * mat.amount;
-      }
+      value += sumMaterialAmountPrice(building.reclaimableMaterials);
     }
     if (value === 0) {
       continue;
