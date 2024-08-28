@@ -12,6 +12,9 @@ messages({
     store.setAll(data.blueprints);
     store.setFetched();
   },
+  BLUEPRINT_BLUEPRINT(data: PrunApi.Blueprint) {
+    store.setOne(data);
+  },
 });
 
 const all = (() => {

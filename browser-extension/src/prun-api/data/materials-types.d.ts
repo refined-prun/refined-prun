@@ -24,6 +24,10 @@ declare namespace PrunApi {
     limit: number;
   }
 
+  export interface ProjectInventory {
+    items: MaterialAmountLimit[];
+  }
+
   export interface MaterialAmountValue {
     value: CurrencyAmount;
     material: Material;

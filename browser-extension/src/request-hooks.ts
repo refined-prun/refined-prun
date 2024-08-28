@@ -18,38 +18,22 @@ function requestBS(siteId?: string | null) {
   showBuffer(`BS ${naturalId}`, true, true);
 }
 
-let cxos = false;
+function singleBufferRequest(command: string) {
+  let requested = false;
 
-function requestCXOS() {
-  if (cxos) {
-    return;
-  }
-  cxos = true;
-  showBuffer(`CXOS`, true, true);
-}
-
-let fxos = false;
-
-function requestFXOS() {
-  if (fxos) {
-    return;
-  }
-  fxos = true;
-  showBuffer(`FXOS`, true, true);
-}
-
-let blu = false;
-
-function requestBLU() {
-  if (blu) {
-    return;
-  }
-  blu = true;
-  showBuffer(`BLU`, true, true);
+  return function request() {
+    if (requested) {
+      return;
+    }
+    requested = true;
+    showBuffer(command, true, true);
+  };
 }
 
 request.production = requestBS;
 request.workforce = requestBS;
-request.cxos = requestCXOS;
-request.fxos = requestFXOS;
-request.blueprints = requestBLU;
+request.cxos = singleBufferRequest('CXOS');
+request.fxos = singleBufferRequest('FXOS');
+request.blueprints = singleBufferRequest('BLU');
+request.shipyards = singleBufferRequest('SHY');
+request.shipyardProjects = singleBufferRequest('SHYP');

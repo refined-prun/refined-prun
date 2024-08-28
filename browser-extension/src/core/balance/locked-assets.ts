@@ -6,6 +6,7 @@ import { blueprintsStore } from '@src/prun-api/data/blueprints';
 import { accumulatedHQUpgrades, maxHQLevel } from '@src/core/hq';
 import { sumItemsValue } from '@src/core/balance/utils';
 import { clamp } from '@src/utils/clamp';
+import { shipyardProjectsStore } from '@src/prun-api/data/shipyard-projects';
 
 const ships = computed(() => {
   let total = 0;
@@ -27,7 +28,9 @@ const ships = computed(() => {
 
     total += shipValue - repairsCost;
   }
-
+  for (const project of shipyardProjectsStore.all.value.filter(x => x.status === 'IN_PROGRESS')) {
+    total += sumItemsValue(project.inventory.items);
+  }
   return total;
 });
 

@@ -16,6 +16,12 @@ export const request = {
   blueprints(): void {
     throw Error('Not implemented');
   },
+  shipyards(): void {
+    throw Error('Not implemented');
+  },
+  shipyardProjects(): void {
+    throw Error('Not implemented');
+  },
 };
 
 export function createRequestGetter<T, K>(

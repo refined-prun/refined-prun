@@ -16,7 +16,7 @@ declare namespace PrunApi {
     level: number;
     basePermits: number;
     usedBasePermits: number;
-    inventory: CompanyHQInventory;
+    inventory: ProjectInventory;
     additionalBasePermits: number;
     additionalProductionQueueSlots: number;
     nextRelocationTime: null;
@@ -28,10 +28,6 @@ declare namespace PrunApi {
   export interface HQEfficiencyGain {
     category: string;
     gain: number;
-  }
-
-  export interface CompanyHQInventory {
-    items: MaterialAmountLimit[];
   }
 
   export interface RatingReport {
