@@ -38,28 +38,26 @@ const hqLevelValue = computed(() => {
   return clamp(companyStore.headquarters.level, 0, maxHQLevel);
 });
 
-const hqLevel = computed(() => {
+const hqUpgrades = computed(() => {
   let value = 0;
   for (const [amount, ticker] of accumulatedHQUpgrades[hqLevelValue.value]) {
     value += getPrice(ticker) * amount;
   }
+  value += sumItemsValue(companyStore.headquarters.inventory.items);
   return value;
 });
-
-const hqUpgradeInventory = computed(() => sumItemsValue(companyStore.headquarters.inventory.items));
 
 const apexRepresentationCenter = computed(
   () => companyStore.representation.contributedTotal.amount,
 );
 
 const total = computed(() => {
-  return ships.value + hqLevel.value + hqUpgradeInventory.value + apexRepresentationCenter.value;
+  return ships.value + hqUpgrades.value + hqUpgrades.value + apexRepresentationCenter.value;
 });
 
 export const lockedAssets = {
   ships,
-  hqLevel,
-  hqUpgradeInventory,
+  hqUpgrades,
   apexRepresentationCenter,
   total,
 };

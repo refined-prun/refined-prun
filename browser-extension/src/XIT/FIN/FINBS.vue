@@ -68,8 +68,7 @@ const lockedAssetsSection = computed<Section>(() => ({
   total: lockedAssets.total.value,
   rows: [
     ['Ships', lockedAssets.ships.value],
-    ['HQ Levels', lockedAssets.hqLevel.value],
-    ['HQ Upgrade Inventory', lockedAssets.hqUpgradeInventory.value],
+    ['HQ Upgrades', lockedAssets.hqUpgrades.value],
     ['APEX Representation Center', lockedAssets.apexRepresentationCenter.value],
   ],
 }));
