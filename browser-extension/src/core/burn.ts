@@ -57,7 +57,7 @@ export function calculatePlanetBurn(
       for (const order of line.orders) {
         if (!order.started && (!hasRecurring || order.recurring)) {
           // Only account for orders in the queue.
-          totalDuration += order.duration.millis;
+          totalDuration += order.duration?.millis || Infinity;
         }
       }
       totalDuration /= 86400000; // Convert to days

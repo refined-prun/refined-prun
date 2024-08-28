@@ -29,7 +29,7 @@ declare namespace PrunApi {
     created: DateTime;
     started: DateTime | null;
     completion: DateTime | null;
-    duration: TimeSpan;
+    duration: TimeSpan | null;
     lastUpdated: DateTime | null;
     completed: number;
     halted: boolean;

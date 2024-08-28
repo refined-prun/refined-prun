@@ -27,7 +27,7 @@ export function calculateSiteProfitability(siteId: string) {
       let totalDuration = 0;
       for (const order of line.orders) {
         if (!order.started && (!isRecurring || order.recurring)) {
-          totalDuration += order.duration.millis || Infinity;
+          totalDuration += order.duration?.millis || Infinity;
         }
       }
 
