@@ -62,6 +62,7 @@ async function init() {
 async function initializeFeature(feature: FeatureDescriptor, signal: AbortSignal) {
   let result = true;
   if (feature.init) {
+    features.current = feature.id;
     await asyncForEach(castArray(feature.init), async init => {
       try {
         await init(signal);
@@ -70,6 +71,7 @@ async function initializeFeature(feature: FeatureDescriptor, signal: AbortSignal
         result = false;
       }
     });
+    features.current = undefined;
   }
   if (result) {
     if (feature.attribute) {
@@ -82,6 +84,7 @@ async function initializeFeature(feature: FeatureDescriptor, signal: AbortSignal
 const features = {
   add,
   init,
+  current: undefined as string | undefined,
 };
 
 export default features;

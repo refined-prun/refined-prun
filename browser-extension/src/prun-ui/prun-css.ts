@@ -3,21 +3,23 @@ import { CssClasses } from '@src/prun-ui/prun-css-types';
 
 // @ts-expect-error This object will be loaded via function below
 const PrunCss: CssClasses = {};
+export default PrunCss;
 
-export function loadPrunCss() {
+export function parsePrunCss() {
   const classSet = new Set<string>();
   const styles = $$('style', document.head);
   for (const style of styles) {
-    const text = style.textContent;
-    if (!text) {
+    const sheet = style.sheet;
+    if (!sheet) {
       continue;
     }
-    for (const line of text.split('\n')) {
-      if (!line.includes('___')) {
+    for (let i = 0; i < sheet.cssRules.length; i++) {
+      const rule = sheet.cssRules.item(i) as CSSStyleRule;
+      const selector = rule?.selectorText;
+      if (!selector?.includes('___')) {
         continue;
       }
-
-      const matches = line.match(/[\w-]+__[\w-]+___[\w-]+/g);
+      const matches = selector.match(/[\w-]+__[\w-]+___[\w-]+/g);
       for (const match of matches ?? []) {
         classSet.add(match);
       }
@@ -47,5 +49,3 @@ export function loadPrunCss() {
   }
   Object.assign(PrunCss, result);
 }
-
-export default PrunCss;

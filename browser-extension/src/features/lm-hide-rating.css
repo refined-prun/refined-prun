@@ -1,7 +1,7 @@
-[rp-lm-hide-rating] div[data-rp-command='LM'] .RatingIcon__container___wMamsNH {
+.lm-hide-rating__icon {
   display: none;
 }
 
-[rp-lm-hide-rating] div[data-rp-command='LM'] .CommodityAd__text___xJQmJNa {
+.lm-hide-rating__text {
   padding-left: 5px;
 }

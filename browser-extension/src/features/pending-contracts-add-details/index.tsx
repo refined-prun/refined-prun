@@ -7,6 +7,7 @@ import ContractPartnerName from '@src/features/pending-contracts-add-details/Con
 import { refTextContent } from '@src/utils/reactive-dom';
 import { reactive } from 'vue';
 import { showBuffer } from '@src/util';
+import { applyCssRule } from '@src/prun-ui/refined-prun-css';
 
 function onContractIdReady(id: HTMLDivElement) {
   id.addEventListener('click', () => showBuffer(`CONT ${id.textContent}`));
@@ -20,6 +21,9 @@ function onContractIdReady(id: HTMLDivElement) {
 }
 
 export function init() {
+  applyCssRule(`.${PrunCss.Sidebar.contract} .${PrunCss.Link.link}`, 'link');
+  applyCssRule(`.${PrunCss.Sidebar.contractId}`, 'contract-id');
+  applyCssRule(`.${PrunCss.Sidebar.contractId}:hover`, 'contract-id:hover');
   observeReadyElementsByClassName(PrunCss.Sidebar.contractId, onContractIdReady);
 }
 

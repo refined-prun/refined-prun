@@ -13,6 +13,7 @@ import ShipStatusLabel from '@src/features/hide-redundant-info/ShipStatusLabel.v
 import { extractPlanetName } from '@src/util';
 import { _$$ } from '@src/utils/get-element-by-class-name';
 import { planetsStore } from '@src/prun-api/data/planets';
+import { applyScopedClassCssRule, applyScopedCssRule } from '@src/prun-ui/refined-prun-css';
 
 function cleanCOGCPEX(buffer: PrunBuffer) {
   // Replace 'view details/vote' with 'vote'
@@ -125,7 +126,7 @@ function cleanLM(buffer: PrunBuffer) {
       if (ad.firstChild?.textContent === 'SHIPPING') {
         cleanShipmentAd(buffer, ad);
       }
-      for (const node of ad.childNodes) {
+      for (const node of Array.from(ad.childNodes)) {
         if (!node.textContent) {
           continue;
         }
@@ -176,6 +177,14 @@ function cleanContractType(ad: HTMLElement) {
 }
 
 export function init() {
+  // Hide Exchange column
+  applyScopedCssRule('CXOS', 'tr > *:first-child', 'first-column');
+  // Hide Transponder column
+  applyScopedCssRule('FLT', 'tr > *:first-child', 'first-column');
+  // Hide sort options
+  applyScopedClassCssRule('SHPF', PrunCss.InventorySortControls.controls, 'inventory-controls');
+  // Hide Weight and Volume labels
+  applyScopedClassCssRule('SHPF', PrunCss.StoreView.name, 'store-name');
   buffers.observe('COGCPEX', cleanCOGCPEX);
   buffers.observe('FLT', cleanFLT);
   buffers.observe('INV', cleanINV);

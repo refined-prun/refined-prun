@@ -1,18 +1,14 @@
-[rp-pending-contracts-add-details]
-.Sidebar__contract___J0gmlzN
-.Link__link___fa4mmMA {
+.pending-contracts-add-details__link {
   display: none;
 }
 
-[rp-pending-contracts-add-details]
-.Sidebar__contractId___Lg85TRZ {
+.pending-contracts-add-details__contract-id {
   flex-shrink: 0;
   width: 65px;
   color: #3fa2de;
   cursor: pointer;
 }
 
-[rp-pending-contracts-add-details]
-.Sidebar__contractId___Lg85TRZ:hover {
+.pending-contracts-add-details__contract-id:hover {
   color: #f7a600;
 }

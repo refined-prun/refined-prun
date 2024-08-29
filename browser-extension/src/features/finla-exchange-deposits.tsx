@@ -8,6 +8,7 @@ import { computed, watch } from 'vue';
 import { deposits } from '@src/core/deposits';
 import { fixed0 } from '@src/utils/format';
 import PrunCss from '@src/prun-ui/prun-css';
+import { applyCssRule } from '@src/prun-ui/refined-prun-css';
 
 async function onBufferCreated(buffer: PrunBuffer) {
   observeReadyElementsByTagName('thead', {
@@ -66,11 +67,13 @@ function onTableBodyReady(tbody: HTMLTableSectionElement) {
 }
 
 export function init() {
+  for (let i = 2; i < 5; i++) {
+    applyCssRule(`.${PrunCss.LiquidAssetsPanel.row} td:nth-child(${i})`, 'row');
+  }
   buffers.observe('FINLA', onBufferCreated);
 }
 
 void features.add({
   id: 'finla-exchange-deposits',
   init,
-  attribute: true,
 });

@@ -9,7 +9,7 @@ import { IconMarkers } from '@src/features/IconMarkers';
 import { loadLegacySettings, Settings } from './Settings';
 import features from '@src/feature-registry';
 import { initializePrunApi, loadGameData } from '@src/prun-api';
-import { loadPrunCss } from '@src/prun-ui/prun-css';
+import { parsePrunCss } from '@src/prun-ui/prun-css';
 import { applyXITParameters } from '@src/XIT/xit-commands';
 
 import './refined-prun.css';
@@ -17,11 +17,10 @@ import { fetchPrices } from '@src/fio/cx';
 import { loadFinHistory, recordFinancials } from '@src/core/financials';
 import { loadSettings } from '@src/store/settings';
 import dayjs from 'dayjs';
+import { loadRefinedPrunCss } from '@src/prun-ui/refined-prun-css';
 
 // The main function that initializes everything
 async function mainRun() {
-  appendStyle(RPrunStylesheet.refinedPrun);
-
   initializePrunApi();
 
   let result: Settings;
@@ -33,8 +32,13 @@ async function mainRun() {
     throw e;
   }
 
-  await Promise.allSettled([loadFinHistory(), loadGameData(), waitUntilPrunLoaded()]);
-  loadPrunCss();
+  await Promise.allSettled([
+    loadFinHistory(),
+    loadGameData(),
+    loadRefinedPrunCss(),
+    waitUntilPrunLoaded(),
+  ]);
+  parsePrunCss();
 
   // Detect what date it is for... no reason.
   const specialTime = getSpecial() && !result['PMMGExtended']['surprises_opt_out'];

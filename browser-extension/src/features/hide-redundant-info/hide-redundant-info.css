@@ -1,23 +1,11 @@
-/* Hide redundant columns */
-[rp-hide-redundant-info]
-:is(
-  /* Exchange */
-  div[data-rp-command='CXOS'],
-  /* Transponder */
-  div[data-rp-command='FLT']
-)
-tr > *:first-child {
+.hide-redundant-info__first-column {
   display: none;
 }
 
-/* Hide redundant elements in Ship Fuel Store */
-[rp-hide-redundant-info]
-div[data-rp-command='SHPF']
-:is(
-  /* Sort options */
-  .InventorySortControls__controls___qk5heAZ,
-  /* Weight and Volume labels */
-  .StoreView__name___eX4pgs6
-) {
+.hide-redundant-info__inventory-controls {
+  display: none;
+}
+
+.hide-redundant-info__store-name {
   display: none;
 }
