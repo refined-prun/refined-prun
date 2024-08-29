@@ -1,4 +1,6 @@
 import { clamp } from '@src/utils/clamp';
+import { computed } from 'vue';
+import { materialsStore } from '@src/prun-api/data/materials';
 
 type MaterialAmount = [number, string];
 type UpgradeMap = MaterialAmount[][];
@@ -450,11 +452,20 @@ export const hqUpgradeMaterials: UpgradeMap = [
 
 export const maxHQLevel = hqUpgradeMaterials.length - 1;
 
-export const accumulatedHQUpgrades: UpgradeMap = [[]];
+type AccumulatedAmounts = { [ticker: string]: number };
 
-for (let i = 1; i < hqUpgradeMaterials.length; i++) {
-  accumulatedHQUpgrades[i] = calculateHQUpgradeMaterials(0, i);
-}
+export const accumulatedHQUpgrades = computed(() => {
+  const levels: PrunApi.MaterialAmount[][] = [[]];
+  const accumulated: { [ticker: string]: number } = {};
+  for (let i = 1; i < hqUpgradeMaterials.length; i++) {
+    const level = hqUpgradeMaterials[i];
+    for (const [amount, ticker] of level) {
+      accumulated[ticker] = (accumulated[ticker] ?? 0) + amount;
+    }
+    levels[i] = convertToMaterialAmounts(accumulated);
+  }
+  return levels;
+});
 
 export function calculateHQUpgradeMaterials(from: number, to: number) {
   from = clamp(from, 0, maxHQLevel);
@@ -463,17 +474,19 @@ export function calculateHQUpgradeMaterials(from: number, to: number) {
     return [];
   }
 
-  const accumulated: MaterialAmount[] = [];
+  const accumulated: { [ticker: string]: number } = {};
   for (let i = from + 1; i <= to; i++) {
     const level = hqUpgradeMaterials[i];
     for (const [amount, ticker] of level) {
-      const existing = accumulated.find(x => x[1] === ticker);
-      if (existing) {
-        existing[0] += amount;
-      } else {
-        accumulated.push([amount, ticker]);
-      }
+      accumulated[ticker] = (accumulated[ticker] ?? 0) + amount;
     }
   }
-  return accumulated;
+  return convertToMaterialAmounts(accumulated);
+}
+
+function convertToMaterialAmounts(accumulated: AccumulatedAmounts) {
+  return Object.keys(accumulated).map(x => ({
+    material: materialsStore.getByTicker(x)!,
+    amount: accumulated[x],
+  })) as PrunApi.MaterialAmount[];
 }

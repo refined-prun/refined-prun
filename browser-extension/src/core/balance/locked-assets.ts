@@ -1,7 +1,7 @@
 import { computed } from 'vue';
 import { companyStore } from '@src/prun-api/data/company';
 import { shipsStore } from '@src/prun-api/data/ships';
-import { sumMaterialAmountPrice, getPrice } from '@src/fio/cx';
+import { sumMaterialAmountPrice } from '@src/fio/cx';
 import { blueprintsStore } from '@src/prun-api/data/blueprints';
 import { accumulatedHQUpgrades, maxHQLevel } from '@src/core/hq';
 import { clamp } from '@src/utils/clamp';
@@ -30,10 +30,7 @@ const hqLevelValue = computed(() => {
 });
 
 const hqUpgrades = computed(() => {
-  let value = 0;
-  for (const [amount, ticker] of accumulatedHQUpgrades[hqLevelValue.value]) {
-    value += getPrice(ticker) * amount;
-  }
+  let value = sumMaterialAmountPrice(accumulatedHQUpgrades.value[hqLevelValue.value]);
   value += sumMaterialAmountPrice(companyStore.headquarters.inventory.items);
   return value;
 });

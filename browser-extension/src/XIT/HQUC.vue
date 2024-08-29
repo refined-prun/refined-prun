@@ -16,28 +16,13 @@ import { computed, ref } from 'vue';
 import { calculateHQUpgradeMaterials, maxHQLevel } from '@src/core/hq';
 import { cxStore } from '@src/fio/cx';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
-import { materialsStore } from '@src/prun-api/data/materials';
 import { companyStore } from '@src/prun-api/data/company';
 import MaterialPurchaseTable from '@src/components/MaterialPurchaseTable.vue';
 
 const from = ref(companyStore.headquarters.level);
 const to = ref(from.value + 1);
 
-const materials = computed(() => {
-  const raw = calculateHQUpgradeMaterials(from.value, to.value);
-  const materials: PrunApi.MaterialAmount[] = [];
-  for (const [amount, ticker] of raw) {
-    const material = materialsStore.getByTicker(ticker);
-    if (!material) {
-      continue;
-    }
-    materials.push({
-      material,
-      amount,
-    });
-  }
-  return materials;
-});
+const materials = computed(() => calculateHQUpgradeMaterials(from.value, to.value));
 </script>
 
 <template>
