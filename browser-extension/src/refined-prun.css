@@ -1,11 +1,3 @@
-.cursor-move {
-  cursor: default !important;
-}
-
-.cursor-move:active {
-  cursor: move !important;
-}
-
 .pb-minimize {
   font-size: 14px;
   font-weight: bold;
@@ -48,27 +40,10 @@
   width: 32px;
 }
 
-.check-time-complete {
-  text-decoration: line-through;
-}
-
-.check-time-overdue {
-  color: #d9534f;
-}
-
-.check-time {
-  color: rgb(153, 153, 153);
-}
-
 .check-item {
   display: flex;
   justify-content: space-between;
   border-bottom: solid 1px #555;
-}
-
-.checked-text {
-  text-decoration: line-through;
-  color: rgb(153, 153, 153);
 }
 
 .delete-button {
@@ -85,10 +60,6 @@
 
 .delete-button:hover {
   color: #222;
-}
-
-.notes-wrapper .title.note-title {
-  padding-top: 5px;
 }
 
 .pb-note-overlay {
@@ -192,29 +163,6 @@
   width: 0;
 }
 
-.check-wrapper {
-  margin: 5px;
-}
-
-.tooltip-base {
-  display: flex;
-  position: absolute !important;
-  font-family: 'Droid Sans', sans-serif;
-  font-size: 10px;
-  color: #bbb;
-}
-
-.tooltip {
-  display: none;
-  margin-left: 100px;
-}
-
-.tooltip-base:hover .tooltip {
-  display: block;
-  background-color: #23282b;
-  position: absolute;
-}
-
 .select {
   border: 0px;
   border-bottom: 1px solid #8d6411;
@@ -243,14 +191,6 @@
 .list {
   display: block;
   padding: 5px;
-}
-
-.fin-title {
-  display: block;
-  font-size: 12px;
-  margin-bottom: 0px;
-  padding: 6px 4px 2px;
-  background-color: rgba(63, 162, 222, 0.15);
 }
 
 .inv-header {
@@ -296,32 +236,6 @@
   background: #d9534f;
 }
 
-.refresh-button {
-  background-color: #f7a600;
-  color: #eee;
-  border-width: 0px;
-  padding: 0px 8px;
-  display: block;
-  font-weight: bold;
-  font-size: 11px;
-  cursor: pointer;
-  margin: 4px 8px;
-}
-
-.refresh-button:hover {
-  color: #1e1e1e;
-}
-
-.fin-box {
-  margin: 1px;
-  min-width: 100px;
-  width: calc(33% - 2px);
-  max-width: 150px;
-  padding: 4px;
-  background-color: #23282b;
-  display: inline-block;
-}
-
 .link {
   color: #3fa2de;
   cursor: pointer;
@@ -343,15 +257,6 @@
 
 .input-text:focus {
   outline: none;
-}
-
-.hidden-element {
-  display: none !important;
-  visibility: false !important;
-  max-height: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  font-size: 0px !important;
 }
 
 .button-upper-right {
