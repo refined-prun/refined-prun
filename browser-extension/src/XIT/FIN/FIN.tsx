@@ -11,7 +11,7 @@ import {
 } from '@src/util';
 import { Style } from '@src/Style';
 import system from '@src/system';
-import xit from '@src/xit-registry';
+import xit from '@src/XIT/xit-registry';
 import { cxStore } from '@src/fio/cx';
 import { recordFinancials, calculateLocationAssets, finHistory } from '@src/core/financials';
 import FIN from './FIN.vue';
