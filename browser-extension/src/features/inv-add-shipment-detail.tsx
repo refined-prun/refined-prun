@@ -1,6 +1,6 @@
 import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
-import PrunCss from '../prun-ui/prun-css';
+import PrunCss from '@src/prun-ui/prun-css';
 import { _$ } from '@src/utils/get-element-by-class-name';
 import { refAttributeValue } from '@src/utils/reactive-dom';
 import { computed, reactive } from 'vue';

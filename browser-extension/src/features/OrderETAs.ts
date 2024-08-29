@@ -1,6 +1,6 @@
-import { Module } from '../ModuleRunner';
-import { Selector } from '../Selector';
-import { convertDurationToETA, parseDuration, createTextSpan, genericCleanup } from '../util';
+import { Module } from '@src/ModuleRunner';
+import { Selector } from '@src/Selector';
+import { convertDurationToETA, parseDuration, createTextSpan, genericCleanup } from '@src/util';
 import PrunCss from '@src/prun-ui/prun-css';
 
 export class OrderETAs implements Module {

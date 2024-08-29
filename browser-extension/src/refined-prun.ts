@@ -48,7 +48,7 @@ import './XIT/HELP';
 import './XIT/HQUC.vue';
 import './XIT/INV';
 import './XIT/LISTS';
-import './XIT/NOTE';
+import './XIT/NOTE/NOTE';
 import './XIT/REP/REP.vue';
 import './XIT/SET';
 import './XIT/SORT';

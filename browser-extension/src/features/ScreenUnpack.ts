@@ -1,7 +1,7 @@
-import { Module } from '../ModuleRunner';
-import { Selector } from '../Selector';
-import { WithStyles, Style } from '../Style';
-import { genericCleanup, createNode } from '../util';
+import { Module } from '@src/ModuleRunner';
+import { Selector } from '@src/Selector';
+import { WithStyles, Style } from '@src/Style';
+import { genericCleanup, createNode } from '@src/util';
 
 export class ScreenUnpack implements Module {
   private tag = 'pb-screens';

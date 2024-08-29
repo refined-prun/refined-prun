@@ -1,4 +1,4 @@
-import { Style, WithStyles } from '../Style';
+import { Style, WithStyles } from '@src/Style';
 import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';

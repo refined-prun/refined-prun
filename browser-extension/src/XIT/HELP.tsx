@@ -1,5 +1,5 @@
-import { createTextSpan, clearChildren, createLink } from '../util';
-import { Style } from '../Style';
+import { createTextSpan, clearChildren, createLink } from '@src/util';
+import { Style } from '@src/Style';
 import xit from './xit-registry';
 
 class Help {

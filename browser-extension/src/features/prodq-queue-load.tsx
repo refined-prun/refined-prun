@@ -1,4 +1,4 @@
-import { parseDuration } from '../util';
+import { parseDuration } from '@src/util';
 import buffers from '@src/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
 import PrunCss from '@src/prun-ui/prun-css';

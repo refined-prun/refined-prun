@@ -1,4 +1,4 @@
-import { changeValue } from '../util';
+import { changeValue } from '@src/util';
 import PrunCss from '@src/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';

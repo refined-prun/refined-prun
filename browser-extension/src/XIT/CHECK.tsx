@@ -9,8 +9,8 @@ import {
   Popup,
   showWarningDialog,
   showBuffer,
-} from '../util';
-import { Style, TextColors } from '../Style';
+} from '@src/util';
+import { Style, TextColors } from '@src/Style';
 import xit from './xit-registry';
 import { getBuildingLastRepair, sitesStore } from '@src/prun-api/data/sites';
 import { workforcesStore } from '@src/prun-api/data/workforces';

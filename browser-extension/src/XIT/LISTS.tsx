@@ -10,8 +10,8 @@ import {
   showWarningDialog,
   Popup,
   showBuffer,
-} from '../util';
-import { Style } from '../Style';
+} from '@src/util';
+import { Style } from '@src/Style';
 import xit from './xit-registry';
 
 class CommandLists {

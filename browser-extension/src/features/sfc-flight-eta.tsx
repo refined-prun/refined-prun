@@ -1,4 +1,4 @@
-import { convertDurationToETA, parseDuration } from '../util';
+import { convertDurationToETA, parseDuration } from '@src/util';
 import features from '@src/feature-registry';
 import buffers from '@src/prun-ui/prun-buffers';
 import { $$ } from 'select-dom';

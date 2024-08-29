@@ -1,9 +1,9 @@
-import features from '../feature-registry';
-import buffers from '../prun-ui/prun-buffers';
-import PrunCss from '../prun-ui/prun-css';
-import descendantPresent from '../utils/descendant-present';
-import { observeReadyElementsByClassName } from '../utils/mutation-observer';
-import { widgetAppend } from '../utils/vue-mount';
+import features from '@src/feature-registry';
+import buffers from '@src/prun-ui/prun-buffers';
+import PrunCss from '@src/prun-ui/prun-css';
+import descendantPresent from '@src/utils/descendant-present';
+import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
+import { widgetAppend } from '@src/utils/vue-mount';
 import { Fragment } from 'vue';
 
 async function onBufferCreated(buffer: PrunBuffer) {

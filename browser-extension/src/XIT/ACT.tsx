@@ -15,10 +15,10 @@ import {
   showBuffer,
   showSuccessDialog,
   showWarningDialog,
-} from '../util';
-import { Style } from '../Style';
-import { Selector } from '../Selector';
-import { ExchangeTickersReverse } from '../GameProperties';
+} from '@src/util';
+import { Style } from '@src/Style';
+import { Selector } from '@src/Selector';
+import { ExchangeTickersReverse } from '@src/GameProperties';
 import xit from './xit-registry';
 import { cxobStore } from '@src/prun-api/data/cxob';
 import { workforcesStore } from '@src/prun-api/data/workforces';

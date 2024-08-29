@@ -4,7 +4,7 @@ import {
   createMaterialElement,
   createLink,
   XITWebRequest,
-} from '../util';
+} from '@src/util';
 import xit from './xit-registry';
 
 class FIOInventory {

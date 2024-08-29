@@ -1,4 +1,4 @@
-import { Module } from '../ModuleRunner';
+import { Module } from '@src/ModuleRunner';
 import {
   createMaterialElement,
   getBuffersFromList,
@@ -7,10 +7,10 @@ import {
   setSettings,
   showBuffer,
   targetedCleanup,
-} from '../util';
-import { Selector } from '../Selector';
-import { Style } from '../Style';
-import { SortingTriangleHTML } from '../GameProperties';
+} from '@src/util';
+import { Selector } from '@src/Selector';
+import { Style } from '@src/Style';
+import { SortingTriangleHTML } from '@src/GameProperties';
 import { sitesStore } from '@src/prun-api/data/sites';
 import { workforcesStore } from '@src/prun-api/data/workforces';
 import { calculatePlanetBurn } from '@src/core/burn';

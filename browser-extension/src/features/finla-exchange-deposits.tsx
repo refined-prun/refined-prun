@@ -1,6 +1,6 @@
 import './finla-exchange-deposits.css';
-import buffers from '../prun-ui/prun-buffers';
-import features from '../feature-registry';
+import buffers from '@src/prun-ui/prun-buffers';
+import features from '@src/feature-registry';
 import { observeReadyElementsByTagName } from '@src/utils/mutation-observer';
 import { refTextContent } from '@src/utils/reactive-dom';
 import onElementDisconnected from '@src/utils/on-element-disconnected';

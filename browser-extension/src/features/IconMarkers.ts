@@ -1,6 +1,6 @@
-import { Module } from '../ModuleRunner';
-import { getLocalStorage, setSettings } from '../util';
-import { Selector } from '../Selector';
+import { Module } from '@src/ModuleRunner';
+import { getLocalStorage, setSettings } from '@src/util';
+import { Selector } from '@src/Selector';
 
 /**
  * Display small icon markers next to items in inventories

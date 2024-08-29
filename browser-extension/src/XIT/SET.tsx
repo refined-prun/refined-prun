@@ -7,8 +7,8 @@ import {
   getSpecial,
   getLocalStorage,
   createToolTip,
-} from '../util';
-import { Style, WithStyles } from '../Style';
+} from '@src/util';
+import { Style, WithStyles } from '@src/Style';
 import xit from './xit-registry';
 
 class Settings {

@@ -1,4 +1,4 @@
-import { changeValue } from '../util';
+import { changeValue } from '@src/util';
 import xit from './xit-registry';
 import features from '@src/feature-registry';
 import { _$ } from '@src/utils/get-element-by-class-name';

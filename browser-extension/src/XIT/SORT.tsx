@@ -8,8 +8,8 @@ import {
   getValueOfPopupRow,
   getCheckOfPopupRow,
   createSmallButton,
-} from '../util';
-import { Style } from '../Style';
+} from '@src/util';
+import { Style } from '@src/Style';
 import xit from './xit-registry';
 
 class Sort {
