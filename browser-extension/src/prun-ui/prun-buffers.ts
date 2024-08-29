@@ -29,7 +29,16 @@ function reconciliate() {
     PrunCss.TileFrame.frame,
   ) as HTMLCollectionOf<HTMLDivElement>;
   if (frameElements.length === activeBuffers.length) {
-    return;
+    let sameBuffers = true;
+    for (let i = 0; i < frameElements.length; i++) {
+      if (activeBuffers[i].frame !== frameElements[i]) {
+        sameBuffers = false;
+        break;
+      }
+    }
+    if (sameBuffers) {
+      return;
+    }
   }
 
   const newFrames: Set<HTMLDivElement> = new Set();
