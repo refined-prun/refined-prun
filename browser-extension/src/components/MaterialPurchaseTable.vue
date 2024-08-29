@@ -2,9 +2,10 @@
 import { fixed0, fixed2 } from '@src/utils/format';
 import PrunLink from '@src/components/PrunLink.vue';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
-import { PropType } from 'vue';
+import { computed, PropType } from 'vue';
 import { settings } from '@src/store/settings';
 import { calcMaterialAmountPrice } from '@src/fio/cx';
+import { sortMaterialAmounts } from '@src/prun-api/data/materials';
 
 const props = defineProps({
   materials: {
@@ -13,9 +14,11 @@ const props = defineProps({
   },
 });
 
+const sorted = computed(() => sortMaterialAmounts(props.materials));
+
 function calculateTotal(fn: (material: PrunApi.MaterialAmount) => number) {
   let total = 0;
-  for (const material of props.materials) {
+  for (const material of sorted.value) {
     total += fn(material);
   }
   return total;
@@ -46,7 +49,7 @@ function calculateVolume(amount: PrunApi.MaterialAmount) {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="material in materials" :key="material.material.ticker">
+      <tr v-for="material in sorted" :key="material.material.ticker">
         <td><MaterialIcon small :ticker="material.material.ticker" :amount="material.amount" /></td>
         <td>{{ formatPrice(calcMaterialAmountPrice(material)) }}</td>
         <td>{{ fixed2(calculateWeight(material)) }}t</td>

@@ -20,7 +20,7 @@ import { dayjsLive, timestampLive } from '@src/utils/dayjs';
 import { binarySearch } from '@src/utils/binary-search';
 import dayjs from 'dayjs';
 import { fixed1, percent1 } from '@src/utils/format';
-import { mergeMaterialAmounts, sortMaterialAmounts } from '@src/prun-api/data/materials';
+import { mergeMaterialAmounts } from '@src/prun-api/data/materials';
 import MaterialPurchaseTable from '@src/components/MaterialPurchaseTable.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { cxStore } from '@src/fio/cx';
@@ -62,7 +62,7 @@ const materials = computed(() => {
     }
   }
   materials.push(...visibleShips.value.flatMap(x => x.materials));
-  return sortMaterialAmounts(mergeMaterialAmounts(materials));
+  return mergeMaterialAmounts(materials);
 });
 
 function calculateAge(lastRepair: number) {
