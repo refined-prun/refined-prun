@@ -19,6 +19,10 @@ const materialsToDeliver = computed(
     sumFactionProvisions(selfCurrentConditions),
 );
 
+const quick = computed(() => {
+  return accountsPayable.value + shortTermDebt.value;
+});
+
 const total = computed(() => {
   return accountsPayable.value + shortTermDebt.value + materialsToDeliver.value;
 });
@@ -27,5 +31,6 @@ export const currentLiabilities = {
   accountsPayable,
   shortTermDebt,
   materialsToDeliver,
+  quick,
   total,
 };

@@ -31,8 +31,8 @@ async function saveFinHistory() {
   finHistory.push([
     Date.now(),
     Math.round(nonCurrentAssets.total.value * 100) / 100,
-    Math.round(currentAssets.totalExceptLiquid.value * 100) / 100,
-    Math.round(currentAssets.liquid.value * 100) / 100,
+    Math.round(currentAssets.totalExceptQuick.value * 100) / 100,
+    Math.round(currentAssets.quick.value * 100) / 100,
     Math.round(balance.totalLiabilities.value * 100) / 100,
   ]);
   savedSettings[storageKey].History = finHistory;

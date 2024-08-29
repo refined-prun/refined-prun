@@ -67,7 +67,7 @@ const fxDepositsTotal = computed(() => sumMapValues(fxDeposits.value));
 
 const depositsTotal = computed(() => cxDepositsTotal.value + fxDepositsTotal.value);
 
-const liquid = computed(() => cashTotal.value + depositsTotal.value);
+const quick = computed(() => cashTotal.value + depositsTotal.value);
 
 const accountsReceivable = computed(() => sumAccountsPayable(partnerCurrentConditions));
 
@@ -101,7 +101,7 @@ const total = computed(() => {
   );
 });
 
-const totalExceptLiquid = computed(() => total.value - liquid.value);
+const totalExceptQuick = computed(() => total.value - quick.value);
 
 export const currentAssets = {
   cashTotal,
@@ -110,12 +110,12 @@ export const currentAssets = {
   fxDeposits,
   fxDepositsTotal,
   depositsTotal,
-  liquid,
+  quick,
   accountsReceivable,
   shortTermLoans,
   marketListedMaterials,
   inventory: inventory.total,
   materialsToReceive,
   total,
-  totalExceptLiquid,
+  totalExceptQuick,
 };

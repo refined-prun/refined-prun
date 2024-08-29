@@ -21,7 +21,7 @@ const debtToEquityRatio = computed(() => totalLiabilities.value / equity.value);
 
 const acidTestRatio = computed(() => {
   const quickAssets =
-    currentAssets.liquid.value +
+    currentAssets.quick.value +
     currentAssets.accountsReceivable.value +
     currentAssets.shortTermLoans.value;
   const quickLiabilities =

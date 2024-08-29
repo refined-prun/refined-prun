@@ -10,7 +10,6 @@ import { fixed0, fixed1, fixed2, percent0, percent1, percent2 } from '@src/utils
 import { balance } from '@src/core/balance/balance';
 import { currentAssets } from '@src/core/balance/current-assets';
 import { currentLiabilities } from '@src/core/balance/current-liabilities';
-import { lockedAssets } from '@src/core/balance/locked-assets';
 
 const locations = computed(() => calculateLocationAssets());
 
@@ -50,13 +49,13 @@ function formatPercentage(ratio: number) {
 
 const figures = computed(() => {
   return [
+    { name: 'Quick Assets', value: formatAmount(currentAssets.quick.value) },
     { name: 'Current Assets', value: formatAmount(currentAssets.total.value) },
-    { name: '(of which Liquid)', value: formatAmount(currentAssets.liquid.value) },
     { name: 'Total Assets', value: formatAmount(balance.totalAssets.value) },
     { name: 'Equity', value: formatAmount(balance.equity.value) },
+    { name: 'Quick Liabilities', value: formatAmount(currentLiabilities.quick.value) },
     { name: 'Current Liabilities', value: formatAmount(currentLiabilities.total.value) },
     { name: 'Total Liabilities', value: formatAmount(balance.totalLiabilities.value) },
-    { name: 'Locked Assets', value: formatAmount(lockedAssets.total.value) },
     { name: 'Company Value', value: formatAmount(balance.companyValue.value) },
     { name: 'Acid-Test Ratio', value: formatRatio(balance.acidTestRatio.value) },
     { name: 'Working Capital Ratio', value: formatRatio(balance.workingCapitalRatio.value) },
