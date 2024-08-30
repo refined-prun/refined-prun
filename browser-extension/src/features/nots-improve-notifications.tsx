@@ -48,7 +48,6 @@ function processNotification(element: Element) {
       </div>
     ));
     let newText = textContent;
-    newText = newText.replace(/Chamber of Global Commerce/, 'COGC');
     switch (search[0]) {
       case 'produced': {
         newText = newText
@@ -100,6 +99,7 @@ function processNotification(element: Element) {
       }
       case 'cogc':
       case 'chamber of global commerce': {
+        newText = newText.replace(/Chamber of Global Commerce/, 'COGC');
         newText = newText
           .replace(/ a new economic program/, '')
           .replace(/ Advertising Campaign:/, '');
@@ -110,7 +110,9 @@ function processNotification(element: Element) {
         break;
       }
     }
-    textElement.textContent = newText;
+    if (textElement.textContent !== newText) {
+      textElement.textContent = newText;
+    }
     break;
   }
 
