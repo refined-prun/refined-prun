@@ -40,7 +40,7 @@ function calculateDeadline(contract: PrunApi.Contract, condition: PrunApi.Contra
   }
 
   if (!condition.deadlineDuration) {
-    return Number.MAX_VALUE;
+    return Number.POSITIVE_INFINITY;
   }
 
   let latestDependency = contract.date.timestamp;
@@ -52,10 +52,6 @@ function calculateDeadline(contract: PrunApi.Contract, condition: PrunApi.Contra
         calculateDeadline(contract, dependencyCondition),
       );
     }
-  }
-
-  if (latestDependency === Number.MAX_VALUE) {
-    return latestDependency;
   }
 
   return latestDependency + condition.deadlineDuration.millis;

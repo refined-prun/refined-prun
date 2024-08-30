@@ -44,7 +44,7 @@ function compareContracts(a: PrunApi.Contract, b: PrunApi.Contract) {
   <table v-else>
     <thead>
       <tr>
-        <th>Name</th>
+        <th>Contract</th>
         <th>Material</th>
         <th>Partner&apos;s Conditions</th>
         <th>My Conditions</th>

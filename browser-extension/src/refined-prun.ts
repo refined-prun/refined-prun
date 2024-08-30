@@ -39,6 +39,7 @@ import './XIT/BURN/BURN.vue';
 import './XIT/CALC.vue';
 import './XIT/CHAT.vue';
 import './XIT/CHECK';
+import './XIT/CONTC/CONTC.vue';
 import './XIT/CONTS/CONTS.vue';
 import './XIT/CXTS/CXTS.vue';
 import './XIT/DEBUG/DEBUG.vue';

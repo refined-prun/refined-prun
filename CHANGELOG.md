@@ -1,5 +1,6 @@
 New features:
 - XIT CXOS
+- XIT CONTC
 - reload-page-on-websocket-disconnect
 - correct-material-command
 - SHPT icons now have a destination label on them
