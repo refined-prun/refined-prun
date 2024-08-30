@@ -25,10 +25,10 @@ export function applyXITParameters(pmmgSettings, modules) {
 async function onBufferCreated(buffer: PrunBuffer) {
   const frame = buffer.frame;
   const scrollView = await descendantPresent(frame, PrunCss.ScrollView.view);
-  // XIT command produces a buffer with full-size green screen on top.
-  // For custom XIT commands we just draw on top of it.
-  const greenScreen = scrollView.children[0] as HTMLDivElement;
-  if (!greenScreen) {
+  // XIT command produces a buffer with full-size green screen as its content.
+  // For custom XIT commands we just hide it and mount XIT buffer instead.
+  const container = scrollView.children[0] as HTMLDivElement;
+  if (!container) {
     return;
   }
 
@@ -54,9 +54,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
     return;
   }
 
-  const container = document.createElement('div');
-  container.className = 'rp-XIT-container';
-  greenScreen.appendChild(container);
+  container.style.display = 'none';
 
   const xitCommand = xit.get(command);
   if (!xitCommand) {
@@ -82,13 +80,13 @@ async function onBufferCreated(buffer: PrunBuffer) {
         const args = getXitArgs();
         return new xitCommand.module!(container, parameters, args.pmmgSettings, args.modules);
       },
-    }).mount(container);
+    }).mount(scrollView);
   } else if (xitCommand.component) {
     // eslint-disable-next-line vue/one-component-per-file
     createApp(XITContainer, {
       buffer: xitCommand.component(parameters),
       parameters: parameters,
-    }).mount(container);
+    }).mount(scrollView);
   }
 }
 

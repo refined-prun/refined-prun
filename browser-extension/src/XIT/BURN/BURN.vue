@@ -113,30 +113,28 @@ const isMultiplanet = computed(() => props.parameters.length > 2 || isBurnAll.va
 </script>
 
 <template>
-  <div>
-    <div :class="PrunCss.ComExOrdersPanel.filter" :style="{ zIndex: 1 }">
-      <FilterButton v-model="dispSettings.red">RED</FilterButton>
-      <FilterButton v-model="dispSettings.yellow">YELLOW</FilterButton>
-      <FilterButton v-model="dispSettings.green">GREEN</FilterButton>
-      <FilterButton v-model="dispSettings.inf">INF</FilterButton>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Material</th>
-          <th>Delta</th>
-          <th>Needed</th>
-          <th>Actions</th>
-          <th>Load</th>
-          <th>Days</th>
-        </tr>
-      </thead>
-      <BurnSection
-        v-for="burn in planetBurn"
-        :key="burn.planetName"
-        :is-multiplanet="isMultiplanet"
-        :burn="burn"
-        :disp-settings="dispSettings" />
-    </table>
+  <div :class="PrunCss.ComExOrdersPanel.filter" :style="{ zIndex: 1 }">
+    <FilterButton v-model="dispSettings.red">RED</FilterButton>
+    <FilterButton v-model="dispSettings.yellow">YELLOW</FilterButton>
+    <FilterButton v-model="dispSettings.green">GREEN</FilterButton>
+    <FilterButton v-model="dispSettings.inf">INF</FilterButton>
   </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Material</th>
+        <th>Delta</th>
+        <th>Needed</th>
+        <th>Actions</th>
+        <th>Load</th>
+        <th>Days</th>
+      </tr>
+    </thead>
+    <BurnSection
+      v-for="burn in planetBurn"
+      :key="burn.planetName"
+      :is-multiplanet="isMultiplanet"
+      :burn="burn"
+      :disp-settings="dispSettings" />
+  </table>
 </template>

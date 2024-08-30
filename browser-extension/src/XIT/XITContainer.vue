@@ -14,19 +14,6 @@ defineProps({
 </script>
 
 <template>
-  <div :class="$style.container">
-    <Component :is="buffer" v-if="buffer" :parameters="parameters" />
-    <template v-else>Error! No Matching Function!</template>
-  </div>
+  <Component :is="buffer" v-if="buffer" :parameters="parameters" />
+  <template v-else>Error! No Matching Function!</template>
 </template>
-
-<style module>
-.container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background-color: #222;
-}
-</style>
