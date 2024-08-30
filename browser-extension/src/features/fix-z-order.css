@@ -1,0 +1,7 @@
+.fix-z-order__filter {
+  z-index: 1;
+}
+
+.fix-z-order__scroll-track {
+  z-index: 2;
+}

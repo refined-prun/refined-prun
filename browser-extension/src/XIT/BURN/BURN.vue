@@ -113,7 +113,7 @@ const isMultiplanet = computed(() => props.parameters.length > 2 || isBurnAll.va
 </script>
 
 <template>
-  <div :class="PrunCss.ComExOrdersPanel.filter" :style="{ zIndex: 1 }">
+  <div :class="PrunCss.ComExOrdersPanel.filter">
     <FilterButton v-model="dispSettings.red">RED</FilterButton>
     <FilterButton v-model="dispSettings.yellow">YELLOW</FilterButton>
     <FilterButton v-model="dispSettings.green">GREEN</FilterButton>

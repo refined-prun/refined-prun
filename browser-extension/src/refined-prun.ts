@@ -22,6 +22,7 @@ import './features/compact-ui';
 import './features/clickable-apex-logo';
 import './features/prod-burn-link';
 import './features/prodq-queue-load';
+import './features/fix-z-order';
 import './features/header-calculator-button';
 import './features/header-duplicate-button';
 import './features/hide-redundant-info';
