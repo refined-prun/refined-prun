@@ -5,10 +5,9 @@ import PrunCss from '@src/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
 import { _$ } from '@src/utils/get-element-by-class-name';
 import xit from '@src/XIT/xit-registry';
-import { createApp } from 'vue';
 import XITContainer from '@src/XIT/XITContainer.vue';
 import LegacyXITAdapter from '@src/XIT/LegacyXITAdapter.vue';
-import { widgetAfter } from '@src/utils/vue-mount';
+import { widgetAfter, widgetAppend } from '@src/utils/vue-mount';
 import ContextControls from '@src/components/ContextControls.vue';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,7 +25,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
   const frame = buffer.frame;
   const scrollView = await descendantPresent(frame, PrunCss.ScrollView.view);
   // XIT command produces a buffer with full-size green screen as its content.
-  // For custom XIT commands we just hide it and mount XIT buffer instead.
+  // Custom XIT buffers are just mounted inside this green screen.
   const container = scrollView.children[0] as HTMLDivElement;
   if (!container) {
     return;
@@ -54,7 +53,8 @@ async function onBufferCreated(buffer: PrunBuffer) {
     return;
   }
 
-  container.style.display = 'none';
+  // Remove green screen styling
+  container.removeAttribute('style');
 
   const xitCommand = xit.get(command);
   if (!xitCommand) {
@@ -74,19 +74,17 @@ async function onBufferCreated(buffer: PrunBuffer) {
   }
 
   if (xitCommand.module) {
-    // eslint-disable-next-line vue/one-component-per-file
-    createApp(LegacyXITAdapter, {
+    widgetAppend(container, LegacyXITAdapter, {
       module: (container: HTMLDivElement) => {
         const args = getXitArgs();
         return new xitCommand.module!(container, parameters, args.pmmgSettings, args.modules);
       },
-    }).mount(scrollView);
+    });
   } else if (xitCommand.component) {
-    // eslint-disable-next-line vue/one-component-per-file
-    createApp(XITContainer, {
+    widgetAppend(container, XITContainer, {
       buffer: xitCommand.component(parameters),
       parameters: parameters,
-    }).mount(scrollView);
+    });
   }
 }
 
