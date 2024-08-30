@@ -56,6 +56,8 @@ function sumNeed(property: (x: PrunApi.Material) => number) {
       <span :class="$style.minimize" @click="onClick">{{ minimized ? '+' : '-' }}</span>
       <span>{{ burn.planetName }}</span>
     </td>
+    <!-- This <tr> is needed so both other <tr>s are the same color -->
+    <td :style="{ display: 'none' }" />
     <td>
       <span>{{ fixed2(needWeight) }}t</span>
       <br />
