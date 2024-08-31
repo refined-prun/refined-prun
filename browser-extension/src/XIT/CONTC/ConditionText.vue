@@ -35,11 +35,11 @@ defineProps({
   <template v-else-if="condition.type === 'EXPLORATION'">
     Explore <AddressLink :address="condition.address!" />
   </template>
+  <template v-else-if="condition.type === 'COMEX_PURCHASE_PICKUP'">
+    Pick up {{ condition.quantity!.amount }} {{ condition.quantity!.material.ticker }} @
+    <AddressLink :address="condition.address!" />
+  </template>
   <template v-else>
     {{ condition.type }}
   </template>
 </template>
-
-<style scoped>
-
-</style>
