@@ -1,9 +1,9 @@
 import { h, Component, createApp } from 'vue';
 import onElementDisconnected from '@src/utils/on-element-disconnected';
 
-type Data = Record<string, unknown>;
+export type WidgetData = Record<string, unknown>;
 
-export function widgetAppend(parent: Element, component: Component, rootProps?: Data | null) {
+export function widgetAppend(parent: Element, component: Component, rootProps?: WidgetData | null) {
   const fragment = document.createDocumentFragment();
   // eslint-disable-next-line vue/one-component-per-file
   const widget = createApp({ render: () => h(component, rootProps) });
@@ -14,7 +14,7 @@ export function widgetAppend(parent: Element, component: Component, rootProps?: 
   return { widget, instance };
 }
 
-export function widgetAfter(sibling: Element, component: Component, rootProps?: Data | null) {
+export function widgetAfter(sibling: Element, component: Component, rootProps?: WidgetData | null) {
   const fragment = document.createDocumentFragment();
   // eslint-disable-next-line vue/one-component-per-file
   const widget = createApp({ render: () => h(component, rootProps) });
@@ -25,7 +25,11 @@ export function widgetAfter(sibling: Element, component: Component, rootProps?: 
   return { widget, instance };
 }
 
-export function widgetBefore(sibling: Element, component: Component, rootProps?: Data | null) {
+export function widgetBefore(
+  sibling: Element,
+  component: Component,
+  rootProps?: WidgetData | null,
+) {
   const fragment = document.createDocumentFragment();
   // eslint-disable-next-line vue/one-component-per-file
   const widget = createApp({ render: () => h(component, rootProps) });

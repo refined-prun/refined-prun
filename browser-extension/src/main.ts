@@ -18,6 +18,7 @@ import { loadFinHistory, recordFinancials } from '@src/core/financials';
 import { loadSettings } from '@src/store/settings';
 import dayjs from 'dayjs';
 import { loadRefinedPrunCss } from '@src/prun-ui/refined-prun-css';
+import { loadNotes } from '@src/store/notes';
 
 // The main function that initializes everything
 async function mainRun() {
@@ -27,6 +28,7 @@ async function mainRun() {
   try {
     result = await loadLegacySettings();
     await loadSettings();
+    await loadNotes();
   } catch (e) {
     console.error('PMMG: Failed to load settings');
     throw e;

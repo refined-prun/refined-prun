@@ -13,6 +13,11 @@ export default ts.config(
   // vue
   ...vue.configs['flat/recommended'],
   {
+    rules: {
+      'vue/multi-word-component-names': 'off',
+    },
+  },
+  {
     files: ['*.vue', '**/*.vue'],
     languageOptions: {
       parserOptions: {
