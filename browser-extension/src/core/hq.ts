@@ -1,6 +1,6 @@
 import { clamp } from '@src/utils/clamp';
 import { computed } from 'vue';
-import { materialsStore } from '@src/prun-api/data/materials';
+import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 
 type MaterialAmount = [number, string];
 type UpgradeMap = MaterialAmount[][];

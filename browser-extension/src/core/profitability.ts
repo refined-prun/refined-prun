@@ -1,6 +1,6 @@
-import { productionStore } from '@src/prun-api/data/production';
-import { workforcesStore } from '@src/prun-api/data/workforces';
-import { sumMaterialAmountPrice } from '@src/fio/cx';
+import { productionStore } from '@src/infrastructure/prun-api/data/production';
+import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
+import { sumMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 
 export function calculateSiteProfitability(siteId: string) {
   const production = productionStore.getBySiteId(siteId);

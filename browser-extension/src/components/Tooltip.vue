@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { PropType } from 'vue';
-import PrunCss from '@src/prun-ui/prun-css';
+import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 
 type Position = 'left' | 'right' | 'top' | 'bottom';
 

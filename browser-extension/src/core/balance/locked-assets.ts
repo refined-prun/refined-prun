@@ -1,11 +1,11 @@
 import { computed } from 'vue';
-import { companyStore } from '@src/prun-api/data/company';
-import { shipsStore } from '@src/prun-api/data/ships';
-import { sumMaterialAmountPrice } from '@src/fio/cx';
-import { blueprintsStore } from '@src/prun-api/data/blueprints';
+import { companyStore } from '@src/infrastructure/prun-api/data/company';
+import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
+import { sumMaterialAmountPrice } from '@src/infrastructure/fio/cx';
+import { blueprintsStore } from '@src/infrastructure/prun-api/data/blueprints';
 import { accumulatedHQUpgrades, maxHQLevel } from '@src/core/hq';
 import { clamp } from '@src/utils/clamp';
-import { shipyardProjectsStore } from '@src/prun-api/data/shipyard-projects';
+import { shipyardProjectsStore } from '@src/infrastructure/prun-api/data/shipyard-projects';
 
 const ships = computed(() => {
   let total = 0;

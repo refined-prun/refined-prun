@@ -1,6 +1,6 @@
 import { computed } from 'vue';
-import { sumMaterialAmountPrice } from '@src/fio/cx';
-import { sitesStore } from '@src/prun-api/data/sites';
+import { sumMaterialAmountPrice } from '@src/infrastructure/fio/cx';
+import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import {
   partnerNonCurrentConditions,
   selfNonCurrentConditions,
@@ -11,7 +11,7 @@ import {
   sumMaterialsPickup,
 } from '@src/core/balance/contract-conditions';
 import { sumMapValues } from '@src/core/balance/utils';
-import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
+import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 
 type AddressableId = string;
 

@@ -1,10 +1,10 @@
-import { cxStore } from '@src/fio/cx';
+import { cxStore } from '@src/infrastructure/fio/cx';
 import { setSettings } from '@src/util';
 import system from '@src/system';
 import { currentAssets } from '@src/core/balance/current-assets';
 import { nonCurrentAssets } from '@src/core/balance/non-current-assets';
 import { balance } from '@src/core/balance/balance';
-import { contractsStore } from '@src/prun-api/data/contracts';
+import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import { inventory } from '@src/core/balance/inventory';
 
 interface LocationAssets {

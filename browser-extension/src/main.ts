@@ -1,23 +1,23 @@
 import { ModuleRunner } from './ModuleRunner';
-import { OrderETAs } from '@src/features/OrderETAs';
+import { OrderETAs } from '@src/features/standard/OrderETAs';
 import { getSpecial } from './util';
 import { appendStyle, RPrunStylesheet } from './Style';
-import { ScreenUnpack } from '@src/features/ScreenUnpack';
-import { InventoryOrganizer } from '@src/features/InventoryOrganizer';
-import { HeaderMinimizer } from '@src/features/HeaderMinimizer';
-import { IconMarkers } from '@src/features/IconMarkers';
+import { ScreenUnpack } from '@src/features/standard/ScreenUnpack';
+import { InventoryOrganizer } from '@src/features/standard/InventoryOrganizer';
+import { HeaderMinimizer } from '@src/features/standard/HeaderMinimizer';
+import { IconMarkers } from '@src/features/standard/IconMarkers';
 import { loadLegacySettings, Settings } from './Settings';
 import features from '@src/feature-registry';
-import { initializePrunApi, loadGameData } from '@src/prun-api';
-import { parsePrunCss } from '@src/prun-ui/prun-css';
-import { applyXITParameters } from '@src/XIT/xit-commands';
+import { initializePrunApi, loadGameData } from '@src/infrastructure/prun-api';
+import { parsePrunCss } from '@src/infrastructure/prun-ui/prun-css';
+import { applyXITParameters } from '@src/features/XIT/xit-commands';
 
 import './refined-prun.css';
-import { fetchPrices } from '@src/fio/cx';
+import { fetchPrices } from '@src/infrastructure/fio/cx';
 import { loadFinHistory, recordFinancials } from '@src/core/financials';
 import { loadSettings } from '@src/store/settings';
 import dayjs from 'dayjs';
-import { loadRefinedPrunCss } from '@src/prun-ui/refined-prun-css';
+import { loadRefinedPrunCss } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { loadNotes } from '@src/store/notes';
 
 // The main function that initializes everything

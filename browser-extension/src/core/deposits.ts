@@ -1,7 +1,7 @@
 import { computed } from 'vue';
-import { balancesStore } from '@src/prun-api/data/balances';
-import { cxosStore } from '@src/prun-api/data/cxos';
-import { fxosStore } from '@src/prun-api/data/fxos';
+import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
+import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
+import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
 
 interface CurrencyDeposits {
   currency: string;

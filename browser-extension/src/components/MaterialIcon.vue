@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import PrunCss from '@src/prun-ui/prun-css';
+import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { showBuffer } from '@src/util';
 import { computed } from 'vue';
 import { useCssModule } from 'vue';
 import ColoredIcon from '@src/components/ColoredIcon.vue';
-import { materialsStore } from '@src/prun-api/data/materials';
-import { materialCategoriesStore } from '@src/prun-api/data/material-categories';
-import { getMaterialNameByTicker } from '@src/prun-ui/material-names';
+import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
+import { getMaterialNameByTicker } from '@src/infrastructure/prun-ui/material-names';
 
 const props = defineProps({
   ticker: {

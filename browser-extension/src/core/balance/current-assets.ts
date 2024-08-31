@@ -1,8 +1,8 @@
 import { computed } from 'vue';
 import { sumBy } from '@src/utils/sum-by';
-import { balancesStore } from '@src/prun-api/data/balances';
-import { cxosStore } from '@src/prun-api/data/cxos';
-import { fxosStore } from '@src/prun-api/data/fxos';
+import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
+import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
+import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
 import {
   selfConditions,
   partnerCurrentConditions,
@@ -13,7 +13,7 @@ import {
   sumMaterialsShipment,
   sumMaterialsPickup,
 } from '@src/core/balance/contract-conditions';
-import { getPrice } from '@src/fio/cx';
+import { getPrice } from '@src/infrastructure/fio/cx';
 import { sumMapValues } from '@src/core/balance/utils';
 import { inventory } from '@src/core/balance/inventory';
 

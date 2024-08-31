@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PrunCss from '@src/prun-ui/prun-css';
+import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import ContextControlsItem from '@src/components/ContextControlsItem.vue';
 
 interface Item {

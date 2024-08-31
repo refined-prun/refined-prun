@@ -1,6 +1,6 @@
-import { sitesStore } from '@src/prun-api/data/sites';
-import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
-import { warehousesStore } from '@src/prun-api/data/warehouses';
+import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
+import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 
 export function sumMapValues<T>(map: Map<T, number>) {
   let sum = 0;

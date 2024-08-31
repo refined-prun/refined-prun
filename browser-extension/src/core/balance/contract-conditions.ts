@@ -1,9 +1,9 @@
 import { computed, Ref } from 'vue';
-import { contractsStore, isFactionContract } from '@src/prun-api/data/contracts';
+import { contractsStore, isFactionContract } from '@src/infrastructure/prun-api/data/contracts';
 import dayjs from 'dayjs';
 import { timestampLive } from '@src/utils/dayjs';
 import { sumBy } from '@src/utils/sum-by';
-import { calcMaterialAmountPrice } from '@src/fio/cx';
+import { calcMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { binarySearch } from '@src/utils/binary-search';
 
 interface ContractCondition {

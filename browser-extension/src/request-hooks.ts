@@ -1,7 +1,7 @@
-import { sitesStore } from '@src/prun-api/data/sites';
-import { getPlanetNaturalIdFromAddress } from '@src/prun-api/data/addresses';
+import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
+import { getPlanetNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { showBuffer } from '@src/util';
-import { request } from '@src/prun-api/data/request-hooks';
+import { request } from '@src/infrastructure/prun-api/data/request-hooks';
 
 const bs: Set<string> = new Set();
 

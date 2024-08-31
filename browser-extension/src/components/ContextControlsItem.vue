@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PrunCss from '@src/prun-ui/prun-css';
+import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { showBuffer } from '@src/util';
 
 defineProps({

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import GridItemView from '@src/components/GridItemView.vue';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
-import { getMaterialNameByTicker } from '@src/prun-ui/material-names';
+import { getMaterialNameByTicker } from '@src/infrastructure/prun-ui/material-names';
 import { computed } from 'vue';
 
 const props = defineProps({

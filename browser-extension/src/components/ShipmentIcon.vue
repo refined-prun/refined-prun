@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ColoredIcon from '@src/components/ColoredIcon.vue';
-import { contractsStore } from '@src/prun-api/data/contracts';
-import PrunCss from '@src/prun-ui/prun-css';
+import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
+import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { showBuffer } from '@src/util';
 import { computed, useCssModule } from 'vue';
 

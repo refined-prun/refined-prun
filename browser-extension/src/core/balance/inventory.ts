@@ -1,10 +1,10 @@
 import { computed } from 'vue';
-import { storagesStore } from '@src/prun-api/data/storage';
+import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { getStoreLocationName, sumMapValues } from '@src/core/balance/utils';
-import { shipyardProjectsStore } from '@src/prun-api/data/shipyard-projects';
-import { shipyardsStore } from '@src/prun-api/data/shipyards';
-import { getPlanetNameFromAddress } from '@src/prun-api/data/addresses';
-import { sumMaterialAmountPrice } from '@src/fio/cx';
+import { shipyardProjectsStore } from '@src/infrastructure/prun-api/data/shipyard-projects';
+import { shipyardsStore } from '@src/infrastructure/prun-api/data/shipyards';
+import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { sumMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 
 type LocationName = string;
 
