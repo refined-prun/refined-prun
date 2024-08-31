@@ -6,8 +6,12 @@ import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import { widgetBefore } from '@src/utils/vue-mount';
 import MinimizeRow from '@src/features/standard/minimize-headers/MinimizeRow.vue';
 import { reactive, ref } from 'vue';
+import { companyStore } from '@src/infrastructure/prun-api/data/company';
 
 async function onBufferCreated(buffer: PrunBuffer) {
+  if (companyStore.code === 'KCB') {
+    return;
+  }
   const header = await descendantPresent(buffer.frame, PrunCss.FormComponent.containerPassive);
   setHeaders(buffer, true);
 
