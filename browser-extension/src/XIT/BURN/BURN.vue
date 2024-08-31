@@ -127,6 +127,7 @@ const isMultiplanet = computed(() => props.parameters.length > 2 || isBurnAll.va
         <th>Needed</th>
         <th>Actions</th>
         <th>Load</th>
+        <th>Cost</th>
         <th>Days</th>
       </tr>
     </thead>

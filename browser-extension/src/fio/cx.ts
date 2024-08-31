@@ -103,6 +103,10 @@ function weightedAverage<T>(
 }
 
 export function getPrice(ticker?: string | null) {
+  if (!cxStore.fetched) {
+    return 0;
+  }
+
   if (!ticker) {
     return 0;
   }

@@ -3,7 +3,8 @@ import { computed, PropType } from 'vue';
 import DaysCell from '@src/XIT/BURN/DaysCell.vue';
 import { settings } from '@src/store/settings';
 import { materialsStore } from '@src/prun-api/data/materials';
-import { fixed2 } from '@src/utils/format';
+import { fixed0, fixed2 } from '@src/utils/format';
+import { getPrice } from '@src/fio/cx';
 
 const props = defineProps({
   burn: {
@@ -30,6 +31,7 @@ const days = computed(() => {
 
 const needWeight = computed(() => sumNeed(x => x.weight));
 const needVolume = computed(() => sumNeed(x => x.volume));
+const needCost = computed(() => sumNeed(x => getPrice(x.ticker)));
 
 function sumNeed(property: (x: PrunApi.Material) => number) {
   const resupply = settings.burn.resupply;
@@ -48,6 +50,10 @@ function sumNeed(property: (x: PrunApi.Material) => number) {
   }
   return sum;
 }
+
+function formatPrice(price: number): string {
+  return settings.fin.currency + fixed0(price);
+}
 </script>
 
 <template>
@@ -63,6 +69,7 @@ function sumNeed(property: (x: PrunApi.Material) => number) {
       <br />
       <span>{{ fixed2(needVolume) }}m³</span>
     </td>
+    <td>{{ formatPrice(needCost) }}</td>
     <DaysCell :days="days" />
   </tr>
 </template>

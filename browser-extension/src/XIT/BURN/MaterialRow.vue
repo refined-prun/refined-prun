@@ -7,6 +7,7 @@ import DaysCell from '@src/XIT/BURN/DaysCell.vue';
 import PrunCss from '@src/prun-ui/prun-css';
 import { showBuffer } from '@src/util';
 import { fixed0, fixed1, fixed2 } from '@src/utils/format';
+import { getPrice } from '@src/fio/cx';
 
 const props = defineProps({
   material: {
@@ -71,6 +72,14 @@ const needWeight = computed(() =>
 const needVolume = computed(() =>
   needAmt.value && !isNaN(needAmt.value) ? needAmt.value * props.material.volume : 0,
 );
+
+const needCost = computed(() =>
+  needAmt.value && !isNaN(needAmt.value) ? needAmt.value * getPrice(props.material.ticker) : 0,
+);
+
+function formatPrice(price: number): string {
+  return settings.fin.currency + fixed0(price);
+}
 </script>
 
 <template>
@@ -96,6 +105,7 @@ const needVolume = computed(() =>
       <br />
       <span>{{ fixed2(needVolume) }}m³</span>
     </td>
+    <td>{{ formatPrice(needCost) }}</td>
     <DaysCell :days="days" />
   </tr>
 </template>
