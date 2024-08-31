@@ -48,8 +48,8 @@ async function onBufferCreated(buffer: PrunBuffer) {
   }
 
   const command = parameters[0];
-  if (command.toUpperCase() == 'FIO') {
-    // Exception for FIO to use XIT
+  if (command.toUpperCase() == 'FIO' || command.toUpperCase() == 'COL') {
+    // Exception for FIO and PrUn-Collector to use XIT
     return;
   }
 
