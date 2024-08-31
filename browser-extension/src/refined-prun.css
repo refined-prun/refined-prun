@@ -1,28 +1,3 @@
-.pb-minimize {
-  font-size: 14px;
-  font-weight: bold;
-  margin-left: auto;
-  margin-right: 3px;
-  margin-top: 1px;
-  text-align: center;
-  width: 18px;
-  cursor: pointer;
-}
-
-.pb-minimize-cx:hover {
-  color: #26353e;
-  background-color: #3fa2de;
-}
-
-.pb-minimize-cx {
-  background-color: #26353e;
-  color: #3fa2de;
-}
-
-.pb-minimize-settings:hover {
-  color: #ddd;
-}
-
 .mat-element-large {
   height: 48px;
   width: 48px;

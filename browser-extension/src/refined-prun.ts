@@ -30,6 +30,7 @@ import '@src/features/advanced/hide-redundant-info';
 import '@src/features/standard/correct-material-command';
 import '@src/features/standard/correct-planet-command';
 import '@src/features/standard/evaluate-input-formula';
+import '@src/features/standard/minimize-headers';
 import '@src/features/standard/reload-page-on-websocket-disconnect';
 import '@src/features/standard/pending-contracts-add-details';
 import '@src/features/standard/remove-mobile-css-rules';
