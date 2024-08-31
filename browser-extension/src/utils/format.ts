@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export const hhmm = new Intl.DateTimeFormat(undefined, {
   hour: '2-digit',
   minute: '2-digit',
@@ -50,3 +52,12 @@ export const percent2 = new Intl.NumberFormat(undefined, {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 }).format;
+
+export function formatEta(from: number, to: number) {
+  let ret = hhmm(to);
+  const diffDays = dayjs(from).diff(to, 'days');
+  if (diffDays > 0) {
+    ret += ` +${diffDays}d`;
+  }
+  return ret;
+}
