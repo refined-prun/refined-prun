@@ -33,6 +33,7 @@ import '@src/features/standard/reload-page-on-websocket-disconnect';
 import '@src/features/standard/pending-contracts-add-details';
 import '@src/features/standard/remove-mobile-css-rules';
 import '@src/features/standard/sidebar-buttons';
+import '@src/features/standard/screen-tab-bar';
 
 import '@src/features/XIT/xit-commands';
 import '@src/features/XIT/ACT';

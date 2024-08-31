@@ -2,7 +2,6 @@ import { ModuleRunner } from './ModuleRunner';
 import { OrderETAs } from '@src/features/standard/OrderETAs';
 import { getSpecial } from './util';
 import { appendStyle, RPrunStylesheet } from './Style';
-import { ScreenUnpack } from '@src/features/standard/ScreenUnpack';
 import { InventoryOrganizer } from '@src/features/standard/InventoryOrganizer';
 import { HeaderMinimizer } from '@src/features/standard/HeaderMinimizer';
 import { IconMarkers } from '@src/features/standard/IconMarkers';
@@ -85,7 +84,6 @@ async function mainRun() {
   const modules = [
     new OrderETAs(),
     new InventoryOrganizer(result),
-    new ScreenUnpack(result['PMMGExtended']['unpack_exceptions']),
     new HeaderMinimizer(result['PMMGExtended']['minimize_by_default']),
     new IconMarkers(),
   ];

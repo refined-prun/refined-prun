@@ -18,7 +18,6 @@ export async function loadRefinedPrunCss() {
     document.documentElement.appendChild(css);
   });
   await buildFeatureRules(css.sheet!);
-  console.log(featureRules);
 }
 
 async function buildFeatureRules(sheet: CSSStyleSheet) {
