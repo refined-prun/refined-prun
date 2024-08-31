@@ -1,5 +1,4 @@
 import { ModuleRunner } from './ModuleRunner';
-import { OrderETAs } from '@src/features/standard/OrderETAs';
 import { getSpecial } from './util';
 import { appendStyle, RPrunStylesheet } from './Style';
 import { InventoryOrganizer } from '@src/features/standard/InventoryOrganizer';
@@ -82,7 +81,6 @@ async function mainRun() {
     window.setTimeout(() => recordFinancials(result), 5000);
   }
   const modules = [
-    new OrderETAs(),
     new InventoryOrganizer(result),
     new HeaderMinimizer(result['PMMGExtended']['minimize_by_default']),
     new IconMarkers(),

@@ -21,6 +21,7 @@ import '@src/features/standard/sfc-flight-eta';
 import '@src/features/standard/compact-ui';
 import '@src/features/standard/clickable-apex-logo';
 import '@src/features/standard/prod-burn-link';
+import '@src/features/standard/prod-order-eta';
 import '@src/features/standard/prodq-queue-load';
 import '@src/features/standard/fix-z-order';
 import '@src/features/standard/header-calculator-button';
