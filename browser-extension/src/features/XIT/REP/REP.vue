@@ -16,7 +16,7 @@ import { settings } from '@src/store/settings';
 import { computed } from 'vue';
 import InputNumber from '@src/components/InputNumber.vue';
 import { calculateBuildingEntries, calculateShipEntries } from '@src/features/XIT/REP/entries';
-import { dayjsLive, timestampLive } from '@src/utils/dayjs';
+import { dayjsEachSecond, timestampEachSecond } from '@src/utils/dayjs';
 import { binarySearch } from '@src/utils/binary-search';
 import dayjs from 'dayjs';
 import { fixed1, percent1 } from '@src/utils/format';
@@ -24,6 +24,7 @@ import { mergeMaterialAmounts } from '@src/infrastructure/prun-api/data/material
 import MaterialPurchaseTable from '@src/components/MaterialPurchaseTable.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { cxStore } from '@src/infrastructure/fio/cx';
+import { calculateBuildingCondition } from '@src/core/buildings';
 
 const props = defineProps({
   parameters: {
@@ -39,7 +40,7 @@ const msInADay = dayjs.duration(1, 'day').asMilliseconds();
 
 const currentSplitIndex = computed(() => {
   const currentSplitDate =
-    timestampLive() - settings.repairThreshold * msInADay + settings.repairOffset * msInADay;
+    timestampEachSecond() - settings.repairThreshold * msInADay + settings.repairOffset * msInADay;
   return binarySearch(currentSplitDate, buildings.value, x => x.lastRepair);
 });
 
@@ -51,13 +52,13 @@ const visibleShips = computed(() => ships.value.filter(x => x.condition <= 0.85)
 
 const materials = computed(() => {
   const materials: PrunApi.MaterialAmount[] = [];
-  const time = timestampLive();
+  const time = timestampEachSecond();
   for (const building of visibleBuildings.value) {
     const plannedRepairDate = (time - building.lastRepair) / msInADay + settings.repairOffset;
     for (const { material, amount } of building.fullMaterials) {
       materials.push({
         material,
-        amount: plannedRepairDate > 180 ? amount : Math.ceil((amount * plannedRepairDate) / 180),
+        amount: Math.ceil(amount * (1 - calculateBuildingCondition(plannedRepairDate))),
       });
     }
   }
@@ -66,7 +67,7 @@ const materials = computed(() => {
 });
 
 function calculateAge(lastRepair: number) {
-  return dayjsLive().diff(lastRepair, 'days', true);
+  return dayjsEachSecond().diff(lastRepair, 'days', true);
 }
 </script>
 

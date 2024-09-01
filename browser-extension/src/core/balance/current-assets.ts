@@ -16,6 +16,7 @@ import {
 import { getPrice } from '@src/infrastructure/fio/cx';
 import { sumMapValues } from '@src/core/balance/utils';
 import { inventory } from '@src/core/balance/inventory';
+import { currentOrderValue, totalOrderValue } from './orders';
 
 const cashTotal = computed(() => sumBy(balancesStore.all, x => x.amount));
 
@@ -96,8 +97,9 @@ const total = computed(() => {
     depositsTotal.value +
     marketListedMaterials.value +
     accountsReceivable.value +
-    materialsToReceive.value +
-    inventory.total.value
+    inventory.total.value +
+    totalOrderValue.value +
+    materialsToReceive.value
   );
 });
 
@@ -113,6 +115,8 @@ export const currentAssets = {
   quick,
   accountsReceivable,
   shortTermLoans,
+  orders: currentOrderValue,
+  totalOrderValue,
   marketListedMaterials,
   inventory: inventory.total,
   materialsToReceive,

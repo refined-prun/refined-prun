@@ -29,6 +29,8 @@ Fixes:
   - Materials requests in faction contracts are now included in liabilities
   - Materials rewards in faction contracts are now included in assets
   - Materials in not yet started shipyard projects are now included in assets
+  - Materials for buildings are now gradually depreciated when counted towards total asset value
+  - Input/output materials and fee in production orders are now included in assets
 - Properly intercept all PrUn server-client messages, preventing data loss
 - Reduced the amount of UI updates
 - Improved UI responsiveness

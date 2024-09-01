@@ -75,6 +75,12 @@ export function calculateLocationAssets() {
     location.total += value;
   }
 
+  for (const [name, value] of currentAssets.orders.value) {
+    const location = getLocation(name);
+    location.current += value;
+    location.total += value;
+  }
+
   for (const [name, value] of nonCurrentAssets.buildings.value) {
     const location = getLocation(name);
     location.nonCurrent += value;

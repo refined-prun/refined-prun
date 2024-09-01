@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
-import { timestampLive } from '@src/utils/dayjs';
+import { timestampEachSecond } from '@src/utils/dayjs';
 import { formatEta } from '@src/utils/format';
 
 const props = defineProps({
@@ -16,7 +16,7 @@ const props = defineProps({
 const ship = computed(() => shipsStore.getByRegistration(props.shipRegistration));
 const flight = computed(() => flightsStore.getById(ship.value?.flightId));
 const eta = computed(() =>
-  flight.value ? formatEta(timestampLive(), flight.value.arrival.timestamp) : undefined,
+  flight.value ? formatEta(timestampEachSecond(), flight.value.arrival.timestamp) : undefined,
 );
 </script>
 

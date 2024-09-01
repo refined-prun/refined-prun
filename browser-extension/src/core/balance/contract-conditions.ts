@@ -1,7 +1,7 @@
 import { computed, Ref } from 'vue';
 import { contractsStore, isFactionContract } from '@src/infrastructure/prun-api/data/contracts';
 import dayjs from 'dayjs';
-import { timestampLive } from '@src/utils/dayjs';
+import { timestampEachSecond } from '@src/utils/dayjs';
 import { sumBy } from '@src/utils/sum-by';
 import { calcMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { binarySearch } from '@src/utils/binary-search';
@@ -60,7 +60,7 @@ function calculateDeadline(contract: PrunApi.Contract, condition: PrunApi.Contra
 const accountingPeriod = dayjs.duration(1, 'week').asMilliseconds();
 
 const currentSplitIndex = computed(() => {
-  const currentSplitDate = timestampLive() + accountingPeriod;
+  const currentSplitDate = timestampEachSecond() + accountingPeriod;
   return binarySearch(currentSplitDate, sortedConditions.value, x => x.deadline);
 });
 

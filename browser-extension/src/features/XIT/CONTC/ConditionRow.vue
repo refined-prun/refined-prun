@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, PropType } from 'vue';
 import ContractLink from '@src/features/XIT/CONTC/ContractLink.vue';
-import { timestampLive } from '@src/utils/dayjs';
+import { timestampEachSecond } from '@src/utils/dayjs';
 import dayjs from 'dayjs';
 import ConditionText from '@src/features/XIT/CONTC/ConditionText.vue';
 
@@ -24,7 +24,7 @@ const eta = computed(() => {
   if (!isFinite(props.deadline)) {
     return '∞';
   }
-  let duration = dayjs.duration({ milliseconds: props.deadline - timestampLive() });
+  let duration = dayjs.duration({ milliseconds: props.deadline - timestampEachSecond() });
   const days = Math.floor(duration.asDays());
   duration = duration.subtract(days, 'days');
   const hours = Math.floor(duration.asHours());

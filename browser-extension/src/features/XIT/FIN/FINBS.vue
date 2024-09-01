@@ -28,6 +28,7 @@ const currentAssetsSection = computed<Section>(() => ({
     ['Short-Term Loans', currentAssets.shortTermLoans.value],
     ['Market-Listed Materials', currentAssets.marketListedMaterials.value],
     ['Inventory', currentAssets.inventory.value],
+    ['Orders in Progress', currentAssets.totalOrderValue.value],
     ['Materials to Receive', currentAssets.materialsToReceive.value],
   ],
 }));
