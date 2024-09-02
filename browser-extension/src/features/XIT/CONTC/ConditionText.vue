@@ -25,6 +25,10 @@ defineProps({
   <template v-else-if="condition.type === 'DELIVERY_SHIPMENT'">
     Deliver SHPT @ <AddressLink :address="condition.destination!" />
   </template>
+  <template v-else-if="condition.type === 'DELIVERY'">
+    Deliver {{ condition.quantity!.amount }} {{ condition.quantity!.material.ticker }} @
+    <AddressLink :address="condition.address!" />
+  </template>
   <template v-else-if="condition.type === 'PICKUP_SHIPMENT'">
     Pick up SHPT @ <AddressLink :address="condition.address!" />
   </template>
