@@ -1,7 +1,6 @@
-import { ModuleRunner } from './ModuleRunner';
-import { getSpecial } from './util';
+import { getSpecial, showBuffer } from './util';
 import { appendStyle, RPrunStylesheet } from './Style';
-import { loadLegacySettings, Settings } from './Settings';
+import { loadLegacySettings, saveSettings, Settings } from './Settings';
 import features from '@src/feature-registry';
 import { initializePrunApi, loadGameData } from '@src/infrastructure/prun-api';
 import { parsePrunCss } from '@src/infrastructure/prun-ui/prun-css';
@@ -77,13 +76,16 @@ async function mainRun() {
     // 72000000
     window.setTimeout(() => recordFinancials(result), 5000);
   }
-  const modules = [];
-  applyXITParameters(result, modules);
+  applyXITParameters(result);
   await features.init();
-  const runner = new ModuleRunner(modules, result);
 
-  // Start the loop
-  runner.loop();
+  // Run intro if it hasn't run already
+  if (!result.PMMGExtended.loaded_before) {
+    result.PMMGExtended.loaded_before = showBuffer('XIT START');
+    if (result.PMMGExtended.loaded_before) {
+      saveSettings(result);
+    }
+  }
 }
 
 async function waitUntilPrunLoaded() {

@@ -14,9 +14,9 @@ import ContextControls from '@src/components/ContextControls.vue';
 let xitArgs: any;
 export const getXitArgs = () => xitArgs;
 
-export function applyXITParameters(pmmgSettings, modules) {
+export function applyXITParameters(pmmgSettings) {
   xitArgs = {
-    modules,
+    modules: [],
     pmmgSettings,
   };
 }
