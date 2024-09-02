@@ -3,6 +3,7 @@ import '@src/utils/chartjs-dayjs';
 
 import '@src/request-hooks';
 
+import '@src/features/standard/bs-building-list/bs-building-list';
 import '@src/features/standard/com-add-images';
 import '@src/features/standard/com-hide-delete-button';
 import '@src/features/standard/com-hide-join-leave';
