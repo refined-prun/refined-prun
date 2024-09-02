@@ -1,7 +1,6 @@
 import { ModuleRunner } from './ModuleRunner';
 import { getSpecial } from './util';
 import { appendStyle, RPrunStylesheet } from './Style';
-import { InventoryOrganizer } from '@src/features/standard/InventoryOrganizer';
 import { IconMarkers } from '@src/features/standard/IconMarkers';
 import { loadLegacySettings, Settings } from './Settings';
 import features from '@src/feature-registry';
@@ -79,7 +78,7 @@ async function mainRun() {
     // 72000000
     window.setTimeout(() => recordFinancials(result), 5000);
   }
-  const modules = [new InventoryOrganizer(result), new IconMarkers()];
+  const modules = [new IconMarkers()];
   applyXITParameters(result, modules);
   await features.init();
   const runner = new ModuleRunner(modules, result);

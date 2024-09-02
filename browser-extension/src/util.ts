@@ -29,13 +29,6 @@ export function downloadFile(fileData, fileName, isJSON: boolean = true) {
   return;
 }
 
-// Creates an HTML element from an HTML string
-export function createNode(htmlString) {
-  const div = document.createElement('div');
-  div.innerHTML = htmlString.trim();
-  return div.firstChild as HTMLElement;
-}
-
 // Create an option element for a select list
 export function createSelectOption(optionLabel, optionValue, rightAlign?) {
   const option = document.createElement('option');
@@ -111,32 +104,6 @@ export function createTextDiv(text, className: string = 'prun-remove-js') {
   newSpan.classList.add(className);
   newSpan.textContent = text;
   return newSpan;
-}
-
-// Parse the inventory name on inventory buffers
-export function parseInvName(text) {
-  try {
-    const match = text.split(' ');
-    if (match && match[1]) {
-      return match[1];
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-// Parse the planet name on inventory buffers
-export function parsePlanetName(text) {
-  try {
-    const match = text.match(/\((.*?)\)/);
-    if (match && match[1]) {
-      return match[1];
-    }
-    return null;
-  } catch {
-    return null;
-  }
 }
 
 // Get the data in local storage for a given storageName. Then call the callback function.
@@ -379,15 +346,6 @@ export function changeValue(input, value) {
   inputEvent.initEvent('input', true, true);
   // Dispatch the event to the input element
   input.dispatchEvent(inputEvent);
-}
-
-// Remove all elements added in the last run with a class name
-export function genericCleanup(className: string = 'prun-remove-js') {
-  Array.from(document.getElementsByClassName(className)).forEach(elem => {
-    elem.parentNode?.removeChild(elem);
-    return;
-  });
-  return;
 }
 
 // Remove all elements from an HTML Element added in the last run with a class name
@@ -652,15 +610,6 @@ export function showSuccessDialog(tile, message: string = 'Action succeeded!') {
  */
 export function getLocalStoragePromise(keys: string | string[]) {
   return system.storage.local.get(keys);
-}
-
-/**
- * Sets multiple items in localStorage.
- * @param items - An object which gives each key/value pair to update storage with. Any other key/value pairs in storage will not be affected. Primitive values such as numbers will serialize as expected. Values with a typeof "object" and "function" will typically serialize to {}, with the exception of Array (serializes as expected), Date, and Regex (serialize using their String representation).
- * @returns A void Promise
- */
-export function setLocalStoragePromise(items: { [p: string]: any }) {
-  return system.storage.local.set(items);
 }
 
 export class Popup {
