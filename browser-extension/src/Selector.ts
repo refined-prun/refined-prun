@@ -6,11 +6,8 @@
 export const Selector = {
   BufferHeaderClass: 'TileFrame__cmd___ScBYW0n type__type-very-small___HaVMqrE',
   BufferHeader: "div[class~='TileFrame__cmd___ScBYW0n']",
-  MaterialIconSelector: "div[class~='GridItemView__image___yMoKOZV']",
-  BufferLink: "span[class~='Link__link___fa4mmMA']",
   Inventory: "div[class~='InventoryView__grid___UyRQSX8']",
   MaterialText: "span[class~='ColoredIcon__label___OU1I4oP']",
-  InventoryContainer: "div[class~='StoreView__container___RrvYu52']",
   ButtonSuccess: "button[class~='Button__success___bCiIVXw']",
   ActionFeedback: "span[class~='ActionFeedback__message___G2Sz4bw']",
   ActionFeedbackMain: "span[class~='ActionFeedback__message___G2Sz4bw'] > span",

@@ -1,51 +1,40 @@
-import { Module } from '@src/ModuleRunner';
-import { getLocalStorage, setSettings } from '@src/util';
+import { setSettings } from '@src/util';
 import { Selector } from '@src/Selector';
+import features from '@src/feature-registry';
+import system from '@src/system';
+import { companyStore } from '@src/infrastructure/prun-api/data/company';
+import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
+import PrunCss from '@src/infrastructure/prun-ui/prun-css';
+import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 
-/**
- * Display small icon markers next to items in inventories
- */
-export class IconMarkers implements Module {
-  private tag = 'pb-marker';
-  private storedData = { unchanged: true };
+const tag = 'pb-marker';
+const storedData: { unchanged?: boolean } = { unchanged: true };
 
-  constructor() {
-    getLocalStorage('PMMG-Markers', setStorage, this.storedData);
-  }
-
-  cleanup() {
-    // Nothing to clean up.
+export async function init() {
+  if (companyStore.code === 'KCB') {
     return;
   }
-
-  run() {
-    if (this.storedData.unchanged) {
+  const result = await system.storage.local.get('PMMG-Markers');
+  setStorage(result);
+  observeReadyElementsByClassName(PrunCss.StoreView.container, container => {
+    const invNameElem = _$(PrunCss.Link.link, container);
+    const invName = invNameElem?.textContent;
+    if (!invName) {
       return;
     }
-    // Change to searching for inventories, then mats on each inventory to pass down inventory name
-    const invs = document.querySelectorAll(Selector.InventoryContainer);
-    (Array.from(invs) as HTMLElement[]).forEach(inv => {
-      const invNameElem = inv.querySelector(Selector.BufferLink);
-      if (!invNameElem || !invNameElem.textContent) {
-        return;
+
+    const mats = _$$(PrunCss.GridItemView.image, container);
+    for (const mat of mats) {
+      if (mat.children[1]) {
+        continue;
       }
 
-      const invName = invNameElem.textContent;
-
-      const mats = inv.querySelectorAll(Selector.MaterialIconSelector);
-
-      (Array.from(mats) as HTMLElement[]).forEach(mat => {
-        if (mat.children[1]) {
-          return;
-        }
-
-        constructIcon(mat, invName, this.storedData, this.tag);
-      });
-    });
-  }
+      constructIcon(mat, invName);
+    }
+  });
 }
 
-function setStorage(gatheredData, storedData) {
+function setStorage(gatheredData) {
   storedData['PMMG-Markers'] = {};
   if (gatheredData['PMMG-Markers']) {
     Object.keys(gatheredData['PMMG-Markers']).forEach(identifier => {
@@ -55,7 +44,7 @@ function setStorage(gatheredData, storedData) {
   delete storedData.unchanged;
 }
 
-function constructIcon(mat, invName, storedData, tag) {
+function constructIcon(mat, invName) {
   let status = 0;
   const matTickerElem = mat.querySelector(Selector.MaterialText);
   if (!matTickerElem || !matTickerElem.textContent) {
@@ -130,6 +119,11 @@ function constructIcon(mat, invName, storedData, tag) {
     setSettings(storedData);
   });
 }
+
+void features.add({
+  id: 'icon-markers',
+  init,
+});
 
 const icons = [
   `<?xml version="1.0" encoding="utf-8"?>
