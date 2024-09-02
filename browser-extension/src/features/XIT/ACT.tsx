@@ -1222,7 +1222,7 @@ function parseActionPackage(rawActionPackage, messageBox) {
 
     if (inv) {
       inv.items.forEach(mat => {
-        CXInvs[ticker][mat.quantity.material.ticker] = mat.quantity.amount;
+        CXInvs[ticker][mat.quantity?.material.ticker] = mat.quantity?.amount;
       });
     }
   });
