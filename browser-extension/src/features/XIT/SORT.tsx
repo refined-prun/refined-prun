@@ -11,6 +11,7 @@ import {
 } from '@src/util';
 import { Style } from '@src/Style';
 import xit from './xit-registry';
+import { settings } from '@src/store/settings';
 
 class Sort {
   private tile: HTMLElement;
@@ -40,9 +41,9 @@ class Sort {
       return;
     }
 
-    if (!pmmgSettings['PMMGExtended']['sorting']) {
+    if (!settings.sorting) {
       // Initialize the stored sorting settings if they don't exist
-      pmmgSettings['PMMGExtended']['sorting'] = [];
+      settings.sorting = [];
     }
 
     const table = document.createElement('table'); // Create a table of all current sorting settings
@@ -76,7 +77,7 @@ class Sort {
     });
 
     let isSorting = false; // Whether any sorting options exist
-    pmmgSettings['PMMGExtended']['sorting'].forEach(settings => {
+    settings.sorting.forEach(settings => {
       // For each stored sorting option, test to only show the ones corresponding to the current planet
       if (!settings[0] || !settings[1] || !settings[2]) {
         return;
@@ -124,11 +125,11 @@ class Sort {
 
             for (
               let i = 0;
-              i < pmmgSettings['PMMGExtended']['sorting'].length;
+              i < settings.sorting.length;
               i++ // For each stored setting, find the one corresponding to the current row
             ) {
-              if (pmmgSettings['PMMGExtended']['sorting'][i] == settings) {
-                pmmgSettings['PMMGExtended']['sorting'].splice(i, 1); // Remove it and hide the row
+              if (settings.sorting[i] == settings) {
+                settings.sorting.splice(i, 1); // Remove it and hide the row
                 row.style.display = 'none';
                 setSettings(pmmgSettings);
                 break;
@@ -165,8 +166,8 @@ class Sort {
 
 // Creates the interface to add a new sorting option
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: any[] = []) {
-  const prefilled = settings.length != 0;
+function createAddInterface(sortObj, tile, pmmgSettings, parameters, setting: any[] = []) {
+  const prefilled = setting.length != 0;
   const overlapDiv = document.createElement('div');
   overlapDiv.classList.add(...Style.OverlappingDiv);
   const greyStripes = document.createElement('div');
@@ -193,24 +194,24 @@ function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: a
   form.appendChild(
     createPopupInputRow(
       'Abbreviation',
-      prefilled ? settings[0] : '',
+      prefilled ? setting[0] : '',
       'The abbreviation showing at the top of the inventory (ABC, CAT, etc.)',
     ),
   );
 
   if (prefilled) {
-    for (let i = 0; i < settings[2].length; i++) {
+    for (let i = 0; i < setting[2].length; i++) {
       form.appendChild(
         createPopupInputRow(
           `Category ${i + 1} Name`,
-          prefilled ? settings[2][i][0] : '',
+          prefilled ? setting[2][i][0] : '',
           i == 0 ? 'The name of the first category for materials' : '',
         ),
       );
       form.appendChild(
         createPopupInputRow(
           `Category ${i + 1} MATs`,
-          prefilled ? settings[2][i][1].join(', ') : '',
+          prefilled ? setting[2][i][1].join(', ') : '',
           i == 0
             ? 'A list of materials in the first category. Separate tickers by a comma. (RAT, DW, etc.)'
             : '',
@@ -260,14 +261,14 @@ function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: a
   //Create the burn row
   const burnRow = createPopupCheckboxRow(
     'Burn Sorting',
-    settings[3] || false,
+    setting[3] || false,
     'Add burn sorting as a secondary sorting method. Burn categories will show under the categories defined above.',
   );
   form.appendChild(burnRow);
   //Create zero items row
   const zeroRow = createPopupCheckboxRow(
     'Show Zeros',
-    settings[4] || false,
+    setting[4] || false,
     'Show item icons that have zero quantity.',
   );
   form.appendChild(zeroRow);
@@ -317,9 +318,9 @@ function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: a
       return;
     }
     if (prefilled) {
-      for (i = 0; i < pmmgSettings['PMMGExtended']['sorting'].length; i++) {
-        if (pmmgSettings['PMMGExtended']['sorting'][i] == settings) {
-          pmmgSettings['PMMGExtended']['sorting'][i] = [
+      for (i = 0; i < settings.sorting.length; i++) {
+        if (settings.sorting[i] == setting) {
+          settings.sorting[i] = [
             itemAbbreviation,
             parameters[1],
             sortingInfo,
@@ -330,7 +331,7 @@ function createAddInterface(sortObj, tile, pmmgSettings, parameters, settings: a
         }
       }
     } else {
-      pmmgSettings['PMMGExtended']['sorting'].push([
+      settings.sorting.push([
         itemAbbreviation,
         parameters[1],
         sortingInfo,

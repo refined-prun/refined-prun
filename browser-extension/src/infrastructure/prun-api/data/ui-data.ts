@@ -1,5 +1,5 @@
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
-import { shallowReactive } from 'vue';
+import { computed, ref, shallowReactive } from 'vue';
 
 // ¯\_(ツ)_/¯
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -10,3 +10,17 @@ messages({
     Object.assign(uiDataStore, data);
   },
 });
+
+export const screenHash = ref(undefined as string | undefined);
+
+function updateCurrent() {
+  screenHash.value = location.hash.match(/screen=([^&]*)/)?.[1];
+}
+updateCurrent();
+
+window.addEventListener('locationchange', updateCurrent);
+window.addEventListener('hashchange', updateCurrent);
+
+export const currentScreen = computed(
+  () => uiDataStore.screens.find(x => x.id === screenHash.value) ?? uiDataStore.screens[0],
+);

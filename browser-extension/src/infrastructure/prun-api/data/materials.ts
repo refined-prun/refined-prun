@@ -40,27 +40,38 @@ export const materialsStore = {
   getByTicker,
 };
 
-export const sortMaterials = (materials: PrunApi.Material[]) => {
-  const categories = materialCategoriesStore.entities;
-  return materials.slice().sort((a, b) => {
-    const categoryA = categories[a.category].name;
-    const categoryB = categories[b.category].name;
-    return categoryA === categoryB
-      ? a.ticker.localeCompare(b.ticker)
-      : categoryA.localeCompare(categoryB);
-  });
-};
+export function sortMaterials(materials: PrunApi.Material[]) {
+  return sortMaterialsBy(materials, x => x);
+}
 
-export const sortMaterialAmounts = (materials: PrunApi.MaterialAmount[]) => {
+export function sortMaterialAmounts(materials: PrunApi.MaterialAmount[]) {
+  return sortMaterialsBy(materials, x => x.material);
+}
+
+export function sortMaterialsBy<T>(
+  items: T[],
+  selector: (item: T) => PrunApi.Material | undefined,
+) {
   const categories = materialCategoriesStore.entities;
-  return materials.slice().sort((a, b) => {
-    const categoryA = categories[a.material.category].name;
-    const categoryB = categories[b.material.category].name;
+  return items.slice().sort((a, b) => {
+    const materialA = selector(a);
+    const materialB = selector(b);
+    if (materialA === materialB) {
+      return 0;
+    }
+    if (!materialA) {
+      return 1;
+    }
+    if (!materialB) {
+      return -1;
+    }
+    const categoryA = categories[materialA.category].name;
+    const categoryB = categories[materialB.category].name;
     return categoryA === categoryB
-      ? a.material.ticker.localeCompare(b.material.ticker)
+      ? materialA.ticker.localeCompare(materialB.ticker)
       : categoryA.localeCompare(categoryB);
   });
-};
+}
 
 export function mergeMaterialAmounts(materials: PrunApi.MaterialAmount[]) {
   const result: PrunApi.MaterialAmount[] = [];

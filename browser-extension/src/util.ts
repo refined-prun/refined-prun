@@ -348,15 +348,6 @@ export function changeValue(input, value) {
   input.dispatchEvent(inputEvent);
 }
 
-// Remove all elements from an HTML Element added in the last run with a class name
-export function targetedCleanup(className: string, element: Element) {
-  Array.from(element.getElementsByClassName(className)).forEach(elem => {
-    elem.parentNode?.removeChild(elem);
-    return;
-  });
-  return;
-}
-
 // Return all matching buffers
 export function getBuffers(bufferCode: string): HTMLElement[] {
   const nodes = document.evaluate(

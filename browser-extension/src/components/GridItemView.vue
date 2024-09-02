@@ -20,7 +20,7 @@ const textElementClass = [
   <div :class="PrunCss.GridItemView.container">
     <div :class="PrunCss.GridItemView.image">
       <slot />
-      <span :class="textElementClass">{{ name }}</span>
     </div>
+    <span :class="textElementClass">{{ name }}</span>
   </div>
 </template>

@@ -9,6 +9,7 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  warning: Boolean,
   amount: {
     type: Number,
     default: undefined,
@@ -32,6 +33,6 @@ const name = computed(() => {
 
 <template>
   <GridItemView :name="name">
-    <MaterialIcon :ticker="ticker" :amount="amount" />
+    <MaterialIcon :ticker="ticker" :amount="amount" :warning="warning" />
   </GridItemView>
 </template>

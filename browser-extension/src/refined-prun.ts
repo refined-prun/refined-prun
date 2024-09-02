@@ -29,7 +29,7 @@ import '@src/features/standard/header-calculator-button';
 import '@src/features/standard/header-duplicate-button';
 import '@src/features/advanced/hide-redundant-info/hide-redundant-info';
 import '@src/features/standard/icon-markers/icon-markers';
-import '@src/features/standard/inventory-organizer';
+import '@src/features/standard/inventory-organizer/inventory-organizer';
 import '@src/features/standard/correct-material-command';
 import '@src/features/standard/correct-planet-command';
 import '@src/features/standard/evaluate-input-formula';

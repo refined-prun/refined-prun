@@ -1,5 +1,6 @@
 import { reactive, watch } from 'vue';
 import system from '@src/system';
+import { deepToRaw } from '@src/utils/deep-to-raw';
 
 export const settings = reactive({
   burn: {
@@ -33,6 +34,14 @@ export const settings = reactive({
     ['SET', 'XIT SETTINGS'],
     ['HELP', 'XIT HELP'],
   ],
+  selectedSorting: [] as [id: string, name: string][],
+  sorting: [] as [
+    name: string,
+    storeId: string,
+    info: [group: string, mats: string[]][],
+    burn: boolean,
+    zero: boolean,
+  ][],
 });
 
 type PricingMethod = 'ASK' | 'BID' | 'AVG' | 'VWAP7D' | 'VWAP30D' | string;
@@ -52,7 +61,7 @@ export async function loadSettings() {
       if (!saveQueued) {
         queueMicrotask(() => {
           void system.storage.local.set({
-            [key]: settings,
+            [key]: deepToRaw(settings),
           });
           saveQueued = false;
         });
