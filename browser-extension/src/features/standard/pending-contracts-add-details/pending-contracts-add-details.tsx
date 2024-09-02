@@ -1,4 +1,4 @@
-import './pending-contracts-add-details.css';
+import classes from './pending-contracts-add-details.module.css';
 import features from '@src/feature-registry';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
@@ -21,9 +21,9 @@ function onContractIdReady(id: HTMLDivElement) {
 }
 
 export function init() {
-  applyCssRule(`.${PrunCss.Sidebar.contract} .${PrunCss.Link.link}`, 'link');
-  applyCssRule(`.${PrunCss.Sidebar.contractId}`, 'contract-id');
-  applyCssRule(`.${PrunCss.Sidebar.contractId}:hover`, 'contract-id:hover');
+  applyCssRule(`.${PrunCss.Sidebar.contract} .${PrunCss.Link.link}`, classes.link);
+  applyCssRule(`.${PrunCss.Sidebar.contractId}`, classes.contractId);
+  applyCssRule(`.${PrunCss.Sidebar.contractId}:hover`, `${classes.contractId}:hover`);
   observeReadyElementsByClassName(PrunCss.Sidebar.contractId, onContractIdReady);
 }
 

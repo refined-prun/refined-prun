@@ -1,4 +1,4 @@
-import './nots-improve-notifications.css';
+import classes from './nots-improve-notifications.module.css';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import buffers from '@src/infrastructure/prun-ui/prun-buffers';
@@ -43,7 +43,7 @@ function processNotification(element: Element) {
     }
 
     widgetBefore(textElement, () => (
-      <div class="rp-notification-type" style={{ color: search[2] }}>
+      <div class={classes.type} style={{ color: search[2] }}>
         {search[1].toUpperCase()}
       </div>
     ));

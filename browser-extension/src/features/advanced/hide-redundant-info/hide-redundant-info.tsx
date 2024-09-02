@@ -1,4 +1,4 @@
-import './hide-redundant-info.css';
+import classes from './hide-redundant-info.module.css';
 import features from '@src/feature-registry';
 import buffers from '@src/infrastructure/prun-ui/prun-buffers';
 import {
@@ -181,13 +181,13 @@ function cleanContractType(ad: HTMLElement) {
 
 export function init() {
   // Hide Exchange column
-  applyScopedCssRule('CXOS', 'tr > *:first-child', 'first-column');
+  applyScopedCssRule('CXOS', 'tr > *:first-child', classes.hide);
   // Hide Transponder column
-  applyScopedCssRule('FLT', 'tr > *:first-child', 'first-column');
+  applyScopedCssRule('FLT', 'tr > *:first-child', classes.hide);
   // Hide sort options
-  applyScopedClassCssRule('SHPF', PrunCss.InventorySortControls.controls, 'inventory-controls');
+  applyScopedClassCssRule('SHPF', PrunCss.InventorySortControls.controls, classes.hide);
   // Hide Weight and Volume labels
-  applyScopedClassCssRule('SHPF', PrunCss.StoreView.name, 'store-name');
+  applyScopedClassCssRule('SHPF', PrunCss.StoreView.name, classes.hide);
   buffers.observe('COGCPEX', cleanCOGCPEX);
   buffers.observe('FLT', cleanFLT);
   buffers.observe('INV', cleanINV);

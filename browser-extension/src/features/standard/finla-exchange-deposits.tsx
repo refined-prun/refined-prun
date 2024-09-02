@@ -1,4 +1,4 @@
-import './finla-exchange-deposits.css';
+import classes from './finla-exchange-deposits.module.css';
 import buffers from '@src/infrastructure/prun-ui/prun-buffers';
 import features from '@src/feature-registry';
 import { observeReadyElementsByTagName } from '@src/utils/mutation-observer';
@@ -68,7 +68,7 @@ function onTableBodyReady(tbody: HTMLTableSectionElement) {
 
 export function init() {
   for (let i = 2; i < 5; i++) {
-    applyCssRule(`.${PrunCss.LiquidAssetsPanel.row} td:nth-child(${i})`, 'row');
+    applyCssRule(`.${PrunCss.LiquidAssetsPanel.row} td:nth-child(${i})`, classes.row);
   }
   buffers.observe('FINLA', onBufferCreated);
 }

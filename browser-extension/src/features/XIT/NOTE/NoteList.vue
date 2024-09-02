@@ -44,7 +44,7 @@ function confirmDelete(ev: Event, name: string) {
           >
         </td>
         <td>
-          <button class="delete-button" @click="x => confirmDelete(x, note[0])">DELETE</button>
+          <button :class="$style.delete" @click="x => confirmDelete(x, note[0])">DELETE</button>
         </td>
       </tr>
     </tbody>
@@ -58,8 +58,8 @@ function confirmDelete(ev: Event, name: string) {
   </button>
 </template>
 
-<style scoped>
-.delete-button {
+<style module>
+.delete {
   color: red;
   border: none;
   cursor: pointer;

@@ -4,9 +4,7 @@ import features from '@src/feature-registry';
 
 let styleElement: HTMLStyleElement | undefined = undefined;
 
-type FeatureRules = { [id: string]: { [key: string]: string } };
-
-const featureRules: FeatureRules = {};
+const rules: { [id: string]: string } = {};
 
 export async function loadRefinedPrunCss() {
   const css = document.createElement('link');
@@ -17,46 +15,34 @@ export async function loadRefinedPrunCss() {
     css.onload = resolve;
     document.documentElement.appendChild(css);
   });
-  await buildFeatureRules(css.sheet!);
+  await readRules(css.sheet!);
 }
 
-async function buildFeatureRules(sheet: CSSStyleSheet) {
+async function readRules(sheet: CSSStyleSheet) {
   for (let i = 0; i < sheet.cssRules.length; i++) {
     const rule = sheet.cssRules.item(i) as CSSStyleRule;
-    const selector = rule?.selectorText;
-    if (!selector?.includes('__')) {
+    if (!rule) {
       continue;
     }
-    const matches = selector.match(/\.([a-z-]+)__([a-z-:]+)$/);
-    if (!matches) {
-      continue;
-    }
-    const id = matches[1];
-    const key = matches[2];
-    let feature = featureRules[id];
-    if (!feature) {
-      feature = {};
-      featureRules[id] = feature;
-    }
-    feature[key] = rule.cssText.replace(selector, '/* selector */');
+    rules[rule.selectorText] = rule.cssText;
   }
 }
 
-export function applyClassCssRule(classNames: Arrayable<string>, key: string) {
+export function applyClassCssRule(classNames: Arrayable<string>, sourceClass: string) {
   for (const className of castArray(classNames)) {
-    applyCssRule(`.${className}`, key);
+    applyCssRule(`.${className}`, sourceClass);
   }
 }
 
 export function applyScopedClassCssRule(
   buffers: Arrayable<string>,
   classNames: Arrayable<string>,
-  key: string,
+  sourceClass: string,
 ) {
   classNames = castArray(classNames);
   for (const buffer of castArray(buffers)) {
     for (const className of classNames) {
-      applyCssRule(`${selectBuffer(buffer)} .${className}`, key);
+      applyCssRule(`${selectBuffer(buffer)} .${className}`, sourceClass);
     }
   }
 }
@@ -64,36 +50,40 @@ export function applyScopedClassCssRule(
 export function applyScopedCssRule(
   buffers: Arrayable<string>,
   selectors: Arrayable<string>,
-  key: string,
+  sourceClass: string,
 ) {
   selectors = castArray(selectors);
   for (const buffer of castArray(buffers)) {
     for (const selector of selectors) {
-      applyCssRule(`${selectBuffer(buffer)} ${selector}`, key);
+      applyCssRule(`${selectBuffer(buffer)} ${selector}`, sourceClass);
     }
   }
 }
 
-export function applyCssRule(selector: string, key: string) {
+export function applyCssRule(selector: string, sourceClass: string) {
+  if (!sourceClass) {
+    throw new Error('Source class is undefined');
+  }
   if (!features.current) {
     throw new Error('Cannot apply css rules outside of feature init');
   }
-  const match = featureRules[features.current]?.[key];
+  const sourceSelector = '.' + sourceClass;
+  const match = rules[sourceSelector];
   if (!match) {
-    throw new Error(`Failed to match rule ${features.current}__${key}`);
+    throw new Error(`Failed to find css selector ${sourceSelector}`);
   }
   if (!styleElement) {
     styleElement = document.createElement('style');
-    styleElement.id = 'rp-css-rules';
+    styleElement.id = 'rp-css-overrides';
     styleElement.textContent = '';
     document.head.appendChild(styleElement);
   } else {
     styleElement.textContent += '\n\n';
   }
   const attribute = `rp-${features.current}`;
-  const prefix = `html[${attribute}] `;
+  const prefix = `html[${attribute}]`;
   document.documentElement.setAttribute(attribute, '');
-  styleElement.textContent += match.replace('/* selector */', prefix + selector);
+  styleElement.textContent += match.replace(sourceSelector, `${prefix} ${selector}`);
 }
 
 function selectBuffer(buffer: string) {
