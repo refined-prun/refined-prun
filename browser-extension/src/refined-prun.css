@@ -178,32 +178,6 @@
   background-color: rgb(247, 166, 0);
 }
 
-.pb-marker {
-  width: 15px;
-  height: 15px;
-  position: absolute;
-  top: 33px;
-}
-
-.pb-marker > div {
-  background: #29353f;
-  border-color: #314b5f;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 4px 4px 4px 0px;
-  height: 100%;
-  width: 100%;
-  display: none;
-}
-
-.pb-marker:hover > div {
-  display: block;
-}
-
-.pb-marker > div > div {
-  margin: 1px;
-}
-
 div.Head__container___3ecBw0E > div:nth-child(2) {
   flex-shrink: 0;
 }

@@ -60,6 +60,7 @@ export function observeHtmlCollectionChanged<T extends Element>(
     return false;
   };
   if (baseElement === document) {
+    checkElements();
     observeDocumentMutations(checkElements);
   } else {
     observeDescendantListChanged(baseElement, checkElements);

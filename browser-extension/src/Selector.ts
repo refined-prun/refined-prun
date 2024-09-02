@@ -7,7 +7,6 @@ export const Selector = {
   BufferHeaderClass: 'TileFrame__cmd___ScBYW0n type__type-very-small___HaVMqrE',
   BufferHeader: "div[class~='TileFrame__cmd___ScBYW0n']",
   Inventory: "div[class~='InventoryView__grid___UyRQSX8']",
-  MaterialText: "span[class~='ColoredIcon__label___OU1I4oP']",
   ButtonSuccess: "button[class~='Button__success___bCiIVXw']",
   ActionFeedback: "span[class~='ActionFeedback__message___G2Sz4bw']",
   ActionFeedbackMain: "span[class~='ActionFeedback__message___G2Sz4bw'] > span",
