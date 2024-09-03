@@ -19,7 +19,7 @@ const ships = computed(() => {
     const repairsCost = sumMaterialAmountPrice(ship.repairMaterials);
     total += shipValue - repairsCost;
   }
-  for (const project of shipyardProjectsStore.all.value.filter(x => x.status === 'IN_PROGRESS')) {
+  for (const project of shipyardProjectsStore.all.value.filter(x => x.status === 'STARTED')) {
     total += sumMaterialAmountPrice(project.inventory.items);
   }
   return total;

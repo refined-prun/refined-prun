@@ -13,5 +13,5 @@ declare namespace PrunApi {
     shipId: null | string;
   }
 
-  declare type ShipyardProjectStatus = 'CREATED' | 'IN_PROGRESS' | 'BUILT';
+  declare type ShipyardProjectStatus = 'CREATED' | 'STARTED' | 'BUILT';
 }
