@@ -55,6 +55,8 @@ async function onBufferCreated(buffer: PrunBuffer) {
 
   // Remove green screen styling
   container.removeAttribute('style');
+  container.style.width = '100%';
+  container.style.height = '100%';
 
   const xitCommand = xit.get(command);
   if (!xitCommand) {
