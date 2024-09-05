@@ -20,7 +20,6 @@ const icon = computed(() => (isFulfilled.value ? '✓' : '✗'));
 
 <template>
   <div>
-    <span :class="iconClass" :style="{ fontWeight: 'bold' }">{{ icon }}&nbsp;</span>
-    <span>{{ friendlyConditionText(condition.type) }}</span>
+    <span :class="iconClass">{{ icon }}&nbsp;{{ friendlyConditionText(condition.type) }}</span>
   </div>
 </template>
