@@ -36,6 +36,10 @@ defineProps({
     Provision {{ condition.quantity!.amount }} {{ condition.quantity!.material.ticker }} @
     <AddressLink :address="condition.address!" />
   </template>
+  <template v-else-if="condition.type === 'PROVISION'">
+    Provision {{ condition.quantity!.amount }} {{ condition.quantity!.material.ticker }} @
+    <AddressLink :address="condition.address!" />
+  </template>
   <template v-else-if="condition.type === 'EXPLORATION'">
     Explore <AddressLink :address="condition.address!" />
   </template>
