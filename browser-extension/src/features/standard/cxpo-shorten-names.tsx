@@ -1,12 +1,12 @@
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
 import { _$ } from '@src/utils/get-element-by-class-name';
 
-async function onBufferCreated(buffer: PrunBuffer) {
-  const form = await descendantPresent(buffer.frame, PrunCss.ComExPlaceOrderForm.form);
-  const parts = buffer.parameter!.split('.');
+async function onTileReady(tile: PrunTile) {
+  const form = await descendantPresent(tile.frame, PrunCss.ComExPlaceOrderForm.form);
+  const parts = tile.parameter!.split('.');
   replaceRowValue(form.children[0], parts[1]);
   replaceRowValue(form.children[1], parts[0]);
 }
@@ -19,7 +19,7 @@ function replaceRowValue(row: Element, value: string) {
 }
 
 export function init() {
-  buffers.observe('CXPO', onBufferCreated);
+  tiles.observe('CXPO', onTileReady);
 }
 
 void features.add({

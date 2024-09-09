@@ -1,5 +1,5 @@
 import { Style, WithStyles } from '@src/Style';
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
@@ -17,22 +17,22 @@ import { settings } from '@src/store/settings';
 import { exchangeStore } from '@src/infrastructure/prun-api/data/exchanges';
 import { getPlanetNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 
-function onBBLBufferCreated(buffer: PrunBuffer) {
-  clearBuildingLists(buffer.frame);
+function onBBLTileReady(tile: PrunTile) {
+  clearBuildingLists(tile.frame);
 }
 
-export function clearBuildingLists(buffer: HTMLDivElement) {
-  if (!buffer.isConnected) {
+export function clearBuildingLists(tile: HTMLDivElement) {
+  if (!tile.isConnected) {
     return;
   }
-  setTimeout(() => clearBuildingLists(buffer), 1000);
+  setTimeout(() => clearBuildingLists(tile), 1000);
   const tag = 'rp-compact-ui';
-  const nameElem = _$(PrunCss.SectionList.container, buffer);
+  const nameElem = _$(PrunCss.SectionList.container, tile);
   if (!nameElem || !nameElem.textContent) {
     return;
   }
 
-  for (const row of _$$(PrunCss.SectionList.divider, buffer) as HTMLElement[]) {
+  for (const row of _$$(PrunCss.SectionList.divider, tile) as HTMLElement[]) {
     if (row.childNodes.length >= 2) {
       continue;
     }
@@ -193,9 +193,9 @@ export function showElement(element: HTMLElement, tag: string) {
   element.classList.remove(`${tag}-hidden`);
 }
 
-function onCXOSBufferCreated(buffer: PrunBuffer) {
+function onCXOSTileReady(tile: PrunTile) {
   observeReadyElementsByClassName(PrunCss.Link.link, {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: link => {
       const exchange = exchangeStore.getByName(link.textContent);
       const naturalId = getPlanetNaturalIdFromAddress(exchange?.address);
@@ -206,7 +206,7 @@ function onCXOSBufferCreated(buffer: PrunBuffer) {
   });
 
   observeReadyElementsByTagName('th', {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: header => {
       if (header.textContent == 'Exchange') {
         header.textContent = 'Exc.';
@@ -215,28 +215,28 @@ function onCXOSBufferCreated(buffer: PrunBuffer) {
   });
 }
 
-async function onBSBufferCreated(buffer: PrunBuffer) {
-  // Only process BS {base} buffers
-  if (!buffer.parameter) {
+async function onBSTileReady(tile: PrunTile) {
+  // Only process BS {base} tiles
+  if (!tile.parameter) {
     return;
   }
 
-  await descendantPresent(buffer.frame, PrunCss.Site.container);
+  await descendantPresent(tile.frame, PrunCss.Site.container);
 
-  processBSAreaProgressBar(buffer);
+  processBSAreaProgressBar(tile);
 
   observeReadyElementsByTagName('th', {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: x => (x.innerText = x.innerText.replace('Current Workforce', 'Current')),
   });
 
   observeReadyElementsByTagName('tr', {
-    baseElement: buffer.frame,
-    callback: x => onWorkforceTableRowReady(buffer, x),
+    baseElement: tile.frame,
+    callback: x => onWorkforceTableRowReady(tile, x),
   });
 }
 
-function onWorkforceTableRowReady(buffer: PrunBuffer, row: HTMLTableRowElement) {
+function onWorkforceTableRowReady(tile: PrunTile, row: HTMLTableRowElement) {
   const cells = row.getElementsByTagName('td');
   if (cells.length === 0) {
     return;
@@ -245,7 +245,7 @@ function onWorkforceTableRowReady(buffer: PrunBuffer, row: HTMLTableRowElement) 
   const levelText = refInnerText(cells[0]);
   const shouldHideRow = computed(() => {
     const level = levelText.value.substring(0, 3).toLowerCase();
-    const site = sitesStore.getByPlanetNaturalId(buffer.parameter);
+    const site = sitesStore.getByPlanetNaturalId(tile.parameter);
     const workforce = workforcesStore
       .getById(site?.siteId)
       ?.workforces.find(x => x.level.toLowerCase().startsWith(level));
@@ -272,8 +272,8 @@ function onWorkforceTableRowReady(buffer: PrunBuffer, row: HTMLTableRowElement) 
   );
 }
 
-function processBSAreaProgressBar(buffer: PrunBuffer) {
-  const elements = _$$(PrunCss.FormComponent.containerPassive, buffer.frame) as HTMLElement[];
+function processBSAreaProgressBar(tile: PrunTile) {
+  const elements = _$$(PrunCss.FormComponent.containerPassive, tile.frame) as HTMLElement[];
   if (elements.length < 2) {
     return;
   }
@@ -295,9 +295,9 @@ function processBSAreaProgressBar(buffer: PrunBuffer) {
 }
 
 export function init() {
-  buffers.observe('BBL', onBBLBufferCreated);
-  buffers.observe('CXOS', onCXOSBufferCreated);
-  buffers.observe('BS', onBSBufferCreated);
+  tiles.observe('BBL', onBBLTileReady);
+  tiles.observe('CXOS', onCXOSTileReady);
+  tiles.observe('BS', onBSTileReady);
 }
 
 void features.add({

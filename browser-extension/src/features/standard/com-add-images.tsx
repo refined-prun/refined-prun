@@ -1,13 +1,13 @@
 import features from '@src/feature-registry';
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import { widgetAppend } from '@src/utils/vue-mount';
 import { Fragment } from 'vue';
 
-async function onBufferCreated(buffer: PrunBuffer) {
-  const messages = await descendantPresent(buffer.frame, PrunCss.MessageList.messages);
+async function onTileReady(tile: PrunTile) {
+  const messages = await descendantPresent(tile.frame, PrunCss.MessageList.messages);
   observeReadyElementsByClassName(PrunCss.Link.link, {
     baseElement: messages,
     callback: processLink,
@@ -38,7 +38,7 @@ function isImage(url: string) {
 }
 
 export function init() {
-  buffers.observe(['COMG', 'COMP', 'COMU'], onBufferCreated);
+  tiles.observe(['COMG', 'COMP', 'COMU'], onTileReady);
 }
 
 void features.add({

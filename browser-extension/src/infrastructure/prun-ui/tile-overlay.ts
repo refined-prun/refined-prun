@@ -5,7 +5,7 @@ import Overlay from '@src/components/Overlay.vue';
 import { dot } from '@src/utils/dot';
 import ActionConfirmationOverlay from '@src/components/ActionConfirmationOverlay.vue';
 
-export function showBufferOverlay(
+export function showTileOverlay(
   baseElementOrEvent: Element | Event,
   component: Component,
   rootProps?: WidgetData | null,

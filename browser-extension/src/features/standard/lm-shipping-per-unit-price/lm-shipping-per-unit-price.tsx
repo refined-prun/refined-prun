@@ -3,16 +3,16 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import { widgetAfter, widgetBefore } from '@src/utils/vue-mount';
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import { _$$ } from '@src/utils/get-element-by-class-name';
 import PpuLabel from './PpuLabel.vue';
 import { reactive } from 'vue';
 import { refValue } from '@src/utils/reactive-dom';
 import { fixed2 } from '@src/utils/format';
 
-function onLMBufferReady(buffer: PrunBuffer) {
+function onLMTileReady(tile: PrunTile) {
   observeReadyElementsByClassName(PrunCss.CommodityAd.text, {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: onAdTextReady,
   });
 }
@@ -43,9 +43,9 @@ function onAdTextReady(element: HTMLDivElement) {
   }
 }
 
-function onLMPBufferReady(buffer: PrunBuffer) {
+function onLMPTileReady(tile: PrunTile) {
   observeReadyElementsByClassName(PrunCss.LocalMarketPost.form, {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: onFormReady,
   });
 }
@@ -79,8 +79,8 @@ function onFormReady(form: HTMLFormElement) {
 }
 
 export function init() {
-  buffers.observe(['LM', 'LMA'], onLMBufferReady);
-  buffers.observe('LMP', onLMPBufferReady);
+  tiles.observe(['LM', 'LMA'], onLMTileReady);
+  tiles.observe('LMP', onLMPTileReady);
 }
 
 void features.add({

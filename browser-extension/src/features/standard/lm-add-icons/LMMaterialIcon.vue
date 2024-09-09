@@ -14,12 +14,7 @@ defineProps({
 </script>
 
 <template>
-  <MaterialIcon
-    v-if="ticker"
-    :ticker="ticker"
-    :amount="amount"
-    size="small"
-    :class="$style.icon" />
+  <MaterialIcon v-if="ticker" :ticker="ticker" :amount="amount" size="small" :class="$style.icon" />
 </template>
 
 <style module>

@@ -2,7 +2,7 @@
 import { Component, PropType } from 'vue';
 
 defineProps({
-  buffer: {
+  component: {
     type: Object as PropType<Component>,
     default: undefined,
   },
@@ -14,6 +14,6 @@ defineProps({
 </script>
 
 <template>
-  <Component :is="buffer" v-if="buffer" :parameters="parameters" />
+  <Component :is="component" v-if="component" :parameters="parameters" />
   <template v-else>Error! No Matching Function!</template>
 </template>

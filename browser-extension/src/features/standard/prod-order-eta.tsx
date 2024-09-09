@@ -1,24 +1,24 @@
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { convertDurationToETA, parseDuration } from '@src/util';
 
 const tag = 'rp-order-eta';
 
-function onBufferCreated(buffer: PrunBuffer) {
-  if (!buffer.parameter) {
+function onTileReady(tile: PrunTile) {
+  if (!tile.parameter) {
     return;
   }
 
-  updateOrders(buffer);
-  setInterval(() => updateOrders(buffer), 1000);
+  updateOrders(tile);
+  setInterval(() => updateOrders(tile), 1000);
 }
 
-function updateOrders(buffer: PrunBuffer) {
-  if (!buffer.frame.isConnected) {
+function updateOrders(tile: PrunTile) {
+  if (!tile.frame.isConnected) {
     return;
   }
-  const columns = buffer.frame.getElementsByClassName(PrunCss.SiteProductionLines.column);
+  const columns = tile.frame.getElementsByClassName(PrunCss.SiteProductionLines.column);
   const elements = Array.from(columns);
   for (const queue of elements) {
     const prodSlots = Array.from(queue.children);
@@ -68,7 +68,7 @@ function updateOrders(buffer: PrunBuffer) {
 }
 
 export function init() {
-  buffers.observe('PROD', onBufferCreated);
+  tiles.observe('PROD', onTileReady);
 }
 
 void features.add({

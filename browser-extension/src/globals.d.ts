@@ -4,7 +4,7 @@ interface SignalAsOptions {
   signal?: AbortSignal;
 }
 
-interface PrunBuffer {
+interface PrunTile {
   frame: HTMLDivElement;
   fullCommand: string;
   command: string;

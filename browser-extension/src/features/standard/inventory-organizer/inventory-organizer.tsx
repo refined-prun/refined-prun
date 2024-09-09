@@ -3,7 +3,7 @@ import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { BurnValues, calculatePlanetBurn } from '@src/core/burn';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import descendantPresent from '@src/utils/descendant-present';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
@@ -17,16 +17,16 @@ import { App } from 'vue';
 import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
 import { currentScreen } from '@src/infrastructure/prun-api/data/ui-data';
 
-async function onInvReady(buffer: PrunBuffer) {
-  await observeInventoryChanged(buffer);
+async function onInvReady(tile: PrunTile) {
+  await observeInventoryChanged(tile);
 }
 
-async function onShpiReady(buffer: PrunBuffer) {
-  await observeInventoryChanged(buffer);
+async function onShpiReady(tile: PrunTile) {
+  await observeInventoryChanged(tile);
 }
 
-async function observeInventoryChanged(buffer: PrunBuffer) {
-  const inventoryId = buffer.parameter;
+async function observeInventoryChanged(tile: PrunTile) {
+  const inventoryId = tile.parameter;
   if (!inventoryId) {
     return;
   }
@@ -41,8 +41,8 @@ async function observeInventoryChanged(buffer: PrunBuffer) {
   }
 
   const screenName = getScreenName();
-  const sortOptions = await descendantPresent(buffer.frame, PrunCss.InventorySortControls.controls);
-  const inventory = await descendantPresent(buffer.frame, PrunCss.InventoryView.grid);
+  const sortOptions = await descendantPresent(tile.frame, PrunCss.InventorySortControls.controls);
+  const inventory = await descendantPresent(tile.frame, PrunCss.InventoryView.grid);
   const cleanup = [];
   appendSortControls(sortOptions, screenName, inventoryId, inventory, burn);
   sortInventory(inventory, sortOptions, screenName, inventoryId, burn, cleanup);
@@ -424,8 +424,8 @@ const SortingTriangleHTML = `
 </div>`;
 
 export function init() {
-  buffers.observe('INV', onInvReady);
-  buffers.observe('SHPI', onShpiReady);
+  tiles.observe('INV', onInvReady);
+  tiles.observe('SHPI', onShpiReady);
 }
 
 void features.add({

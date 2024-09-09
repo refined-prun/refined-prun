@@ -1,10 +1,10 @@
 import classes from './cxob-highlight-own-orders.module.css';
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 
-function onBufferCreated(buffer: PrunBuffer) {
-  const rows = buffer.frame.getElementsByTagName('tr');
+function onTileReady(tile: PrunTile) {
+  const rows = tile.frame.getElementsByTagName('tr');
   const observer = new MutationObserver(() => {
     for (const row of Array.from(rows)) {
       if (row.firstChild?.textContent === companyStore.name) {
@@ -14,11 +14,11 @@ function onBufferCreated(buffer: PrunBuffer) {
       }
     }
   });
-  observer.observe(buffer.frame, { childList: true, subtree: true, characterData: true });
+  observer.observe(tile.frame, { childList: true, subtree: true, characterData: true });
 }
 
 export function init() {
-  buffers.observe('CXOB', onBufferCreated);
+  tiles.observe('CXOB', onTileReady);
 }
 
 void features.add({

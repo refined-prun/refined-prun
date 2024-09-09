@@ -1,15 +1,15 @@
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import { widgetBefore } from '@src/utils/vue-mount';
 import LMMaterialIcon from './LMMaterialIcon.vue';
 import LMShipmentIcon from './LMShipmentIcon.vue';
 
-function onLMBufferReady(buffer: PrunBuffer) {
+function onTileReady(tile: PrunTile) {
   observeReadyElementsByClassName(PrunCss.CommodityAd.container, {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: onContainerReady,
   });
 }
@@ -60,7 +60,7 @@ function processTrade(container: Element, adText: Element) {
 }
 
 export function init() {
-  buffers.observe('LM', onLMBufferReady);
+  tiles.observe('LM', onTileReady);
 }
 
 void features.add({

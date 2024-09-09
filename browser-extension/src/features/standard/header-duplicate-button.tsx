@@ -1,16 +1,16 @@
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import { showBuffer } from '@src/util';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
 import { widgetBefore } from '@src/utils/vue-mount';
 
-async function onBufferCreated(buffer: PrunBuffer) {
-  if (!buffer.firstActivation) {
+async function onTileReady(tile: PrunTile) {
+  if (!tile.firstActivation) {
     return;
   }
 
-  const splitControls = await descendantPresent(buffer.frame, PrunCss.TileControls.splitControls);
+  const splitControls = await descendantPresent(tile.frame, PrunCss.TileControls.splitControls);
   widgetBefore(splitControls.children[0], () => (
     <div
       class="button-upper-right"
@@ -20,14 +20,14 @@ async function onBufferCreated(buffer: PrunBuffer) {
         paddingRight: '1px',
         paddingLeft: '1px',
       }}
-      onClick={() => showBuffer(buffer.fullCommand)}>
+      onClick={() => showBuffer(tile.fullCommand)}>
       ↗
     </div>
   ));
 }
 
 export function init() {
-  buffers.observeAll(onBufferCreated);
+  tiles.observeAll(onTileReady);
 }
 
 void features.add({

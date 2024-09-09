@@ -1,5 +1,5 @@
 import classes from './finla-exchange-deposits.module.css';
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import { observeReadyElementsByTagName } from '@src/utils/mutation-observer';
 import { refTextContent } from '@src/utils/reactive-dom';
@@ -10,13 +10,13 @@ import { fixed0 } from '@src/utils/format';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
-async function onBufferCreated(buffer: PrunBuffer) {
+async function onTileReady(tile: PrunTile) {
   observeReadyElementsByTagName('thead', {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: onTableHeadReady,
   });
   observeReadyElementsByTagName('tbody', {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: onTableBodyReady,
   });
 }
@@ -70,7 +70,7 @@ export function init() {
   for (let i = 2; i < 5; i++) {
     applyCssRule(`.${PrunCss.LiquidAssetsPanel.row} td:nth-child(${i})`, classes.row);
   }
-  buffers.observe('FINLA', onBufferCreated);
+  tiles.observe('FINLA', onTileReady);
 }
 
 void features.add({

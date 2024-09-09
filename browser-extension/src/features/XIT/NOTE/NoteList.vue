@@ -3,14 +3,11 @@ import { deleteNote, notes } from '@src/store/notes';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { showBuffer } from '@src/util';
 import PrunLink from '@src/components/PrunLink.vue';
-import {
-  showBufferOverlay,
-  showConfirmationOverlay,
-} from '@src/infrastructure/prun-ui/buffer-overlay';
+import { showTileOverlay, showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import CreateNoteOverlay from '@src/features/XIT/NOTE/CreateNoteOverlay.vue';
 
 function createNewNote(ev: Event) {
-  showBufferOverlay(ev, CreateNoteOverlay, {
+  showTileOverlay(ev, CreateNoteOverlay, {
     onCreate: (name: string) => showBuffer(`XIT NOTE_${name}`),
   });
 }

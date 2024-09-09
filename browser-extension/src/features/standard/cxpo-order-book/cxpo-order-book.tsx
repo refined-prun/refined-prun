@@ -1,4 +1,4 @@
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
@@ -6,12 +6,12 @@ import { _$$ } from '@src/utils/get-element-by-class-name';
 import { widgetAppend } from '@src/utils/vue-mount';
 import OrderBook from './OrderBook.vue';
 
-async function onBufferCreated(buffer: PrunBuffer) {
-  if (!buffer.parameter) {
+async function onTileReady(tile: PrunTile) {
+  if (!tile.parameter) {
     return;
   }
 
-  const form = await descendantPresent(buffer.frame, PrunCss.ComExPlaceOrderForm.form);
+  const form = await descendantPresent(tile.frame, PrunCss.ComExPlaceOrderForm.form);
   const formParent = form.parentElement!;
   formParent.style.display = 'flex';
   form.style.flex = '1';
@@ -22,11 +22,11 @@ async function onBufferCreated(buffer: PrunBuffer) {
     span.setAttribute('data-tooltip-position', 'right');
   }
 
-  widgetAppend(formParent, OrderBook, { ticker: buffer.parameter });
+  widgetAppend(formParent, OrderBook, { ticker: tile.parameter });
 }
 
 export function init() {
-  buffers.observe('CXPO', onBufferCreated);
+  tiles.observe('CXPO', onTileReady);
 }
 
 void features.add({

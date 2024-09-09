@@ -1,16 +1,16 @@
 import classes from './nots-improve-notifications.module.css';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { getTickerByMaterialName } from '@src/infrastructure/prun-ui/material-names';
 import { widgetBefore } from '@src/utils/vue-mount';
 
-function onBufferReady(buffer: PrunBuffer) {
-  const notifications = buffer.frame.getElementsByClassName(PrunCss.AlertListItem.content);
+function onTileReady(tile: PrunTile) {
+  const notifications = tile.frame.getElementsByClassName(PrunCss.AlertListItem.content);
   const processed: WeakSet<Element> = new WeakSet();
-  observeDescendantListChanged(buffer.frame, () => {
+  observeDescendantListChanged(tile.frame, () => {
     for (let i = 0; i < notifications.length; i++) {
       const element = notifications[i];
       if (processed.has(element)) {
@@ -120,7 +120,7 @@ function processNotification(element: Element) {
 }
 
 function init() {
-  buffers.observe('NOTS', onBufferReady);
+  tiles.observe('NOTS', onTileReady);
 }
 
 void features.add({

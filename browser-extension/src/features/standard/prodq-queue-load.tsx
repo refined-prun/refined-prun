@@ -1,5 +1,5 @@
 import { parseDuration } from '@src/util';
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { $$ } from 'select-dom';
@@ -8,17 +8,17 @@ import { widgetAppend } from '@src/utils/vue-mount';
 import { sumBy } from '@src/utils/sum-by';
 import { percent2 } from '@src/utils/format';
 
-function updateBuffer(buffer: PrunBuffer) {
-  if (!buffer.frame.isConnected) {
+function onTileReady(tile: PrunTile) {
+  if (!tile.frame.isConnected) {
     return;
   }
 
   const tag = 'rp-prod-queue-load';
-  for (const element of _$$(tag, buffer.frame)) {
+  for (const element of _$$(tag, tile.frame)) {
     element.remove();
   }
 
-  const tables = _$$(PrunCss.ProductionQueue.table, buffer.frame);
+  const tables = _$$(PrunCss.ProductionQueue.table, tile.frame);
   for (const table of tables) {
     const rows = $$('tbody:nth-of-type(2) > tr', table);
     const totalTime = sumBy(rows, getEtaFromRow);
@@ -35,7 +35,7 @@ function updateBuffer(buffer: PrunBuffer) {
     }
   }
 
-  requestAnimationFrame(() => updateBuffer(buffer));
+  requestAnimationFrame(() => onTileReady(tile));
 }
 
 function getEtaFromRow(row: Element) {
@@ -50,7 +50,7 @@ function getEtaFromRow(row: Element) {
 }
 
 function init() {
-  buffers.observe('PRODQ', updateBuffer);
+  tiles.observe('PRODQ', onTileReady);
 }
 
 void features.add({

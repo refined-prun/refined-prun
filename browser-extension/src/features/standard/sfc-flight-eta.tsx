@@ -1,21 +1,21 @@
 import { convertDurationToETA, parseDuration } from '@src/util';
 import features from '@src/feature-registry';
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import { $$ } from 'select-dom';
 import { _$$ } from '@src/utils/get-element-by-class-name';
 import { widgetAppend } from '@src/utils/vue-mount';
 
 const tag = 'rp-sfc-eta';
 
-function updateBuffer(buffer: PrunBuffer) {
-  if (!buffer.frame.isConnected) {
+function onTileReady(tile: PrunTile) {
+  if (!tile.frame.isConnected) {
     return;
   }
-  const cleanupList = _$$(tag, buffer.frame);
+  const cleanupList = _$$(tag, tile.frame);
   for (const element of cleanupList) {
     element.remove();
   }
-  const elements = $$('table > tbody > tr', buffer.frame);
+  const elements = $$('table > tbody > tr', tile.frame);
   let currentTime = 0;
   for (let i = 1; i < elements.length; i++) {
     const targetRow = elements[i] as HTMLElement;
@@ -38,11 +38,11 @@ function updateBuffer(buffer: PrunBuffer) {
     }
   }
 
-  requestAnimationFrame(() => updateBuffer(buffer));
+  requestAnimationFrame(() => onTileReady(tile));
 }
 
 function init() {
-  buffers.observe('SFC', updateBuffer);
+  tiles.observe('SFC', onTileReady);
 }
 
 void features.add({

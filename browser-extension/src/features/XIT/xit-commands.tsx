@@ -1,6 +1,6 @@
 import './xit-commands.css';
 import features from '@src/feature-registry';
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
 import { _$ } from '@src/utils/get-element-by-class-name';
@@ -21,17 +21,17 @@ export function applyXITParameters(pmmgSettings) {
   };
 }
 
-async function onBufferCreated(buffer: PrunBuffer) {
-  const frame = buffer.frame;
+async function onTileReady(tile: PrunTile) {
+  const frame = tile.frame;
   const scrollView = await descendantPresent(frame, PrunCss.ScrollView.view);
-  // XIT command produces a buffer with full-size green screen as its content.
-  // Custom XIT buffers are just mounted inside this green screen.
+  // XIT command produces a tile with full-size green screen as its content.
+  // Custom XIT tiles are just mounted inside this green screen.
   const container = scrollView.children[0] as HTMLDivElement;
   if (!container) {
     return;
   }
 
-  const rawParameter = buffer.parameter;
+  const rawParameter = tile.parameter;
   if (!rawParameter) {
     return;
   }
@@ -84,14 +84,14 @@ async function onBufferCreated(buffer: PrunBuffer) {
     });
   } else if (xitCommand.component) {
     widgetAppend(container, XITContainer, {
-      buffer: xitCommand.component(parameters),
+      component: xitCommand.component(parameters),
       parameters: parameters,
     });
   }
 }
 
 export function init() {
-  buffers.observe('XIT', onBufferCreated);
+  tiles.observe('XIT', onTileReady);
 }
 
 void features.add({

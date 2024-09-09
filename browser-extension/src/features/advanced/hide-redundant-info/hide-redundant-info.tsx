@@ -1,6 +1,6 @@
 import classes from './hide-redundant-info.module.css';
 import features from '@src/feature-registry';
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import {
   observeReadyElementsByClassName,
   observeReadyElementsByTagName,
@@ -18,10 +18,10 @@ import {
   applyScopedCssRule,
 } from '@src/infrastructure/prun-ui/refined-prun-css';
 
-function cleanCOGCPEX(buffer: PrunBuffer) {
+function cleanCOGCPEX(tile: PrunTile) {
   // Replace 'view details/vote' with 'vote'
   observeReadyElementsByClassName(PrunCss.Button.darkInline, {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: button => {
       button.textContent = 'vote';
     },
@@ -29,7 +29,7 @@ function cleanCOGCPEX(buffer: PrunBuffer) {
 
   // Remove redundant title parts
   observeReadyElementsByClassName(PrunCss.Link.link, {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: link => {
       if (link.textContent) {
         link.textContent = link
@@ -40,10 +40,10 @@ function cleanCOGCPEX(buffer: PrunBuffer) {
   });
 }
 
-function cleanFLT(buffer: PrunBuffer) {
+function cleanFLT(tile: PrunTile) {
   // Cargo capacity labels
   observeReadyElementsByClassName(PrunCss.ShipStore.store, {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: div => {
       // div -> div
       const label = div.children[2];
@@ -57,7 +57,7 @@ function cleanFLT(buffer: PrunBuffer) {
 
   // Shorten planet names
   observeReadyElementsByClassName(PrunCss.Link.link, {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: link => {
       if (link.textContent) {
         link.textContent = extractPlanetName(link.textContent);
@@ -67,7 +67,7 @@ function cleanFLT(buffer: PrunBuffer) {
 
   // Shorten flight status
   observeReadyElementsByTagName('tr', {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: row => {
       const status = row.children[3]?.children[0] as HTMLDivElement;
       if (status) {
@@ -84,15 +84,15 @@ function cleanFLT(buffer: PrunBuffer) {
   });
 }
 
-function cleanINV(buffer: PrunBuffer) {
-  // Only clean the main INV buffer
-  if (buffer.parameter) {
+function cleanINV(tile: PrunTile) {
+  // Only clean the main INV tile
+  if (tile.parameter) {
     return;
   }
 
   // Shorten planet names
   observeReadyElementsByClassName(PrunCss.Link.link, {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: link => {
       if (link.textContent) {
         link.textContent = extractPlanetName(link.textContent);
@@ -102,7 +102,7 @@ function cleanINV(buffer: PrunBuffer) {
 
   // Shorten storage types
   observeReadyElementsByTagName('tr', {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: row => {
       // tr -> td -> span
       const typeLabel = row.firstChild?.firstChild;
@@ -122,12 +122,12 @@ const cleanINVNames = {
   'FTL fuel tank': 'FTL',
 };
 
-function cleanLM(buffer: PrunBuffer) {
+function cleanLM(tile: PrunTile) {
   observeReadyElementsByClassName(PrunCss.CommodityAd.text, {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: ad => {
       if (ad.firstChild?.textContent === 'SHIPPING') {
-        cleanShipmentAd(buffer, ad);
+        cleanShipmentAd(tile, ad);
       }
       for (const node of Array.from(ad.childNodes)) {
         if (!node.textContent) {
@@ -148,10 +148,10 @@ function cleanLM(buffer: PrunBuffer) {
   });
 }
 
-function cleanShipmentAd(buffer: PrunBuffer, ad: HTMLElement) {
+function cleanShipmentAd(tile: PrunTile, ad: HTMLElement) {
   // Shorten planet names
   const links = _$$(PrunCss.Link.link, ad) as HTMLDivElement[];
-  const parameter = buffer.parameter;
+  const parameter = tile.parameter;
   for (const link of links) {
     const planetName = extractPlanetName(link.textContent);
     const planet = planetsStore.getByIdOrName(planetName);
@@ -188,10 +188,10 @@ export function init() {
   applyScopedClassCssRule('SHPF', PrunCss.InventorySortControls.controls, classes.hide);
   // Hide Weight and Volume labels
   applyScopedClassCssRule('SHPF', PrunCss.StoreView.name, classes.hide);
-  buffers.observe('COGCPEX', cleanCOGCPEX);
-  buffers.observe('FLT', cleanFLT);
-  buffers.observe('INV', cleanINV);
-  buffers.observe('LM', cleanLM);
+  tiles.observe('COGCPEX', cleanCOGCPEX);
+  tiles.observe('FLT', cleanFLT);
+  tiles.observe('INV', cleanINV);
+  tiles.observe('LM', cleanLM);
 }
 
 void features.add({

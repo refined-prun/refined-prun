@@ -95,17 +95,17 @@ const planetBurn = computed(() => {
 const screenNameElem = _$(PrunCss.ScreenControls.currentScreenName);
 const screenName = screenNameElem ? screenNameElem.textContent : '';
 
-const bufferName = screenName + props.parameters.join('');
+const tileName = screenName + props.parameters.join('');
 
 const dispSettings = computed(() => {
-  const result = settings.burn.buffers[bufferName] || {
+  const result = settings.burn.buffers[tileName] || {
     red: true,
     yellow: true,
     green: true,
     inf: true,
     minimized: {},
   };
-  settings.burn.buffers[bufferName] = result;
+  settings.burn.buffers[tileName] = result;
   return result;
 });
 

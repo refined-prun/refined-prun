@@ -1,15 +1,15 @@
 import { changeValue } from '@src/util';
 import features from '@src/feature-registry';
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import { observeReadyElementsByTagName } from '@src/utils/mutation-observer';
 import Mexp from 'math-expression-evaluator';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 
 const mexp = new Mexp();
 
-function onBufferCreated(buffer: PrunBuffer) {
+function onTileReady(tile: PrunTile) {
   observeReadyElementsByTagName('input', {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: input => {
       input.addEventListener('keyup', e => onKeyUp(input, e));
     },
@@ -62,7 +62,7 @@ function replaceMaterialProperties(expression: string) {
 }
 
 export function init() {
-  buffers.observe(['CXPO', 'FXPO', 'LMP', 'CONTD', 'MTRA', 'MOTS'], onBufferCreated);
+  tiles.observe(['CXPO', 'FXPO', 'LMP', 'CONTD', 'MTRA', 'MOTS'], onTileReady);
 }
 
 void features.add({

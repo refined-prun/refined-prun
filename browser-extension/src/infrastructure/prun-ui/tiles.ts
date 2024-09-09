@@ -6,37 +6,37 @@ import onetime from 'onetime';
 import observeDocumentMutations from '@src/utils/document-mutation-observer';
 import removeArrayElement from '@src/utils/remove-array-element';
 
-interface PrunBufferObserver {
-  (buffer: PrunBuffer): void;
+interface PrunTileObserver {
+  (tile: PrunTile): void;
 }
 
-const activeBuffers: PrunBuffer[] = [];
-const commandObservers: Map<string, PrunBufferObserver[]> = new Map();
-const anyCommandObservers: PrunBufferObserver[] = [];
+const activeTiles: PrunTile[] = [];
+const commandObservers: Map<string, PrunTileObserver[]> = new Map();
+const anyCommandObservers: PrunTileObserver[] = [];
 
 const setupObserver = onetime(() => {
   observeDocumentMutations(reconciliate);
 });
 
 function reconciliate() {
-  for (const buffer of activeBuffers) {
-    if (!buffer.frame.isConnected) {
-      deactivateBuffer(buffer);
+  for (const tile of activeTiles) {
+    if (!tile.frame.isConnected) {
+      deactivateTile(tile);
     }
   }
 
   const frameElements = document.getElementsByClassName(
     PrunCss.TileFrame.frame,
   ) as HTMLCollectionOf<HTMLDivElement>;
-  if (frameElements.length === activeBuffers.length) {
-    let sameBuffers = true;
+  if (frameElements.length === activeTiles.length) {
+    let sameTiles = true;
     for (let i = 0; i < frameElements.length; i++) {
-      if (activeBuffers[i].frame !== frameElements[i]) {
-        sameBuffers = false;
+      if (activeTiles[i].frame !== frameElements[i]) {
+        sameTiles = false;
         break;
       }
     }
-    if (sameBuffers) {
+    if (sameTiles) {
       return;
     }
   }
@@ -46,8 +46,8 @@ function reconciliate() {
   for (let i = 0; i < frameElements.length; i++) {
     newFrames.add(frameElements[i]);
   }
-  for (const buffer of activeBuffers) {
-    newFrames.delete(buffer.frame);
+  for (const tile of activeTiles) {
+    newFrames.delete(tile.frame);
   }
 
   for (const frame of newFrames) {
@@ -64,71 +64,71 @@ function activateFrame(frame: HTMLDivElement, anchor: Element) {
   const commandElement = frame.getElementsByClassName(PrunCss.TileFrame.cmd)[0];
   const fullCommand = commandElement.textContent!;
   const indexOfSpace = fullCommand.indexOf(' ');
-  const buffer: PrunBuffer = {
+  const tile: PrunTile = {
     frame,
     fullCommand,
     command: (indexOfSpace > 0 ? fullCommand.slice(0, indexOfSpace) : fullCommand).toUpperCase(),
     parameter: indexOfSpace > 0 ? fullCommand.slice(indexOfSpace + 1) : undefined,
     firstActivation: true,
   };
-  frame.setAttribute('data-rp-command', buffer.command);
-  activateBuffer(buffer);
+  frame.setAttribute('data-rp-command', tile.command);
+  activateTile(tile);
 
   observeChildListChanged(anchor, () => {
     if (anchor.children.length === 0) {
-      deactivateBuffer(buffer);
+      deactivateTile(tile);
     }
   });
 }
 
-function activateBuffer(buffer: PrunBuffer) {
-  if (activeBuffers.includes(buffer)) {
+function activateTile(tile: PrunTile) {
+  if (activeTiles.includes(tile)) {
     return;
   }
 
-  activeBuffers.push(buffer);
-  for (const observer of getMapArray(commandObservers, buffer.command)) {
-    observer(buffer);
+  activeTiles.push(tile);
+  for (const observer of getMapArray(commandObservers, tile.command)) {
+    observer(tile);
   }
   for (const observer of anyCommandObservers) {
-    observer(buffer);
+    observer(tile);
   }
-  buffer.firstActivation = false;
+  tile.firstActivation = false;
 }
 
-function deactivateBuffer(buffer: PrunBuffer) {
-  if (!activeBuffers.includes(buffer)) {
+function deactivateTile(tile: PrunTile) {
+  if (!activeTiles.includes(tile)) {
     return;
   }
 
-  removeArrayElement(activeBuffers, buffer);
+  removeArrayElement(activeTiles, tile);
 }
 
-function observeBuffers(commands: Arrayable<string>, observer: PrunBufferObserver) {
+function observeTiles(commands: Arrayable<string>, observer: PrunTileObserver) {
   setupObserver();
   for (let command of castArray(commands)) {
     command = command.toUpperCase();
     const observers = getMapArray(commandObservers, command);
     observers.push(observer);
-    for (const buffer of activeBuffers) {
-      if (buffer.command === command) {
-        observer(buffer);
+    for (const tile of activeTiles) {
+      if (tile.command === command) {
+        observer(tile);
       }
     }
   }
 }
 
-function observeAllBuffers(observer: PrunBufferObserver) {
+function observeAllTiles(observer: PrunTileObserver) {
   setupObserver();
   anyCommandObservers.push(observer);
-  for (const buffer of activeBuffers) {
-    observer(buffer);
+  for (const tile of activeTiles) {
+    observer(tile);
   }
 }
 
-const buffers = {
-  observe: observeBuffers,
-  observeAll: observeAllBuffers,
+const tiles = {
+  observe: observeTiles,
+  observeAll: observeAllTiles,
 };
 
-export default buffers;
+export default tiles;

@@ -35,27 +35,27 @@ export function applyClassCssRule(classNames: Arrayable<string>, sourceClass: st
 }
 
 export function applyScopedClassCssRule(
-  buffers: Arrayable<string>,
+  commands: Arrayable<string>,
   classNames: Arrayable<string>,
   sourceClass: string,
 ) {
   classNames = castArray(classNames);
-  for (const buffer of castArray(buffers)) {
+  for (const command of castArray(commands)) {
     for (const className of classNames) {
-      applyCssRule(`${selectBuffer(buffer)} .${className}`, sourceClass);
+      applyCssRule(`${selectCommand(command)} .${className}`, sourceClass);
     }
   }
 }
 
 export function applyScopedCssRule(
-  buffers: Arrayable<string>,
+  commands: Arrayable<string>,
   selectors: Arrayable<string>,
   sourceClass: string,
 ) {
   selectors = castArray(selectors);
-  for (const buffer of castArray(buffers)) {
+  for (const command of castArray(commands)) {
     for (const selector of selectors) {
-      applyCssRule(`${selectBuffer(buffer)} ${selector}`, sourceClass);
+      applyCssRule(`${selectCommand(command)} ${selector}`, sourceClass);
     }
   }
 }
@@ -86,6 +86,6 @@ export function applyCssRule(selector: string, sourceClass: string) {
   styleElement.textContent += match.replace(sourceSelector, `${prefix} ${selector}`);
 }
 
-function selectBuffer(buffer: string) {
-  return `div[data-rp-command='${buffer}']`;
+function selectCommand(command: string) {
+  return `div[data-rp-command='${command}']`;
 }

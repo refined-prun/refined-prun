@@ -1,5 +1,5 @@
 import features from '@src/feature-registry';
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import {
   observeChildListChanged,
   observeReadyElementsByTagName,
@@ -9,9 +9,9 @@ import ShipArrivalEta from './ShipArrivalEta.vue';
 import { refTextContent } from '@src/utils/reactive-dom';
 import { reactive } from 'vue';
 
-function onBufferReady(buffer: PrunBuffer) {
+function onTileReady(tile: PrunTile) {
   observeReadyElementsByTagName('tbody', {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: onTableReady,
   });
 }
@@ -40,7 +40,7 @@ function onRowReady(row: HTMLTableRowElement) {
 }
 
 function init() {
-  buffers.observe('FLT', onBufferReady);
+  tiles.observe('FLT', onTileReady);
 }
 
 void features.add({

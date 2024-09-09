@@ -1,4 +1,4 @@
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { _$ } from '@src/utils/get-element-by-class-name';
@@ -9,9 +9,9 @@ import { widgetAppend } from '@src/utils/vue-mount';
 import ColoredIconDetail from '@src/components/ColoredIconDetail.vue';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 
-async function onBufferCreated(buffer: PrunBuffer) {
+async function onTileReady(tile: PrunTile) {
   observeReadyElementsByClassName(PrunCss.ColoredIcon.container, {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: element => {
       const container = _$(PrunCss.ColoredIcon.labelContainer, element);
       if (!container) {
@@ -42,7 +42,7 @@ async function onBufferCreated(buffer: PrunBuffer) {
 }
 
 export function init() {
-  buffers.observe(['INV', 'SHPI'], onBufferCreated);
+  tiles.observe(['INV', 'SHPI'], onTileReady);
 }
 
 void features.add({

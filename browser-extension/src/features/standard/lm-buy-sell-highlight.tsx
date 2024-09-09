@@ -1,11 +1,11 @@
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
-import buffers from '@src/infrastructure/prun-ui/prun-buffers';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 
-function onLMBufferReady(buffer: PrunBuffer) {
+function onTileReady(tile: PrunTile) {
   observeReadyElementsByClassName(PrunCss.CommodityAd.text, {
-    baseElement: buffer.frame,
+    baseElement: tile.frame,
     callback: onAdTextReady,
   });
 }
@@ -24,7 +24,7 @@ function onAdTextReady(element: HTMLDivElement) {
 }
 
 export function init() {
-  buffers.observe(['LM', 'LMA'], onLMBufferReady);
+  tiles.observe(['LM', 'LMA'], onTileReady);
 }
 
 void features.add({
