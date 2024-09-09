@@ -13,6 +13,9 @@ messages({
   WAREHOUSE_STORAGE(data: PrunApi.Warehouse) {
     store.setOne(data);
   },
+  WAREHOUSE_STORAGE_REMOVED(data: { warehouseId: string }) {
+    store.removeOne(data.warehouseId);
+  },
 });
 
 const getByNaturalId = createMapGetter(state.all, x => x.address[1].entity.naturalId);
