@@ -9,22 +9,19 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  small: Boolean,
   amount: {
     type: Number,
-    required: false,
     default: undefined,
   },
   text: {
     type: String,
-    required: false,
     default: undefined,
   },
 });
 
 const name = computed(() => {
-  if (!props.text) {
-    return undefined;
+  if (props.text !== undefined) {
+    return props.text;
   }
   if (props.ticker === 'SHPT') {
     return 'Shipment';
@@ -35,6 +32,6 @@ const name = computed(() => {
 
 <template>
   <GridItemView :name="name">
-    <MaterialIcon :small="small" :ticker="ticker" :amount="amount" />
+    <MaterialIcon :ticker="ticker" :amount="amount" />
   </GridItemView>
 </template>

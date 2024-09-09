@@ -14,12 +14,16 @@ defineProps({
 </script>
 
 <template>
-  <MaterialIcon v-if="ticker" :ticker="ticker" :amount="amount" small :class="$style.icon" />
+  <MaterialIcon
+    v-if="ticker"
+    :ticker="ticker"
+    :amount="amount"
+    size="small"
+    :class="$style.icon" />
 </template>
 
 <style module>
 .icon {
   flex-shrink: 0;
-  height: 16px;
 }
 </style>

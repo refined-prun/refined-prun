@@ -56,10 +56,10 @@ const icons = computed(() => {
   <div>
     <template v-for="(icon, i) in icons" :key="i">
       <div v-if="icon.type === 'SHIPMENT'" :style="{ marginBottom: '4px' }">
-        <ShipmentIcon small :shipment-id="icon.shipmentId" />
+        <ShipmentIcon size="medium" :shipment-id="icon.shipmentId" />
       </div>
       <div v-if="icon.type === 'MATERIAL'" :style="{ marginBottom: '4px' }">
-        <MaterialIcon small :ticker="icon.ticker" :amount="icon.amount" />
+        <MaterialIcon size="medium" :ticker="icon.ticker" :amount="icon.amount" />
       </div>
     </template>
   </div>

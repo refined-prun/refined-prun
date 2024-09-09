@@ -85,7 +85,7 @@ function formatPrice(price: number): string {
 <template>
   <tr :class="{ [$style.collapse]: !isVisible }">
     <td :style="materialColumnStyle">
-      <MaterialIcon small :ticker="material.ticker" :amount="invAmount" />
+      <MaterialIcon size="medium" :ticker="material.ticker" :amount="invAmount" />
     </td>
     <td>
       <span>{{ consText }} / day</span>

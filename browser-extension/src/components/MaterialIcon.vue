@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { showBuffer } from '@src/util';
-import { computed } from 'vue';
-import { useCssModule } from 'vue';
+import { computed, PropType } from 'vue';
 import ColoredIcon from '@src/components/ColoredIcon.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
@@ -13,15 +12,17 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  small: Boolean,
+  size: {
+    type: String as PropType<'large' | 'medium' | 'small'>,
+    default: 'large',
+  },
+  warning: Boolean,
   amount: {
     type: Number,
     required: false,
     default: undefined,
   },
 });
-
-const $style = useCssModule();
 
 const material = computed(() => materialsStore.getByTicker(props.ticker));
 const materialCategory = computed(() => materialCategoriesStore.getById(material.value?.category));
@@ -35,19 +36,13 @@ const colors = computed(() => {
   };
 });
 
-const containerClasses = computed(() => [
-  PrunCss.MaterialIcon.container,
-  $style.container,
-  {
-    [$style.small]: props.small,
-    [$style.large]: !props.small,
-  },
-]);
-
-const amountClasses = [
+const indicatorClasses = [
   PrunCss.MaterialIcon.indicator,
   PrunCss.MaterialIcon.neutral,
   PrunCss.MaterialIcon.typeVerySmall,
+  {
+    [PrunCss.ColoredValue.negative]: props.warning,
+  },
 ];
 
 const onClick = () => showBuffer(`MAT ${props.ticker.toUpperCase()}`);
@@ -157,15 +152,19 @@ const categoryColors = {
 </script>
 
 <template>
-  <div :class="containerClasses">
+  <div :class="[PrunCss.MaterialIcon.container, $style.container]">
     <ColoredIcon
       :label="ticker"
       :title="name"
       :background="colors.background"
       :color="colors.color"
+      :size="size"
       @click="onClick" />
-    <div v-if="amount" :class="PrunCss.MaterialIcon.indicatorContainer" @click="onClick">
-      <div :class="amountClasses">{{ amount }}</div>
+    <div
+      v-if="amount !== undefined"
+      :class="PrunCss.MaterialIcon.indicatorContainer"
+      @click="onClick">
+      <div :class="indicatorClasses">{{ amount }}</div>
     </div>
   </div>
 </template>
@@ -173,22 +172,5 @@ const categoryColors = {
 <style module>
 .container {
   cursor: pointer;
-}
-
-.large {
-  height: 48px;
-  width: 48px;
-}
-
-.large div.ColoredIcon__container___djaR4r2 {
-  height: 48px;
-  width: 48px;
-  font-size: 15.84px;
-  cursor: pointer;
-}
-
-.small {
-  height: 32px;
-  width: 32px;
 }
 </style>

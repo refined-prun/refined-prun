@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { computed } from 'vue';
+import { computed, PropType, useCssModule } from 'vue';
 import ColoredIconDetail from '@src/components/ColoredIconDetail.vue';
 
 const props = defineProps({
@@ -25,7 +25,20 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  size: {
+    type: String as PropType<'large' | 'medium' | 'small'>,
+    default: 'large',
+  },
 });
+
+const $style = useCssModule();
+
+const classes = computed(() => ({
+  [PrunCss.ColoredIcon.container]: true,
+  [$style.large]: props.size === 'large',
+  [$style.medium]: props.size === 'medium',
+  [$style.small]: props.size === 'small',
+}));
 
 const style = computed(() => ({
   background: props.background,
@@ -34,10 +47,30 @@ const style = computed(() => ({
 </script>
 
 <template>
-  <div :class="PrunCss.ColoredIcon.container" :style="style" :title="title">
+  <div :class="classes" :style="style" :title="title">
     <div :class="PrunCss.ColoredIcon.labelContainer">
       <span :class="PrunCss.ColoredIcon.label">{{ label }}</span>
       <ColoredIconDetail :detail="detail" />
     </div>
   </div>
 </template>
+
+<style module>
+.large {
+  height: 48px;
+  width: 48px;
+  font-size: 16px;
+}
+
+.medium {
+  height: 32px;
+  width: 32px;
+  font-size: 11px;
+}
+
+.small {
+  height: 16px;
+  width: 32px;
+  font-size: 11px;
+}
+</style>

@@ -50,7 +50,12 @@ function calculateVolume(amount: PrunApi.MaterialAmount) {
     </thead>
     <tbody>
       <tr v-for="material in sorted" :key="material.material.ticker">
-        <td><MaterialIcon small :ticker="material.material.ticker" :amount="material.amount" /></td>
+        <td>
+          <MaterialIcon
+            size="medium"
+            :ticker="material.material.ticker"
+            :amount="material.amount" />
+        </td>
         <td>{{ formatPrice(calcMaterialAmountPrice(material)) }}</td>
         <td>{{ fixed2(calculateWeight(material)) }}t</td>
         <td>{{ fixed2(calculateVolume(material)) }}m³</td>

@@ -3,7 +3,7 @@ import ColoredIcon from '@src/components/ColoredIcon.vue';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { showBuffer } from '@src/util';
-import { computed, useCssModule } from 'vue';
+import { computed, PropType } from 'vue';
 
 const props = defineProps({
   shipmentId: {
@@ -14,23 +14,16 @@ const props = defineProps({
     type: String,
     default: undefined,
   },
-  small: Boolean,
+  size: {
+    type: String as PropType<'large' | 'medium' | 'small'>,
+    default: 'large',
+  },
 });
 
-const $style = useCssModule();
 const contract = computed(() => contractsStore.getByShipmentId(props.shipmentId));
 const destination = computed(
   () => props.destination ?? contractsStore.getDestinationByShipmentId(props.shipmentId),
 );
-
-const containerClasses = computed(() => [
-  PrunCss.MaterialIcon.container,
-  $style.container,
-  {
-    [$style.small]: props.small,
-    [$style.large]: !props.small,
-  },
-]);
 
 const background = 'linear-gradient(135deg, #030303, #181818)';
 const color = '#7f7f7f';
@@ -44,13 +37,14 @@ const onClick = () => {
 </script>
 
 <template>
-  <div :class="containerClasses">
+  <div :class="[PrunCss.MaterialIcon.container, $style.container]">
     <ColoredIcon
       label="SHPT"
       title="Shipment"
       :detail="destination"
       :background="background"
       :color="color"
+      :size="size"
       :class="$style.icon"
       @click="onClick" />
   </div>
@@ -59,22 +53,5 @@ const onClick = () => {
 <style module>
 .container {
   cursor: pointer;
-}
-
-.large {
-  height: 48px;
-  width: 48px;
-}
-
-.large div.icon {
-  height: 48px;
-  width: 48px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.small {
-  height: 32px;
-  width: 32px;
 }
 </style>
