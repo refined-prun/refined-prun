@@ -25,12 +25,12 @@ function onAdTextReady(element: HTMLDivElement) {
     return;
   }
 
-  const weight = parseFloat(matches[1].replace(/[,.]/g, '')) / 100;
-  const volume = parseFloat(matches[2].replace(/[,.]/g, '')) / 100;
+  const weight = parseFloat(matches[1].replace(/[,.]/g, ''));
+  const volume = parseFloat(matches[2].replace(/[,.]/g, ''));
   const totalCost = matches[3];
   const unit = weight > volume ? 't' : 'm³';
   const amount = weight > volume ? weight : volume;
-  const total = parseFloat(totalCost.replace(/[,.]/g, '.'));
+  const total = parseFloat(totalCost.replace(/[,.]/g, ''));
   for (const child of Array.from(element.childNodes)) {
     if (child.nodeValue && child.nodeValue.slice(1) in CurrencySymbols) {
       widgetAfter(child as Element, () => (
