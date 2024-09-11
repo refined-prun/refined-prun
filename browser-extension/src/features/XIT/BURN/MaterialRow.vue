@@ -52,7 +52,7 @@ const isVisible = computed(() => {
 const materialColumnStyle = computed(() => ({
   width: '32px',
   paddingRight: '0px',
-  paddingLeft: props.isMultiplanet ? '32px' : '0px',
+  paddingLeft: props.isMultiplanet ? '32px' : '10px',
 }));
 
 const consText = computed(() =>

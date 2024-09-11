@@ -172,5 +172,7 @@ const categoryColors = {
 <style module>
 .container {
   cursor: pointer;
+  width: fit-content;
+  height: fit-content;
 }
 </style>
