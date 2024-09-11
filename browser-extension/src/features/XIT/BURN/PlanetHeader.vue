@@ -11,6 +11,7 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  hasMinimize: Boolean,
   minimized: Boolean,
   onClick: {
     type: Function as PropType<() => void>,
@@ -59,7 +60,9 @@ function formatPrice(price: number): string {
 <template>
   <tr :class="$style.row">
     <td colspan="4" :class="$style.cell">
-      <span :class="$style.minimize" @click="onClick">{{ minimized ? '+' : '-' }}</span>
+      <span v-if="hasMinimize" :class="$style.minimize" @click="onClick">
+        {{ minimized ? '+' : '-' }}
+      </span>
       <span>{{ burn.planetName }}</span>
     </td>
     <!-- This <tr> is needed so both other <tr>s are the same color -->

@@ -5,6 +5,7 @@ import { observeChildListChanged } from '@src/utils/mutation-observer';
 import onetime from 'onetime';
 import observeDocumentMutations from '@src/utils/document-mutation-observer';
 import removeArrayElement from '@src/utils/remove-array-element';
+import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 
 interface PrunTileObserver {
   (tile: PrunTile): void;
@@ -61,10 +62,12 @@ function reconciliate() {
 }
 
 function activateFrame(frame: HTMLDivElement, anchor: Element) {
+  const id = getPrunId(frame.parentElement!)!;
   const commandElement = frame.getElementsByClassName(PrunCss.TileFrame.cmd)[0];
   const fullCommand = commandElement.textContent!;
   const indexOfSpace = fullCommand.indexOf(' ');
   const tile: PrunTile = {
+    id,
     frame,
     fullCommand,
     command: (indexOfSpace > 0 ? fullCommand.slice(0, indexOfSpace) : fullCommand).toUpperCase(),

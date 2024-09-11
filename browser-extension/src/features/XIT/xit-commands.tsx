@@ -9,6 +9,9 @@ import XITContainer from '@src/features/XIT/XITContainer.vue';
 import LegacyXITAdapter from '@src/features/XIT/LegacyXITAdapter.vue';
 import { widgetAfter, widgetAppend } from '@src/utils/vue-mount';
 import ContextControls from '@src/components/ContextControls.vue';
+import { computed, createApp, h } from 'vue';
+import onElementDisconnected from '@src/utils/on-element-disconnected';
+import { tilesStore, tileStateKey } from '@src/infrastructure/prun-api/data/tiles';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let xitArgs: any;
@@ -83,10 +86,20 @@ async function onTileReady(tile: PrunTile) {
       },
     });
   } else if (xitCommand.component) {
-    widgetAppend(container, XITContainer, {
+    const fragment = document.createDocumentFragment();
+    const props = {
       component: xitCommand.component(parameters),
       parameters: parameters,
-    });
+    };
+    const widget = createApp({ render: () => h(XITContainer, props) });
+    widget.provide(
+      tileStateKey,
+      computed(() => tilesStore.getTileState(tile)),
+    );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    widget.mount(fragment as any);
+    onElementDisconnected(container, () => widget.unmount());
+    container.appendChild(fragment);
   }
 }
 

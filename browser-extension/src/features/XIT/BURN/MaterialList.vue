@@ -10,10 +10,6 @@ const props = defineProps({
     type: Object as PropType<PlanetBurn>,
     required: true,
   },
-  dispSettings: {
-    type: Object,
-    required: true,
-  },
 });
 
 const materials = computed(() => Object.keys(props.burn.burn).map(materialsStore.getByTicker));
@@ -30,7 +26,6 @@ const sorted = computed(() => {
   <MaterialRow
     v-for="material in sorted"
     :key="material.id"
-    :disp-settings="dispSettings"
     :burn="burn"
     :material="material"
     :is-multiplanet="isMultiplanet" />

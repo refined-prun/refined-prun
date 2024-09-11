@@ -3,6 +3,7 @@ import { computed, PropType } from 'vue';
 import { PlanetBurn } from '@src/core/burn';
 import PlanetHeader from '@src/features/XIT/BURN/PlanetHeader.vue';
 import MaterialList from '@src/features/XIT/BURN/MaterialList.vue';
+import { useTileState } from '@src/features/XIT/BURN/tile-state';
 
 const props = defineProps({
   isMultiplanet: Boolean,
@@ -10,33 +11,32 @@ const props = defineProps({
     type: Object as PropType<PlanetBurn>,
     required: true,
   },
-  dispSettings: {
-    type: Object,
-    required: true,
-  },
 });
 
-const dispSettings = computed(() => props.dispSettings);
+const expand = useTileState('expand');
 
-const isMinimized = computed(
-  () => dispSettings.value.minimized && dispSettings.value.minimized[props.burn.planetName],
-);
+const naturalId = computed(() => props.burn.naturalId);
+const isMinimized = computed(() => props.isMultiplanet && !expand.value.includes(naturalId.value));
 
 const onHeaderClick = () => {
-  if (props.dispSettings.minimized[props.burn.planetName]) {
-    delete dispSettings.value.minimized[props.burn.planetName];
+  if (isMinimized.value) {
+    expand.value = [...expand.value, naturalId.value];
   } else {
-    dispSettings.value.minimized[props.burn.planetName] = true;
+    expand.value = expand.value.filter(x => x !== naturalId.value);
   }
 };
 </script>
 
 <template>
   <tbody>
-    <PlanetHeader :burn="burn" :minimized="isMinimized" :on-click="onHeaderClick" />
+    <PlanetHeader
+      :has-minimize="isMultiplanet"
+      :burn="burn"
+      :minimized="isMinimized"
+      :on-click="onHeaderClick" />
   </tbody>
   <tbody :class="{ [$style.collapse]: isMinimized }">
-    <MaterialList :is-multiplanet="isMultiplanet" :burn="burn" :disp-settings="dispSettings" />
+    <MaterialList :is-multiplanet="isMultiplanet" :burn="burn" />
   </tbody>
 </template>
 

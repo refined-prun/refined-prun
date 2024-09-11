@@ -15,7 +15,11 @@ import InventorySortControls from '@src/features/standard/inventory-organizer/In
 import { materialsStore, sortMaterialsBy } from '@src/infrastructure/prun-api/data/materials';
 import { App } from 'vue';
 import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
-import { currentScreen } from '@src/infrastructure/prun-api/data/ui-data';
+import { tilesStore } from '@src/infrastructure/prun-api/data/tiles';
+
+interface TileState {
+  activeSort?: string;
+}
 
 async function onInvReady(tile: PrunTile) {
   await observeInventoryChanged(tile);
@@ -30,6 +34,7 @@ async function observeInventoryChanged(tile: PrunTile) {
   if (!inventoryId) {
     return;
   }
+  const tileState = tilesStore.getTileState(tile);
   const storage = storagesStore.getByShortId(inventoryId);
   const site = sitesStore.getById(storage?.addressableId);
   const workforce = workforcesStore.getById(site?.siteId)?.workforces;
@@ -40,32 +45,26 @@ async function observeInventoryChanged(tile: PrunTile) {
     burn = calculatePlanetBurn(production, workforce, stores);
   }
 
-  const screenName = getScreenName();
   const sortOptions = await descendantPresent(tile.frame, PrunCss.InventorySortControls.controls);
   const inventory = await descendantPresent(tile.frame, PrunCss.InventoryView.grid);
   const cleanup = [];
-  appendSortControls(sortOptions, screenName, inventoryId, inventory, burn);
-  sortInventory(inventory, sortOptions, screenName, inventoryId, burn, cleanup);
+  appendSortControls(sortOptions, inventoryId, inventory, burn, tileState);
+  sortInventory(inventory, sortOptions, inventoryId, burn, cleanup, tileState);
   const observer = new MutationObserver(() => {
     observer.disconnect();
-    sortInventory(inventory, sortOptions, screenName, inventoryId, burn, cleanup);
+    sortInventory(inventory, sortOptions, inventoryId, burn, cleanup, tileState);
     setTimeout(() => observer.observe(inventory, { childList: true, subtree: true }), 0);
   });
   observer.observe(inventory, { childList: true, subtree: true });
 }
 
-function getScreenName() {
-  return currentScreen.value?.name ?? '';
-}
-
 function appendSortControls(
   sortOptions: HTMLElement,
-  screenName: string,
   invName: string,
   inventory: HTMLElement,
   burn: BurnValues | undefined,
+  tileState: TileState,
 ) {
-  const id = screenName + invName;
   for (const option of Array.from(sortOptions.children) as HTMLElement[]) {
     if (option === sortOptions.firstChild || option.classList.contains('pb-toggle')) {
       continue;
@@ -81,12 +80,7 @@ function appendSortControls(
         if (optionInner.children[1] && optionInner.classList.contains('pb-toggle')) {
           // Find ones that are selected and are custom sort options
           optionInner.removeChild(optionInner.children[1]); // Remove the dot
-          for (const sortSettings of settings.selectedSorting) {
-            // Find the corresponding entry in the settings and set that to nothing
-            if (sortSettings[0] === id) {
-              sortSettings[1] = '';
-            }
-          }
+          delete tileState.activeSort;
         }
       }
 
@@ -98,13 +92,7 @@ function appendSortControls(
   }
   if (burn) {
     sortOptions.appendChild(
-      createToggle(
-        sortOptions,
-        'BRN',
-        findIfActive(settings.selectedSorting, id, 'BRN'),
-        id,
-        inventory,
-      ),
+      createToggle(sortOptions, 'BRN', tileState.activeSort === 'BRN', inventory, tileState),
     );
   }
   for (const setting of settings.sorting) {
@@ -119,9 +107,9 @@ function appendSortControls(
       createToggle(
         sortOptions,
         setting[0],
-        findIfActive(settings.selectedSorting, id, setting[0]),
-        id,
+        tileState.activeSort === setting[0],
         inventory,
+        tileState,
       ),
     );
   }
@@ -131,16 +119,16 @@ function appendSortControls(
 function sortInventory(
   inventory: HTMLElement,
   sortOptions: HTMLElement,
-  screenName: string,
   invName: string,
   burn: BurnValues | undefined,
   cleanupList: App<Element>[],
+  tileState: TileState,
 ) {
   for (const widget of cleanupList) {
     widget.unmount();
   }
   cleanupList.length = 0;
-  const activeSort = settings.selectedSorting.find(x => x[0] === screenName + invName)?.[1] ?? '';
+  const activeSort = tileState.activeSort ?? '';
   for (const option of Array.from(sortOptions.children) as HTMLElement[]) {
     // For each sorting option
     if (
@@ -319,27 +307,6 @@ function getGridItems(inventory: HTMLElement) {
 }
 
 /**
- *  Finds if a screen/inventory combination and settings mode is active
- *  sortSettings: The settings stored in local storage
- *  screenPlanet: The screen name concatentated with the encoded inventory name
- *  sortModeName: The name of the sorting mode
- **/
-function findIfActive(
-  sortSettings: [string, string][],
-  screenPlanet: string,
-  sortModeName: string,
-) {
-  let match = false;
-  for (const settings of sortSettings) {
-    // For each setting, try to find a match
-    if (settings[0] === screenPlanet && settings[1] === sortModeName) {
-      match = true;
-    }
-  }
-  return match;
-}
-
-/**
  *  Creates a toggle button to add to the sorting options
  *  sortOptions: The list of sortion option elements at the top of each inventory
  *  abbreviation: The abbreviation on the button
@@ -350,8 +317,8 @@ function createToggle(
   sortOptions: HTMLElement,
   abbreviation: string,
   selected: boolean,
-  combinedName: string,
   inventory: HTMLElement,
+  tileState: TileState,
 ) {
   const customSortButton = document.createElement('div'); // Create the button and style it
   customSortButton.classList.add(PrunCss.InventorySortControls.criteria);
@@ -399,19 +366,7 @@ function createToggle(
     toggleIndicator.innerHTML = SortingTriangleHTML;
     toggleIndicator.style.marginLeft = '2px';
     customSortButton.appendChild(toggleIndicator);
-
-    // Save to settings
-    let savedBefore = false;
-    for (const sortingOptions of settings.selectedSorting) {
-      if (sortingOptions[0] === combinedName) {
-        sortingOptions[1] = abbreviation;
-        savedBefore = true;
-      }
-    }
-    if (!savedBefore) {
-      settings.selectedSorting.push([combinedName, abbreviation]);
-    }
-    return;
+    tileState.activeSort = abbreviation;
   });
 
   return customSortButton;

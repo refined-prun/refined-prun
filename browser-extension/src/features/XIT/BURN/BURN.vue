@@ -25,13 +25,12 @@ export default {};
 
 <script setup lang="ts">
 import FilterButton from '@src/features/XIT/BURN/FilterButton.vue';
-import { _$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { settings } from '@src/store/settings';
 import { computed } from 'vue';
 import { getPlanetBurn, PlanetBurn } from '@src/core/burn';
 import { comparePlanets } from '@src/util';
 import BurnSection from '@src/features/XIT/BURN/BurnSection.vue';
+import { useTileState } from '@src/features/XIT/BURN/tile-state';
 
 const props = defineProps({
   parameters: {
@@ -51,9 +50,8 @@ const sites = computed(() => {
 
   return props.parameters
     .slice(1)
-    .map(x => sitesStore.getByPlanetNaturalIdOrName(x))
-    .filter(x => x)
-    .map(x => x!);
+    .map(x => sitesStore.getByPlanetNaturalIdOrName(x)!)
+    .filter(x => x);
 });
 
 const planetBurn = computed(() => {
@@ -87,37 +85,24 @@ const planetBurn = computed(() => {
     }
   }
 
-  filtered.push({ burn: overallBurn, planetName: 'Overall' });
-
+  filtered.push({ burn: overallBurn, planetName: 'Overall', naturalId: '' });
   return filtered;
 });
 
-const screenNameElem = _$(PrunCss.ScreenControls.currentScreenName);
-const screenName = screenNameElem ? screenNameElem.textContent : '';
+const isMultiplanet = computed(() => sites.value.length > 1);
 
-const tileName = screenName + props.parameters.join('');
-
-const dispSettings = computed(() => {
-  const result = settings.burn.buffers[tileName] || {
-    red: true,
-    yellow: true,
-    green: true,
-    inf: true,
-    minimized: {},
-  };
-  settings.burn.buffers[tileName] = result;
-  return result;
-});
-
-const isMultiplanet = computed(() => props.parameters.length > 2 || isBurnAll.value);
+const red = useTileState('red');
+const yellow = useTileState('yellow');
+const green = useTileState('green');
+const inf = useTileState('inf');
 </script>
 
 <template>
   <div :class="PrunCss.ComExOrdersPanel.filter">
-    <FilterButton v-model="dispSettings.red">RED</FilterButton>
-    <FilterButton v-model="dispSettings.yellow">YELLOW</FilterButton>
-    <FilterButton v-model="dispSettings.green">GREEN</FilterButton>
-    <FilterButton v-model="dispSettings.inf">INF</FilterButton>
+    <FilterButton v-model="red">RED</FilterButton>
+    <FilterButton v-model="yellow">YELLOW</FilterButton>
+    <FilterButton v-model="green">GREEN</FilterButton>
+    <FilterButton v-model="inf">INF</FilterButton>
   </div>
   <table>
     <thead>
@@ -135,7 +120,6 @@ const isMultiplanet = computed(() => props.parameters.length > 2 || isBurnAll.va
       v-for="burn in planetBurn"
       :key="burn.planetName"
       :is-multiplanet="isMultiplanet"
-      :burn="burn"
-      :disp-settings="dispSettings" />
+      :burn="burn" />
   </table>
 </template>

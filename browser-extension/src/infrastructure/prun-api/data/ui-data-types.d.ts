@@ -21,18 +21,4 @@ declare namespace PrunApi {
     key: string;
     value: string;
   }
-
-  export interface Tile {
-    id: string;
-    parentId: null | string;
-    content: null | string;
-    container: TileContainer | null;
-  }
-
-  export interface TileContainer {
-    child1Id: string;
-    child2Id: string;
-    dividerPosition: number;
-    vertical: boolean;
-  }
 }

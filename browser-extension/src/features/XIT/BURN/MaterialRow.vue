@@ -8,6 +8,7 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { showBuffer } from '@src/util';
 import { fixed0, fixed1, fixed2 } from '@src/utils/format';
 import { getPrice } from '@src/infrastructure/fio/cx';
+import { useTileState } from '@src/features/XIT/BURN/tile-state';
 
 const props = defineProps({
   material: {
@@ -22,10 +23,6 @@ const props = defineProps({
     type: Object as PropType<PlanetBurn>,
     required: true,
   },
-  dispSettings: {
-    type: Object,
-    required: true,
-  },
 });
 
 const matBurn = computed(() => props.burn.burn[props.material.ticker]);
@@ -38,14 +35,17 @@ const isYellow = computed(() => days.value <= settings.burn.yellow);
 const isGreen = computed(() => days.value > settings.burn.yellow);
 const isInf = computed(() => production.value >= 0);
 
+const red = useTileState('red');
+const yellow = useTileState('yellow');
+const green = useTileState('green');
+const inf = useTileState('inf');
+
 const isVisible = computed(() => {
-  if (isInf.value && !props.dispSettings.inf) {
+  if (isInf.value && !inf.value) {
     return false;
   }
   return (
-    (isRed.value && props.dispSettings.red) ||
-    (isYellow.value && props.dispSettings.yellow) ||
-    (isGreen.value && props.dispSettings.green)
+    (isRed.value && red.value) || (isYellow.value && yellow.value) || (isGreen.value && green.value)
   );
 });
 

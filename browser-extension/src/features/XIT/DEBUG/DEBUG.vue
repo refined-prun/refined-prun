@@ -15,6 +15,11 @@ export default {};
 import { downloadFile } from '@src/util';
 import DebugButton from '@src/features/XIT/DEBUG/DebugButton.vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
+import { settings } from '@src/store/settings';
+
+function logSettings() {
+  console.log(settings);
+}
 
 function downloadCssDefinition() {
   function capitalize(str: string): string {
@@ -40,5 +45,6 @@ function downloadCssDefinition() {
 <template>
   <div :style="{ paddingTop: '4px' }">
     <DebugButton @click="downloadCssDefinition">Export prun-css-types.ts</DebugButton>
+    <DebugButton @click="logSettings">Log settings</DebugButton>
   </div>
 </template>

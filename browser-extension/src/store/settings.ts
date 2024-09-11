@@ -3,11 +3,11 @@ import system from '@src/system';
 import { deepToRaw } from '@src/utils/deep-to-raw';
 
 export const settings = reactive({
+  tileState: {} as Record<string, BaseTileState | undefined>,
   burn: {
     red: 3,
     yellow: 7,
     resupply: 16,
-    buffers: {},
   },
   fin: {
     currency: '₳',
@@ -34,7 +34,6 @@ export const settings = reactive({
     ['SET', 'XIT SETTINGS'],
     ['HELP', 'XIT HELP'],
   ],
-  selectedSorting: [] as [id: string, name: string][],
   sorting: [] as [
     name: string,
     storeId: string,
@@ -58,6 +57,9 @@ export async function loadSettings() {
   watch(
     settings,
     () => {
+      if (__DEV__) {
+        console.log(settings);
+      }
       if (!saveQueued) {
         queueMicrotask(() => {
           void system.storage.local.set({
