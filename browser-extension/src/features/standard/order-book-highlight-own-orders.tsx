@@ -19,6 +19,7 @@ function onTileReady(tile: PrunTile) {
 
 export function init() {
   tiles.observe('CXOB', onTileReady);
+  tiles.observe('FXOB', onTileReady);
 }
 
 void features.add({
