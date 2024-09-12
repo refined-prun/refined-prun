@@ -2,7 +2,7 @@
 import { PropType } from 'vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 
-type Position = 'left' | 'right' | 'top' | 'bottom';
+export type TooltipPosition = 'left' | 'right' | 'top' | 'bottom';
 
 defineProps({
   tooltip: {
@@ -10,8 +10,8 @@ defineProps({
     required: true,
   },
   position: {
-    type: String as PropType<Position>,
-    required: true,
+    type: String as PropType<TooltipPosition>,
+    default: 'right',
   },
 });
 </script>

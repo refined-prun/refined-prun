@@ -14,7 +14,7 @@ export default {};
 <script setup lang="ts">
 import { settings } from '@src/store/settings';
 import { computed } from 'vue';
-import InputNumber from '@src/components/InputNumber.vue';
+import NumberInput from '@src/components/forms/NumberInput.vue';
 import { calculateBuildingEntries, calculateShipEntries } from '@src/features/XIT/REP/entries';
 import { timestampEachSecond } from '@src/utils/dayjs';
 import { binarySearch } from '@src/utils/binary-search';
@@ -79,11 +79,11 @@ function calculateAge(lastRepair: number) {
     <div>
       <div style="display: inline">
         <span style="padding-left: 5px">Age Threshold:</span>
-        <InputNumber v-model="settings.repairThreshold" style="width: 60px" />
+        <NumberInput v-model="settings.repairThreshold" style="width: 60px" />
       </div>
       <div style="display: inline">
         <span style="padding-left: 5px">Time Offset:</span>
-        <InputNumber v-model="settings.repairOffset" style="width: 60px" />
+        <NumberInput v-model="settings.repairOffset" style="width: 60px" />
       </div>
     </div>
 
