@@ -18,6 +18,7 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
+import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 
 // All functions associated with generating/editing action packages
 export async function createGenerateScreen(tile, packageName) {
@@ -968,7 +969,7 @@ class GenerateScreen {
 }
 
 // Parse storage payload into inventory name (not MTRA inventory name)
-function parseStorageName(storage) {
+function parseStorageName(storage: PrunApi.Store) {
   switch (storage.type) {
     case 'STL_FUEL_STORE':
       return storage.name + ' STL Store';
@@ -976,10 +977,14 @@ function parseStorageName(storage) {
       return storage.name + ' FTL Store';
     case 'SHIP_STORE':
       return storage.name + ' Cargo';
-    case 'STORE':
-      return storage.PlanetName + ' Base';
-    case 'WAREHOUSE_STORE':
-      return storage.PlanetName + ' Warehouse';
+    case 'STORE': {
+      const site = sitesStore.getById(storage.addressableId);
+      return getPlanetNameFromAddress(site?.address) + ' Base';
+    }
+    case 'WAREHOUSE_STORE': {
+      const warehouse = warehousesStore.getById(storage.addressableId);
+      return getPlanetNameFromAddress(warehouse?.address) + ' Warehouse';
+    }
   }
 
   return 'Error, unable to parse';

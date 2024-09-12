@@ -1,6 +1,9 @@
 import { createTextSpan, createSelectOption } from '@src/util';
 import { Style } from '@src/Style';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
+import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
+import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 
 export function needsConfiguration(action) {
   switch (action.type) {
@@ -189,7 +192,7 @@ function storageSort(a: PrunApi.Store, b: PrunApi.Store) {
   return a.type && b.type && storagePriorityMap[a.type] > storagePriorityMap[b.type] ? 1 : -1;
 }
 
-function parseStorageName(storage) {
+function parseStorageName(storage: PrunApi.Store) {
   switch (storage.type) {
     case 'STL_FUEL_STORE':
       return storage.name + ' STL Store';
@@ -197,10 +200,14 @@ function parseStorageName(storage) {
       return storage.name + ' FTL Store';
     case 'SHIP_STORE':
       return storage.name + ' Cargo';
-    case 'STORE':
-      return storage.PlanetName + ' Base';
-    case 'WAREHOUSE_STORE':
-      return storage.PlanetName + ' Warehouse';
+    case 'STORE': {
+      const site = sitesStore.getById(storage.addressableId);
+      return getPlanetNameFromAddress(site?.address) + ' Base';
+    }
+    case 'WAREHOUSE_STORE': {
+      const warehouse = warehousesStore.getById(storage.addressableId);
+      return getPlanetNameFromAddress(warehouse?.address) + ' Warehouse';
+    }
   }
 
   return 'Error, unable to parse';

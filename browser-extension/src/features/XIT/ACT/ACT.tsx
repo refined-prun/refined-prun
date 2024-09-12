@@ -45,7 +45,7 @@ export class Execute {
 xit.add({
   command: ['ACT', 'ACTION'],
   name: parameters => {
-    if (parameters.length === 0) {
+    if (parameters.length === 1) {
       return 'ACTION PACKAGES';
     }
     if (parameters[1].toUpperCase() == 'GEN' || parameters[1].toUpperCase() == 'EDIT') {
