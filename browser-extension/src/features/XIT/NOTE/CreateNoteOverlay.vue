@@ -3,9 +3,9 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { PropType, ref } from 'vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import SectionHeader from '@src/components/SectionHeader.vue';
-import ActiveFormElement from '@src/components/forms/ActiveFormElement.vue';
+import Active from '@src/components/forms/Active.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
-import CommandFormElement from '@src/components/forms/CommandFormElement.vue';
+import Commands from '@src/components/forms/Commands.vue';
 
 const props = defineProps({
   onCreate: {
@@ -31,14 +31,14 @@ function onCreateClick() {
   <div :class="PrunCss.DraftConditionEditor.form">
     <SectionHeader>New Note</SectionHeader>
     <form>
-      <ActiveFormElement
+      <Active
         label="Note Name"
         tooltip="The name of the note. The command to access will be XIT NOTE_{name}">
         <TextInput v-model="name" />
-      </ActiveFormElement>
-      <CommandFormElement>
+      </Active>
+      <Commands>
         <PrunButton primary @click="onCreateClick">CREATE</PrunButton>
-      </CommandFormElement>
+      </Commands>
     </form>
   </div>
 </template>

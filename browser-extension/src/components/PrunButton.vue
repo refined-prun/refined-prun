@@ -5,6 +5,7 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 const props = defineProps({
   inline: Boolean,
   primary: Boolean,
+  disabled: Boolean,
   neutral: Boolean,
   danger: Boolean,
   dark: Boolean,
@@ -15,6 +16,8 @@ const classes = computed(() => ({
   [PrunCss.Button.inline]: props.inline,
   [PrunCss.Button.primary]: props.primary,
   [PrunCss.Button.primaryInline]: props.primary && props.inline,
+  [PrunCss.Button.disabled]: props.disabled,
+  [PrunCss.Button.disabledInline]: props.disabled && props.inline,
   [PrunCss.Button.neutral]: props.neutral,
   [PrunCss.Button.neutralInline]: props.neutral && props.inline,
   [PrunCss.Button.danger]: props.danger,

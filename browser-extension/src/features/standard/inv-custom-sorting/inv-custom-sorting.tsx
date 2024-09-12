@@ -10,12 +10,14 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import { settings } from '@src/store/settings';
 import { widgetAppend } from '@src/utils/vue-mount';
-import CategoryHeader from '@src/features/standard/inventory-organizer/CategoryHeader.vue';
-import InventorySortControls from '@src/features/standard/inventory-organizer/InventorySortControls.vue';
+import CategoryHeader from './CategoryHeader.vue';
+import InventorySortControls from './InventorySortControls.vue';
 import { materialsStore, sortMaterialsBy } from '@src/infrastructure/prun-api/data/materials';
 import { App } from 'vue';
 import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
 import { tilesStore } from '@src/infrastructure/prun-api/data/tiles';
+import xit from '@src/features/XIT/xit-registry.js';
+import SORT from '@src/features/XIT/SORT/SORT.vue';
 
 interface TileState {
   activeSort?: string;
@@ -95,19 +97,16 @@ function appendSortControls(
       createToggle(sortOptions, 'BRN', tileState.activeSort === 'BRN', inventory, tileState),
     );
   }
-  for (const setting of settings.sorting) {
-    // For each setting for this inventory, create a button
-    if (!setting[0] || !setting[1] || !setting[2]) {
-      continue;
-    }
-    if (setting[1].toUpperCase() !== invName.toUpperCase()) {
-      continue;
-    }
+
+  const sortingModes = settings.sorting.filter(
+    x => x.storeId.toUpperCase() === invName.toUpperCase(),
+  );
+  for (const sortingMode of sortingModes) {
     sortOptions.appendChild(
       createToggle(
         sortOptions,
-        setting[0],
-        tileState.activeSort === setting[0],
+        sortingMode.label,
+        tileState.activeSort === sortingMode.label,
         inventory,
         tileState,
       ),
@@ -167,17 +166,17 @@ function sortInventory(
   gridItems = sortMaterialsBy(gridItems, x => x.material);
 
   let sorted: string[] = []; // A list of all the material tickers already sorted into categories
-  const sortingDetails = settings.sorting.find(x => x[0] === activeSort && x[1] === invName) ?? [];
+  const sortingMode = settings.sorting.find(x => x.label === activeSort && x.storeId === invName);
 
   if (activeSort !== 'BRN') {
-    if (sortingDetails.length < 3) {
+    if (!sortingMode) {
       return;
-    } // No sorting to do
+    }
 
-    if (sortingDetails[4]) {
+    if (sortingMode.zero) {
       let materialsToSort: string[] = [];
-      for (const category of sortingDetails[2]!) {
-        materialsToSort = materialsToSort.concat(category[1]);
+      for (const category of sortingMode.categories) {
+        materialsToSort = materialsToSort.concat(category.materials);
       }
       materialsToSort = materialsToSort.filter((c, index) => {
         return materialsToSort.indexOf(c) === index;
@@ -201,25 +200,25 @@ function sortInventory(
       sortMaterialsBy(gridItems, x => x.material);
     }
 
-    for (const category of sortingDetails[2]!) {
+    for (const category of sortingMode.categories) {
       let categoryTitleAdded = false;
       for (const gridItem of gridItems) {
         const ticker = gridItem.material?.ticker;
-        if (!ticker || !category[1].includes(ticker) || sorted.includes(ticker)) {
+        if (!ticker || !category.materials.includes(ticker) || sorted.includes(ticker)) {
           continue;
         }
         if (!categoryTitleAdded) {
-          const { widget } = widgetAppend(inventory, CategoryHeader, { label: category[0] });
+          const { widget } = widgetAppend(inventory, CategoryHeader, { label: category.name });
           cleanupList.push(widget);
           categoryTitleAdded = true;
         }
         inventory.appendChild(gridItem.div);
       }
-      sorted = sorted.concat(category[1]);
+      sorted = sorted.concat(category.materials);
     }
   }
 
-  if ((sortingDetails[3] || activeSort === 'BRN') && burn) {
+  if ((sortingMode?.burn || activeSort === 'BRN') && burn) {
     const workforceMaterials = Object.keys(burn).filter(x => burn[x].Type === 'workforce');
     const inputMaterials = Object.keys(burn).filter(x => burn[x].Type === 'input');
     const outputMaterials = Object.keys(burn).filter(x => burn[x].Type === 'output');
@@ -381,9 +380,15 @@ const SortingTriangleHTML = `
 export function init() {
   tiles.observe('INV', onInvReady);
   tiles.observe('SHPI', onShpiReady);
+
+  xit.add({
+    command: 'SORT',
+    name: 'SORTING MODES',
+    component: () => SORT,
+  });
 }
 
 void features.add({
-  id: 'inventory-organizer',
+  id: 'inv-custom-sorting',
   init,
 });

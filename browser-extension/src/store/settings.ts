@@ -34,14 +34,21 @@ export const settings = reactive({
     ['SET', 'XIT SETTINGS'],
     ['HELP', 'XIT HELP'],
   ],
-  sorting: [] as [
-    name: string,
-    storeId: string,
-    info: [group: string, mats: string[]][],
-    burn: boolean,
-    zero: boolean,
-  ][],
+  sorting: [] as SortingMode[],
 });
+
+export interface SortingMode {
+  label: string;
+  storeId: string;
+  categories: SortingModeCategory[];
+  burn: boolean;
+  zero: boolean;
+}
+
+export interface SortingModeCategory {
+  name: string;
+  materials: string[];
+}
 
 type PricingMethod = 'ASK' | 'BID' | 'AVG' | 'VWAP7D' | 'VWAP30D' | string;
 
