@@ -88,7 +88,7 @@ function formatPrice(price: number): string {
       <MaterialIcon size="medium" :ticker="material.ticker" :amount="invAmount" />
     </td>
     <td>
-      <span>{{ consText }} / day</span>
+      <span>{{ consText }}</span>
     </td>
     <td>
       <span>{{ isNaN(needAmt) ? '0' : fixed0(needAmt) }}</span>

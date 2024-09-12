@@ -108,7 +108,7 @@ const inf = useTileState('inf');
     <thead>
       <tr>
         <th>Material</th>
-        <th>Delta</th>
+        <th>Δ/day</th>
         <th>Needed</th>
         <th>Actions</th>
         <th>Load</th>
