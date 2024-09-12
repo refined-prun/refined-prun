@@ -855,3 +855,17 @@ export function extractPlanetName(text?: string | null) {
     .replace(/.*\s-\s/, '');
   return Stations[text] ?? text;
 }
+
+export function changeSelectValue(input, selectIndex) {
+  input.selectedIndex = selectIndex;
+  // Create a new change event
+  const changeEvent = document.createEvent('Event');
+  // Initialize the event as an "change" event, bubbling and cancelable
+  changeEvent.initEvent('change', true, true);
+  // Dispatch the event to the change element
+  input.dispatchEvent(changeEvent);
+}
+
+export function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}

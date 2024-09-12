@@ -6,6 +6,7 @@ export const Style = {
   Button: ['Button__btn___UJGZ1b7'],
   ButtonPrimary: ['Button__primary____lObPiw'],
   ButtonSuccess: ['Button__success___bCiIVXw'],
+  ButtonDisabled: ['Button__disabled____x8i7XF'],
   ButtonEnabled: ['Button__primary____lObPiw'],
   ButtonDanger: ['Button__danger___S2rSOES'],
   ButtonNeutral: ['Button__neutral___OAFOaNs'],

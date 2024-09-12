@@ -350,7 +350,7 @@ function generateActionHelpScreen(tile) {
   tile.appendChild(createHeader('How do I make an action package?'));
   tile.appendChild(
     createTextDiv(
-      'Open the XIT ACTION buffer and click "CREATE NEW" or enter XIT_ACTION_GEN_{name} into a new buffer. Begin by adding the material groups you will be working with. Next, add the actions corresponding to those material groups. Click "SAVE" to save to local storage. The "OPEN" button opens the execution screen.',
+      'Open the XIT ACTION buffer and click "CREATE NEW" or enter XIT_ACTION_EDIT_{name} into a new buffer. Begin by adding the material groups you will be working with. Next, add the actions corresponding to those material groups. Click "SAVE" to save to local storage. The "EXECUTE" button opens the execution screen.',
     ),
   );
 

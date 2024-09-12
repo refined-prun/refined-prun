@@ -41,7 +41,7 @@ import '@src/features/standard/sidebar-buttons/sidebar-buttons';
 import '@src/features/standard/screen-tab-bar/screen-tab-bar';
 
 import '@src/features/XIT/xit-commands';
-import '@src/features/XIT/ACT';
+import '@src/features/XIT/ACT/ACT';
 import '@src/features/XIT/BURN/BURN.vue';
 import '@src/features/XIT/CALC.vue';
 import '@src/features/XIT/CHAT.vue';
