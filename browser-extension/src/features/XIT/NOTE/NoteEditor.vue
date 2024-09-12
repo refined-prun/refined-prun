@@ -92,6 +92,7 @@ watch(
   <div :class="['title', $style.title]" :style="{ paddingLeft: '10px' }">{{ name }}</div>
   <div>
     <textarea ref="textbox" v-model="text" :class="$style.textarea" spellcheck="false" />
+    <!-- eslint-disable-next-line vue/no-v-html -->
     <pre ref="overlay" :class="$style.overlay" v-html="renderedText" />
   </div>
 </template>
