@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
+import PrunButton from '@src/components/PrunButton.vue';
 </script>
 
 <template>
-  <button :class="[PrunCss.Button.btn, PrunCss.Button.primary, $style.button]">
-    <slot />
-  </button>
+  <PrunButton primary :class="$style.button"><slot /></PrunButton>
 </template>
 
 <style module>

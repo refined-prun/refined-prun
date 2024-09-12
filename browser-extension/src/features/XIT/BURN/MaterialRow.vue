@@ -4,11 +4,11 @@ import { computed, PropType } from 'vue';
 import { PlanetBurn } from '@src/core/burn';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { showBuffer } from '@src/util';
 import { fixed0, fixed1, fixed2 } from '@src/utils/format';
 import { getPrice } from '@src/infrastructure/fio/cx';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
+import PrunButton from '@src/components/PrunButton.vue';
 
 const props = defineProps({
   material: {
@@ -94,11 +94,7 @@ function formatPrice(price: number): string {
       <span>{{ isNaN(needAmt) ? '0' : fixed0(needAmt) }}</span>
     </td>
     <td>
-      <div
-        :class="[PrunCss.Button.btn, PrunCss.Button.dark, PrunCss.Button.darkInline]"
-        @click="showBuffer(`CXM ${material.ticker}`)">
-        CXM
-      </div>
+      <PrunButton dark @click="showBuffer(`CXM ${material.ticker}`)">CXM</PrunButton>
     </td>
     <td>
       <span>{{ fixed2(needWeight) }}t</span>

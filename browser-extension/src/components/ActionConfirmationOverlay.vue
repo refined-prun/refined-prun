@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { PropType } from 'vue';
+import PrunButton from '@src/components/PrunButton.vue';
 
 defineProps({
   message: {
@@ -50,18 +51,8 @@ defineProps({
         >{{ message }}</span
       >
       <div :class="[PrunCss.ActionConfirmationOverlay.buttons]">
-        <button
-          :class="[PrunCss.Button.neutral, PrunCss.Button.btn]"
-          type="button"
-          @click="onClose">
-          <span>Cancel</span>
-        </button>
-        <button
-          :class="[PrunCss.Button.danger, PrunCss.Button.btn]"
-          type="button"
-          @click="onConfirm">
-          <span>{{ confirmLabel }}</span>
-        </button>
+        <PrunButton neutral @click="onClose">Cancel</PrunButton>
+        <PrunButton danger @click="onConfirm">{{ confirmLabel }}</PrunButton>
       </div>
     </div>
   </div>

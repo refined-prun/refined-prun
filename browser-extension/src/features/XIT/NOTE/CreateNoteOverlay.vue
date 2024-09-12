@@ -2,6 +2,7 @@
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import Tooltip from '@src/components/Tooltip.vue';
 import { PropType, ref } from 'vue';
+import PrunButton from '@src/components/PrunButton.vue';
 
 const props = defineProps({
   onCreate: {
@@ -72,9 +73,7 @@ function onCreateClick() {
           <span>CMD</span>
         </label>
         <div :class="[PrunCss.FormComponent.input, PrunCss.forms.input]">
-          <button :class="[PrunCss.Button.primary, PrunCss.Button.btn]" @click="onCreateClick">
-            <span>Create</span>
-          </button>
+          <PrunButton primary @click="onCreateClick">CREATE</PrunButton>
         </div>
       </div>
     </form>
