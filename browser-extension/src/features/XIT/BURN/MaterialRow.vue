@@ -9,6 +9,7 @@ import { fixed0, fixed1, fixed2 } from '@src/utils/format';
 import { getPrice } from '@src/infrastructure/fio/cx';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
 import PrunButton from '@src/components/PrunButton.vue';
+import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 
 const props = defineProps({
   material: {
@@ -55,9 +56,15 @@ const materialColumnStyle = computed(() => ({
   paddingLeft: props.isMultiplanet ? '32px' : '10px',
 }));
 
-const consText = computed(() =>
-  Math.abs(production.value) < 1 ? fixed2(production.value) : fixed1(production.value),
-);
+const changeText = computed(() => {
+  const abs = Math.abs(production.value);
+  const fixed = abs < 1 ? fixed2(abs) : fixed1(abs);
+  return production.value > 0 ? '+' + fixed : fixed;
+});
+
+const changeClass = computed(() => ({
+  [PrunCss.ColoredValue.positive]: production.value > 0,
+}));
 
 const needAmt = computed(() =>
   days.value > settings.burn.resupply || production.value > 0
@@ -88,7 +95,7 @@ function formatPrice(price: number): string {
       <MaterialIcon size="medium" :ticker="material.ticker" :amount="invAmount" />
     </td>
     <td>
-      <span>{{ consText }}</span>
+      <span :class="changeClass">{{ changeText }}</span>
     </td>
     <td>
       <span>{{ isNaN(needAmt) ? '0' : fixed0(needAmt) }}</span>
