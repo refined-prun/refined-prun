@@ -1,383 +1,205 @@
-import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
-import { BurnValues, calculatePlanetBurn } from '@src/core/burn';
-import { productionStore } from '@src/infrastructure/prun-api/data/production';
+import classes from './inv-custom-sorting.module.css';
+import { BurnValues, getPlanetBurn } from '@src/core/burn';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import descendantPresent from '@src/utils/descendant-present';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
-import { settings } from '@src/store/settings';
-import { widgetAppend } from '@src/utils/vue-mount';
+import { settings, SortingMode } from '@src/store/settings';
 import CategoryHeader from './CategoryHeader.vue';
 import InventorySortControls from './InventorySortControls.vue';
-import { materialsStore, sortMaterialsBy } from '@src/infrastructure/prun-api/data/materials';
-import { App } from 'vue';
+import {
+  materialsStore,
+  sortMaterials,
+  sortMaterialsBy,
+} from '@src/infrastructure/prun-api/data/materials';
+import { App, computed, reactive, watch } from 'vue';
 import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
 import { tilesStore } from '@src/infrastructure/prun-api/data/tiles';
 import xit from '@src/features/XIT/xit-registry.js';
 import SORT from '@src/features/XIT/SORT/SORT.vue';
-
-interface TileState {
-  activeSort?: string;
-}
+import onElementDisconnected from '@src/utils/on-element-disconnected';
+import { TileState } from '@src/features/standard/inv-custom-sorting/tile-state';
+import { showBuffer } from '@src/util';
+import { fragmentAppAppend } from '@src/utils/vue-fragment-app';
+import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 async function onInvReady(tile: PrunTile) {
-  await observeInventoryChanged(tile);
+  await mountCustomSorting(tile);
 }
 
 async function onShpiReady(tile: PrunTile) {
-  await observeInventoryChanged(tile);
+  await mountCustomSorting(tile);
 }
 
-async function observeInventoryChanged(tile: PrunTile) {
-  const inventoryId = tile.parameter;
-  if (!inventoryId) {
+async function mountCustomSorting(tile: PrunTile) {
+  const storeId = tile.parameter;
+  if (!storeId) {
     return;
   }
-  const tileState = tilesStore.getTileState(tile);
-  const storage = storagesStore.getByShortId(inventoryId);
-  const site = sitesStore.getById(storage?.addressableId);
-  const workforce = workforcesStore.getById(site?.siteId)?.workforces;
-  let burn: BurnValues | undefined = undefined;
-  if (workforce) {
-    const production = productionStore.getBySiteId(site?.siteId);
-    const stores = storagesStore.getByAddress(site?.siteId);
-    burn = calculatePlanetBurn(production, workforce, stores);
-  }
 
+  const tileState = computed(() => tilesStore.getTileState(tile) as TileState);
   const sortOptions = await descendantPresent(tile.frame, PrunCss.InventorySortControls.controls);
   const inventory = await descendantPresent(tile.frame, PrunCss.InventoryView.grid);
-  const cleanup = [];
-  appendSortControls(sortOptions, inventoryId, inventory, burn, tileState);
-  sortInventory(inventory, sortOptions, inventoryId, burn, cleanup, tileState);
-  const observer = new MutationObserver(() => {
-    observer.disconnect();
-    sortInventory(inventory, sortOptions, inventoryId, burn, cleanup, tileState);
-    setTimeout(() => observer.observe(inventory, { childList: true, subtree: true }), 0);
-  });
-  observer.observe(inventory, { childList: true, subtree: true });
-}
 
-function appendSortControls(
-  sortOptions: HTMLElement,
-  invName: string,
-  inventory: HTMLElement,
-  burn: BurnValues | undefined,
-  tileState: TileState,
-) {
-  for (const option of Array.from(sortOptions.children) as HTMLElement[]) {
-    if (option === sortOptions.firstChild || option.classList.contains('pb-toggle')) {
-      continue;
+  // Skip the first sorting option because it is the grid/list view switch.
+  for (let i = 1; i < sortOptions.children.length; i++) {
+    const option = sortOptions.children.item(i) as HTMLElement;
+    option.addEventListener('click', () => delete tileState.value.activeSort);
+  }
+
+  const burn = computed(() => getPlanetBurn(storagesStore.getByShortId(storeId)?.addressableId));
+
+  const sortingModes = computed(() => {
+    const modes = settings.sorting.filter(x => x.storeId === storeId);
+    if (burn.value) {
+      modes.push(createBurnSortingMode(storeId));
     }
-    option.addEventListener('click', () => {
-      // Add a function on click to disable custom sort and revert to stock sort
-      if (option.children[1]) {
-        // Reveal the arrow if it was hidden
-        (option.children[1] as HTMLElement).style.display = 'inline';
-      }
-      for (const optionInner of Array.from(sortOptions.children)) {
-        // Look through each sortion option
-        if (optionInner.children[1] && optionInner.classList.contains('pb-toggle')) {
-          // Find ones that are selected and are custom sort options
-          optionInner.removeChild(optionInner.children[1]); // Remove the dot
-          delete tileState.activeSort;
-        }
-      }
+    return modes;
+  });
 
-      if (inventory.firstChild) {
-        inventory.insertBefore(inventory.firstChild, inventory.firstChild);
-      }
-      return;
-    });
-  }
-  if (burn) {
-    sortOptions.appendChild(
-      createToggle(sortOptions, 'BRN', tileState.activeSort === 'BRN', inventory, tileState),
-    );
-  }
-
-  const sortingModes = settings.sorting.filter(
-    x => x.storeId.toUpperCase() === invName.toUpperCase(),
+  const activeSort = computed(() => tileState.value.activeSort);
+  const activeSortingMode = computed(() =>
+    sortingModes.value.find(x => x.label === tileState.value.activeSort),
   );
-  for (const sortingMode of sortingModes) {
-    sortOptions.appendChild(
-      createToggle(
-        sortOptions,
-        sortingMode.label,
-        tileState.activeSort === sortingMode.label,
-        inventory,
-        tileState,
-      ),
-    );
-  }
-  widgetAppend(sortOptions, InventorySortControls, { storeId: invName });
+
+  watch(
+    activeSortingMode,
+    mode => {
+      if (mode) {
+        sortOptions.classList.add(classes.custom);
+      } else {
+        sortOptions.classList.remove(classes.custom);
+      }
+    },
+    { immediate: true },
+  );
+
+  fragmentAppAppend(
+    sortOptions,
+    InventorySortControls,
+    reactive({
+      sortingModes,
+      activeSort,
+      onModeClick: (mode: string) => (tileState.value.activeSort = mode),
+      onAddClick: () => showBuffer(`XIT SORT ${storeId}`),
+    }),
+  );
+
+  const cleanup = [];
+  const runSort = () => {
+    observer.disconnect();
+    sortInventory(inventory, activeSortingMode.value, burn.value?.burn, cleanup);
+    setTimeout(() => observer.observe(inventory, { childList: true, subtree: true }), 0);
+  };
+  const observer = new MutationObserver(runSort);
+  onElementDisconnected(inventory, watch([reactive({ activeSortingMode }), burn], runSort));
+  runSort();
 }
 
 function sortInventory(
-  inventory: HTMLElement,
-  sortOptions: HTMLElement,
-  invName: string,
+  inventory: Element,
+  sortingMode: SortingMode | undefined,
   burn: BurnValues | undefined,
-  cleanupList: App<Element>[],
-  tileState: TileState,
+  cleanup: App[],
 ) {
-  for (const widget of cleanupList) {
+  for (const widget of cleanup) {
     widget.unmount();
   }
-  cleanupList.length = 0;
-  const activeSort = tileState.activeSort ?? '';
-  for (const option of Array.from(sortOptions.children) as HTMLElement[]) {
-    // For each sorting option
-    if (
-      option !== sortOptions.firstChild &&
-      option.firstChild &&
-      option.firstChild.textContent === activeSort &&
-      !option.children[1]
-    ) {
-      // Test if it is the button corresponding to the active sort
-      // Add the triangle next to it
-      const toggleIndicator = document.createElement('div');
-      toggleIndicator.innerHTML = SortingTriangleHTML;
-      toggleIndicator.style.marginLeft = '2px';
-      option.appendChild(toggleIndicator);
-    } else if (
-      option.firstChild &&
-      option.firstChild.textContent !== activeSort &&
-      option.children[1]
-    ) {
-      // If the button does not correspond to the active sort, remove the arrow or circle
-      if (option.classList.contains('pb-toggle')) {
-        option.removeChild(option.children[1]); // Remove the circle
-      } else if (activeSort !== '') {
-        (option.children[1] as HTMLElement).style.display = 'none'; // Hide the arrow if custom sort is active
-      } else {
-        (option.children[1] as HTMLElement).style.display = 'inline'; // Show the arrow if custom sort is inactive
-      }
-    }
-  }
-
-  if (activeSort === '') {
+  cleanup.length = 0;
+  if (!sortingMode) {
     return;
-  } // No sorting to do, stock option selected
-
-  let gridItems = getGridItems(inventory);
-  gridItems = sortMaterialsBy(gridItems, x => x.material);
-
-  let sorted: string[] = []; // A list of all the material tickers already sorted into categories
-  const sortingMode = settings.sorting.find(x => x.label === activeSort && x.storeId === invName);
-
-  if (activeSort !== 'BRN') {
-    if (!sortingMode) {
-      return;
-    }
-
-    if (sortingMode.zero) {
-      let materialsToSort: string[] = [];
-      for (const category of sortingMode.categories) {
-        materialsToSort = materialsToSort.concat(category.materials);
-      }
-      materialsToSort = materialsToSort.filter((c, index) => {
-        return materialsToSort.indexOf(c) === index;
-      });
-
-      for (const ticker of materialsToSort) {
-        if (gridItems.every(x => x.material?.ticker !== ticker)) {
-          const material = materialsStore.getByTicker(ticker);
-          if (!material) {
-            continue;
-          }
-          const { widget, instance } = widgetAppend(inventory, GridMaterialIcon, {
-            ticker,
-            amount: 0,
-            warning: true,
-          });
-          cleanupList.push(widget);
-          gridItems.push({ div: instance.$el, material });
-        }
-      }
-      sortMaterialsBy(gridItems, x => x.material);
-    }
-
-    for (const category of sortingMode.categories) {
-      let categoryTitleAdded = false;
-      for (const gridItem of gridItems) {
-        const ticker = gridItem.material?.ticker;
-        if (!ticker || !category.materials.includes(ticker) || sorted.includes(ticker)) {
-          continue;
-        }
-        if (!categoryTitleAdded) {
-          const { widget } = widgetAppend(inventory, CategoryHeader, { label: category.name });
-          cleanupList.push(widget);
-          categoryTitleAdded = true;
-        }
-        inventory.appendChild(gridItem.div);
-      }
-      sorted = sorted.concat(category.materials);
-    }
   }
 
-  if ((sortingMode?.burn || activeSort === 'BRN') && burn) {
-    const workforceMaterials = Object.keys(burn).filter(x => burn[x].Type === 'workforce');
-    const inputMaterials = Object.keys(burn).filter(x => burn[x].Type === 'input');
-    const outputMaterials = Object.keys(burn).filter(x => burn[x].Type === 'output');
+  const gridItems = _$$(PrunCss.GridItemView.container, inventory).map(div => ({
+    div,
+    ticker: _$(PrunCss.ColoredIcon.label, div)?.textContent,
+  }));
+  const categories = sortingMode.categories.slice();
 
-    let workforceTitleAdded = false;
-    for (const gridItem of gridItems) {
-      const ticker = gridItem.material?.ticker;
-      const isConsumable =
-        ticker &&
-        workforceMaterials.includes(ticker) &&
-        !inputMaterials.includes(ticker) &&
-        !outputMaterials.includes(ticker) &&
-        !sorted.includes(ticker);
-      if (!isConsumable) {
-        continue;
-      }
-      if (!workforceTitleAdded) {
-        const { widget } = widgetAppend(inventory, CategoryHeader, { label: 'Consumables' });
-        cleanupList.push(widget);
-        workforceTitleAdded = true;
-      }
-      inventory.appendChild(gridItem.div);
-    }
+  if (sortingMode.burn && burn) {
+    const tickers = Object.keys(burn);
+    const inputs = new Set(tickers.filter(x => burn[x].Type === 'input'));
+    const outputs = new Set(tickers.filter(x => burn[x].Type === 'output' && !inputs.has(x)));
+    const workforce = tickers.filter(
+      x => burn[x].Type === 'workforce' && !inputs.has(x) && !outputs.has(x),
+    );
 
-    let inputTitleAdded = false;
-    for (const gridItem of gridItems) {
-      const ticker = gridItem.material?.ticker;
-      if (!ticker || !inputMaterials.includes(ticker) || sorted.includes(ticker)) {
-        continue;
-      }
-      if (!inputTitleAdded) {
-        const { widget } = widgetAppend(inventory, CategoryHeader, { label: 'Inputs' });
-        cleanupList.push(widget);
-        inputTitleAdded = true;
-      }
-      inventory.appendChild(gridItem.div);
-    }
-
-    let outputTitleAdded = false;
-    for (const gridItem of gridItems) {
-      const ticker = gridItem.material?.ticker;
-      const isOutput =
-        ticker &&
-        outputMaterials.includes(ticker) &&
-        !inputMaterials.includes(ticker) &&
-        !sorted.includes(ticker);
-      if (!isOutput) {
-        continue;
-      }
-      if (!outputTitleAdded) {
-        const { widget } = widgetAppend(inventory, CategoryHeader, { label: 'Outputs' });
-        cleanupList.push(widget);
-        outputTitleAdded = true;
-      }
-      inventory.appendChild(gridItem.div);
-    }
-    sorted = sorted.concat(workforceMaterials);
-    sorted = sorted.concat(inputMaterials);
-    sorted = sorted.concat(outputMaterials);
+    categories.push({
+      name: 'Consumables',
+      materials: workforce,
+    });
+    categories.push({
+      name: 'Inputs',
+      materials: [...inputs],
+    });
+    categories.push({
+      name: 'Outputs',
+      materials: [...outputs],
+    });
   }
-  let miscTitleAdded = false;
-  for (const gridItem of gridItems) {
-    const ticker = gridItem.material?.ticker;
-    if (ticker && sorted.includes(ticker)) {
+
+  const addedItems = new Set<string>();
+  const remainingItems = new Set(gridItems);
+
+  for (const category of categories) {
+    let materials = category.materials
+      .filter(x => !addedItems.has(x))
+      .map(x => materialsStore.getByTicker(x)!)
+      .filter(x => x!);
+    if (materials.length === 0) {
       continue;
     }
-    if (!miscTitleAdded) {
-      const { widget } = widgetAppend(inventory, CategoryHeader, { label: 'Other' });
-      cleanupList.push(widget);
-      miscTitleAdded = true;
-    }
-    inventory.appendChild(gridItem.div);
-  }
-}
 
-function getGridItems(inventory: HTMLElement) {
-  const materialDivs = _$$(PrunCss.GridItemView.container, inventory);
-  const result: { div: HTMLElement; material: PrunApi.Material | undefined }[] = [];
-  for (const div of materialDivs) {
-    const ticker = _$(PrunCss.ColoredIcon.label, div)?.textContent;
-    const material = materialsStore.getByTicker(ticker);
-    result.push({ div, material });
-  }
-  return result;
-}
-
-/**
- *  Creates a toggle button to add to the sorting options
- *  sortOptions: The list of sortion option elements at the top of each inventory
- *  abbreviation: The abbreviation on the button
- *  selected: Whether the button is selected
- *  combinedName: The concatentated screen and encoded inventory name
- **/
-function createToggle(
-  sortOptions: HTMLElement,
-  abbreviation: string,
-  selected: boolean,
-  inventory: HTMLElement,
-  tileState: TileState,
-) {
-  const customSortButton = document.createElement('div'); // Create the button and style it
-  customSortButton.classList.add(PrunCss.InventorySortControls.criteria);
-  customSortButton.classList.add('pb-toggle'); // Add a class signifying it is created by PMMGExtended, but not to clean up
-
-  const toggleLabel = document.createElement('div'); // Create the inner text label
-  toggleLabel.textContent = abbreviation;
-  customSortButton.appendChild(toggleLabel);
-
-  if (selected) {
-    // If the button is selected
-    for (const option of Array.from(sortOptions.children)) {
-      // For each sorting option, clear away the carrot or circle
-      if (option.children[1]) {
-        if (option.classList.contains('pb-toggle')) {
-          option.removeChild(option.children[1]);
-        } else {
-          (option.children[1] as HTMLElement).style.display = 'none';
-        }
+    cleanup.push(fragmentAppAppend(inventory, CategoryHeader, { label: category.name }));
+    materials = sortMaterials(materials);
+    for (const material of materials) {
+      const gridItem = gridItems.find(x => x.ticker === material.ticker);
+      if (gridItem) {
+        inventory.appendChild(gridItem.div);
+        remainingItems.delete(gridItem);
+      } else if (sortingMode.zero) {
+        cleanup.push(
+          fragmentAppAppend(inventory, GridMaterialIcon, {
+            ticker: material.ticker,
+            amount: 0,
+            warning: true,
+          }),
+        );
       }
+      addedItems.add(material.ticker);
     }
-    // Add the triangle next to the current option
-    const toggleIndicator = document.createElement('div');
-    toggleIndicator.innerHTML = SortingTriangleHTML;
-    toggleIndicator.style.marginLeft = '2px';
-    customSortButton.appendChild(toggleIndicator);
   }
 
-  customSortButton.addEventListener('click', () => {
-    // When clicked, clear away the carrot or circle from each option
-    for (const option of Array.from(sortOptions.children)) {
-      if (option.children[1]) {
-        if (option.classList.contains('pb-toggle')) {
-          option.removeChild(option.children[1]);
-        } else {
-          (option.children[1] as HTMLElement).style.display = 'none';
-        }
-        if (inventory.firstChild) {
-          inventory.insertBefore(inventory.firstChild, inventory.firstChild);
-        }
-      }
-    }
-    // Add the triangle next to the current option
-    const toggleIndicator = document.createElement('div');
-    toggleIndicator.innerHTML = SortingTriangleHTML;
-    toggleIndicator.style.marginLeft = '2px';
-    customSortButton.appendChild(toggleIndicator);
-    tileState.activeSort = abbreviation;
-  });
+  if (remainingItems.size === 0) {
+    return;
+  }
 
-  return customSortButton;
+  cleanup.push(fragmentAppAppend(inventory, CategoryHeader, { label: 'Other' }));
+  let otherItems = [...remainingItems].map(x => ({
+    div: x.div,
+    material: materialsStore.getByTicker(x.ticker),
+  }));
+  otherItems = sortMaterialsBy(otherItems, x => x.material);
+  for (const item of otherItems) {
+    inventory.appendChild(item.div);
+  }
 }
 
-const SortingTriangleHTML = `
-<div title="">
-  <svg aria-hidden="true" width="10" height="10" role="img" version="1.1" fill="currentcolor" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" style="vertical-align: middle;"><g><path d="M.88681 1.097752l12.13774 21.02318L25.422964 1.105446z"></path></g>
-  </svg>
-</div>`;
+function createBurnSortingMode(storeId: string): SortingMode {
+  return {
+    label: 'BRN',
+    storeId,
+    categories: [],
+    burn: true,
+    zero: true,
+  };
+}
 
 export function init() {
+  applyCssRule(`.${classes.custom} .${PrunCss.InventorySortControls.order} > div`, classes.hide);
+
   tiles.observe('INV', onInvReady);
   tiles.observe('SHPI', onShpiReady);
 

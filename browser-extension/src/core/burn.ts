@@ -24,8 +24,11 @@ export interface PlanetBurn {
   burn: BurnValues;
 }
 
-export function getPlanetBurn(siteOrId: PrunApi.Site | string) {
-  const site = typeof siteOrId === 'string' ? sitesStore.getById(siteOrId)! : siteOrId;
+export function getPlanetBurn(siteOrId?: PrunApi.Site | string | null) {
+  const site = typeof siteOrId === 'string' ? sitesStore.getById(siteOrId) : siteOrId;
+  if (!site) {
+    return undefined;
+  }
   const id = site.siteId;
   const workforce = workforcesStore.getById(id)?.workforces;
   const production = productionStore.getBySiteId(id);

@@ -1,7 +1,7 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 import { settings } from '@src/store/settings';
-import { computed, inject, InjectionKey, reactive, Ref, watch } from 'vue';
+import { App, computed, inject, InjectionKey, reactive, Ref, watch, Plugin } from 'vue';
 
 const store = createEntityStore<PrunApi.Tile>();
 const state = store.state;
@@ -162,25 +162,37 @@ function getTileState<T extends BaseTileState>(tileOrId: PrunTile | string) {
   return state as T;
 }
 
-export const tileStateKey = Symbol() as InjectionKey<Ref<BaseTileState>>;
+const baseTileStateKey = Symbol() as InjectionKey<Ref<BaseTileState>>;
+
+export function tileStateKey<T extends BaseTileState>() {
+  return baseTileStateKey as InjectionKey<Ref<T>>;
+}
+
+export const tileStatePlugin: Plugin = {
+  install: (app: App, options: { tile: PrunTile | string }) => {
+    app.provide(
+      tileStateKey(),
+      computed(() => getTileState(options.tile)),
+    );
+  },
+};
 
 export function createTileStateHook<T extends BaseTileState>(defaultState: T) {
   deepFreeze(defaultState);
   return function useTileState<K extends keyof T>(key: K) {
-    const state = inject(tileStateKey)!;
-    const stateT = () => state.value as T;
+    const state = inject(tileStateKey<T>())!;
     return computed({
-      get: () => stateT()[key] ?? defaultState[key],
+      get: () => state.value[key] ?? defaultState[key],
       set: value => {
         if (Array.isArray(value) && value.length === 0) {
-          delete stateT()[key];
+          delete state.value[key];
           return;
         }
         if (value === defaultState[key]) {
-          delete stateT()[key];
+          delete state.value[key];
           return;
         }
-        stateT()[key] = value;
+        state.value[key] = value;
       },
     });
   };

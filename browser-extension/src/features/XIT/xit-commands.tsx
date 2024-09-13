@@ -93,7 +93,7 @@ async function onTileReady(tile: PrunTile) {
     };
     const widget = createApp({ render: () => h(XITContainer, props) });
     widget.provide(
-      tileStateKey,
+      tileStateKey(),
       computed(() => tilesStore.getTileState(tile)),
     );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
