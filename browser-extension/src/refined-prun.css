@@ -1,3 +1,15 @@
+.pb-hide-input {
+  width: 64px;
+  color: rgba(1,1,1,0) !important;
+  background-color: rgba(1,1,1,0) !important;
+  cursor: pointer !important;
+  border: none !important;
+}
+
+.pb-hide-input::placeholder {
+  color: rgba(1,1,1,0) !important;
+}
+
 .mat-element-large {
   height: 48px;
   width: 48px;
