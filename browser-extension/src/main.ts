@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 import { loadRefinedPrunCss } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { loadNotes } from '@src/store/notes';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { balance } from '@src/core/balance/balance';
 
 // The main function that initializes everything
 async function mainRun() {
@@ -69,13 +70,23 @@ async function mainRun() {
   setTimeout(fetchPrices, 1000);
   setInterval(fetchPrices, dayjs.duration(15, 'minutes').asMilliseconds());
 
-  // Do FIN recording
   if (
     !result['PMMGExtended']['last_fin_recording'] ||
-    Date.now() - result['PMMGExtended']['last_fin_recording'] > 64800000
+    Date.now() - result['PMMGExtended']['last_fin_recording'] >
+      dayjs.duration(18, 'hours').asMilliseconds()
   ) {
-    // 72000000
-    window.setTimeout(() => recordFinancials(result), 5000);
+    setTimeout(() => {
+      let companyValue = balance.companyValue.value;
+      const interval = setInterval(() => {
+        // Hacky way to wait until all the financials are loaded.
+        if (companyValue !== balance.companyValue.value) {
+          companyValue = balance.companyValue.value;
+          return;
+        }
+        clearInterval(interval);
+        recordFinancials(result);
+      }, 1000);
+    }, 5000);
   }
   applyXITParameters(result);
   await features.init();
