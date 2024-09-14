@@ -62,8 +62,8 @@ function formatPrice(price: number): string {
 
 <template>
   <tr :class="$style.row">
-    <td colspan="3" :class="$style.cell">
-      <span v-if="hasMinimize" :class="$style.minimize" @click="onClick">
+    <td colspan="3" :class="$style.cell" @click="onClick">
+      <span v-if="hasMinimize" :class="$style.minimize">
         {{ minimized ? '+' : '-' }}
       </span>
       <span>{{ burn.planetName }}</span>
@@ -92,13 +92,13 @@ function formatPrice(price: number): string {
 .cell {
   font-weight: bold;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .minimize {
   display: inline-block;
   width: 26px;
   text-align: center;
-  cursor: pointer;
 }
 
 .buttons {
