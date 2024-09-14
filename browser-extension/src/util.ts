@@ -272,7 +272,9 @@ export function createLink(text, command, autoSubmit = true) {
   const link = document.createElement('span');
   link.textContent = text;
   link.addEventListener('click', () => {
-    showBuffer(command, autoSubmit);
+    showBuffer(command, {
+      autoSubmit,
+    });
   });
 
   const linkDiv = document.createElement('div');

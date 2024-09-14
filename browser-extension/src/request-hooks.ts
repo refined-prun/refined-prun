@@ -26,7 +26,7 @@ function singleBufferRequest(command: string) {
       return;
     }
     requested = true;
-    showBuffer(command, true, true);
+    showBuffer(command, { autoClose: true });
   };
 }
 

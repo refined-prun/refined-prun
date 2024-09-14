@@ -129,9 +129,14 @@ function observeAllTiles(observer: PrunTileObserver) {
   }
 }
 
+function findTiles(command: string) {
+  return activeTiles.filter(tile => tile.fullCommand === command);
+}
+
 const tiles = {
   observe: observeTiles,
   observeAll: observeAllTiles,
+  find: findTiles,
 };
 
 export default tiles;

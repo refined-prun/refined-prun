@@ -3,11 +3,27 @@ import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import { changeValue, sleep } from '@src/util';
 import onElementDisconnected from '@src/utils/on-element-disconnected';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
+import tiles from '@src/infrastructure/prun-ui/tiles';
 
 let isBusy = false;
 const pendingResolvers: (() => void)[] = [];
 
-export async function showBuffer(command: string, autoSubmit = true, autoClose = false) {
+interface ShowBufferOptions {
+  force?: boolean;
+  autoSubmit?: boolean;
+  autoClose?: boolean;
+}
+
+export async function showBuffer(command: string, options?: ShowBufferOptions) {
+  if (!options?.force) {
+    const activeTiles = tiles.find(command);
+    for (const tile of activeTiles) {
+      const tileWindow = tile.frame.closest(`.${PrunCss.Window.window}`) as HTMLElement;
+      if (tileWindow) {
+        return false;
+      }
+    }
+  }
   await acquireSlot();
   const create = _$(PrunCss.Dock.create) as HTMLButtonElement;
   if (!create) {
@@ -18,7 +34,7 @@ export async function showBuffer(command: string, autoSubmit = true, autoClose =
   try {
     create.click();
     await new Promise<void>(resolve => queueMicrotask(resolve));
-    await captureLastWindow(command, autoSubmit, autoClose);
+    await captureLastWindow(command, options);
     return true;
   } catch {
     return false;
@@ -44,7 +60,7 @@ function releaseSlot() {
   }
 }
 
-async function captureLastWindow(command: string, autoSubmit: boolean, autoClose: boolean) {
+async function captureLastWindow(command: string, options?: ShowBufferOptions) {
   const windows = _$$(PrunCss.Window.window);
   if (windows.length === 0) {
     return;
@@ -52,7 +68,7 @@ async function captureLastWindow(command: string, autoSubmit: boolean, autoClose
   const window = windows[windows.length - 1] as HTMLDivElement;
   const tile = _$(PrunCss.Tile.tile, window);
   const id = getPrunId(tile!)?.padStart(2, '0');
-  if (autoClose) {
+  if (options?.autoClose) {
     const dock = _$$(PrunCss.Dock.buffer).find(x => _$(PrunCss.Dock.title, x)?.textContent === id);
     if (dock) {
       dock.style.display = 'none';
@@ -62,13 +78,13 @@ async function captureLastWindow(command: string, autoSubmit: boolean, autoClose
   const input = _$(PrunCss.PanelSelector.input, window) as HTMLInputElement;
   changeValue(input, command);
   const form = input.form;
-  if (!form?.isConnected || !autoSubmit) {
+  if (!form?.isConnected || !(options?.autoSubmit ?? true)) {
     return;
   }
   await sleep(0);
   form.requestSubmit();
   await new Promise<void>(resolve => onElementDisconnected(input, resolve));
-  if (!autoClose) {
+  if (!options?.autoClose) {
     return;
   }
   await sleep(0);

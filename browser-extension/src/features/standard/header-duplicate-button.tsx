@@ -20,7 +20,7 @@ async function onTileReady(tile: PrunTile) {
         paddingRight: '1px',
         paddingLeft: '1px',
       }}
-      onClick={() => showBuffer(tile.fullCommand)}>
+      onClick={() => showBuffer(tile.fullCommand, { force: true })}>
       ↗
     </div>
   )).before(splitControls.children[0]);
