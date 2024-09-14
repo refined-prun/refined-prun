@@ -3,7 +3,7 @@ import features from '@src/feature-registry';
 import descendantPresent from '@src/utils/descendant-present';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
-import { widgetBefore } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import MinimizeRow from '@src/features/standard/minimize-headers/MinimizeRow.vue';
 import { reactive, ref } from 'vue';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
@@ -17,8 +17,7 @@ async function onTileReady(tile: PrunTile) {
 
   const isMinimized = ref(true);
 
-  widgetBefore(
-    header,
+  createFragmentApp(
     MinimizeRow,
     reactive({
       isMinimized,
@@ -27,7 +26,7 @@ async function onTileReady(tile: PrunTile) {
         setHeaders(tile, isMinimized.value);
       },
     }),
-  );
+  ).before(header);
 }
 
 function setHeaders(tile: PrunTile, isMinimized: boolean) {

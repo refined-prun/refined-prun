@@ -3,7 +3,7 @@ import features from '@src/feature-registry';
 import { showBuffer } from '@src/util';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
-import { widgetBefore } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 
 async function onTileReady(tile: PrunTile) {
   if (!tile.firstActivation) {
@@ -11,7 +11,7 @@ async function onTileReady(tile: PrunTile) {
   }
 
   const splitControls = await descendantPresent(tile.frame, PrunCss.TileControls.splitControls);
-  widgetBefore(splitControls.children[0], () => (
+  createFragmentApp(() => (
     <div
       class="button-upper-right"
       style={{
@@ -23,7 +23,7 @@ async function onTileReady(tile: PrunTile) {
       onClick={() => showBuffer(tile.fullCommand)}>
       ↗
     </div>
-  ));
+  )).before(splitControls.children[0]);
 }
 
 export function init() {

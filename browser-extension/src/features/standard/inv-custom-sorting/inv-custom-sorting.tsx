@@ -14,7 +14,7 @@ import {
   sortMaterials,
   sortMaterialsBy,
 } from '@src/infrastructure/prun-api/data/materials';
-import { App, computed, reactive, watch } from 'vue';
+import { computed, reactive, watch } from 'vue';
 import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
 import { tilesStore } from '@src/infrastructure/prun-api/data/tiles';
 import xit from '@src/features/XIT/xit-registry.js';
@@ -22,7 +22,7 @@ import SORT from '@src/features/XIT/SORT/SORT.vue';
 import onElementDisconnected from '@src/utils/on-element-disconnected';
 import { TileState } from '@src/features/standard/inv-custom-sorting/tile-state';
 import { showBuffer } from '@src/util';
-import { fragmentAppAppend } from '@src/utils/vue-fragment-app';
+import { createFragmentApp, FragmentAppScope } from '@src/utils/vue-fragment-app';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 async function onInvReady(tile: PrunTile) {
@@ -76,8 +76,7 @@ async function mountCustomSorting(tile: PrunTile) {
     { immediate: true },
   );
 
-  fragmentAppAppend(
-    sortOptions,
+  createFragmentApp(
     InventorySortControls,
     reactive({
       sortingModes,
@@ -85,12 +84,14 @@ async function mountCustomSorting(tile: PrunTile) {
       onModeClick: (mode: string) => (tileState.value.activeSort = mode),
       onAddClick: () => showBuffer(`XIT SORT ${storeId}`),
     }),
-  );
+  ).appendTo(sortOptions);
 
-  const cleanup = [];
+  const scope = new FragmentAppScope();
   const runSort = () => {
     observer.disconnect();
-    sortInventory(inventory, activeSortingMode.value, burn.value?.burn, cleanup);
+    scope.begin();
+    sortInventory(inventory, activeSortingMode.value, burn.value?.burn);
+    scope.end();
     setTimeout(() => observer.observe(inventory, { childList: true, subtree: true }), 0);
   };
   const observer = new MutationObserver(runSort);
@@ -102,12 +103,7 @@ function sortInventory(
   inventory: Element,
   sortingMode: SortingMode | undefined,
   burn: BurnValues | undefined,
-  cleanup: App[],
 ) {
-  for (const widget of cleanup) {
-    widget.unmount();
-  }
-  cleanup.length = 0;
   if (!sortingMode) {
     return;
   }
@@ -152,7 +148,7 @@ function sortInventory(
       continue;
     }
 
-    cleanup.push(fragmentAppAppend(inventory, CategoryHeader, { label: category.name }));
+    createFragmentApp(CategoryHeader, { label: category.name }).appendTo(inventory);
     materials = sortMaterials(materials);
     for (const material of materials) {
       const gridItem = gridItems.find(x => x.ticker === material.ticker);
@@ -160,13 +156,11 @@ function sortInventory(
         inventory.appendChild(gridItem.div);
         remainingItems.delete(gridItem);
       } else if (sortingMode.zero) {
-        cleanup.push(
-          fragmentAppAppend(inventory, GridMaterialIcon, {
-            ticker: material.ticker,
-            amount: 0,
-            warning: true,
-          }),
-        );
+        createFragmentApp(GridMaterialIcon, {
+          ticker: material.ticker,
+          amount: 0,
+          warning: true,
+        }).appendTo(inventory);
       }
       addedItems.add(material.ticker);
     }
@@ -176,7 +170,7 @@ function sortInventory(
     return;
   }
 
-  cleanup.push(fragmentAppAppend(inventory, CategoryHeader, { label: 'Other' }));
+  createFragmentApp(CategoryHeader, { label: 'Other' }).appendTo(inventory);
   let otherItems = [...remainingItems].map(x => ({
     div: x.div,
     material: materialsStore.getByTicker(x.ticker),

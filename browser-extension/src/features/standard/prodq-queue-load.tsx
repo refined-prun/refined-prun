@@ -4,7 +4,7 @@ import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { $$ } from 'select-dom';
 import { _$$ } from '@src/utils/get-element-by-class-name';
-import { widgetAppend } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import { sumBy } from '@src/utils/sum-by';
 import { percent2 } from '@src/utils/format';
 
@@ -30,7 +30,7 @@ function onTileReady(tile: PrunTile) {
       const percent = eta / totalTime;
       const textField = $$('td', row)[6];
       if (textField && eta > 0) {
-        widgetAppend(textField, () => <span class={tag}> {percent2(percent)}</span>);
+        createFragmentApp(() => <span class={tag}> {percent2(percent)}</span>).appendTo(textField);
       }
     }
   }

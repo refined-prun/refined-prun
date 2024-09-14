@@ -3,7 +3,7 @@ import features from '@src/feature-registry';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
-import { widgetBefore } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import LMMaterialIcon from './LMMaterialIcon.vue';
 import LMShipmentIcon from './LMShipmentIcon.vue';
 
@@ -34,7 +34,7 @@ function processShipment(container: Element, adText: Element) {
     return;
   }
 
-  widgetBefore(container.firstElementChild!, LMShipmentIcon);
+  createFragmentApp(LMShipmentIcon).before(container.firstElementChild!);
 }
 
 function processTrade(container: Element, adText: Element) {
@@ -54,9 +54,7 @@ function processTrade(container: Element, adText: Element) {
 
   amountNode.textContent = ` ${amount} @ `;
 
-  widgetBefore(container.firstElementChild!, LMMaterialIcon, {
-    ticker,
-  });
+  createFragmentApp(LMMaterialIcon, { ticker }).before(container.firstElementChild!);
 }
 
 export function init() {

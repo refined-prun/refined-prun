@@ -5,7 +5,7 @@ import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
-import { widgetAppend } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import IconMarker from './IconMarker.vue';
 import { computed, reactive, ref, watch } from 'vue';
 
@@ -68,15 +68,14 @@ function constructIcon(mat: HTMLElement, invName: string, storedData: any) {
     }
     return value;
   };
-  widgetAppend(
-    mat,
+  createFragmentApp(
     IconMarker,
     reactive({
       marker,
       onNext: () => (status.value = wrapStatus(status.value + 1)),
       onPrevious: () => (status.value = wrapStatus(status.value - 1)),
     }),
-  );
+  ).appendTo(mat);
 }
 
 void features.add({

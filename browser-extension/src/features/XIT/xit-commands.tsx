@@ -7,11 +7,9 @@ import { _$ } from '@src/utils/get-element-by-class-name';
 import xit from '@src/features/XIT/xit-registry';
 import XITContainer from '@src/features/XIT/XITContainer.vue';
 import LegacyXITAdapter from '@src/features/XIT/LegacyXITAdapter.vue';
-import { widgetAfter, widgetAppend } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContextControls from '@src/components/ContextControls.vue';
-import { computed, createApp, h } from 'vue';
-import onElementDisconnected from '@src/utils/on-element-disconnected';
-import { tilesStore, tileStateKey } from '@src/infrastructure/prun-api/data/tiles';
+import { tileStatePlugin } from '@src/infrastructure/prun-api/data/tiles';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let xitArgs: any;
@@ -74,32 +72,24 @@ async function onTileReady(tile: PrunTile) {
     const items = xitCommand.contextItems(parameters);
     if (items.length > 0) {
       const header = _$(PrunCss.TileFrame.header, frame)!;
-      widgetAfter(header, ContextControls, { items });
+      createFragmentApp(ContextControls, { items }).after(header);
     }
   }
 
   if (xitCommand.module) {
-    widgetAppend(container, LegacyXITAdapter, {
+    createFragmentApp(LegacyXITAdapter, {
       module: (container: HTMLDivElement) => {
         const args = getXitArgs();
         return new xitCommand.module!(container, parameters, args.pmmgSettings, args.modules);
       },
-    });
+    }).appendTo(container);
   } else if (xitCommand.component) {
-    const fragment = document.createDocumentFragment();
-    const props = {
+    createFragmentApp(XITContainer, {
       component: xitCommand.component(parameters),
       parameters: parameters,
-    };
-    const widget = createApp({ render: () => h(XITContainer, props) });
-    widget.provide(
-      tileStateKey(),
-      computed(() => tilesStore.getTileState(tile)),
-    );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    widget.mount(fragment as any);
-    onElementDisconnected(container, () => widget.unmount());
-    container.appendChild(fragment);
+    })
+      .use(tileStatePlugin, { tile })
+      .appendTo(container);
   }
 }
 

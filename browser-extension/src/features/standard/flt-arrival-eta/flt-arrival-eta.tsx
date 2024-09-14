@@ -4,7 +4,7 @@ import {
   observeChildListChanged,
   observeReadyElementsByTagName,
 } from '@src/utils/mutation-observer';
-import { widgetAppend } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ShipArrivalEta from './ShipArrivalEta.vue';
 import { refTextContent } from '@src/utils/reactive-dom';
 import { reactive } from 'vue';
@@ -25,13 +25,12 @@ function onTableReady(table: HTMLTableSectionElement) {
 
 function onRowReady(row: HTMLTableRowElement) {
   const etaColumn = row.children[7];
-  const { instance } = widgetAppend(
-    etaColumn,
+  const instance = createFragmentApp(
     ShipArrivalEta,
     reactive({
       shipRegistration: refTextContent(row.children[0]),
     }),
-  );
+  ).appendTo(etaColumn);
   observeChildListChanged(etaColumn, () => {
     if (etaColumn.lastChild !== instance.$el) {
       etaColumn.appendChild(instance.$el);

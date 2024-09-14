@@ -3,7 +3,7 @@ import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
 import { _$$ } from '@src/utils/get-element-by-class-name';
-import { widgetAppend } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import OrderBook from './OrderBook.vue';
 
 async function onTileReady(tile: PrunTile) {
@@ -22,7 +22,7 @@ async function onTileReady(tile: PrunTile) {
     span.setAttribute('data-tooltip-position', 'right');
   }
 
-  widgetAppend(formParent, OrderBook, { ticker: tile.parameter });
+  createFragmentApp(OrderBook, { ticker: tile.parameter }).appendTo(formParent);
 }
 
 export function init() {

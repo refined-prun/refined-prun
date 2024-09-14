@@ -3,7 +3,7 @@ import features from '@src/feature-registry';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import { $$ } from 'select-dom';
 import { _$$ } from '@src/utils/get-element-by-class-name';
-import { widgetAppend } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 
 const tag = 'rp-sfc-eta';
 
@@ -23,7 +23,7 @@ function onTileReady(tile: PrunTile) {
     if (etaData.textContent != '') {
       const duration = parseDuration(etaData.textContent);
       const eta = convertDurationToETA(duration + currentTime);
-      widgetAppend(etaData, () => <span class={tag}> ({eta})</span>);
+      createFragmentApp(() => <span class={tag}> ({eta})</span>).appendTo(etaData);
       currentTime += duration;
     }
   }
@@ -33,7 +33,7 @@ function onTileReady(tile: PrunTile) {
     if (firstEtaData) {
       if (firstEtaData.textContent != '') {
         const totalEta = convertDurationToETA(currentTime);
-        widgetAppend(firstEtaData, () => <span class={tag}> ({totalEta})</span>);
+        createFragmentApp(() => <span class={tag}> ({totalEta})</span>).appendTo(firstEtaData);
       }
     }
   }

@@ -5,7 +5,7 @@ import tiles from '@src/infrastructure/prun-ui/tiles';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { getTickerByMaterialName } from '@src/infrastructure/prun-ui/material-names';
-import { widgetBefore } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 
 function onTileReady(tile: PrunTile) {
   const notifications = tile.frame.getElementsByClassName(PrunCss.AlertListItem.content);
@@ -42,11 +42,11 @@ function processNotification(element: Element) {
       continue;
     }
 
-    widgetBefore(textElement, () => (
+    createFragmentApp(() => (
       <div class={classes.type} style={{ color: search[2] }}>
         {search[1].toUpperCase()}
       </div>
-    ));
+    )).before(textElement);
     let newText = textContent;
     switch (search[0]) {
       case 'produced': {

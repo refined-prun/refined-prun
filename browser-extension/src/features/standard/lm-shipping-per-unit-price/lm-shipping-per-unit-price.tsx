@@ -2,7 +2,7 @@ import { CurrencySymbols } from '@src/GameProperties';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
-import { widgetAfter, widgetBefore } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import { _$$ } from '@src/utils/get-element-by-class-name';
 import PpuLabel from './PpuLabel.vue';
@@ -33,12 +33,12 @@ function onAdTextReady(element: HTMLDivElement) {
   const total = parseFloat(totalCost.replace(/[,.]/g, ''));
   for (const child of Array.from(element.childNodes)) {
     if (child.nodeValue && child.nodeValue.slice(1) in CurrencySymbols) {
-      widgetAfter(child as Element, () => (
+      createFragmentApp(() => (
         <span>
           {' '}
           ({fixed2(total / amount)}/{unit})
         </span>
-      ));
+      )).after(child as Element);
     }
   }
 }
@@ -66,8 +66,7 @@ function onFormReady(form: HTMLFormElement) {
   const totalPriceInput = selectInput("div[label/span[text()='Total price']]//input");
   const currencyInput = selectInput("div[label/span[text()='Currency']]//select");
 
-  widgetBefore(
-    totalPriceInput,
+  createFragmentApp(
     PpuLabel,
     reactive({
       materialName: refValue(commodityInput),
@@ -75,7 +74,7 @@ function onFormReady(form: HTMLFormElement) {
       totalPriceInput: refValue(totalPriceInput),
       currencyInput: refValue(currencyInput),
     }),
-  );
+  ).before(totalPriceInput);
 }
 
 export function init() {

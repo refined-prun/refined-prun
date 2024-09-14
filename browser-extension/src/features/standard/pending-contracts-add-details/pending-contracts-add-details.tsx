@@ -2,7 +2,7 @@ import classes from './pending-contracts-add-details.module.css';
 import features from '@src/feature-registry';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { widgetAfter } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContractPartnerName from './ContractPartnerName.vue';
 import { refTextContent } from '@src/utils/reactive-dom';
 import { reactive } from 'vue';
@@ -11,13 +11,12 @@ import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function onContractIdReady(id: HTMLDivElement) {
   id.addEventListener('click', () => showBuffer(`CONT ${id.textContent}`));
-  widgetAfter(
-    id,
+  createFragmentApp(
     ContractPartnerName,
     reactive({
       contractLocalId: refTextContent(id),
     }),
-  );
+  ).after(id);
 }
 
 export function init() {

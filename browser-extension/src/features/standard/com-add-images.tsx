@@ -3,7 +3,7 @@ import tiles from '@src/infrastructure/prun-ui/tiles';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
-import { widgetAppend } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import { Fragment } from 'vue';
 
 async function onTileReady(tile: PrunTile) {
@@ -25,12 +25,12 @@ function processLink(element: HTMLElement) {
     maxWidth: '90%',
   };
 
-  widgetAppend(element.parentElement!, () => (
+  createFragmentApp(() => (
     <Fragment>
       <br />
       <img src={link} alt="Chat image" style={style} />
     </Fragment>
-  ));
+  )).appendTo(element.parentElement!);
 }
 
 function isImage(url: string) {

@@ -6,7 +6,7 @@ import {
   observeReadyElementsByTagName,
 } from '@src/utils/mutation-observer';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { widgetAfter } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import { reactive } from 'vue';
 import { refTextContent } from '@src/utils/reactive-dom';
 import ShipStatusLabel from './ShipStatusLabel.vue';
@@ -72,13 +72,12 @@ function cleanFLT(tile: PrunTile) {
       const status = row.children[3]?.children[0] as HTMLDivElement;
       if (status) {
         status.style.display = 'none';
-        widgetAfter(
-          status,
+        createFragmentApp(
           ShipStatusLabel,
           reactive({
             shipRegistration: refTextContent(row.children[0]),
           }),
-        );
+        ).after(status);
       }
     },
   });

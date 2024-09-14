@@ -1,6 +1,6 @@
 import { Component } from 'vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { widgetAppend, WidgetData } from '@src/utils/vue-mount';
+import { createFragmentApp, FragmentAppData } from '@src/utils/vue-fragment-app';
 import Overlay from '@src/components/Overlay.vue';
 import { dot } from '@src/utils/dot';
 import ActionConfirmationOverlay from '@src/components/ActionConfirmationOverlay.vue';
@@ -8,17 +8,18 @@ import ActionConfirmationOverlay from '@src/components/ActionConfirmationOverlay
 export function showTileOverlay(
   baseElementOrEvent: Element | Event,
   component: Component,
-  rootProps?: WidgetData | null,
+  rootProps?: FragmentAppData | null,
 ) {
   const container = findMountContainer(baseElementOrEvent);
   if (!container) {
     return;
   }
-  const { widget } = widgetAppend(container, Overlay, {
+  const fragmentApp = createFragmentApp(Overlay, {
     child: component,
     props: rootProps,
-    onClose: () => widget.unmount(),
+    onClose: () => fragmentApp.unmount(),
   });
+  fragmentApp.appendTo(container);
 }
 
 export function showConfirmationOverlay(
@@ -35,15 +36,16 @@ export function showConfirmationOverlay(
   if (!container) {
     return;
   }
-  const { widget } = widgetAppend(container, ActionConfirmationOverlay, {
+  const fragmentApp = createFragmentApp(ActionConfirmationOverlay, {
     message,
     confirmLabel,
     onConfirm: () => {
-      widget.unmount();
+      fragmentApp.unmount();
       onConfirm();
     },
-    onClose: () => widget.unmount(),
+    onClose: () => fragmentApp.unmount(),
   });
+  fragmentApp.appendTo(container);
 }
 
 function findMountContainer(baseElementOrEvent: Element | Event) {

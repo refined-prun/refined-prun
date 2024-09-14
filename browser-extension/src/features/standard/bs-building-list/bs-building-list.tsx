@@ -2,7 +2,7 @@ import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import descendantPresent from '@src/utils/descendant-present';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { widgetAppend } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import BuildingCountSection from './BuildingCountSection.vue';
 
 async function onTileReady(tile: PrunTile) {
@@ -12,7 +12,7 @@ async function onTileReady(tile: PrunTile) {
   }
 
   const container = await descendantPresent(tile.frame, PrunCss.Site.container);
-  widgetAppend(container, BuildingCountSection, { naturalId });
+  createFragmentApp(BuildingCountSection, { naturalId }).appendTo(container);
 }
 
 export function init() {

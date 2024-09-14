@@ -5,7 +5,7 @@ import { _$ } from '@src/utils/get-element-by-class-name';
 import { refAttributeValue } from '@src/utils/reactive-dom';
 import { computed, reactive } from 'vue';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
-import { widgetAppend } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ColoredIconDetail from '@src/components/ColoredIconDetail.vue';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 
@@ -30,13 +30,12 @@ async function onTileReady(tile: PrunTile) {
         const shipmentId = match[1];
         return contractsStore.getDestinationByShipmentId(shipmentId);
       });
-      widgetAppend(
-        container,
+      createFragmentApp(
         ColoredIconDetail,
         reactive({
           detail,
         }),
-      );
+      ).appendTo(container);
     },
   });
 }

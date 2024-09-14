@@ -2,7 +2,7 @@ import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import descendantPresent from '@src/utils/descendant-present';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { widgetAppend, widgetBefore } from '@src/utils/vue-mount';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContextControlsItem from '@src/components/ContextControlsItem.vue';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getPlanetNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
@@ -25,10 +25,11 @@ async function onTileReady(tile: PrunTile) {
     cmd: `XIT BURN ${getPlanetNaturalIdFromAddress(site.address)}`,
   };
   const contextBar = await descendantPresent(tile.frame, PrunCss.ContextControls.container);
+  const fragmentApp = createFragmentApp(ContextControlsItem, props);
   if (contextBar.children[0]) {
-    widgetBefore(contextBar.children[0], ContextControlsItem, props);
+    fragmentApp.before(contextBar.children[0]);
   } else {
-    widgetAppend(contextBar, ContextControlsItem, props);
+    fragmentApp.appendTo(contextBar);
   }
 }
 
