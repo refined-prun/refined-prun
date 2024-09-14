@@ -53,7 +53,5 @@ function findMountContainer(baseElementOrEvent: Element | Event) {
   const target = (baseElementOrEvent as any).target
     ? ((baseElementOrEvent as Event).target as Element)
     : (baseElementOrEvent as Element);
-  return (
-    target.closest(dot(PrunCss.ScrollView.view)) ?? target.closest(dot(PrunCss.TileFrame.anchor))
-  );
+  return target.closest(dot(PrunCss.TileFrame.anchor));
 }
