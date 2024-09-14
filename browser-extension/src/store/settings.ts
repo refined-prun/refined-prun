@@ -68,12 +68,12 @@ export async function loadSettings() {
         console.log(settings);
       }
       if (!saveQueued) {
-        queueMicrotask(() => {
+        setTimeout(() => {
           void system.storage.local.set({
             [key]: deepToRaw(settings),
           });
           saveQueued = false;
-        });
+        }, 1000);
         saveQueued = true;
       }
     },
