@@ -15,7 +15,7 @@ const props = defineProps({
 });
 
 const storeId = computed(() => props.parameters[1]);
-const storage = computed(() => storagesStore.getByShortId(storeId.value));
+const storage = computed(() => storagesStore.getById(storeId.value));
 const sortingModes = computed(() =>
   settings.sorting.filter(x => x.storeId.toUpperCase() === storeId.value.toUpperCase()),
 );

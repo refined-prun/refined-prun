@@ -25,7 +25,7 @@ const props = defineProps({
   },
 });
 
-const storage = computed(() => storagesStore.getByShortId(props.storeId));
+const storage = computed(() => storagesStore.getById(props.storeId));
 
 const sortingMode = props.sortingMode;
 const label = ref(sortingMode?.label ?? '');

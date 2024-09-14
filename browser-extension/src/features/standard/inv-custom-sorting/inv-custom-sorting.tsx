@@ -49,7 +49,7 @@ async function applyCustomSorting(tile: PrunTile) {
     option.addEventListener('click', () => (activeSort.value = undefined));
   }
 
-  const burn = computed(() => getPlanetBurn(storagesStore.getByShortId(storeId)?.addressableId));
+  const burn = computed(() => getPlanetBurn(storagesStore.getById(storeId)?.addressableId));
 
   const sortingModes = computed(() => {
     const modes = settings.sorting.filter(x => x.storeId === storeId);

@@ -16,7 +16,7 @@ async function onTileReady(tile: PrunTile) {
     return;
   }
 
-  const site = sitesStore.getByShortId(tile.parameter);
+  const site = sitesStore.getById(tile.parameter);
   if (!site) {
     return;
   }
