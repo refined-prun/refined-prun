@@ -301,12 +301,7 @@ export function changeValue(input, value) {
     return;
   }
   // Call the native input value setter with the input element and the new value
-  try {
-    nativeInputValueSetter.call(input, value);
-  } catch (e) {
-    debugger;
-    throw e;
-  }
+  nativeInputValueSetter.call(input, value);
 
   // Create a new input event
   const inputEvent = document.createEvent('Event');

@@ -1,7 +1,7 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 import { settings } from '@src/store/settings';
-import { App, computed, inject, InjectionKey, reactive, Ref, watch, Plugin, unref } from 'vue';
+import { App, computed, inject, InjectionKey, reactive, Ref, watch, Plugin } from 'vue';
 import { deepFreeze } from '@src/utils/deep-freeze';
 
 const store = createEntityStore<PrunApi.Tile>();
