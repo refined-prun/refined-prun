@@ -61,7 +61,7 @@ const planetBurn = computed(() => {
     return filtered;
   }
 
-  filtered.sort((a, b) => comparePlanets(a.planetName, b.planetName));
+  filtered.sort((a, b) => comparePlanets(a.naturalId, b.naturalId));
 
   const overallBurn = {};
   for (const burn of filtered) {
