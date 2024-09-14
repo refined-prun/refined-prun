@@ -14,7 +14,7 @@ import {
   Title,
   Tooltip,
 } from 'chart.js';
-import { mmdd, percent0, fixed0 } from '@src/utils/format';
+import { mmdd, fixed0 } from '@src/utils/format';
 
 Chart.register(
   LineController,
@@ -40,6 +40,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  averageFactor: {
+    type: Number,
+    default: 0.2,
+  },
   maintainAspectRatio: Boolean,
 });
 
@@ -50,8 +54,6 @@ const xlabel = 'Date';
 const xtype: AxisType = 'time';
 const ytype: AxisType = 'linear';
 const xprefix = '';
-
-const averageFactor = ref(0.2);
 
 function calculateMovingAverage(data: number[], factor: number) {
   factor = Math.min(Math.max(factor, 0), 1);
@@ -112,7 +114,7 @@ const chartData = computed<ChartData<'line', number[], number | string | Date>>(
     },
     {
       label: undefined,
-      data: calculateMovingAverage(props.ydata, averageFactor.value),
+      data: calculateMovingAverage(props.ydata, props.averageFactor),
       borderColor: '#f7a600',
       fill: false,
       pointRadius: 0,
@@ -216,15 +218,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="$style.wide">Smoothing: {{ percent0(averageFactor) }}</div>
-  <input
-    v-model="averageFactor"
-    :class="$style.wide"
-    type="range"
-    name="volume"
-    min="0"
-    max="1"
-    step="0.01" />
   <div ref="outerContainer">
     <div
       ref="chartContainer"
@@ -234,10 +227,3 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<style module>
-.wide {
-  width: 100%;
-  text-align: center;
-}
-</style>

@@ -22,11 +22,10 @@ const parameter = computed(() => props.parameters[1]?.toUpperCase());
   <LoadingSpinner v-if="!cxStore.fetched" />
   <div v-else-if="!parameter">
     <FinHeader>Equity History</FinHeader>
-    <div
-      :style="{ margin: '5px', marginTop: '10px' }"
-      :class="$style.clickable"
-      @click="() => showBuffer('XIT FINCH EQUITY')">
-      <EquityHistoryChart maintain-aspect-ratio />
+    <div :style="{ margin: '5px', marginTop: '10px' }" :class="$style.clickable">
+      <EquityHistoryChart
+        maintain-aspect-ratio
+        @chart-click="() => showBuffer('XIT FINCH EQUITY')" />
     </div>
     <FinHeader>Asset Breakdown</FinHeader>
     <div :style="{ margin: '5px' }">
