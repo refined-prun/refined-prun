@@ -19,6 +19,7 @@ export interface BurnValues {
 }
 
 export interface PlanetBurn {
+  storeId: string;
   planetName: string;
   naturalId: string;
   burn: BurnValues;
@@ -38,6 +39,7 @@ export function getPlanetBurn(siteOrId?: PrunApi.Site | string | null) {
   }
 
   return {
+    storeId: storage?.[0]?.id,
     planetName: getPlanetNameFromAddress(site.address),
     naturalId: getPlanetNaturalIdFromAddress(site.address),
     burn: calculatePlanetBurn(production, workforce, storage ?? []),

@@ -5,10 +5,13 @@ import { settings } from '@src/store/settings';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { fixed0, fixed2 } from '@src/utils/format';
 import { getPrice } from '@src/infrastructure/fio/cx';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import PrunButton from '@src/components/PrunButton.vue';
+import { PlanetBurn } from '@src/core/burn';
 
 const props = defineProps({
   burn: {
-    type: Object,
+    type: Object as PropType<PlanetBurn>,
     required: true,
   },
   hasMinimize: Boolean,
@@ -59,14 +62,18 @@ function formatPrice(price: number): string {
 
 <template>
   <tr :class="$style.row">
-    <td colspan="4" :class="$style.cell">
+    <td colspan="3" :class="$style.cell">
       <span v-if="hasMinimize" :class="$style.minimize" @click="onClick">
         {{ minimized ? '+' : '-' }}
       </span>
       <span>{{ burn.planetName }}</span>
     </td>
-    <!-- This <tr> is needed so both other <tr>s are the same color -->
-    <td :style="{ display: 'none' }" />
+    <td>
+      <div :class="$style.buttons">
+        <PrunButton dark inline @click="showBuffer(`BS ${burn.naturalId}`)">BS</PrunButton>
+        <PrunButton dark inline @click="showBuffer(`INV ${burn.storeId}`)">INV</PrunButton>
+      </div>
+    </td>
     <td>
       <span>{{ fixed2(needWeight) }}t</span>
       <br />
@@ -92,5 +99,12 @@ function formatPrice(price: number): string {
   width: 26px;
   text-align: center;
   cursor: pointer;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: 0.25rem;
 }
 </style>
