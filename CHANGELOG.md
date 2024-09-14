@@ -34,6 +34,7 @@ Fixes:
   - Input/output materials and fee in production orders are now included in assets
   - Debt interest is only counted as a liability if it is due in current period (deadline <7d)
     - Debt principal is still counted in full size, regardless of the deadline
+- Unnamed planets in named systems are now displayed like in PrUn (system name + letter)
 - Properly intercept all PrUn server-client messages, preventing data loss
 - Reduced the amount of UI updates
 - Improved UI responsiveness

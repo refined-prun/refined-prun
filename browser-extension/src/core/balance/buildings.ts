@@ -1,7 +1,7 @@
 import { sumMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { sumMapValues } from '@src/core/balance/utils';
-import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { timestampEachMinute } from '@src/utils/dayjs';
 import { calculateBuildingCondition } from '@src/core/buildings';
 import { computed } from 'vue';
@@ -16,7 +16,7 @@ interface Entry {
 const buildingValue = computed(() => {
   const buildings: Entry[] = [];
   for (const site of sitesStore.all.value) {
-    const location = getPlanetNameFromAddress(site.address)!;
+    const location = getEntityNameFromAddress(site.address)!;
     for (const building of site.platforms) {
       const value =
         sumMaterialAmountPrice(building.reclaimableMaterials) +

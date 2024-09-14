@@ -36,23 +36,46 @@ export const addressesStore = {
   ...state,
 };
 
-export const getPlanetNaturalIdFromAddress = (address?: PrunApi.Address | undefined) => {
-  return getPlanetLineFromAddress(address)?.entity.naturalId;
+export const getEntityNaturalIdFromAddress = (address?: PrunApi.Address | undefined) => {
+  return getLocationLineFromAddress(address)?.entity.naturalId;
 };
 
-export const getPlanetNameFromAddress = (address?: PrunApi.Address | undefined) => {
-  return getPlanetLineFromAddress(address)?.entity.name;
-};
-
-const getPlanetLineFromAddress = (address?: PrunApi.Address | undefined) => {
-  if (!address) {
+export const getEntityNameFromAddress = (address?: PrunApi.Address | undefined) => {
+  const location = getLocationLineFromAddress(address);
+  if (!location) {
     return undefined;
   }
 
-  const entry: PrunApi.AddressLine = address.lines[1];
-  if (entry?.type === 'PLANET' || entry?.type === 'STATION') {
-    return entry;
+  if (location.type !== 'PLANET' || location.entity.name !== location.entity.naturalId) {
+    return location.entity.name;
   }
 
-  return address.lines.find(x => x.type === 'PLANET' || x.type === 'STATION');
+  const system = getSystemLineFromAddress(address);
+  if (!system || system.entity.name === system.entity.naturalId) {
+    return location.entity.name;
+  }
+
+  return location.entity.name.replace(system.entity.naturalId, `${system.entity.name} `);
 };
+
+const getSystemLineFromAddress = (address?: PrunApi.Address | undefined) => {
+  if (!address) {
+    return undefined;
+  }
+  return isSystemLine(address.lines[0]) ? address.lines[0] : address.lines.find(isSystemLine);
+};
+
+const getLocationLineFromAddress = (address?: PrunApi.Address | undefined) => {
+  if (!address) {
+    return undefined;
+  }
+  return isLocationLine(address.lines[1]) ? address.lines[1] : address.lines.find(isLocationLine);
+};
+
+function isSystemLine(line?: PrunApi.AddressLine) {
+  return line?.type === 'SYSTEM';
+}
+
+function isLocationLine(line?: PrunApi.AddressLine) {
+  return line?.type === 'PLANET' || line?.type === 'STATION';
+}

@@ -13,7 +13,7 @@ export default {};
 
 <script setup lang="ts">
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
@@ -29,7 +29,7 @@ import { dayjsEachSecond } from '@src/utils/dayjs';
 
 const bases = computed(() => {
   return sitesStore.all.value.map(site => ({
-    name: getPlanetNameFromAddress(site.address)!,
+    name: getEntityNameFromAddress(site.address)!,
     workforce: !!workforcesStore.getById(site.siteId),
     production: !!productionStore.getBySiteId(site.siteId),
     storage: !!storagesStore.getByAddress(site.siteId),

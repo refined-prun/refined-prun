@@ -3,8 +3,8 @@ import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import {
-  getPlanetNameFromAddress,
-  getPlanetNaturalIdFromAddress,
+  getEntityNameFromAddress,
+  getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
 
 export interface MaterialBurn {
@@ -40,8 +40,8 @@ export function getPlanetBurn(siteOrId?: PrunApi.Site | string | null) {
 
   return {
     storeId: storage?.[0]?.id,
-    planetName: getPlanetNameFromAddress(site.address),
-    naturalId: getPlanetNaturalIdFromAddress(site.address),
+    planetName: getEntityNameFromAddress(site.address),
+    naturalId: getEntityNaturalIdFromAddress(site.address),
     burn: calculatePlanetBurn(production, workforce, storage ?? []),
   } as PlanetBurn;
 }

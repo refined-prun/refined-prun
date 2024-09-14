@@ -14,7 +14,7 @@ import {
 import { comparePlanets } from '@src/util';
 import { Style } from '@src/Style';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
@@ -251,7 +251,7 @@ class GenerateScreen {
         // Get list of planets
         const possiblePlanets = [] as any[];
         for (const workforce of workforcesStore.all.value) {
-          possiblePlanets.push(getPlanetNameFromAddress(workforce.address));
+          possiblePlanets.push(getEntityNameFromAddress(workforce.address));
         }
 
         possiblePlanets.sort(comparePlanets);
@@ -291,7 +291,7 @@ class GenerateScreen {
         // Get list of planets
         const possiblePlanets = [] as any[];
         for (const site of sitesStore.all.value) {
-          possiblePlanets.push(getPlanetNameFromAddress(site.address));
+          possiblePlanets.push(getEntityNameFromAddress(site.address));
         }
 
         possiblePlanets.sort(comparePlanets);
@@ -979,11 +979,11 @@ function parseStorageName(storage: PrunApi.Store) {
       return storage.name + ' Cargo';
     case 'STORE': {
       const site = sitesStore.getById(storage.addressableId);
-      return getPlanetNameFromAddress(site?.address) + ' Base';
+      return getEntityNameFromAddress(site?.address) + ' Base';
     }
     case 'WAREHOUSE_STORE': {
       const warehouse = warehousesStore.getById(storage.addressableId);
-      return getPlanetNameFromAddress(warehouse?.address) + ' Warehouse';
+      return getEntityNameFromAddress(warehouse?.address) + ' Warehouse';
     }
   }
 

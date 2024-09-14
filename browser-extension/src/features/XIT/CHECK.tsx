@@ -15,7 +15,7 @@ import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { calculatePlanetBurn } from '@src/core/burn';
-import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { mmddyyyy } from '@src/utils/format';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
@@ -350,7 +350,7 @@ function updatePopupInfo(junk, params) {
       // Add in the planet row
       planetNames = [] as any[];
 
-      planetNames = workforcesStore.all.value.map(x => getPlanetNameFromAddress(x.address)!);
+      planetNames = workforcesStore.all.value.map(x => getEntityNameFromAddress(x.address)!);
 
       if (info['planet'] && planetNames.includes(info['planet']) && planetNames.length !== 1) {
         planetNames.push(planetNames.indexOf(info['planet']));
@@ -375,7 +375,7 @@ function updatePopupInfo(junk, params) {
     } else if (typeValue == 'Repair') {
       planetNames = [] as any[];
 
-      planetNames = sitesStore.all.value.map(site => getPlanetNameFromAddress(site.address)!);
+      planetNames = sitesStore.all.value.map(site => getEntityNameFromAddress(site.address)!);
       if (info['planet'] && planetNames.includes(info['planet']) && planetNames.length !== 1) {
         planetNames.push(planetNames.indexOf(info['planet']));
       }

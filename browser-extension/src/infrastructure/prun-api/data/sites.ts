@@ -1,6 +1,6 @@
 import {
-  getPlanetNameFromAddress,
-  getPlanetNaturalIdFromAddress,
+  getEntityNameFromAddress,
+  getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
@@ -23,13 +23,13 @@ const getByShortId = createMapGetter(state.all, x => x.siteId.substring(0, 8));
 
 const getByPlanetNaturalId = createMapGetter(
   state.all,
-  x => getPlanetNaturalIdFromAddress(x.address)!.toLowerCase(),
+  x => getEntityNaturalIdFromAddress(x.address)!.toLowerCase(),
   x => x.toLowerCase(),
 );
 
 const getByPlanetName = createMapGetter(
   state.all,
-  x => getPlanetNameFromAddress(x.address)!.toLowerCase(),
+  x => getEntityNameFromAddress(x.address)!.toLowerCase(),
   x => x.toLowerCase(),
 );
 

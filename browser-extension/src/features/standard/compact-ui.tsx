@@ -15,7 +15,7 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { settings } from '@src/store/settings';
 import { exchangeStore } from '@src/infrastructure/prun-api/data/exchanges';
-import { getPlanetNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 
 function onBBLTileReady(tile: PrunTile) {
   clearBuildingLists(tile.frame);
@@ -198,7 +198,7 @@ function onCXOSTileReady(tile: PrunTile) {
     baseElement: tile.frame,
     callback: link => {
       const exchange = exchangeStore.getByName(link.textContent);
-      const naturalId = getPlanetNaturalIdFromAddress(exchange?.address);
+      const naturalId = getEntityNaturalIdFromAddress(exchange?.address);
       if (naturalId) {
         link.textContent = naturalId;
       }

@@ -2,7 +2,7 @@ import { createTextSpan, createSelectOption } from '@src/util';
 import { Style } from '@src/Style';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 
 export function needsConfiguration(action) {
@@ -202,11 +202,11 @@ function parseStorageName(storage: PrunApi.Store) {
       return storage.name + ' Cargo';
     case 'STORE': {
       const site = sitesStore.getById(storage.addressableId);
-      return getPlanetNameFromAddress(site?.address) + ' Base';
+      return getEntityNameFromAddress(site?.address) + ' Base';
     }
     case 'WAREHOUSE_STORE': {
       const warehouse = warehousesStore.getById(storage.addressableId);
-      return getPlanetNameFromAddress(warehouse?.address) + ' Warehouse';
+      return getEntityNameFromAddress(warehouse?.address) + ' Warehouse';
     }
   }
 

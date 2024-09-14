@@ -2,7 +2,7 @@ import { computed } from 'vue';
 import { sumMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { timestampEachMinute } from '@src/utils/dayjs';
 import { clamp } from '@src/utils/clamp';
-import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { sumMapValues } from '@src/core/balance/utils';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
@@ -17,7 +17,7 @@ interface Entry {
 const orderValue = computed(() => {
   const orders: Entry[] = [];
   for (const site of sitesStore.all.value) {
-    const location = getPlanetNameFromAddress(site.address)!;
+    const location = getEntityNameFromAddress(site.address)!;
     const lines = productionStore.getBySiteId(site.siteId);
     if (!lines) {
       continue;

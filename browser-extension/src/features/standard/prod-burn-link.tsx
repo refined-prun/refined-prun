@@ -5,7 +5,7 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContextControlsItem from '@src/components/ContextControlsItem.vue';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { getPlanetNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 
 async function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {
@@ -22,7 +22,7 @@ async function onTileReady(tile: PrunTile) {
   }
 
   const props = {
-    cmd: `XIT BURN ${getPlanetNaturalIdFromAddress(site.address)}`,
+    cmd: `XIT BURN ${getEntityNaturalIdFromAddress(site.address)}`,
   };
   const contextBar = await descendantPresent(tile.frame, PrunCss.ContextControls.container);
   const fragmentApp = createFragmentApp(ContextControlsItem, props);

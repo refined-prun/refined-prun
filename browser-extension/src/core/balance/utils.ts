@@ -1,5 +1,5 @@
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 
 export function sumMapValues<T>(map: Map<T, number>) {
@@ -15,12 +15,12 @@ export function getStoreLocationName(store: PrunApi.Store) {
   switch (store.type) {
     case 'STORE': {
       const site = sitesStore.getById(store.addressableId);
-      name = getPlanetNameFromAddress(site?.address)!;
+      name = getEntityNameFromAddress(site?.address)!;
       break;
     }
     case 'WAREHOUSE_STORE': {
       const warehouse = warehousesStore.getById(store.addressableId);
-      name = getPlanetNameFromAddress(warehouse?.address)!;
+      name = getEntityNameFromAddress(warehouse?.address)!;
       break;
     }
   }

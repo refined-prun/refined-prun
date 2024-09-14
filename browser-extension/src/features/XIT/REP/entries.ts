@@ -1,7 +1,7 @@
 import MaterialAmount = PrunApi.MaterialAmount;
 import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getShipLastRepair, shipsStore } from '@src/infrastructure/prun-api/data/ships';
-import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { mergeMaterialAmounts } from '@src/infrastructure/prun-api/data/materials';
 
 export interface RepairEntry {
@@ -26,7 +26,7 @@ export function calculateBuildingEntries(parameters: string[]) {
   }
   const entries: RepairEntry[] = [];
   for (const site of sites) {
-    const target = getPlanetNameFromAddress(site.address)!;
+    const target = getEntityNameFromAddress(site.address)!;
     for (const building of site.platforms.filter(x => x.repairMaterials.length > 0)) {
       entries.push({
         ticker: building.module.reactorTicker,

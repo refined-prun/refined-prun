@@ -3,7 +3,7 @@ import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { getStoreLocationName, sumMapValues } from '@src/core/balance/utils';
 import { shipyardProjectsStore } from '@src/infrastructure/prun-api/data/shipyard-projects';
 import { shipyardsStore } from '@src/infrastructure/prun-api/data/shipyards';
-import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { sumMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 
 type LocationName = string;
@@ -31,7 +31,7 @@ const byLocation = computed(() => {
       continue;
     }
 
-    const name = getPlanetNameFromAddress(shipyard.address)!;
+    const name = getEntityNameFromAddress(shipyard.address)!;
     inventories.set(name, (inventories.get(name) ?? 0) + value);
   }
   return inventories;

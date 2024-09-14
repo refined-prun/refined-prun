@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';
 import { computed } from 'vue';
@@ -25,7 +25,7 @@ const entries = computed<ProductionEntry[]>(() => {
   for (const site of sitesStore.all.value) {
     const profitability = calculateSiteProfitability(site.siteId);
     entries.push({
-      name: getPlanetNameFromAddress(site.address)!,
+      name: getEntityNameFromAddress(site.address)!,
       produced: profitability.produced,
       consumed: profitability.consumed,
       profit: profitability.profit,
