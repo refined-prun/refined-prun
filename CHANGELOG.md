@@ -42,6 +42,7 @@ Fixes:
 ---
 
 Known bugs:
+- COM button in the sidebar DOES NOT BlINK on new messages. Open COM buffer directly to check for new messages.
 - LM ad list will display incorrect data if an ad added/removed/accepted. Please reopen the screen with LM on change
 - FLT ship status can be wonky sometimes
 
