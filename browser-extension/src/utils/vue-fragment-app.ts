@@ -29,8 +29,7 @@ export class FragmentApp {
   }
 
   mount() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this.app.mount(this.fragment as any);
+    return this.app.mount(this.fragment as unknown as Element);
   }
 
   unmount() {
