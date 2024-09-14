@@ -16,11 +16,11 @@ import {
 } from '@src/infrastructure/prun-api/data/materials';
 import { computed, reactive, watch } from 'vue';
 import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
-import { tilesStore } from '@src/infrastructure/prun-api/data/tiles';
+import { computedTileState } from '@src/infrastructure/prun-api/data/tiles';
 import xit from '@src/features/XIT/xit-registry.js';
 import SORT from '@src/features/XIT/SORT/SORT.vue';
 import onElementDisconnected from '@src/utils/on-element-disconnected';
-import { TileState } from '@src/features/standard/inv-custom-sorting/tile-state';
+import { getTileState } from '@src/features/standard/inv-custom-sorting/tile-state';
 import { showBuffer } from '@src/util';
 import { createFragmentApp, FragmentAppScope } from '@src/utils/vue-fragment-app';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
@@ -39,14 +39,14 @@ async function applyCustomSorting(tile: PrunTile) {
     return;
   }
 
-  const tileState = computed(() => tilesStore.getTileState(tile) as TileState);
+  const activeSort = computedTileState(getTileState(tile), 'activeSort');
   const sortOptions = await descendantPresent(tile.frame, PrunCss.InventorySortControls.controls);
   const inventory = await descendantPresent(tile.frame, PrunCss.InventoryView.grid);
 
   // Skip the first sorting option because it is the grid/list view switch.
   for (let i = 1; i < sortOptions.children.length; i++) {
     const option = sortOptions.children.item(i) as HTMLElement;
-    option.addEventListener('click', () => delete tileState.value.activeSort);
+    option.addEventListener('click', () => (activeSort.value = undefined));
   }
 
   const burn = computed(() => getPlanetBurn(storagesStore.getByShortId(storeId)?.addressableId));
@@ -59,9 +59,8 @@ async function applyCustomSorting(tile: PrunTile) {
     return modes;
   });
 
-  const activeSort = computed(() => tileState.value.activeSort);
   const activeSortingMode = computed(() =>
-    sortingModes.value.find(x => x.label === tileState.value.activeSort),
+    sortingModes.value.find(x => x.label === activeSort.value),
   );
 
   watch(
@@ -81,7 +80,7 @@ async function applyCustomSorting(tile: PrunTile) {
     reactive({
       sortingModes,
       activeSort,
-      onModeClick: (mode: string) => (tileState.value.activeSort = mode),
+      onModeClick: (mode: string) => (activeSort.value = mode),
       onAddClick: () => showBuffer(`XIT SORT ${storeId}`),
     }),
   ).appendTo(sortOptions);

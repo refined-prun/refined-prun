@@ -1,7 +1,8 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 import { settings } from '@src/store/settings';
-import { App, computed, inject, InjectionKey, reactive, Ref, watch, Plugin } from 'vue';
+import { App, computed, inject, InjectionKey, reactive, Ref, watch, Plugin, unref } from 'vue';
+import { deepFreeze } from '@src/utils/deep-freeze';
 
 const store = createEntityStore<PrunApi.Tile>();
 const state = store.state;
@@ -181,32 +182,33 @@ export function createTileStateHook<T extends BaseTileState>(defaultState: T) {
   deepFreeze(defaultState);
   return function useTileState<K extends keyof T>(key: K) {
     const state = inject(tileStateKey<T>())!;
-    return computed({
-      get: () => state.value[key] ?? defaultState[key],
-      set: value => {
-        if (Array.isArray(value) && value.length === 0) {
-          delete state.value[key];
-          return;
-        }
-        if (value === defaultState[key]) {
-          delete state.value[key];
-          return;
-        }
-        state.value[key] = value;
-      },
-    });
+    return computedTileState(state, key, defaultState[key]);
   };
 }
 
-function deepFreeze(object: object) {
-  const propNames = Reflect.ownKeys(object);
-  for (const name of propNames) {
-    const value = object[name];
-    if ((value && typeof value === 'object') || typeof value === 'function') {
-      deepFreeze(value);
-    }
-  }
-  return Object.freeze(object);
+export function computedTileState<T extends BaseTileState, K extends keyof T>(
+  state: Ref<T>,
+  key: K,
+  defaultValue?: T[K],
+) {
+  return computed({
+    get: () => {
+      // Touch property to trigger reactivity
+      const value = state.value[key];
+      return Object.hasOwn(state.value, key) ? value : defaultValue;
+    },
+    set: value => {
+      if (Array.isArray(value) && value.length === 0) {
+        delete state.value[key];
+        return;
+      }
+      if (value === defaultValue) {
+        delete state.value[key];
+        return;
+      }
+      state.value[key] = value!;
+    },
+  });
 }
 
 export const tilesStore = {
