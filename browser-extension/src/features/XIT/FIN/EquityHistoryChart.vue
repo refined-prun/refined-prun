@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { finHistory } from '@src/core/financials';
 import { settings } from '@src/store/settings';
 import LineChart from '@src/features/XIT/FIN/LineChart.vue';
 import { percent0 } from '@src/utils/format';
+import { createTileStateHook } from '@src/infrastructure/prun-api/data/tiles';
 
 defineProps({
   pan: Boolean,
@@ -13,7 +14,15 @@ defineProps({
 
 const emit = defineEmits<{ (e: 'chart-click'): void }>();
 
-const averageFactor = ref(0.2);
+const useTileState = createTileStateHook({ averageFactor: 0.2 });
+const averageFactor = useTileState('averageFactor');
+const averageFactorText = ref(averageFactor.value);
+watch(averageFactorText, x => {
+  const parsed = parseFloat(x);
+  if (isFinite(parsed)) {
+    averageFactor.value = parsed;
+  }
+});
 
 const lineChartData = computed(() => {
   const date: number[] = [];
@@ -39,7 +48,7 @@ const lineChartData = computed(() => {
 <template>
   <div :class="$style.wide">Smoothing: {{ percent0(averageFactor) }}</div>
   <input
-    v-model="averageFactor"
+    v-model="averageFactorText"
     :class="$style.wide"
     type="range"
     name="volume"
