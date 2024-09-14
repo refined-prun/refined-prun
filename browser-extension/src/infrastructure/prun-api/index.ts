@@ -2,9 +2,9 @@ import { listenPrunApi } from '@src/infrastructure/prun-api/prun-api-listener';
 import { loadFallbackPlanetData, preloadFioResponses } from '@src/infrastructure/fio/fio-api';
 import { loadMaterialNames } from '@src/infrastructure/prun-ui/material-names';
 
-export async function initializePrunApi() {
+export function initializePrunApi() {
   preloadFioResponses();
-  await listenPrunApi();
+  listenPrunApi();
 }
 
 export async function loadGameData() {

@@ -8,7 +8,7 @@ export interface Packet {
   payload: any;
 }
 
-export async function listenPrunApi() {
+export function listenPrunApi() {
   socketIOMiddleware<Packet>((context, payload) => {
     try {
       if (context === companyContextId.value || !companyContextId.value || !context) {

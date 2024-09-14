@@ -3,7 +3,7 @@ import { appendStyle, RPrunStylesheet } from './Style';
 import { loadLegacySettings, saveSettings, Settings } from './Settings';
 import features from '@src/feature-registry';
 import { initializePrunApi, loadGameData } from '@src/infrastructure/prun-api';
-import { parsePrunCss } from '@src/infrastructure/prun-ui/prun-css';
+import PrunCss, { parsePrunCss } from '@src/infrastructure/prun-ui/prun-css';
 import { applyXITParameters } from '@src/features/XIT/xit-commands';
 
 import './refined-prun.css';
@@ -15,9 +15,15 @@ import { loadRefinedPrunCss } from '@src/infrastructure/prun-ui/refined-prun-css
 import { loadNotes } from '@src/store/notes';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { balance } from '@src/core/balance/balance';
+import descendantPresent from '@src/utils/descendant-present';
 
 async function mainRun() {
-  void initializePrunApi();
+  initializePrunApi();
+  const backgroundTasks = Promise.allSettled([
+    loadFinHistory(),
+    loadGameData(),
+    loadRefinedPrunCss(),
+  ]);
 
   let result: Settings;
   try {
@@ -29,13 +35,9 @@ async function mainRun() {
     throw e;
   }
 
-  await Promise.allSettled([
-    loadFinHistory(),
-    loadGameData(),
-    loadRefinedPrunCss(),
-    waitUntilPrunLoaded(),
-  ]);
-  parsePrunCss();
+  await parsePrunCss();
+  await descendantPresent(document.documentElement, PrunCss.App.container);
+  await backgroundTasks;
 
   if (!result.PMMGExtended.loaded_before) {
     console.log('First Time Loading PMMG');
@@ -82,23 +84,9 @@ async function mainRun() {
   if (!result.PMMGExtended.loaded_before) {
     result.PMMGExtended.loaded_before = await showBuffer('XIT START');
     if (result.PMMGExtended.loaded_before) {
-      void saveSettings(result);
+      saveSettings(result);
     }
   }
-}
-
-async function waitUntilPrunLoaded() {
-  await new Promise<void>(resolve => {
-    function checkContainer() {
-      const container = document.getElementById('container');
-      if (container !== null && container.children.length > 0) {
-        resolve();
-        return;
-      }
-      requestAnimationFrame(checkContainer);
-    }
-    checkContainer();
-  });
 }
 
 void mainRun();

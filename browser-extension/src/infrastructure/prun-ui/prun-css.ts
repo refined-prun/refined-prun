@@ -1,14 +1,20 @@
-import { $$ } from 'select-dom';
 import { CssClasses } from '@src/infrastructure/prun-ui/prun-css-types';
+import oneMutation from 'one-mutation';
 
 // @ts-expect-error This object will be loaded via function below
 const PrunCss: CssClasses = {};
 export default PrunCss;
 
-export function parsePrunCss() {
+export async function parsePrunCss() {
+  const head = document.head;
+  const styles = head.getElementsByTagName('style');
+  await oneMutation(head, {
+    childList: true,
+    filter: () => styles.length > 0,
+  });
   const classSet = new Set<string>();
-  const styles = $$('style', document.head);
-  for (const style of styles) {
+  for (let i = 0; i < styles.length; i++) {
+    const style = styles[i];
     const sheet = style.sheet;
     if (!sheet) {
       continue;

@@ -15,10 +15,10 @@ export async function loadRefinedPrunCss() {
     css.onload = resolve;
     document.documentElement.appendChild(css);
   });
-  await readRules(css.sheet!);
+  readRules(css.sheet!);
 }
 
-async function readRules(sheet: CSSStyleSheet) {
+function readRules(sheet: CSSStyleSheet) {
   for (let i = 0; i < sheet.cssRules.length; i++) {
     const rule = sheet.cssRules.item(i) as CSSStyleRule;
     if (!rule) {
