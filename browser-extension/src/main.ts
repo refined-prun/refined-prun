@@ -67,7 +67,7 @@ async function mainRun() {
     appendStyle(RPrunStylesheet.advanced);
   }
 
-  setTimeout(fetchPrices, 1000);
+  void fetchPrices();
   setInterval(fetchPrices, dayjs.duration(15, 'minutes').asMilliseconds());
 
   if (
