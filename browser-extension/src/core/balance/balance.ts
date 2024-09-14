@@ -13,21 +13,13 @@ const totalLiabilities = computed(
 
 const equity = computed(() => totalAssets.value - totalLiabilities.value);
 
-const debtRatio = computed(() => totalLiabilities.value / totalAssets.value);
+const acidTestRatio = computed(() => currentAssets.quick.value / currentLiabilities.quick.value);
 
 const workingCapitalRatio = computed(() => totalAssets.value / totalLiabilities.value);
 
-const debtToEquityRatio = computed(() => totalLiabilities.value / equity.value);
+const debtRatio = computed(() => totalLiabilities.value / totalAssets.value);
 
-const acidTestRatio = computed(() => {
-  const quickAssets =
-    currentAssets.quick.value +
-    currentAssets.accountsReceivable.value +
-    currentAssets.shortTermLoans.value;
-  const quickLiabilities =
-    currentLiabilities.accountsPayable.value + currentLiabilities.shortTermDebt.value;
-  return quickAssets / quickLiabilities;
-});
+const debtToEquityRatio = computed(() => totalLiabilities.value / equity.value);
 
 const companyValue = computed(() => equity.value + lockedAssets.total.value);
 
@@ -35,9 +27,9 @@ export const balance = {
   totalAssets,
   totalLiabilities,
   equity,
+  acidTestRatio,
   workingCapitalRatio,
   debtRatio,
   debtToEquityRatio,
-  acidTestRatio,
   companyValue,
 };

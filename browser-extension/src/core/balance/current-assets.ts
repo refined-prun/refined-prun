@@ -6,12 +6,13 @@ import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
 import {
   selfConditions,
   partnerCurrentConditions,
-  sumLoanInstallments,
+  sumLoanRepayments,
   sumAccountsPayable,
   sumDeliveries,
   sumPendingMaterialsPickup,
   sumMaterialsShipment,
   sumMaterialsPickup,
+  sumLoanInterest,
 } from '@src/core/balance/contract-conditions';
 import { getPrice } from '@src/infrastructure/fio/cx';
 import { sumMapValues } from '@src/core/balance/utils';
@@ -68,11 +69,20 @@ const fxDepositsTotal = computed(() => sumMapValues(fxDeposits.value));
 
 const depositsTotal = computed(() => cxDepositsTotal.value + fxDepositsTotal.value);
 
-const quick = computed(() => cashTotal.value + depositsTotal.value);
+const quick = computed(
+  () =>
+    cashTotal.value +
+    depositsTotal.value +
+    interestReceivable.value +
+    accountsReceivable.value +
+    shortTermLoans.value,
+);
+
+const interestReceivable = computed(() => sumLoanInterest(partnerCurrentConditions));
 
 const accountsReceivable = computed(() => sumAccountsPayable(partnerCurrentConditions));
 
-const shortTermLoans = computed(() => sumLoanInstallments(partnerCurrentConditions));
+const shortTermLoans = computed(() => sumLoanRepayments(partnerCurrentConditions));
 
 const marketListedMaterials = computed(() => {
   const sellOrders = cxosStore.all.value.filter(x => x.type === 'SELLING' && x.status !== 'FILLED');
@@ -91,17 +101,18 @@ const materialsToReceive = computed(
     sumPendingMaterialsPickup(selfConditions),
 );
 
-const total = computed(() => {
-  return (
+const total = computed(
+  () =>
     cashTotal.value +
     depositsTotal.value +
-    marketListedMaterials.value +
+    interestReceivable.value +
     accountsReceivable.value +
+    shortTermLoans.value +
+    marketListedMaterials.value +
     inventory.total.value +
     totalOrderValue.value +
-    materialsToReceive.value
-  );
-});
+    materialsToReceive.value,
+);
 
 const totalExceptQuick = computed(() => total.value - quick.value);
 
@@ -113,6 +124,7 @@ export const currentAssets = {
   fxDepositsTotal,
   depositsTotal,
   quick,
+  interestReceivable,
   accountsReceivable,
   shortTermLoans,
   orders: currentOrderValue,

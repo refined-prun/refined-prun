@@ -24,6 +24,7 @@ const currentAssetsSection = computed<Section>(() => ({
   rows: [
     ['Cash', currentAssets.cashTotal.value],
     ['Deposits', currentAssets.depositsTotal.value],
+    ['Interest Receivable', currentAssets.interestReceivable.value],
     ['Accounts Receivable', currentAssets.accountsReceivable.value],
     ['Short-Term Loans', currentAssets.shortTermLoans.value],
     ['Market-Listed Materials', currentAssets.marketListedMaterials.value],
@@ -51,6 +52,7 @@ const currentLiabilitiesSection = computed<Section>(() => ({
     ['Accounts Payable', currentLiabilities.accountsPayable.value],
     ['Materials to Deliver', currentLiabilities.materialsToDeliver.value],
     ['Short-Term Debt', currentLiabilities.shortTermDebt.value],
+    ['Interest Payable', currentLiabilities.interestPayable.value],
   ],
 }));
 

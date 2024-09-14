@@ -96,12 +96,17 @@ export function sumAccountsPayable(conditions: Ref<ContractCondition[]>) {
   return sumConditions(conditions, ['PAYMENT', 'LOAN_PAYOUT'], x => x.amount!.amount);
 }
 
-export function sumLoanInstallments(conditions: Ref<ContractCondition[]>) {
-  return sumConditions(
-    conditions,
-    ['LOAN_INSTALLMENT'],
-    x => x.interest!.amount + x.repayment!.amount,
+export function sumLoanRepayments(conditions: Ref<ContractCondition[]>) {
+  return sumConditions(conditions, ['LOAN_INSTALLMENT'], x => x.repayment!.amount);
+}
+
+export function sumLoanInterest(conditions: Ref<ContractCondition[]>) {
+  const filtered = conditions.value.filter(
+    x =>
+      x.condition.type === 'LOAN_INSTALLMENT' &&
+      x.dependencies.every(y => y.status === 'FULFILLED'),
   );
+  return sumBy(filtered, x => x.condition.interest!.amount);
 }
 
 export function sumDeliveries(conditions: Ref<ContractCondition[]>) {

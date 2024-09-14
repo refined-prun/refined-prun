@@ -2,15 +2,13 @@ import { computed } from 'vue';
 import {
   selfNonCurrentConditions,
   sumAccountsPayable,
-  sumLoanInstallments,
+  sumLoanRepayments,
   sumDeliveries,
   sumProvisions,
   sumFactionProvisions,
 } from '@src/core/balance/contract-conditions';
 
 const accountsPayable = computed(() => sumAccountsPayable(selfNonCurrentConditions));
-
-const longTermDebt = computed(() => sumLoanInstallments(selfNonCurrentConditions));
 
 const materialsToDeliver = computed(
   () =>
@@ -19,13 +17,15 @@ const materialsToDeliver = computed(
     sumFactionProvisions(selfNonCurrentConditions),
 );
 
+const longTermDebt = computed(() => sumLoanRepayments(selfNonCurrentConditions));
+
 const total = computed(() => {
-  return accountsPayable.value + longTermDebt.value + materialsToDeliver.value;
+  return accountsPayable.value + materialsToDeliver.value + longTermDebt.value;
 });
 
 export const nonCurrentLiabilities = {
   accountsPayable,
-  longTermDebt,
   materialsToDeliver,
+  longTermDebt,
   total,
 };

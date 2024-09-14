@@ -3,18 +3,16 @@ import {
   partnerNonCurrentConditions,
   selfNonCurrentConditions,
   sumAccountsPayable,
-  sumLoanInstallments,
+  sumLoanRepayments,
   sumDeliveries,
   sumMaterialsShipment,
   sumMaterialsPickup,
 } from '@src/core/balance/contract-conditions';
 import { buildingsTotal, currentBuildingValue } from '@src/core/balance/buildings';
 
-const bases = computed(() => 1);
-
 const accountsReceivable = computed(() => sumAccountsPayable(partnerNonCurrentConditions));
 
-const longTermLoans = computed(() => sumLoanInstallments(partnerNonCurrentConditions));
+const longTermLoans = computed(() => sumLoanRepayments(partnerNonCurrentConditions));
 
 const materialsToReceive = computed(
   () =>
@@ -25,18 +23,13 @@ const materialsToReceive = computed(
 
 const total = computed(() => {
   return (
-    buildingsTotal.value +
-    bases.value +
-    accountsReceivable.value +
-    materialsToReceive.value +
-    longTermLoans.value
+    buildingsTotal.value + accountsReceivable.value + materialsToReceive.value + longTermLoans.value
   );
 });
 
 export const nonCurrentAssets = {
   buildings: currentBuildingValue,
   buildingsTotal,
-  bases,
   accountsReceivable,
   materialsToReceive,
   longTermLoans,

@@ -2,15 +2,14 @@ import { computed } from 'vue';
 import {
   selfCurrentConditions,
   sumAccountsPayable,
-  sumLoanInstallments,
+  sumLoanRepayments,
   sumDeliveries,
   sumProvisions,
   sumFactionProvisions,
+  sumLoanInterest,
 } from '@src/core/balance/contract-conditions';
 
 const accountsPayable = computed(() => sumAccountsPayable(selfCurrentConditions));
-
-const shortTermDebt = computed(() => sumLoanInstallments(selfCurrentConditions));
 
 const materialsToDeliver = computed(
   () =>
@@ -19,18 +18,25 @@ const materialsToDeliver = computed(
     sumFactionProvisions(selfCurrentConditions),
 );
 
+const shortTermDebt = computed(() => sumLoanRepayments(selfCurrentConditions));
+
+const interestPayable = computed(() => sumLoanInterest(selfCurrentConditions));
+
 const quick = computed(() => {
-  return accountsPayable.value + shortTermDebt.value;
+  return accountsPayable.value + shortTermDebt.value + interestPayable.value;
 });
 
 const total = computed(() => {
-  return accountsPayable.value + shortTermDebt.value + materialsToDeliver.value;
+  return (
+    accountsPayable.value + materialsToDeliver.value + shortTermDebt.value + interestPayable.value
+  );
 });
 
 export const currentLiabilities = {
   accountsPayable,
-  shortTermDebt,
   materialsToDeliver,
+  shortTermDebt,
+  interestPayable,
   quick,
   total,
 };
