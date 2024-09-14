@@ -1,4 +1,4 @@
-export function deepFreeze(object: object) {
+export function deepFreeze<T extends object>(object: T): T {
   const propNames = Reflect.ownKeys(object);
   for (const name of propNames) {
     const value = object[name];

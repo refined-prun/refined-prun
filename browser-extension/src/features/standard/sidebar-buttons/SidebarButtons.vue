@@ -3,8 +3,6 @@ import { settings } from '@src/store/settings';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
-const buttons = settings.sidebar;
-
 const textClasses = [
   PrunCss.Frame.toggleLabel,
   PrunCss.fonts.fontRegular,
@@ -17,7 +15,7 @@ const sliverClasses = [PrunCss.Frame.toggleIndicator, PrunCss.Frame.toggleIndica
 <template>
   <div>
     <div
-      v-for="(button, i) in buttons"
+      v-for="(button, i) in settings.sidebar"
       :key="i"
       :class="PrunCss.Frame.toggle"
       @click="() => showBuffer(button[1])">

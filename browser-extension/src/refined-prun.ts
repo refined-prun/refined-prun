@@ -58,7 +58,7 @@ import '@src/features/XIT/INV';
 import '@src/features/XIT/LISTS';
 import '@src/features/XIT/NOTE/NOTE.vue';
 import '@src/features/XIT/REP/REP.vue';
-import '@src/features/XIT/SET';
+import '@src/features/XIT/SET/SET.vue';
 import '@src/features/XIT/START.vue';
 import '@src/features/XIT/WEB';
 

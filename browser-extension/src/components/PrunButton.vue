@@ -7,6 +7,7 @@ const props = defineProps({
   primary: Boolean,
   disabled: Boolean,
   neutral: Boolean,
+  success: Boolean,
   danger: Boolean,
   dark: Boolean,
 });
@@ -20,6 +21,8 @@ const classes = computed(() => ({
   [PrunCss.Button.disabledInline]: props.disabled && props.inline,
   [PrunCss.Button.neutral]: props.neutral,
   [PrunCss.Button.neutralInline]: props.neutral && props.inline,
+  [PrunCss.Button.success]: props.success,
+  [PrunCss.Button.successInline]: props.success && props.inline,
   [PrunCss.Button.danger]: props.danger,
   [PrunCss.Button.dangerInline]: props.danger && props.inline,
   [PrunCss.Button.dark]: props.dark,

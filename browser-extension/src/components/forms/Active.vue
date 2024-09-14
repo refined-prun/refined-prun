@@ -6,7 +6,7 @@ import Tooltip, { TooltipPosition } from '@src/components/Tooltip.vue';
 defineProps({
   label: {
     type: String,
-    required: true,
+    default: undefined,
   },
   tooltip: {
     type: String,

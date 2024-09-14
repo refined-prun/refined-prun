@@ -1,8 +1,9 @@
 import { reactive, watch } from 'vue';
 import system from '@src/system';
 import { deepToRaw } from '@src/utils/deep-to-raw';
+import { deepFreeze } from '@src/utils/deep-freeze';
 
-export const settings = reactive({
+const defaultSettings = deepFreeze({
   tileState: {} as Record<string, BaseTileState | undefined>,
   burn: {
     red: 3,
@@ -37,6 +38,8 @@ export const settings = reactive({
   sorting: [] as SortingMode[],
 });
 
+export const settings = reactive(structuredClone(defaultSettings));
+
 export interface SortingMode {
   label: string;
   storeId: string;
@@ -51,6 +54,14 @@ export interface SortingModeCategory {
 }
 
 type PricingMethod = 'ASK' | 'BID' | 'AVG' | 'VWAP7D' | 'VWAP30D' | string;
+
+export function resetSidebar() {
+  settings.sidebar = [...defaultSettings.sidebar].map(x => [...x]);
+}
+
+export function resetSettings() {
+  Object.assign(settings, structuredClone(defaultSettings));
+}
 
 const key = 'rp-settings';
 

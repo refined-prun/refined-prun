@@ -1,0 +1,115 @@
+<script lang="ts">
+import xit from '@src/features/XIT/xit-registry.js';
+import SET from '@src/features/XIT/SET/SET.vue';
+
+xit.add({
+  command: ['SET', 'SETTINGS'],
+  name: 'REFINED PRUN SETTINGS',
+  component: () => SET,
+});
+</script>
+
+<script setup lang="ts">
+import PrunButton from '@src/components/PrunButton.vue';
+import SectionHeader from '@src/components/SectionHeader.vue';
+import Tooltip from '@src/components/Tooltip.vue';
+import TextInput from '@src/components/forms/TextInput.vue';
+import Active from '@src/components/forms/Active.vue';
+import NumberInput from '@src/components/forms/NumberInput.vue';
+import Commands from '@src/components/forms/Commands.vue';
+import { resetSettings, resetSidebar, settings } from '@src/store/settings';
+import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
+
+function addSidebarButton() {
+  settings.sidebar.push(['SET', 'XIT SET']);
+}
+
+function deleteSidebarButton(index: number) {
+  settings.sidebar.splice(index, 1);
+}
+
+function confirmResetSidebar(ev: Event) {
+  showConfirmationOverlay(ev, resetSidebar);
+}
+
+function confirmResetSettings(ev: Event) {
+  showConfirmationOverlay(ev, resetSettings);
+}
+</script>
+
+<template>
+  <SectionHeader>Burn Settings</SectionHeader>
+  <form>
+    <Active
+      label="Red"
+      tooltip="Thresholds for red consumable level in burn calculations (in days)">
+      <NumberInput v-model="settings.burn.red" />
+    </Active>
+    <Active
+      label="Yellow"
+      tooltip="Thresholds for yellow consumable level in burn calculations (in days)">
+      <NumberInput v-model="settings.burn.yellow" />
+    </Active>
+    <Active label="Resupply" tooltip="TODO: Add a proper tooltip">
+      <NumberInput v-model="settings.burn.resupply" />
+    </Active>
+  </form>
+  <SectionHeader>
+    Left Sidebar Buttons
+    <Tooltip
+      :class="$style.tooltip"
+      tooltip="Create hotkeys on the left sidebar.
+         The first value is what will be displayed,
+          the second is the command." />
+  </SectionHeader>
+  <form>
+    <Active v-for="(button, i) in settings.sidebar" :key="i" :label="`Button ${i + 1}`">
+      <div :class="$style.sidebarInputPair">
+        <TextInput v-model="button[0]" :class="$style.sidebarInput" />
+        <TextInput v-model="button[1]" :class="$style.sidebarInput" />
+        <PrunButton danger @click="deleteSidebarButton(i)">x</PrunButton>
+      </div>
+    </Active>
+    <Commands>
+      <PrunButton primary @click="confirmResetSidebar">RESET</PrunButton>
+      <PrunButton primary @click="addSidebarButton">ADD NEW</PrunButton>
+    </Commands>
+  </form>
+  <SectionHeader>Import/Export Settings</SectionHeader>
+  <form>
+    <Commands>
+      <PrunButton primary>Import Settings</PrunButton>
+      <PrunButton primary>Export Settings</PrunButton>
+      <input type="file" accept=".json" style="display: none" />
+      <span class="prun-remove-js" style="display: none">Error Loading File!</span>
+    </Commands>
+  </form>
+  <SectionHeader>Danger Zone</SectionHeader>
+  <form>
+    <Commands>
+      <PrunButton danger @click="confirmResetSettings">Reset Settings</PrunButton>
+    </Commands>
+  </form>
+</template>
+
+<style module>
+.tooltip {
+  float: revert;
+  font-size: 12px;
+  margin-top: -4px;
+}
+
+.sidebarInputPair {
+  display: flex;
+  justify-content: flex-end;
+  column-gap: 10px;
+}
+
+.sidebarInput {
+  width: 40%;
+}
+
+.sidebarInput input {
+  width: 100%;
+}
+</style>
