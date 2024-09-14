@@ -218,12 +218,18 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="outerContainer">
+  <div ref="outerContainer" :class="$style.outer">
     <div
       ref="chartContainer"
-      class="chart-container"
       :style="{ position: 'relative', width: `${chartWidth}px`, height: `${chartHeight}px` }">
       <Line :options="chartOptions" :data="chartData" />
     </div>
   </div>
 </template>
+
+<style module>
+.outer {
+  flex-grow: 1;
+  overflow: hidden;
+}
+</style>

@@ -20,30 +20,43 @@ const parameter = computed(() => props.parameters[1]?.toUpperCase());
 
 <template>
   <LoadingSpinner v-if="!cxStore.fetched" />
-  <div v-else-if="!parameter">
-    <FinHeader>Equity History</FinHeader>
-    <div :style="{ margin: '5px', marginTop: '10px' }" :class="$style.clickable">
-      <EquityHistoryChart
-        maintain-aspect-ratio
-        @chart-click="() => showBuffer('XIT FINCH EQUITY')" />
-    </div>
-    <FinHeader>Asset Breakdown</FinHeader>
-    <div :style="{ margin: '5px' }">
-      <AssetPieChart :class="$style.clickable" @click="() => showBuffer('XIT FINCH ASSETS')" />
-      <LocationsPieChart
-        :class="$style.clickable"
-        @click="() => showBuffer('XIT FINCH LOCATIONS')" />
-    </div>
-  </div>
-  <div v-else :style="{ margin: '5px' }">
-    <EquityHistoryChart v-if="parameter === 'EQUITY'" />
-    <AssetPieChart v-else-if="parameter === 'ASSETS'" />
-    <LocationsPieChart v-else-if="parameter === 'LOCATIONS'" />
-    <span v-else>Error: Not a valid chart type</span>
+  <div v-else :class="$style.root">
+    <template v-if="!parameter">
+      <FinHeader>Equity History</FinHeader>
+      <div :style="{ marginTop: '5px' }" :class="$style.clickable">
+        <EquityHistoryChart
+          maintain-aspect-ratio
+          @chart-click="() => showBuffer('XIT FINCH EQUITY')" />
+      </div>
+      <FinHeader>Asset Breakdown</FinHeader>
+      <div :style="{ marginTop: '5px' }">
+        <AssetPieChart :class="$style.clickable" @click="() => showBuffer('XIT FINCH ASSETS')" />
+        <LocationsPieChart
+          :class="$style.clickable"
+          @click="() => showBuffer('XIT FINCH LOCATIONS')" />
+      </div>
+    </template>
+    <template v-else>
+      <EquityHistoryChart v-if="parameter === 'EQUITY'" />
+      <AssetPieChart v-else-if="parameter === 'ASSETS'" />
+      <LocationsPieChart v-else-if="parameter === 'LOCATIONS'" />
+      <span v-else>Error: Not a valid chart type</span>
+    </template>
   </div>
 </template>
 
 <style module>
+.root {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
 .clickable {
   cursor: pointer;
 }
