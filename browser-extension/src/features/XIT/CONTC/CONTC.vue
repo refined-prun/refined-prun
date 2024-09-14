@@ -64,7 +64,7 @@ const nonCurrent = computed(() =>
       </tr>
     </thead>
     <tbody>
-      <tr v-if="current.length === 0">
+      <tr v-if="nonCurrent.length === 0">
         <td colspan="3">No pending conditions</td>
       </tr>
       <template v-else>
