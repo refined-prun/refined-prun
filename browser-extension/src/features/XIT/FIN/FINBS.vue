@@ -170,10 +170,6 @@ table tr > *:not(:first-child) {
 </style>
 
 <style module>
-.category {
-  text-align: center;
-}
-
 .total {
   font-weight: bold;
 }
