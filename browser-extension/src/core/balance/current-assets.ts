@@ -33,10 +33,6 @@ const cxDeposits = computed(() => {
     deposits.set(currency, (deposits.get(currency) ?? 0) + deposit);
   }
 
-  for (const currency of balancesStore.currencies.value) {
-    deposits.set(currency, deposits.get(currency) ?? 0);
-  }
-
   return deposits;
 });
 
@@ -56,10 +52,6 @@ const fxDeposits = computed(() => {
       currency = order.limit.quote;
     }
     deposits.set(currency, (deposits.get(currency) ?? 0) + deposit);
-  }
-
-  for (const currency of balancesStore.currencies.value) {
-    deposits.set(currency, deposits.get(currency) ?? 0);
   }
 
   return deposits;

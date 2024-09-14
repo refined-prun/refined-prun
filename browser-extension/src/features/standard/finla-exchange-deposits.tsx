@@ -5,10 +5,10 @@ import { observeReadyElementsByTagName } from '@src/utils/mutation-observer';
 import { refTextContent } from '@src/utils/reactive-dom';
 import onElementDisconnected from '@src/utils/on-element-disconnected';
 import { computed, watch } from 'vue';
-import { deposits } from '@src/core/deposits';
 import { fixed0 } from '@src/utils/format';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
+import { currentAssets } from '@src/core/balance/current-assets';
 
 async function onTileReady(tile: PrunTile) {
   observeReadyElementsByTagName('thead', {
@@ -47,7 +47,7 @@ function onTableBodyReady(tbody: HTMLTableSectionElement) {
       const cx = row.appendChild(document.createElement('td'));
       cx.classList.add(PrunCss.LiquidAssetsPanel.number);
       const cxDeposits = computed(() =>
-        currency.value ? deposits.value.get(currency.value)?.cx ?? 0 : 0,
+        currency.value ? currentAssets.cxDeposits.value.get(currency.value) ?? 0 : 0,
       );
       onElementDisconnected(
         row,
@@ -56,7 +56,7 @@ function onTableBodyReady(tbody: HTMLTableSectionElement) {
       const fx = row.appendChild(document.createElement('td'));
       fx.classList.add(PrunCss.LiquidAssetsPanel.number);
       const fxDeposits = computed(() =>
-        currency.value ? deposits.value.get(currency.value)?.fx ?? 0 : 0,
+        currency.value ? currentAssets.fxDeposits.value.get(currency.value) ?? 0 : 0,
       );
       onElementDisconnected(
         row,
