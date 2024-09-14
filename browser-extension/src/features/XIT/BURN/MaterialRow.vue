@@ -4,12 +4,12 @@ import { computed, PropType } from 'vue';
 import { PlanetBurn } from '@src/core/burn';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
-import { showBuffer } from '@src/util';
 import { fixed0, fixed1, fixed2 } from '@src/utils/format';
 import { getPrice } from '@src/infrastructure/fio/cx';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
 import PrunButton from '@src/components/PrunButton.vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 const props = defineProps({
   material: {

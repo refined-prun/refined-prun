@@ -2,11 +2,6 @@
 import { Selector } from './Selector';
 import { CategoryColors, Style, WithStyles } from './Style';
 import system from '@src/system';
-import { _$, _$$ } from '@src/utils/get-element-by-class-name';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
-import onetime from 'onetime';
-import { dot } from '@src/utils/dot';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { getMaterialNameByTicker } from '@src/infrastructure/prun-ui/material-names';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
@@ -14,6 +9,7 @@ import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/stars';
 import { Stations } from '@src/GameProperties';
 import { hhmm } from '@src/utils/format';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 // Download a file containing fileData with fileName
 export function downloadFile(fileData, fileName, isJSON: boolean = true) {
@@ -285,41 +281,6 @@ export function createLink(text, command, autoSubmit = true) {
   return linkDiv;
 }
 
-const commandQueue: [string, boolean, boolean][] = [];
-
-// Shows a buffer with a specified command
-export function showBuffer(command: string, autoSubmit = true, autoClose = false) {
-  setupShowBufferTracking();
-
-  const button = _$(PrunCss.Dock.create) as HTMLButtonElement;
-  if (button == null) {
-    return false;
-  }
-
-  commandQueue.push([command, autoSubmit, autoClose]);
-  button.click();
-  return true;
-}
-
-const setupShowBufferTracking = onetime(() => {
-  observeReadyElementsByClassName(PrunCss.PanelSelector.input, input => {
-    if (commandQueue.length === 0) {
-      return;
-    }
-    const [command, autoSubmit, autoClose] = commandQueue.shift()!;
-    changeValue(input, command);
-    if (autoSubmit) {
-      (input as HTMLInputElement).form!.requestSubmit();
-      if (autoClose) {
-        const window = input.closest(dot(PrunCss.Window.window))!;
-        const buttons = _$$(PrunCss.Window.button, window);
-        const closeButton = buttons.find(x => x.textContent === 'x');
-        setTimeout(() => (closeButton as HTMLButtonElement)?.click(), 0);
-      }
-    }
-  });
-});
-
 // Change the value of a new buffer box
 export function changeValue(input, value) {
   // Get the property descriptor for the input element's value property
@@ -338,7 +299,12 @@ export function changeValue(input, value) {
     return;
   }
   // Call the native input value setter with the input element and the new value
-  nativeInputValueSetter.call(input, value);
+  try {
+    nativeInputValueSetter.call(input, value);
+  } catch (e) {
+    debugger;
+    throw e;
+  }
 
   // Create a new input event
   const inputEvent = document.createEvent('Event');

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { showBuffer } from '@src/util';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 const props = defineProps({
   ticker: {

@@ -6,8 +6,8 @@ import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContractPartnerName from './ContractPartnerName.vue';
 import { refTextContent } from '@src/utils/reactive-dom';
 import { reactive } from 'vue';
-import { showBuffer } from '@src/util';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 function onContractIdReady(id: HTMLDivElement) {
   id.addEventListener('click', () => showBuffer(`CONT ${id.textContent}`));

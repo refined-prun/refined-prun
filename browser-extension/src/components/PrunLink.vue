@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { showBuffer } from '@src/util';
 import { useCssModule } from 'vue';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 const props = defineProps({
   inline: Boolean,
@@ -29,7 +29,7 @@ const classes = computed(() => ({
     <slot v-if="$slots.default"></slot>
     <template v-else>{{ href }}</template>
   </a>
-  <div v-else :class="classes" @click="() => showBuffer(command!, true)">
+  <div v-else :class="classes" @click="() => showBuffer(command!)">
     <slot v-if="$slots.default"></slot>
     <template v-else>{{ command }}</template>
   </div>

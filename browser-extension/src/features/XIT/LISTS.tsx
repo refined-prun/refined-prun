@@ -9,10 +9,10 @@ import {
   getValueOfPopupRow,
   showWarningDialog,
   Popup,
-  showBuffer,
 } from '@src/util';
 import { Style } from '@src/Style';
 import xit from './xit-registry';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 class CommandLists {
   private tile: HTMLElement;

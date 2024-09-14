@@ -8,7 +8,6 @@ import {
   getLocalStoragePromise,
   Popup,
   setSettings,
-  showBuffer,
   showSuccessDialog,
   showWarningDialog,
 } from '@src/util';
@@ -19,6 +18,7 @@ import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addr
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 // All functions associated with generating/editing action packages
 export async function createGenerateScreen(tile, packageName) {

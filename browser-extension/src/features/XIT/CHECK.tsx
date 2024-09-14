@@ -8,7 +8,6 @@ import {
   createLink,
   Popup,
   showWarningDialog,
-  showBuffer,
 } from '@src/util';
 import { Style, TextColors } from '@src/Style';
 import xit from './xit-registry';
@@ -18,6 +17,7 @@ import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { calculatePlanetBurn } from '@src/core/burn';
 import { getPlanetNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { mmddyyyy } from '@src/utils/format';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 class Checklists {
   private tile: HTMLElement;

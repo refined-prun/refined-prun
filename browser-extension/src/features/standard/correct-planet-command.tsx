@@ -36,7 +36,7 @@ function onSelectorReady(selector: HTMLDivElement) {
     }
 
     const planet = planetsStore.getByName(commandParts[1]);
-    if (!planet) {
+    if (!planet || commandParts[1] === planet.naturalId) {
       return;
     }
 

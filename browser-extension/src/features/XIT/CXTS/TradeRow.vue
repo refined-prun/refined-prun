@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, PropType } from 'vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { showBuffer } from '@src/util';
 import PrunLink from '@src/components/PrunLink.vue';
 import { fixed2, hhmmss } from '@src/utils/format';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 const props = defineProps({
   date: {

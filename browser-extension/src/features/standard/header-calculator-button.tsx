@@ -1,10 +1,10 @@
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
-import { showBuffer } from '@src/util';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
 import system from '@src/system';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 async function onTileReady(tile: PrunTile) {
   if (!tile.firstActivation) {

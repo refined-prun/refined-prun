@@ -21,9 +21,9 @@ import xit from '@src/features/XIT/xit-registry.js';
 import SORT from '@src/features/XIT/SORT/SORT.vue';
 import onElementDisconnected from '@src/utils/on-element-disconnected';
 import { getTileState } from '@src/features/standard/inv-custom-sorting/tile-state';
-import { showBuffer } from '@src/util';
 import { createFragmentApp, FragmentAppScope } from '@src/utils/vue-fragment-app';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 async function onInvReady(tile: PrunTile) {
   await applyCustomSorting(tile);

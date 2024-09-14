@@ -1,5 +1,4 @@
 import {
-  showBuffer,
   setSettings,
   getLocalStoragePromise,
   showWarningDialog,
@@ -9,6 +8,7 @@ import {
   Popup,
 } from '@src/util';
 import { Style } from '@src/Style';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 // All functions associated with the summary screen
 export async function createSummaryScreen(tile, parentBuffer) {

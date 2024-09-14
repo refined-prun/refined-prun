@@ -1,7 +1,7 @@
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getPlanetNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
-import { showBuffer } from '@src/util';
 import { request } from '@src/infrastructure/prun-api/data/request-hooks';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 const bs: Set<string> = new Set();
 
@@ -15,7 +15,7 @@ function requestBS(siteId?: string | null) {
   }
   bs.add(site.siteId);
   const naturalId = getPlanetNaturalIdFromAddress(site.address);
-  showBuffer(`BS ${naturalId}`, true, true);
+  singleBufferRequest(`BS ${naturalId}`)();
 }
 
 function singleBufferRequest(command: string) {

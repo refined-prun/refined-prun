@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { showBuffer } from '@src/util';
 import { settings } from '@src/store/settings';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 const buttons = settings.sidebar;
 

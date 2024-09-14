@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { deleteNote, notes } from '@src/store/notes';
-import { showBuffer } from '@src/util';
 import { showTileOverlay, showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import CreateNoteOverlay from '@src/features/XIT/NOTE/CreateNoteOverlay.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import ActionBar from '@src/components/ActionBar.vue';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 function createNewNote(ev: Event) {
   showTileOverlay(ev, CreateNoteOverlay, {

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';
-import { showBuffer } from '@src/util';
 import EquityHistoryChart from '@src/features/XIT/FIN/EquityHistoryChart.vue';
 import AssetPieChart from '@src/features/XIT/FIN/AssetPieChart.vue';
 import LocationsPieChart from '@src/features/XIT/FIN/LocationsPieChart.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { cxStore } from '@src/infrastructure/fio/cx';
 import { computed } from 'vue';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 const props = defineProps({
   parameters: {

@@ -1,4 +1,4 @@
-import { getSpecial, showBuffer } from './util';
+import { getSpecial } from './util';
 import { appendStyle, RPrunStylesheet } from './Style';
 import { loadLegacySettings, saveSettings, Settings } from './Settings';
 import features from '@src/feature-registry';
@@ -13,6 +13,7 @@ import { loadSettings } from '@src/store/settings';
 import dayjs from 'dayjs';
 import { loadRefinedPrunCss } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { loadNotes } from '@src/store/notes';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 // The main function that initializes everything
 async function mainRun() {
@@ -81,7 +82,7 @@ async function mainRun() {
 
   // Run intro if it hasn't run already
   if (!result.PMMGExtended.loaded_before) {
-    result.PMMGExtended.loaded_before = showBuffer('XIT START');
+    result.PMMGExtended.loaded_before = await showBuffer('XIT START');
     if (result.PMMGExtended.loaded_before) {
       saveSettings(result);
     }

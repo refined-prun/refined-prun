@@ -2,8 +2,8 @@
 import ColoredIcon from '@src/components/ColoredIcon.vue';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { showBuffer } from '@src/util';
 import { computed, PropType } from 'vue';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 const props = defineProps({
   shipmentId: {
