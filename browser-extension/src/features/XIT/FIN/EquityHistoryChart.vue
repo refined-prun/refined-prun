@@ -6,6 +6,8 @@ import LineChart from '@src/features/XIT/FIN/LineChart.vue';
 import { percent0 } from '@src/utils/format';
 
 defineProps({
+  pan: Boolean,
+  zoom: Boolean,
   maintainAspectRatio: Boolean,
 });
 
@@ -50,6 +52,8 @@ const lineChartData = computed(() => {
     :yprefix="settings.fin.currency"
     :ydata="lineChartData.equity"
     :xdata="lineChartData.date"
+    :pan="pan"
+    :zoom="zoom"
     @click="emit('chart-click')" />
 </template>
 

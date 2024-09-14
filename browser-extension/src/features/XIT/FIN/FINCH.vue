@@ -37,7 +37,7 @@ const parameter = computed(() => props.parameters[1]?.toUpperCase());
       </div>
     </template>
     <template v-else>
-      <EquityHistoryChart v-if="parameter === 'EQUITY'" />
+      <EquityHistoryChart v-if="parameter === 'EQUITY'" pan zoom />
       <AssetPieChart v-else-if="parameter === 'ASSETS'" />
       <LocationsPieChart v-else-if="parameter === 'LOCATIONS'" />
       <span v-else>Error: Not a valid chart type</span>

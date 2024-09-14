@@ -21,6 +21,7 @@
   "dependencies": {
     "chart.js": "^4.4.3",
     "chartjs-plugin-datalabels": "^2.2.0",
+    "chartjs-plugin-zoom": "^2.0.1",
     "code-tag": "^1.2.0",
     "dayjs": "^1.11.13",
     "engine.io-parser": "^5.2.3",

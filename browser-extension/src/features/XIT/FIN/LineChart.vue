@@ -14,6 +14,7 @@ import {
   Title,
   Tooltip,
 } from 'chart.js';
+import zoomPlugin from 'chartjs-plugin-zoom';
 import { mmdd, fixed0 } from '@src/utils/format';
 
 Chart.register(
@@ -44,6 +45,8 @@ const props = defineProps({
     type: Number,
     default: 0.2,
   },
+  pan: Boolean,
+  zoom: Boolean,
   maintainAspectRatio: Boolean,
 });
 
@@ -54,6 +57,8 @@ const xlabel = 'Date';
 const xtype: AxisType = 'time';
 const ytype: AxisType = 'linear';
 const xprefix = '';
+
+const sortedYData = computed(() => props.ydata.slice().sort((a, b) => a - b));
 
 function calculateMovingAverage(data: number[], factor: number) {
   factor = Math.min(Math.max(factor, 0), 1);
@@ -191,6 +196,26 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
       },
       filter: tooltip => tooltip.datasetIndex === 0,
     },
+    zoom: {
+      limits: {
+        x: { min: props.xdata[0], max: props.xdata[props.xdata.length - 1] },
+        y: { min: 0, max: sortedYData.value[sortedYData.value.length - 1] + sortedYData.value[0] },
+      },
+      pan: {
+        enabled: props.pan,
+        mode: 'xy',
+        threshold: 5,
+      },
+      zoom: {
+        wheel: {
+          enabled: props.zoom,
+        },
+        pinch: {
+          enabled: props.zoom,
+        },
+        mode: 'xy',
+      },
+    },
   },
   elements: {
     point: {
@@ -222,7 +247,7 @@ onMounted(() => {
     <div
       ref="chartContainer"
       :style="{ position: 'relative', width: `${chartWidth}px`, height: `${chartHeight}px` }">
-      <Line :options="chartOptions" :data="chartData" />
+      <Line :options="chartOptions" :data="chartData" :plugins="[zoomPlugin]" />
     </div>
   </div>
 </template>
