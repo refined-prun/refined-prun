@@ -26,14 +26,14 @@ import { createFragmentApp, FragmentAppScope } from '@src/utils/vue-fragment-app
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 async function onInvReady(tile: PrunTile) {
-  await mountCustomSorting(tile);
+  await applyCustomSorting(tile);
 }
 
 async function onShpiReady(tile: PrunTile) {
-  await mountCustomSorting(tile);
+  await applyCustomSorting(tile);
 }
 
-async function mountCustomSorting(tile: PrunTile) {
+async function applyCustomSorting(tile: PrunTile) {
   const storeId = tile.parameter;
   if (!storeId) {
     return;
