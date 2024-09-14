@@ -16,9 +16,8 @@ import { loadNotes } from '@src/store/notes';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { balance } from '@src/core/balance/balance';
 
-// The main function that initializes everything
 async function mainRun() {
-  initializePrunApi();
+  void initializePrunApi();
 
   let result: Settings;
   try {
@@ -38,32 +37,21 @@ async function mainRun() {
   ]);
   parsePrunCss();
 
-  // Detect what date it is for... no reason.
-  const specialTime = getSpecial() && !result['PMMGExtended']['surprises_opt_out'];
-  // Log if is the first time the user loads PMMG Extended
   if (!result.PMMGExtended.loaded_before) {
     console.log('First Time Loading PMMG');
   }
 
-  const doc = document.querySelector('html');
-  if (!doc) {
-    return;
-  }
-
-  // If enhanced color scheme is selected or no color scheme is selected, appy the enhanced color scheme
+  const specialTime = getSpecial() && !result['PMMGExtended']['surprises_opt_out'];
   if (
     result['PMMGExtended']['color_scheme'] == 'enhanced' ||
     !result['PMMGExtended']['color_scheme']
   ) {
     appendStyle(specialTime ? RPrunStylesheet.oldColors : RPrunStylesheet.enhancedColors);
-  }
-  // If the icons color scheme is selected, apply it
-  else if (result['PMMGExtended']['color_scheme'] == 'icons') {
-    // Use allocater's icons
+  } else if (result['PMMGExtended']['color_scheme'] == 'icons') {
     appendStyle(specialTime ? RPrunStylesheet.oldColors : RPrunStylesheet.icons);
   }
 
-  if (result['PMMGExtended']['advanced_mode'] && doc) {
+  if (result['PMMGExtended']['advanced_mode']) {
     appendStyle(RPrunStylesheet.advanced);
   }
 
@@ -91,11 +79,10 @@ async function mainRun() {
   applyXITParameters(result);
   await features.init();
 
-  // Run intro if it hasn't run already
   if (!result.PMMGExtended.loaded_before) {
     result.PMMGExtended.loaded_before = await showBuffer('XIT START');
     if (result.PMMGExtended.loaded_before) {
-      saveSettings(result);
+      void saveSettings(result);
     }
   }
 }
