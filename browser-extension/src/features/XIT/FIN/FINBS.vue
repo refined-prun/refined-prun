@@ -1,3 +1,15 @@
+<script lang="ts">
+import xit from '@src/features/XIT/xit-registry.js';
+import FINBS from '@src/features/XIT/FIN/FINBS.vue';
+
+xit.add({
+  command: ['FINBS'],
+  name: 'Balance Statement',
+  contextItems: () => [{ cmd: 'XIT FIN' }, { cmd: 'XIT FINPR' }, { cmd: 'XIT SET FIN' }],
+  component: () => FINBS,
+});
+</script>
+
 <script setup lang="ts">
 import { formatAmount } from '@src/features/XIT/FIN/utils';
 import { computed } from 'vue';

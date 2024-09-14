@@ -427,17 +427,6 @@ export function getValueOfPopupRow(row) {
   return row.children[1].firstChild.value || '';
 }
 
-// Creates a small button as in LMOS and CXOS view/delete buttons
-export function createSmallButton(label, clickFunction, parameters) {
-  const button = document.createElement('button');
-  button.textContent = label;
-  button.classList.add(...Style.SmallButton);
-  button.addEventListener('click', () => {
-    clickFunction(...parameters);
-  });
-  return button;
-}
-
 // Create a warning dialog with a confirmation button before running the callback function with the passed parameters
 export function showWarningDialog(
   tile,

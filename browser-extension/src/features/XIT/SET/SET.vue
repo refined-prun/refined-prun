@@ -1,11 +1,12 @@
 <script lang="ts">
 import xit from '@src/features/XIT/xit-registry.js';
 import SET from '@src/features/XIT/SET/SET.vue';
+import FIN from '@src/features/XIT/SET/FIN.vue';
 
 xit.add({
   command: ['SET', 'SETTINGS'],
   name: 'REFINED PRUN SETTINGS',
-  component: () => SET,
+  component: parameters => (parameters[1] === 'FIN' ? FIN : SET),
 });
 </script>
 

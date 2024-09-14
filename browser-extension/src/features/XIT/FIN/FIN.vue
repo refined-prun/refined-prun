@@ -1,3 +1,15 @@
+<script lang="ts">
+import xit from '@src/features/XIT/xit-registry.js';
+import FIN from '@src/features/XIT/FIN/FIN.vue';
+
+xit.add({
+  command: ['FIN'],
+  name: 'Financial overview',
+  contextItems: () => [{ cmd: 'XIT FINPR' }, { cmd: 'XIT FINCH' }, { cmd: 'XIT SET FIN' }],
+  component: () => FIN,
+});
+</script>
+
 <script setup lang="ts">
 import { computed } from 'vue';
 import { calculateLocationAssets } from '@src/core/financials';

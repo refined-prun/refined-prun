@@ -6,6 +6,7 @@ import { nonCurrentAssets } from '@src/core/balance/non-current-assets';
 import { balance } from '@src/core/balance/balance';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import { inventory } from '@src/core/balance/inventory';
+import { reactive } from 'vue';
 
 interface LocationAssets {
   name: string;
@@ -15,7 +16,7 @@ interface LocationAssets {
 }
 
 // History stored as [time, fixed, current, liquid, liabilities]
-export const finHistory: number[][] = [];
+export const finHistory = reactive([] as number[][]);
 
 const storageKey = 'PMMG-Finance';
 

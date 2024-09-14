@@ -1,3 +1,15 @@
+<script lang="ts">
+import xit from '@src/features/XIT/xit-registry.js';
+import FINCH from '@src/features/XIT/FIN/FINCH.vue';
+
+xit.add({
+  command: ['FINCH'],
+  name: 'Financial Charts',
+  contextItems: () => [{ cmd: 'XIT FIN' }, { cmd: 'XIT FINPR' }, { cmd: 'XIT SET FIN' }],
+  component: () => FINCH,
+});
+</script>
+
 <script setup lang="ts">
 import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';
 import EquityHistoryChart from '@src/features/XIT/FIN/EquityHistoryChart.vue';
