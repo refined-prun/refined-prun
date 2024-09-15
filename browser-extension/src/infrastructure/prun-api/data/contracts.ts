@@ -2,6 +2,10 @@ import { createEntityStore } from '@src/infrastructure/prun-api/data/create-enti
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 import { computed } from 'vue';
+import {
+  getEntityNameFromAddress,
+  getLocationLineFromAddress,
+} from '@src/infrastructure/prun-api/data/addresses';
 
 const store = createEntityStore<PrunApi.Contract>();
 const state = store.state;
@@ -69,12 +73,17 @@ function getDeliveryConditionByShipmentId(id?: string | undefined) {
 
 function getDestinationByShipmentId(id?: string | undefined) {
   const deliveryCondition = getDeliveryConditionByShipmentId(id);
-  const destination = deliveryCondition?.destination?.lines[1];
+  const destination = deliveryCondition?.destination;
   if (!destination) {
     return undefined;
   }
 
-  return destination.type === 'PLANET' ? destination.entity.name : destination.entity.naturalId;
+  const location = getLocationLineFromAddress(destination);
+  if (location?.type === 'STATION') {
+    return location.entity.naturalId;
+  }
+
+  return getEntityNameFromAddress(destination);
 }
 
 export const active = computed(() =>

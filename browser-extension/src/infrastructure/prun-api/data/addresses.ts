@@ -65,7 +65,7 @@ const getSystemLineFromAddress = (address?: PrunApi.Address | undefined) => {
   return isSystemLine(address.lines[0]) ? address.lines[0] : address.lines.find(isSystemLine);
 };
 
-const getLocationLineFromAddress = (address?: PrunApi.Address | undefined) => {
+export const getLocationLineFromAddress = (address?: PrunApi.Address | undefined) => {
   if (!address) {
     return undefined;
   }
