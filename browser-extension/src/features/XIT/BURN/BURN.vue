@@ -31,6 +31,7 @@ import { getPlanetBurn, PlanetBurn } from '@src/core/burn';
 import { comparePlanets } from '@src/util';
 import BurnSection from '@src/features/XIT/BURN/BurnSection.vue';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
+import Tooltip from '@src/components/Tooltip.vue';
 
 const props = defineProps({
   parameters: {
@@ -85,7 +86,7 @@ const planetBurn = computed(() => {
     }
   }
 
-  filtered.push({ burn: overallBurn, planetName: 'Overall', naturalId: '' });
+  filtered.push({ burn: overallBurn, planetName: 'Overall', naturalId: '', storeId: '' });
   return filtered;
 });
 
@@ -108,8 +109,22 @@ const inf = useTileState('inf');
     <thead>
       <tr>
         <th>Material</th>
-        <th>Δ/day</th>
-        <th>Needed</th>
+        <th>
+          <div :class="$style.header">
+            Burn
+            <Tooltip
+              position="bottom"
+              tooltip="How much of a material is consumed per day. Positive amount means production." />
+          </div>
+        </th>
+        <th>
+          <div :class="$style.header">
+            Need
+            <Tooltip
+              position="bottom"
+              tooltip="How much of a material needs to be delivered to be fully resupplied" />
+          </div>
+        </th>
         <th>CMD</th>
         <th>Load</th>
         <th>Cost</th>
@@ -123,3 +138,11 @@ const inf = useTileState('inf');
       :burn="burn" />
   </table>
 </template>
+
+<style module>
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+</style>
