@@ -45,13 +45,22 @@ function getDeliveryConditionByShipmentId(id?: string | undefined) {
   }
 
   for (const contract of state.all.value) {
-    const condition = contract.conditions.find(
-      x =>
-        x.type === 'DELIVERY_SHIPMENT' &&
-        x.shipmentItemId?.toLowerCase().startsWith(id.toLowerCase()),
-    );
-    if (condition) {
-      return condition;
+    for (const condition of contract.conditions) {
+      if (
+        condition.type === 'PROVISION_SHIPMENT' &&
+        condition.blockId?.toLowerCase().startsWith(id.toLowerCase())
+      ) {
+        const delivery = contract.conditions.find(x => x.type === 'DELIVERY_SHIPMENT');
+        if (delivery) {
+          return delivery;
+        }
+      }
+      if (
+        condition.type === 'DELIVERY_SHIPMENT' &&
+        condition.shipmentItemId?.toLowerCase().startsWith(id.toLowerCase())
+      ) {
+        return condition;
+      }
     }
   }
 

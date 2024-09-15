@@ -3,7 +3,7 @@ New features:
 - XIT CONTC
 - reload-page-on-websocket-disconnect
 - correct-material-command
-- SHPT icons now have a destination label on them
+- SHPT and BLCK icons now have a destination label on them
 - XIT CONTS now displays a ! mark for contracts with unfulfilled own conditions
 - XIT CONTS now displays SHPT for contracts with shipment condition
 - Clicking on APEX logo now opens company information

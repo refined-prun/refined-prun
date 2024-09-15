@@ -20,7 +20,7 @@ async function onTileReady(tile: PrunTile) {
 
       const attribute = refAttributeValue(element, 'title');
       const detail = computed(() => {
-        const regex = /Shipment\s+#([a-zA-Z0-9]+)/;
+        const regex = /#([a-zA-Z0-9]+)/;
         const match = attribute.value?.match(regex);
 
         if (!match) {

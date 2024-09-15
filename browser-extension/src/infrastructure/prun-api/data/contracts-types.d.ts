@@ -23,7 +23,7 @@ declare namespace PrunApi {
   export interface ContractCondition {
     quantity?: MaterialAmount | null;
     address?: Address;
-    blockId?: null;
+    blockId?: string | null;
     type: ContractConditionType;
     id: string;
     party: ContractParty;
