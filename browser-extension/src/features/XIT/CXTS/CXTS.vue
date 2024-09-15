@@ -16,7 +16,7 @@ import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import { computed } from 'vue';
 import DateRow from '@src/features/XIT/CXTS/DateRow.vue';
 import TradeRow from '@src/features/XIT/CXTS/TradeRow.vue';
-import { diffDays } from '@src/utils/time-diff';
+import dayjs from 'dayjs';
 
 const orders = cxosStore.all;
 
@@ -62,7 +62,7 @@ const days = computed(() => {
       continue;
     }
 
-    if (diffDays(trade.date, day.date) !== 0) {
+    if (!dayjs(day.date).isSame(trade.date, 'day')) {
       day = {
         date: trade.date,
         trades: [],
