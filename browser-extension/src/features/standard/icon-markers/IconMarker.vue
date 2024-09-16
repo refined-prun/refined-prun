@@ -19,22 +19,13 @@ const props = defineProps({
 const boxStyle = computed(() => ({
   display: props.marker !== undefined ? 'block' : undefined,
 }));
-
-function onClick(ev: Event) {
-  ev.preventDefault();
-  ev.stopPropagation();
-  props.onNext();
-}
-
-function onContextMenu(ev: Event) {
-  ev.preventDefault();
-  ev.stopPropagation();
-  props.onPrevious();
-}
 </script>
 
 <template>
-  <div :class="$style.container" @click="onClick" @contextmenu="onContextMenu">
+  <div
+    :class="$style.container"
+    @click.left.prevent.stop="onNext"
+    @click.right.prevent.stop="onPrevious">
     <div :class="$style.box" :style="boxStyle">
       <img v-if="marker" :class="$style.icon" :src="marker" alt="Icon Marker" />
     </div>
