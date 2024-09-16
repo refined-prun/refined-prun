@@ -8,10 +8,12 @@ export default PrunCss;
 export async function parsePrunCss() {
   const head = document.head;
   const styles = head.getElementsByTagName('style');
-  await oneMutation(head, {
-    childList: true,
-    filter: () => styles.length > 0,
-  });
+  if (styles.length === 0) {
+    await oneMutation(head, {
+      childList: true,
+      filter: () => styles.length > 0,
+    });
+  }
   const classSet = new Set<string>();
   for (let i = 0; i < styles.length; i++) {
     const style = styles[i];

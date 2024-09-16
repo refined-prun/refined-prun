@@ -19,11 +19,7 @@ import descendantPresent from '@src/utils/descendant-present';
 
 async function mainRun() {
   initializePrunApi();
-  const backgroundTasks = Promise.allSettled([
-    loadFinHistory(),
-    loadGameData(),
-    loadRefinedPrunCss(),
-  ]);
+  const backgroundTasks = Promise.allSettled([loadGameData()]);
 
   let result: Settings;
   try {
@@ -36,6 +32,7 @@ async function mainRun() {
   }
 
   await parsePrunCss();
+  await loadRefinedPrunCss();
   await descendantPresent(document.documentElement, PrunCss.App.container);
   await backgroundTasks;
 
