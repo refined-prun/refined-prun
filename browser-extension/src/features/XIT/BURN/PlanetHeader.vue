@@ -68,19 +68,19 @@ function formatPrice(price: number): string {
       </span>
       <span>{{ burn.planetName }}</span>
     </td>
-    <td>
-      <div :class="$style.buttons">
-        <PrunButton dark inline @click="showBuffer(`BS ${burn.naturalId}`)">BS</PrunButton>
-        <PrunButton dark inline @click="showBuffer(`INV ${burn.storeId}`)">INV</PrunButton>
-      </div>
-    </td>
+    <DaysCell :days="days" />
     <td>
       <span>{{ fixed2(needWeight) }}t</span>
       <br />
       <span>{{ fixed2(needVolume) }}m³</span>
     </td>
     <td>{{ formatPrice(needCost) }}</td>
-    <DaysCell :days="days" />
+    <td>
+      <div :class="$style.buttons">
+        <PrunButton dark inline @click="showBuffer(`BS ${burn.naturalId}`)">BS</PrunButton>
+        <PrunButton dark inline @click="showBuffer(`INV ${burn.storeId}`)">INV</PrunButton>
+      </div>
+    </td>
   </tr>
 </template>
 

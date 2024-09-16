@@ -125,10 +125,10 @@ const inf = useTileState('inf');
               tooltip="How much of a material needs to be delivered to be fully resupplied" />
           </div>
         </th>
-        <th>CMD</th>
+        <th>Days</th>
         <th>Load</th>
         <th>Cost</th>
-        <th>Days</th>
+        <th>CMD</th>
       </tr>
     </thead>
     <BurnSection

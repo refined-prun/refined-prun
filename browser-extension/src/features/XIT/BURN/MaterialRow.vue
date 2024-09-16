@@ -100,16 +100,16 @@ function formatPrice(price: number): string {
     <td>
       <span>{{ isNaN(needAmt) ? '0' : fixed0(needAmt) }}</span>
     </td>
-    <td>
-      <PrunButton dark inline @click="showBuffer(`CXM ${material.ticker}`)">CXM</PrunButton>
-    </td>
+    <DaysCell :days="days" />
     <td>
       <span>{{ fixed2(needWeight) }}t</span>
       <br />
       <span>{{ fixed2(needVolume) }}m³</span>
     </td>
     <td>{{ formatPrice(needCost) }}</td>
-    <DaysCell :days="days" />
+    <td>
+      <PrunButton dark inline @click="showBuffer(`CXM ${material.ticker}`)">CXM</PrunButton>
+    </td>
   </tr>
 </template>
 
