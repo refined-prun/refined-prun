@@ -30,6 +30,9 @@
       return;
     }
     if (event.data.type === 'rp-socket-io-listener-ready') {
+      if (listenerReady) {
+        return;
+      }
       listenerReady = true;
       for (const event of queuedMessages) {
         forwardMessage(event);
@@ -185,5 +188,14 @@
     },
   });
 
+  document.documentElement.setAttribute('rp-socket-io-proxy-ready', '');
+
   console.log('Refined PrUn: Added socket.io proxy');
+
+  // Deserialize app script.
+  const currentScript = document.currentScript;
+  const script = document.createElement('script');
+  script.defer = true;
+  script.src = atob(currentScript!.textContent!);
+  document.head.appendChild(script);
 })();
