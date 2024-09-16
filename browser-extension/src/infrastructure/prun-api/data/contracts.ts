@@ -88,7 +88,10 @@ function getDestinationByShipmentId(id?: string | undefined) {
 
 export const active = computed(() =>
   state.all.value.filter(
-    x => x.status === 'CLOSED' || x.status === 'PARTIALLY_FULFILLED' || x.status === 'VIOLATED',
+    x =>
+      x.status === 'CLOSED' ||
+      x.status === 'PARTIALLY_FULFILLED' ||
+      x.status === 'DEADLINE_EXCEEDED',
   ),
 );
 

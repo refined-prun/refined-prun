@@ -25,7 +25,8 @@ function shouldShowContract(contract: PrunApi.Contract) {
   switch (contract.status) {
     case 'OPEN':
     case 'CLOSED':
-    case 'PARTIALLY_FULFILLED': {
+    case 'PARTIALLY_FULFILLED':
+    case 'DEADLINE_EXCEEDED': {
       return true;
     }
     default: {
