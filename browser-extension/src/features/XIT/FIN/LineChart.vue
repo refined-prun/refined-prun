@@ -105,7 +105,7 @@ const chartData = computed<ChartData<'line', number[], number | string | Date>>(
       data: props.ydata,
       borderColor: '#f7a600',
       fill: false,
-      pointRadius: 0.5,
+      pointRadius: 0.25,
       pointBackgroundColor: '#f7a600',
       showLine: false,
     },
