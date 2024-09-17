@@ -325,6 +325,14 @@ async function executeAction(
         return;
       }
 
+      // Need to flicker MTRA source in order to update inventory
+      // Move to 1st then 2nd item in MTRA list to guarantee change.
+      button.disabled = true;
+      changeSelectValue(originSelect, 0);
+      await sleep(1);
+      changeSelectValue(originSelect, 1);
+      await sleep(1);
+
       changeSelectValue(originSelect, sourceIndex); // Change source select
 
       // Start changing destination select
@@ -333,6 +341,7 @@ async function executeAction(
         undoButtonMove(button, resetStyles, executeControls);
         addMessage(messageBox, 'Error: Destination inventory not found executing: ' + actionName);
         tile.removeChild(executionInfo);
+        button.disabled = false;
         return;
       }
 
@@ -354,12 +363,16 @@ async function executeAction(
         undoButtonMove(button, resetStyles, executeControls);
         addMessage(messageBox, 'Error: Destination inventory not found executing: ' + actionName);
         tile.removeChild(executionInfo);
+        button.disabled = false;
         return;
       }
 
       changeSelectValue(destSelect, destIndex); // Change source select
 
+      await sleep(50);
+
       // Clear previous material in MTRA
+      button.disabled = false;
       button.focus();
       button.value = '';
 
@@ -374,7 +387,7 @@ async function executeAction(
       // Change amount and make transfer
       // Determine how many can be transferred by reading the buffer
       button.disabled = true;
-      await sleep(75); // Need to wait for buffer to update
+      await sleep(50); // Need to wait for buffer to update
       const sliderNumbers = buffer.querySelectorAll("span[class~='rc-slider-mark-text']");
       let maxAmount = 0;
       sliderNumbers.forEach(sliderNumber => {
@@ -390,6 +403,7 @@ async function executeAction(
         undoButtonMove(button, resetStyles, executeControls);
         addMessage(messageBox, 'Error: Missing UI elements');
         tile.removeChild(executionInfo);
+        button.disabled = false;
         return;
       }
       const amountInput = allInputs[1]; // Amount input
@@ -406,7 +420,7 @@ async function executeAction(
       amountInput.focus(); // Need to focus for some reason
       changeButton.focus();
 
-      await sleep(75);
+      await sleep(50);
 
       changeButton.click();
       button.disabled = false;
@@ -724,19 +738,23 @@ function storageNameToID(name) {
   }
   match = name.match(/(.*) Base/);
   if (match && match[1]) {
-    return 'base - ' + mtraConvert(match[1]);
+    return 'base - ' + mtraConvert(match[1]).toLowerCase();
   }
   match = name.match(/(.*) Warehouse/);
   if (match && match[1]) {
-    return 'warehouse - ' + mtraConvert(match[1]);
+    return 'warehouse - ' + mtraConvert(match[1]).toLowerCase();
   }
   return undefined;
 }
 
-function mtraConvert(nameOrNaturalId) {
+function mtraConvert(nameOrNaturalId: string) {
   if (Stations[nameOrNaturalId]) {
     // For station warehouses, just return the name of that station
     return nameOrNaturalId.toLowerCase();
+  }
+
+  if (nameOrNaturalId.length < 3) {
+    return '-';
   }
 
   // Determine the planets' natural IDs (XX-###x)
@@ -749,7 +767,6 @@ function mtraConvert(nameOrNaturalId) {
 
   // Get system name or ID
   const system = starsStore.getByPlanetNaturalId(natural);
-
   return (system?.name + ' - ' + nameOrNaturalId).toLowerCase();
 }
 

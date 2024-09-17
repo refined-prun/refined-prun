@@ -4,6 +4,7 @@ import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
+import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 
 export function needsConfiguration(action) {
   switch (action.type) {
@@ -93,7 +94,46 @@ export function createConfigureUI(
           'Error: Missing group on action at index ' + currentConfigIndex.toLocaleString(undefined),
         );
       }
-      const storageNames = [...storagesStore.all.value].sort(storageSort).map(parseStorageName);
+
+      let filteredStorages = [...storagesStore.all.value]; // Filter to only storages in the same location as the origin/destination
+      if (
+        action.origin &&
+        action.origin === 'Configure on Execution' &&
+        action.dest &&
+        action.dest === 'Configure on Execution'
+      ) {
+        filteredStorages = [...storagesStore.all.value];
+      } else if (action.origin && action.origin == 'Configure on Execution' && action.dest) {
+        const destStoragePayload = storagesStore.all.value.find(
+          storage => parseStorageName(storage) === action.dest,
+        );
+
+        if (destStoragePayload) {
+          filteredStorages = storagesStore.all.value.filter(storage =>
+            atSameLocation(storage, destStoragePayload),
+          );
+        } else {
+          addMessage(messageBox, 'Warning: No matching destination payload found.');
+          filteredStorages = [...storagesStore.all.value];
+        }
+      } else if (action.dest && action.dest == 'Configure on Execution' && action.origin) {
+        const originStoragePayload = storagesStore.all.value.find(
+          storage => parseStorageName(storage) === action.origin,
+        );
+
+        if (originStoragePayload) {
+          filteredStorages = storagesStore.all.value.filter(storage =>
+            atSameLocation(storage, originStoragePayload),
+          );
+        } else {
+          addMessage(messageBox, 'Warning: No matching origin payload found.');
+          filteredStorages = [...storagesStore.all.value];
+        }
+      } else {
+        filteredStorages = [...storagesStore.all.value];
+      }
+
+      const storageNames = filteredStorages.sort(storageSort).map(parseStorageName);
       let originSelect;
       let destSelect;
 
@@ -183,11 +223,11 @@ function addMessage(messageBox, message, clear?) {
 // Sort storages into an order based on type
 function storageSort(a: PrunApi.Store, b: PrunApi.Store) {
   const storagePriorityMap = {
-    FTL_FUEL_STORE: 0,
-    STL_FUEL_STORE: 1,
+    FTL_FUEL_STORE: 4,
+    STL_FUEL_STORE: 3,
     SHIP_STORE: 2,
-    STORE: 3,
-    WAREHOUSE_STORE: 4,
+    STORE: 0,
+    WAREHOUSE_STORE: 1,
   };
   return a.type && b.type && storagePriorityMap[a.type] > storagePriorityMap[b.type] ? 1 : -1;
 }
@@ -211,4 +251,48 @@ function parseStorageName(storage: PrunApi.Store) {
   }
 
   return 'Error, unable to parse';
+}
+
+function atSameLocation(storageA: PrunApi.Store, storageB: PrunApi.Store) {
+  if (storageA === storageB) {
+    return false;
+  }
+
+  const addressA = getStoreAddress(storageA);
+  const addressB = getStoreAddress(storageB);
+
+  if (!addressA || !addressB) {
+    return false;
+  }
+
+  for (let i = 0; i < addressA.lines.length; i++) {
+    const lineA = addressA.lines[i];
+    const lineB = addressB.lines[i];
+    if (!lineA || !lineB || lineA.entity.id !== lineB.entity.id) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function getStoreAddress(store: PrunApi.Store) {
+  switch (store.type) {
+    case 'STORE': {
+      const site = sitesStore.getById(store.addressableId);
+      return site?.address;
+    }
+    case 'WAREHOUSE_STORE': {
+      const warehouse = warehousesStore.getById(store.addressableId);
+      return warehouse?.address;
+    }
+    case 'SHIP_STORE':
+    case 'STL_FUEL_STORE':
+    case 'FTL_FUEL_STORE': {
+      const ship = shipsStore.getById(store.addressableId);
+      return ship?.address;
+    }
+  }
+
+  return undefined;
 }

@@ -13,6 +13,7 @@ import '@src/features/standard/finla-exchange-deposits';
 import '@src/features/standard/flt-arrival-eta/flt-arrival-eta';
 import '@src/features/standard/inv-add-shipment-detail';
 import '@src/features/standard/inv-custom-sorting/inv-custom-sorting';
+import '@src/features/standard/inv-search-bar';
 import '@src/features/standard/lm-add-icons/lm-add-icons';
 import '@src/features/standard/lm-buy-sell-highlight';
 import '@src/features/standard/lm-hide-rating';

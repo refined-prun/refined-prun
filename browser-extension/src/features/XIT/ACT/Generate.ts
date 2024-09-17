@@ -993,11 +993,11 @@ function parseStorageName(storage: PrunApi.Store) {
 // Sort storages into an order based on type
 function storageSort(a: PrunApi.Store, b: PrunApi.Store) {
   const storagePriorityMap = {
-    FTL_FUEL_STORE: 0,
-    STL_FUEL_STORE: 1,
+    FTL_FUEL_STORE: 4,
+    STL_FUEL_STORE: 3,
     SHIP_STORE: 2,
-    STORE: 3,
-    WAREHOUSE_STORE: 4,
+    STORE: 0,
+    WAREHOUSE_STORE: 1,
   };
   return a.type && b.type && storagePriorityMap[a.type] > storagePriorityMap[b.type] ? 1 : -1;
 }
