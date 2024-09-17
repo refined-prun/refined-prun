@@ -3,9 +3,9 @@ import { fixed0, fixed2 } from '@src/utils/format';
 import PrunLink from '@src/components/PrunLink.vue';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import { computed, PropType } from 'vue';
-import { settings } from '@src/store/settings';
 import { calcMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { sortMaterialAmounts } from '@src/infrastructure/prun-api/data/materials';
+import { userData } from '@src/store/user-data';
 
 const props = defineProps({
   materials: {
@@ -25,7 +25,7 @@ function calculateTotal(fn: (material: PrunApi.MaterialAmount) => number) {
 }
 
 function formatPrice(price: number): string {
-  return settings.fin.currency + fixed0(price);
+  return userData.settings.currency + fixed0(price);
 }
 
 function calculateWeight(amount: PrunApi.MaterialAmount) {

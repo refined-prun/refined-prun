@@ -1,8 +1,8 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
-import { settings } from '@src/store/settings';
 import { App, computed, inject, InjectionKey, reactive, Ref, watch, Plugin } from 'vue';
 import { deepFreeze } from '@src/utils/deep-freeze';
+import { userData } from '@src/store/user-data';
 
 const store = createEntityStore<PrunApi.Tile>();
 const state = store.state;
@@ -10,7 +10,7 @@ const state = store.state;
 messages({
   UI_DATA(data: PrunApi.UIData) {
     store.setAll(data.tiles);
-    for (const key of Object.keys(settings.tileState)) {
+    for (const key of Object.keys(userData.tileState)) {
       if (!state.entities[key]) {
         removeTileState(key);
       }
@@ -128,19 +128,21 @@ messages({
 });
 
 function removeTileState(id: string) {
-  delete settings.tileState[id];
+  delete userData.tileState[id];
 }
 
 function moveTileState(fromId: string, toId: string) {
-  if (settings.tileState[fromId]) {
-    settings.tileState[toId] = settings.tileState[fromId];
+  if (userData.tileState[fromId]) {
+    userData.tileState[toId] = userData.tileState[fromId];
     removeTileState(fromId);
   }
 }
 
-function getTileState<T extends BaseTileState>(tileOrId: PrunTile | string) {
+type TileState = UserData.TileState;
+
+function getTileState<T extends TileState>(tileOrId: PrunTile | string) {
   const id = typeof tileOrId === 'string' ? tileOrId : tileOrId.id;
-  let state = settings.tileState[id];
+  let state = userData.tileState[id];
   let isAdded = state !== undefined;
   if (!state) {
     state = reactive({});
@@ -150,11 +152,11 @@ function getTileState<T extends BaseTileState>(tileOrId: PrunTile | string) {
     () => {
       const hasKeys = Object.keys(state).length > 0;
       if (hasKeys && !isAdded) {
-        settings.tileState[id] = state;
+        userData.tileState[id] = state;
         isAdded = true;
       }
       if (!hasKeys && isAdded) {
-        delete settings.tileState[id];
+        delete userData.tileState[id];
         isAdded = false;
       }
     },
@@ -163,9 +165,9 @@ function getTileState<T extends BaseTileState>(tileOrId: PrunTile | string) {
   return state as T;
 }
 
-const baseTileStateKey = Symbol() as InjectionKey<Ref<BaseTileState>>;
+const baseTileStateKey = Symbol() as InjectionKey<Ref<TileState>>;
 
-export function tileStateKey<T extends BaseTileState>() {
+export function tileStateKey<T extends TileState>() {
   return baseTileStateKey as InjectionKey<Ref<T>>;
 }
 
@@ -178,7 +180,7 @@ export const tileStatePlugin: Plugin = {
   },
 };
 
-export function createTileStateHook<T extends BaseTileState>(defaultState: T) {
+export function createTileStateHook<T extends TileState>(defaultState: T) {
   deepFreeze(defaultState);
   return function useTileState<K extends keyof T>(key: K) {
     const state = inject(tileStateKey<T>())!;
@@ -186,7 +188,7 @@ export function createTileStateHook<T extends BaseTileState>(defaultState: T) {
   };
 }
 
-export function computedTileState<T extends BaseTileState, K extends keyof T>(
+export function computedTileState<T extends TileState, K extends keyof T>(
   state: Ref<T>,
   key: K,
   defaultValue?: T[K],

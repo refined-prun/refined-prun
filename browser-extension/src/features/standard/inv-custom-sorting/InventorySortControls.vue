@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { PropType } from 'vue';
-import { SortingMode } from '@src/store/settings';
 import SortingOrderIcon from '@src/features/standard/inv-custom-sorting/SortingOrderIcon.vue';
 
 defineProps({
   sortingModes: {
-    type: Array as PropType<SortingMode[]>,
+    type: Array as PropType<UserData.SortingMode[]>,
     required: true,
   },
   activeSort: {

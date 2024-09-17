@@ -21,17 +21,10 @@ const materialsToReceive = computed(
     sumMaterialsPickup(selfNonCurrentConditions),
 );
 
-const total = computed(() => {
-  return (
-    buildingsTotal.value + accountsReceivable.value + materialsToReceive.value + longTermLoans.value
-  );
-});
-
 export const nonCurrentAssets = {
   buildings: currentBuildingValue,
   buildingsTotal,
   accountsReceivable,
   materialsToReceive,
   longTermLoans,
-  total,
 };

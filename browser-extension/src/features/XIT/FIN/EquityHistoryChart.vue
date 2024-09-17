@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { finHistory } from '@src/core/financials';
-import { settings } from '@src/store/settings';
 import LineChart from '@src/features/XIT/FIN/LineChart.vue';
 import { percent0 } from '@src/utils/format';
 import { createTileStateHook } from '@src/infrastructure/prun-api/data/tiles';
+import { userData } from '@src/store/user-data';
+import { calcEquity } from '@src/core/balance/balance-sheet-summary';
+import { balanceHistory } from '@src/store/user-data-balance';
 
 defineProps({
   pan: Boolean,
@@ -26,21 +27,20 @@ watch(averageFactorText, x => {
 
 const lineChartData = computed(() => {
   const date: number[] = [];
-  const equity: number[] = [];
+  const equityValues: number[] = [];
 
-  for (const entry of finHistory) {
-    const equityValue = entry[1] + entry[2] + entry[3] - entry[4];
-    if (equityValue == 0) {
+  for (const entry of balanceHistory.value) {
+    if (!entry) {
       continue;
     }
 
-    date.push(entry[0]);
-    equity.push(Number(equityValue.toPrecision(4)));
+    date.push(entry.timestamp);
+    equityValues.push(calcEquity(entry));
   }
 
   return {
     date,
-    equity,
+    equity: equityValues,
   };
 });
 </script>
@@ -58,7 +58,7 @@ const lineChartData = computed(() => {
   <LineChart
     :maintain-aspect-ratio="maintainAspectRatio"
     :average-factor="averageFactor"
-    :yprefix="settings.fin.currency"
+    :yprefix="userData.settings.currency"
     :ydata="lineChartData.equity"
     :xdata="lineChartData.date"
     :pan="pan"

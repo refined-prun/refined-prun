@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { settings } from '@src/store/settings';
 import { computed, PropType } from 'vue';
 import { PlanetBurn } from '@src/core/burn';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
@@ -10,6 +9,7 @@ import { useTileState } from '@src/features/XIT/BURN/tile-state';
 import PrunButton from '@src/components/PrunButton.vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { userData } from '@src/store/user-data';
 
 const props = defineProps({
   material: {
@@ -31,9 +31,9 @@ const days = computed(() => matBurn.value.DaysLeft);
 const production = computed(() => matBurn.value.DailyAmount);
 const invAmount = computed(() => matBurn.value.Inventory ?? 0);
 
-const isRed = computed(() => days.value <= settings.burn.red);
-const isYellow = computed(() => days.value <= settings.burn.yellow);
-const isGreen = computed(() => days.value > settings.burn.yellow);
+const isRed = computed(() => days.value <= userData.settings.burn.red);
+const isYellow = computed(() => days.value <= userData.settings.burn.yellow);
+const isGreen = computed(() => days.value > userData.settings.burn.yellow);
 const isInf = computed(() => production.value >= 0);
 
 const red = useTileState('red');
@@ -67,9 +67,9 @@ const changeClass = computed(() => ({
 }));
 
 const needAmt = computed(() =>
-  days.value > settings.burn.resupply || production.value > 0
+  days.value > userData.settings.burn.resupply || production.value > 0
     ? 0
-    : (days.value - settings.burn.resupply) * production.value,
+    : (days.value - userData.settings.burn.resupply) * production.value,
 );
 
 const needWeight = computed(() =>
@@ -85,7 +85,7 @@ const needCost = computed(() =>
 );
 
 function formatPrice(price: number): string {
-  return settings.fin.currency + fixed0(price);
+  return userData.settings.currency + fixed0(price);
 }
 </script>
 

@@ -18,23 +18,23 @@ import TextInput from '@src/components/forms/TextInput.vue';
 import Active from '@src/components/forms/Active.vue';
 import NumberInput from '@src/components/forms/NumberInput.vue';
 import Commands from '@src/components/forms/Commands.vue';
-import { resetSettings, resetSidebar, settings } from '@src/store/settings';
 import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
+import { resetAllData, resetSidebar, userData } from '@src/store/user-data';
 
 function addSidebarButton() {
-  settings.sidebar.push(['SET', 'XIT SET']);
+  userData.settings.sidebar.push(['SET', 'XIT SET']);
 }
 
 function deleteSidebarButton(index: number) {
-  settings.sidebar.splice(index, 1);
+  userData.settings.sidebar.splice(index, 1);
 }
 
 function confirmResetSidebar(ev: Event) {
   showConfirmationOverlay(ev, resetSidebar);
 }
 
-function confirmResetSettings(ev: Event) {
-  showConfirmationOverlay(ev, resetSettings);
+function confirmResetAllData(ev: Event) {
+  showConfirmationOverlay(ev, resetAllData);
 }
 </script>
 
@@ -44,15 +44,15 @@ function confirmResetSettings(ev: Event) {
     <Active
       label="Red"
       tooltip="Thresholds for red consumable level in burn calculations (in days)">
-      <NumberInput v-model="settings.burn.red" />
+      <NumberInput v-model="userData.settings.burn.red" />
     </Active>
     <Active
       label="Yellow"
       tooltip="Thresholds for yellow consumable level in burn calculations (in days)">
-      <NumberInput v-model="settings.burn.yellow" />
+      <NumberInput v-model="userData.settings.burn.yellow" />
     </Active>
     <Active label="Resupply" tooltip="TODO: Add a proper tooltip">
-      <NumberInput v-model="settings.burn.resupply" />
+      <NumberInput v-model="userData.settings.burn.resupply" />
     </Active>
   </form>
   <SectionHeader>
@@ -64,7 +64,7 @@ function confirmResetSettings(ev: Event) {
           the second is the command." />
   </SectionHeader>
   <form>
-    <Active v-for="(button, i) in settings.sidebar" :key="i" :label="`Button ${i + 1}`">
+    <Active v-for="(button, i) in userData.settings.sidebar" :key="i" :label="`Button ${i + 1}`">
       <div :class="$style.sidebarInputPair">
         <TextInput v-model="button[0]" :class="$style.sidebarInput" />
         <TextInput v-model="button[1]" :class="$style.sidebarInput" />
@@ -88,7 +88,7 @@ function confirmResetSettings(ev: Event) {
   <SectionHeader>Danger Zone</SectionHeader>
   <form>
     <Commands>
-      <PrunButton danger @click="confirmResetSettings">Reset Settings</PrunButton>
+      <PrunButton danger @click="confirmResetAllData">Reset All Data</PrunButton>
     </Commands>
   </form>
 </template>

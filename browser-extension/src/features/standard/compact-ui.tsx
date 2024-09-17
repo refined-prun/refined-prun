@@ -13,9 +13,9 @@ import {
 } from '@src/utils/mutation-observer';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
-import { settings } from '@src/store/settings';
 import { exchangeStore } from '@src/infrastructure/prun-api/data/exchanges';
 import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { userData } from '@src/store/user-data';
 
 function onBBLTileReady(tile: PrunTile) {
   clearBuildingLists(tile.frame);
@@ -164,7 +164,7 @@ export function clearBuildingLists(tile: HTMLDivElement) {
           } else {
             bar[0].value = 180 - value;
             const progress = bar[0].value / bar[0].max;
-            const threshold = settings.repairThreshold / 180.0;
+            const threshold = userData.settings.repair.threshold / 180.0;
             if (progress > 0.75) {
               bar[0].classList.add(...WithStyles(Style.ProgressBarGood));
             } else if (progress > threshold) {

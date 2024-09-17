@@ -15,10 +15,10 @@ export default {};
 import { downloadFile } from '@src/util';
 import DebugButton from '@src/features/XIT/DEBUG/DebugButton.vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { settings } from '@src/store/settings';
+import { userData } from '@src/store/user-data';
 
-function logSettings() {
-  console.log(settings);
+function logUserData() {
+  console.log(userData);
 }
 
 function downloadCssDefinition() {
@@ -44,7 +44,7 @@ function downloadCssDefinition() {
 
 <template>
   <div :style="{ paddingTop: '4px' }">
+    <DebugButton @click="logUserData">Log User Data</DebugButton>
     <DebugButton @click="downloadCssDefinition">Export prun-css-types.ts</DebugButton>
-    <DebugButton @click="logSettings">Log settings</DebugButton>
   </div>
 </template>

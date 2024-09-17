@@ -6,7 +6,6 @@ import features from '@src/feature-registry';
 import descendantPresent from '@src/utils/descendant-present';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
-import { settings, SortingMode } from '@src/store/settings';
 import CategoryHeader from './CategoryHeader.vue';
 import InventorySortControls from './InventorySortControls.vue';
 import {
@@ -24,6 +23,7 @@ import { getTileState } from '@src/features/standard/inv-custom-sorting/tile-sta
 import { createFragmentApp, FragmentAppScope } from '@src/utils/vue-fragment-app';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { userData } from '@src/store/user-data';
 
 async function onInvReady(tile: PrunTile) {
   await applyCustomSorting(tile);
@@ -52,7 +52,7 @@ async function applyCustomSorting(tile: PrunTile) {
   const burn = computed(() => getPlanetBurn(storagesStore.getById(storeId)?.addressableId));
 
   const sortingModes = computed(() => {
-    const modes = settings.sorting.filter(x => x.storeId === storeId);
+    const modes = userData.sortingModes.filter(x => x.storeId === storeId);
     if (burn.value) {
       modes.push(createBurnSortingMode(storeId));
     }
@@ -100,7 +100,7 @@ async function applyCustomSorting(tile: PrunTile) {
 
 function sortInventory(
   inventory: Element,
-  sortingMode: SortingMode | undefined,
+  sortingMode: UserData.SortingMode | undefined,
   burn: BurnValues | undefined,
 ) {
   if (!sortingMode) {
@@ -180,7 +180,7 @@ function sortInventory(
   }
 }
 
-function createBurnSortingMode(storeId: string): SortingMode {
+function createBurnSortingMode(storeId: string): UserData.SortingMode {
   return {
     label: 'BRN',
     storeId,

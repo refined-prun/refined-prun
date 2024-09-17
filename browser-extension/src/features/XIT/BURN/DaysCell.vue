@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { settings } from '@src/store/settings';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { computed } from 'vue';
+import { userData } from '@src/store/user-data';
 
 const props = defineProps({
   days: {
@@ -12,9 +12,9 @@ const props = defineProps({
 
 const days = computed(() => Math.floor(props.days));
 const burnClass = computed(() => ({
-  [PrunCss.Workforces.daysMissing]: days.value <= settings.burn.red,
-  [PrunCss.Workforces.daysWarning]: days.value <= settings.burn.yellow,
-  [PrunCss.Workforces.daysSupplied]: days.value > settings.burn.yellow,
+  [PrunCss.Workforces.daysMissing]: days.value <= userData.settings.burn.red,
+  [PrunCss.Workforces.daysWarning]: days.value <= userData.settings.burn.yellow,
+  [PrunCss.Workforces.daysSupplied]: days.value > userData.settings.burn.yellow,
 }));
 </script>
 

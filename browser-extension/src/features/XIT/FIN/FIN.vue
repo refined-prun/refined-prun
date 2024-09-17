@@ -19,9 +19,7 @@ import { formatAmount } from '@src/features/XIT/FIN/utils';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { cxStore } from '@src/infrastructure/fio/cx';
 import { fixed0, fixed1, fixed2, percent0, percent1, percent2 } from '@src/utils/format';
-import { balance } from '@src/core/balance/balance';
-import { currentAssets } from '@src/core/balance/current-assets';
-import { currentLiabilities } from '@src/core/balance/current-liabilities';
+import { liveBalanceSummary } from '@src/core/balance/balance-sheet-live';
 
 const locations = computed(() => calculateLocationAssets());
 
@@ -61,18 +59,18 @@ function formatPercentage(ratio: number) {
 
 const figures = computed(() => {
   return [
-    { name: 'Quick Assets', value: formatAmount(currentAssets.quick.value) },
-    { name: 'Current Assets', value: formatAmount(currentAssets.total.value) },
-    { name: 'Total Assets', value: formatAmount(balance.totalAssets.value) },
-    { name: 'Equity', value: formatAmount(balance.equity.value) },
-    { name: 'Quick Liabilities', value: formatAmount(currentLiabilities.quick.value) },
-    { name: 'Current Liabilities', value: formatAmount(currentLiabilities.total.value) },
-    { name: 'Total Liabilities', value: formatAmount(balance.totalLiabilities.value) },
-    { name: 'Company Value', value: formatAmount(balance.companyValue.value) },
-    { name: 'Acid-Test Ratio', value: formatRatio(balance.acidTestRatio.value) },
-    { name: 'Working Capital Ratio', value: formatRatio(balance.workingCapitalRatio.value) },
-    { name: 'Debt Ratio', value: formatPercentage(balance.debtRatio.value) },
-    { name: 'Debt-to-Equity Ratio', value: formatRatio(balance.debtToEquityRatio.value) },
+    { name: 'Quick Assets', value: formatAmount(liveBalanceSummary.quickAssets) },
+    { name: 'Current Assets', value: formatAmount(liveBalanceSummary.currentAssets) },
+    { name: 'Total Assets', value: formatAmount(liveBalanceSummary.assets) },
+    { name: 'Equity', value: formatAmount(liveBalanceSummary.equity) },
+    { name: 'Quick Liabilities', value: formatAmount(liveBalanceSummary.quickLiabilities) },
+    { name: 'Current Liabilities', value: formatAmount(liveBalanceSummary.currentLiabilities) },
+    { name: 'Total Liabilities', value: formatAmount(liveBalanceSummary.liabilities) },
+    { name: 'Company Value', value: formatAmount(liveBalanceSummary.companyValue) },
+    { name: 'Acid-Test Ratio', value: formatRatio(liveBalanceSummary.acidTestRatio) },
+    { name: 'Working Capital Ratio', value: formatRatio(liveBalanceSummary.workingCapitalRatio) },
+    { name: 'Debt Ratio', value: formatPercentage(liveBalanceSummary.debtRatio) },
+    { name: 'Debt-to-Equity Ratio', value: formatRatio(liveBalanceSummary.debtToEquityRatio) },
   ];
 });
 </script>

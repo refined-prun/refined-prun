@@ -1,6 +1,6 @@
-import { settings } from '@src/store/settings';
 import { fixed0 } from '@src/utils/format';
+import { userData } from '@src/store/user-data';
 
 export function formatAmount(amount: number) {
-  return settings.fin.currency + fixed0(amount);
+  return userData.settings.currency + fixed0(amount);
 }

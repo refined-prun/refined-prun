@@ -7,7 +7,6 @@ import Commands from '@src/components/forms/Commands.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import { computed, PropType, ref } from 'vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
-import { SortingMode } from '@src/store/settings';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 
 const props = defineProps({
@@ -16,11 +15,11 @@ const props = defineProps({
     required: true,
   },
   onSave: {
-    type: Function as PropType<(sortingMode: SortingMode) => void>,
+    type: Function as PropType<(sortingMode: UserData.SortingMode) => void>,
     required: true,
   },
   sortingMode: {
-    type: Object as PropType<SortingMode | undefined>,
+    type: Object as PropType<UserData.SortingMode | undefined>,
     default: undefined,
   },
 });

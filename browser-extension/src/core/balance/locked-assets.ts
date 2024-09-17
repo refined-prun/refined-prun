@@ -39,13 +39,8 @@ const apexRepresentationCenter = computed(
   () => companyStore.representation.contributedTotal.amount,
 );
 
-const total = computed(() => {
-  return ships.value + hqUpgrades.value + hqUpgrades.value + apexRepresentationCenter.value;
-});
-
 export const lockedAssets = {
   ships,
   hqUpgrades,
   apexRepresentationCenter,
-  total,
 };

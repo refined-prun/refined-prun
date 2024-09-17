@@ -13,16 +13,11 @@ xit.add({
 <script setup lang="ts">
 import { formatAmount } from '@src/features/XIT/FIN/utils';
 import { computed } from 'vue';
-import { currentAssets } from '@src/core/balance/current-assets';
-import { nonCurrentAssets } from '@src/core/balance/non-current-assets';
-import { currentLiabilities } from '@src/core/balance/current-liabilities';
-import { nonCurrentLiabilities } from '@src/core/balance/non-current-liabilities';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { cxStore } from '@src/infrastructure/fio/cx';
 import BalanceSheetSection from '@src/features/XIT/FIN/BalanceSheetSection.vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { balance } from '@src/core/balance/balance';
-import { lockedAssets } from '@src/core/balance/locked-assets';
+import { liveBalanceSheet, liveBalanceSummary } from '@src/core/balance/balance-sheet-live';
 
 interface Section {
   name: string;
@@ -32,59 +27,59 @@ interface Section {
 
 const currentAssetsSection = computed<Section>(() => ({
   name: 'Current Assets',
-  total: currentAssets.total.value,
+  total: liveBalanceSummary.currentAssets,
   rows: [
-    ['Cash', currentAssets.cashTotal.value],
-    ['Deposits', currentAssets.depositsTotal.value],
-    ['Interest Receivable', currentAssets.interestReceivable.value],
-    ['Accounts Receivable', currentAssets.accountsReceivable.value],
-    ['Short-Term Loans', currentAssets.shortTermLoans.value],
-    ['Market-Listed Materials', currentAssets.marketListedMaterials.value],
-    ['Inventory', currentAssets.inventory.value],
-    ['Orders in Progress', currentAssets.totalOrderValue.value],
-    ['Materials to Receive', currentAssets.materialsToReceive.value],
+    ['Cash', liveBalanceSheet.currentAssets.cash],
+    ['Deposits', liveBalanceSheet.currentAssets.deposits],
+    ['Interest Receivable', liveBalanceSheet.currentAssets.interestReceivable],
+    ['Accounts Receivable', liveBalanceSheet.currentAssets.accountsReceivable],
+    ['Short-Term Loans', liveBalanceSheet.currentAssets.shortTermLoans],
+    ['Market-Listed Materials', liveBalanceSheet.currentAssets.marketListedMaterials],
+    ['Inventory', liveBalanceSheet.currentAssets.inventory],
+    ['Orders in Progress', liveBalanceSheet.currentAssets.ordersInProgress],
+    ['Materials to Receive', liveBalanceSheet.currentAssets.materialsToReceive],
   ],
 }));
 
 const nonCurrentAssetsSection = computed<Section>(() => ({
   name: 'Non-Current Assets',
-  total: nonCurrentAssets.total.value,
+  total: liveBalanceSummary.nonCurrentAssets,
   rows: [
-    ['Buildings', nonCurrentAssets.buildingsTotal.value],
-    ['Accounts Receivable', nonCurrentAssets.accountsReceivable.value],
-    ['Long-Term Loans', nonCurrentAssets.longTermLoans.value],
-    ['Materials to Receive', nonCurrentAssets.materialsToReceive.value],
+    ['Buildings', liveBalanceSheet.nonCurrentAssets.buildings],
+    ['Accounts Receivable', liveBalanceSheet.nonCurrentAssets.accountsReceivable],
+    ['Long-Term Loans', liveBalanceSheet.nonCurrentAssets.longTermLoans],
+    ['Materials to Receive', liveBalanceSheet.nonCurrentAssets.materialsToReceive],
   ],
 }));
 
 const currentLiabilitiesSection = computed<Section>(() => ({
   name: 'Current Liabilities',
-  total: currentLiabilities.total.value,
+  total: liveBalanceSummary.currentLiabilities,
   rows: [
-    ['Accounts Payable', currentLiabilities.accountsPayable.value],
-    ['Materials to Deliver', currentLiabilities.materialsToDeliver.value],
-    ['Short-Term Debt', currentLiabilities.shortTermDebt.value],
-    ['Interest Payable', currentLiabilities.interestPayable.value],
+    ['Accounts Payable', liveBalanceSheet.currentLiabilities.accountsPayable],
+    ['Materials to Deliver', liveBalanceSheet.currentLiabilities.materialsToDeliver],
+    ['Short-Term Debt', liveBalanceSheet.currentLiabilities.shortTermDebt],
+    ['Interest Payable', liveBalanceSheet.currentLiabilities.interestPayable],
   ],
 }));
 
 const nonCurrentLiabilitiesSection = computed<Section>(() => ({
   name: 'Non-Current Liabilities',
-  total: nonCurrentLiabilities.total.value,
+  total: liveBalanceSummary.nonCurrentLiabilities,
   rows: [
-    ['Accounts Payable', nonCurrentLiabilities.accountsPayable.value],
-    ['Materials to Deliver', nonCurrentLiabilities.materialsToDeliver.value],
-    ['Long-Term Debt', nonCurrentLiabilities.longTermDebt.value],
+    ['Accounts Payable', liveBalanceSheet.nonCurrentLiabilities.accountsPayable],
+    ['Materials to Deliver', liveBalanceSheet.nonCurrentLiabilities.materialsToDeliver],
+    ['Long-Term Debt', liveBalanceSheet.nonCurrentLiabilities.longTermDebt],
   ],
 }));
 
 const lockedAssetsSection = computed<Section>(() => ({
   name: 'Locked Assets',
-  total: lockedAssets.total.value,
+  total: liveBalanceSummary.lockedAssets,
   rows: [
-    ['Ships', lockedAssets.ships.value],
-    ['HQ Upgrades', lockedAssets.hqUpgrades.value],
-    ['APEX Representation Center', lockedAssets.apexRepresentationCenter.value],
+    ['Ships', liveBalanceSheet.lockedAssets.ships],
+    ['HQ Upgrades', liveBalanceSheet.lockedAssets.hqUpgrades],
+    ['APEX Representation Center', liveBalanceSheet.lockedAssets.arc],
   ],
 }));
 </script>
@@ -117,7 +112,7 @@ const lockedAssetsSection = computed<Section>(() => ({
     <tbody>
       <tr :class="[PrunCss.IncomeStatementPanel.totals, $style.total]">
         <td :class="PrunCss.IncomeStatementPanel.number">Total Assets</td>
-        <td>{{ formatAmount(balance.totalAssets.value) }}</td>
+        <td>{{ formatAmount(liveBalanceSummary.assets) }}</td>
         <td>--</td>
         <td>--</td>
         <td>--</td>
@@ -139,7 +134,7 @@ const lockedAssetsSection = computed<Section>(() => ({
     <tbody>
       <tr :class="[PrunCss.IncomeStatementPanel.totals, $style.total]">
         <td :class="PrunCss.IncomeStatementPanel.number">Total Liabilities</td>
-        <td>{{ formatAmount(balance.totalLiabilities.value) }}</td>
+        <td>{{ formatAmount(liveBalanceSummary.liabilities) }}</td>
         <td>--</td>
         <td>--</td>
         <td>--</td>
@@ -148,7 +143,7 @@ const lockedAssetsSection = computed<Section>(() => ({
     <tbody>
       <tr :class="[PrunCss.IncomeStatementPanel.totals, $style.total]">
         <td :class="PrunCss.IncomeStatementPanel.number">Equity</td>
-        <td>{{ formatAmount(balance.equity.value) }}</td>
+        <td>{{ formatAmount(liveBalanceSummary.equity) }}</td>
         <td>--</td>
         <td>--</td>
         <td>--</td>
@@ -166,7 +161,7 @@ const lockedAssetsSection = computed<Section>(() => ({
     <tbody>
       <tr :class="[PrunCss.IncomeStatementPanel.totals, $style.total]">
         <td :class="PrunCss.IncomeStatementPanel.number">Company Value</td>
-        <td>{{ formatAmount(balance.companyValue.value) }}</td>
+        <td>{{ formatAmount(liveBalanceSummary.companyValue) }}</td>
         <td>--</td>
         <td>--</td>
         <td>--</td>

@@ -12,7 +12,6 @@ export default {};
 </script>
 
 <script setup lang="ts">
-import { settings } from '@src/store/settings';
 import { computed } from 'vue';
 import NumberInput from '@src/components/forms/NumberInput.vue';
 import { calculateBuildingEntries, calculateShipEntries } from '@src/features/XIT/REP/entries';
@@ -26,6 +25,7 @@ import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { cxStore } from '@src/infrastructure/fio/cx';
 import { calculateBuildingCondition } from '@src/core/buildings';
 import { diffDays } from '@src/utils/time-diff';
+import { userData } from '@src/store/user-data';
 
 const props = defineProps({
   parameters: {
@@ -40,8 +40,9 @@ const ships = computed(() => calculateShipEntries(props.parameters));
 const msInADay = dayjs.duration(1, 'day').asMilliseconds();
 
 const currentSplitIndex = computed(() => {
+  const settings = userData.settings.repair;
   const currentSplitDate =
-    timestampEachSecond() - settings.repairThreshold * msInADay + settings.repairOffset * msInADay;
+    timestampEachSecond() - settings.threshold * msInADay + settings.offset * msInADay;
   return binarySearch(currentSplitDate, buildings.value, x => x.lastRepair);
 });
 
@@ -55,7 +56,8 @@ const materials = computed(() => {
   const materials: PrunApi.MaterialAmount[] = [];
   const time = timestampEachSecond();
   for (const building of visibleBuildings.value) {
-    const plannedRepairDate = (time - building.lastRepair) / msInADay + settings.repairOffset;
+    const plannedRepairDate =
+      (time - building.lastRepair) / msInADay + userData.settings.repair.offset;
     for (const { material, amount } of building.fullMaterials) {
       materials.push({
         material,
@@ -79,11 +81,11 @@ function calculateAge(lastRepair: number) {
     <div>
       <div style="display: inline">
         <span style="padding-left: 5px">Age Threshold:</span>
-        <NumberInput v-model="settings.repairThreshold" style="width: 60px" />
+        <NumberInput v-model="userData.settings.repair.threshold" style="width: 60px" />
       </div>
       <div style="display: inline">
         <span style="padding-left: 5px">Time Offset:</span>
-        <NumberInput v-model="settings.repairOffset" style="width: 60px" />
+        <NumberInput v-model="userData.settings.repair.offset" style="width: 60px" />
       </div>
     </div>
 

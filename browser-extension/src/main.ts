@@ -8,23 +8,22 @@ import { applyXITParameters } from '@src/features/XIT/xit-commands';
 
 import './refined-prun.css';
 import { fetchPrices } from '@src/infrastructure/fio/cx';
-import { loadFinHistory, recordFinancials } from '@src/core/financials';
-import { loadSettings } from '@src/store/settings';
-import dayjs from 'dayjs';
 import { loadRefinedPrunCss } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { loadNotes } from '@src/store/notes';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import { balance } from '@src/core/balance/balance';
 import descendantPresent from '@src/utils/descendant-present';
+import { loadUserData } from '@src/store/user-data';
+import { trackFinancialHistory } from '@src/store/user-data-balance';
 
 async function mainRun() {
+  void fetchPrices();
   initializePrunApi();
   const backgroundTasks = Promise.allSettled([loadGameData()]);
 
   let result: Settings;
   try {
     result = await loadLegacySettings();
-    await loadSettings();
+    await loadUserData();
     await loadNotes();
   } catch (e) {
     console.error('PMMG: Failed to load settings');
@@ -54,30 +53,10 @@ async function mainRun() {
     appendStyle(RPrunStylesheet.advanced);
   }
 
-  void fetchPrices();
-  setInterval(fetchPrices, dayjs.duration(15, 'minutes').asMilliseconds());
-
-  if (
-    !result['PMMGExtended']['last_fin_recording'] ||
-    Date.now() - result['PMMGExtended']['last_fin_recording'] >
-      dayjs.duration(18, 'hours').asMilliseconds()
-  ) {
-    setTimeout(() => {
-      let companyValue = balance.companyValue.value;
-      const interval = setInterval(() => {
-        // Hacky way to wait until all the financials are loaded.
-        if (companyValue !== balance.companyValue.value) {
-          companyValue = balance.companyValue.value;
-          return;
-        }
-        clearInterval(interval);
-        recordFinancials(result);
-      }, 1000);
-    }, 5000);
-  }
   applyXITParameters(result);
   await features.init();
 
+  void trackFinancialHistory();
   if (!result.PMMGExtended.loaded_before) {
     result.PMMGExtended.loaded_before = await showBuffer('XIT START');
     if (result.PMMGExtended.loaded_before) {

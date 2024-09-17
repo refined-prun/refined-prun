@@ -43,6 +43,7 @@ export default ts.config(
       globals: {
         chrome: 'readonly',
         PrunApi: 'readonly',
+        UserData: 'readonly',
       },
     },
     ignores: ['eslint.config.js', 'browser-extension/manifest.js'],

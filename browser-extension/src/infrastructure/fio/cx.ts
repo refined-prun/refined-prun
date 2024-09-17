@@ -1,8 +1,11 @@
 import { shallowReactive } from 'vue';
-import { settings } from '@src/store/settings';
 import { sumBy } from '@src/utils/sum-by';
+import { userData } from '@src/store/user-data';
+import dayjs from 'dayjs';
 
 export async function fetchPrices() {
+  setTimeout(fetchPrices, dayjs.duration(15, 'minutes').asMilliseconds());
+
   const url = 'https://refined-prun.github.io/refined-prices/all.json';
   const response = await fetch(url);
   const tickersInfo = (await response.json()) as TickerPriceInfo[];
@@ -111,7 +114,7 @@ export function getPrice(ticker?: string | null) {
     return 0;
   }
 
-  const pricing = settings.pricing;
+  const pricing = userData.settings.pricing;
   const exchange = cxStore.prices.get(pricing.exchange);
   if (!exchange) {
     return 0;

@@ -19,13 +19,8 @@ const materialsToDeliver = computed(
 
 const longTermDebt = computed(() => sumLoanRepayments(selfNonCurrentConditions));
 
-const total = computed(() => {
-  return accountsPayable.value + materialsToDeliver.value + longTermDebt.value;
-});
-
 export const nonCurrentLiabilities = {
   accountsPayable,
   materialsToDeliver,
   longTermDebt,
-  total,
 };

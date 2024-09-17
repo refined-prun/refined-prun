@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { settings } from '@src/store/settings';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { userData } from '@src/store/user-data';
 
 const textClasses = [
   PrunCss.Frame.toggleLabel,
@@ -15,7 +15,7 @@ const sliverClasses = [PrunCss.Frame.toggleIndicator, PrunCss.Frame.toggleIndica
 <template>
   <div>
     <div
-      v-for="(button, i) in settings.sidebar"
+      v-for="(button, i) in userData.settings.sidebar"
       :key="i"
       :class="PrunCss.Frame.toggle"
       @click="() => showBuffer(button[1])">

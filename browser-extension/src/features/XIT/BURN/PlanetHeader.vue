@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed, PropType } from 'vue';
 import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
-import { settings } from '@src/store/settings';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { fixed0, fixed2 } from '@src/utils/format';
 import { getPrice } from '@src/infrastructure/fio/cx';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import PrunButton from '@src/components/PrunButton.vue';
 import { PlanetBurn } from '@src/core/burn';
+import { userData } from '@src/store/user-data';
 
 const props = defineProps({
   burn: {
@@ -38,7 +38,7 @@ const needVolume = computed(() => sumNeed(x => x.volume));
 const needCost = computed(() => sumNeed(x => getPrice(x.ticker)));
 
 function sumNeed(property: (x: PrunApi.Material) => number) {
-  const resupply = settings.burn.resupply;
+  const resupply = userData.settings.burn.resupply;
   let sum = 0;
   for (const key of Object.keys(props.burn.burn)) {
     const mat = materialsStore.getByTicker(key);
@@ -56,7 +56,7 @@ function sumNeed(property: (x: PrunApi.Material) => number) {
 }
 
 function formatPrice(price: number): string {
-  return settings.fin.currency + fixed0(price);
+  return userData.settings.currency + fixed0(price);
 }
 </script>
 

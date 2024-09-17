@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { settings, SortingMode } from '@src/store/settings';
 import PrunButton from '@src/components/PrunButton.vue';
 import ActionBar from '@src/components/ActionBar.vue';
 import { showConfirmationOverlay, showTileOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import SortingModeEditor from './SortingModeEditor.vue';
+import { userData } from '@src/store/user-data';
 
 const props = defineProps({
   parameters: {
@@ -17,29 +17,29 @@ const props = defineProps({
 const storeId = computed(() => props.parameters[1]);
 const storage = computed(() => storagesStore.getById(storeId.value));
 const sortingModes = computed(() =>
-  settings.sorting.filter(x => x.storeId.toUpperCase() === storeId.value.toUpperCase()),
+  userData.sortingModes.filter(x => x.storeId.toUpperCase() === storeId.value.toUpperCase()),
 );
 
 function createSortingMode(ev: Event) {
   showTileOverlay(ev, SortingModeEditor, {
     storeId: storeId.value,
-    onSave: (sortingMode: SortingMode) => settings.sorting.push(sortingMode),
+    onSave: (sortingMode: UserData.SortingMode) => userData.sortingModes.push(sortingMode),
   });
 }
 
-function editSortingMode(ev: Event, sortingMode: SortingMode) {
+function editSortingMode(ev: Event, sortingMode: UserData.SortingMode) {
   showTileOverlay(ev, SortingModeEditor, {
     storeId: storeId.value,
     sortingMode,
-    onSave: (saved: SortingMode) => Object.assign(sortingMode, saved),
+    onSave: (saved: UserData.SortingMode) => Object.assign(sortingMode, saved),
   });
 }
 
-function deleteSortingMode(ev: Event, sortingMode: SortingMode) {
+function deleteSortingMode(ev: Event, sortingMode: UserData.SortingMode) {
   showConfirmationOverlay(
     ev,
     () => {
-      settings.sorting = settings.sorting.filter(x => x !== sortingMode);
+      userData.sortingModes = userData.sortingModes.sorting.filter(x => x !== sortingMode);
     },
     {
       message: `Are you sure you want to delete ${sortingMode.label}?`,

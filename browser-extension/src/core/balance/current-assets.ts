@@ -61,15 +61,6 @@ const fxDepositsTotal = computed(() => sumMapValues(fxDeposits.value));
 
 const depositsTotal = computed(() => cxDepositsTotal.value + fxDepositsTotal.value);
 
-const quick = computed(
-  () =>
-    cashTotal.value +
-    depositsTotal.value +
-    interestReceivable.value +
-    accountsReceivable.value +
-    shortTermLoans.value,
-);
-
 const interestReceivable = computed(() => sumLoanInterest(partnerCurrentConditions));
 
 const accountsReceivable = computed(() => sumAccountsPayable(partnerCurrentConditions));
@@ -93,29 +84,11 @@ const materialsToReceive = computed(
     sumPendingMaterialsPickup(selfConditions),
 );
 
-const total = computed(
-  () =>
-    cashTotal.value +
-    depositsTotal.value +
-    interestReceivable.value +
-    accountsReceivable.value +
-    shortTermLoans.value +
-    marketListedMaterials.value +
-    inventory.total.value +
-    totalOrderValue.value +
-    materialsToReceive.value,
-);
-
-const totalExceptQuick = computed(() => total.value - quick.value);
-
 export const currentAssets = {
   cashTotal,
   cxDeposits,
-  cxDepositsTotal,
   fxDeposits,
-  fxDepositsTotal,
   depositsTotal,
-  quick,
   interestReceivable,
   accountsReceivable,
   shortTermLoans,
@@ -124,6 +97,4 @@ export const currentAssets = {
   marketListedMaterials,
   inventory: inventory.total,
   materialsToReceive,
-  total,
-  totalExceptQuick,
 };

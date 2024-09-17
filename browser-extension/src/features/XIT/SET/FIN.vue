@@ -4,11 +4,31 @@ import Tooltip from '@src/components/Tooltip.vue';
 import Commands from '@src/components/forms/Commands.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import { computed } from 'vue';
-import { finHistory } from '@src/core/financials';
 import { fixed0, hhmm, mmddyyyy } from '@src/utils/format';
+import { clearBalanceHistory, deleteBalanceHistoryDataPoint, userData } from '@src/store/user-data';
+import { calcEquity } from '@src/core/balance/balance-sheet-summary';
+import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
+import { downloadJson } from '@src/utils/download-json';
+import { balanceHistory, collectFinDataPoint } from '@src/store/user-data-balance';
 
-const sortedData = computed(() => finHistory.slice().reverse());
-// You are about to clear all current and historical financial data. Do you want to continue?
+const sortedData = computed(() => balanceHistory.value.slice().reverse());
+
+function exportData() {
+  downloadJson(userData.balanceHistory, `refined-prun-fin-${Date.now()}.json`);
+}
+
+function confirmDataPointDelete(ev: Event, index: number) {
+  index = balanceHistory.value.length - index - 1;
+  showConfirmationOverlay(ev, () => deleteBalanceHistoryDataPoint(index), {
+    message: `You are about to delete a historical data point. Do you want to continue?`,
+  });
+}
+
+function confirmAllDataDelete(ev: Event) {
+  showConfirmationOverlay(ev, clearBalanceHistory, {
+    message: `You are about to clear all historical financial data. Do you want to continue?`,
+  });
+}
 </script>
 
 <template>
@@ -19,7 +39,7 @@ const sortedData = computed(() => finHistory.slice().reverse());
   <form>
     <Commands>
       <PrunButton primary>Import Data</PrunButton>
-      <PrunButton primary>Export Data</PrunButton>
+      <PrunButton primary @click="exportData">Export Data</PrunButton>
     </Commands>
   </form>
   <SectionHeader>
@@ -28,7 +48,7 @@ const sortedData = computed(() => finHistory.slice().reverse());
   </SectionHeader>
   <form>
     <Commands>
-      <PrunButton primary>Collect Data Point</PrunButton>
+      <PrunButton primary @click="collectFinDataPoint">Collect Data Point</PrunButton>
     </Commands>
   </form>
   <table>
@@ -40,11 +60,11 @@ const sortedData = computed(() => finHistory.slice().reverse());
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(data, i) in sortedData" :key="i">
-        <td>{{ hhmm(data[0]) }} on {{ mmddyyyy(data[0]) }}</td>
-        <td>{{ fixed0(data[1] + data[2] + data[3] - data[4]) }}</td>
+      <tr v-for="(balance, i) in sortedData" :key="i">
+        <td>{{ hhmm(balance.timestamp) }} on {{ mmddyyyy(balance.timestamp) }}</td>
+        <td>{{ fixed0(calcEquity(balance)) }}</td>
         <td>
-          <PrunButton dark inline>delete</PrunButton>
+          <PrunButton dark inline @click="confirmDataPointDelete($event, i)">delete</PrunButton>
         </td>
       </tr>
     </tbody>
@@ -55,7 +75,7 @@ const sortedData = computed(() => finHistory.slice().reverse());
   </SectionHeader>
   <form>
     <Commands>
-      <PrunButton danger>Clear Financial Data</PrunButton>
+      <PrunButton danger @click="confirmAllDataDelete">Clear Financial Data</PrunButton>
     </Commands>
   </form>
 </template>

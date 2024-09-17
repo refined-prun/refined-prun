@@ -1,9 +1,3 @@
-type Arrayable<X> = X | X[];
-
-interface SignalAsOptions {
-  signal?: AbortSignal;
-}
-
 interface PrunTile {
   id: string;
   frame: HTMLDivElement;
@@ -12,5 +6,3 @@ interface PrunTile {
   parameter: string | undefined;
   firstActivation: boolean;
 }
-
-declare type BaseTileState = Record<string, unknown>;
