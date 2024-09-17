@@ -1,4 +1,4 @@
-import { createTileStateHook } from '@src/infrastructure/prun-api/data/tiles';
+import { createTileStateHook } from '@src/store/user-data-tiles';
 
 export const useTileState = createTileStateHook({
   red: true,

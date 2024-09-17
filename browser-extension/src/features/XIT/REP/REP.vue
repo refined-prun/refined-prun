@@ -19,13 +19,13 @@ import { timestampEachSecond } from '@src/utils/dayjs';
 import { binarySearch } from '@src/utils/binary-search';
 import dayjs from 'dayjs';
 import { fixed1, percent1 } from '@src/utils/format';
-import { mergeMaterialAmounts } from '@src/infrastructure/prun-api/data/materials';
 import MaterialPurchaseTable from '@src/components/MaterialPurchaseTable.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { cxStore } from '@src/infrastructure/fio/cx';
 import { calculateBuildingCondition } from '@src/core/buildings';
 import { diffDays } from '@src/utils/time-diff';
 import { userData } from '@src/store/user-data';
+import { mergeMaterialAmounts } from '@src/core/sort-materials';
 
 const props = defineProps({
   parameters: {

@@ -5,15 +5,15 @@ import Commands from '@src/components/forms/Commands.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import { computed } from 'vue';
 import { fixed0, hhmm, ddmmyyyy } from '@src/utils/format';
-import { clearBalanceHistory, deleteBalanceHistoryDataPoint } from '@src/store/user-data';
-import { calcEquity } from '@src/core/balance/balance-sheet-summary';
+import { clearBalanceHistory, userData } from '@src/store/user-data';
+import { calcCompanyValue, calcEquity } from '@src/core/balance/balance-sheet-summary';
 import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import {
   balanceHistory,
   collectFinDataPoint,
-  exportFinancialHistory,
-  importFinancialHistory,
+  
 } from '@src/store/user-data-balance';
+import { exportFinancialHistory, importFinancialHistory } from '@src/infrastructure/storage/balance-serializer';
 
 const sortedData = computed(() => balanceHistory.value.slice().reverse());
 
@@ -24,10 +24,22 @@ function confirmDataPointDelete(ev: Event, index: number) {
   });
 }
 
+function deleteBalanceHistoryDataPoint(index: number) {
+  if (index < userData.balanceHistory.v1.length) {
+    userData.balanceHistory.v1.splice(index, 1);
+  } else {
+    userData.balanceHistory.v2.splice(index - userData.balanceHistory.v1.length, 1);
+  }
+}
+
 function confirmAllDataDelete(ev: Event) {
   showConfirmationOverlay(ev, clearBalanceHistory, {
     message: `You are about to clear all historical financial data. Do you want to continue?`,
   });
+}
+
+function formatValue(number?: number) {
+  return number ? fixed0(number) : '--';
 }
 </script>
 
@@ -56,13 +68,15 @@ function confirmAllDataDelete(ev: Event) {
       <tr>
         <th>Date</th>
         <th>Equity</th>
+        <th>Company Value</th>
         <th>Command</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="(balance, i) in sortedData" :key="i">
-        <td>{{ hhmm(balance.timestamp) }} on {{ ddmmyyyy(balance.timestamp) }}</td>
-        <td>{{ fixed0(calcEquity(balance)) }}</td>
+        <td>{{ hhmm(balance.timestamp) }} {{ ddmmyyyy(balance.timestamp) }}</td>
+        <td>{{ formatValue(calcEquity(balance)) }}</td>
+        <td>{{ formatValue(calcCompanyValue(balance)) }}</td>
         <td>
           <PrunButton dark inline @click="confirmDataPointDelete($event, i)">delete</PrunButton>
         </td>

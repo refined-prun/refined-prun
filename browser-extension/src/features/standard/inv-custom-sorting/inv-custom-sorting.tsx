@@ -8,14 +8,9 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import CategoryHeader from './CategoryHeader.vue';
 import InventorySortControls from './InventorySortControls.vue';
-import {
-  materialsStore,
-  sortMaterials,
-  sortMaterialsBy,
-} from '@src/infrastructure/prun-api/data/materials';
+import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { computed, reactive, watch } from 'vue';
 import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
-import { computedTileState } from '@src/infrastructure/prun-api/data/tiles';
 import xit from '@src/features/XIT/xit-registry.js';
 import SORT from '@src/features/XIT/SORT/SORT.vue';
 import onElementDisconnected from '@src/utils/on-element-disconnected';
@@ -24,6 +19,8 @@ import { createFragmentApp, FragmentAppScope } from '@src/utils/vue-fragment-app
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
+import { sortMaterials, sortMaterialsBy } from '@src/core/sort-materials';
+import { computedTileState } from '@src/store/user-data-tiles';
 
 async function onInvReady(tile: PrunTile) {
   await applyCustomSorting(tile);
@@ -51,20 +48,18 @@ async function applyCustomSorting(tile: PrunTile) {
 
   const burn = computed(() => getPlanetBurn(storagesStore.getById(storeId)?.addressableId));
 
-  const sortingModes = computed(() => {
-    const modes = userData.sortingModes.filter(x => x.storeId === storeId);
+  const sorting = computed(() => {
+    const modes = userData.sorting.filter(x => x.storeId === storeId);
     if (burn.value) {
       modes.push(createBurnSortingMode(storeId));
     }
     return modes;
   });
 
-  const activeSortingMode = computed(() =>
-    sortingModes.value.find(x => x.label === activeSort.value),
-  );
+  const activeSorting = computed(() => sorting.value.find(x => x.label === activeSort.value));
 
   watch(
-    activeSortingMode,
+    activeSorting,
     mode => {
       if (mode) {
         sortOptions.classList.add(classes.custom);
@@ -78,7 +73,7 @@ async function applyCustomSorting(tile: PrunTile) {
   createFragmentApp(
     InventorySortControls,
     reactive({
-      sortingModes,
+      sorting,
       activeSort,
       onModeClick: (mode: string) => (activeSort.value = mode),
       onAddClick: () => showBuffer(`XIT SORT ${storeId}`),
@@ -89,21 +84,24 @@ async function applyCustomSorting(tile: PrunTile) {
   const runSort = () => {
     observer.disconnect();
     scope.begin();
-    sortInventory(inventory, activeSortingMode.value, burn.value?.burn);
+    sortInventory(inventory, activeSorting.value, burn.value?.burn);
     scope.end();
     setTimeout(() => observer.observe(inventory, { childList: true, subtree: true }), 0);
   };
   const observer = new MutationObserver(runSort);
-  onElementDisconnected(inventory, watch([reactive({ activeSortingMode }), burn], runSort));
+  onElementDisconnected(
+    inventory,
+    watch([reactive({ activeSortingMode: activeSorting }), burn], runSort),
+  );
   runSort();
 }
 
 function sortInventory(
   inventory: Element,
-  sortingMode: UserData.SortingMode | undefined,
+  sorting: UserData.SortingMode | undefined,
   burn: BurnValues | undefined,
 ) {
-  if (!sortingMode) {
+  if (!sorting) {
     return;
   }
 
@@ -111,9 +109,9 @@ function sortInventory(
     div,
     ticker: _$(PrunCss.ColoredIcon.label, div)?.textContent,
   }));
-  const categories = sortingMode.categories.slice();
+  const categories = sorting.categories.slice();
 
-  if (sortingMode.burn && burn) {
+  if (sorting.burn && burn) {
     const tickers = Object.keys(burn);
     const inputs = new Set(tickers.filter(x => burn[x].Type === 'input'));
     const outputs = new Set(tickers.filter(x => burn[x].Type === 'output' && !inputs.has(x)));
@@ -154,7 +152,7 @@ function sortInventory(
       if (gridItem) {
         inventory.appendChild(gridItem.div);
         remainingItems.delete(gridItem);
-      } else if (sortingMode.zero) {
+      } else if (sorting.zero) {
         createFragmentApp(GridMaterialIcon, {
           ticker: material.ticker,
           amount: 0,

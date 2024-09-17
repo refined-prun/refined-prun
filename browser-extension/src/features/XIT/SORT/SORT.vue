@@ -16,33 +16,33 @@ const props = defineProps({
 
 const storeId = computed(() => props.parameters[1]);
 const storage = computed(() => storagesStore.getById(storeId.value));
-const sortingModes = computed(() =>
-  userData.sortingModes.filter(x => x.storeId.toUpperCase() === storeId.value.toUpperCase()),
+const sorting = computed(() =>
+  userData.sorting.filter(x => x.storeId.toUpperCase() === storeId.value.toUpperCase()),
 );
 
 function createSortingMode(ev: Event) {
   showTileOverlay(ev, SortingModeEditor, {
     storeId: storeId.value,
-    onSave: (sortingMode: UserData.SortingMode) => userData.sortingModes.push(sortingMode),
+    onSave: (sorting: UserData.SortingMode) => userData.sorting.push(sorting),
   });
 }
 
-function editSortingMode(ev: Event, sortingMode: UserData.SortingMode) {
+function editSortingMode(ev: Event, sorting: UserData.SortingMode) {
   showTileOverlay(ev, SortingModeEditor, {
     storeId: storeId.value,
-    sortingMode,
-    onSave: (saved: UserData.SortingMode) => Object.assign(sortingMode, saved),
+    sorting,
+    onSave: (saved: UserData.SortingMode) => Object.assign(sorting, saved),
   });
 }
 
-function deleteSortingMode(ev: Event, sortingMode: UserData.SortingMode) {
+function deleteSortingMode(ev: Event, sorting: UserData.SortingMode) {
   showConfirmationOverlay(
     ev,
     () => {
-      userData.sortingModes = userData.sortingModes.sorting.filter(x => x !== sortingMode);
+      userData.sorting = userData.sorting.filter(x => x !== sorting);
     },
     {
-      message: `Are you sure you want to delete ${sortingMode.label}?`,
+      message: `Are you sure you want to delete ${sorting.label}?`,
     },
   );
 }
@@ -62,8 +62,8 @@ function deleteSortingMode(ev: Event, sortingMode: UserData.SortingMode) {
           <th />
         </tr>
       </thead>
-      <tbody v-if="sortingModes.length > 0">
-        <tr v-for="mode in sortingModes" :key="mode.label">
+      <tbody v-if="sorting.length > 0">
+        <tr v-for="mode in sorting" :key="mode.label">
           <td>{{ mode.label }}</td>
           <td>{{ mode.categories.map(x => x.name).join(', ') }}</td>
           <td>

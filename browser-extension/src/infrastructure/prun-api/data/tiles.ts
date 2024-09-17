@@ -1,8 +1,5 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
-import { App, computed, inject, InjectionKey, reactive, Ref, watch, Plugin } from 'vue';
-import { deepFreeze } from '@src/utils/deep-freeze';
-import { userData } from '@src/store/user-data';
 
 const store = createEntityStore<PrunApi.Tile>();
 const state = store.state;
@@ -10,11 +7,8 @@ const state = store.state;
 messages({
   UI_DATA(data: PrunApi.UIData) {
     store.setAll(data.tiles);
-    for (const key of Object.keys(userData.tileState)) {
-      if (!state.entities[key]) {
-        removeTileState(key);
-      }
-    }
+    store.setFetched();
+    tilesStore.listener.tilesInitialized();
   },
   UI_TILES_CHANGE_COMMAND(data: { id: string; newCommand: string | null }) {
     const tile = state.getById(data.id);
@@ -26,7 +20,7 @@ messages({
       ...tile,
       content: data.newCommand,
     });
-    removeTileState(data.id);
+    tilesStore.listener.tileRemoved(data.id);
   },
   UI_TILES_MOVE(data: { sourceId: string; targetId: string; content: string }) {
     const source = state.getById(data.sourceId);
@@ -47,7 +41,7 @@ messages({
       ...target,
       content: data.content,
     });
-    moveTileState(data.sourceId, data.targetId);
+    tilesStore.listener.tileMoved(data.sourceId, data.targetId);
   },
   UI_TILES_SPLIT(data: { id: string; newId1: string; newId2: string; vertically: boolean }) {
     const tile = state.getById(data.id);
@@ -80,7 +74,7 @@ messages({
       },
     });
 
-    moveTileState(data.id, data.newId1);
+    tilesStore.listener.tileMoved(data.id, data.newId1);
   },
   UI_TILES_REMOVE(data: { id: string }) {
     const tile = state.getById(data.id);
@@ -108,8 +102,8 @@ messages({
     store.removeOne(tile.id);
     store.removeOne(other.id);
 
-    removeTileState(tile.id);
-    moveTileState(other.id, parent.id);
+    tilesStore.listener.tileRemoved(tile.id);
+    tilesStore.listener.tileMoved(other.id, parent.id);
   },
   UI_TILES_CHANGE_SIZE(data: { id: string; newDividerPosition: number }) {
     const tile = state.getById(data.id);
@@ -127,93 +121,17 @@ messages({
   },
 });
 
-function removeTileState(id: string) {
-  delete userData.tileState[id];
-}
-
-function moveTileState(fromId: string, toId: string) {
-  if (userData.tileState[fromId]) {
-    userData.tileState[toId] = userData.tileState[fromId];
-    removeTileState(fromId);
-  }
-}
-
-type TileState = UserData.TileState;
-
-function getTileState<T extends TileState>(tileOrId: PrunTile | string) {
-  const id = typeof tileOrId === 'string' ? tileOrId : tileOrId.id;
-  let state = userData.tileState[id];
-  let isAdded = state !== undefined;
-  if (!state) {
-    state = reactive({});
-  }
-  watch(
-    state,
-    () => {
-      const hasKeys = Object.keys(state).length > 0;
-      if (hasKeys && !isAdded) {
-        userData.tileState[id] = state;
-        isAdded = true;
-      }
-      if (!hasKeys && isAdded) {
-        delete userData.tileState[id];
-        isAdded = false;
-      }
-    },
-    { deep: true },
-  );
-  return state as T;
-}
-
-const baseTileStateKey = Symbol() as InjectionKey<Ref<TileState>>;
-
-export function tileStateKey<T extends TileState>() {
-  return baseTileStateKey as InjectionKey<Ref<T>>;
-}
-
-export const tileStatePlugin: Plugin = {
-  install: (app: App, options: { tile: PrunTile | string }) => {
-    app.provide(
-      tileStateKey(),
-      computed(() => getTileState(options.tile)),
-    );
-  },
-};
-
-export function createTileStateHook<T extends TileState>(defaultState: T) {
-  deepFreeze(defaultState);
-  return function useTileState<K extends keyof T>(key: K) {
-    const state = inject(tileStateKey<T>())!;
-    return computedTileState(state, key, defaultState[key]);
-  };
-}
-
-export function computedTileState<T extends TileState, K extends keyof T>(
-  state: Ref<T>,
-  key: K,
-  defaultValue?: T[K],
-) {
-  return computed({
-    get: () => {
-      // Touch property to trigger reactivity
-      const value = state.value[key];
-      return Object.hasOwn(state.value, key) ? value : defaultValue;
-    },
-    set: value => {
-      if (Array.isArray(value) && value.length === 0) {
-        delete state.value[key];
-        return;
-      }
-      if (value === defaultValue) {
-        delete state.value[key];
-        return;
-      }
-      state.value[key] = value!;
-    },
-  });
+interface ChangeListener {
+  tilesInitialized(): void;
+  tileMoved(fromId: string, toId: string): void;
+  tileRemoved(id: string): void;
 }
 
 export const tilesStore = {
   ...state,
-  getTileState,
+  listener: {
+    tilesInitialized() {},
+    tileMoved() {},
+    tileRemoved() {},
+  } as ChangeListener,
 };

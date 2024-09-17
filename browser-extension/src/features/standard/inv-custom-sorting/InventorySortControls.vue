@@ -4,7 +4,7 @@ import { PropType } from 'vue';
 import SortingOrderIcon from '@src/features/standard/inv-custom-sorting/SortingOrderIcon.vue';
 
 defineProps({
-  sortingModes: {
+  sorting: {
     type: Array as PropType<UserData.SortingMode[]>,
     required: true,
   },
@@ -13,7 +13,7 @@ defineProps({
     default: undefined,
   },
   onModeClick: {
-    type: Function as PropType<(sortingMode: string) => void>,
+    type: Function as PropType<(sorting: string) => void>,
     required: true,
   },
   onAddClick: {
@@ -25,7 +25,7 @@ defineProps({
 
 <template>
   <div
-    v-for="mode in sortingModes.map(x => x.label)"
+    v-for="mode in sorting.map(x => x.label)"
     :key="mode"
     :class="PrunCss.InventorySortControls.criteria"
     @click="onModeClick(mode)">

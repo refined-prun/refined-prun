@@ -1,9 +1,8 @@
 import { reactive, shallowReactive, watch } from 'vue';
-import system from '@src/system';
-import { deepToRaw } from '@src/utils/deep-to-raw';
 import { deepFreeze } from '@src/utils/deep-freeze';
 
-const initial = deepFreeze({
+export const initialUserData = deepFreeze({
+  version: 1,
   tileState: {} as Record<string, UserData.TileState | undefined>,
   settings: {
     currency: '₳',
@@ -37,14 +36,45 @@ const initial = deepFreeze({
       ['HELP', 'XIT HELP'],
     ],
   },
-  sortingModes: [] as UserData.SortingMode[],
+  sorting: [] as UserData.SortingMode[],
   balanceHistory: {
     v1: [],
     v2: [],
   } as UserData.BalanceHistory,
 });
 
-export const userData = reactive(structuredClone(initial));
+export const userData = reactive({} as typeof initialUserData);
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function applyUserData(newData: any) {
+  const clone = structuredClone(newData);
+  clone.balanceHistory = {
+    v1: shallowReactive(clone.balanceHistory?.v1 ?? []),
+    v2: shallowReactive(clone.balanceHistory?.v2 ?? []),
+  };
+  Object.assign(userData, clone);
+}
+
+export function resetAllData() {
+  applyUserData(initialUserData);
+}
+
+resetAllData();
+
+export function applyPmmgUserData(pmmg: UserData.PmmgSettings) {
+  userData.settings.currency = pmmg.currency;
+  userData.settings.burn.red = pmmg.burn.red;
+  userData.settings.burn.yellow = pmmg.burn.yellow;
+  userData.settings.burn.resupply = pmmg.burn.resupply;
+  userData.settings.repair.threshold = pmmg.repair.threshold;
+  userData.settings.repair.offset = pmmg.repair.offset;
+  if (pmmg.sidebar) {
+    userData.settings.sidebar = pmmg.sidebar;
+  }
+  if (pmmg.sorting) {
+    userData.sorting = pmmg.sorting;
+  }
+}
 
 export function clearBalanceHistory() {
   userData.balanceHistory = reactive({
@@ -53,32 +83,7 @@ export function clearBalanceHistory() {
   });
 }
 
-// This will make balance history shallow reactive instead of reactive.
-clearBalanceHistory();
-
-export function deleteBalanceHistoryDataPoint(index: number) {
-  if (index < userData.balanceHistory.v1.length) {
-    userData.balanceHistory.v1.splice(index, 1);
-  } else {
-    userData.balanceHistory.v2.splice(index - userData.balanceHistory.v1.length, 1);
-  }
-}
-
-export function resetSidebar() {
-  userData.settings.sidebar = [...initial.settings.sidebar].map(x => [...x]);
-}
-
-export function resetAllData() {
-  Object.assign(userData, structuredClone(initial));
-}
-
-const key = 'rp-user-data';
-
-export async function loadUserData() {
-  const saved = await system.storage.local.get(key);
-  if (saved[key]) {
-    Object.assign(userData, saved[key]);
-  }
+export function watchUserData(save: () => void) {
   let saveQueued = false;
 
   watch(
@@ -89,9 +94,7 @@ export async function loadUserData() {
       }
       if (!saveQueued) {
         setTimeout(() => {
-          void system.storage.local.set({
-            [key]: deepToRaw(userData),
-          });
+          save();
           saveQueued = false;
         }, 1000);
         saveQueued = true;

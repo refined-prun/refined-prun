@@ -1,22 +1,27 @@
 import { downloadJson, uploadJson } from '@src/utils/download-json';
+import { userData } from '@src/store/user-data';
+import { shallowReactive } from 'vue';
 
-const balanceHistoryType = 'rp-balance';
+const fileType = 'rp-balance';
 
-export function saveBalanceHistory(balanceHistory: UserData.BalanceHistory) {
-  const json = {
-    type: balanceHistoryType,
-    data: balanceHistory,
-  };
-  downloadJson(json, `rp-balance-${Date.now()}.json`);
-}
-
-export function loadBalanceHistory(callback: (balanceHistory: UserData.BalanceHistory) => void) {
+export function importFinancialHistory() {
   uploadJson(json => {
     const balanceHistory = parseBalanceHistory(json);
     if (balanceHistory) {
-      callback(balanceHistory);
+      userData.balanceHistory = {
+        v1: shallowReactive(balanceHistory.v1),
+        v2: shallowReactive(balanceHistory.v2),
+      };
     }
   });
+}
+
+export function exportFinancialHistory() {
+  const json = {
+    type: fileType,
+    data: userData.balanceHistory,
+  };
+  downloadJson(json, `rp-balance-${Date.now()}.json`);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,7 +30,7 @@ function parseBalanceHistory(json: any) {
     return undefined;
   }
 
-  if (json.type === balanceHistoryType) {
+  if (json.type === fileType) {
     return json.data as UserData.BalanceHistory;
   }
 
@@ -34,7 +39,7 @@ function parseBalanceHistory(json: any) {
     return {
       v1: json.History.map((item: number[]) => item.map(Math.round)),
       v2: [],
-    };
+    } as UserData.BalanceHistory;
   }
 
   return undefined;

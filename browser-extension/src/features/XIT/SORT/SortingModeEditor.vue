@@ -15,10 +15,10 @@ const props = defineProps({
     required: true,
   },
   onSave: {
-    type: Function as PropType<(sortingMode: UserData.SortingMode) => void>,
+    type: Function as PropType<(sorting: UserData.SortingMode) => void>,
     required: true,
   },
-  sortingMode: {
+  sorting: {
     type: Object as PropType<UserData.SortingMode | undefined>,
     default: undefined,
   },
@@ -26,15 +26,15 @@ const props = defineProps({
 
 const storage = computed(() => storagesStore.getById(props.storeId));
 
-const sortingMode = props.sortingMode;
-const label = ref(sortingMode?.label ?? '');
+const sorting = props.sorting;
+const label = ref(sorting?.label ?? '');
 const categories = ref(
-  sortingMode?.categories.map(x => ({ name: x.name, materials: x.materials.join(', ') })) ?? [
+  sorting?.categories.map(x => ({ name: x.name, materials: x.materials.join(', ') })) ?? [
     createCategory(),
   ],
 );
-const burn = ref(sortingMode?.burn ?? false);
-const zero = ref(sortingMode?.zero ?? false);
+const burn = ref(sorting?.burn ?? false);
+const zero = ref(sorting?.zero ?? false);
 
 const canRemoveCategory = computed(() => categories.value.length > 1);
 

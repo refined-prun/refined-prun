@@ -2,10 +2,10 @@
 import { computed, ref, watch } from 'vue';
 import LineChart from '@src/features/XIT/FIN/LineChart.vue';
 import { percent0 } from '@src/utils/format';
-import { createTileStateHook } from '@src/infrastructure/prun-api/data/tiles';
 import { userData } from '@src/store/user-data';
 import { calcEquity } from '@src/core/balance/balance-sheet-summary';
 import { balanceHistory } from '@src/store/user-data-balance';
+import { createTileStateHook } from '@src/store/user-data-tiles';
 
 defineProps({
   pan: Boolean,

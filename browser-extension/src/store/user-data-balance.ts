@@ -3,9 +3,8 @@ import { userData } from '@src/store/user-data';
 import dayjs from 'dayjs';
 import { diffHours } from '@src/utils/time-diff';
 import { liveBalanceSheet, liveBalanceSummary } from '@src/core/balance/balance-sheet-live';
-import { computed, shallowReactive } from 'vue';
+import { computed } from 'vue';
 import { sleep } from '@src/util';
-import { loadBalanceHistory, saveBalanceHistory } from '@src/store/user-data-serializer';
 
 const v1 = computed(() => userData.balanceHistory.v1.map(deserializeBalanceSheetV1Data));
 const v2 = computed(() => userData.balanceHistory.v2.map(deserializeBalanceSheetV2Data));
@@ -44,19 +43,6 @@ function hasRecentBalanceRecording() {
     (dayjs(lastRecording.timestamp).isSame(now, 'day') ||
       diffHours(lastRecording.timestamp, now) < 8)
   );
-}
-
-export function importFinancialHistory() {
-  loadBalanceHistory(balanceHistory => {
-    userData.balanceHistory = {
-      v1: shallowReactive(balanceHistory.v1),
-      v2: shallowReactive(balanceHistory.v2),
-    };
-  });
-}
-
-export function exportFinancialHistory() {
-  saveBalanceHistory(userData.balanceHistory);
 }
 
 export function deserializeBalanceSheetV1Data(

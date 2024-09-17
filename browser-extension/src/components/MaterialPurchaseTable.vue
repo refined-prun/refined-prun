@@ -4,8 +4,8 @@ import PrunLink from '@src/components/PrunLink.vue';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import { computed, PropType } from 'vue';
 import { calcMaterialAmountPrice } from '@src/infrastructure/fio/cx';
-import { sortMaterialAmounts } from '@src/infrastructure/prun-api/data/materials';
 import { userData } from '@src/store/user-data';
+import { sortMaterialAmounts } from '@src/core/sort-materials';
 
 const props = defineProps({
   materials: {

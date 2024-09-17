@@ -9,7 +9,8 @@ import XITContainer from '@src/features/XIT/XITContainer.vue';
 import LegacyXITAdapter from '@src/features/XIT/LegacyXITAdapter.vue';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContextControls from '@src/components/ContextControls.vue';
-import { tileStatePlugin } from '@src/infrastructure/prun-api/data/tiles';
+
+import { tileStatePlugin } from '@src/store/user-data-tiles';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let xitArgs: any;

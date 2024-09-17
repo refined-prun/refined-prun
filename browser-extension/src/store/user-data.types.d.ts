@@ -65,4 +65,19 @@ declare namespace UserData {
     hqUpgrades: number,
     arc: number,
   ];
+
+  interface PmmgSettings {
+    currency: string;
+    burn: {
+      red: number;
+      yellow: number;
+      resupply: number;
+    };
+    repair: {
+      threshold: number;
+      offset: number;
+    };
+    sidebar?: [string, string][];
+    sorting?: UserData.SortingMode[];
+  }
 }

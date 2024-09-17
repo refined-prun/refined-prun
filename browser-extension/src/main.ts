@@ -12,8 +12,9 @@ import { loadRefinedPrunCss } from '@src/infrastructure/prun-ui/refined-prun-css
 import { loadNotes } from '@src/store/notes';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import descendantPresent from '@src/utils/descendant-present';
-import { loadUserData } from '@src/store/user-data';
 import { trackBalanceHistory } from '@src/store/user-data-balance';
+import { initializeTileListener } from '@src/store/user-data-tiles';
+import { loadUserData } from '@src/infrastructure/storage/user-data-serializer';
 
 async function mainRun() {
   void fetchPrices();
@@ -22,9 +23,10 @@ async function mainRun() {
 
   let result: Settings;
   try {
-    result = await loadLegacySettings();
     await loadUserData();
+    initializeTileListener();
     await loadNotes();
+    result = await loadLegacySettings();
   } catch (e) {
     console.error('PMMG: Failed to load settings');
     throw e;

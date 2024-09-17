@@ -2,7 +2,8 @@ import MaterialAmount = PrunApi.MaterialAmount;
 import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getShipLastRepair, shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
-import { mergeMaterialAmounts } from '@src/infrastructure/prun-api/data/materials';
+
+import { mergeMaterialAmounts } from '@src/core/sort-materials';
 
 export interface RepairEntry {
   ticker: string;

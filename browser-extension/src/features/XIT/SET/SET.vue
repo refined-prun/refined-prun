@@ -19,7 +19,8 @@ import Active from '@src/components/forms/Active.vue';
 import NumberInput from '@src/components/forms/NumberInput.vue';
 import Commands from '@src/components/forms/Commands.vue';
 import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
-import { resetAllData, resetSidebar, userData } from '@src/store/user-data';
+import { initialUserData, resetAllData, userData } from '@src/store/user-data';
+import { exportUserData, importUserData } from '@src/infrastructure/storage/user-data-serializer';
 
 function addSidebarButton() {
   userData.settings.sidebar.push(['SET', 'XIT SET']);
@@ -30,7 +31,9 @@ function deleteSidebarButton(index: number) {
 }
 
 function confirmResetSidebar(ev: Event) {
-  showConfirmationOverlay(ev, resetSidebar);
+  showConfirmationOverlay(ev, () => {
+    userData.settings.sidebar = [...initialUserData.settings.sidebar].map(x => [...x]);
+  });
 }
 
 function confirmResetAllData(ev: Event) {
@@ -79,8 +82,8 @@ function confirmResetAllData(ev: Event) {
   <SectionHeader>Import/Export Settings</SectionHeader>
   <form>
     <Commands>
-      <PrunButton primary>Import Settings</PrunButton>
-      <PrunButton primary>Export Settings</PrunButton>
+      <PrunButton primary @click="importUserData">Import Settings</PrunButton>
+      <PrunButton primary @click="exportUserData">Export Settings</PrunButton>
       <input type="file" accept=".json" style="display: none" />
       <span class="prun-remove-js" style="display: none">Error Loading File!</span>
     </Commands>
