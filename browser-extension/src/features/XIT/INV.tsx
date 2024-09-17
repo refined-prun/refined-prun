@@ -10,18 +10,17 @@ import xit from './xit-registry';
 class FIOInventory {
   private tile: HTMLElement;
   private parameters: string[];
-  private pmmgSettings;
   public name = 'FIO INVENTORY';
 
-  constructor(tile, parameters, pmmgSettings) {
+  constructor(tile, parameters) {
     this.tile = tile;
     this.parameters = parameters;
-    this.pmmgSettings = pmmgSettings;
   }
 
   create_buffer() {
     clearChildren(this.tile);
-    const apikey = this.pmmgSettings['PMMGExtended']['apikey'];
+    const apikey = '';
+    // this.pmmgSettings['PMMGExtended']['apikey'];
     if (this.parameters.length < 2) {
       this.tile.textContent = 'Error! Not Enough Parameters!';
       return;

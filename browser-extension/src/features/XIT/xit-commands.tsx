@@ -12,17 +12,6 @@ import ContextControls from '@src/components/ContextControls.vue';
 
 import { tileStatePlugin } from '@src/store/user-data-tiles';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let xitArgs: any;
-export const getXitArgs = () => xitArgs;
-
-export function applyXITParameters(pmmgSettings) {
-  xitArgs = {
-    modules: [],
-    pmmgSettings,
-  };
-}
-
 async function onTileReady(tile: PrunTile) {
   const frame = tile.frame;
   const scrollView = await descendantPresent(frame, PrunCss.ScrollView.view);
@@ -80,8 +69,7 @@ async function onTileReady(tile: PrunTile) {
   if (xitCommand.module) {
     createFragmentApp(LegacyXITAdapter, {
       module: (container: HTMLDivElement) => {
-        const args = getXitArgs();
-        return new xitCommand.module!(container, parameters, args.pmmgSettings, args.modules);
+        return new xitCommand.module!(container, parameters);
       },
     }).appendTo(container);
   } else if (xitCommand.component) {

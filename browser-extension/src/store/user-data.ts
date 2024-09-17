@@ -3,6 +3,7 @@ import { deepFreeze } from '@src/utils/deep-freeze';
 
 export const initialUserData = deepFreeze({
   version: 1,
+  first: true,
   tileState: {} as Record<string, UserData.TileState | undefined>,
   settings: {
     currency: '₳',

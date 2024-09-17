@@ -22,13 +22,11 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 class Checklists {
   private tile: HTMLElement;
   private parameters: string[];
-  public pmmgResult;
   public name = 'CHECKLIST';
 
-  constructor(tile, parameters, pmmgResult) {
+  constructor(tile, parameters) {
     this.tile = tile;
     this.parameters = parameters;
-    this.pmmgResult = pmmgResult;
   }
 
   create_buffer() {
