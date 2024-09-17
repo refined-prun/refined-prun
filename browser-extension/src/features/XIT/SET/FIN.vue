@@ -5,17 +5,17 @@ import Commands from '@src/components/forms/Commands.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import { computed } from 'vue';
 import { fixed0, hhmm, ddmmyyyy } from '@src/utils/format';
-import { clearBalanceHistory, deleteBalanceHistoryDataPoint, userData } from '@src/store/user-data';
+import { clearBalanceHistory, deleteBalanceHistoryDataPoint } from '@src/store/user-data';
 import { calcEquity } from '@src/core/balance/balance-sheet-summary';
 import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
-import { downloadJson } from '@src/utils/download-json';
-import { balanceHistory, collectFinDataPoint } from '@src/store/user-data-balance';
+import {
+  balanceHistory,
+  collectFinDataPoint,
+  exportFinancialHistory,
+  importFinancialHistory,
+} from '@src/store/user-data-balance';
 
 const sortedData = computed(() => balanceHistory.value.slice().reverse());
-
-function exportData() {
-  downloadJson(userData.balanceHistory, `refined-prun-fin-${Date.now()}.json`);
-}
 
 function confirmDataPointDelete(ev: Event, index: number) {
   index = balanceHistory.value.length - index - 1;
@@ -38,8 +38,8 @@ function confirmAllDataDelete(ev: Event) {
   </SectionHeader>
   <form>
     <Commands>
-      <PrunButton primary>Import Data</PrunButton>
-      <PrunButton primary @click="exportData">Export Data</PrunButton>
+      <PrunButton primary @click="importFinancialHistory">Import Data</PrunButton>
+      <PrunButton primary @click="exportFinancialHistory">Export Data</PrunButton>
     </Commands>
   </form>
   <SectionHeader>

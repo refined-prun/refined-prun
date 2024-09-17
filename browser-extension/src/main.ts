@@ -13,7 +13,7 @@ import { loadNotes } from '@src/store/notes';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import descendantPresent from '@src/utils/descendant-present';
 import { loadUserData } from '@src/store/user-data';
-import { trackFinancialHistory } from '@src/store/user-data-balance';
+import { trackBalanceHistory } from '@src/store/user-data-balance';
 
 async function mainRun() {
   void fetchPrices();
@@ -56,7 +56,7 @@ async function mainRun() {
   applyXITParameters(result);
   await features.init();
 
-  void trackFinancialHistory();
+  void trackBalanceHistory();
   if (!result.PMMGExtended.loaded_before) {
     result.PMMGExtended.loaded_before = await showBuffer('XIT START');
     if (result.PMMGExtended.loaded_before) {
