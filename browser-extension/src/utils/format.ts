@@ -11,12 +11,12 @@ export const hhmmss = new Intl.DateTimeFormat(undefined, {
   second: '2-digit',
 }).format;
 
-export const mmdd = new Intl.DateTimeFormat(undefined, {
+export const ddmm = new Intl.DateTimeFormat(undefined, {
   month: '2-digit',
   day: '2-digit',
 }).format;
 
-export const mmddyyyy = new Intl.DateTimeFormat(undefined, {
+export const ddmmyyyy = new Intl.DateTimeFormat(undefined, {
   month: '2-digit',
   day: '2-digit',
   year: 'numeric',

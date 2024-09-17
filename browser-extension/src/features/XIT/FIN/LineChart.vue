@@ -15,7 +15,7 @@ import {
   Tooltip,
 } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
-import { fixed0, hhmm, mmdd, mmddyyyy } from '@src/utils/format';
+import { fixed0, hhmm, ddmm, ddmmyyyy } from '@src/utils/format';
 
 Chart.register(
   LineController,
@@ -139,7 +139,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
       ticks: {
         color: '#999',
         callback(value: string | number) {
-          return mmdd(Number(value));
+          return ddmm(Number(value));
         },
       },
     },
@@ -182,7 +182,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
           if (!timestamp) {
             return;
           }
-          return `${hhmm(timestamp)} ${mmddyyyy(timestamp)}`;
+          return `${hhmm(timestamp)} ${ddmmyyyy(timestamp)}`;
         },
         label(item): string | void {
           let label = item.dataset.label || '';

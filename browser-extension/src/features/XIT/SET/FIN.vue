@@ -4,7 +4,7 @@ import Tooltip from '@src/components/Tooltip.vue';
 import Commands from '@src/components/forms/Commands.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import { computed } from 'vue';
-import { fixed0, hhmm, mmddyyyy } from '@src/utils/format';
+import { fixed0, hhmm, ddmmyyyy } from '@src/utils/format';
 import { clearBalanceHistory, deleteBalanceHistoryDataPoint, userData } from '@src/store/user-data';
 import { calcEquity } from '@src/core/balance/balance-sheet-summary';
 import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
@@ -61,7 +61,7 @@ function confirmAllDataDelete(ev: Event) {
     </thead>
     <tbody>
       <tr v-for="(balance, i) in sortedData" :key="i">
-        <td>{{ hhmm(balance.timestamp) }} on {{ mmddyyyy(balance.timestamp) }}</td>
+        <td>{{ hhmm(balance.timestamp) }} on {{ ddmmyyyy(balance.timestamp) }}</td>
         <td>{{ fixed0(calcEquity(balance)) }}</td>
         <td>
           <PrunButton dark inline @click="confirmDataPointDelete($event, i)">delete</PrunButton>

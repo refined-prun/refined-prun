@@ -16,7 +16,7 @@ import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { calculatePlanetBurn } from '@src/core/burn';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
-import { mmddyyyy } from '@src/utils/format';
+import { ddmmyyyy } from '@src/utils/format';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 class Checklists {
@@ -117,7 +117,7 @@ function generateCheckTable(result, tile) {
     row.appendChild(incompleteElem);
 
     const duedateElem = document.createElement('td');
-    duedateElem.appendChild(createTextSpan(duedate ? mmddyyyy(duedate) : '--')); // -- or -? Best way to signify no value?
+    duedateElem.appendChild(createTextSpan(duedate ? ddmmyyyy(duedate) : '--')); // -- or -? Best way to signify no value?
     if (duedate && duedate < Date.now()) {
       duedateElem.style.color = TextColors.Failure;
     }
@@ -741,7 +741,7 @@ class CheckItem {
 
     if (checkInfo.duedate) {
       // The due date under the name
-      let dateText = mmddyyyy(checkInfo.duedate);
+      let dateText = ddmmyyyy(checkInfo.duedate);
       if (checkInfo.recurring) {
         dateText += ` (every ${checkInfo.recurring.toLocaleString(undefined, { maximumFractionDigits: 1 })} day${
           checkInfo.recurring == 1 ? ')' : 's)'

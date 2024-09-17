@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, PropType } from 'vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { fixed2, mmddyyyy } from '@src/utils/format';
+import { fixed2, ddmmyyyy } from '@src/utils/format';
 
 const props = defineProps({
   date: {
@@ -30,7 +30,7 @@ const totals = computed(() => {
 <template>
   <tr>
     <td colspan="2" :style="style">
-      <span>{{ mmddyyyy(date) }}</span>
+      <span>{{ ddmmyyyy(date) }}</span>
     </td>
     <!-- This <tr> is needed so both other <tr>s are the same color -->
     <td :style="{ display: 'none' }" />
