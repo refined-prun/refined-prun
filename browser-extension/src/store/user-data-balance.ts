@@ -37,7 +37,8 @@ export async function trackBalanceHistory() {
 
 function hasRecentBalanceRecording() {
   const lastRecording = balanceHistory.value[balanceHistory.value.length - 1];
-  const now = Date.now();
+  // Offset 'now' by 10 minutes in the past to prevent recording on 23:59
+  const now = Date.now() - dayjs.duration(10, 'minutes').asMilliseconds();
   return (
     lastRecording &&
     (dayjs(lastRecording.timestamp).isSame(now, 'day') ||
