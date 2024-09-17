@@ -1,7 +1,6 @@
 New features:
 - XIT CXOS
 - XIT CONTC
-- reload-page-on-websocket-disconnect
 - correct-material-command
 - SHPT and BLCK icons now have a destination label on them
 - XIT CONTS now displays a ! mark for contracts with unfulfilled own conditions
