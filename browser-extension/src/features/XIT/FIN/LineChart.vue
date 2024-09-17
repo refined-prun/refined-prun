@@ -15,7 +15,7 @@ import {
   Tooltip,
 } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
-import { mmdd, fixed0 } from '@src/utils/format';
+import { fixed0, hhmm, mmdd, mmddyyyy } from '@src/utils/format';
 
 Chart.register(
   LineController,
@@ -49,14 +49,6 @@ const props = defineProps({
   zoom: Boolean,
   maintainAspectRatio: Boolean,
 });
-
-type AxisType = 'linear' | 'logarithmic' | 'category' | 'time';
-
-const ylabel = 'Equity';
-const xlabel = 'Date';
-const xtype: AxisType = 'time';
-const ytype: AxisType = 'linear';
-const xprefix = '';
 
 const sortedYData = computed(() => props.ydata.slice().sort((a, b) => a - b));
 
@@ -109,7 +101,7 @@ const chartData = computed<ChartData<'line', number[], number | string | Date>>(
   labels: props.xdata,
   datasets: [
     {
-      label: ylabel,
+      label: 'Equity',
       data: props.ydata,
       borderColor: '#f7a600',
       fill: false,
@@ -132,10 +124,10 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
   maintainAspectRatio: props.maintainAspectRatio,
   scales: {
     x: {
-      type: xtype,
+      type: 'time',
       title: {
         display: true,
-        text: xlabel,
+        text: 'Date',
         color: '#eeeeee',
         font: {
           family: '"Droid Sans", sans-serif',
@@ -147,15 +139,15 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
       ticks: {
         color: '#999',
         callback(value: string | number) {
-          return xtype === 'time' ? mmdd(value as number) : xprefix + value;
+          return mmdd(Number(value));
         },
       },
     },
     y: {
-      type: ytype,
+      type: 'linear',
       title: {
         display: true,
-        text: ylabel,
+        text: 'Equity',
         color: '#eeeeee',
         font: {
           family: '"Droid Sans", sans-serif',
@@ -184,13 +176,21 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
       axis: 'x',
       intersect: false,
       callbacks: {
-        label(context): string | void {
-          let label = context.dataset.label || '';
+        title(items): string | void {
+          const item = items[0];
+          const timestamp = item?.parsed?.x;
+          if (!timestamp) {
+            return;
+          }
+          return `${hhmm(timestamp)} ${mmddyyyy(timestamp)}`;
+        },
+        label(item): string | void {
+          let label = item.dataset.label || '';
 
           if (label) {
             label += ': ';
           }
-          label += props.yprefix + fixed0(context.parsed.y);
+          label += props.yprefix + fixed0(item.parsed.y);
           return label;
         },
       },
