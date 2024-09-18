@@ -7,6 +7,7 @@ import '@src/features/standard/bs-building-list/bs-building-list';
 import '@src/features/standard/com-add-images';
 import '@src/features/standard/com-hide-delete-button';
 import '@src/features/standard/com-hide-join-leave';
+import '@src/features/standard/contd-search-results-above-search-bar';
 import '@src/features/standard/cxpo-order-book/cxpo-order-book';
 import '@src/features/standard/cxpo-shorten-names';
 import '@src/features/standard/finla-exchange-deposits';

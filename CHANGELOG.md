@@ -14,6 +14,7 @@ New features:
 - XIT HQUC - HQ Upgrade Calculator
 - XIT REP now shows a weight/volume/cost table
 - Building list with building count in BS buffer
+- CONTD partner search results now show above the search bar
 
 Changes:
 - XIT command renames: // TODO
