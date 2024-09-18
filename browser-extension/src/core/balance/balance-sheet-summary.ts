@@ -135,7 +135,7 @@ export function calcAcidTestRatio(sheet: PartialBalanceSheet) {
 }
 
 export function calcWorkingCapitalRatio(sheet: PartialBalanceSheet) {
-  return calcTotalAssets(sheet) / calcTotalLiabilities(sheet);
+  return calcTotalCurrentAssets(sheet) / calcTotalCurrentLiabilities(sheet);
 }
 
 export function calcDebtRatio(sheet: PartialBalanceSheet) {

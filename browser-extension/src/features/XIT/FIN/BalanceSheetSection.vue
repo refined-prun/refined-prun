@@ -31,7 +31,7 @@ defineProps({
       <td>--</td>
     </tr>
     <tr :class="PrunCss.IncomeStatementPanel.totals">
-      <td :class="PrunCss.IncomeStatementPanel.number">Total {{ name }}</td>
+      <td :class="PrunCss.IncomeStatementPanel.number">Total</td>
       <td>{{ formatAmount(total) }}</td>
       <td>--</td>
       <td>--</td>

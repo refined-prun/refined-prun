@@ -11,12 +11,10 @@ xit.add({
 </script>
 
 <script setup lang="ts">
-import { formatAmount } from '@src/features/XIT/FIN/utils';
 import { computed } from 'vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { cxStore } from '@src/infrastructure/fio/cx';
 import BalanceSheetSection from '@src/features/XIT/FIN/BalanceSheetSection.vue';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { liveBalanceSheet, liveBalanceSummary } from '@src/core/balance/balance-sheet-live';
 
 interface Section {
@@ -25,7 +23,7 @@ interface Section {
   rows: [string, number][];
 }
 
-const currentAssetsSection = computed<Section>(() => ({
+const currentAssets = computed<Section>(() => ({
   name: 'Current Assets',
   total: liveBalanceSummary.currentAssets,
   rows: [
@@ -36,12 +34,12 @@ const currentAssetsSection = computed<Section>(() => ({
     ['Short-Term Loans', liveBalanceSheet.currentAssets.shortTermLoans],
     ['Market-Listed Materials', liveBalanceSheet.currentAssets.marketListedMaterials],
     ['Inventory', liveBalanceSheet.currentAssets.inventory],
-    ['Orders in Progress', liveBalanceSheet.currentAssets.ordersInProgress],
+    ['Work-in-Progress (WIP)', liveBalanceSheet.currentAssets.ordersInProgress],
     ['Materials to Receive', liveBalanceSheet.currentAssets.materialsToReceive],
   ],
 }));
 
-const nonCurrentAssetsSection = computed<Section>(() => ({
+const nonCurrentAssets = computed<Section>(() => ({
   name: 'Non-Current Assets',
   total: liveBalanceSummary.nonCurrentAssets,
   rows: [
@@ -52,7 +50,7 @@ const nonCurrentAssetsSection = computed<Section>(() => ({
   ],
 }));
 
-const currentLiabilitiesSection = computed<Section>(() => ({
+const currentLiabilities = computed<Section>(() => ({
   name: 'Current Liabilities',
   total: liveBalanceSummary.currentLiabilities,
   rows: [
@@ -63,7 +61,7 @@ const currentLiabilitiesSection = computed<Section>(() => ({
   ],
 }));
 
-const nonCurrentLiabilitiesSection = computed<Section>(() => ({
+const nonCurrentLiabilities = computed<Section>(() => ({
   name: 'Non-Current Liabilities',
   total: liveBalanceSummary.nonCurrentLiabilities,
   rows: [
@@ -73,13 +71,31 @@ const nonCurrentLiabilitiesSection = computed<Section>(() => ({
   ],
 }));
 
-const lockedAssetsSection = computed<Section>(() => ({
+const equity = computed<Section>(() => ({
+  name: 'Equity',
+  total: liveBalanceSummary.equity,
+  rows: [
+    ['Total Assets', liveBalanceSummary.assets],
+    ['Total Liabilities', -liveBalanceSummary.liabilities],
+  ],
+}));
+
+const lockedAssets = computed<Section>(() => ({
   name: 'Locked Assets',
   total: liveBalanceSummary.lockedAssets,
   rows: [
     ['Ships', liveBalanceSheet.lockedAssets.ships],
     ['HQ Upgrades', liveBalanceSheet.lockedAssets.hqUpgrades],
     ['APEX Representation Center', liveBalanceSheet.lockedAssets.arc],
+  ],
+}));
+
+const companyValue = computed<Section>(() => ({
+  name: 'Company Value',
+  total: liveBalanceSummary.companyValue,
+  rows: [
+    ['Equity', liveBalanceSummary.equity],
+    ['Locked Assets', liveBalanceSummary.lockedAssets],
   ],
 }));
 </script>
@@ -96,88 +112,39 @@ const lockedAssetsSection = computed<Section>(() => ({
         <th>Change</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
-        <th colspan="5">ASSETS</th>
-      </tr>
-    </tbody>
     <BalanceSheetSection
-      :name="currentAssetsSection.name"
-      :total="currentAssetsSection.total"
-      :rows="currentAssetsSection.rows" />
+      :name="currentAssets.name"
+      :total="currentAssets.total"
+      :rows="currentAssets.rows" />
     <BalanceSheetSection
-      :name="nonCurrentAssetsSection.name"
-      :total="nonCurrentAssetsSection.total"
-      :rows="nonCurrentAssetsSection.rows" />
-    <tbody>
-      <tr :class="[PrunCss.IncomeStatementPanel.totals, $style.total]">
-        <td :class="PrunCss.IncomeStatementPanel.number">Total Assets</td>
-        <td>{{ formatAmount(liveBalanceSummary.assets) }}</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-      </tr>
-    </tbody>
-    <tbody>
-      <tr>
-        <th colspan="5">LIABILITIES AND EQUITY</th>
-      </tr>
-    </tbody>
+      :name="nonCurrentAssets.name"
+      :total="nonCurrentAssets.total"
+      :rows="nonCurrentAssets.rows" />
     <BalanceSheetSection
-      :name="currentLiabilitiesSection.name"
-      :total="currentLiabilitiesSection.total"
-      :rows="currentLiabilitiesSection.rows" />
+      :name="currentLiabilities.name"
+      :total="currentLiabilities.total"
+      :rows="currentLiabilities.rows" />
     <BalanceSheetSection
-      :name="nonCurrentLiabilitiesSection.name"
-      :total="nonCurrentLiabilitiesSection.total"
-      :rows="nonCurrentLiabilitiesSection.rows" />
-    <tbody>
-      <tr :class="[PrunCss.IncomeStatementPanel.totals, $style.total]">
-        <td :class="PrunCss.IncomeStatementPanel.number">Total Liabilities</td>
-        <td>{{ formatAmount(liveBalanceSummary.liabilities) }}</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-      </tr>
-    </tbody>
-    <tbody>
-      <tr :class="[PrunCss.IncomeStatementPanel.totals, $style.total]">
-        <td :class="PrunCss.IncomeStatementPanel.number">Equity</td>
-        <td>{{ formatAmount(liveBalanceSummary.equity) }}</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-      </tr>
-    </tbody>
-    <tbody>
-      <tr>
-        <th colspan="5">COMPANY VALUE</th>
-      </tr>
-    </tbody>
+      :name="nonCurrentLiabilities.name"
+      :total="nonCurrentLiabilities.total"
+      :rows="nonCurrentLiabilities.rows" />
     <BalanceSheetSection
-      :name="lockedAssetsSection.name"
-      :total="lockedAssetsSection.total"
-      :rows="lockedAssetsSection.rows" />
-    <tbody>
-      <tr :class="[PrunCss.IncomeStatementPanel.totals, $style.total]">
-        <td :class="PrunCss.IncomeStatementPanel.number">Company Value</td>
-        <td>{{ formatAmount(liveBalanceSummary.companyValue) }}</td>
-        <td>--</td>
-        <td>--</td>
-        <td>--</td>
-      </tr>
-    </tbody>
+      :name="equity.name"
+      :total="equity.total"
+      :rows="equity.rows" />
+    <BalanceSheetSection
+      :name="lockedAssets.name"
+      :total="lockedAssets.total"
+      :rows="lockedAssets.rows" />
+    <BalanceSheetSection
+      :name="companyValue.name"
+      :total="companyValue.total"
+      :rows="companyValue.rows" />
   </table>
 </template>
 
 <style scoped>
 table tr > *:not(:first-child) {
   text-align: right;
-}
-</style>
-
-<style module>
-.total {
-  font-weight: bold;
 }
 </style>
