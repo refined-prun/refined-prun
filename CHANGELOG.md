@@ -27,12 +27,13 @@
   - `XIT FIN_SET` is changed to `XIT SET FIN`
   - Old `XIT FIN` landing page was removed in favor of context buttons
 - `XIT SHEETS` are now displayed in minimalist mode
-- `XIT BURN` now uses PrUn-consistent CSS styling and got additional features:
+- `XIT BURN` got additional features:
   - Total load of all needed resources
   - Total cost of all needed resources
   - Context buttons: `BS` and `INV` for planets, `CXM` for materials
-- All XIT commands now accept up to 3 space-separated arguments
 - `LM` ads are now more compact and show commodity/shipment icons
+- New and old UIs now use vanilla PrUn styling where possible
+- All XIT commands now accept up to 3 space-separated arguments
 - Implemented the real-time updates of XIT buffers and added features. Goodbye refresh button!
 - Changed chart library to Chart.js, reducing the size of the plugin. Works on Firefox too!
 - Changed XIT calculator to https://desmos.com/scientific
