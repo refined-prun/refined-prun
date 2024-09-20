@@ -40,7 +40,7 @@ function processText(text: string) {
   }
 
   // Allow for HTML tags
-  text = text.replace('&', '&amp;').replace('<', '&lt;');
+  text = text.replaceAll('&', '&amp;').replaceAll('<', '&lt;');
 
   const regexp = /\b(?:[a-zA-Z0-9]{1,3}\.(?:CI1|IC1|AI1|NC1|CI2|NC2))(?!<)/;
   let counter = 0;
@@ -50,7 +50,7 @@ function processText(text: string) {
       break;
     }
 
-    text = text.replace(regexp, `<span class="${$style.link}">${matches[0]}</span>`);
+    text = text.replaceAll(regexp, `<span class="${$style.link}">${matches[0]}</span>`);
 
     counter++;
     if (counter > 100) {

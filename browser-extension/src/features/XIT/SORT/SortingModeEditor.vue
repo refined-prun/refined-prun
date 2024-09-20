@@ -63,7 +63,7 @@ function onSaveClick() {
     storeId: props.storeId,
     categories: categories.value.map(x => ({
       name: x.name,
-      materials: x.materials.replace(' ', '').split(','),
+      materials: x.materials.replaceAll(' ', '').split(','),
     })),
     burn: burn.value,
     zero: zero.value,
