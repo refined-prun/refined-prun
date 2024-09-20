@@ -22,11 +22,11 @@ import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import ConditionRow from '@src/features/XIT/CONTC/ConditionRow.vue';
 
 const current = computed(() =>
-  selfCurrentConditions.value.filter(x => x.dependencies.every(x => x.status === 'FULFILLED')),
+  selfCurrentConditions.value!.filter(x => x.dependencies.every(x => x.status === 'FULFILLED')),
 );
 
 const nonCurrent = computed(() =>
-  selfNonCurrentConditions.value.filter(x => x.dependencies.every(x => x.status === 'FULFILLED')),
+  selfNonCurrentConditions.value!.filter(x => x.dependencies.every(x => x.status === 'FULFILLED')),
 );
 </script>
 

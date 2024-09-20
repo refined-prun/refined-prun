@@ -28,26 +28,28 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { dayjsEachSecond } from '@src/utils/dayjs';
 
 const bases = computed(() => {
-  return sitesStore.all.value.map(site => ({
-    name: getEntityNameFromAddress(site.address)!,
-    workforce: !!workforcesStore.getById(site.siteId),
-    production: !!productionStore.getBySiteId(site.siteId),
-    storage: !!storagesStore.getByAddress(site.siteId),
-  }));
+  return (
+    sitesStore.all.value?.map(site => ({
+      name: getEntityNameFromAddress(site.address)!,
+      workforce: !!workforcesStore.getById(site.siteId),
+      production: !!productionStore.getBySiteId(site.siteId),
+      storage: !!storagesStore.getByAddress(site.siteId),
+    })) ?? []
+  );
 });
 
 const otherData = computed(() => [
-  ['Base Sites', sitesStore.all.value.length],
-  ['Warehouse Sites', warehousesStore.all.value.length],
-  ['Base Stores', storagesStore.all.value.filter(x => x.type === 'STORE').length],
-  ['Warehouse Stores', storagesStore.all.value.filter(x => x.type === 'WAREHOUSE_STORE').length],
-  ['Ship Stores', storagesStore.all.value.filter(x => x.type === 'SHIP_STORE').length],
-  ['Workforces', workforcesStore.all.value.length],
-  ['Production Sites', productionStore.all.value.length],
-  ['Contracts', contractsStore.all.value.length],
-  ['CXOS', cxosStore.all.value.length],
-  ['FXOS', fxosStore.all.value.length],
-  ['Currency', balancesStore.all.value.length > 0],
+  ['Base Sites', sitesStore.all.value?.length],
+  ['Warehouse Sites', warehousesStore.all.value?.length],
+  ['Base Stores', storagesStore.all.value?.filter(x => x.type === 'STORE').length],
+  ['Warehouse Stores', storagesStore.all.value?.filter(x => x.type === 'WAREHOUSE_STORE').length],
+  ['Ship Stores', storagesStore.all.value?.filter(x => x.type === 'SHIP_STORE').length],
+  ['Workforces', workforcesStore.all.value?.length],
+  ['Production Sites', productionStore.all.value?.length],
+  ['Contracts', contractsStore.all.value?.length],
+  ['CXOS', cxosStore.all.value?.length],
+  ['FXOS', fxosStore.all.value?.length],
+  ['Currency', (balancesStore.all.value?.length ?? 0) > 0],
   ['Last CX Price Update', cxStore.fetched ? `${dayjsEachSecond().to(cxStore.age)}` : false],
 ]);
 
@@ -92,7 +94,9 @@ const negative = PrunCss.ColoredValue.negative;
           <td>{{ other[0] }}</td>
           <td>
             <span v-if="other[1] === true" :class="positive">✓</span>
-            <span v-else-if="other[1] === false" :class="negative">✗</span>
+            <span v-else-if="other[1] === false || other[1] === undefined" :class="negative">
+              ✗
+            </span>
             <template v-else>{{ other[1] }}</template>
           </td>
         </tr>

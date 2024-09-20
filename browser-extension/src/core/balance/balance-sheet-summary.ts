@@ -1,14 +1,16 @@
 import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
+import { map } from '@src/utils/map-values';
+import { sum } from '@src/utils/sum';
 
 export function calcTotalCurrentAssets(sheet: PartialBalanceSheet) {
   const assets = sheet.currentAssets;
   if (!assets) {
-    return 0;
+    return undefined;
   }
 
   return (
     assets.total ??
-    sumPartial(
+    mapSum(
       assets.cash,
       assets.deposits,
       assets.interestReceivable,
@@ -25,12 +27,12 @@ export function calcTotalCurrentAssets(sheet: PartialBalanceSheet) {
 export function calcTotalNonCurrentAssets(sheet: PartialBalanceSheet) {
   const assets = sheet.nonCurrentAssets;
   if (!assets) {
-    return 0;
+    return undefined;
   }
 
   return (
     assets.total ??
-    sumPartial(
+    mapSum(
       assets.buildings,
       assets.accountsReceivable,
       assets.longTermLoans,
@@ -41,19 +43,19 @@ export function calcTotalNonCurrentAssets(sheet: PartialBalanceSheet) {
 
 export function calcTotalAssets(sheet: PartialBalanceSheet) {
   return (
-    sheet.totalAssets ?? sumPartial(calcTotalCurrentAssets(sheet), calcTotalNonCurrentAssets(sheet))
+    sheet.totalAssets ?? mapSum(calcTotalCurrentAssets(sheet), calcTotalNonCurrentAssets(sheet))
   );
 }
 
 export function calcTotalCurrentLiabilities(sheet: PartialBalanceSheet) {
   const liabilities = sheet.currentLiabilities;
   if (!liabilities) {
-    return 0;
+    return undefined;
   }
 
   return (
     liabilities.total ??
-    sumPartial(
+    mapSum(
       liabilities.accountsPayable,
       liabilities.materialsToDeliver,
       liabilities.shortTermDebt,
@@ -65,50 +67,48 @@ export function calcTotalCurrentLiabilities(sheet: PartialBalanceSheet) {
 export function calcTotalNonCurrentLiabilities(sheet: PartialBalanceSheet) {
   const liabilities = sheet.nonCurrentLiabilities;
   if (!liabilities) {
-    return 0;
+    return undefined;
   }
 
   return (
     liabilities.total ??
-    sumPartial(
-      liabilities.accountsPayable,
-      liabilities.materialsToDeliver,
-      liabilities.longTermDebt,
-    )
+    mapSum(liabilities.accountsPayable, liabilities.materialsToDeliver, liabilities.longTermDebt)
   );
 }
 
 export function calcTotalLiabilities(sheet: PartialBalanceSheet) {
   return (
     sheet.totalLiabilities ??
-    sumPartial(calcTotalCurrentLiabilities(sheet), calcTotalNonCurrentLiabilities(sheet))
+    mapSum(calcTotalCurrentLiabilities(sheet), calcTotalNonCurrentLiabilities(sheet))
   );
 }
 
 export function calcTotalLockedAssets(sheet: PartialBalanceSheet) {
   const assets = sheet.lockedAssets;
   if (!assets) {
-    return 0;
+    return undefined;
   }
 
-  return assets.total ?? sumPartial(assets.ships, assets.hqUpgrades, assets.arc);
+  return assets.total ?? mapSum(assets.ships, assets.hqUpgrades, assets.arc);
 }
 
 export function calcEquity(sheet: PartialBalanceSheet) {
-  return sheet.equity ?? calcTotalAssets(sheet) - calcTotalLiabilities(sheet);
+  return (
+    sheet.equity ?? map([calcTotalAssets(sheet), calcTotalLiabilities(sheet)], (x, y) => x - y)
+  );
 }
 
 export function calcCompanyValue(sheet: PartialBalanceSheet) {
-  return sheet.companyValue ?? calcEquity(sheet) + calcTotalLockedAssets(sheet);
+  return sheet.companyValue ?? map([calcEquity(sheet), calcTotalLockedAssets(sheet)], sum);
 }
 
 export function calcQuickAssets(sheet: PartialBalanceSheet) {
   const assets = sheet.currentAssets;
   if (!assets) {
-    return 0;
+    return undefined;
   }
 
-  return sumPartial(
+  return mapSum(
     assets.cash,
     assets.deposits,
     assets.interestReceivable,
@@ -120,10 +120,10 @@ export function calcQuickAssets(sheet: PartialBalanceSheet) {
 export function calcQuickLiabilities(sheet: PartialBalanceSheet) {
   const liabilities = sheet.currentLiabilities;
   if (!liabilities) {
-    return 0;
+    return undefined;
   }
 
-  return sumPartial(
+  return mapSum(
     liabilities.accountsPayable,
     liabilities.shortTermDebt,
     liabilities.interestPayable,
@@ -131,26 +131,21 @@ export function calcQuickLiabilities(sheet: PartialBalanceSheet) {
 }
 
 export function calcAcidTestRatio(sheet: PartialBalanceSheet) {
-  return calcQuickAssets(sheet) / calcQuickLiabilities(sheet);
+  return map([calcQuickAssets(sheet), calcQuickLiabilities(sheet)], (x, y) => x / y);
 }
 
 export function calcWorkingCapitalRatio(sheet: PartialBalanceSheet) {
-  return calcTotalCurrentAssets(sheet) / calcTotalCurrentLiabilities(sheet);
+  return map([calcTotalCurrentAssets(sheet), calcTotalCurrentLiabilities(sheet)], (x, y) => x / y);
 }
 
 export function calcDebtRatio(sheet: PartialBalanceSheet) {
-  return calcTotalLiabilities(sheet) / calcTotalAssets(sheet);
+  return map([calcTotalLiabilities(sheet), calcTotalAssets(sheet)], (x, y) => x / y);
 }
 
 export function calcDebtToEquityRatio(sheet: PartialBalanceSheet) {
-  return calcTotalLiabilities(sheet) / calcEquity(sheet);
+  return map([calcTotalLiabilities(sheet), calcEquity(sheet)], (x, y) => x / y);
 }
 
-function sumPartial(...args: (number | undefined)[]) {
-  let sum = 0;
-  // TODO: undefined if no all undefined args
-  for (const arg of args) {
-    sum += arg ?? 0;
-  }
-  return sum;
+function mapSum(...args: (number | undefined)[]) {
+  return map(args, sum);
 }

@@ -36,7 +36,7 @@ async function applyCustomSorting(tile: PrunTile) {
     return;
   }
 
-  const activeSort = computedTileState(getTileState(tile), 'activeSort');
+  const activeSort = computedTileState(getTileState(tile), 'activeSort', undefined);
   const sortOptions = await descendantPresent(tile.frame, PrunCss.InventorySortControls.controls);
   const inventory = await descendantPresent(tile.frame, PrunCss.InventoryView.grid);
 

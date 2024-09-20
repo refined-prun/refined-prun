@@ -12,30 +12,28 @@ xit.add({
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import LoadingSpinner from '@src/components/LoadingSpinner.vue';
-import { cxStore } from '@src/infrastructure/fio/cx';
 import BalanceSheetSection from '@src/features/XIT/FIN/BalanceSheetSection.vue';
 import { liveBalanceSheet, liveBalanceSummary } from '@src/core/balance/balance-sheet-live';
 
 interface Section {
   name: string;
-  total: number;
-  rows: [string, number][];
+  total: number | undefined;
+  rows: [string, number | undefined][];
 }
 
 const currentAssets = computed<Section>(() => ({
   name: 'Current Assets',
   total: liveBalanceSummary.currentAssets,
   rows: [
-    ['Cash', liveBalanceSheet.currentAssets.cash],
-    ['Deposits', liveBalanceSheet.currentAssets.deposits],
-    ['Interest Receivable', liveBalanceSheet.currentAssets.interestReceivable],
-    ['Accounts Receivable', liveBalanceSheet.currentAssets.accountsReceivable],
-    ['Short-Term Loans', liveBalanceSheet.currentAssets.shortTermLoans],
-    ['Market-Listed Materials', liveBalanceSheet.currentAssets.marketListedMaterials],
-    ['Inventory', liveBalanceSheet.currentAssets.inventory],
-    ['Work-in-Progress (WIP)', liveBalanceSheet.currentAssets.ordersInProgress],
-    ['Materials to Receive', liveBalanceSheet.currentAssets.materialsToReceive],
+    ['Cash', liveBalanceSheet.currentAssets?.cash],
+    ['Deposits', liveBalanceSheet.currentAssets?.deposits],
+    ['Interest Receivable', liveBalanceSheet.currentAssets?.interestReceivable],
+    ['Accounts Receivable', liveBalanceSheet.currentAssets?.accountsReceivable],
+    ['Short-Term Loans', liveBalanceSheet.currentAssets?.shortTermLoans],
+    ['Market-Listed Materials', liveBalanceSheet.currentAssets?.marketListedMaterials],
+    ['Inventory', liveBalanceSheet.currentAssets?.inventory],
+    ['Work-in-Progress (WIP)', liveBalanceSheet.currentAssets?.ordersInProgress],
+    ['Materials to Receive', liveBalanceSheet.currentAssets?.materialsToReceive],
   ],
 }));
 
@@ -43,10 +41,10 @@ const nonCurrentAssets = computed<Section>(() => ({
   name: 'Non-Current Assets',
   total: liveBalanceSummary.nonCurrentAssets,
   rows: [
-    ['Buildings', liveBalanceSheet.nonCurrentAssets.buildings],
-    ['Accounts Receivable', liveBalanceSheet.nonCurrentAssets.accountsReceivable],
-    ['Long-Term Loans', liveBalanceSheet.nonCurrentAssets.longTermLoans],
-    ['Materials to Receive', liveBalanceSheet.nonCurrentAssets.materialsToReceive],
+    ['Buildings', liveBalanceSheet.nonCurrentAssets?.buildings],
+    ['Accounts Receivable', liveBalanceSheet.nonCurrentAssets?.accountsReceivable],
+    ['Long-Term Loans', liveBalanceSheet.nonCurrentAssets?.longTermLoans],
+    ['Materials to Receive', liveBalanceSheet.nonCurrentAssets?.materialsToReceive],
   ],
 }));
 
@@ -54,10 +52,10 @@ const currentLiabilities = computed<Section>(() => ({
   name: 'Current Liabilities',
   total: liveBalanceSummary.currentLiabilities,
   rows: [
-    ['Accounts Payable', liveBalanceSheet.currentLiabilities.accountsPayable],
-    ['Materials to Deliver', liveBalanceSheet.currentLiabilities.materialsToDeliver],
-    ['Short-Term Debt', liveBalanceSheet.currentLiabilities.shortTermDebt],
-    ['Interest Payable', liveBalanceSheet.currentLiabilities.interestPayable],
+    ['Accounts Payable', liveBalanceSheet.currentLiabilities?.accountsPayable],
+    ['Materials to Deliver', liveBalanceSheet.currentLiabilities?.materialsToDeliver],
+    ['Short-Term Debt', liveBalanceSheet.currentLiabilities?.shortTermDebt],
+    ['Interest Payable', liveBalanceSheet.currentLiabilities?.interestPayable],
   ],
 }));
 
@@ -65,9 +63,9 @@ const nonCurrentLiabilities = computed<Section>(() => ({
   name: 'Non-Current Liabilities',
   total: liveBalanceSummary.nonCurrentLiabilities,
   rows: [
-    ['Accounts Payable', liveBalanceSheet.nonCurrentLiabilities.accountsPayable],
-    ['Materials to Deliver', liveBalanceSheet.nonCurrentLiabilities.materialsToDeliver],
-    ['Long-Term Debt', liveBalanceSheet.nonCurrentLiabilities.longTermDebt],
+    ['Accounts Payable', liveBalanceSheet.nonCurrentLiabilities?.accountsPayable],
+    ['Materials to Deliver', liveBalanceSheet.nonCurrentLiabilities?.materialsToDeliver],
+    ['Long-Term Debt', liveBalanceSheet.nonCurrentLiabilities?.longTermDebt],
   ],
 }));
 
@@ -76,7 +74,10 @@ const equity = computed<Section>(() => ({
   total: liveBalanceSummary.equity,
   rows: [
     ['Total Assets', liveBalanceSummary.assets],
-    ['Total Liabilities', -liveBalanceSummary.liabilities],
+    [
+      'Total Liabilities',
+      liveBalanceSummary.liabilities !== undefined ? -liveBalanceSummary.liabilities : undefined,
+    ],
   ],
 }));
 
@@ -84,9 +85,9 @@ const lockedAssets = computed<Section>(() => ({
   name: 'Locked Assets',
   total: liveBalanceSummary.lockedAssets,
   rows: [
-    ['Ships', liveBalanceSheet.lockedAssets.ships],
-    ['HQ Upgrades', liveBalanceSheet.lockedAssets.hqUpgrades],
-    ['APEX Representation Center', liveBalanceSheet.lockedAssets.arc],
+    ['Ships', liveBalanceSheet.lockedAssets?.ships],
+    ['HQ Upgrades', liveBalanceSheet.lockedAssets?.hqUpgrades],
+    ['APEX Representation Center', liveBalanceSheet.lockedAssets?.arc],
   ],
 }));
 
@@ -101,8 +102,7 @@ const companyValue = computed<Section>(() => ({
 </script>
 
 <template>
-  <LoadingSpinner v-if="!cxStore.fetched" />
-  <table v-else>
+  <table>
     <thead>
       <tr>
         <th>&nbsp;</th>

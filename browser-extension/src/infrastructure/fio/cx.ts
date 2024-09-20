@@ -1,5 +1,4 @@
 import { shallowReactive } from 'vue';
-import { sumBy } from '@src/utils/sum-by';
 import { userData } from '@src/store/user-data';
 import dayjs from 'dayjs';
 
@@ -107,38 +106,47 @@ function weightedAverage<T>(
 
 export function getPrice(ticker?: string | null) {
   if (!cxStore.fetched) {
-    return 0;
+    return undefined;
   }
 
   if (!ticker) {
-    return 0;
+    return undefined;
   }
 
   const pricing = userData.settings.pricing;
   const exchange = cxStore.prices.get(pricing.exchange);
   if (!exchange) {
-    return 0;
+    return undefined;
   }
 
   const tickerInfo = exchange.get(ticker);
   if (!tickerInfo) {
-    return 0;
+    return undefined;
   }
 
   switch (pricing.method) {
     case 'ASK':
-      return tickerInfo.Ask ?? 0;
+      return tickerInfo.Ask ?? undefined;
     case 'BID':
-      return tickerInfo.Bid ?? 0;
+      return tickerInfo.Bid ?? undefined;
     case 'AVG':
-      return tickerInfo.PriceAverage ?? 0;
+      return tickerInfo.PriceAverage ?? undefined;
     case 'VWAP7D':
-      return tickerInfo.VWAP7D ?? 0;
+      return tickerInfo.VWAP7D ?? undefined;
     case 'VWAP30D':
-      return tickerInfo.VWAP30D ?? 0;
+      return tickerInfo.VWAP30D ?? undefined;
+    case 'DEFAULT':
+      return (
+        tickerInfo.VWAP7D ??
+        tickerInfo.VWAP30D ??
+        tickerInfo.PriceAverage ??
+        tickerInfo.Ask ??
+        tickerInfo.Bid ??
+        0
+      );
   }
 
-  return 0;
+  return undefined;
 }
 
 export function getMaterialPrice(material: PrunApi.Material) {
@@ -146,11 +154,20 @@ export function getMaterialPrice(material: PrunApi.Material) {
 }
 
 export function calcMaterialAmountPrice(amount: PrunApi.MaterialAmount) {
-  return getMaterialPrice(amount.material) * amount.amount;
+  const price = getMaterialPrice(amount.material);
+  return price ? price * amount.amount : undefined;
 }
 
 export function sumMaterialAmountPrice(amounts: PrunApi.MaterialAmount[]) {
-  return sumBy(amounts, calcMaterialAmountPrice);
+  let result = 0;
+  for (const item of amounts) {
+    const price = calcMaterialAmountPrice(item);
+    if (price === undefined) {
+      return undefined;
+    }
+    result += price;
+  }
+  return result;
 }
 
 export const cxStore = shallowReactive({

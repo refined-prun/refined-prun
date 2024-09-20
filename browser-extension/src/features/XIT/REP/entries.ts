@@ -17,6 +17,9 @@ export interface RepairEntry {
 export function calculateBuildingEntries(parameters: string[]) {
   let sites: PrunApi.Site[] = [];
   if (parameters.length === 1) {
+    if (sitesStore.all.value === undefined) {
+      return undefined;
+    }
     sites = sitesStore.all.value;
   }
   for (let i = 1; i < parameters.length; i++) {
@@ -48,6 +51,9 @@ export function calculateBuildingEntries(parameters: string[]) {
 export function calculateShipEntries(parameters: string[]) {
   let ships: PrunApi.Ship[] = [];
   if (parameters.length === 1 || parameters.some(isShipParameter)) {
+    if (shipsStore.all.value === undefined) {
+      return undefined;
+    }
     ships = shipsStore.all.value;
   }
   const entries: RepairEntry[] = [];

@@ -80,12 +80,19 @@ const needVolume = computed(() =>
   needAmt.value && !isNaN(needAmt.value) ? needAmt.value * props.material.volume : 0,
 );
 
-const needCost = computed(() =>
-  needAmt.value && !isNaN(needAmt.value) ? needAmt.value * getPrice(props.material.ticker) : 0,
-);
+const needCost = computed(() => {
+  if (isNaN(needAmt.value)) {
+    return undefined;
+  }
+  const price = getPrice(props.material.ticker);
+  if (price === undefined) {
+    return undefined;
+  }
+  return needAmt.value * price;
+});
 
-function formatPrice(price: number): string {
-  return userData.settings.currency + fixed0(price);
+function formatPrice(price: number | undefined): string {
+  return price !== undefined ? userData.settings.currency + fixed0(price) : '--';
 }
 </script>
 

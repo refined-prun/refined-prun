@@ -5,7 +5,7 @@ import { nonCurrentAssets } from '@src/core/balance/non-current-assets';
 import { currentLiabilities } from '@src/core/balance/current-liabilities';
 import { nonCurrentLiabilities } from '@src/core/balance/non-current-liabilities';
 import { lockedAssets } from '@src/core/balance/locked-assets';
-import { BalanceSheet, PartialBalanceSheet } from '@src/core/balance/balance-sheet';
+import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
 import {
   calcAcidTestRatio,
   calcCompanyValue,
@@ -26,7 +26,7 @@ import {
 
 export const liveBalanceSheet = createLiveBalanceSheet();
 
-function createLiveBalanceSheet(): BalanceSheet {
+function createLiveBalanceSheet(): PartialBalanceSheet {
   return unwrapRefProperties({
     timestamp: timestampEachSecond(),
 
@@ -65,7 +65,7 @@ function createLiveBalanceSheet(): BalanceSheet {
     lockedAssets: unwrapRefProperties({
       ships: lockedAssets.ships,
       hqUpgrades: lockedAssets.hqUpgrades,
-      arc: lockedAssets.apexRepresentationCenter,
+      arc: lockedAssets.arc,
     }),
   });
 }

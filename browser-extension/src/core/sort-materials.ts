@@ -12,7 +12,10 @@ export function sortMaterialsBy<T>(
   items: T[],
   selector: (item: T) => PrunApi.Material | undefined,
 ) {
-  const categories = materialCategoriesStore.entities;
+  const categories = materialCategoriesStore.entities.value;
+  if (categories === undefined) {
+    return items;
+  }
   return items.slice().sort((a, b) => {
     const materialA = selector(a);
     const materialB = selector(b);

@@ -14,7 +14,7 @@ const props = defineProps({
 
 const $style = useCssModule();
 const ownOrderClass = computed(() => ({
-  [$style.own]: props.order.amount && props.order.trader.id === companyStore.id,
+  [$style.own]: props.order.amount && props.order.trader.id === companyStore.value?.id,
 }));
 const amount = computed(() => (props.order.amount ? fixed0(props.order.amount) : '∞'));
 const amountClass = computed(() => [PrunCss.ComExOrderBookPanel.amount, ownOrderClass.value]);

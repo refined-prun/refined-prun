@@ -26,18 +26,27 @@ export function calculateLocationAssets() {
     return location;
   }
 
+  if (inventory.byLocation.value === undefined) {
+    return undefined;
+  }
   for (const [name, value] of inventory.byLocation.value) {
     const location = getLocation(name);
     location.current += value;
     location.total += value;
   }
 
+  if (currentAssets.orders.value === undefined) {
+    return undefined;
+  }
   for (const [name, value] of currentAssets.orders.value) {
     const location = getLocation(name);
     location.current += value;
     location.total += value;
   }
 
+  if (nonCurrentAssets.buildings.value === undefined) {
+    return undefined;
+  }
   for (const [name, value] of nonCurrentAssets.buildings.value) {
     const location = getLocation(name);
     location.nonCurrent += value;

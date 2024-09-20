@@ -31,7 +31,12 @@ function getByShipmentId(id?: string | undefined) {
     return undefined;
   }
 
-  for (const contract of state.all.value) {
+  const all = state.all.value;
+  if (all === undefined) {
+    return undefined;
+  }
+
+  for (const contract of all) {
     const condition = contract.conditions.find(
       x => x.type === 'DELIVERY_SHIPMENT' && x.shipmentItemId?.startsWith(id),
     );
@@ -48,7 +53,12 @@ function getDeliveryConditionByShipmentId(id?: string | undefined) {
     return undefined;
   }
 
-  for (const contract of state.all.value) {
+  const all = state.all.value;
+  if (all === undefined) {
+    return undefined;
+  }
+
+  for (const contract of all) {
     for (const condition of contract.conditions) {
       if (
         condition.type === 'PROVISION_SHIPMENT' &&
@@ -87,7 +97,7 @@ function getDestinationByShipmentId(id?: string | undefined) {
 }
 
 export const active = computed(() =>
-  state.all.value.filter(
+  state.all.value?.filter(
     x =>
       x.status === 'CLOSED' ||
       x.status === 'PARTIALLY_FULFILLED' ||
@@ -104,5 +114,5 @@ export const contractsStore = {
 };
 
 export function isFactionContract(contract: PrunApi.Contract) {
-  return !!contract.partner.countryCode;
+  return contract.partner.countryCode !== undefined;
 }

@@ -18,7 +18,7 @@ import { computed } from 'vue';
 import ContractRow from '@src/features/XIT/CONTS/ContractRow.vue';
 
 const filtered = computed(() =>
-  contractsStore.all.value.filter(shouldShowContract).sort(compareContracts),
+  contractsStore.all.value!.filter(shouldShowContract).sort(compareContracts),
 );
 
 function shouldShowContract(contract: PrunApi.Contract) {

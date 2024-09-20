@@ -1,7 +1,6 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
-import { request } from '@src/infrastructure/prun-api/data/request-hooks';
-import { computed } from 'vue';
+import { createRequestStore, request } from '@src/infrastructure/prun-api/data/request-hooks';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 
 const store = createEntityStore<PrunApi.Blueprint>();
@@ -17,21 +16,9 @@ messages({
   },
 });
 
-const all = (() => {
-  const all = state.all;
-  return computed(() => {
-    if (!state.fetched.value) {
-      request.blueprints();
-    }
+const getByNaturalId = createMapGetter(state.all, x => x.naturalId);
 
-    return all.value;
-  });
-})();
-
-const getByNaturalId = createMapGetter(all, x => x.naturalId);
-
-export const blueprintsStore = {
+export const blueprintsStore = createRequestStore(request.blueprints, {
   ...state,
-  all,
   getByNaturalId,
-};
+});

@@ -1,4 +1,5 @@
 import { computed, ref, shallowReactive } from 'vue';
+import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 
 type EntityId = number | string;
 type IdSelector<T, Id extends EntityId> = (model: T) => Id;
@@ -8,12 +9,24 @@ export function createEntityStore<T>(selectId?: IdSelector<T, string>) {
   selectId = selectId ?? ((model: any) => model.id);
   const entities = shallowReactive({} as Record<string, T>);
   const fetched = ref(false);
+
+  messages({
+    CLIENT_CONNECTION_OPENED() {
+      for (const id of Object.keys(entities)) {
+        delete entities[id];
+      }
+      fetched.value = false;
+    },
+  });
+
   return {
     state: {
-      entities,
       fetched,
-      all: computed(() => Object.values(entities)),
-      getById: (id?: string | null) => (id ? entities[id] : undefined),
+      entities: computed(() => {
+        return fetched.value ? entities : undefined;
+      }),
+      all: computed(() => (fetched.value ? Object.values(entities) : undefined)),
+      getById: (id?: string | null) => (fetched.value && id ? entities[id] : undefined),
     },
     setAll(items: T[]) {
       for (const key in entities) {

@@ -14,20 +14,17 @@ export default {};
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { calculateHQUpgradeMaterials, maxHQLevel } from '@src/core/hq';
-import { cxStore } from '@src/infrastructure/fio/cx';
-import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import MaterialPurchaseTable from '@src/components/MaterialPurchaseTable.vue';
 
-const from = ref(companyStore.headquarters.level);
+const from = ref(companyStore.value?.headquarters.level ?? 1);
 const to = ref(from.value + 1);
 
 const materials = computed(() => calculateHQUpgradeMaterials(from.value, to.value));
 </script>
 
 <template>
-  <LoadingSpinner v-if="!cxStore.fetched" />
-  <div v-else :class="$style.container">
+  <div :class="$style.container">
     <div :class="$style.selectors">
       <span>From: </span>
       <select v-model="from">

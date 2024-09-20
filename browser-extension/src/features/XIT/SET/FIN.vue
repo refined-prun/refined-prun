@@ -8,12 +8,11 @@ import { fixed0, hhmm, ddmmyyyy } from '@src/utils/format';
 import { clearBalanceHistory, userData } from '@src/store/user-data';
 import { calcCompanyValue, calcEquity } from '@src/core/balance/balance-sheet-summary';
 import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
+import { balanceHistory, collectFinDataPoint } from '@src/store/user-data-balance';
 import {
-  balanceHistory,
-  collectFinDataPoint,
-  
-} from '@src/store/user-data-balance';
-import { exportFinancialHistory, importFinancialHistory } from '@src/infrastructure/storage/balance-serializer';
+  exportFinancialHistory,
+  importFinancialHistory,
+} from '@src/infrastructure/storage/balance-serializer';
 
 const sortedData = computed(() => balanceHistory.value.slice().reverse());
 

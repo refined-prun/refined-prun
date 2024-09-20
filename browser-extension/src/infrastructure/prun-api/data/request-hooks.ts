@@ -37,3 +37,19 @@ export function createRequestGetter<T, K>(
     return undefined;
   };
 }
+
+type RequestStore<T> = T & { request(): void };
+
+export function createRequestStore<T>(request: () => void, store: T): RequestStore<T> {
+  const wrapped = {} as RequestStore<T>;
+  for (const key in store) {
+    Object.defineProperty(wrapped, key, {
+      get: () => {
+        request();
+        return store[key];
+      },
+    });
+  }
+  wrapped.request = request;
+  return wrapped;
+}

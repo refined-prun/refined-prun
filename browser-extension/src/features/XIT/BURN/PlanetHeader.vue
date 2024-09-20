@@ -33,11 +33,11 @@ const days = computed(() => {
   return days;
 });
 
-const needWeight = computed(() => sumNeed(x => x.weight));
-const needVolume = computed(() => sumNeed(x => x.volume));
+const needWeight = computed(() => sumNeed(x => x.weight)!);
+const needVolume = computed(() => sumNeed(x => x.volume)!);
 const needCost = computed(() => sumNeed(x => getPrice(x.ticker)));
 
-function sumNeed(property: (x: PrunApi.Material) => number) {
+function sumNeed(property: (x: PrunApi.Material) => number | undefined) {
   const resupply = userData.settings.burn.resupply;
   let sum = 0;
   for (const key of Object.keys(props.burn.burn)) {
@@ -50,13 +50,17 @@ function sumNeed(property: (x: PrunApi.Material) => number) {
       continue;
     }
     const needed = (days - resupply) * production;
-    sum += needed * property(mat);
+    const value = property(mat);
+    if (value === undefined) {
+      return undefined;
+    }
+    sum += needed * value;
   }
   return sum;
 }
 
-function formatPrice(price: number): string {
-  return userData.settings.currency + fixed0(price);
+function formatPrice(price: number | undefined): string {
+  return price !== undefined ? userData.settings.currency + fixed0(price) : '--';
 }
 </script>
 

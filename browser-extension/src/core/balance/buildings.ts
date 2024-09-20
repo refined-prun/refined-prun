@@ -6,6 +6,7 @@ import { timestampEachMinute } from '@src/utils/dayjs';
 import { calculateBuildingCondition } from '@src/core/buildings';
 import { computed } from 'vue';
 import { diffDays } from '@src/utils/time-diff';
+import { sum } from '@src/utils/sum';
 
 interface Entry {
   location: string;
@@ -14,13 +15,21 @@ interface Entry {
 }
 
 const buildingValue = computed(() => {
+  const sites = sitesStore.all.value;
+  if (sites === undefined) {
+    return undefined;
+  }
   const buildings: Entry[] = [];
-  for (const site of sitesStore.all.value) {
+  for (const site of sites) {
     const location = getEntityNameFromAddress(site.address)!;
     for (const building of site.platforms) {
-      const value =
-        sumMaterialAmountPrice(building.reclaimableMaterials) +
-        sumMaterialAmountPrice(building.repairMaterials);
+      const value = sum(
+        sumMaterialAmountPrice(building.reclaimableMaterials),
+        sumMaterialAmountPrice(building.repairMaterials),
+      );
+      if (value === undefined) {
+        return undefined;
+      }
       buildings.push({
         location,
         building,
@@ -32,6 +41,10 @@ const buildingValue = computed(() => {
 });
 
 export const currentBuildingValue = computed(() => {
+  if (buildingValue.value == undefined) {
+    return undefined;
+  }
+
   const now = timestampEachMinute();
   const buildings = new Map<string, number>();
   for (const building of buildingValue.value) {

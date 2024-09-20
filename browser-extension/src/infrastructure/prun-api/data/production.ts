@@ -16,6 +16,7 @@ messages({
     productionLines: PrunApi.ProductionLine[];
   }) {
     store.setMany(data.productionLines);
+    store.setFetched();
   },
   PRODUCTION_PRODUCTION_LINE_ADDED(data: PrunApi.ProductionLine) {
     store.setOne(data);
@@ -24,34 +25,37 @@ messages({
     store.setOne(data);
   },
   PRODUCTION_ORDER_ADDED(data: PrunApi.ProductionOrder) {
-    const line = state.entities[data.productionLineId];
-    if (!line) {
+    const entities = state.entities.value;
+    const line = entities?.[data.productionLineId];
+    if (entities === undefined || line === undefined) {
       return;
     }
 
-    state.entities[data.productionLineId] = {
+    entities[data.productionLineId] = {
       ...line,
       orders: [...line.orders, data],
     };
   },
   PRODUCTION_ORDER_UPDATED(data: PrunApi.ProductionOrder) {
-    const line = state.entities[data.productionLineId];
-    if (!line) {
+    const entities = state.entities.value;
+    const line = entities?.[data.productionLineId];
+    if (entities === undefined || line === undefined) {
       return;
     }
 
-    state.entities[data.productionLineId] = {
+    entities[data.productionLineId] = {
       ...line,
       orders: line.orders.map(x => (x.id === data.id ? data : x)),
     };
   },
   PRODUCTION_ORDER_REMOVED(data: { orderId: string; productionLineId: string }) {
-    const line = state.entities[data.productionLineId];
-    if (!line) {
+    const entities = state.entities.value;
+    const line = entities?.[data.productionLineId];
+    if (entities === undefined || line === undefined) {
       return;
     }
 
-    state.entities[data.productionLineId] = {
+    entities[data.productionLineId] = {
       ...line,
       orders: line.orders.filter(x => x.id !== data.orderId),
     };

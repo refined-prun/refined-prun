@@ -250,7 +250,7 @@ class GenerateScreen {
       case 'Resupply': {
         // Get list of planets
         const possiblePlanets = [] as any[];
-        for (const workforce of workforcesStore.all.value) {
+        for (const workforce of workforcesStore.all.value ?? []) {
           possiblePlanets.push(getEntityNameFromAddress(workforce.address));
         }
 
@@ -290,7 +290,7 @@ class GenerateScreen {
       case 'Repair': {
         // Get list of planets
         const possiblePlanets = [] as any[];
-        for (const site of sitesStore.all.value) {
+        for (const site of sitesStore.all.value ?? []) {
           possiblePlanets.push(getEntityNameFromAddress(site.address));
         }
 
@@ -725,7 +725,7 @@ class GenerateScreen {
         popup.addPopupRow('dropdown', 'Material Group', groupNames, undefined, undefined);
 
         // Generate list of inventories
-        const originNames = [...storagesStore.all.value]
+        const originNames = [...(storagesStore.all.value ?? [])]
           .sort(storageSort)
           .map(parseStorageName) as any[];
 
@@ -740,7 +740,7 @@ class GenerateScreen {
 
         popup.addPopupRow('dropdown', 'Origin', originNames, undefined, undefined);
 
-        const destNames = [...storagesStore.all.value]
+        const destNames = [...(storagesStore.all.value ?? [])]
           .sort(storageSort)
           .map(parseStorageName) as any[];
 

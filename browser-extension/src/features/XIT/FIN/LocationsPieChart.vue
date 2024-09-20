@@ -3,7 +3,7 @@ import PieChart from '@src/features/XIT/FIN/PieChart.vue';
 import { computed } from 'vue';
 import { calculateLocationAssets } from '@src/core/financials';
 
-const locations = computed(() => calculateLocationAssets());
+const locations = computed(() => calculateLocationAssets() ?? []);
 </script>
 
 <template>

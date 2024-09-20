@@ -1,12 +1,10 @@
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
-import { shallowReactive } from 'vue';
+import { shallowRef } from 'vue';
 
-// ¯\_(ツ)_/¯
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const companyStore = shallowReactive<PrunApi.CompanyData>({} as any);
+export const companyStore = shallowRef<PrunApi.CompanyData | undefined>(undefined);
 
 messages({
   COMPANY_DATA(data: PrunApi.CompanyData) {
-    Object.assign(companyStore, data);
+    companyStore.value = data;
   },
 });

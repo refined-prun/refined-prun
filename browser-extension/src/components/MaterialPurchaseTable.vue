@@ -6,6 +6,7 @@ import { computed, PropType } from 'vue';
 import { calcMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { userData } from '@src/store/user-data';
 import { sortMaterialAmounts } from '@src/core/sort-materials';
+import { sumBy } from '@src/utils/sum-by';
 
 const props = defineProps({
   materials: {
@@ -16,16 +17,8 @@ const props = defineProps({
 
 const sorted = computed(() => sortMaterialAmounts(props.materials));
 
-function calculateTotal(fn: (material: PrunApi.MaterialAmount) => number) {
-  let total = 0;
-  for (const material of sorted.value) {
-    total += fn(material);
-  }
-  return total;
-}
-
-function formatPrice(price: number): string {
-  return userData.settings.currency + fixed0(price);
+function formatPrice(price: number | undefined): string {
+  return price !== undefined ? userData.settings.currency + fixed0(price) : '--';
 }
 
 function calculateWeight(amount: PrunApi.MaterialAmount) {
@@ -65,9 +58,9 @@ function calculateVolume(amount: PrunApi.MaterialAmount) {
     <tbody>
       <tr>
         <td>Total:</td>
-        <td>{{ formatPrice(calculateTotal(calcMaterialAmountPrice)) }}</td>
-        <td>{{ fixed2(calculateTotal(calculateWeight)) }}t</td>
-        <td>{{ fixed2(calculateTotal(calculateVolume)) }}m³</td>
+        <td>{{ formatPrice(sumBy(sorted, calcMaterialAmountPrice)) }}</td>
+        <td>{{ fixed2(sumBy(sorted, calculateWeight)) }}t</td>
+        <td>{{ fixed2(sumBy(sorted, calculateVolume)) }}m³</td>
       </tr>
     </tbody>
   </table>

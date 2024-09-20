@@ -1,5 +1,5 @@
 declare namespace UserData {
-  type PricingMethod = 'ASK' | 'BID' | 'AVG' | 'VWAP7D' | 'VWAP30D' | string;
+  type PricingMethod = 'ASK' | 'BID' | 'AVG' | 'VWAP7D' | 'VWAP30D' | 'DEFAULT' | string;
 
   interface SortingMode {
     label: string;

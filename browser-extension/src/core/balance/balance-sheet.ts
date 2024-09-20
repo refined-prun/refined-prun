@@ -11,7 +11,7 @@ export interface BalanceSheet {
     inventory: number;
     ordersInProgress: number;
     materialsToReceive: number;
-    total?: number;
+    total: number;
   };
 
   nonCurrentAssets: {
@@ -19,38 +19,38 @@ export interface BalanceSheet {
     accountsReceivable: number;
     longTermLoans: number;
     materialsToReceive: number;
-    total?: number;
+    total: number;
   };
 
-  totalAssets?: number;
+  totalAssets: number;
 
   currentLiabilities: {
     accountsPayable: number;
     materialsToDeliver: number;
     shortTermDebt: number;
     interestPayable: number;
-    total?: number;
+    total: number;
   };
 
   nonCurrentLiabilities: {
     accountsPayable: number;
     materialsToDeliver: number;
     longTermDebt: number;
-    total?: number;
+    total: number;
   };
 
-  totalLiabilities?: number;
+  totalLiabilities: number;
 
-  equity?: number;
+  equity: number;
 
   lockedAssets: {
     ships: number;
     hqUpgrades: number;
     arc: number;
-    total?: number;
+    total: number;
   };
 
-  companyValue?: number;
+  companyValue: number;
 }
 
 export type PartialBalanceSheet = DeepPartial<BalanceSheet> & { timestamp: number };

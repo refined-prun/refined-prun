@@ -33,9 +33,13 @@ const lineChartData = computed(() => {
     if (!entry) {
       continue;
     }
+    const equity = calcEquity(entry);
+    if (equity === undefined) {
+      continue;
+    }
 
     date.push(entry.timestamp);
-    equityValues.push(calcEquity(entry));
+    equityValues.push(equity);
   }
 
   return {

@@ -1,7 +1,6 @@
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { computed } from 'vue';
-import { request } from '@src/infrastructure/prun-api/data/request-hooks';
+import { createRequestStore, request } from '@src/infrastructure/prun-api/data/request-hooks';
 
 const store = createEntityStore<PrunApi.ShipyardProject>();
 const state = store.state;
@@ -16,18 +15,6 @@ messages({
   },
 });
 
-const all = (() => {
-  const all = state.all;
-  return computed(() => {
-    if (!state.fetched.value) {
-      request.shipyardProjects();
-    }
-
-    return all.value;
-  });
-})();
-
-export const shipyardProjectsStore = {
+export const shipyardProjectsStore = createRequestStore(request.shipyardProjects, {
   ...state,
-  all,
-};
+});

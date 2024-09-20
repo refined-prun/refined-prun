@@ -7,8 +7,8 @@ import { liveBalanceSummary } from '@src/core/balance/balance-sheet-live';
   <PieChart
     :label-data="['Current', 'Non-Current', 'Locked']"
     :numerical-data="[
-      liveBalanceSummary.currentAssets,
-      liveBalanceSummary.nonCurrentAssets,
-      liveBalanceSummary.lockedAssets,
+      liveBalanceSummary.currentAssets ?? 0,
+      liveBalanceSummary.nonCurrentAssets ?? 0,
+      liveBalanceSummary.lockedAssets ?? 0,
     ]" />
 </template>

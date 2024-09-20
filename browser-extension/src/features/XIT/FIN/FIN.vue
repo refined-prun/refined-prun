@@ -16,14 +16,15 @@ import { calculateLocationAssets } from '@src/core/financials';
 import KeyFigures from '@src/features/XIT/FIN/KeyFigures.vue';
 import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';
 import { formatAmount } from '@src/features/XIT/FIN/utils';
-import LoadingSpinner from '@src/components/LoadingSpinner.vue';
-import { cxStore } from '@src/infrastructure/fio/cx';
 import { fixed0, fixed1, fixed2, percent0, percent1, percent2 } from '@src/utils/format';
 import { liveBalanceSummary } from '@src/core/balance/balance-sheet-live';
 
 const locations = computed(() => calculateLocationAssets());
 
-function formatRatio(ratio: number) {
+function formatRatio(ratio: number | undefined) {
+  if (ratio === undefined) {
+    return '--';
+  }
   if (!isFinite(ratio)) {
     return 'N/A';
   }
@@ -40,7 +41,10 @@ function formatRatio(ratio: number) {
   return fixed2(ratio);
 }
 
-function formatPercentage(ratio: number) {
+function formatPercentage(ratio: number | undefined) {
+  if (ratio === undefined) {
+    return '--';
+  }
   if (!isFinite(ratio)) {
     return 'N/A';
   }
@@ -76,30 +80,27 @@ const figures = computed(() => {
 </script>
 
 <template>
-  <LoadingSpinner v-if="!cxStore.fetched" />
-  <div v-else>
-    <FinHeader>Key Figures</FinHeader>
-    <KeyFigures :figures="figures" />
-    <FinHeader>Inventory Breakdown</FinHeader>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Non-Current Assets</th>
-          <th>Current Assets</th>
-          <th>Total Assets</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="location in locations" :key="location.name">
-          <td>{{ location.name }}</td>
-          <td>{{ fixed0(location.nonCurrent) }}</td>
-          <td>{{ fixed0(location.current) }}</td>
-          <td>{{ fixed0(location.total) }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <FinHeader>Key Figures</FinHeader>
+  <KeyFigures :figures="figures" />
+  <FinHeader>Inventory Breakdown</FinHeader>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Non-Current Assets</th>
+        <th>Current Assets</th>
+        <th>Total Assets</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="location in locations" :key="location.name">
+        <td>{{ location.name }}</td>
+        <td>{{ fixed0(location.nonCurrent) }}</td>
+        <td>{{ fixed0(location.current) }}</td>
+        <td>{{ fixed0(location.total) }}</td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <style scoped>

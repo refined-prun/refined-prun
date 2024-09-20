@@ -8,14 +8,16 @@ import {
   sumFactionProvisions,
   sumLoanInterest,
 } from '@src/core/balance/contract-conditions';
+import { sum } from '@src/utils/sum';
 
 const accountsPayable = computed(() => sumAccountsPayable(selfCurrentConditions));
 
-const materialsToDeliver = computed(
-  () =>
-    sumDeliveries(selfCurrentConditions) +
-    sumProvisions(selfCurrentConditions) +
+const materialsToDeliver = computed(() =>
+  sum(
+    sumDeliveries(selfCurrentConditions),
+    sumProvisions(selfCurrentConditions),
     sumFactionProvisions(selfCurrentConditions),
+  ),
 );
 
 const shortTermDebt = computed(() => sumLoanRepayments(selfCurrentConditions));

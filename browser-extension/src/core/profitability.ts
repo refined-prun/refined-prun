@@ -8,19 +8,21 @@ export function calculateSiteProfitability(siteId: string) {
   const inputs: PrunApi.MaterialAmount[] = [];
   const outputs: PrunApi.MaterialAmount[] = [];
 
-  if (workforce) {
-    for (const need of workforce.workforces.flatMap(x => x.needs)) {
-      inputs.push({
-        material: need.material,
-        amount: need.unitsPerInterval,
-      });
-    }
+  if (workforce === undefined) {
+    return undefined;
+  }
+
+  for (const need of workforce.workforces.flatMap(x => x.needs)) {
+    inputs.push({
+      material: need.material,
+      amount: need.unitsPerInterval,
+    });
   }
 
   let isRecurring = false;
   const msInADay = 86400000;
 
-  if (production) {
+  if (production !== undefined) {
     isRecurring = production.some(x => x.orders.some(y => y.recurring));
 
     for (const line of production) {
@@ -53,6 +55,10 @@ export function calculateSiteProfitability(siteId: string) {
 
   const consumed = sumMaterialAmountPrice(inputs);
   const produced = sumMaterialAmountPrice(outputs);
+
+  if (produced === undefined || consumed === undefined) {
+    return undefined;
+  }
 
   const profit = produced - consumed;
   const margin = consumed !== 0 ? profit / consumed : 0;

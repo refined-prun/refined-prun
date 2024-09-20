@@ -9,7 +9,7 @@ import { reactive, ref } from 'vue';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 
 async function onTileReady(tile: PrunTile) {
-  if (companyStore.code === 'KCB') {
+  if (companyStore.value?.code === 'KCB') {
     return;
   }
   const header = await descendantPresent(tile.frame, PrunCss.FormComponent.containerPassive);

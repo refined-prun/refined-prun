@@ -9,7 +9,7 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 export function init() {
   applyClassCssRule(PrunCss.Frame.logo, classes.logo);
   observeReadyElementsByClassName(PrunCss.Frame.logo, logo =>
-    logo.addEventListener('click', () => showBuffer(`CO ${companyStore.code}`)),
+    logo.addEventListener('click', () => showBuffer(`CO ${companyStore.value?.code}`)),
   );
 }
 

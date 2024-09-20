@@ -7,7 +7,7 @@ function onTileReady(tile: PrunTile) {
   const rows = tile.frame.getElementsByTagName('tr');
   const observer = new MutationObserver(() => {
     for (const row of Array.from(rows)) {
-      if (row.firstChild?.textContent === companyStore.name) {
+      if (row.firstChild?.textContent === companyStore.value?.name) {
         row.classList.add(classes.highlight);
       } else {
         row.classList.remove(classes.highlight);

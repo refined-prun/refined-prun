@@ -32,6 +32,7 @@ import { comparePlanets } from '@src/util';
 import BurnSection from '@src/features/XIT/BURN/BurnSection.vue';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
 import Tooltip from '@src/components/Tooltip.vue';
+import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 
 const props = defineProps({
   parameters: {
@@ -56,7 +57,7 @@ const sites = computed(() => {
 });
 
 const planetBurn = computed(() => {
-  const burn = sites.value.map(getPlanetBurn);
+  const burn = sites.value!.map(getPlanetBurn);
   const filtered = burn.filter((x): x is PlanetBurn => x !== undefined);
   if (filtered.length <= 1) {
     return filtered;
@@ -90,7 +91,7 @@ const planetBurn = computed(() => {
   return filtered;
 });
 
-const isMultiplanet = computed(() => sites.value.length > 1);
+const isMultiplanet = computed(() => sites.value!.length > 1);
 
 const red = useTileState('red');
 const yellow = useTileState('yellow');
@@ -99,44 +100,47 @@ const inf = useTileState('inf');
 </script>
 
 <template>
-  <div :class="PrunCss.ComExOrdersPanel.filter">
-    <FilterButton v-model="red">RED</FilterButton>
-    <FilterButton v-model="yellow">YELLOW</FilterButton>
-    <FilterButton v-model="green">GREEN</FilterButton>
-    <FilterButton v-model="inf">INF</FilterButton>
-  </div>
-  <table>
-    <thead>
-      <tr>
-        <th>Material</th>
-        <th>
-          <div :class="$style.header">
-            Burn
-            <Tooltip
-              position="bottom"
-              tooltip="How much of a material is consumed per day. Positive amount means production." />
-          </div>
-        </th>
-        <th>
-          <div :class="$style.header">
-            Need
-            <Tooltip
-              position="bottom"
-              tooltip="How much of a material needs to be delivered to be fully resupplied" />
-          </div>
-        </th>
-        <th>Days</th>
-        <th>Load</th>
-        <th>Cost</th>
-        <th>CMD</th>
-      </tr>
-    </thead>
-    <BurnSection
-      v-for="burn in planetBurn"
-      :key="burn.planetName"
-      :is-multiplanet="isMultiplanet"
-      :burn="burn" />
-  </table>
+  <LoadingSpinner v-if="sites === undefined" />
+  <template v-else>
+    <div :class="PrunCss.ComExOrdersPanel.filter">
+      <FilterButton v-model="red">RED</FilterButton>
+      <FilterButton v-model="yellow">YELLOW</FilterButton>
+      <FilterButton v-model="green">GREEN</FilterButton>
+      <FilterButton v-model="inf">INF</FilterButton>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Material</th>
+          <th>
+            <div :class="$style.header">
+              Burn
+              <Tooltip
+                position="bottom"
+                tooltip="How much of a material is consumed per day. Positive amount means production." />
+            </div>
+          </th>
+          <th>
+            <div :class="$style.header">
+              Need
+              <Tooltip
+                position="bottom"
+                tooltip="How much of a material needs to be delivered to be fully resupplied" />
+            </div>
+          </th>
+          <th>Days</th>
+          <th>Load</th>
+          <th>Cost</th>
+          <th>CMD</th>
+        </tr>
+      </thead>
+      <BurnSection
+        v-for="burn in planetBurn"
+        :key="burn.planetName"
+        :is-multiplanet="isMultiplanet"
+        :burn="burn" />
+    </table>
+  </template>
 </template>
 
 <style module>

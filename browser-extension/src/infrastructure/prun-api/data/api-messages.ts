@@ -1,7 +1,6 @@
 interface Message {
   type: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any;
+  data?: unknown;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

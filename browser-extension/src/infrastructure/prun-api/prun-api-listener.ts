@@ -3,22 +3,27 @@ import { dispatch } from '@src/infrastructure/prun-api/data/api-messages';
 import { companyContextId } from '@src/infrastructure/prun-api/data/user-data';
 
 export interface Packet {
-  messageType: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload: any;
+  messageType?: string;
+  payload?: {
+    message: Packet;
+  };
 }
 
 export function listenPrunApi() {
-  socketIOMiddleware<Packet>((context, payload) => {
-    try {
-      if (context === companyContextId.value || !companyContextId.value || !context) {
-        processEvent(payload);
-      }
-    } catch (error) {
-      console.error(error);
+  socketIOMiddleware<Packet>(onOpen, (context, payload) => {
+    if (context === companyContextId.value || !companyContextId.value || !context) {
+      processEvent(payload);
     }
     return false;
   });
+}
+
+function onOpen() {
+  const storeAction = {
+    type: 'CLIENT_CONNECTION_OPENED',
+    data: undefined,
+  };
+  dispatch(storeAction);
 }
 
 function processEvent(packet: Packet) {
@@ -31,7 +36,7 @@ function processEvent(packet: Packet) {
   }
 
   if (packet.messageType === 'ACTION_COMPLETED') {
-    processEvent(packet.payload?.message);
+    processEvent(packet.payload.message);
   } else {
     const storeAction = {
       type: packet.messageType,

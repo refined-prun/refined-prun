@@ -24,7 +24,7 @@ export function initializeTileListener() {
 
 function pruneTileStates() {
   for (const key of Object.keys(userData.tileState)) {
-    if (!tilesStore.entities[key]) {
+    if (!tilesStore.entities.value![key]) {
       removeTileState(key);
     }
   }
@@ -92,7 +92,7 @@ export function createTileStateHook<T extends TileState>(defaultState: T) {
 export function computedTileState<T extends TileState, K extends keyof T>(
   state: Ref<T>,
   key: K,
-  defaultValue?: T[K],
+  defaultValue: T[K],
 ) {
   return computed({
     get: () => {

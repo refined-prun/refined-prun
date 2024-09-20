@@ -14,6 +14,7 @@ const state = store.state;
 messages({
   WORKFORCE_WORKFORCES(data: Entity) {
     store.setOne(data);
+    store.setFetched();
   },
   WORKFORCE_WORKFORCES_UPDATED(data: Entity) {
     store.setOne(data);

@@ -3,14 +3,14 @@ import { Decoder, Encoder } from 'socket.io-parser';
 
 type Middleware<T> = (context: string | undefined, packet: T) => boolean;
 
-export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
+export default function socketIOMiddleware<T>(onOpen: () => void, middleware: Middleware<T>) {
   window.addEventListener('message', (event: MessageEvent<SocketIOProxyMessage>) => {
     if (event.source !== window) {
       return;
     }
     if (event.data.type === 'rp-socket-io-message') {
       const message = event.data;
-      const data = processMessage(message, middleware);
+      const data = processMessage(message, onOpen, middleware);
       window.postMessage(
         <SocketIOProxyMessage>{
           type: 'rp-socket-io-message-apply',
@@ -48,7 +48,11 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
   }
 }
 
-function processMessage<T>(message: SocketIOProxyMessage, middleware: Middleware<T>) {
+function processMessage<T>(
+  message: SocketIOProxyMessage,
+  onOpen: () => void,
+  middleware: Middleware<T>,
+) {
   let data = message.data;
   const engineIOPackets = decodePayload(data);
   let rewriteMessage = false;
@@ -59,12 +63,27 @@ function processMessage<T>(message: SocketIOProxyMessage, middleware: Middleware
     const decoder = new Decoder();
     decoder.on('decoded', decodedPacket => {
       const data = decodedPacket.data;
+      if (decodedPacket.type === 0) {
+        try {
+          onOpen();
+        } catch (error) {
+          console.error(error);
+        }
+        return;
+      }
       const payload = data[1];
-      if (data[0] !== 'event' || payload === undefined) {
+      if (decodedPacket.type !== 2 || data[0] !== 'event' || payload === undefined) {
         return;
       }
 
-      if (middleware(message.context, payload)) {
+      let rewrite: boolean;
+      try {
+        rewrite = middleware(message.context, payload);
+      } catch (error) {
+        console.error(error);
+        rewrite = false;
+      }
+      if (rewrite) {
         const encoder = new Encoder();
         engineIOPacket.data = encoder.encode(decodedPacket)[0];
         rewriteMessage = true;

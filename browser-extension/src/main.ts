@@ -17,6 +17,7 @@ import { userData } from '@src/store/user-data';
 async function mainRun() {
   void fetchPrices();
   initializePrunApi();
+  //return;
   const backgroundTasks = Promise.allSettled([loadGameData()]);
 
   try {

@@ -1,16 +1,19 @@
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 
 interface Payload {
   ownCurrency: PrunApi.Currency;
   currencyAccounts: PrunApi.CurrencyAccount[];
 }
 
-const all = ref<PrunApi.CurrencyAmount[]>([]);
+const store = createEntityStore<PrunApi.CurrencyAmount>(x => x.currency);
+const state = store.state;
 
 messages({
   ACCOUNTING_CASH_BALANCES(data: Payload) {
-    all.value = data.currencyAccounts.map(x => x.currencyBalance);
+    store.setAll(data.currencyAccounts.map(x => x.currencyBalance));
+    store.setFetched();
   },
   ACCOUNTING_BOOKINGS(data: { items: PrunApi.BookingItem[] }) {
     for (const item of data.items) {
@@ -18,17 +21,14 @@ messages({
         continue;
       }
 
-      const account = all.value.find(x => x.currency === item.balance.currency);
-      if (account) {
-        account.amount = item.balance.amount;
-      }
+      store.setOne(item.balance);
     }
   },
 });
 
-const currencies = computed(() => all.value.map(x => x.currency));
+const currencies = computed(() => state.all.value?.map(x => x.currency));
 
 export const balancesStore = {
-  all,
+  ...state,
   currencies,
 };

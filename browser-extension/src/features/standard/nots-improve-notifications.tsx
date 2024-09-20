@@ -91,7 +91,7 @@ function processNotification(element: Element) {
         newText = newText.replace(/its destination /, '');
         const match = newText.match(/AVI-[0-9A-Z]{5}/)?.[0];
         const ships = shipsStore.all.value;
-        const ship = ships.find(x => x.registration === match && x.name);
+        const ship = ships?.find(x => x.registration === match && x.name);
         if (match && ship) {
           newText = newText.replace(match, ship.name);
         }

@@ -348,7 +348,7 @@ function updatePopupInfo(junk, params) {
       // Add in the planet row
       planetNames = [] as any[];
 
-      planetNames = workforcesStore.all.value.map(x => getEntityNameFromAddress(x.address)!);
+      planetNames = workforcesStore.all.value?.map(x => getEntityNameFromAddress(x.address)!) ?? [];
 
       if (info['planet'] && planetNames.includes(info['planet']) && planetNames.length !== 1) {
         planetNames.push(planetNames.indexOf(info['planet']));
@@ -373,7 +373,8 @@ function updatePopupInfo(junk, params) {
     } else if (typeValue == 'Repair') {
       planetNames = [] as any[];
 
-      planetNames = sitesStore.all.value.map(site => getEntityNameFromAddress(site.address)!);
+      planetNames =
+        sitesStore.all.value?.map(site => getEntityNameFromAddress(site.address)!) ?? [];
       if (info['planet'] && planetNames.includes(info['planet']) && planetNames.length !== 1) {
         planetNames.push(planetNames.indexOf(info['planet']));
       }

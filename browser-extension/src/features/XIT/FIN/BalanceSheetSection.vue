@@ -9,10 +9,10 @@ defineProps({
   },
   total: {
     type: Number,
-    required: true,
+    default: undefined,
   },
   rows: {
-    type: Array<[string, number]>,
+    type: Array<[string, number | undefined]>,
     required: true,
   },
 });

@@ -21,7 +21,6 @@ import dayjs from 'dayjs';
 import { fixed1, percent1 } from '@src/utils/format';
 import MaterialPurchaseTable from '@src/components/MaterialPurchaseTable.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
-import { cxStore } from '@src/infrastructure/fio/cx';
 import { calculateBuildingCondition } from '@src/core/buildings';
 import { diffDays } from '@src/utils/time-diff';
 import { userData } from '@src/store/user-data';
@@ -40,6 +39,9 @@ const ships = computed(() => calculateShipEntries(props.parameters));
 const msInADay = dayjs.duration(1, 'day').asMilliseconds();
 
 const currentSplitIndex = computed(() => {
+  if (buildings.value === undefined) {
+    return undefined;
+  }
   const settings = userData.settings.repair;
   const currentSplitDate =
     timestampEachSecond() - settings.threshold * msInADay + settings.offset * msInADay;
@@ -47,12 +49,15 @@ const currentSplitIndex = computed(() => {
 });
 
 const visibleBuildings = computed(() => {
-  return buildings.value.slice(0, currentSplitIndex.value);
+  return buildings.value?.slice(0, currentSplitIndex.value);
 });
 
-const visibleShips = computed(() => ships.value.filter(x => x.condition <= 0.85));
+const visibleShips = computed(() => ships.value?.filter(x => x.condition <= 0.85));
 
 const materials = computed(() => {
+  if (visibleBuildings.value === undefined || visibleShips.value === undefined) {
+    return undefined;
+  }
   const materials: PrunApi.MaterialAmount[] = [];
   const time = timestampEachSecond();
   for (const building of visibleBuildings.value) {
@@ -75,7 +80,7 @@ function calculateAge(lastRepair: number) {
 </script>
 
 <template>
-  <LoadingSpinner v-if="!cxStore.fetched" />
+  <LoadingSpinner v-if="materials === undefined" />
   <div v-else :style="{ height: '100%', flexGrow: 1, paddingTop: '4px' }">
     <span class="title">All Repairs</span>
     <div>

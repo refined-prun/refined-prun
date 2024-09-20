@@ -17,8 +17,9 @@ import { computed } from 'vue';
 import DateRow from '@src/features/XIT/CXTS/DateRow.vue';
 import TradeRow from '@src/features/XIT/CXTS/TradeRow.vue';
 import dayjs from 'dayjs';
+import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 
-const orders = cxosStore.all;
+const orders = computed(() => cxosStore.all.value);
 
 interface OrderTrade {
   order: PrunApi.CXOrder;
@@ -34,7 +35,7 @@ interface DayTrades {
 
 const days = computed(() => {
   const trades: OrderTrade[] = [];
-  for (const order of orders.value) {
+  for (const order of orders.value!) {
     for (const trade of order.trades) {
       trades.push({
         order,
@@ -82,36 +83,39 @@ const days = computed(() => {
 </script>
 
 <template>
-  <table>
-    <thead>
-      <tr>
-        <th>Time</th>
-        <th>Type</th>
-        <th>Ticker</th>
-        <th>Partner</th>
-        <th>Amount</th>
-        <th>Price</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-if="days.length === 0">
-        <td colSpan="7">
-          <template v-if="orders.length === 0">No (partially) filled orders</template>
-          <template v-else>No recent trades</template>
-        </td>
-      </tr>
-      <template v-else>
-        <template v-for="group in days" :key="group.date">
-          <DateRow :date="group.date" :totals="group.totals" />
-          <TradeRow
-            v-for="trade in group.trades"
-            :key="trade.trade.id"
-            :date="trade.date"
-            :order="trade.order"
-            :trade="trade.trade" />
+  <LoadingSpinner v-if="orders === undefined" />
+  <template v-else>
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Type</th>
+          <th>Ticker</th>
+          <th>Partner</th>
+          <th>Amount</th>
+          <th>Price</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-if="days.length === 0">
+          <td colSpan="7">
+            <template v-if="orders.length === 0">No (partially) filled orders</template>
+            <template v-else>No recent trades</template>
+          </td>
+        </tr>
+        <template v-else>
+          <template v-for="group in days" :key="group.date">
+            <DateRow :date="group.date" :totals="group.totals" />
+            <TradeRow
+              v-for="trade in group.trades"
+              :key="trade.trade.id"
+              :date="trade.date"
+              :order="trade.order"
+              :trade="trade.trade" />
+          </template>
         </template>
-      </template>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </template>
 </template>

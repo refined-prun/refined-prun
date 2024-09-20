@@ -95,42 +95,42 @@ export function createConfigureUI(
         );
       }
 
-      let filteredStorages = [...storagesStore.all.value]; // Filter to only storages in the same location as the origin/destination
+      let filteredStorages = [...(storagesStore.all.value ?? [])]; // Filter to only storages in the same location as the origin/destination
       if (
         action.origin &&
         action.origin === 'Configure on Execution' &&
         action.dest &&
         action.dest === 'Configure on Execution'
       ) {
-        filteredStorages = [...storagesStore.all.value];
+        filteredStorages = [...(storagesStore.all.value ?? [])];
       } else if (action.origin && action.origin == 'Configure on Execution' && action.dest) {
-        const destStoragePayload = storagesStore.all.value.find(
+        const destStoragePayload = (storagesStore.all.value ?? []).find(
           storage => parseStorageName(storage) === action.dest,
         );
 
         if (destStoragePayload) {
-          filteredStorages = storagesStore.all.value.filter(storage =>
+          filteredStorages = (storagesStore.all.value ?? []).filter(storage =>
             atSameLocation(storage, destStoragePayload),
           );
         } else {
           addMessage(messageBox, 'Warning: No matching destination payload found.');
-          filteredStorages = [...storagesStore.all.value];
+          filteredStorages = [...(storagesStore.all.value ?? [])];
         }
       } else if (action.dest && action.dest == 'Configure on Execution' && action.origin) {
-        const originStoragePayload = storagesStore.all.value.find(
+        const originStoragePayload = (storagesStore.all.value ?? []).find(
           storage => parseStorageName(storage) === action.origin,
         );
 
         if (originStoragePayload) {
-          filteredStorages = storagesStore.all.value.filter(storage =>
+          filteredStorages = (storagesStore.all.value ?? []).filter(storage =>
             atSameLocation(storage, originStoragePayload),
           );
         } else {
           addMessage(messageBox, 'Warning: No matching origin payload found.');
-          filteredStorages = [...storagesStore.all.value];
+          filteredStorages = [...(storagesStore.all.value ?? [])];
         }
       } else {
-        filteredStorages = [...storagesStore.all.value];
+        filteredStorages = [...(storagesStore.all.value ?? [])];
       }
 
       const storageNames = filteredStorages.sort(storageSort).map(parseStorageName);

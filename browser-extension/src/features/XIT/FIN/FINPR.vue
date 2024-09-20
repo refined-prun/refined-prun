@@ -17,12 +17,12 @@ import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';
 import { computed } from 'vue';
 import { formatAmount } from '@src/features/XIT/FIN/utils';
 import KeyFigures from '@src/features/XIT/FIN/KeyFigures.vue';
-import { cxStore } from '@src/infrastructure/fio/cx';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { calculateSiteProfitability } from '@src/core/profitability';
 import { sumBy } from '@src/utils/sum-by';
 import { fixed0, percent2 } from '@src/utils/format';
+import { liveBalanceSummary } from '@src/core/balance/balance-sheet-live';
 
 interface ProductionEntry {
   name: string;
@@ -32,10 +32,17 @@ interface ProductionEntry {
   margin: number;
 }
 
-const entries = computed<ProductionEntry[]>(() => {
+const entries = computed(() => {
+  const sites = sitesStore.all.value;
+  if (sites === undefined) {
+    return [];
+  }
   const entries: ProductionEntry[] = [];
-  for (const site of sitesStore.all.value) {
+  for (const site of sites) {
     const profitability = calculateSiteProfitability(site.siteId);
+    if (profitability === undefined) {
+      continue;
+    }
     entries.push({
       name: getEntityNameFromAddress(site.address)!,
       produced: profitability.produced,
@@ -49,9 +56,9 @@ const entries = computed<ProductionEntry[]>(() => {
   return entries;
 });
 
-const totalProduced = computed(() => sumBy(entries, x => x.produced));
-const totalConsumed = computed(() => sumBy(entries, x => x.consumed));
-const totalProfit = computed(() => sumBy(entries, x => x.profit));
+const totalProduced = computed(() => sumBy(entries.value, x => x.produced));
+const totalConsumed = computed(() => sumBy(entries.value, x => x.consumed));
+const totalProfit = computed(() => sumBy(entries.value, x => x.profit));
 
 const figures = computed(() => {
   return [
@@ -70,8 +77,7 @@ function profitClass(value: number) {
 </script>
 
 <template>
-  <LoadingSpinner v-if="!cxStore.fetched" />
-  <div v-else>
+  <div>
     <FinHeader>Production Overview</FinHeader>
     <KeyFigures :figures="figures" />
     <FinHeader>Breakdown by Planet</FinHeader>

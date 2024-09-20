@@ -15,20 +15,29 @@ interface Entry {
 }
 
 const orderValue = computed(() => {
+  const sites = sitesStore.all.value;
+  if (sites === undefined) {
+    return undefined;
+  }
   const orders: Entry[] = [];
-  for (const site of sitesStore.all.value) {
+  for (const site of sites) {
     const location = getEntityNameFromAddress(site.address)!;
     const lines = productionStore.getBySiteId(site.siteId);
     if (!lines) {
-      continue;
+      return undefined;
     }
     for (const line of lines) {
       for (const order of line.orders.filter(x => x.started)) {
+        const inputs = sumMaterialAmountPrice(order.inputs);
+        const outputs = sumMaterialAmountPrice(order.outputs);
+        if (inputs === undefined || outputs === undefined) {
+          return undefined;
+        }
         orders.push({
           location,
           order,
-          inputs: sumMaterialAmountPrice(order.inputs) + order.productionFee.amount,
-          outputs: sumMaterialAmountPrice(order.outputs),
+          inputs: inputs + order.productionFee.amount,
+          outputs,
         });
       }
     }
@@ -37,6 +46,9 @@ const orderValue = computed(() => {
 });
 
 export const currentOrderValue = computed(() => {
+  if (orderValue.value === undefined) {
+    return undefined;
+  }
   const now = timestampEachMinute();
   const orders = new Map<string, number>();
   for (const order of orderValue.value) {

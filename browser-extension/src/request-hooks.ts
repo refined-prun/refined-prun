@@ -2,8 +2,15 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { request } from '@src/infrastructure/prun-api/data/request-hooks';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 
 const bs: Set<string> = new Set();
+
+messages({
+  CLIENT_CONNECTION_OPENED() {
+    bs.clear();
+  },
+});
 
 function requestBS(siteId?: string | null) {
   const site = sitesStore.getById(siteId);
@@ -20,6 +27,12 @@ function requestBS(siteId?: string | null) {
 
 function singleBufferRequest(command: string) {
   let requested = false;
+
+  messages({
+    CLIENT_CONNECTION_OPENED() {
+      requested = false;
+    },
+  });
 
   return function request() {
     if (requested) {

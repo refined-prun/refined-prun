@@ -9,7 +9,7 @@ export const initialUserData = deepFreeze({
     currency: '₳',
     pricing: {
       exchange: 'UNIVERSE',
-      method: 'VWAP7D' as UserData.PricingMethod,
+      method: 'BALANCED' as UserData.PricingMethod,
     },
     burn: {
       red: 3,
@@ -54,6 +54,7 @@ export function applyUserData(newData: any) {
     v2: shallowReactive(clone.balanceHistory?.v2 ?? []),
   };
   Object.assign(userData, clone);
+  userData.settings.pricing.method = 'DEFAULT';
 }
 
 export function resetAllData() {

@@ -33,7 +33,7 @@ const all = (() => {
   });
 })();
 
-const active = computed(() => all.value.filter(x => x.status !== 'FILLED'));
+const active = computed(() => all.value?.filter(x => x.status !== 'FILLED'));
 
 export const fxosStore = {
   ...state,

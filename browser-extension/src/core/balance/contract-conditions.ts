@@ -15,8 +15,12 @@ interface ContractCondition {
 }
 
 const sortedConditions = computed(() => {
+  const active = contractsStore.active.value;
+  if (active === undefined) {
+    return undefined;
+  }
   const conditions: ContractCondition[] = [];
-  for (const contract of contractsStore.active.value) {
+  for (const contract of active) {
     const activeConditions = contract.conditions.filter(x => x.status !== 'FULFILLED');
     for (const condition of activeConditions) {
       conditions.push({
@@ -60,48 +64,54 @@ function calculateDeadline(contract: PrunApi.Contract, condition: PrunApi.Contra
 const accountingPeriod = dayjs.duration(1, 'week').asMilliseconds();
 
 const currentSplitIndex = computed(() => {
+  const sorted = sortedConditions.value;
+  if (sorted === undefined) {
+    return undefined;
+  }
   const currentSplitDate = timestampEachSecond() + accountingPeriod;
-  return binarySearch(currentSplitDate, sortedConditions.value, x => x.deadline);
+  return binarySearch(currentSplitDate, sorted, x => x.deadline);
 });
 
 export const selfConditions = computed(() => {
-  return sortedConditions.value.filter(x => x.isSelf);
+  return sortedConditions.value?.filter(x => x.isSelf);
 });
 
 export const currentConditions = computed(() => {
-  return sortedConditions.value.slice(0, currentSplitIndex.value);
+  return sortedConditions.value?.slice(0, currentSplitIndex.value);
 });
 
 export const selfCurrentConditions = computed(() => {
-  return currentConditions.value.filter(x => x.isSelf);
+  return currentConditions.value?.filter(x => x.isSelf);
 });
 
 export const partnerCurrentConditions = computed(() => {
-  return currentConditions.value.filter(x => !x.isSelf);
+  return currentConditions.value?.filter(x => !x.isSelf);
 });
 
 export const nonCurrentConditions = computed(() => {
-  return sortedConditions.value.slice(currentSplitIndex.value);
+  return sortedConditions.value?.slice(currentSplitIndex.value);
 });
 
 export const selfNonCurrentConditions = computed(() => {
-  return nonCurrentConditions.value.filter(x => x.isSelf);
+  return nonCurrentConditions.value?.filter(x => x.isSelf);
 });
 
 export const partnerNonCurrentConditions = computed(() => {
-  return nonCurrentConditions.value.filter(x => !x.isSelf);
+  return nonCurrentConditions.value?.filter(x => !x.isSelf);
 });
 
-export function sumAccountsPayable(conditions: Ref<ContractCondition[]>) {
+type MaybeConditions = Ref<ContractCondition[] | undefined>;
+
+export function sumAccountsPayable(conditions: MaybeConditions) {
   return sumConditions(conditions, ['PAYMENT', 'LOAN_PAYOUT'], x => x.amount!.amount);
 }
 
-export function sumLoanRepayments(conditions: Ref<ContractCondition[]>) {
+export function sumLoanRepayments(conditions: MaybeConditions) {
   return sumConditions(conditions, ['LOAN_INSTALLMENT'], x => x.repayment!.amount);
 }
 
-export function sumLoanInterest(conditions: Ref<ContractCondition[]>) {
-  const filtered = conditions.value.filter(
+export function sumLoanInterest(conditions: MaybeConditions) {
+  const filtered = conditions.value?.filter(
     x =>
       x.condition.type === 'LOAN_INSTALLMENT' &&
       x.dependencies.every(y => y.status === 'FULFILLED'),
@@ -109,25 +119,25 @@ export function sumLoanInterest(conditions: Ref<ContractCondition[]>) {
   return sumBy(filtered, x => x.condition.interest!.amount);
 }
 
-export function sumDeliveries(conditions: Ref<ContractCondition[]>) {
+export function sumDeliveries(conditions: MaybeConditions) {
   return sumConditions(conditions, ['DELIVERY'], getMaterialQuantityValue);
 }
 
-export function sumProvisions(conditions: Ref<ContractCondition[]>) {
+export function sumProvisions(conditions: MaybeConditions) {
   return sumConditions(conditions, ['PROVISION'], getMaterialQuantityValue);
 }
 
-export function sumFactionProvisions(conditions: Ref<ContractCondition[]>) {
+export function sumFactionProvisions(conditions: MaybeConditions) {
   // Faction Logistics contracts request materials via PROVISION_SHIPMENT
   // contract conditions. Count them as liabilities.
-  const filtered = conditions.value.filter(
+  const filtered = conditions.value?.filter(
     x => isFactionContract(x.contract) && x.condition.type === 'PROVISION_SHIPMENT',
   );
   return sumBy(filtered, x => getMaterialQuantityValue(x.condition));
 }
 
-export function sumMaterialsPickup(conditions: Ref<ContractCondition[]>) {
-  const filtered = conditions.value.filter(
+export function sumMaterialsPickup(conditions: MaybeConditions) {
+  const filtered = conditions.value?.filter(
     x =>
       x.condition.type === 'COMEX_PURCHASE_PICKUP' &&
       x.dependencies.some(y => y.status !== 'FULFILLED'),
@@ -135,8 +145,8 @@ export function sumMaterialsPickup(conditions: Ref<ContractCondition[]>) {
   return sumBy(filtered, x => getMaterialQuantityValue(x.condition));
 }
 
-export function sumPendingMaterialsPickup(conditions: Ref<ContractCondition[]>) {
-  const filtered = conditions.value.filter(
+export function sumPendingMaterialsPickup(conditions: MaybeConditions) {
+  const filtered = conditions.value?.filter(
     x =>
       x.condition.type === 'COMEX_PURCHASE_PICKUP' &&
       x.dependencies.every(y => y.status === 'FULFILLED'),
@@ -144,9 +154,12 @@ export function sumPendingMaterialsPickup(conditions: Ref<ContractCondition[]>) 
   return sumBy(filtered, x => getMaterialQuantityValue(x.condition));
 }
 
-export function sumMaterialsShipment(conditions: Ref<ContractCondition[]>) {
+export function sumMaterialsShipment(conditions: MaybeConditions) {
   let total = 0;
-  const filtered = conditions.value.filter(x => x.condition.type === 'DELIVERY_SHIPMENT');
+  const filtered = conditions.value?.filter(x => x.condition.type === 'DELIVERY_SHIPMENT');
+  if (filtered === undefined) {
+    return undefined;
+  }
   for (const cc of filtered) {
     const pickup = findDependency(cc.contract, cc.condition, 'PICKUP_SHIPMENT');
     if (!pickup) {
@@ -156,7 +169,11 @@ export function sumMaterialsShipment(conditions: Ref<ContractCondition[]>) {
     if (provision?.status !== 'FULFILLED' || !provision?.quantity) {
       continue;
     }
-    total += getMaterialQuantityValue(provision);
+    const value = getMaterialQuantityValue(provision);
+    if (!value) {
+      return undefined;
+    }
+    total += value;
   }
   return total;
 }
@@ -176,11 +193,11 @@ function findDependency(
 }
 
 function sumConditions(
-  conditions: Ref<ContractCondition[]>,
+  conditions: MaybeConditions,
   types: PrunApi.ContractConditionType[],
-  property: (item: PrunApi.ContractCondition) => number,
+  property: (item: PrunApi.ContractCondition) => number | undefined,
 ) {
-  const filtered = conditions.value.filter(x => types.includes(x.condition.type));
+  const filtered = conditions.value?.filter(x => types.includes(x.condition.type));
   return sumBy(filtered, x => property(x.condition));
 }
 

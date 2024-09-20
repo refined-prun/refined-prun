@@ -10,7 +10,7 @@ import IconMarker from './IconMarker.vue';
 import { computed, reactive, ref, watch } from 'vue';
 
 export async function init() {
-  if (companyStore.code === 'KCB') {
+  if (companyStore.value?.code === 'KCB') {
     return;
   }
   const result = await system.storage.local.get('PMMG-Markers');
