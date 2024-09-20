@@ -13,6 +13,7 @@ messages({
       ...data,
       timestamp: Date.now(),
     });
+    store.setFetched();
   },
 });
 

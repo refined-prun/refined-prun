@@ -12,6 +12,7 @@ messages({
       return;
     }
     store.setMany(castArray(data.body));
+    store.setFetched();
   },
 });
 

@@ -1,9 +1,8 @@
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 import { computed, shallowReactive } from 'vue';
 
-// ¯\_(ツ)_/¯
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const userDataStore = shallowReactive<PrunApi.UserData>({} as any);
+// Will be initialized before UI, so no need for undefined or fallbacks.
+export const userDataStore = shallowReactive<PrunApi.UserData>({} as PrunApi.UserData);
 
 export const companyContextId = computed(
   () => userDataStore.contexts?.find(x => x.type === 'COMPANY')?.id,
