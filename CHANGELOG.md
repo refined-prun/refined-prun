@@ -1,29 +1,38 @@
-## New
-- XIT CXOS
-- XIT CONTC
-- correct-material-command
-- SHPT and BLCK icons now have a destination label on them
-- XIT CONTS now displays a ! mark for contracts with unfulfilled own conditions
-- XIT CONTS now displays SHPT for contracts with shipment condition
-- Clicking on APEX logo now opens company information
-- BURN redesign
-- BUYING/SELLING LM ads are now highlighted green/red
-- LM remove redundant info
-- FINLA now shows CX and FX deposits in addition to cash
-- XIT FINBS
-- XIT HQUC - HQ Upgrade Calculator
-- XIT REP now shows a weight/volume/cost table
-- Building list with building count in BS buffer
-- CONTD partner search results now show above the search bar
-- XIT WEB
+## New commands
+- `XIT CXTS`: Commodity Exchange Orders
+- `XIT FINBS`: Balance Statement
+- `XIT HQUC`: HQ Upgrade Calculator
+- `XIT CONTC`: Pending Contract Conditions
+- `XIT WEB`: Open any web page (Pro tip! Try `XIT WEB https://www.youtube.com/embed/dQw4w9WgXcQ`)
+
+## New features
+- `CONTD` partner search results show above the search bar
+- `SHPT` and `BLCK` icons show a destination label on them
+- `FINLA` shows CX and FX deposits in addition to cash
+- `XIT CONTS` displays a ! mark for contracts with unfulfilled own conditions
+- `XIT CONTS` displays `SHPT` for contracts with shipment condition
+- `LM` BUYING/SELLING ads are highlighted green/red
+- Clicking on APEX logo opens player company information
+- `XIT REP` shows a weight/volume/cost table
+- `BS` shows building list summary at the bottom
+- Material ticker is auto-capitalized on input when entering the following commands:
+  `CXM`, `CXOB`, `CXP`, `CXPC`, `CXPO`, `MAT`. For example: `CXPO h2o.ai1` will change
+  to `CXPO H2O.AI1` when you hit Enter.
 
 ## Changed
-- XIT FIN is split in several commands
-  - XIT FIN: Financial overview
-  - XIT FINBS: Balance Statement
-  - XIT FINCH: Financial Charts
-  - XIT FINPR: Profitability Report
-- XIT SHEETS are now displayed in minimalist mode
+- `XIT FIN` is split in several commands
+  - `XIT FIN`: Financial overview
+  - `XIT FINCH`: Financial Charts
+  - `XIT FINPR`: Profitability Report
+  - `XIT FIN_SET` is changed to `XIT SET FIN`
+  - Old `XIT FIN` landing page was removed in favor of context buttons
+- `XIT SHEETS` are now displayed in minimalist mode
+- `XIT BURN` now uses PrUn-consistent CSS styling and got additional features:
+  - Total load of all needed resources
+  - Total cost of all needed resources
+  - Context buttons: `BS` and `INV` for planets, `CXM` for materials
+- All XIT commands now accept up to 3 space-separated arguments
+- `LM` ads are now more compact and show commodity/shipment icons
 - Implemented the real-time updates of XIT buffers and added features. Goodbye refresh button!
 - Changed chart library to Chart.js, reducing the size of the plugin. Works on Firefox too!
 - Changed XIT calculator to https://desmos.com/scientific
@@ -41,10 +50,9 @@
   - Debt interest is only counted as a liability if it is due in current period (deadline <7d)
     - Debt principal is still counted in full size, regardless of the deadline
 - Unnamed planets in named systems are now displayed like in PrUn (system name + letter)
-- Properly intercept all PrUn server-client messages, preventing data loss
-- Reduced the amount of UI updates
-- Improved UI responsiveness
-- remove-mobile-css-rules
+- The extension now aggressively intercepts all PrUn server-client messages,
+  reducing the chance of data loss or out-of-date data
+- The amount of UI updates was reduced, this should lead to better FPS
 
 ---
 
