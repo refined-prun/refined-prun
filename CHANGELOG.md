@@ -1,4 +1,4 @@
-New features:
+## New
 - XIT CXOS
 - XIT CONTC
 - correct-material-command
@@ -15,15 +15,21 @@ New features:
 - XIT REP now shows a weight/volume/cost table
 - Building list with building count in BS buffer
 - CONTD partner search results now show above the search bar
+- XIT WEB
 
-Changes:
-- XIT command renames: // TODO
+## Changed
+- XIT FIN is split in several commands
+  - XIT FIN: Financial overview
+  - XIT FINBS: Balance Statement
+  - XIT FINCH: Financial Charts
+  - XIT FINPR: Profitability Report
+- XIT SHEETS are now displayed in minimalist mode
 - Implemented the real-time updates of XIT buffers and added features. Goodbye refresh button!
 - Changed chart library to Chart.js, reducing the size of the plugin. Works on Firefox too!
 - Changed XIT calculator to https://desmos.com/scientific
 - Changed custom math evaluator to https://github.com/bugwheels94/math-expression-evaluator
 
-Fixes:
+## Fixed
 - Various fixes to XIT FIN balance calculations:
   - Blocked/Shipped materials are now included in assets
   - Materials in "Pick up shipment" contract condition are now included in assets

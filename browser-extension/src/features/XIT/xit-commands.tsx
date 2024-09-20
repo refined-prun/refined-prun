@@ -32,7 +32,13 @@ async function onTileReady(tile: PrunTile) {
     const keyValues = rawParameter.split(' ');
     parameters.push(...keyValues.map(x => x.slice(2)));
   } else {
-    parameters = rawParameter.split(/[_ ]+/g);
+    const web = rawParameter.substring(0, 3);
+    if (web.toUpperCase() === 'WEB') {
+      // XIT WEB uses underscore as a part of base64 encoding
+      parameters = rawParameter.split(/ +/g);
+    } else {
+      parameters = rawParameter.split(/[_ ]+/g);
+    }
   }
   if (parameters.length === 0) {
     return;

@@ -3,7 +3,7 @@ import xit from '@src/features/XIT/xit-registry.js';
 import REP from '@src/features/XIT/REP/REP.vue';
 
 xit.add({
-  command: 'REP',
+  command: ['REP', 'REPAIR', 'REPAIRS'],
   name: 'REPAIRS',
   component: () => REP,
 });
@@ -59,7 +59,7 @@ const materials = computed(() => {
     return undefined;
   }
   const materials: PrunApi.MaterialAmount[] = [];
-  const time = timestampEachSecond();
+  const time = timestampEachSecond.value;
   for (const building of visibleBuildings.value) {
     const plannedRepairDate =
       (time - building.lastRepair) / msInADay + userData.settings.repair.offset;

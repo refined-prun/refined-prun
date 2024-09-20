@@ -4,6 +4,7 @@ import features from '@src/feature-registry';
 import { _$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
+import { castArray } from '@src/utils/cast-array';
 
 function WEB(props: { parameters: string[] }) {
   const { parameters } = props;
@@ -12,11 +13,81 @@ function WEB(props: { parameters: string[] }) {
   }
 
   let url = parameters[1];
+  const shortcut = parameters[0];
+  const applyShortcut = shortcuts.get(shortcut.toUpperCase());
+  if (applyShortcut) {
+    const newUrl = applyShortcut(parameters);
+    if (!newUrl) {
+      return <div>Invalid parameters!</div>;
+    }
+    url = newUrl;
+  }
   if (!isValidUrl(url)) {
-    url = parameters.slice(1).map(prunAtob).join();
+    try {
+      url = parameters.slice(1).map(prunAtob).join();
+    } catch {
+      // Do nothing
+    }
+  }
+  if (!isValidUrl(url)) {
+    return <div>Url {url} is invalid!</div>;
   }
   return <iframe src={url} width="100%" height="100%" style={{ borderWidth: '0' }} />;
 }
+
+xit.add({
+  command: 'WEB',
+  name: 'WEB PAGE',
+  component: () => WEB,
+});
+
+const shortcuts = new Map<string, (parameters: string[]) => string | undefined>();
+
+function shortcut(
+  commands: Arrayable<string>,
+  name: string,
+  url: (parameters: string[]) => string | undefined,
+) {
+  xit.add({
+    command: commands,
+    name: name,
+    component: () => WEB,
+  });
+  for (const command of castArray(commands)) {
+    shortcuts.set(command.toUpperCase(), url);
+  }
+}
+
+shortcut('PRUN', 'PRUN-CEPTION', () => 'https://apex.prosperousuniverse.com/#/');
+
+shortcut('PROSPERITY', 'PROSPERITY', parameters => {
+  let url = 'https://prosperity-prun.netlify.app/';
+  if (parameters.length == 3) {
+    url += `?from=${parameters[1]}&to=${parameters[2]}`;
+  }
+  return url;
+});
+
+shortcut(['SHEET', 'SHEETS'], 'GOOGLE SHEETS', parameters => {
+  if (parameters.length < 2) {
+    return undefined;
+  }
+  let url = parameters[1];
+  for (let i = 2; i < parameters.length; i++) {
+    url += `_${parameters[i]}`;
+  }
+  return `https://docs.google.com/spreadsheets/d/${url}/edit?usp=sharing&rm=minimal`;
+});
+
+shortcut(['PLANNER', 'PLAN', 'PRUN PLANNER'], 'GOOGLE SHEETS', parameters => {
+  let url = 'https://prunplanner.org';
+  for (let i = 1; i < parameters.length; i++) {
+    url += `/${parameters[i]}`;
+  }
+  return url;
+});
+
+shortcut('MAP', "Taiyi's Map", () => 'https://universemap.duckdns.org/');
 
 function onSelectorReady(selector: HTMLDivElement) {
   const input = _$(PrunCss.PanelSelector.input, selector) as HTMLInputElement;
@@ -45,140 +116,22 @@ function isValidUrl(url: string) {
 
 function prunBtoa(input: string) {
   const base64 = btoa(input);
-  return base64.replace('+', '--').replace('/', '-').replace('=', '');
+  return base64.replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
 }
 
 function prunAtob(input: string) {
-  let base64 = input.replace('--', '+').replace('-', '/');
+  let base64 = input.replaceAll('-', '+').replaceAll('_', '/');
   while (base64.length % 4) {
     base64 += '=';
   }
   return atob(base64);
 }
-xit.add({
-  command: 'WEB',
-  name: 'WEB PAGE',
-  component: () => WEB,
-});
 
 function init() {
   observeReadyElementsByClassName(PrunCss.Tile.selector, onSelectorReady);
 }
 
 features.add({
-  id: 'xit-web',
+  id: 'xit-web-correct-command',
   init,
-});
-
-xit.add({
-  command: 'PRUN',
-  name: 'PRUN-CEPTION',
-  component: () => <WEB parameters={['', 'https://apex.prosperousuniverse.com/#/']} />,
-});
-
-xit.add({
-  command: 'PROSPERITY',
-  name: 'PROSPERITY',
-  component: parameters => {
-    let url = 'https://prosperity-prun.netlify.app/';
-    if (parameters.length == 3) {
-      url += `?from=${parameters[1]}&to=${parameters[2]}`;
-    }
-    return <WEB parameters={['', url]} />;
-  },
-});
-
-xit.add({
-  command: ['SHEET', 'SHEETS'],
-  name: 'GOOGLE SHEETS',
-  component: parameters => {
-    if (parameters.length < 2) {
-      return <div>Error! Not Enough Parameters!</div>;
-    }
-    let url = parameters[1];
-    for (let i = 2; i < parameters.length; i++) {
-      url += `_${parameters[i]}`;
-    }
-    return (
-      <WEB parameters={['', `https://docs.google.com/spreadsheets/d/${url}/edit?usp=sharing`]} />
-    );
-  },
-});
-
-/* // All Discord server stuff is broken. Changes to widgetbot? Not many people seem to use it so I'll remove it for the time being.
-const DiscordServers = {
-	"UFO": ["855488309802172469", "855489711635431475"],
-	"FIOC": ["807992640247300116", "808451512351195166"],
-	"AHI": ["704907707634941982", "797157877324185650"],
-	"PCT": ["667551433503014924", "667551433503014927"]
-}
-
-export function Discord_pre(tile, parameters)
-{
-	clearChildren(tile);
-	var serverID;
-	var channelID;
-	if(parameters.length == 2)
-	{
-		if(DiscordServers[parameters[1]] == undefined)
-		{
-			tile.textContent = "Error! Not Enough Parameters";
-			return;
-		}
-		else
-		{
-			serverID = DiscordServers[parameters[1]][0];
-			channelID = DiscordServers[parameters[1]][1];
-		}
-	}
-	else if(parameters.length > 2)
-	{
-		serverID = parameters[1];
-		channelID = parameters[2];
-	}
-	else
-	{
-		tile.textContent = "Error! Not Enough Parameters";
-		return;
-	}
-	const discord = document.createElement("iframe");
-		discord.src = "https://e.widgetbot.io/channels/" + serverID + "/" + channelID;
-		discord.width = "100%";
-		discord.height = "100%";
-		discord.style.borderWidth = "0px";
-				
-	tile.appendChild(discord);
-	return;
-}
-*/
-
-// Wiki iframe not working right now. Refuses to connect
-xit.add({
-  command: 'WIKI',
-  name: 'PRUN WIKI',
-  component: parameters => {
-    const url =
-      parameters[1] && parameters[1].toLowerCase() == 'resources'
-        ? 'https://handbook.apex.prosperousuniverse.com/wiki/community-resources/index.html'
-        : 'https://handbook.apex.prosperousuniverse.com/wiki/index.html';
-    return <WEB parameters={['', url]} />;
-  },
-});
-
-xit.add({
-  command: ['PLANNER', 'PLAN', 'PRUNPLANNER'],
-  name: 'PRUN PLANNER',
-  component: parameters => {
-    let url = 'https://prunplanner.org';
-    for (let i = 1; i < parameters.length; i++) {
-      url += `/${parameters[i]}`;
-    }
-    return <WEB parameters={['', url]} />;
-  },
-});
-
-xit.add({
-  command: 'MAP',
-  name: "Taiyi's Map",
-  component: () => <WEB parameters={['', 'https://universemap.duckdns.org/']} />,
 });
