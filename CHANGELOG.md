@@ -21,7 +21,7 @@
 
 ## Changed
 - `XIT FIN` is split in several commands
-  - `XIT FIN`: Financial overview
+  - `XIT FIN`: Financial Overview
   - `XIT FINCH`: Financial Charts
   - `XIT FINPR`: Profitability Report
   - `XIT FIN_SET` is changed to `XIT SET FIN`
@@ -31,6 +31,8 @@
   - Total load of all needed resources
   - Total cost of all needed resources
   - Context buttons: `BS` and `INV` for planets, `CXM` for materials
+- The `Additional Days` burn setting was changed to `Resupply`, which now represents
+  the total amount of days for which to resupply.
 - `LM` ads are now more compact and show commodity/shipment icons
 - New and old UIs now use vanilla PrUn styling where possible
 - All XIT commands now accept up to 3 space-separated arguments
