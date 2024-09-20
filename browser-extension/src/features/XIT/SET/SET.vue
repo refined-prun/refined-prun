@@ -22,6 +22,10 @@ import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overla
 import { initialUserData, resetAllData, userData } from '@src/store/user-data';
 import { exportUserData, importUserData } from '@src/infrastructure/storage/user-data-serializer';
 import { exportNotes, importNotes } from '@src/infrastructure/storage/notes-serializer';
+import {
+  exportFinancialHistory,
+  importFinancialHistory,
+} from '@src/infrastructure/storage/balance-serializer';
 
 function addSidebarButton() {
   userData.settings.sidebar.push(['SET', 'XIT SET']);
@@ -80,11 +84,15 @@ function confirmResetAllData(ev: Event) {
       <PrunButton primary @click="addSidebarButton">ADD NEW</PrunButton>
     </Commands>
   </form>
-  <SectionHeader>Import/Export Settings</SectionHeader>
+  <SectionHeader>Import/Export</SectionHeader>
   <form>
     <Commands>
-      <PrunButton primary @click="importUserData">Import Settings</PrunButton>
-      <PrunButton primary @click="exportUserData">Export Settings</PrunButton>
+      <PrunButton primary @click="importUserData">Import User Data</PrunButton>
+      <PrunButton primary @click="exportUserData">Export User Data</PrunButton>
+    </Commands>
+    <Commands>
+      <PrunButton primary @click="importFinancialHistory">Import Finances</PrunButton>
+      <PrunButton primary @click="exportFinancialHistory">Export Finances</PrunButton>
     </Commands>
     <Commands>
       <PrunButton primary @click="importNotes">Import Notes</PrunButton>
