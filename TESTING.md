@@ -5,7 +5,7 @@
 ### [Changelog](https://github.com/refined-prun/refined-prun/blob/main/CHANGELOG.md)
 
 **Read it thoroughly (especially the known bug section) so you could
-properly test new features/changes and have less surprises overall**
+properly test new features/changes and have fewer surprises overall**
 
 ## What's expected from you
 
