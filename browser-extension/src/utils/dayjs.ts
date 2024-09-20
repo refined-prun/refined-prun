@@ -1,7 +1,7 @@
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
-import { Ref, ref } from 'vue';
+import { computed, Ref, ref } from 'vue';
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
@@ -12,11 +12,11 @@ setInterval(() => eachSecond.value++, 1000);
 const eachMinute = ref(0);
 setInterval(() => eachMinute.value++, 60000);
 
-export const dayjsEachSecond = () => live(dayjs(), eachSecond);
-export const timestampEachSecond = () => live(Date.now(), eachSecond);
+export const dayjsEachSecond = computed(() => live(dayjs(), eachSecond));
+export const timestampEachSecond = computed(() => live(Date.now(), eachSecond));
 
-export const dayjsEachMinute = () => live(dayjs(), eachMinute);
-export const timestampEachMinute = () => live(Date.now(), eachMinute);
+export const dayjsEachMinute = computed(() => live(dayjs(), eachMinute));
+export const timestampEachMinute = computed(() => live(Date.now(), eachMinute));
 
 function live<T>(value: T, tick: Ref<number>): T {
   // Touch reactive value

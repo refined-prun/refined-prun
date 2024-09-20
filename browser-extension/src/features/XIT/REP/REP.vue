@@ -44,7 +44,7 @@ const currentSplitIndex = computed(() => {
   }
   const settings = userData.settings.repair;
   const currentSplitDate =
-    timestampEachSecond() - settings.threshold * msInADay + settings.offset * msInADay;
+    timestampEachSecond.value - settings.threshold * msInADay + settings.offset * msInADay;
   return binarySearch(currentSplitDate, buildings.value, x => x.lastRepair);
 });
 
@@ -75,7 +75,7 @@ const materials = computed(() => {
 });
 
 function calculateAge(lastRepair: number) {
-  return diffDays(lastRepair, timestampEachSecond(), true);
+  return diffDays(lastRepair, timestampEachSecond.value, true);
 }
 </script>
 

@@ -45,7 +45,7 @@ export const currentBuildingValue = computed(() => {
     return undefined;
   }
 
-  const now = timestampEachMinute();
+  const now = timestampEachMinute.value;
   const buildings = new Map<string, number>();
   for (const building of buildingValue.value) {
     const lastRepair = getBuildingLastRepair(building.building);

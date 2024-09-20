@@ -28,7 +28,7 @@ export const liveBalanceSheet = createLiveBalanceSheet();
 
 function createLiveBalanceSheet(): PartialBalanceSheet {
   return unwrapRefProperties({
-    timestamp: timestampEachSecond(),
+    timestamp: timestampEachSecond,
 
     currentAssets: unwrapRefProperties({
       cash: currentAssets.cashTotal,

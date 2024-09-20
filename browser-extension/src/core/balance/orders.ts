@@ -49,7 +49,7 @@ export const currentOrderValue = computed(() => {
   if (orderValue.value === undefined) {
     return undefined;
   }
-  const now = timestampEachMinute();
+  const now = timestampEachMinute.value;
   const orders = new Map<string, number>();
   for (const order of orderValue.value) {
     const duration = order.order.duration!.millis;

@@ -16,7 +16,7 @@ const props = defineProps({
 const ship = computed(() => shipsStore.getByRegistration(props.shipRegistration));
 const flight = computed(() => flightsStore.getById(ship.value?.flightId));
 const eta = computed(() =>
-  flight.value ? formatEta(timestampEachSecond(), flight.value.arrival.timestamp) : undefined,
+  flight.value ? formatEta(timestampEachSecond.value, flight.value.arrival.timestamp) : undefined,
 );
 </script>
 

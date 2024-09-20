@@ -68,7 +68,7 @@ const currentSplitIndex = computed(() => {
   if (sorted === undefined) {
     return undefined;
   }
-  const currentSplitDate = timestampEachSecond() + accountingPeriod;
+  const currentSplitDate = timestampEachSecond.value + accountingPeriod;
   return binarySearch(currentSplitDate, sorted, x => x.deadline);
 });
 
