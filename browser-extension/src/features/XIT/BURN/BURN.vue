@@ -115,9 +115,7 @@ const inf = useTileState('inf');
           <th>
             <div :class="$style.header">
               Burn
-              <Tooltip
-                position="bottom"
-                tooltip="How much of a material is consumed per day. Positive amount means production." />
+              <Tooltip position="bottom" tooltip="How much of a material is consumed per day" />
             </div>
           </th>
           <th>
