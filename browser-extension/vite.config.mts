@@ -69,7 +69,10 @@ export default defineConfig({
         'refined-prun': resolve(__dirname, 'src/refined-prun.ts'),
         popup: resolve(__dirname, 'src/popup/popup.ts'),
         'socket-io-proxy': resolve(__dirname, 'src/infrastructure/prun-api/socket-io-proxy.ts'),
-        'socket-io-proxy-inject': resolve(__dirname, 'src/infrastructure/prun-api/socket-io-proxy-inject.ts'),
+        'socket-io-proxy-inject': resolve(
+          __dirname,
+          'src/infrastructure/prun-api/socket-io-proxy-inject.ts',
+        ),
       },
     },
   },

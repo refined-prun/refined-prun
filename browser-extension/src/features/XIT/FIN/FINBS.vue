@@ -128,10 +128,7 @@ const companyValue = computed<Section>(() => ({
       :name="nonCurrentLiabilities.name"
       :total="nonCurrentLiabilities.total"
       :rows="nonCurrentLiabilities.rows" />
-    <BalanceSheetSection
-      :name="equity.name"
-      :total="equity.total"
-      :rows="equity.rows" />
+    <BalanceSheetSection :name="equity.name" :total="equity.total" :rows="equity.rows" />
     <BalanceSheetSection
       :name="lockedAssets.name"
       :total="lockedAssets.total"

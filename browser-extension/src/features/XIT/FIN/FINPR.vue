@@ -18,11 +18,9 @@ import { computed } from 'vue';
 import { formatAmount } from '@src/features/XIT/FIN/utils';
 import KeyFigures from '@src/features/XIT/FIN/KeyFigures.vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { calculateSiteProfitability } from '@src/core/profitability';
 import { sumBy } from '@src/utils/sum-by';
 import { fixed0, percent2 } from '@src/utils/format';
-import { liveBalanceSummary } from '@src/core/balance/balance-sheet-live';
 
 interface ProductionEntry {
   name: string;
