@@ -33,11 +33,11 @@ as browser always loads it from this folder**
 
 ## How to import PMMG user data
 
-- Settings: `XIT SET` -> `Import User Data`
-- Finances: `XIT SET` -> `Import Finances`
-- Notes: `XIT SET` -> `Import Notes`
-- Lists: not implemented yet
-- Actions: not implemented yet
+- pmmg-settings: `XIT SET` -> `Import User Data`
+- pmmg-finance: `XIT SET` -> `Import Finances`
+- pmmg-notes: `XIT SET` -> `Import Notes`
+- pmmg-lists: not implemented yet
+- pmmg-actions: not implemented yet
 
 ## How to update extension
 
