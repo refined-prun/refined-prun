@@ -107,9 +107,9 @@ const companyValue = computed<Section>(() => ({
       <tr>
         <th>&nbsp;</th>
         <th>Current Period</th>
-        <th>Last Period</th>
-        <th>Previous Period</th>
-        <th>Change</th>
+        <th>Last Period<br />(WIP)</th>
+        <th>Previous Period<br />(WIP)</th>
+        <th>Change<br />(WIP)</th>
       </tr>
     </thead>
     <BalanceSheetSection
