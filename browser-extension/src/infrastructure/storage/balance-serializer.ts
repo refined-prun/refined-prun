@@ -21,7 +21,7 @@ export function exportFinancialHistory() {
     type: fileType,
     data: userData.balanceHistory,
   };
-  downloadJson(json, `rp-balance-${Date.now()}.json`);
+  downloadJson(json, `${fileType}-${Date.now()}.json`);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

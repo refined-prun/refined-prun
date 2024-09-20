@@ -1,36 +1,30 @@
 import { reactive, watch } from 'vue';
-import system from '@src/system';
-import { deepToRaw } from '@src/utils/deep-to-raw';
 
-type Note = [string, string];
+export type Note = [string, string];
 
 export const notes = reactive({
   notes: [] as Note[],
 });
 
-export function deleteNote(name: string) {
-  notes.notes = notes.notes.filter(x => x[0] !== name);
+export function deleteNote(note: Note) {
+  notes.notes = notes.notes.filter(x => x !== note);
 }
 
-const key = 'rp-notes';
+export function applyNotes(newNotes: { notes: Note[] }) {
+  notes.notes.push(...newNotes.notes);
+}
 
-export async function loadNotes() {
-  const savedSettings = await system.storage.local.get(key);
-  if (savedSettings[key]) {
-    Object.assign(notes, savedSettings[key]);
-  }
+export async function watchNotes(save: () => void) {
   let saveQueued = false;
 
   watch(
     notes,
     () => {
       if (!saveQueued) {
-        queueMicrotask(() => {
-          void system.storage.local.set({
-            [key]: deepToRaw(notes),
-          });
+        setTimeout(() => {
+          save();
           saveQueued = false;
-        });
+        }, 1000);
         saveQueued = true;
       }
     },

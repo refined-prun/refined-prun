@@ -43,5 +43,5 @@ export function exportUserData() {
     type: fileType,
     data: userData,
   };
-  downloadJson(json, `rp-user-data-${Date.now()}.json`);
+  downloadJson(json, `${fileType}-${Date.now()}.json`);
 }

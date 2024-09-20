@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { deleteNote, notes } from '@src/store/notes';
+import { deleteNote, Note, notes } from '@src/store/notes';
 import { showTileOverlay, showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import CreateNoteOverlay from '@src/features/XIT/NOTE/CreateNoteOverlay.vue';
 import PrunButton from '@src/components/PrunButton.vue';
@@ -12,9 +12,9 @@ function createNewNote(ev: Event) {
   });
 }
 
-function confirmDelete(ev: Event, name: string) {
-  showConfirmationOverlay(ev, () => deleteNote(name), {
-    message: `Are you sure you want to delete the note "${name}"?`,
+function confirmDelete(ev: Event, note: Note) {
+  showConfirmationOverlay(ev, () => deleteNote(note), {
+    message: `Are you sure you want to delete the note "${note[0]}"?`,
   });
 }
 </script>
@@ -43,7 +43,7 @@ function confirmDelete(ev: Event, name: string) {
         </td>
         <td>
           <PrunButton primary @click="showBuffer(`XIT NOTES ${note[0]}`)">VIEW</PrunButton>
-          <PrunButton danger @click="x => confirmDelete(x, note[0])">DELETE</PrunButton>
+          <PrunButton danger @click="x => confirmDelete(x, note)">DELETE</PrunButton>
         </td>
       </tr>
     </tbody>

@@ -7,17 +7,16 @@ import PrunCss, { parsePrunCss } from '@src/infrastructure/prun-ui/prun-css';
 import './refined-prun.css';
 import { fetchPrices } from '@src/infrastructure/fio/cx';
 import { loadRefinedPrunCss } from '@src/infrastructure/prun-ui/refined-prun-css';
-import { loadNotes } from '@src/store/notes';
 import descendantPresent from '@src/utils/descendant-present';
 import { trackBalanceHistory } from '@src/store/user-data-balance';
 import { initializeTileListener } from '@src/store/user-data-tiles';
 import { loadUserData } from '@src/infrastructure/storage/user-data-serializer';
 import { userData } from '@src/store/user-data';
+import { loadNotes } from '@src/infrastructure/storage/notes-serializer';
 
 async function mainRun() {
   void fetchPrices();
   initializePrunApi();
-  //return;
   const backgroundTasks = Promise.allSettled([loadGameData()]);
 
   try {

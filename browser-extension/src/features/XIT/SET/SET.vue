@@ -21,6 +21,7 @@ import Commands from '@src/components/forms/Commands.vue';
 import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import { initialUserData, resetAllData, userData } from '@src/store/user-data';
 import { exportUserData, importUserData } from '@src/infrastructure/storage/user-data-serializer';
+import { exportNotes, importNotes } from '@src/infrastructure/storage/notes-serializer';
 
 function addSidebarButton() {
   userData.settings.sidebar.push(['SET', 'XIT SET']);
@@ -84,8 +85,10 @@ function confirmResetAllData(ev: Event) {
     <Commands>
       <PrunButton primary @click="importUserData">Import Settings</PrunButton>
       <PrunButton primary @click="exportUserData">Export Settings</PrunButton>
-      <input type="file" accept=".json" style="display: none" />
-      <span class="prun-remove-js" style="display: none">Error Loading File!</span>
+    </Commands>
+    <Commands>
+      <PrunButton primary @click="importNotes">Import Notes</PrunButton>
+      <PrunButton primary @click="exportNotes">Export Notes</PrunButton>
     </Commands>
   </form>
   <SectionHeader>Danger Zone</SectionHeader>
