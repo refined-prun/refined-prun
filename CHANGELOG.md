@@ -6,8 +6,16 @@
 - `XIT WEB`: Open any web page (Pro tip! Try `XIT WEB https://www.youtube.com/embed/dQw4w9WgXcQ`)
 
 ## New features
+- Introduced a new asset category: Locked Assets. It includes ships, HQ upgrades 
+  and APEX Representation Center.
+- Introduced a new financial metric: Company Value. This value is calculated as Equity +
+  Locked Assets. This should give you a more stable metric to gauge your game progress.
 - `CONTD` partner search results show above the search bar
 - `SHPT` and `BLCK` icons show a destination label on them
+- `XIT BURN` got additional features:
+  - Total weight, volume and cost of all needed resources
+  - Context buttons: `BS` and `INV` for planets, `CXM` for materials
+- `XIT FINPR` shows Margin = Profit / Cost
 - `FINLA` shows CX and FX deposits in addition to cash
 - `XIT CONTS` displays a ! mark for contracts with unfulfilled own conditions
 - `XIT CONTS` displays `SHPT` for contracts with shipment condition
@@ -20,17 +28,26 @@
   to `CXPO H2O.AI1` when you hit Enter.
 
 ## Changed
+- Prices are now calculated using the following method (falling back if data is unavailable):
+  UNIVERSE_VWAP7D => UNIVERSE_VWAP30D => UNIVERSE_AVG => UNIVERSE_ASK => UNIVERSE_BID
 - `XIT FIN` is split in several commands
   - `XIT FIN`: Financial Overview
   - `XIT FINCH`: Financial Charts
   - `XIT FINPR`: Profitability Report
   - `XIT FIN_SET` is changed to `XIT SET FIN`
   - Old `XIT FIN` landing page was removed in favor of context buttons
+- `XIT FIN` shows different Key Figures:
+  - Liquid Assets are replaced with Quick Assets. Quick Assets are: Cash, Deposits,
+  Interest Receivable, Accounts Receivable, Short-Term loans. These assets are either
+  liquid or close-to-liquid and are used in Acid-Test Ratio calculation.
+  - Fixed Assets were removed
+  - In addition to Total Liabilities, Current and Quick Liabilities are added. Quick
+  Liabilities are: Accounts Payable, Short-Term Dept and Interest Payable. These
+  liabilities represent immediate financial obligations and are used in Acid-Test Ratio
+  calculation.
+  - Company Value is added
+  - 4 new financial ratios are added. Look them up if you don't know them!
 - `XIT SHEETS` are now displayed in minimalist mode
-- `XIT BURN` got additional features:
-  - Total load of all needed resources
-  - Total cost of all needed resources
-  - Context buttons: `BS` and `INV` for planets, `CXM` for materials
 - The `Additional Days` burn setting was changed to `Resupply`, which now represents
   the total amount of days for which to resupply.
 - `LM` ads are now more compact and show commodity/shipment icons
