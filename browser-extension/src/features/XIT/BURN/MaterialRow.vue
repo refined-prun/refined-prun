@@ -27,14 +27,14 @@ const props = defineProps({
 });
 
 const matBurn = computed(() => props.burn.burn[props.material.ticker]);
-const days = computed(() => matBurn.value.DaysLeft);
 const production = computed(() => matBurn.value.DailyAmount);
 const invAmount = computed(() => matBurn.value.Inventory ?? 0);
+const isInf = computed(() => production.value >= 0);
+const days = computed(() => (isInf.value ? 1000 : matBurn.value.DaysLeft));
 
 const isRed = computed(() => days.value <= userData.settings.burn.red);
 const isYellow = computed(() => days.value <= userData.settings.burn.yellow);
 const isGreen = computed(() => days.value > userData.settings.burn.yellow);
-const isInf = computed(() => production.value >= 0);
 
 const red = useTileState('red');
 const yellow = useTileState('yellow');
