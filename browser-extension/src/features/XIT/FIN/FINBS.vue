@@ -24,7 +24,6 @@ import {
   calcTotalNonCurrentAssets,
   calcTotalNonCurrentLiabilities,
 } from '@src/core/balance/balance-sheet-summary';
-import { map } from '@src/utils/map-values';
 import { SectionData } from '@src/features/XIT/FIN/balance-section';
 import { liveBalanceSheet } from '@src/core/balance/balance-sheet-live';
 import { balanceHistory } from '@src/store/user-data-balance';
@@ -86,7 +85,7 @@ const equity = computed<SectionData>(() => ({
   total: calcEquity,
   rows: [
     ['Total Assets', calcTotalAssets],
-    ['Total Liabilities', x => map([calcTotalLiabilities(x)], y => -y)],
+    ['Total Liabilities', calcTotalLiabilities],
   ],
 }));
 
