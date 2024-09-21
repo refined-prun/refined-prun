@@ -121,12 +121,16 @@ const sections = [
 ];
 
 const last = computed(() => {
-  const now = timestampEachMinute.value;
+  // Touch timestampEachMinute to trigger reactivity,
+  // but use Date.now() instead because the most recent
+  // history entry can be more recent than a minute ago.
+  const _ = timestampEachMinute.value;
+  const now = Date.now();
   const dayjsNow = dayjs(now);
   const history = balanceHistory.value;
   for (let i = history.length - 1; i >= 0; i--) {
     const timestamp = history[i].timestamp;
-    if (now <= timestamp) {
+    if (now < timestamp) {
       return undefined;
     }
     if (!dayjsNow.isSame(timestamp, 'isoWeek')) {
@@ -140,16 +144,20 @@ const previous = computed(() => {
   if (!last.value) {
     return undefined;
   }
+  // Touch timestampEachMinute to trigger reactivity,
+  // but use Date.now() instead because the most recent
+  // history entry can be more recent than a minute ago.
+  const _ = timestampEachMinute.value;
   const lastTimestamp = last.value.timestamp;
   const lastDayjs = dayjs(lastTimestamp);
-  const now = timestampEachMinute.value;
+  const now = Date.now();
   const history = balanceHistory.value;
   for (let i = history.length - 1; i >= 0; i--) {
     const timestamp = history[i].timestamp;
-    if (now <= timestamp) {
+    if (now < timestamp) {
       return undefined;
     }
-    if (last.value.timestamp <= timestamp) {
+    if (last.value.timestamp < timestamp) {
       continue;
     }
     if (!lastDayjs.isSame(timestamp, 'isoWeek')) {
