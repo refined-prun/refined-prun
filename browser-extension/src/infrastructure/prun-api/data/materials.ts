@@ -13,6 +13,8 @@ messages({
   },
 });
 
+const getByName = createMapGetter(state.all, x => x.name);
+
 const getByTicker = (() => {
   const getter = createMapGetter(
     state.all,
@@ -37,4 +39,5 @@ const getByTicker = (() => {
 export const materialsStore = {
   ...state,
   getByTicker,
+  getByName,
 };

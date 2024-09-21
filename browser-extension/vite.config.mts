@@ -41,6 +41,12 @@ export default defineConfig({
     isDev &&
       watchRebuildPlugin({
         options: {
+          'i18n-reader': {
+            skip: true,
+          },
+          'i18n-reader-inject': {
+            skip: true,
+          },
           'socket-io-proxy': {
             skip: true,
           },
@@ -68,6 +74,11 @@ export default defineConfig({
       input: {
         'refined-prun': resolve(__dirname, 'src/refined-prun.ts'),
         popup: resolve(__dirname, 'src/popup/popup.ts'),
+        'i18n-reader': resolve(__dirname, 'src/infrastructure/prun-ui/i18n-reader.ts'),
+        'i18n-reader-inject': resolve(
+          __dirname,
+          'src/infrastructure/prun-ui/i18n-reader-inject.ts',
+        ),
         'socket-io-proxy': resolve(__dirname, 'src/infrastructure/prun-api/socket-io-proxy.ts'),
         'socket-io-proxy-inject': resolve(
           __dirname,

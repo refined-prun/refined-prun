@@ -36,7 +36,7 @@ const manifest = {
     },
     {
       matches: [apex],
-      js: ['refined-prun.js'],
+      js: ['i18n-reader-inject.js', 'refined-prun.js'],
       run_at: 'document_start',
     },
   ],

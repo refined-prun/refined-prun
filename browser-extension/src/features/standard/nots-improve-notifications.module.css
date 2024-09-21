@@ -1,5 +1,6 @@
 .type {
   display: inline-block;
+  text-transform: uppercase;
   min-width: 65px;
   max-width: 65px;
 }

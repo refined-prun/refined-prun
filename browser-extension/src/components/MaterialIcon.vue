@@ -4,8 +4,8 @@ import { computed, PropType } from 'vue';
 import ColoredIcon from '@src/components/ColoredIcon.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
-import { getMaterialNameByTicker } from '@src/infrastructure/prun-ui/material-names';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
 
 const props = defineProps({
   ticker: {
@@ -27,7 +27,7 @@ const props = defineProps({
 const material = computed(() => materialsStore.getByTicker(props.ticker));
 const materialCategory = computed(() => materialCategoriesStore.getById(material.value?.category));
 
-const name = computed(() => getMaterialNameByTicker(material.value?.ticker) ?? 'Unknown');
+const name = computed(() => getMaterialName(material.value) ?? 'Unknown');
 const colors = computed(() => {
   const colors = categoryColors[materialCategory.value?.name ?? ''] ?? categoryColors['unknown'];
   return {

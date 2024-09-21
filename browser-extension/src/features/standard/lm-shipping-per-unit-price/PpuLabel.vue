@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { getTickerByMaterialName } from '@src/infrastructure/prun-ui/material-names';
-import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { CurrencySymbols } from '@src/GameProperties';
 import { computed } from 'vue';
 import { fixed0 } from '@src/utils/format';
+import { getMaterialByName } from '@src/infrastructure/prun-ui/i18n';
 
 const props = defineProps({
   materialName: {
@@ -24,10 +23,7 @@ const props = defineProps({
   },
 });
 
-const material = computed(() => {
-  const ticker = getTickerByMaterialName(props.materialName);
-  return materialsStore.getByTicker(ticker);
-});
+const material = computed(() => getMaterialByName(props.materialName));
 
 const unit = computed(() => {
   if (!material.value) {

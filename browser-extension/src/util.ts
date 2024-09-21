@@ -3,13 +3,13 @@ import { Selector } from './Selector';
 import { CategoryColors, Style, WithStyles } from './Style';
 import system from '@src/system';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { getMaterialNameByTicker } from '@src/infrastructure/prun-ui/material-names';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/stars';
 import { Stations } from '@src/GameProperties';
 import { hhmm } from '@src/utils/format';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
 
 // Download a file containing fileData with fileName
 export function downloadFile(fileData, fileName, isJSON: boolean = true) {
@@ -823,4 +823,9 @@ export function changeSelectValue(input, selectIndex) {
 
 export function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export function getMaterialNameByTicker(ticker?: string | null) {
+  const material = materialsStore.getByTicker(ticker);
+  return getMaterialName(material);
 }

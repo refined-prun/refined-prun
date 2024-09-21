@@ -13,6 +13,8 @@ import { initializeTileListener } from '@src/store/user-data-tiles';
 import { loadUserData } from '@src/infrastructure/storage/user-data-serializer';
 import { userData } from '@src/store/user-data';
 import { loadNotes } from '@src/infrastructure/storage/notes-serializer';
+import { readPrunI18N } from '@src/infrastructure/prun-ui/i18n';
+import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 
 async function mainRun() {
   void fetchPrices();
@@ -31,6 +33,7 @@ async function mainRun() {
   await parsePrunCss();
   await loadRefinedPrunCss();
   await descendantPresent(document.documentElement, PrunCss.App.container);
+  await readPrunI18N(materialsStore.all);
   await backgroundTasks;
 
   const specialTime = getSpecial();
