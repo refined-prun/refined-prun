@@ -50,6 +50,7 @@
 - `XIT SHEETS` now display in minimalist mode.
 - The `Additional Days` burn setting was changed to `Resupply`, representing total days for resupply.
 - `LM` ads are more compact, showing commodity/shipment icons.
+- Equity history chart now shows only the latest point per day
 - New and old UIs now use vanilla PrUn styling where possible.
 - All XIT commands accept up to 3 space-separated arguments.
 - Real-time updates for XIT buffers implemented, removing the need for refresh button.
