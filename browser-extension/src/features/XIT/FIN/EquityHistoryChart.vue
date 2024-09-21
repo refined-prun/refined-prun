@@ -6,6 +6,7 @@ import { userData } from '@src/store/user-data';
 import { calcEquity } from '@src/core/balance/balance-sheet-summary';
 import { balanceHistory } from '@src/store/user-data-balance';
 import { createTileStateHook } from '@src/store/user-data-tiles';
+import dayjs from 'dayjs';
 
 defineProps({
   pan: Boolean,
@@ -38,8 +39,14 @@ const lineChartData = computed(() => {
       continue;
     }
 
-    date.push(entry.timestamp);
-    equityValues.push(equity);
+    const previousDay = date[date.length - 1];
+    if (previousDay && dayjs(previousDay).isSame(entry.timestamp, 'day')) {
+      date[date.length - 1] = entry.timestamp;
+      equityValues[equityValues.length - 1] = equity;
+    } else {
+      date.push(entry.timestamp);
+      equityValues.push(equity);
+    }
   }
 
   return {
