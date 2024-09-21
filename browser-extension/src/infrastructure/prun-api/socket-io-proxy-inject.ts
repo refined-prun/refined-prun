@@ -14,14 +14,14 @@
     if (!head) {
       return false;
     }
-    const proxyScript = document.createElement('script');
     // Serialize app script an remove it from DOM to prevent PrUn loading
     // before socket.io proxy is injected. This script will be attached
     // back to head in proxy script.
     const appScript = head.getElementsByTagName('script')[0];
-    proxyScript.textContent = btoa(appScript.src);
     appScript.remove();
+    const proxyScript = document.createElement('script');
     proxyScript.src = (__CHROME__ ? chrome : browser).runtime.getURL('socket-io-proxy.js');
+    proxyScript.textContent = appScript.src;
     head.appendChild(proxyScript);
     return true;
   }
