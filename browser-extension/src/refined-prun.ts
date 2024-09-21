@@ -55,6 +55,7 @@ import '@src/features/XIT/FIN/FIN.vue';
 import '@src/features/XIT/FIN/FINBS.vue';
 import '@src/features/XIT/FIN/FINCH.vue';
 import '@src/features/XIT/FIN/FINPR.vue';
+import '@src/features/XIT/GIF.vue';
 import '@src/features/XIT/HEALTH.vue';
 import '@src/features/XIT/HELP';
 import '@src/features/XIT/HQUC.vue';

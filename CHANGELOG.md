@@ -4,6 +4,7 @@
 - `XIT HQUC`: HQ Upgrade Calculator
 - `XIT CONTC`: Pending Contract Conditions
 - `XIT WEB`: Open any web page (Pro tip! Try `XIT WEB https://www.youtube.com/embed/dQw4w9WgXcQ`)
+- `XIT GIF`: Random GIF (The main reason for this one is `XIT GIF cats`)
 - `XIT FIN` is divided into multiple commands:
   - `XIT FIN`: Financial Overview
   - `XIT FINCH`: Financial Charts
