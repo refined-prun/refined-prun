@@ -25,6 +25,8 @@ import { calculateBuildingCondition } from '@src/core/buildings';
 import { diffDays } from '@src/utils/time-diff';
 import { userData } from '@src/store/user-data';
 import { mergeMaterialAmounts } from '@src/core/sort-materials';
+import Active from '@src/components/forms/Active.vue';
+import SectionHeader from '@src/components/SectionHeader.vue';
 
 const props = defineProps({
   parameters: {
@@ -81,23 +83,18 @@ function calculateAge(lastRepair: number) {
 
 <template>
   <LoadingSpinner v-if="materials === undefined" />
-  <div v-else :style="{ height: '100%', flexGrow: 1, paddingTop: '4px' }">
-    <span class="title">All Repairs</span>
-    <div>
-      <div style="display: inline">
-        <span style="padding-left: 5px">Age Threshold:</span>
-        <NumberInput v-model="userData.settings.repair.threshold" style="width: 60px" />
-      </div>
-      <div style="display: inline">
-        <span style="padding-left: 5px">Time Offset:</span>
-        <NumberInput v-model="userData.settings.repair.offset" style="width: 60px" />
-      </div>
-    </div>
-
-    <span class="title" style="padding-bottom: 2px">Shopping Cart</span>
+  <template v-else>
+    <form>
+      <Active label="Age Threshold">
+        <NumberInput v-model="userData.settings.repair.threshold" />
+      </Active>
+      <Active label="Time Offset">
+        <NumberInput v-model="userData.settings.repair.offset" />
+      </Active>
+    </form>
+    <SectionHeader>Shopping Cart</SectionHeader>
     <MaterialPurchaseTable :materials="materials" />
-
-    <span class="title" style="padding-top: 5px; padding-bottom: 2px">Buildings</span>
+    <SectionHeader>Buildings</SectionHeader>
     <table>
       <thead>
         <tr>
@@ -122,5 +119,5 @@ function calculateAge(lastRepair: number) {
         </tr>
       </tbody>
     </table>
-  </div>
+  </template>
 </template>
