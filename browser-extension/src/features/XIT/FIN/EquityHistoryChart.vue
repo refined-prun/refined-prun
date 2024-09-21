@@ -5,7 +5,7 @@ import { percent0 } from '@src/utils/format';
 import { userData } from '@src/store/user-data';
 import { calcEquity } from '@src/core/balance/balance-sheet-summary';
 import { balanceHistory } from '@src/store/user-data-balance';
-import { createTileStateHook } from '@src/store/user-data-tiles';
+import { useTileState } from '@src/store/user-data-tiles';
 import dayjs from 'dayjs';
 
 defineProps({
@@ -16,8 +16,7 @@ defineProps({
 
 const emit = defineEmits<{ (e: 'chart-click'): void }>();
 
-const useTileState = createTileStateHook({ averageFactor: 0.2 });
-const averageFactor = useTileState('averageFactor');
+const averageFactor = useTileState('averageFactor', 0.2);
 const averageFactorText = ref(averageFactor.value);
 watch(averageFactorText, x => {
   const parsed = parseFloat(x);

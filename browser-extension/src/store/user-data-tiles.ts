@@ -1,5 +1,15 @@
 import { userData } from '@src/store/user-data';
-import { App, computed, inject, InjectionKey, Plugin, reactive, Ref, watch } from 'vue';
+import {
+  App,
+  computed,
+  inject,
+  InjectionKey,
+  Plugin,
+  reactive,
+  Ref,
+  watch,
+  WritableComputedRef,
+} from 'vue';
 import { deepFreeze } from '@src/utils/deep-freeze';
 import { tilesStore } from '@src/infrastructure/prun-api/data/tiles';
 
@@ -48,21 +58,24 @@ export function getTileState<T extends TileState>(tileOrId: PrunTile | string) {
   if (!state) {
     state = reactive({});
   }
-  watch(
-    state,
-    () => {
-      const hasKeys = Object.keys(state).length > 0;
-      if (hasKeys && !isAdded) {
-        userData.tileState[id] = state;
-        isAdded = true;
-      }
-      if (!hasKeys && isAdded) {
-        delete userData.tileState[id];
-        isAdded = false;
-      }
-    },
-    { deep: true },
-  );
+  const isPersistent = isNaN(Number(id));
+  if (isPersistent) {
+    watch(
+      state,
+      () => {
+        const hasKeys = Object.keys(state).length > 0;
+        if (hasKeys && !isAdded) {
+          userData.tileState[id] = state;
+          isAdded = true;
+        }
+        if (!hasKeys && isAdded) {
+          delete userData.tileState[id];
+          isAdded = false;
+        }
+      },
+      { deep: true },
+    );
+  }
   return state as T;
 }
 
@@ -87,6 +100,11 @@ export function createTileStateHook<T extends TileState>(defaultState: T) {
     const state = inject(tileStateKey<T>())!;
     return computedTileState(state, key, defaultState[key]);
   };
+}
+
+export function useTileState<T>(key: string, defaultValue: T): WritableComputedRef<T> {
+  const state = inject(tileStateKey())!;
+  return computedTileState(state, key, defaultValue) as WritableComputedRef<T>;
 }
 
 export function computedTileState<T extends TileState, K extends keyof T>(
