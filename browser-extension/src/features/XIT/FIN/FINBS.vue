@@ -29,8 +29,8 @@ import { SectionData } from '@src/features/XIT/FIN/balance-section';
 import { liveBalanceSheet } from '@src/core/balance/balance-sheet-live';
 import { balanceHistory } from '@src/store/user-data-balance';
 import dayjs from 'dayjs';
-import { dayjsEachMinute, timestampEachMinute } from '@src/utils/dayjs';
-import { ddmmyyyy } from '../../../utils/format';
+import { timestampEachMinute } from '@src/utils/dayjs';
+import { ddmmyyyy } from '@src/utils/format';
 
 const currentAssets = computed<SectionData>(() => ({
   name: 'Current Assets',
