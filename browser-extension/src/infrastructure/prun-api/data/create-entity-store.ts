@@ -4,20 +4,25 @@ import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 type EntityId = number | string;
 type IdSelector<T, Id extends EntityId> = (model: T) => Id;
 
-export function createEntityStore<T>(selectId?: IdSelector<T, string>) {
+export function createEntityStore<T>(
+  selectId?: IdSelector<T, string>,
+  options?: {
+    preserveOnOpen?: boolean;
+  },
+) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   selectId = selectId ?? ((model: any) => model.id);
-  const entities = shallowReactive({} as Record<string, T>);
+  let entities = shallowReactive({} as Record<string, T>);
   const fetched = ref(false);
 
-  messages({
-    CLIENT_CONNECTION_OPENED() {
-      for (const id of Object.keys(entities)) {
-        delete entities[id];
-      }
-      fetched.value = false;
-    },
-  });
+  if (!options?.preserveOnOpen) {
+    messages({
+      CLIENT_CONNECTION_OPENED() {
+        fetched.value = false;
+        entities = shallowReactive({} as Record<string, T>);
+      },
+    });
+  }
 
   return {
     state: {

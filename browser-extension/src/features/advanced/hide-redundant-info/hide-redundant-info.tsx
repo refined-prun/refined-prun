@@ -153,7 +153,7 @@ function cleanShipmentAd(tile: PrunTile, ad: HTMLElement) {
   const parameter = tile.parameter;
   for (const link of links) {
     const planetName = extractPlanetName(link.textContent);
-    const planet = planetsStore.getByIdOrName(planetName);
+    const planet = planetsStore.find(planetName);
     if (parameter === planetName || parameter === planet?.naturalId) {
       // Hide 'from' links from shipment ads on the same planet/station.
       link.previousSibling!.textContent = '';

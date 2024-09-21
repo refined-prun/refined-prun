@@ -758,7 +758,7 @@ function mtraConvert(nameOrNaturalId: string) {
   }
 
   // Determine the planets' natural IDs (XX-###x)
-  const planet = planetsStore.getByIdOrName(nameOrNaturalId);
+  const planet = planetsStore.find(nameOrNaturalId);
   if (!planet) {
     return nameOrNaturalId.toLowerCase();
   }

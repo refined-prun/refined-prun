@@ -739,16 +739,16 @@ export async function loadLocalJson(path: string) {
 
 // A function to compare two planets (to be used in .sort() functions)
 export function comparePlanets(idOrNameA: string, idOrNameB: string) {
-  const planetA = planetsStore.getByIdOrName(idOrNameA);
-  const planetB = planetsStore.getByIdOrName(idOrNameB);
+  const planetA = planetsStore.find(idOrNameA);
+  const planetB = planetsStore.find(idOrNameB);
+  if (planetA === planetB) {
+    return 0;
+  }
   if (!planetA) {
     return 1;
   }
   if (!planetB) {
     return -1;
-  }
-  if (planetA === planetB) {
-    return 0;
   }
 
   const systemA = starsStore.getByPlanetNaturalId(planetA.naturalId);
@@ -761,8 +761,10 @@ export function comparePlanets(idOrNameA: string, idOrNameB: string) {
   }
 
   if (systemA !== systemB) {
-    const isSystemANamed = systemA.name !== getStarNaturalId(systemA);
-    const isSystemBNamed = systemB.name !== getStarNaturalId(systemB);
+    const naturalIdA = getStarNaturalId(systemA);
+    const naturalIdB = getStarNaturalId(systemB);
+    const isSystemANamed = systemA.name !== naturalIdA;
+    const isSystemBNamed = systemB.name !== naturalIdB;
 
     if (isSystemANamed && !isSystemBNamed) {
       return -1;
@@ -770,9 +772,10 @@ export function comparePlanets(idOrNameA: string, idOrNameB: string) {
     if (isSystemBNamed && !isSystemANamed) {
       return 1;
     }
-    if (isSystemANamed && isSystemBNamed && systemA !== systemB) {
+    if (isSystemANamed && isSystemBNamed) {
       return systemA.name > systemB.name ? 1 : -1;
     }
+    return naturalIdA > naturalIdB ? 1 : -1;
   }
 
   const isPlanetANamed = planetA.name !== planetA.naturalId;
