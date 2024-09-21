@@ -1,3 +1,11 @@
 .hide {
   display: none;
 }
+
+.gridItem {
+  width: auto;
+}
+
+.containerError {
+  flex-wrap: nowrap;
+}

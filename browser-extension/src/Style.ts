@@ -292,8 +292,6 @@ export const CategoryColors = {
 };
 
 export enum RPrunStylesheet {
-  refinedPrun = 'refined-prun',
-  advanced = 'pmmg-advanced',
   enhancedColors = 'pmmg-enhanced-colors',
   icons = 'pmmg-icons',
   oldColors = 'pmmg-old-colors',

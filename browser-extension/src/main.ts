@@ -37,7 +37,6 @@ async function mainRun() {
 
   // TODO
   appendStyle(specialTime ? RPrunStylesheet.oldColors : RPrunStylesheet.enhancedColors);
-  appendStyle(RPrunStylesheet.advanced);
   //appendStyle(specialTime ? RPrunStylesheet.oldColors : RPrunStylesheet.icons);
 
   await features.init();

@@ -14,6 +14,7 @@ import { extractPlanetName } from '@src/util';
 import { _$$ } from '@src/utils/get-element-by-class-name';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import {
+  applyClassCssRule,
   applyScopedClassCssRule,
   applyScopedCssRule,
 } from '@src/infrastructure/prun-ui/refined-prun-css';
@@ -187,6 +188,16 @@ export function init() {
   applyScopedClassCssRule('SHPF', PrunCss.InventorySortControls.controls, classes.hide);
   // Hide Weight and Volume labels
   applyScopedClassCssRule('SHPF', PrunCss.StoreView.name, classes.hide);
+  // Hide item names in inventories
+  applyClassCssRule(PrunCss.GridItemView.name, classes.hide);
+  // Remove gaps between items in GridView
+  applyClassCssRule(PrunCss.GridItemView.container, classes.gridItem);
+  // Hide error messages in form components
+  // Remove hard-coded ones when molp fixes class duplication
+  applyClassCssRule(PrunCss.FormComponent.containerError, classes.containerError);
+  applyClassCssRule('FormComponent__containerError___pN__L1Q', classes.containerError);
+  applyClassCssRule(PrunCss.FormComponent.errorMessage, classes.hide);
+  applyClassCssRule('FormComponent__errorMessage___mBdvpz5', classes.hide);
   tiles.observe('COGCPEX', cleanCOGCPEX);
   tiles.observe('FLT', cleanFLT);
   tiles.observe('INV', cleanINV);
