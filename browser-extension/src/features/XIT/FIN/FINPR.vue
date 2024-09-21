@@ -80,6 +80,7 @@ function profitClass(value: number) {
     <KeyFigures :figures="figures" />
     <FinHeader>Breakdown by Planet</FinHeader>
     <table>
+      <colgroup span="5" style="width: 20%"></colgroup>
       <thead>
         <tr>
           <th>Name</th>
@@ -103,10 +104,6 @@ function profitClass(value: number) {
 </template>
 
 <style scoped>
-table {
-  table-layout: fixed;
-}
-
 table tr > *:not(:first-child) {
   text-align: right;
 }
