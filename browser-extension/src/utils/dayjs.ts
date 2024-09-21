@@ -1,10 +1,12 @@
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import isoWeek from 'dayjs/plugin/isoWeek';
 import dayjs from 'dayjs';
 import { computed, Ref, ref } from 'vue';
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
+dayjs.extend(isoWeek);
 
 const eachSecond = ref(0);
 setInterval(() => eachSecond.value++, 1000);

@@ -13,92 +13,151 @@ xit.add({
 <script setup lang="ts">
 import { computed } from 'vue';
 import BalanceSheetSection from '@src/features/XIT/FIN/BalanceSheetSection.vue';
-import { liveBalanceSheet, liveBalanceSummary } from '@src/core/balance/balance-sheet-live';
+import {
+  calcCompanyValue,
+  calcEquity,
+  calcTotalAssets,
+  calcTotalCurrentAssets,
+  calcTotalCurrentLiabilities,
+  calcTotalLiabilities,
+  calcTotalLockedAssets,
+  calcTotalNonCurrentAssets,
+  calcTotalNonCurrentLiabilities,
+} from '@src/core/balance/balance-sheet-summary';
+import { map } from '@src/utils/map-values';
+import { SectionData } from '@src/features/XIT/FIN/balance-section';
+import { liveBalanceSheet } from '@src/core/balance/balance-sheet-live';
+import { balanceHistory } from '@src/store/user-data-balance';
+import dayjs from 'dayjs';
+import { dayjsEachMinute, timestampEachMinute } from '@src/utils/dayjs';
+import { ddmmyyyy } from '../../../utils/format';
 
-interface Section {
-  name: string;
-  total: number | undefined;
-  rows: [string, number | undefined][];
-}
-
-const currentAssets = computed<Section>(() => ({
+const currentAssets = computed<SectionData>(() => ({
   name: 'Current Assets',
-  total: liveBalanceSummary.currentAssets,
+  total: calcTotalCurrentAssets,
   rows: [
-    ['Cash', liveBalanceSheet.currentAssets?.cash],
-    ['Deposits', liveBalanceSheet.currentAssets?.deposits],
-    ['Interest Receivable', liveBalanceSheet.currentAssets?.interestReceivable],
-    ['Accounts Receivable', liveBalanceSheet.currentAssets?.accountsReceivable],
-    ['Short-Term Loans', liveBalanceSheet.currentAssets?.shortTermLoans],
-    ['Market-Listed Materials', liveBalanceSheet.currentAssets?.marketListedMaterials],
-    ['Inventory', liveBalanceSheet.currentAssets?.inventory],
-    ['Work-in-Progress (WIP)', liveBalanceSheet.currentAssets?.ordersInProgress],
-    ['Materials to Receive', liveBalanceSheet.currentAssets?.materialsToReceive],
+    ['Cash', x => x.currentAssets?.cash],
+    ['Deposits', x => x.currentAssets?.deposits],
+    ['Interest Receivable', x => x.currentAssets?.interestReceivable],
+    ['Accounts Receivable', x => x.currentAssets?.accountsReceivable],
+    ['Short-Term Loans', x => x.currentAssets?.shortTermLoans],
+    ['Market-Listed Materials', x => x.currentAssets?.marketListedMaterials],
+    ['Inventory', x => x.currentAssets?.inventory],
+    ['Work-in-Progress (WIP)', x => x.currentAssets?.ordersInProgress],
+    ['Materials to Receive', x => x.currentAssets?.materialsToReceive],
   ],
 }));
 
-const nonCurrentAssets = computed<Section>(() => ({
+const nonCurrentAssets = computed<SectionData>(() => ({
   name: 'Non-Current Assets',
-  total: liveBalanceSummary.nonCurrentAssets,
+  total: calcTotalNonCurrentAssets,
   rows: [
-    ['Buildings', liveBalanceSheet.nonCurrentAssets?.buildings],
-    ['Accounts Receivable', liveBalanceSheet.nonCurrentAssets?.accountsReceivable],
-    ['Long-Term Loans', liveBalanceSheet.nonCurrentAssets?.longTermLoans],
-    ['Materials to Receive', liveBalanceSheet.nonCurrentAssets?.materialsToReceive],
+    ['Buildings', x => x.nonCurrentAssets?.buildings],
+    ['Accounts Receivable', x => x.nonCurrentAssets?.accountsReceivable],
+    ['Long-Term Loans', x => x.nonCurrentAssets?.longTermLoans],
+    ['Materials to Receive', x => x.nonCurrentAssets?.materialsToReceive],
   ],
 }));
 
-const currentLiabilities = computed<Section>(() => ({
+const currentLiabilities = computed<SectionData>(() => ({
   name: 'Current Liabilities',
-  total: liveBalanceSummary.currentLiabilities,
+  total: calcTotalCurrentLiabilities,
   rows: [
-    ['Accounts Payable', liveBalanceSheet.currentLiabilities?.accountsPayable],
-    ['Materials to Deliver', liveBalanceSheet.currentLiabilities?.materialsToDeliver],
-    ['Short-Term Debt', liveBalanceSheet.currentLiabilities?.shortTermDebt],
-    ['Interest Payable', liveBalanceSheet.currentLiabilities?.interestPayable],
+    ['Accounts Payable', x => x.currentLiabilities?.accountsPayable],
+    ['Materials to Deliver', x => x.currentLiabilities?.materialsToDeliver],
+    ['Short-Term Debt', x => x.currentLiabilities?.shortTermDebt],
+    ['Interest Payable', x => x.currentLiabilities?.interestPayable],
   ],
 }));
 
-const nonCurrentLiabilities = computed<Section>(() => ({
+const nonCurrentLiabilities = computed<SectionData>(() => ({
   name: 'Non-Current Liabilities',
-  total: liveBalanceSummary.nonCurrentLiabilities,
+  total: calcTotalNonCurrentLiabilities,
   rows: [
-    ['Accounts Payable', liveBalanceSheet.nonCurrentLiabilities?.accountsPayable],
-    ['Materials to Deliver', liveBalanceSheet.nonCurrentLiabilities?.materialsToDeliver],
-    ['Long-Term Debt', liveBalanceSheet.nonCurrentLiabilities?.longTermDebt],
+    ['Accounts Payable', x => x.nonCurrentLiabilities?.accountsPayable],
+    ['Materials to Deliver', x => x.nonCurrentLiabilities?.materialsToDeliver],
+    ['Long-Term Debt', x => x.nonCurrentLiabilities?.longTermDebt],
   ],
 }));
 
-const equity = computed<Section>(() => ({
+const equity = computed<SectionData>(() => ({
   name: 'Equity',
-  total: liveBalanceSummary.equity,
+  important: true,
+  total: calcEquity,
   rows: [
-    ['Total Assets', liveBalanceSummary.assets],
-    [
-      'Total Liabilities',
-      liveBalanceSummary.liabilities !== undefined ? -liveBalanceSummary.liabilities : undefined,
-    ],
+    ['Total Assets', calcTotalAssets],
+    ['Total Liabilities', x => map([calcTotalLiabilities(x)], y => -y)],
   ],
 }));
 
-const lockedAssets = computed<Section>(() => ({
+const lockedAssets = computed<SectionData>(() => ({
   name: 'Locked Assets',
-  total: liveBalanceSummary.lockedAssets,
+  total: calcTotalLockedAssets,
   rows: [
-    ['Ships', liveBalanceSheet.lockedAssets?.ships],
-    ['HQ Upgrades', liveBalanceSheet.lockedAssets?.hqUpgrades],
-    ['APEX Representation Center', liveBalanceSheet.lockedAssets?.arc],
+    ['Ships', x => x.lockedAssets?.ships],
+    ['HQ Upgrades', x => x.lockedAssets?.hqUpgrades],
+    ['APEX Representation Center', x => x.lockedAssets?.arc],
   ],
 }));
 
-const companyValue = computed<Section>(() => ({
+const companyValue = computed<SectionData>(() => ({
   name: 'Company Value',
-  total: liveBalanceSummary.companyValue,
+  important: true,
+  total: calcCompanyValue,
   rows: [
-    ['Equity', liveBalanceSummary.equity],
-    ['Locked Assets', liveBalanceSummary.lockedAssets],
+    ['Equity', calcEquity],
+    ['Locked Assets', calcTotalLockedAssets],
   ],
 }));
+
+const sections = [
+  currentAssets,
+  nonCurrentAssets,
+  currentLiabilities,
+  nonCurrentLiabilities,
+  equity,
+  lockedAssets,
+  companyValue,
+];
+
+const last = computed(() => {
+  const now = timestampEachMinute.value;
+  const dayjsNow = dayjs(now);
+  const history = balanceHistory.value;
+  for (let i = history.length - 1; i >= 0; i--) {
+    const timestamp = history[i].timestamp;
+    if (now <= timestamp) {
+      return undefined;
+    }
+    if (!dayjsNow.isSame(timestamp, 'isoWeek')) {
+      return history[i];
+    }
+  }
+  return undefined;
+});
+
+const previous = computed(() => {
+  if (!last.value) {
+    return undefined;
+  }
+  const lastTimestamp = last.value.timestamp;
+  const lastDayjs = dayjs(lastTimestamp);
+  const now = timestampEachMinute.value;
+  const history = balanceHistory.value;
+  for (let i = history.length - 1; i >= 0; i--) {
+    const timestamp = history[i].timestamp;
+    if (now <= timestamp) {
+      return undefined;
+    }
+    if (last.value.timestamp <= timestamp) {
+      continue;
+    }
+    if (!lastDayjs.isSame(timestamp, 'isoWeek')) {
+      return history[i];
+    }
+  }
+  return undefined;
+});
 </script>
 
 <template>
@@ -107,36 +166,24 @@ const companyValue = computed<Section>(() => ({
       <tr>
         <th>&nbsp;</th>
         <th>Current Period</th>
-        <th>Last Period<br />(N/A)</th>
-        <th>Previous Period<br />(N/A)</th>
-        <th>Change<br />(N/A)</th>
+        <th>
+          <template v-if="last">{{ ddmmyyyy(last.timestamp) }}</template>
+          <template v-else>Last Period</template>
+        </th>
+        <th>
+          <template v-if="last">{{ ddmmyyyy(previous.timestamp) }}</template>
+          <template v-else>Previous Period</template>
+        </th>
+        <th>Change</th>
       </tr>
     </thead>
     <BalanceSheetSection
-      :name="currentAssets.name"
-      :total="currentAssets.total"
-      :rows="currentAssets.rows" />
-    <BalanceSheetSection
-      :name="nonCurrentAssets.name"
-      :total="nonCurrentAssets.total"
-      :rows="nonCurrentAssets.rows" />
-    <BalanceSheetSection
-      :name="currentLiabilities.name"
-      :total="currentLiabilities.total"
-      :rows="currentLiabilities.rows" />
-    <BalanceSheetSection
-      :name="nonCurrentLiabilities.name"
-      :total="nonCurrentLiabilities.total"
-      :rows="nonCurrentLiabilities.rows" />
-    <BalanceSheetSection :name="equity.name" :total="equity.total" :rows="equity.rows" />
-    <BalanceSheetSection
-      :name="lockedAssets.name"
-      :total="lockedAssets.total"
-      :rows="lockedAssets.rows" />
-    <BalanceSheetSection
-      :name="companyValue.name"
-      :total="companyValue.total"
-      :rows="companyValue.rows" />
+      v-for="section in sections"
+      :key="section.value.name"
+      :current="liveBalanceSheet"
+      :last="last"
+      :previous="previous"
+      :section="section.value" />
   </table>
 </template>
 
