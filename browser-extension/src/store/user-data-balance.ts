@@ -11,6 +11,10 @@ const v2 = computed(() => userData.balanceHistory.v2.map(deserializeBalanceSheet
 
 export const balanceHistory = computed(() => v1.value.slice().concat(v2.value));
 
+export function canCollectFinDataPoint() {
+  return serializeBalanceSheet(liveBalanceSheet) !== undefined;
+}
+
 export function collectFinDataPoint(): boolean {
   const sheet = serializeBalanceSheet(liveBalanceSheet);
   if (sheet) {

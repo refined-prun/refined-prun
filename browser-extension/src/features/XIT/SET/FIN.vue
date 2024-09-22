@@ -8,7 +8,7 @@ import { fixed0, hhmm, ddmmyyyy } from '@src/utils/format';
 import { clearBalanceHistory, userData } from '@src/store/user-data';
 import { calcCompanyValue, calcEquity } from '@src/core/balance/balance-sheet-summary';
 import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
-import { balanceHistory, collectFinDataPoint } from '@src/store/user-data-balance';
+import { balanceHistory, canCollectFinDataPoint, collectFinDataPoint } from '@src/store/user-data-balance';
 import {
   exportFinancialHistory,
   importFinancialHistory,
@@ -59,7 +59,9 @@ function formatValue(number?: number) {
   </SectionHeader>
   <form>
     <Commands>
-      <PrunButton primary @click="collectFinDataPoint">Collect Data Point</PrunButton>
+      <PrunButton primary :disabled="!canCollectFinDataPoint()" @click="collectFinDataPoint">
+        Collect Data Point
+      </PrunButton>
     </Commands>
   </form>
   <table>
