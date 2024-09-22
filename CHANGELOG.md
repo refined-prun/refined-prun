@@ -33,6 +33,7 @@
 - `BS` displays a building list summary at the bottom.
 - Material ticker auto-capitalizes inputs for commands: `CXM`, `CXOB`, `CXP`, `CXPC`, `CXPO`, `MAT`.
   For example: `CXPO h2o.ai1` will change to `CXPO H2O.AI1` when you hit Enter.
+- Added compatibility with non-English localizations.
 
 ## Changed
 - Prices are now calculated using the following method (falling back if data is unavailable):
