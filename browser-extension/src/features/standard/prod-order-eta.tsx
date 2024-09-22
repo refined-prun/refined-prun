@@ -1,70 +1,102 @@
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { convertDurationToETA, parseDuration } from '@src/util';
-
-const tag = 'rp-order-eta';
+import {
+  observeDescendantListChanged,
+  observeReadyElementsByClassName,
+} from '@src/utils/mutation-observer';
+import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
+import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
+import { computed, watch } from 'vue';
+import { productionStore } from '@src/infrastructure/prun-api/data/production';
+import onElementDisconnected from '@src/utils/on-element-disconnected';
+import { formatEta } from '@src/utils/format';
+import { timestampEachSecond } from '@src/utils/dayjs';
+import { _$ } from '@src/utils/get-element-by-class-name';
 
 function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {
     return;
   }
 
-  updateOrders(tile);
-  setInterval(() => updateOrders(tile), 1000);
+  observeReadyElementsByClassName(PrunCss.OrderSlot.container, {
+    baseElement: tile.frame,
+    callback: x => onOrderSlotReady(x, tile.parameter!),
+  });
 }
 
-function updateOrders(tile: PrunTile) {
-  if (!tile.frame.isConnected) {
-    return;
-  }
-  const columns = tile.frame.getElementsByClassName(PrunCss.SiteProductionLines.column);
-  const elements = Array.from(columns);
-  for (const queue of elements) {
-    const prodSlots = Array.from(queue.children);
-    let inQueue = false;
-    let lineTimes = [] as number[];
-    let timeElapsed = 0;
-    for (const prodItem of prodSlots) {
-      if (!prodItem.classList.contains(PrunCss.OrderSlot.container)) {
-        inQueue = true;
-        continue;
-      }
-      try {
-        prodItem.getElementsByClassName(tag).item(0)?.remove();
-        let duration: number;
-        if (inQueue) {
-          if (prodItem.children[0].children.length < 2) {
-            continue;
-          }
-          lineTimes.sort((a, b) => a - b);
-          const minTime = lineTimes[0];
-          timeElapsed += minTime;
-          lineTimes.shift();
-          lineTimes = lineTimes.map(value => value - minTime);
-          duration = parseDuration(prodItem.children[0].children[1].textContent);
-          lineTimes.push(duration);
-          if (!isNaN(duration + timeElapsed)) {
-            const span = document.createElement('span');
-            span.classList.add(tag);
-            span.textContent = ` (${convertDurationToETA(duration + timeElapsed)})`;
-            prodItem.children[0].children[1].appendChild(span);
-          }
-        } else {
-          duration = parseDuration(prodItem.children[1].children[1].textContent);
-          lineTimes.push(duration);
-          if (!isNaN(duration)) {
-            const span = document.createElement('span');
-            span.classList.add(tag);
-            span.textContent = ` (${convertDurationToETA(duration)})`;
-            prodItem.children[1].children[1].appendChild(span);
-          }
+async function onOrderSlotReady(slot: HTMLElement, siteId: string) {
+  const orderId = refPrunId(slot);
+  const completion = computed(() => {
+    const site = sitesStore.getById(siteId);
+    const lines = productionStore.getBySiteId(site?.siteId) ?? [];
+    for (const line of lines) {
+      for (const order of line.orders) {
+        if (order.id === orderId.value) {
+          return calcCompletionDate(line, order);
         }
-      } catch {
-        /* empty */
       }
     }
+    return undefined;
+  });
+  const eta = computed(() =>
+    completion.value ? formatEta(timestampEachSecond.value, completion.value) : undefined,
+  );
+  const span = document.createElement('span');
+  onElementDisconnected(
+    slot,
+    watch(
+      eta,
+      eta => {
+        span.style.display = eta !== undefined ? 'inline' : 'none';
+        span.textContent = `(${eta})`;
+      },
+      { immediate: true },
+    ),
+  );
+  observeDescendantListChanged(slot, () => {
+    const info = _$(PrunCss.OrderSlot.info, slot);
+    if (info && info.lastChild !== span) {
+      info.appendChild(span);
+    }
+  });
+}
+
+function calcCompletionDate(line: PrunApi.ProductionLine, order: PrunApi.ProductionOrder) {
+  if (!order.duration) {
+    return undefined;
   }
+
+  if (order.completion) {
+    return order.completion.timestamp;
+  }
+
+  const capacity = line.capacity;
+  if (capacity === 0) {
+    return undefined;
+  }
+  const queue: number[] = [];
+
+  for (const lineOrder of line.orders) {
+    if (!lineOrder.duration) {
+      return undefined;
+    }
+    if (lineOrder.completion) {
+      // Order has started
+      queue.push(lineOrder.completion.timestamp);
+    } else if (queue.length < capacity) {
+      // Order has not started but there's capacity to start it
+      queue.push(Date.now() + lineOrder.duration.millis);
+    } else {
+      // Order has not started
+      queue.push(queue.shift()! + lineOrder.duration.millis);
+    }
+    if (lineOrder === order) {
+      return queue.pop();
+    }
+  }
+
+  return undefined;
 }
 
 export function init() {
