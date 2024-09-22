@@ -1,6 +1,5 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
-import { createRequestStore, request } from '@src/infrastructure/prun-api/data/request-hooks';
 
 const store = createEntityStore<PrunApi.Alert>();
 const state = store.state;
@@ -15,6 +14,6 @@ messages({
   },
 });
 
-export const alertsStore = createRequestStore(request.blueprints, {
+export const alertsStore = {
   ...state,
-});
+};
