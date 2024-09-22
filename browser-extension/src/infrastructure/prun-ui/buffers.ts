@@ -6,6 +6,7 @@ import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import { Ref } from 'vue';
 import { watchUntil } from '@src/utils/watch';
+import descendantPresent from '@src/utils/descendant-present';
 
 let isBusy = false;
 const pendingResolvers: (() => void)[] = [];
@@ -28,11 +29,7 @@ export async function showBuffer(command: string, options?: ShowBufferOptions) {
     }
   }
   await acquireSlot();
-  const create = _$(PrunCss.Dock.create) as HTMLButtonElement;
-  if (!create) {
-    releaseSlot();
-    return false;
-  }
+  const create = await descendantPresent(document.documentElement, PrunCss.Dock.create);
 
   try {
     create.click();
