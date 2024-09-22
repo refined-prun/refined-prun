@@ -1,6 +1,6 @@
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { shallowReactive } from 'vue';
+import { computed, ref, shallowReactive } from 'vue';
 
 const store = createEntityStore<PrunApi.Screen>();
 const state = store.state;
@@ -34,6 +34,28 @@ messages({
   },
 });
 
+export const screenHash = ref(undefined as string | undefined);
+
+function updateCurrent() {
+  screenHash.value = location.hash.match(/screen=([^&]*)/)?.[1];
+}
+updateCurrent();
+
+window.addEventListener('locationchange', updateCurrent);
+window.addEventListener('hashchange', updateCurrent);
+
+const sorted = computed(() =>
+  state.all.value
+    ?.filter(x => !x.hidden)
+    .sort((a, b) => (a.name === b.name ? 0 : a.name < b.name ? -1 : 1)),
+);
+
+const current = computed(
+  () => sorted.value?.find(x => x.id === screenHash.value) ?? sorted.value?.[0],
+);
+
 export const screensStore = {
   ...state,
+  sorted,
+  current,
 };
