@@ -1,8 +1,14 @@
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
-import { request } from '@src/infrastructure/prun-api/data/request-hooks';
+import { implementRequestHooks } from '@src/infrastructure/prun-api/data/request-hooks';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { computed } from 'vue';
+import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
+import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
+import { blueprintsStore } from '@src/infrastructure/prun-api/data/blueprints';
+import { shipyardsStore } from '@src/infrastructure/prun-api/data/shipyards';
+import { shipyardProjectsStore } from '@src/infrastructure/prun-api/data/shipyard-projects';
 
 const bs: Set<string> = new Set();
 
@@ -22,10 +28,10 @@ function requestBS(siteId?: string | null) {
   }
   bs.add(site.siteId);
   const naturalId = getEntityNaturalIdFromAddress(site.address);
-  singleBufferRequest(`BS ${naturalId}`)();
+  singleBufferRequest(`BS ${naturalId}`, () => sitesStore.getById(siteId) !== undefined)();
 }
 
-function singleBufferRequest(command: string) {
+function singleBufferRequest(command: string, closeWhen: () => boolean) {
   let requested = false;
 
   messages({
@@ -39,14 +45,16 @@ function singleBufferRequest(command: string) {
       return;
     }
     requested = true;
-    showBuffer(command, { autoClose: true });
+    showBuffer(command, { autoClose: true, closeWhen: computed(closeWhen) });
   };
 }
 
-request.production = requestBS;
-request.workforce = requestBS;
-request.cxos = singleBufferRequest('CXOS');
-request.fxos = singleBufferRequest('FXOS');
-request.blueprints = singleBufferRequest('BLU');
-request.shipyards = singleBufferRequest('SHY');
-request.shipyardProjects = singleBufferRequest('SHYP');
+implementRequestHooks({
+  production: requestBS,
+  workforce: requestBS,
+  cxos: singleBufferRequest('CXOS', () => cxosStore.fetched.value),
+  fxos: singleBufferRequest('FXOS', () => fxosStore.fetched.value),
+  blueprints: singleBufferRequest('BLU', () => blueprintsStore.fetched.value),
+  shipyards: singleBufferRequest('SHY', () => shipyardsStore.fetched.value),
+  shipyardProjects: singleBufferRequest('SHYP', () => shipyardProjectsStore.fetched.value),
+});

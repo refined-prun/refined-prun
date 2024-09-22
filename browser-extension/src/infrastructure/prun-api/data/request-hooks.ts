@@ -1,28 +1,49 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+interface RequestHooks {
+  production(siteId?: string | null): void;
+  workforce(siteId?: string | null): void;
+  cxos(): void;
+  fxos(): void;
+  blueprints(): void;
+  shipyards(): void;
+  shipyardProjects(): void;
+}
+
+let hooks: RequestHooks | undefined = undefined;
+
+export function implementRequestHooks(newHooks: RequestHooks) {
+  hooks = newHooks;
+}
 
 export const request = {
   production(siteId?: string | null): void {
-    throw Error('Not implemented');
+    getHooks().production(siteId);
   },
   workforce(siteId?: string | null): void {
-    throw Error('Not implemented');
+    getHooks().workforce(siteId);
   },
   cxos(): void {
-    throw Error('Not implemented');
+    getHooks().cxos();
   },
   fxos(): void {
-    throw Error('Not implemented');
+    getHooks().fxos();
   },
   blueprints(): void {
-    throw Error('Not implemented');
+    getHooks().blueprints();
   },
   shipyards(): void {
-    throw Error('Not implemented');
+    getHooks().shipyards();
   },
   shipyardProjects(): void {
-    throw Error('Not implemented');
+    getHooks().shipyardProjects();
   },
 };
+
+function getHooks() {
+  if (!hooks) {
+    throw Error('Not implemented');
+  }
+  return hooks;
+}
 
 export function createRequestGetter<T, K>(
   getter: (value?: K | null) => T | undefined,

@@ -4,6 +4,8 @@ import { changeValue, sleep } from '@src/util';
 import onElementDisconnected from '@src/utils/on-element-disconnected';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import tiles from '@src/infrastructure/prun-ui/tiles';
+import { Ref } from 'vue';
+import { watchUntil } from '@src/utils/watch';
 
 let isBusy = false;
 const pendingResolvers: (() => void)[] = [];
@@ -12,6 +14,7 @@ interface ShowBufferOptions {
   force?: boolean;
   autoSubmit?: boolean;
   autoClose?: boolean;
+  closeWhen?: Ref<boolean>;
 }
 
 export async function showBuffer(command: string, options?: ShowBufferOptions) {
@@ -87,7 +90,15 @@ async function captureLastWindow(command: string, options?: ShowBufferOptions) {
   if (!options?.autoClose) {
     return;
   }
+  void closeWhenDone(window, options);
+}
+
+async function closeWhenDone(window: HTMLDivElement, options?: ShowBufferOptions) {
   await sleep(0);
+  const closeWhen = options?.closeWhen;
+  if (closeWhen) {
+    await watchUntil(closeWhen);
+  }
   const buttons = _$$(PrunCss.Window.button, window);
   const closeButton = buttons.find(x => x.textContent === 'x') as HTMLButtonElement;
   if (closeButton) {
