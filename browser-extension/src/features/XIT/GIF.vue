@@ -28,6 +28,7 @@ async function load() {
     return;
   }
   isLoading.value = true;
+  url.value = undefined;
   let rawUrl = 'https://api.giphy.com/v1/gifs/random?api_key=0UTRbFtkMxAplrohufYco5IY74U8hOes';
   const tag = props.parameters[1];
   if (tag) {
@@ -39,9 +40,11 @@ async function load() {
   } catch (e) {
     console.error(e);
     url.value = '';
-  } finally {
-    isLoading.value = false;
   }
+}
+
+function onLoad() {
+  isLoading.value = false;
 }
 
 onMounted(() => void load());
@@ -49,8 +52,8 @@ onMounted(() => void load());
 
 <template>
   <LoadingSpinner v-if="isLoading" />
-  <div v-else :class="$style.container">
-    <img :class="$style.image" :src="url" alt="gif" @click="load" />
+  <div :class="$style.container">
+    <img :class="$style.image" :src="url" alt="gif" @click="load" @load="onLoad" @error="onLoad" />
   </div>
 </template>
 
