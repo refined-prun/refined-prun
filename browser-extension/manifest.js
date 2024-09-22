@@ -22,11 +22,17 @@ const manifest = {
     'https://rest.fnar.net/',
   ],
   action: {
+    default_icon: {
+      16: 'icons/icon16.png',
+      32: 'icons/icon32.png',
+    },
     default_popup: 'popup.html',
-    default_icon: 'icon-34.png',
   },
   icons: {
-    128: 'icon-128.png',
+    16: 'icons/icon16.png',
+    32: 'icons/icon32.png',
+    48: 'icons/icon48.png',
+    128: 'icons/icon128.png',
   },
   content_scripts: [
     {
@@ -42,7 +48,7 @@ const manifest = {
   ],
   web_accessible_resources: [
     {
-      resources: ['*.js', '*.js.map', '*.css', '*.svg', '*.json', 'icon-128.png', 'icon-34.png'],
+      resources: ['*.js', '*.js.map', '*.css', '*.svg', '*.json'],
       matches: [apex],
     },
   ],
