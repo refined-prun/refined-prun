@@ -11,7 +11,7 @@ import '@src/features/standard/contd-search-results-above-search-bar';
 import '@src/features/standard/cxpo-order-book/cxpo-order-book';
 import '@src/features/standard/cxpo-shorten-names';
 import '@src/features/standard/finla-exchange-deposits';
-import '@src/features/standard/flt-arrival-eta/flt-arrival-eta';
+import '@src/features/standard/flt-arrival-eta';
 import '@src/features/standard/inv-add-shipment-detail';
 import '@src/features/standard/inv-custom-sorting/inv-custom-sorting';
 import '@src/features/standard/inv-search-bar';
