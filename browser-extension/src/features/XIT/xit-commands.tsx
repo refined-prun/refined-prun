@@ -11,6 +11,7 @@ import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContextControls from '@src/components/ContextControls.vue';
 
 import { tileStatePlugin } from '@src/store/user-data-tiles';
+import { startMeasure, stopMeasure } from '@src/utils/performance-measure';
 
 async function onTileReady(tile: PrunTile) {
   const frame = tile.frame;
@@ -79,12 +80,14 @@ async function onTileReady(tile: PrunTile) {
       },
     }).appendTo(container);
   } else if (xitCommand.component) {
+    startMeasure(tile.fullCommand);
     createFragmentApp(XITContainer, {
       component: xitCommand.component(parameters),
       parameters: parameters,
     })
       .use(tileStatePlugin, { tile })
       .appendTo(container);
+    stopMeasure();
   }
 }
 

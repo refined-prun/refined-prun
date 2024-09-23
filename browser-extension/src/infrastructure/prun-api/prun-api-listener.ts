@@ -1,6 +1,7 @@
 import socketIOMiddleware from './socket-io-middleware';
 import { dispatch } from '@src/infrastructure/prun-api/data/api-messages';
 import { companyContextId } from '@src/infrastructure/prun-api/data/user-data';
+import { startMeasure, stopMeasure } from '@src/utils/performance-measure';
 
 export interface Packet {
   messageType?: string;
@@ -31,9 +32,7 @@ function processEvent(packet: Packet) {
     return;
   }
 
-  if (__DEV__) {
-    performance.mark(`${packet.messageType}-START`);
-  }
+  startMeasure(packet.messageType);
 
   if (packet.messageType === 'ACTION_COMPLETED') {
     processEvent(packet.payload.message);
@@ -45,12 +44,5 @@ function processEvent(packet: Packet) {
     dispatch(storeAction);
   }
 
-  if (__DEV__) {
-    performance.mark(`${packet.messageType}-END`);
-    performance.measure(
-      packet.messageType,
-      `${packet.messageType}-START`,
-      `${packet.messageType}-END`,
-    );
-  }
+  stopMeasure();
 }
