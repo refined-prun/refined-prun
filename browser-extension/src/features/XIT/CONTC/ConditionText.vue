@@ -20,7 +20,7 @@ defineProps({
   </template>
   <template v-else-if="condition.type === 'LOAN_INSTALLMENT'">
     Pay {{ fixed0(condition.repayment!.amount + condition.interest!.amount) }}
-    {{ condition.repayment!.currency }}
+    {{ condition.repayment!.currency }} (auto)
   </template>
   <template v-else-if="condition.type === 'DELIVERY_SHIPMENT'">
     Deliver SHPT @ <AddressLink :address="condition.destination!" />
