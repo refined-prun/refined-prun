@@ -1,30 +1,20 @@
 import { Ref } from 'vue';
-import { watchWhileNodeAlive } from '@src/utils/watch-while-node-alive';
+import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 
 export function createReactiveSpan(owner: Node, text: Ref<string | undefined>) {
   const element = document.createElement('span');
-  watchWhileNodeAlive(
-    owner,
-    text,
-    text => {
-      element.style.display = text === undefined ? 'none' : '';
-      element.textContent = text ?? null;
-    },
-    { immediate: true },
-  );
+  watchEffectWhileNodeAlive(owner, () => {
+    element.style.display = text.value === undefined ? 'none' : '';
+    element.textContent = text.value ?? null;
+  });
   return element;
 }
 
 export function createReactiveDiv(owner: Node, text: Ref<string | undefined>) {
   const element = document.createElement('div');
-  watchWhileNodeAlive(
-    owner,
-    text,
-    text => {
-      element.style.display = text === undefined ? 'none' : '';
-      element.textContent = text ?? null;
-    },
-    { immediate: true },
-  );
+  watchEffectWhileNodeAlive(owner, () => {
+    element.style.display = text.value === undefined ? 'none' : '';
+    element.textContent = text.value ?? null;
+  });
   return element;
 }

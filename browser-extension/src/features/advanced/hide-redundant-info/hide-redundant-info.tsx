@@ -20,7 +20,7 @@ import {
 } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { watchWhileNodeAlive } from '@src/utils/watch-while-node-alive';
+import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 
 function cleanCOGCPEX(tile: PrunTile) {
   // Replace 'view details/vote' with 'vote'
@@ -125,18 +125,13 @@ function cleanINV(tile: PrunTile) {
             return null;
         }
       });
-      watchWhileNodeAlive(
-        row,
-        name,
-        name => {
-          // tr -> td -> span
-          const typeLabel = row.firstChild?.firstChild;
-          if (typeLabel && name) {
-            typeLabel.textContent = name;
-          }
-        },
-        { immediate: true },
-      );
+      watchEffectWhileNodeAlive(row, () => {
+        // tr -> td -> span
+        const typeLabel = row.firstChild?.firstChild;
+        if (typeLabel && name) {
+          typeLabel.textContent = name.value;
+        }
+      });
     },
   });
 }

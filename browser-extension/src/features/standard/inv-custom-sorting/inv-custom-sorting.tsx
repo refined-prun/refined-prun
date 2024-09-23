@@ -20,7 +20,7 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 import { sortMaterials, sortMaterialsBy } from '@src/core/sort-materials';
 import { computedTileState } from '@src/store/user-data-tiles';
-import { watchWhileNodeAlive } from '@src/utils/watch-while-node-alive';
+import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 
 async function onInvReady(tile: PrunTile) {
   await applyCustomSorting(tile);
@@ -58,18 +58,13 @@ async function applyCustomSorting(tile: PrunTile) {
 
   const activeSorting = computed(() => sorting.value.find(x => x.label === activeSort.value));
 
-  watchWhileNodeAlive(
-    sortOptions,
-    activeSorting,
-    mode => {
-      if (mode) {
-        sortOptions.classList.add(classes.custom);
-      } else {
-        sortOptions.classList.remove(classes.custom);
-      }
-    },
-    { immediate: true },
-  );
+  watchEffectWhileNodeAlive(sortOptions, () => {
+    if (activeSorting.value) {
+      sortOptions.classList.add(classes.custom);
+    } else {
+      sortOptions.classList.remove(classes.custom);
+    }
+  });
 
   createFragmentApp(
     InventorySortControls,
@@ -90,7 +85,12 @@ async function applyCustomSorting(tile: PrunTile) {
     setTimeout(() => observer.observe(inventory, { childList: true, subtree: true }), 0);
   };
   const observer = new MutationObserver(runSort);
-  watchWhileNodeAlive(inventory, [reactive({ activeSortingMode: activeSorting }), burn], runSort);
+  watchEffectWhileNodeAlive(inventory, () => {
+    // Touch reactive values.
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const _ = activeSorting.value && burn.value;
+    runSort();
+  });
   runSort();
 }
 

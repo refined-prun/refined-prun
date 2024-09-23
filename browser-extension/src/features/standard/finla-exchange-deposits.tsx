@@ -8,7 +8,7 @@ import { fixed0 } from '@src/utils/format';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { currentAssets } from '@src/core/balance/current-assets';
-import { watchWhileNodeAlive } from '@src/utils/watch-while-node-alive';
+import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 
 async function onTileReady(tile: PrunTile) {
   observeReadyElementsByTagName('thead', {
@@ -49,13 +49,13 @@ function onTableBodyReady(tbody: HTMLTableSectionElement) {
       const cxDeposits = computed(() =>
         currency.value ? currentAssets.cxDeposits.value?.get(currency.value) ?? 0 : 0,
       );
-      watchWhileNodeAlive(row, cxDeposits, x => (cx.textContent = fixed0(x)), { immediate: true });
+      watchEffectWhileNodeAlive(row, () => (cx.textContent = fixed0(cxDeposits.value)));
       const fx = row.appendChild(document.createElement('td'));
       fx.classList.add(PrunCss.LiquidAssetsPanel.number);
       const fxDeposits = computed(() =>
         currency.value ? currentAssets.fxDeposits.value?.get(currency.value) ?? 0 : 0,
       );
-      watchWhileNodeAlive(row, fxDeposits, x => (fx.textContent = fixed0(x)), { immediate: true });
+      watchEffectWhileNodeAlive(row, () => (fx.textContent = fixed0(fxDeposits.value)));
     },
   });
 }

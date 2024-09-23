@@ -15,7 +15,7 @@ import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { exchangeStore } from '@src/infrastructure/prun-api/data/exchanges';
 import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { userData } from '@src/store/user-data';
-import { watchWhileNodeAlive } from '@src/utils/watch-while-node-alive';
+import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 
 function onBBLTileReady(tile: PrunTile) {
   clearBuildingLists(tile.frame);
@@ -253,9 +253,7 @@ function onWorkforceTableRowReady(tile: PrunTile, row: HTMLTableRowElement) {
       workforce && workforce.capacity < 1 && workforce.required < 1 && workforce.population < 1
     );
   });
-  watchWhileNodeAlive(row, shouldHideRow, x => (row.style.display = x ? 'none' : ''), {
-    immediate: true,
-  });
+  watchEffectWhileNodeAlive(row, () => (row.style.display = shouldHideRow.value ? 'none' : ''));
 
   const bar = cells[4].getElementsByTagName('div')[0];
   bar.style.display = 'flex';
@@ -265,9 +263,7 @@ function onWorkforceTableRowReady(tile: PrunTile, row: HTMLTableRowElement) {
   const progressTitle = refAnimationFrame(progress, x => x.title);
   const progressText = document.createElement('span');
   bar.appendChild(progressText);
-  watchWhileNodeAlive(progress, progressTitle, x => (progressText.textContent = x), {
-    immediate: true,
-  });
+  watchEffectWhileNodeAlive(progress, () => (progressText.textContent = progressTitle.value));
 }
 
 function processBSAreaProgressBar(tile: PrunTile) {
@@ -284,9 +280,8 @@ function processBSAreaProgressBar(tile: PrunTile) {
   }
 
   const areaBarCopy = areaBar.cloneNode(true) as HTMLProgressElement;
-  watchWhileNodeAlive(areaBar, refValue(areaBar), x => (areaBarCopy.value = x), {
-    immediate: true,
-  });
+  const areaValue = refValue(areaBar);
+  watchEffectWhileNodeAlive(areaBar, () => (areaBarCopy.value = areaValue.value));
   const editDiv = elements[1].getElementsByTagName('div')[0] as HTMLElement;
   editDiv.insertBefore(areaBarCopy, editDiv.lastChild);
 }
