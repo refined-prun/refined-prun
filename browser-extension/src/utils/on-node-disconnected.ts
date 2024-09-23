@@ -1,16 +1,16 @@
 import onetime from 'onetime';
 import observeDocumentMutations from '@src/utils/document-mutation-observer';
 
-let elements: [Element, () => void][] = [];
+let elements: [Node, () => void][] = [];
 
-export default function onElementDisconnected(element: Element, callback: () => void) {
-  if (!element.isConnected) {
+export default function onNodeDisconnected(node: Node, callback: () => void) {
+  if (!node.isConnected) {
     callback();
     return;
   }
 
   setupObserver();
-  elements.push([element, callback]);
+  elements.push([node, callback]);
 }
 
 const setupObserver = onetime(() => {

@@ -7,7 +7,7 @@ import {
 } from '@src/utils/mutation-observer';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
-import { computed, reactive, watch } from 'vue';
+import { computed, reactive } from 'vue';
 import { refTextContent } from '@src/utils/reactive-dom';
 import ShipStatusLabel from './ShipStatusLabel.vue';
 import { extractPlanetName } from '@src/util';
@@ -20,7 +20,7 @@ import {
 } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import onElementDisconnected from '@src/utils/on-element-disconnected';
+import { watchWhileNodeAlive } from '@src/utils/watch-while-node-alive';
 
 function cleanCOGCPEX(tile: PrunTile) {
   // Replace 'view details/vote' with 'vote'
@@ -125,19 +125,17 @@ function cleanINV(tile: PrunTile) {
             return null;
         }
       });
-      onElementDisconnected(
+      watchWhileNodeAlive(
         row,
-        watch(
-          name,
-          name => {
-            // tr -> td -> span
-            const typeLabel = row.firstChild?.firstChild;
-            if (typeLabel && name) {
-              typeLabel.textContent = name;
-            }
-          },
-          { immediate: true },
-        ),
+        name,
+        name => {
+          // tr -> td -> span
+          const typeLabel = row.firstChild?.firstChild;
+          if (typeLabel && name) {
+            typeLabel.textContent = name;
+          }
+        },
+        { immediate: true },
       );
     },
   });

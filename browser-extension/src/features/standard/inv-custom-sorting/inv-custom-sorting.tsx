@@ -9,11 +9,10 @@ import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import CategoryHeader from './CategoryHeader.vue';
 import InventorySortControls from './InventorySortControls.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { computed, reactive, watch } from 'vue';
+import { computed, reactive } from 'vue';
 import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
 import xit from '@src/features/XIT/xit-registry.js';
 import SORT from '@src/features/XIT/SORT/SORT.vue';
-import onElementDisconnected from '@src/utils/on-element-disconnected';
 import { getTileState } from '@src/features/standard/inv-custom-sorting/tile-state';
 import { createFragmentApp, FragmentAppScope } from '@src/utils/vue-fragment-app';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
@@ -21,6 +20,7 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 import { sortMaterials, sortMaterialsBy } from '@src/core/sort-materials';
 import { computedTileState } from '@src/store/user-data-tiles';
+import { watchWhileNodeAlive } from '@src/utils/watch-while-node-alive';
 
 async function onInvReady(tile: PrunTile) {
   await applyCustomSorting(tile);
@@ -58,7 +58,8 @@ async function applyCustomSorting(tile: PrunTile) {
 
   const activeSorting = computed(() => sorting.value.find(x => x.label === activeSort.value));
 
-  watch(
+  watchWhileNodeAlive(
+    sortOptions,
     activeSorting,
     mode => {
       if (mode) {
@@ -89,10 +90,7 @@ async function applyCustomSorting(tile: PrunTile) {
     setTimeout(() => observer.observe(inventory, { childList: true, subtree: true }), 0);
   };
   const observer = new MutationObserver(runSort);
-  onElementDisconnected(
-    inventory,
-    watch([reactive({ activeSortingMode: activeSorting }), burn], runSort),
-  );
+  watchWhileNodeAlive(inventory, [reactive({ activeSortingMode: activeSorting }), burn], runSort);
   runSort();
 }
 

@@ -3,12 +3,12 @@ import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import { observeReadyElementsByTagName } from '@src/utils/mutation-observer';
 import { refTextContent } from '@src/utils/reactive-dom';
-import onElementDisconnected from '@src/utils/on-element-disconnected';
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import { fixed0 } from '@src/utils/format';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { currentAssets } from '@src/core/balance/current-assets';
+import { watchWhileNodeAlive } from '@src/utils/watch-while-node-alive';
 
 async function onTileReady(tile: PrunTile) {
   observeReadyElementsByTagName('thead', {
@@ -49,19 +49,13 @@ function onTableBodyReady(tbody: HTMLTableSectionElement) {
       const cxDeposits = computed(() =>
         currency.value ? currentAssets.cxDeposits.value?.get(currency.value) ?? 0 : 0,
       );
-      onElementDisconnected(
-        row,
-        watch(cxDeposits, x => (cx.textContent = fixed0(x)), { immediate: true }),
-      );
+      watchWhileNodeAlive(row, cxDeposits, x => (cx.textContent = fixed0(x)), { immediate: true });
       const fx = row.appendChild(document.createElement('td'));
       fx.classList.add(PrunCss.LiquidAssetsPanel.number);
       const fxDeposits = computed(() =>
         currency.value ? currentAssets.fxDeposits.value?.get(currency.value) ?? 0 : 0,
       );
-      onElementDisconnected(
-        row,
-        watch(fxDeposits, x => (fx.textContent = fixed0(x)), { immediate: true }),
-      );
+      watchWhileNodeAlive(row, fxDeposits, x => (fx.textContent = fixed0(x)), { immediate: true });
     },
   });
 }

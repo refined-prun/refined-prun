@@ -1,7 +1,7 @@
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import { changeValue, sleep } from '@src/util';
-import onElementDisconnected from '@src/utils/on-element-disconnected';
+import onNodeDisconnected from '@src/utils/on-node-disconnected';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import { Ref } from 'vue';
@@ -83,7 +83,7 @@ async function captureLastWindow(command: string, options?: ShowBufferOptions) {
   }
   await sleep(0);
   form.requestSubmit();
-  await new Promise<void>(resolve => onElementDisconnected(input, resolve));
+  await new Promise<void>(resolve => onNodeDisconnected(input, resolve));
   if (!options?.autoClose) {
     return;
   }
@@ -101,5 +101,5 @@ async function closeWhenDone(window: HTMLDivElement, options?: ShowBufferOptions
   if (closeButton) {
     closeButton?.click();
   }
-  await new Promise<void>(resolve => onElementDisconnected(window, resolve));
+  await new Promise<void>(resolve => onNodeDisconnected(window, resolve));
 }

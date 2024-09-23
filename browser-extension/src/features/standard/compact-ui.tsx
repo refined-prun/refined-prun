@@ -4,8 +4,7 @@ import features from '@src/feature-registry';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { refAnimationFrame, refInnerText, refValue } from '@src/utils/reactive-dom';
-import { computed, watch } from 'vue';
-import onElementDisconnected from '@src/utils/on-element-disconnected';
+import { computed } from 'vue';
 import descendantPresent from '@src/utils/descendant-present';
 import {
   observeReadyElementsByClassName,
@@ -16,6 +15,7 @@ import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { exchangeStore } from '@src/infrastructure/prun-api/data/exchanges';
 import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { userData } from '@src/store/user-data';
+import { watchWhileNodeAlive } from '@src/utils/watch-while-node-alive';
 
 function onBBLTileReady(tile: PrunTile) {
   clearBuildingLists(tile.frame);
@@ -253,10 +253,9 @@ function onWorkforceTableRowReady(tile: PrunTile, row: HTMLTableRowElement) {
       workforce && workforce.capacity < 1 && workforce.required < 1 && workforce.population < 1
     );
   });
-  onElementDisconnected(
-    row,
-    watch(shouldHideRow, x => (row.style.display = x ? 'none' : ''), { immediate: true }),
-  );
+  watchWhileNodeAlive(row, shouldHideRow, x => (row.style.display = x ? 'none' : ''), {
+    immediate: true,
+  });
 
   const bar = cells[4].getElementsByTagName('div')[0];
   bar.style.display = 'flex';
@@ -266,10 +265,9 @@ function onWorkforceTableRowReady(tile: PrunTile, row: HTMLTableRowElement) {
   const progressTitle = refAnimationFrame(progress, x => x.title);
   const progressText = document.createElement('span');
   bar.appendChild(progressText);
-  onElementDisconnected(
-    progress,
-    watch(progressTitle, x => (progressText.textContent = x), { immediate: true }),
-  );
+  watchWhileNodeAlive(progress, progressTitle, x => (progressText.textContent = x), {
+    immediate: true,
+  });
 }
 
 function processBSAreaProgressBar(tile: PrunTile) {
@@ -286,10 +284,9 @@ function processBSAreaProgressBar(tile: PrunTile) {
   }
 
   const areaBarCopy = areaBar.cloneNode(true) as HTMLProgressElement;
-  onElementDisconnected(
-    areaBar,
-    watch(refValue(areaBar), x => (areaBarCopy.value = x), { immediate: true }),
-  );
+  watchWhileNodeAlive(areaBar, refValue(areaBar), x => (areaBarCopy.value = x), {
+    immediate: true,
+  });
   const editDiv = elements[1].getElementsByTagName('div')[0] as HTMLElement;
   editDiv.insertBefore(areaBarCopy, editDiv.lastChild);
 }

@@ -1,5 +1,5 @@
 import { App, Component, createApp, h, InjectionKey, Plugin } from 'vue';
-import onElementDisconnected from '@src/utils/on-element-disconnected';
+import onNodeDisconnected from '@src/utils/on-node-disconnected';
 
 export type FragmentAppData = Record<string, unknown>;
 
@@ -38,21 +38,21 @@ export class FragmentApp {
 
   appendTo(parent: Element) {
     const instance = this.mount();
-    onElementDisconnected(parent, () => this.app.unmount());
+    onNodeDisconnected(parent, () => this.app.unmount());
     parent.appendChild(this.fragment);
     return instance;
   }
 
   before(sibling: Element) {
     const instance = this.mount();
-    onElementDisconnected(sibling.parentElement!, () => this.app.unmount());
+    onNodeDisconnected(sibling.parentElement!, () => this.app.unmount());
     sibling.before(this.fragment);
     return instance;
   }
 
   after(sibling: Element) {
     const instance = this.mount();
-    onElementDisconnected(sibling.parentElement!, () => this.app.unmount());
+    onNodeDisconnected(sibling.parentElement!, () => this.app.unmount());
     sibling.after(this.fragment);
     return instance;
   }

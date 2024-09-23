@@ -10,8 +10,8 @@ import {
 } from '@src/utils/mutation-observer';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
-import { computed, watch } from 'vue';
-import onElementDisconnected from '@src/utils/on-element-disconnected';
+import { computed } from 'vue';
+import { watchWhileNodeAlive } from '@src/utils/watch-while-node-alive';
 
 async function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {
@@ -41,16 +41,14 @@ function onRowReady(row: HTMLTableRowElement, lineId: string) {
     return order.duration!.millis / totalQueueDuration;
   });
   const div = document.createElement('div');
-  onElementDisconnected(
+  watchWhileNodeAlive(
     row,
-    watch(
-      load,
-      load => {
-        div.style.display = load !== undefined ? 'block' : 'none';
-        div.textContent = load ? percent2(load) : null;
-      },
-      { immediate: true },
-    ),
+    load,
+    load => {
+      div.style.display = load !== undefined ? 'block' : 'none';
+      div.textContent = load ? percent2(load) : null;
+    },
+    { immediate: true },
   );
   observeDescendantListChanged(row, () => {
     const statusColumn = row.children[6];

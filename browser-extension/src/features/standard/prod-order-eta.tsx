@@ -7,12 +7,12 @@ import {
 } from '@src/utils/mutation-observer';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
-import onElementDisconnected from '@src/utils/on-element-disconnected';
 import { formatEta } from '@src/utils/format';
 import { timestampEachSecond } from '@src/utils/dayjs';
 import { _$ } from '@src/utils/get-element-by-class-name';
+import { watchWhileNodeAlive } from '@src/utils/watch-while-node-alive';
 
 function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {
@@ -43,16 +43,14 @@ async function onOrderSlotReady(slot: HTMLElement, siteId: string) {
     completion.value ? formatEta(timestampEachSecond.value, completion.value) : undefined,
   );
   const span = document.createElement('span');
-  onElementDisconnected(
+  watchWhileNodeAlive(
     slot,
-    watch(
-      eta,
-      eta => {
-        span.style.display = eta !== undefined ? 'inline' : 'none';
-        span.textContent = `(${eta})`;
-      },
-      { immediate: true },
-    ),
+    eta,
+    eta => {
+      span.style.display = eta !== undefined ? 'inline' : 'none';
+      span.textContent = `(${eta})`;
+    },
+    { immediate: true },
   );
   observeDescendantListChanged(slot, () => {
     const info = _$(PrunCss.OrderSlot.info, slot);

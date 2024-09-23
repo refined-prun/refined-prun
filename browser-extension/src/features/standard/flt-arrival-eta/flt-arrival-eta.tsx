@@ -10,15 +10,8 @@ import { refTextContent } from '@src/utils/reactive-dom';
 import { reactive } from 'vue';
 
 function onTileReady(tile: PrunTile) {
-  observeReadyElementsByTagName('tbody', {
-    baseElement: tile.frame,
-    callback: onTableReady,
-  });
-}
-
-function onTableReady(table: HTMLTableSectionElement) {
   observeReadyElementsByTagName('tr', {
-    baseElement: table,
+    baseElement: tile.frame,
     callback: onRowReady,
   });
 }
