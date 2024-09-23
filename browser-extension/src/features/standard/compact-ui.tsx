@@ -3,7 +3,7 @@ import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { refAnimationFrame, refInnerText, refValue } from '@src/utils/reactive-dom';
+import { refAnimationFrame, refValue } from '@src/utils/reactive-dom';
 import { computed } from 'vue';
 import descendantPresent from '@src/utils/descendant-present';
 import {
@@ -16,6 +16,7 @@ import { exchangeStore } from '@src/infrastructure/prun-api/data/exchanges';
 import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { userData } from '@src/store/user-data';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
+import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 
 function onBBLTileReady(tile: PrunTile) {
   clearBuildingLists(tile.frame);
@@ -232,23 +233,22 @@ async function onBSTileReady(tile: PrunTile) {
 
   observeReadyElementsByTagName('tr', {
     baseElement: tile.frame,
-    callback: x => onWorkforceTableRowReady(tile, x),
+    callback: x => onWorkforceTableRowReady(x, tile.parameter),
   });
 }
 
-function onWorkforceTableRowReady(tile: PrunTile, row: HTMLTableRowElement) {
+function onWorkforceTableRowReady(row: HTMLTableRowElement, siteId: string | undefined) {
   const cells = row.getElementsByTagName('td');
   if (cells.length === 0) {
     return;
   }
 
-  const levelText = refInnerText(cells[0]);
+  const levelId = refPrunId(row);
   const shouldHideRow = computed(() => {
-    const level = levelText.value.substring(0, 3).toLowerCase();
-    const site = sitesStore.getByPlanetNaturalId(tile.parameter);
+    const site = sitesStore.getByPlanetNaturalId(siteId);
     const workforce = workforcesStore
       .getById(site?.siteId)
-      ?.workforces.find(x => x.level.toLowerCase().startsWith(level));
+      ?.workforces.find(x => x.level === levelId.value);
     return (
       workforce && workforce.capacity < 1 && workforce.required < 1 && workforce.population < 1
     );
