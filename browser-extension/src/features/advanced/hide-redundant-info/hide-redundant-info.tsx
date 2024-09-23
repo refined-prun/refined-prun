@@ -11,16 +11,17 @@ import { computed, reactive } from 'vue';
 import { refTextContent } from '@src/utils/reactive-dom';
 import ShipStatusLabel from './ShipStatusLabel.vue';
 import { extractPlanetName } from '@src/util';
-import { _$$ } from '@src/utils/get-element-by-class-name';
+import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import {
   applyClassCssRule,
   applyScopedClassCssRule,
   applyScopedCssRule,
 } from '@src/infrastructure/prun-ui/refined-prun-css';
-import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
+import { getPrunId, refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
+import { localAdsStore } from '@src/infrastructure/prun-api/data/local-ads';
 
 function cleanCOGCPEX(tile: PrunTile) {
   // Replace 'view details/vote' with 'vote'
@@ -137,13 +138,22 @@ function cleanINV(tile: PrunTile) {
 }
 
 function cleanLM(tile: PrunTile) {
-  observeReadyElementsByClassName(PrunCss.CommodityAd.text, {
+  observeReadyElementsByClassName(PrunCss.CommodityAd.container, {
     baseElement: tile.frame,
-    callback: ad => {
-      if (ad.firstChild?.textContent === 'SHIPPING') {
-        cleanShipmentAd(tile, ad);
+    callback: container => {
+      const text = _$(PrunCss.CommodityAd.text, container);
+      if (!text) {
+        return;
       }
-      for (const node of Array.from(ad.childNodes)) {
+      const id = getPrunId(container);
+      const ad = localAdsStore.getById(id);
+      if (!ad) {
+        return;
+      }
+      if (ad.type === 'COMMODITY_SHIPPING') {
+        cleanShipmentAd(tile, text);
+      }
+      for (const node of Array.from(text.childNodes)) {
         if (!node.textContent) {
           continue;
         }
@@ -157,7 +167,7 @@ function cleanLM(tile: PrunTile) {
           .replace('for delivery within', 'in');
         node.textContent = node.textContent.replace(/(\d+)\s+days*/i, '$1d');
       }
-      cleanContractType(ad);
+      cleanContractType(text, ad);
     },
   });
 }
@@ -179,16 +189,19 @@ function cleanShipmentAd(tile: PrunTile, ad: HTMLElement) {
   }
 }
 
-function cleanContractType(ad: HTMLElement) {
-  switch (ad.firstChild?.textContent) {
-    case 'SHIPPING':
-      ad.firstChild.textContent = '';
+function cleanContractType(text: HTMLElement, ad: PrunApi.LocalAd) {
+  if (!text.firstChild) {
+    return;
+  }
+  switch (ad.type) {
+    case 'COMMODITY_SHIPPING':
+      text.firstChild.textContent = '';
       break;
-    case 'BUYING':
-      ad.firstChild.textContent = 'BUY';
+    case 'COMMODITY_BUYING':
+      text.firstChild.textContent = 'BUY';
       break;
-    case 'SELLING':
-      ad.firstChild.textContent = 'SELL';
+    case 'COMMODITY_SELLING':
+      text.firstChild.textContent = 'SELL';
       break;
   }
 }

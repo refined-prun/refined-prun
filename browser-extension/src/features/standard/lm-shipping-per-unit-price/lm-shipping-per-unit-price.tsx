@@ -1,44 +1,53 @@
-import { CurrencySymbols } from '@src/GameProperties';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import tiles from '@src/infrastructure/prun-ui/tiles';
-import { _$$ } from '@src/utils/get-element-by-class-name';
+import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import PpuLabel from './PpuLabel.vue';
 import { reactive } from 'vue';
 import { refValue } from '@src/utils/reactive-dom';
 import { fixed2 } from '@src/utils/format';
+import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
+import { localAdsStore } from '@src/infrastructure/prun-api/data/local-ads';
 
 function onLMTileReady(tile: PrunTile) {
-  observeReadyElementsByClassName(PrunCss.CommodityAd.text, {
+  observeReadyElementsByClassName(PrunCss.CommodityAd.container, {
     baseElement: tile.frame,
-    callback: onAdTextReady,
+    callback: onAdContainerReady,
   });
 }
 
-function onAdTextReady(element: HTMLDivElement) {
-  const regExp = /SHIPPING\s([\d,.]+)t\s\/\s([\d,.]+)m³\s@\s([\d,.]+)\s[A-Z]+\sfrom/;
-  const matches = element.textContent?.match(regExp);
-
-  if (!matches || matches.length < 4) {
+function onAdContainerReady(container: HTMLDivElement) {
+  const text = _$(PrunCss.CommodityAd.text, container);
+  if (!text) {
     return;
   }
 
-  const weight = parseFloat(matches[1].replace(/[,.]/g, ''));
-  const volume = parseFloat(matches[2].replace(/[,.]/g, ''));
-  const totalCost = matches[3];
+  const id = getPrunId(container);
+  const ad = localAdsStore.getById(id);
+  if (!ad || ad.type !== 'COMMODITY_SHIPPING') {
+    return;
+  }
+
+  const weight = ad.cargoWeight;
+  const volume = ad.cargoVolume;
+  if (!weight || !volume) {
+    return;
+  }
   const unit = weight > volume ? 't' : 'm³';
   const amount = weight > volume ? weight : volume;
-  const total = parseFloat(totalCost.replace(/[,.]/g, ''));
-  for (const child of Array.from(element.childNodes)) {
-    if (child.nodeValue && child.nodeValue.slice(1) in CurrencySymbols) {
+  const total = ad.price.amount;
+  for (let i = 0; i < text.childNodes.length; i++) {
+    const child = text.childNodes[i];
+    if (child.nodeValue && child.nodeValue.includes(ad.price.currency)) {
       createFragmentApp(() => (
         <span>
           {' '}
           ({fixed2(total / amount)}/{unit})
         </span>
       )).after(child as Element);
+      break;
     }
   }
 }
