@@ -5,7 +5,7 @@ import '@src/request-hooks';
 
 import '@src/features/standard/bs-building-list/bs-building-list';
 import '@src/features/standard/com-add-images';
-import '@src/features/standard/com-hide-delete-button';
+import '@src/features/standard/com-move-delete-button';
 import '@src/features/standard/com-hide-join-leave';
 import '@src/features/standard/contd-search-results-above-search-bar';
 import '@src/features/standard/cxpo-order-book/cxpo-order-book';

@@ -1,0 +1,13 @@
+.container {
+  position: relative;
+}
+
+.delete {
+  position: absolute;
+  left: -45px;
+  padding-right: 7px;
+}
+
+.username {
+  visibility: hidden;
+}
