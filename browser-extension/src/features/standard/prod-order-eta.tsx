@@ -1,10 +1,7 @@
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import {
-  observeDescendantListChanged,
-  observeReadyElementsByClassName,
-} from '@src/utils/mutation-observer';
+import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { computed } from 'vue';
@@ -12,7 +9,8 @@ import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { formatEta } from '@src/utils/format';
 import { timestampEachSecond } from '@src/utils/dayjs';
 import { _$ } from '@src/utils/get-element-by-class-name';
-import { watchWhileNodeAlive } from '@src/utils/watch-while-node-alive';
+import { createReactiveDiv } from '@src/utils/reactive-element';
+import { keepLast } from '@src/utils/keep-last';
 
 function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {
@@ -39,25 +37,15 @@ async function onOrderSlotReady(slot: HTMLElement, siteId: string) {
     }
     return undefined;
   });
-  const eta = computed(() =>
-    completion.value ? formatEta(timestampEachSecond.value, completion.value) : undefined,
-  );
-  const span = document.createElement('span');
-  watchWhileNodeAlive(
-    slot,
-    eta,
-    eta => {
-      span.style.display = eta !== undefined ? 'inline' : 'none';
-      span.textContent = `(${eta})`;
-    },
-    { immediate: true },
-  );
-  observeDescendantListChanged(slot, () => {
-    const info = _$(PrunCss.OrderSlot.info, slot);
-    if (info && info.lastChild !== span) {
-      info.appendChild(span);
+  const eta = computed(() => {
+    if (!completion.value) {
+      return undefined;
     }
+
+    return `(${formatEta(timestampEachSecond.value, completion.value)})`;
   });
+  const div = createReactiveDiv(slot, eta);
+  keepLast(slot, () => _$(PrunCss.OrderSlot.info, slot), div);
 }
 
 function calcCompletionDate(line: PrunApi.ProductionLine, order: PrunApi.ProductionOrder) {

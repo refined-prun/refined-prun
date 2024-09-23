@@ -4,14 +4,12 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { sumBy } from '@src/utils/sum-by';
 import { percent2 } from '@src/utils/format';
 import descendantPresent from '@src/utils/descendant-present';
-import {
-  observeDescendantListChanged,
-  observeReadyElementsByTagName,
-} from '@src/utils/mutation-observer';
+import { observeReadyElementsByTagName } from '@src/utils/mutation-observer';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { computed } from 'vue';
-import { watchWhileNodeAlive } from '@src/utils/watch-while-node-alive';
+import { createReactiveDiv } from '@src/utils/reactive-element';
+import { keepLast } from '@src/utils/keep-last';
 
 async function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {
@@ -38,24 +36,10 @@ function onRowReady(row: HTMLTableRowElement, lineId: string) {
     }
 
     const totalQueueDuration = sumBy(queue, x => x.duration!.millis);
-    return order.duration!.millis / totalQueueDuration;
+    return percent2(order.duration!.millis / totalQueueDuration);
   });
-  const div = document.createElement('div');
-  watchWhileNodeAlive(
-    row,
-    load,
-    load => {
-      div.style.display = load !== undefined ? 'block' : 'none';
-      div.textContent = load ? percent2(load) : null;
-    },
-    { immediate: true },
-  );
-  observeDescendantListChanged(row, () => {
-    const statusColumn = row.children[6];
-    if (statusColumn && statusColumn.lastChild !== div) {
-      statusColumn.appendChild(div);
-    }
-  });
+  const div = createReactiveDiv(row, load);
+  keepLast(row, () => row.children[6], div);
 }
 
 function init() {
