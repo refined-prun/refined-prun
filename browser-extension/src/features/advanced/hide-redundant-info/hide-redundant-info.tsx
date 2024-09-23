@@ -7,7 +7,7 @@ import {
 } from '@src/utils/mutation-observer';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
-import { reactive } from 'vue';
+import { computed, reactive, watch } from 'vue';
 import { refTextContent } from '@src/utils/reactive-dom';
 import ShipStatusLabel from './ShipStatusLabel.vue';
 import { extractPlanetName } from '@src/util';
@@ -18,6 +18,9 @@ import {
   applyScopedClassCssRule,
   applyScopedCssRule,
 } from '@src/infrastructure/prun-ui/refined-prun-css';
+import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
+import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
+import onElementDisconnected from '@src/utils/on-element-disconnected';
 
 function cleanCOGCPEX(tile: PrunTile) {
   // Replace 'view details/vote' with 'vote'
@@ -104,23 +107,41 @@ function cleanINV(tile: PrunTile) {
   observeReadyElementsByTagName('tr', {
     baseElement: tile.frame,
     callback: row => {
-      // tr -> td -> span
-      const typeLabel = row.firstChild?.firstChild;
-      const type = typeLabel?.textContent;
-      if (type && cleanINVNames[type]) {
-        typeLabel.textContent = cleanINVNames[type];
-      }
+      const id = refPrunId(row);
+      const name = computed(() => {
+        const storage = storagesStore.getById(id.value);
+        switch (storage?.type) {
+          case 'STORE':
+            return 'Base';
+          case 'WAREHOUSE_STORE':
+            return 'WAR';
+          case 'SHIP_STORE':
+            return 'Ship';
+          case 'STL_FUEL_STORE':
+            return 'STL';
+          case 'FTL_FUEL_STORE':
+            return 'FTL';
+          default:
+            return null;
+        }
+      });
+      onElementDisconnected(
+        row,
+        watch(
+          name,
+          name => {
+            // tr -> td -> span
+            const typeLabel = row.firstChild?.firstChild;
+            if (typeLabel && name) {
+              typeLabel.textContent = name;
+            }
+          },
+          { immediate: true },
+        ),
+      );
     },
   });
 }
-
-const cleanINVNames = {
-  'Cargo hold': 'Ship',
-  'Base storage': 'Base',
-  'Warehouse unit': 'WAR',
-  'STL fuel tank': 'STL',
-  'FTL fuel tank': 'FTL',
-};
 
 function cleanLM(tile: PrunTile) {
   observeReadyElementsByClassName(PrunCss.CommodityAd.text, {
