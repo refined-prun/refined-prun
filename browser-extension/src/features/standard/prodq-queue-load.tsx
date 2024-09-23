@@ -1,52 +1,63 @@
-import { parseDuration } from '@src/util';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { $$ } from 'select-dom';
-import { _$$ } from '@src/utils/get-element-by-class-name';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import { sumBy } from '@src/utils/sum-by';
 import { percent2 } from '@src/utils/format';
+import descendantPresent from '@src/utils/descendant-present';
+import {
+  observeDescendantListChanged,
+  observeReadyElementsByTagName,
+} from '@src/utils/mutation-observer';
+import { productionStore } from '@src/infrastructure/prun-api/data/production';
+import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
+import { computed, watch } from 'vue';
+import onElementDisconnected from '@src/utils/on-element-disconnected';
 
-function onTileReady(tile: PrunTile) {
-  if (!tile.frame.isConnected) {
+async function onTileReady(tile: PrunTile) {
+  if (!tile.parameter) {
     return;
   }
-
-  const tag = 'rp-prod-queue-load';
-  for (const element of _$$(tag, tile.frame)) {
-    element.remove();
-  }
-
-  const tables = _$$(PrunCss.ProductionQueue.table, tile.frame);
-  for (const table of tables) {
-    const rows = $$('tbody:nth-of-type(2) > tr', table);
-    const totalTime = sumBy(rows, getEtaFromRow);
-    if (totalTime === 0) {
-      continue;
-    }
-    for (const row of rows) {
-      const eta = getEtaFromRow(row);
-      const percent = eta / totalTime;
-      const textField = $$('td', row)[6];
-      if (textField && eta > 0) {
-        createFragmentApp(() => <span class={tag}> {percent2(percent)}</span>).appendTo(textField);
-      }
-    }
-  }
-
-  requestAnimationFrame(() => onTileReady(tile));
+  const table = await descendantPresent(tile.frame, PrunCss.ProductionQueue.table);
+  observeReadyElementsByTagName('tr', {
+    baseElement: table,
+    callback: x => onRowReady(x, tile.parameter!),
+  });
 }
 
-function getEtaFromRow(row: Element) {
-  const etaCell = row.getElementsByTagName('td').item(5);
-  if (etaCell) {
-    const etaSpan = etaCell.getElementsByTagName('span').item(0);
-    if (etaSpan) {
-      return parseDuration(etaSpan.textContent);
+function onRowReady(row: HTMLTableRowElement, lineId: string) {
+  const orderId = refPrunId(row);
+  const load = computed(() => {
+    const line = productionStore.getById(lineId);
+    const queue = line?.orders.filter(x => !x.started && x.duration);
+    if (!queue) {
+      return undefined;
     }
-  }
-  return 0;
+    const order = queue.find(o => o.id === orderId.value);
+    if (!order) {
+      return undefined;
+    }
+
+    const totalQueueDuration = sumBy(queue, x => x.duration!.millis);
+    return order.duration!.millis / totalQueueDuration;
+  });
+  const div = document.createElement('div');
+  onElementDisconnected(
+    row,
+    watch(
+      load,
+      load => {
+        div.style.display = load !== undefined ? 'block' : 'none';
+        div.textContent = load ? percent2(load) : null;
+      },
+      { immediate: true },
+    ),
+  );
+  observeDescendantListChanged(row, () => {
+    const statusColumn = row.children[6];
+    if (statusColumn && statusColumn.lastChild !== div) {
+      statusColumn.appendChild(div);
+    }
+  });
 }
 
 function init() {

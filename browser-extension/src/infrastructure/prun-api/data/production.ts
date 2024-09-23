@@ -1,6 +1,9 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
-import { createGroupMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
+import {
+  createGroupMapGetter,
+  createMapGetter,
+} from '@src/infrastructure/prun-api/data/create-map-getter';
 import { createRequestGetter, request } from '@src/infrastructure/prun-api/data/request-hooks';
 
 const store = createEntityStore<PrunApi.ProductionLine>();
@@ -18,11 +21,17 @@ messages({
     store.setMany(data.productionLines);
     store.setFetched();
   },
+  PRODUCTION_PRODUCTION_LINE(data: PrunApi.ProductionLine) {
+    store.setOne(data);
+    store.setFetched();
+  },
   PRODUCTION_PRODUCTION_LINE_ADDED(data: PrunApi.ProductionLine) {
     store.setOne(data);
+    store.setFetched();
   },
   PRODUCTION_PRODUCTION_LINE_UPDATED(data: PrunApi.ProductionLine) {
     store.setOne(data);
+    store.setFetched();
   },
   PRODUCTION_ORDER_ADDED(data: PrunApi.ProductionOrder) {
     const entities = state.entities.value;
@@ -62,6 +71,10 @@ messages({
   },
 });
 
+const getByShortId = createMapGetter(state.all, x => x.id.substring(0, 8));
+
+const getById = (value?: string | null) => state.getById(value) ?? getByShortId(value);
+
 const getBySiteId = createRequestGetter(
   createGroupMapGetter(state.all, x => x.siteId),
   x => request.production(x),
@@ -69,5 +82,6 @@ const getBySiteId = createRequestGetter(
 
 export const productionStore = {
   ...state,
+  getById,
   getBySiteId,
 };
