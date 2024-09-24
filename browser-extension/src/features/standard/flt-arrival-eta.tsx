@@ -19,15 +19,14 @@ function onTileReady(tile: PrunTile) {
 
 function onRowReady(row: HTMLTableRowElement) {
   const id = refPrunId(row);
-  const eta = computed(() => {
+  const arrival = computed(() => {
     const ship = shipsStore.getById(id.value);
     const flight = flightsStore.getById(ship?.flightId);
-    if (!flight) {
-      return undefined;
-    }
-    return ` (${formatEta(timestampEachSecond.value, flight.arrival.timestamp)})`;
+    return flight?.arrival.timestamp;
   });
-
+  const eta = computed(() =>
+    arrival.value ? ` (${formatEta(timestampEachSecond.value, arrival.value)})` : undefined,
+  );
   const span = createReactiveSpan(row, eta);
   keepLast(row, () => row.children[7], span);
 }

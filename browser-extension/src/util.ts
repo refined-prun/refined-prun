@@ -7,7 +7,6 @@ import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/mater
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/stars';
 import { Stations } from '@src/GameProperties';
-import { hhmm } from '@src/utils/format';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
 
@@ -34,46 +33,6 @@ export function createSelectOption(optionLabel, optionValue, rightAlign?) {
     option.style.direction = 'rtl';
   }
   return option;
-}
-
-export function convertDurationToETA(parsedSeconds) {
-  const eta = new Date();
-  const now = new Date();
-  eta.setSeconds(eta.getSeconds() + parsedSeconds);
-  const diffTime = Math.abs(eta.getTime() - now.getTime());
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-  let ret = hhmm(eta);
-  if (diffDays > 0) {
-    ret += ` +${diffDays}d`;
-  }
-  return ret;
-}
-
-/**
- * Parse duration into seconds
- * @param duration string
- */
-export function parseDuration(duration) {
-  const days = duration.match(/(\d+)\s*d/);
-  const hours = duration.match(/(\d+)\s*h/);
-  const minutes = duration.match(/(\d+)\s*m/);
-  const seconds = duration.match(/(\d+)\s*s/);
-
-  let parsedSeconds = 0;
-  if (days) {
-    parsedSeconds += parseInt(days[1], 10) * 86400;
-  }
-  if (hours) {
-    parsedSeconds += parseInt(hours[1], 10) * 3600;
-  }
-  if (minutes) {
-    parsedSeconds += parseInt(minutes[1], 10) * 60;
-  }
-  if (seconds) {
-    parsedSeconds += parseInt(seconds[1], 10);
-  }
-  return parsedSeconds;
 }
 
 /**
