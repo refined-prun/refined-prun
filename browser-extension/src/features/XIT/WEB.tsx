@@ -24,7 +24,7 @@ function WEB(props: { parameters: string[] }) {
   }
   if (!isValidUrl(url)) {
     try {
-      url = parameters.slice(1).map(prunAtob).join();
+      url = prunAtob(parameters.slice(1).join(''));
     } catch {
       // Do nothing
     }
@@ -100,7 +100,10 @@ function onSelectorReady(selector: HTMLDivElement) {
     }
 
     ev.stopPropagation();
-    parts[2] = prunBtoa(parts[2]);
+    parts[2] =
+      prunBtoa(parts[2])
+        .match(/.{1,200}/g)
+        ?.join(' ') || '';
     changeValue(input, parts.join(' '));
     setTimeout(() => form.requestSubmit(), 0);
   });
@@ -116,11 +119,11 @@ function isValidUrl(url: string) {
 
 function prunBtoa(input: string) {
   const base64 = btoa(input);
-  return base64.replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
+  return base64.replaceAll('+', '-').replaceAll('/', '.').replaceAll('=', '');
 }
 
 function prunAtob(input: string) {
-  let base64 = input.replaceAll('-', '+').replaceAll('_', '/');
+  let base64 = input.replaceAll('-', '+').replaceAll('.', '/');
   while (base64.length % 4) {
     base64 += '=';
   }
