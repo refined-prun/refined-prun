@@ -6,7 +6,6 @@ import MaterialRow from '@src/features/XIT/BURN/MaterialRow.vue';
 import { sortMaterials } from '@src/core/sort-materials';
 
 const props = defineProps({
-  isMultiplanet: Boolean,
   burn: {
     type: Object as PropType<PlanetBurn>,
     required: true,
@@ -27,7 +26,6 @@ const sorted = computed(() => {
   <MaterialRow
     v-for="material in sorted"
     :key="material.id"
-    :burn="burn"
-    :material="material"
-    :is-multiplanet="isMultiplanet" />
+    :burn="burn.burn[material.ticker]"
+    :material="material" />
 </template>

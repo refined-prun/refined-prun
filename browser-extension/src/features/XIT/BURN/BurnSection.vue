@@ -6,7 +6,7 @@ import MaterialList from '@src/features/XIT/BURN/MaterialList.vue';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
 
 const props = defineProps({
-  isMultiplanet: Boolean,
+  canMinimize: Boolean,
   burn: {
     type: Object as PropType<PlanetBurn>,
     required: true,
@@ -16,7 +16,7 @@ const props = defineProps({
 const expand = useTileState('expand');
 
 const naturalId = computed(() => props.burn.naturalId);
-const isMinimized = computed(() => props.isMultiplanet && !expand.value.includes(naturalId.value));
+const isMinimized = computed(() => props.canMinimize && !expand.value.includes(naturalId.value));
 
 const onHeaderClick = () => {
   if (isMinimized.value) {
@@ -30,13 +30,13 @@ const onHeaderClick = () => {
 <template>
   <tbody>
     <PlanetHeader
-      :has-minimize="isMultiplanet"
+      :has-minimize="canMinimize"
       :burn="burn"
       :minimized="isMinimized"
       :on-click="onHeaderClick" />
   </tbody>
-  <tbody :class="{ [$style.collapse]: isMinimized }">
-    <MaterialList :is-multiplanet="isMultiplanet" :burn="burn" />
+  <tbody v-if="!isMinimized">
+    <MaterialList :burn="burn" />
   </tbody>
 </template>
 

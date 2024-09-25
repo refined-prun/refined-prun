@@ -27,12 +27,14 @@ export default {};
 import FilterButton from '@src/features/XIT/BURN/FilterButton.vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { computed } from 'vue';
-import { getPlanetBurn, PlanetBurn } from '@src/core/burn';
+import { getPlanetBurn, MaterialBurn, PlanetBurn } from '@src/core/burn';
 import { comparePlanets } from '@src/util';
 import BurnSection from '@src/features/XIT/BURN/BurnSection.vue';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
 import Tooltip from '@src/components/Tooltip.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
+import MaterialRow from '@src/features/XIT/BURN/MaterialRow.vue';
+import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 
 const props = defineProps({
   parameters: {
@@ -91,12 +93,19 @@ const planetBurn = computed(() => {
   return filtered;
 });
 
-const isMultiplanet = computed(() => sites.value!.length > 1);
-
 const red = useTileState('red');
 const yellow = useTileState('yellow');
 const green = useTileState('green');
 const inf = useTileState('inf');
+
+const fakeBurn: MaterialBurn = {
+  DailyAmount: -1000,
+  DaysLeft: 10,
+  Inventory: 0,
+  Type: 'input',
+};
+
+const rat = materialsStore.getByTicker('RAT');
 </script>
 
 <template>
@@ -132,16 +141,23 @@ const inf = useTileState('inf');
           <th>CMD</th>
         </tr>
       </thead>
+      <tbody :class="$style.fakeRow">
+        <MaterialRow :burn="fakeBurn" :material="rat" />
+      </tbody>
       <BurnSection
         v-for="burn in planetBurn"
         :key="burn.planetName"
-        :is-multiplanet="isMultiplanet"
+        :can-minimize="sites.length > 1"
         :burn="burn" />
     </table>
   </template>
 </template>
 
 <style module>
+.fakeRow {
+  visibility: collapse;
+}
+
 .header {
   display: flex;
   flex-direction: row;

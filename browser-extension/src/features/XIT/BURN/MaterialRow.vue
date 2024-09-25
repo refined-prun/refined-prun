@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, PropType } from 'vue';
-import { PlanetBurn } from '@src/core/burn';
+import { MaterialBurn } from '@src/core/burn';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
 import { fixed0, fixed1, fixed2 } from '@src/utils/format';
@@ -16,21 +16,16 @@ const props = defineProps({
     type: Object as PropType<PrunApi.Material>,
     required: true,
   },
-  isMultiplanet: {
-    type: Boolean,
-    required: true,
-  },
   burn: {
-    type: Object as PropType<PlanetBurn>,
+    type: Object as PropType<MaterialBurn>,
     required: true,
   },
 });
 
-const matBurn = computed(() => props.burn.burn[props.material.ticker]);
-const production = computed(() => matBurn.value.DailyAmount);
-const invAmount = computed(() => matBurn.value.Inventory ?? 0);
+const production = computed(() => props.burn.DailyAmount);
+const invAmount = computed(() => props.burn.Inventory ?? 0);
 const isInf = computed(() => production.value >= 0);
-const days = computed(() => (isInf.value ? 1000 : matBurn.value.DaysLeft));
+const days = computed(() => (isInf.value ? 1000 : props.burn.DaysLeft));
 
 const isRed = computed(() => days.value <= userData.settings.burn.red);
 const isYellow = computed(() => days.value <= userData.settings.burn.yellow);
