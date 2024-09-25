@@ -50,12 +50,6 @@ const isVisible = computed(() => {
   );
 });
 
-const materialColumnStyle = computed(() => ({
-  width: '32px',
-  paddingRight: '0px',
-  paddingLeft: props.isMultiplanet ? '32px' : '10px',
-}));
-
 const changeText = computed(() => {
   const abs = Math.abs(production.value);
   const fixed = abs >= 1000 ? fixed0(abs) : abs >= 100 ? fixed1(abs) : fixed2(abs);
@@ -98,7 +92,7 @@ function formatPrice(price: number | undefined): string {
 
 <template>
   <tr :class="{ [$style.collapse]: !isVisible }">
-    <td :style="materialColumnStyle">
+    <td :class="$style.materialContainer">
       <MaterialIcon size="medium" :ticker="material.ticker" :amount="invAmount" />
     </td>
     <td>
@@ -123,5 +117,10 @@ function formatPrice(price: number | undefined): string {
 <style module>
 .collapse {
   visibility: collapse;
+}
+
+.materialContainer {
+  width: 32px;
+  padding: 0 0 2px;
 }
 </style>

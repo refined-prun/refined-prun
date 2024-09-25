@@ -111,11 +111,11 @@ const inf = useTileState('inf');
     <table>
       <thead>
         <tr>
-          <th>Material</th>
+          <th />
           <th>
             <div :class="$style.header">
               Burn
-              <Tooltip position="bottom" tooltip="How much of a material is consumed per day" />
+              <Tooltip position="right" tooltip="How much of a material is consumed per day" />
             </div>
           </th>
           <th>
