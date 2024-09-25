@@ -4,14 +4,22 @@ import {
   createGroupMapGetter,
   createMapGetter,
 } from '@src/infrastructure/prun-api/data/create-map-getter';
-import { createRequestGetter, request } from '@src/infrastructure/prun-api/data/request-hooks';
+import { reactive, ref } from 'vue';
+import { request } from '@src/infrastructure/prun-api/data/request-hooks';
 
 const store = createEntityStore<PrunApi.ProductionLine>();
 const state = store.state;
+const fetchedSites = reactive(new Set<string>());
+const fetchedAll = ref(false);
 
 messages({
+  CLIENT_CONNECTION_OPENED() {
+    fetchedSites.clear();
+    fetchedAll.value = false;
+  },
   PRODUCTION_PRODUCTION_LINES(data: { productionLines: PrunApi.ProductionLine[] }) {
     store.setAll(data.productionLines);
+    fetchedAll.value = true;
     store.setFetched();
   },
   PRODUCTION_SITE_PRODUCTION_LINES(data: {
@@ -19,6 +27,7 @@ messages({
     productionLines: PrunApi.ProductionLine[];
   }) {
     store.setMany(data.productionLines);
+    fetchedSites.add(data.siteId);
     store.setFetched();
   },
   PRODUCTION_PRODUCTION_LINE(data: PrunApi.ProductionLine) {
@@ -75,10 +84,26 @@ const getByShortId = createMapGetter(state.all, x => x.id.substring(0, 8));
 
 const getById = (value?: string | null) => state.getById(value) ?? getByShortId(value);
 
-const getBySiteId = createRequestGetter(
-  createGroupMapGetter(state.all, x => x.siteId),
-  x => request.production(x),
-);
+const bySiteId = createGroupMapGetter(state.all, x => x.siteId);
+
+const getBySiteId = (value?: string | null) => {
+  const result = bySiteId(value);
+  if (result) {
+    return result;
+  }
+
+  if (!value) {
+    return undefined;
+  }
+
+  if (fetchedAll.value || fetchedSites.has(value)) {
+    return [];
+  } else {
+    request.production(value);
+  }
+
+  return undefined;
+};
 
 export const productionStore = {
   ...state,
