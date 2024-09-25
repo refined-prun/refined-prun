@@ -39,6 +39,18 @@ const colors = computed(() => {
   };
 });
 
+const amountText = computed(() => {
+  if (props.amount === undefined) {
+    return undefined;
+  }
+
+  if (props.size === 'medium' && props.amount >= 100000) {
+    return fixed0(Math.round(props.amount / 1000)) + 'k';
+  }
+
+  return fixed0(props.amount);
+});
+
 const indicatorClasses = [
   PrunCss.MaterialIcon.indicator,
   PrunCss.MaterialIcon.neutral,
@@ -165,10 +177,10 @@ const categoryColors = {
       :size="size"
       @click="onClick" />
     <div
-      v-if="amount !== undefined"
+      v-if="amountText !== undefined"
       :class="PrunCss.MaterialIcon.indicatorContainer"
       @click="onClick">
-      <div :class="indicatorClasses">{{ fixed0(amount) }}</div>
+      <div :class="indicatorClasses">{{ amountText }}</div>
     </div>
   </div>
 </template>
