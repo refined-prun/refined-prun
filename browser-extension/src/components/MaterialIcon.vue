@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { computed, PropType } from 'vue';
+import { computed, PropType, useCssModule } from 'vue';
 import ColoredIcon from '@src/components/ColoredIcon.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
+import { fixed0 } from '@src/utils/format';
 
 const props = defineProps({
   ticker: {
@@ -23,6 +24,8 @@ const props = defineProps({
     default: undefined,
   },
 });
+
+const $style = useCssModule();
 
 const material = computed(() => materialsStore.getByTicker(props.ticker));
 const materialCategory = computed(() => materialCategoriesStore.getById(material.value?.category));
@@ -42,6 +45,7 @@ const indicatorClasses = [
   PrunCss.MaterialIcon.typeVerySmall,
   {
     [PrunCss.ColoredValue.negative]: props.warning,
+    [$style.indicatorSmall]: props.size === 'medium',
   },
 ];
 
@@ -164,7 +168,7 @@ const categoryColors = {
       v-if="amount !== undefined"
       :class="PrunCss.MaterialIcon.indicatorContainer"
       @click="onClick">
-      <div :class="indicatorClasses">{{ amount }}</div>
+      <div :class="indicatorClasses">{{ fixed0(amount) }}</div>
     </div>
   </div>
 </template>
@@ -174,5 +178,9 @@ const categoryColors = {
   cursor: pointer;
   width: fit-content;
   height: fit-content;
+}
+
+.indicatorSmall {
+  padding: 2px 2px 1px 3px;
 }
 </style>
