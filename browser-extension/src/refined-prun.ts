@@ -34,6 +34,7 @@ import '@src/features/standard/icon-markers/icon-markers';
 import '@src/features/standard/correct-material-command';
 import '@src/features/standard/correct-planet-command';
 import '@src/features/standard/evaluate-input-formula';
+import '@src/features/standard/material-icon-bigger-indicator';
 import '@src/features/standard/minimize-headers/minimize-headers';
 import '@src/features/standard/pending-contracts-add-details/pending-contracts-add-details';
 import '@src/features/standard/order-book-highlight-own-orders';
