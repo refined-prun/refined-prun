@@ -6,10 +6,7 @@ import {
   observeReadyElementsByTagName,
 } from '@src/utils/mutation-observer';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
-import { computed, reactive } from 'vue';
-import { refTextContent } from '@src/utils/reactive-dom';
-import ShipStatusLabel from './ShipStatusLabel.vue';
+import { computed } from 'vue';
 import { extractPlanetName } from '@src/util';
 import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
@@ -22,6 +19,8 @@ import { getPrunId, refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 import { localAdsStore } from '@src/infrastructure/prun-api/data/local-ads';
+import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
+import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
 
 function cleanCOGCPEX(tile: PrunTile) {
   // Replace 'view details/vote' with 'vote'
@@ -74,16 +73,67 @@ function cleanFLT(tile: PrunTile) {
   observeReadyElementsByTagName('tr', {
     baseElement: tile.frame,
     callback: row => {
-      const status = row.children[3]?.children[0] as HTMLDivElement;
-      if (status) {
-        status.style.display = 'none';
-        createFragmentApp(
-          ShipStatusLabel,
-          reactive({
-            shipRegistration: refTextContent(row.children[0]),
-          }),
-        ).after(status);
+      const id = refPrunId(row);
+      const ship = computed(() => shipsStore.getById(id.value));
+      const flight = computed(() => flightsStore.getById(ship.value?.flightId));
+
+      const labels = {
+        TAKE_OFF: '↑',
+        DEPARTURE: '↗',
+        CHARGE: '±',
+        JUMP: '⟿',
+        TRANSIT: '⟶',
+        APPROACH: '↘',
+        LANDING: '↓',
+      };
+
+      const statusLabel = computed(() => {
+        if (!ship.value) {
+          return undefined;
+        }
+
+        if (!flight.value) {
+          return '⦁';
+        }
+
+        const segment = flight.value.segments[flight.value.currentSegmentIndex];
+        if (!segment) {
+          return undefined;
+        }
+
+        return labels[segment.type] ?? undefined;
+      });
+
+      function replaceStatus() {
+        if (statusLabel.value === undefined) {
+          return;
+        }
+        const statusCell = row.children[3] as HTMLTableCellElement;
+        if (!statusCell) {
+          return;
+        }
+
+        const nodes = Array.from(statusCell.childNodes).filter(
+          x => x.nodeType === Node.TEXT_NODE || x.nodeType === Node.ELEMENT_NODE,
+        );
+        if (nodes.length === 0) {
+          return;
+        }
+        if (statusCell.style.textAlign !== 'center') {
+          statusCell.style.textAlign = 'center';
+        }
+        if (nodes[0].textContent !== statusLabel.value) {
+          nodes[0].textContent = statusLabel.value;
+        }
+        for (const node of nodes.slice(1)) {
+          if (node.textContent) {
+            node.textContent = '';
+          }
+        }
       }
+      replaceStatus();
+      const observer = new MutationObserver(replaceStatus);
+      observer.observe(row, { childList: true, subtree: true, characterData: true });
     },
   });
 }
