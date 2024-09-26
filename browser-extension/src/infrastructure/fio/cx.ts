@@ -121,20 +121,20 @@ export function getPrice(ticker?: string | null) {
 
   const tickerInfo = exchange.get(ticker);
   if (!tickerInfo) {
-    return undefined;
+    return 0;
   }
 
   switch (pricing.method) {
     case 'ASK':
-      return tickerInfo.Ask ?? undefined;
+      return tickerInfo.Ask ?? 0;
     case 'BID':
-      return tickerInfo.Bid ?? undefined;
+      return tickerInfo.Bid ?? 0;
     case 'AVG':
-      return tickerInfo.PriceAverage ?? undefined;
+      return tickerInfo.PriceAverage ?? 0;
     case 'VWAP7D':
-      return tickerInfo.VWAP7D ?? undefined;
+      return tickerInfo.VWAP7D ?? 0;
     case 'VWAP30D':
-      return tickerInfo.VWAP30D ?? undefined;
+      return tickerInfo.VWAP30D ?? 0;
     case 'DEFAULT':
       return (
         tickerInfo.VWAP7D ??
@@ -155,7 +155,7 @@ export function getMaterialPrice(material: PrunApi.Material) {
 
 export function calcMaterialAmountPrice(amount: PrunApi.MaterialAmount) {
   const price = getMaterialPrice(amount.material);
-  return price ? price * amount.amount : undefined;
+  return price !== undefined ? price * amount.amount : undefined;
 }
 
 export function sumMaterialAmountPrice(amounts: PrunApi.MaterialAmount[]) {
