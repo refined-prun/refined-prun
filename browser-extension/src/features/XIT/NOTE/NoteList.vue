@@ -8,7 +8,7 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 function createNewNote(ev: Event) {
   showTileOverlay(ev, CreateNoteOverlay, {
-    onCreate: (name: string) => showBuffer(`XIT NOTE_${name}`),
+    onCreate: (name: string) => showBuffer(`XIT NOTE ${sanitizeNoteName(name)}`),
   });
 }
 
@@ -16,6 +16,10 @@ function confirmDelete(ev: Event, note: Note) {
   showConfirmationOverlay(ev, () => deleteNote(note), {
     message: `Are you sure you want to delete the note "${note[0]}"?`,
   });
+}
+
+function sanitizeNoteName(name: string) {
+  return name.replaceAll(' ', '_');
 }
 </script>
 
@@ -42,7 +46,9 @@ function confirmDelete(ev: Event, note: Note) {
           </span>
         </td>
         <td>
-          <PrunButton primary @click="showBuffer(`XIT NOTES ${note[0]}`)">VIEW</PrunButton>
+          <PrunButton primary @click="showBuffer(`XIT NOTES ${sanitizeNoteName(note[0])}`)">
+            VIEW
+          </PrunButton>
           <PrunButton danger @click="x => confirmDelete(x, note)">DELETE</PrunButton>
         </td>
       </tr>

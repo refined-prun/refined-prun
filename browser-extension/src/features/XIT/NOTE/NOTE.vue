@@ -31,6 +31,6 @@ const noteName = computed(() =>
 <template>
   <div :style="{ height: '100%', flexGrow: 1, paddingTop: '4px' }">
     <NoteList v-if="!noteName" />
-    <NoteEditor v-else :name="noteName!" />
+    <NoteEditor v-else :name="noteName!.split('_').join(' ')" />
   </div>
 </template>
