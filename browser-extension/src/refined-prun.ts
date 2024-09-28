@@ -66,6 +66,6 @@ import '@src/features/XIT/NOTE/NOTE.vue';
 import '@src/features/XIT/REP/REP.vue';
 import '@src/features/XIT/SET/SET.vue';
 import '@src/features/XIT/START.vue';
-import '@src/features/XIT/WEB';
+import '@src/features/XIT/WEB.vue';
 
 import '@src/main';

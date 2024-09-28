@@ -1,39 +1,12 @@
-import { changeValue } from '@src/util';
-import xit from './xit-registry';
-import features from '@src/feature-registry';
+<script lang="ts">
+import xit from '@src/features/XIT/xit-registry';
+import { castArray } from '@src/utils/cast-array';
 import { _$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
+import { changeValue } from '@src/util';
 import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
-import { castArray } from '@src/utils/cast-array';
-
-function WEB(props: { parameters: string[] }) {
-  const { parameters } = props;
-  if (parameters.length === 0) {
-    return null;
-  }
-
-  let url = parameters[1];
-  const shortcut = parameters[0];
-  const applyShortcut = shortcuts.get(shortcut.toUpperCase());
-  if (applyShortcut) {
-    const newUrl = applyShortcut(parameters);
-    if (!newUrl) {
-      return <div>Invalid parameters!</div>;
-    }
-    url = newUrl;
-  }
-  if (!isValidUrl(url)) {
-    try {
-      url = prunAtob(parameters.slice(1).join(''));
-    } catch {
-      // Do nothing
-    }
-  }
-  if (!isValidUrl(url)) {
-    return <div>Url {url} is invalid!</div>;
-  }
-  return <iframe src={url} width="100%" height="100%" style={{ borderWidth: '0' }} />;
-}
+import features from '@src/feature-registry';
+import WEB from '@src/features/XIT/WEB.vue';
 
 xit.add({
   command: 'WEB',
@@ -44,7 +17,7 @@ xit.add({
 const shortcuts = new Map<string, (parameters: string[]) => string | undefined>();
 
 function shortcut(
-  commands: Arrayable<string>,
+  commands: string | string[],
   name: string,
   url: (parameters: string[]) => string | undefined,
 ) {
@@ -138,3 +111,35 @@ features.add({
   id: 'xit-web-correct-command',
   init,
 });
+</script>
+
+<script setup lang="ts">
+import { useXitParameters } from '@src/hooks/useXitParameters';
+import { inject } from 'vue';
+
+const command = inject(xit.command)!;
+const parameters = useXitParameters();
+const url = getUrl();
+
+function getUrl() {
+  const applyShortcut = shortcuts.get(command.toUpperCase());
+  if (applyShortcut) {
+    return applyShortcut(parameters);
+  }
+  let url = parameters[1];
+  if (isValidUrl(url)) {
+    return url;
+  }
+  try {
+    return prunAtob(parameters.join(''));
+  } catch {
+    return undefined;
+  }
+}
+</script>
+
+<template>
+  <div v-if="!url">Invalid parameters!</div>
+  <div v-else-if="!isValidUrl(url)">Url {{ url }} is invalid!</div>
+  <iframe v-else :src="url" width="100%" height="100%" style="border-width: 0" />
+</template>

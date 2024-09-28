@@ -5,7 +5,6 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import descendantPresent from '@src/utils/descendant-present';
 import { _$ } from '@src/utils/get-element-by-class-name';
 import xit from '@src/features/XIT/xit-registry';
-import XITContainer from '@src/features/XIT/XITContainer.vue';
 import LegacyXITAdapter from '@src/features/XIT/LegacyXITAdapter.vue';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContextControls from '@src/components/ContextControls.vue';
@@ -75,11 +74,10 @@ async function onTileReady(tile: PrunTile) {
     }).appendTo(container);
   } else if (xitCommand.component) {
     startMeasure(tile.fullCommand);
-    createFragmentApp(XITContainer, {
-      component: xitCommand.component(parameters),
-      parameters: parameters,
-    })
+    createFragmentApp(xitCommand.component(parameters))
       .use(tileStatePlugin, { tile })
+      .provide(xit.command, command)
+      .provide(xit.parameters, parameters.slice(1))
       .appendTo(container);
     stopMeasure();
   }

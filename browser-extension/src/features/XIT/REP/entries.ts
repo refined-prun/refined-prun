@@ -16,13 +16,13 @@ export interface RepairEntry {
 
 export function calculateBuildingEntries(parameters: string[]) {
   let sites: PrunApi.Site[] = [];
-  if (parameters.length === 1) {
+  if (parameters.length === 0) {
     if (sitesStore.all.value === undefined) {
       return undefined;
     }
     sites = sitesStore.all.value;
   }
-  for (let i = 1; i < parameters.length; i++) {
+  for (let i = 0; i < parameters.length; i++) {
     const site = sitesStore.getByPlanetNaturalIdOrName(parameters[i]);
     if (site) {
       sites.push(site);
@@ -50,7 +50,7 @@ export function calculateBuildingEntries(parameters: string[]) {
 
 export function calculateShipEntries(parameters: string[]) {
   let ships: PrunApi.Ship[] = [];
-  if (parameters.length === 1 || parameters.some(isShipParameter)) {
+  if (parameters.length === 0 || parameters.some(isShipParameter)) {
     if (shipsStore.all.value === undefined) {
       return undefined;
     }

@@ -27,16 +27,12 @@ import { userData } from '@src/store/user-data';
 import { mergeMaterialAmounts } from '@src/core/sort-materials';
 import Active from '@src/components/forms/Active.vue';
 import SectionHeader from '@src/components/SectionHeader.vue';
+import { useXitParameters } from '@src/hooks/useXitParameters';
 
-const props = defineProps({
-  parameters: {
-    type: Array<string>,
-    required: true,
-  },
-});
+const parameters = useXitParameters();
 
-const buildings = computed(() => calculateBuildingEntries(props.parameters));
-const ships = computed(() => calculateShipEntries(props.parameters));
+const buildings = computed(() => calculateBuildingEntries(parameters));
+const ships = computed(() => calculateShipEntries(parameters));
 
 const msInADay = dayjs.duration(1, 'day').asMilliseconds();
 

@@ -1,5 +1,5 @@
 import { castArray } from '@src/utils/cast-array';
-import { Component } from 'vue';
+import { Component, InjectionKey } from 'vue';
 
 export interface XITModule {
   create_buffer();
@@ -35,9 +35,14 @@ function get(command: string) {
   return registry.get(command.toUpperCase());
 }
 
+const command = Symbol() as InjectionKey<string>;
+const parameters = Symbol() as InjectionKey<string[]>;
+
 const xit = {
   add,
   get,
+  command,
+  parameters,
 };
 
 export default xit;

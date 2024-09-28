@@ -6,15 +6,11 @@ import ActionBar from '@src/components/ActionBar.vue';
 import { showConfirmationOverlay, showTileOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import SortingModeEditor from './SortingModeEditor.vue';
 import { userData } from '@src/store/user-data';
+import { useXitParameters } from '@src/hooks/useXitParameters';
 
-const props = defineProps({
-  parameters: {
-    type: Array<string>,
-    required: true,
-  },
-});
+const parameters = useXitParameters();
 
-const storeId = computed(() => props.parameters[1]);
+const storeId = computed(() => parameters[0]);
 const storage = computed(() => storagesStore.getById(storeId.value));
 const sorting = computed(() =>
   userData.sorting.filter(x => x.storeId.toUpperCase() === storeId.value.toUpperCase()),

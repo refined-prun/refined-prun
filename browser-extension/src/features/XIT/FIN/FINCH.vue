@@ -17,15 +17,11 @@ import AssetPieChart from '@src/features/XIT/FIN/AssetPieChart.vue';
 import LocationsPieChart from '@src/features/XIT/FIN/LocationsPieChart.vue';
 import { computed } from 'vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { useXitParameters } from '@src/hooks/useXitParameters';
 
-const props = defineProps({
-  parameters: {
-    type: Array<string>,
-    required: true,
-  },
-});
+const parameters = useXitParameters();
 
-const parameter = computed(() => props.parameters[1]?.toUpperCase());
+const parameter = computed(() => parameters[0]?.toUpperCase());
 </script>
 
 <template>

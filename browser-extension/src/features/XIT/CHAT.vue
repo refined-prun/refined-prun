@@ -15,6 +15,7 @@ export default {};
 import { ref, watchEffect } from 'vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { ddmm, hhmm } from '@src/utils/format';
+import { useXitParameters } from '@src/hooks/useXitParameters';
 
 interface FioChatMessage {
   MessageTimestamp: number;
@@ -23,20 +24,15 @@ interface FioChatMessage {
   MessageText: string;
 }
 
-const props = defineProps({
-  parameters: {
-    type: Array<string>,
-    required: true,
-  },
-});
+const parameters = useXitParameters();
 
 const isLoaded = ref(false);
 const messages = ref([] as FioChatMessage[]);
 watchEffect(() => {
-  if (props.parameters.length < 2) {
+  if (parameters.length < 1) {
     return;
   }
-  const parameter = props.parameters[1];
+  const parameter = parameters[0];
   fetch(`https://rest.fnar.net/chat/display/${parameter}`)
     .then(response => response.json())
     .then(data => {
@@ -47,10 +43,10 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div v-if="parameters.length < 2">Error! Not Enough Parameters!</div>
+  <div v-if="parameters.length < 1">Error! Not Enough Parameters!</div>
   <LoadingSpinner v-else-if="!isLoaded" />
   <div v-else :style="{ height: '100%', flexGrow: 1, paddingTop: '4px' }">
-    <div class="title">{{ parameters[1] }} Global Site Owners</div>
+    <div class="title">{{ parameters[0] }} Global Site Owners</div>
     <div v-for="(message, i) in messages" :key="i" :class="$style.line">
       <div>
         <div :class="$style.date">{{ ddmm(message.MessageTimestamp) }}</div>

@@ -12,13 +12,9 @@ xit.add({
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
+import { useXitParameters } from '@src/hooks/useXitParameters';
 
-const props = defineProps({
-  parameters: {
-    type: Array<string>,
-    required: true,
-  },
-});
+const parameters = useXitParameters();
 
 const isLoading = ref(false);
 const url = ref<string | undefined>();
@@ -30,7 +26,7 @@ async function load() {
   isLoading.value = true;
   url.value = undefined;
   let rawUrl = 'https://api.giphy.com/v1/gifs/random?api_key=0UTRbFtkMxAplrohufYco5IY74U8hOes';
-  const tag = props.parameters[1];
+  const tag = parameters[0];
   if (tag) {
     rawUrl += '&tag=' + tag;
   }

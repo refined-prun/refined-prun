@@ -35,27 +35,18 @@ import Tooltip from '@src/components/Tooltip.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import MaterialRow from '@src/features/XIT/BURN/MaterialRow.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import { useXitParameters } from '@src/hooks/useXitParameters';
 
-const props = defineProps({
-  parameters: {
-    type: Array<string>,
-    required: true,
-  },
-});
+const parameters = useXitParameters();
 
-const isBurnAll = computed(
-  () => props.parameters.length === 1 || props.parameters[1].toLowerCase() == 'all',
-);
+const isBurnAll = computed(() => parameters.length === 0 || parameters[0].toLowerCase() == 'all');
 
 const sites = computed(() => {
   if (isBurnAll.value) {
     return sitesStore.all.value;
   }
 
-  return props.parameters
-    .slice(1)
-    .map(x => sitesStore.getByPlanetNaturalIdOrName(x)!)
-    .filter(x => x);
+  return parameters.map(x => sitesStore.getByPlanetNaturalIdOrName(x)!).filter(x => x);
 });
 
 const planetBurn = computed(() => {

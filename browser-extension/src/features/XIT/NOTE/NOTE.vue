@@ -15,17 +15,11 @@ export default {};
 import NoteList from '@src/features/XIT/NOTE/NoteList.vue';
 import NoteEditor from '@src/features/XIT/NOTE/NoteEditor.vue';
 import { computed } from 'vue';
+import { useXitParameters } from '@src/hooks/useXitParameters';
 
-const props = defineProps({
-  parameters: {
-    type: Array<string>,
-    required: true,
-  },
-});
+const parameters = useXitParameters();
 
-const noteName = computed(() =>
-  props.parameters.length === 1 ? undefined : props.parameters.slice(1).join('_'),
-);
+const noteName = computed(() => (parameters.length === 1 ? undefined : parameters.join('_')));
 </script>
 
 <template>
