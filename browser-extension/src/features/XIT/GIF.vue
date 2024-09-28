@@ -26,7 +26,7 @@ async function load() {
   isLoading.value = true;
   url.value = undefined;
   let rawUrl = 'https://api.giphy.com/v1/gifs/random?api_key=0UTRbFtkMxAplrohufYco5IY74U8hOes';
-  const tag = parameters[0];
+  const tag = parameters.join(' ');
   if (tag) {
     rawUrl += '&tag=' + tag;
   }
