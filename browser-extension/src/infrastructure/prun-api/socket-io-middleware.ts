@@ -21,31 +21,6 @@ export default function socketIOMiddleware<T>(onOpen: () => void, middleware: Mi
       );
     }
   });
-
-  const readyAttribute = 'rp-socket-io-proxy-ready';
-  function checkReadyAttribute() {
-    if (!document.documentElement.hasAttribute(readyAttribute)) {
-      return false;
-    }
-
-    window.postMessage(
-      {
-        type: 'rp-socket-io-listener-ready',
-      },
-      '*',
-    );
-    document.documentElement.removeAttribute(readyAttribute);
-    return true;
-  }
-
-  if (!checkReadyAttribute()) {
-    const observer = new MutationObserver(() => {
-      if (checkReadyAttribute()) {
-        observer.disconnect();
-      }
-    });
-    observer.observe(document.documentElement, { attributes: true });
-  }
 }
 
 function processMessage<T>(

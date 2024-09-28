@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-{
-  function inject() {
-    if (window['REFINED_PRUN'] === true) {
-      console.debug('Refined PrUn: Already added socket.io proxy');
-      return;
-    }
-
+(() => {
+  function injectSocketIOProxy() {
     window['REFINED_PRUN'] = true;
 
     interface PendingMessage {
@@ -22,24 +17,12 @@
       };
     }
 
-    let listenerReady = false;
-    let queuedMessages: PendingMessage[] = [];
     const pendingCallbacks: Map<number, PendingMessage> = new Map();
     let callbackId = 0;
 
     window.addEventListener('message', (event: MessageEvent<SocketIOProxyMessage>) => {
       if (event.source !== window) {
         return;
-      }
-      if (event.data.type === 'rp-socket-io-listener-ready') {
-        if (listenerReady) {
-          return;
-        }
-        listenerReady = true;
-        for (const event of queuedMessages) {
-          forwardMessage(event);
-        }
-        queuedMessages = [];
       }
       if (event.data.type === 'rp-socket-io-message-apply') {
         applyMessage(event.data);
@@ -77,11 +60,6 @@
     }
 
     function forwardMessage(message: PendingMessage) {
-      if (!listenerReady) {
-        queuedMessages.push(message);
-        return;
-      }
-
       pendingCallbacks.set(message.id, message);
       window.postMessage(
         <SocketIOProxyMessage>{
@@ -189,23 +167,12 @@
         });
       },
     });
-
-    document.documentElement.setAttribute('rp-socket-io-proxy-ready', '');
-
     console.log('Refined PrUn: Added socket.io proxy');
   }
 
   try {
-    inject();
-  } catch (e) {
-    console.error(e);
-  } finally {
-    // Deserialize app script.
-    const currentScript = document.currentScript!;
-    const script = document.createElement('script');
-    script.defer = true;
-    script.src = currentScript.textContent!;
-    currentScript.textContent = '';
-    document.head.appendChild(script);
+    injectSocketIOProxy();
+  } catch (error) {
+    console.error(error);
   }
-}
+})();

@@ -37,12 +37,7 @@ const manifest = {
   content_scripts: [
     {
       matches: [apex],
-      js: ['socket-io-proxy-inject.js'],
-      run_at: 'document_start',
-    },
-    {
-      matches: [apex],
-      js: ['i18n-reader-inject.js', 'refined-prun.js'],
+      js: ['refined-prun-prepare.js', 'refined-prun.js'],
       run_at: 'document_start',
     },
   ],

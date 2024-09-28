@@ -15,10 +15,13 @@ import { userData } from '@src/store/user-data';
 import { loadNotes } from '@src/infrastructure/storage/notes-serializer';
 import { readPrunI18N } from '@src/infrastructure/prun-ui/i18n';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import oneMutation from 'one-mutation';
+import system from '@src/system';
 
 async function mainRun() {
   void fetchPrices();
   initializePrunApi();
+  await injectConnector();
   const backgroundTasks = Promise.allSettled([loadGameData()]);
 
   try {
@@ -50,6 +53,18 @@ async function mainRun() {
     // TODO: await showBuffer('XIT START');
     userData.first = true;
   }
+}
+
+async function injectConnector() {
+  if (!document.head) {
+    await oneMutation(document.documentElement, {
+      childList: true,
+      filter: () => !!document.head,
+    });
+  }
+  const connector = document.createElement('script');
+  connector.src = system.runtime.getURL('prun-connector.js');
+  document.head.appendChild(connector);
 }
 
 void mainRun();
