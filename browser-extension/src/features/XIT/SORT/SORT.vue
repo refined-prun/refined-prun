@@ -9,23 +9,23 @@ import { userData } from '@src/store/user-data';
 import { useXitParameters } from '@src/hooks/useXitParameters';
 
 const parameters = useXitParameters();
+const storeId = parameters[0];
 
-const storeId = computed(() => parameters[0]);
-const storage = computed(() => storagesStore.getById(storeId.value));
+const storage = computed(() => storagesStore.getById(storeId));
 const sorting = computed(() =>
-  userData.sorting.filter(x => x.storeId.toUpperCase() === storeId.value.toUpperCase()),
+  userData.sorting.filter(x => x.storeId.toUpperCase() === storeId.toUpperCase()),
 );
 
 function createSortingMode(ev: Event) {
   showTileOverlay(ev, SortingModeEditor, {
-    storeId: storeId.value,
+    storeId,
     onSave: (sorting: UserData.SortingMode) => userData.sorting.push(sorting),
   });
 }
 
 function editSortingMode(ev: Event, sorting: UserData.SortingMode) {
   showTileOverlay(ev, SortingModeEditor, {
-    storeId: storeId.value,
+    storeId,
     sorting,
     onSave: (saved: UserData.SortingMode) => Object.assign(sorting, saved),
   });

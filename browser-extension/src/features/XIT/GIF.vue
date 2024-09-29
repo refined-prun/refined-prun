@@ -15,6 +15,7 @@ import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { useXitParameters } from '@src/hooks/useXitParameters';
 
 const parameters = useXitParameters();
+const tag = parameters.join(' ');
 
 const isLoading = ref(false);
 const url = ref<string | undefined>();
@@ -26,7 +27,6 @@ async function load() {
   isLoading.value = true;
   url.value = undefined;
   let rawUrl = 'https://api.giphy.com/v1/gifs/random?api_key=0UTRbFtkMxAplrohufYco5IY74U8hOes';
-  const tag = parameters.join(' ');
   if (tag) {
     rawUrl += '&tag=' + tag;
   }

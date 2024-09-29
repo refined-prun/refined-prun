@@ -31,33 +31,26 @@ function shortcut(
   }
 }
 
-shortcut('PRUN', 'PRUN-CEPTION', () => 'https://apex.prosperousuniverse.com/#/');
+shortcut('PRUN', 'PRUN-CEPTION', () => 'https://apex.prosperousuniverse.com/');
 
 shortcut('PROSPERITY', 'PROSPERITY', parameters => {
   let url = 'https://prosperity-prun.netlify.app/';
-  if (parameters.length == 3) {
-    url += `?from=${parameters[1]}&to=${parameters[2]}`;
+  if (parameters.length == 2) {
+    url += `?from=${parameters[0]}&to=${parameters[1]}`;
   }
   return url;
 });
 
 shortcut(['SHEET', 'SHEETS'], 'GOOGLE SHEETS', parameters => {
-  if (parameters.length < 2) {
+  if (parameters.length === 0) {
     return undefined;
   }
-  let url = parameters[1];
-  for (let i = 2; i < parameters.length; i++) {
-    url += `_${parameters[i]}`;
-  }
+  let url = parameters.join('_');
   return `https://docs.google.com/spreadsheets/d/${url}/edit?usp=sharing&rm=minimal`;
 });
 
 shortcut(['PLANNER', 'PLAN', 'PRUN PLANNER'], 'GOOGLE SHEETS', parameters => {
-  let url = 'https://prunplanner.org';
-  for (let i = 1; i < parameters.length; i++) {
-    url += `/${parameters[i]}`;
-  }
-  return url;
+  return 'https://prunplanner.org/' + parameters.join('/');
 });
 
 shortcut('MAP', "Taiyi's Map", () => 'https://universemap.duckdns.org/');

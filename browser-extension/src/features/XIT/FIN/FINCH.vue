@@ -15,13 +15,11 @@ import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';
 import EquityHistoryChart from '@src/features/XIT/FIN/EquityHistoryChart.vue';
 import AssetPieChart from '@src/features/XIT/FIN/AssetPieChart.vue';
 import LocationsPieChart from '@src/features/XIT/FIN/LocationsPieChart.vue';
-import { computed } from 'vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { useXitParameters } from '@src/hooks/useXitParameters';
 
 const parameters = useXitParameters();
-
-const parameter = computed(() => parameters[0]?.toUpperCase());
+const parameter = parameters[0]?.toUpperCase();
 </script>
 
 <template>

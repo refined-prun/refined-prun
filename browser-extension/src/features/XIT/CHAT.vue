@@ -25,14 +25,14 @@ interface FioChatMessage {
 }
 
 const parameters = useXitParameters();
+const parameter = parameters[0];
 
 const isLoaded = ref(false);
 const messages = ref([] as FioChatMessage[]);
 watchEffect(() => {
-  if (parameters.length < 1) {
+  if (!parameter) {
     return;
   }
-  const parameter = parameters[0];
   fetch(`https://rest.fnar.net/chat/display/${parameter}`)
     .then(response => response.json())
     .then(data => {
@@ -43,10 +43,10 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div v-if="parameters.length < 1">Error! Not Enough Parameters!</div>
+  <div v-if="!parameter">Error! Not Enough Parameters!</div>
   <LoadingSpinner v-else-if="!isLoaded" />
   <div v-else :style="{ height: '100%', flexGrow: 1, paddingTop: '4px' }">
-    <div class="title">{{ parameters[0] }} Global Site Owners</div>
+    <div class="title">{{ parameter }} Global Site Owners</div>
     <div v-for="(message, i) in messages" :key="i" :class="$style.line">
       <div>
         <div :class="$style.date">{{ ddmm(message.MessageTimestamp) }}</div>

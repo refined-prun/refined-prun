@@ -14,12 +14,10 @@ export default {};
 <script setup lang="ts">
 import NoteList from '@src/features/XIT/NOTE/NoteList.vue';
 import NoteEditor from '@src/features/XIT/NOTE/NoteEditor.vue';
-import { computed } from 'vue';
 import { useXitParameters } from '@src/hooks/useXitParameters';
 
 const parameters = useXitParameters();
-
-const noteName = computed(() => (parameters.length === 1 ? undefined : parameters.join('_')));
+const noteName = parameters.join('_');
 </script>
 
 <template>

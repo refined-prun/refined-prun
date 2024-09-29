@@ -38,11 +38,10 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { useXitParameters } from '@src/hooks/useXitParameters';
 
 const parameters = useXitParameters();
-
-const isBurnAll = computed(() => parameters.length === 0 || parameters[0].toLowerCase() == 'all');
+const isBurnAll = parameters.length === 0 || parameters[0].toLowerCase() == 'all';
 
 const sites = computed(() => {
-  if (isBurnAll.value) {
+  if (isBurnAll) {
     return sitesStore.all.value;
   }
 
