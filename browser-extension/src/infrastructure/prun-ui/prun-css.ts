@@ -39,7 +39,7 @@ export async function parsePrunCss() {
   const result = {};
   for (const cssClass of classes) {
     const camelize = (s: string) => s.replace(/-./g, x => x[1].toUpperCase());
-    const parts = cssClass.replace('.', '').replace('___', '_').replace('__', '_').split('_');
+    const parts = cssClass.replaceAll('.', '').replace('__', '.').replace('___', '.').split('.');
     const parent = camelize(parts[0]);
     if (parent === '') {
       continue;
