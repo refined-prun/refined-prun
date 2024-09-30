@@ -15,8 +15,11 @@ export function formatChange(change: number | undefined) {
   }
   const absChange = Math.abs(change);
   let formatted: string;
-  if (absChange > 10) {
-    return change > 0 ? '> +1,000%' : '< -1,000%';
+  if (absChange >= 10) {
+    return change > 0 ? '> +999%' : '< -999%';
+  }
+  if (absChange < 0.0001) {
+    return change >= 0 ? '+0%' : '-0%';
   }
   if (absChange > 1) {
     formatted = percent0(absChange);
