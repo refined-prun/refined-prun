@@ -1,4 +1,4 @@
-import classes from './cxob-highlight-own-orders.module.css';
+import classes from './order-book-highlight-own-orders.module.css';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
@@ -23,6 +23,6 @@ export function init() {
 }
 
 void features.add({
-  id: 'cxob-highlight-own-orders',
+  id: 'order-book-highlight-own-orders',
   init,
 });
