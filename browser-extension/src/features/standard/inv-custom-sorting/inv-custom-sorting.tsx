@@ -3,9 +3,7 @@ import { BurnValues, getPlanetBurn } from '@src/core/burn';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
-import descendantPresent from '@src/utils/descendant-present';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import CategoryHeader from './CategoryHeader.vue';
 import InventorySortControls from './InventorySortControls.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
@@ -21,6 +19,7 @@ import { userData } from '@src/store/user-data';
 import { sortMaterials, sortMaterialsBy } from '@src/core/sort-materials';
 import { computedTileState } from '@src/store/user-data-tiles';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
+import { $, _$, _$$ } from '@src/utils/select-dom';
 
 async function onInvReady(tile: PrunTile) {
   await applyCustomSorting(tile);
@@ -37,8 +36,8 @@ async function applyCustomSorting(tile: PrunTile) {
   }
 
   const activeSort = computedTileState(getTileState(tile), 'activeSort', undefined);
-  const sortOptions = await descendantPresent(tile.frame, PrunCss.InventorySortControls.controls);
-  const inventory = await descendantPresent(tile.frame, PrunCss.InventoryView.grid);
+  const sortOptions = await $(tile.frame, PrunCss.InventorySortControls.controls);
+  const inventory = await $(tile.frame, PrunCss.InventoryView.grid);
 
   // Skip the first sorting option because it is the grid/list view switch.
   for (let i = 1; i < sortOptions.children.length; i++) {
@@ -103,9 +102,9 @@ function sortInventory(
     return;
   }
 
-  const gridItems = _$$(PrunCss.GridItemView.container, inventory).map(div => ({
+  const gridItems = _$$(inventory, PrunCss.GridItemView.container).map(div => ({
     div,
-    ticker: _$(PrunCss.ColoredIcon.label, div)?.textContent,
+    ticker: _$(div, PrunCss.ColoredIcon.label)?.textContent,
   }));
   const categories = sorting.categories.slice();
 

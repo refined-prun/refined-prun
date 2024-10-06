@@ -7,7 +7,6 @@ import PrunCss, { parsePrunCss } from '@src/infrastructure/prun-ui/prun-css';
 import './refined-prun.css';
 import { fetchPrices } from '@src/infrastructure/fio/cx';
 import { loadRefinedPrunCss } from '@src/infrastructure/prun-ui/refined-prun-css';
-import descendantPresent from '@src/utils/descendant-present';
 import { trackBalanceHistory } from '@src/store/user-data-balance';
 import { initializeTileListener } from '@src/store/user-data-tiles';
 import { loadUserData } from '@src/infrastructure/storage/user-data-serializer';
@@ -17,6 +16,7 @@ import { readPrunI18N } from '@src/infrastructure/prun-ui/i18n';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import oneMutation from 'one-mutation';
 import system from '@src/system';
+import { $ } from '@src/utils/select-dom';
 
 async function mainRun() {
   void fetchPrices();
@@ -35,7 +35,7 @@ async function mainRun() {
 
   await parsePrunCss();
   await loadRefinedPrunCss();
-  await descendantPresent(document.documentElement, PrunCss.App.container);
+  await $(document.documentElement, PrunCss.App.container);
   await readPrunI18N(materialsStore.all);
   await backgroundTasks;
 

@@ -1,9 +1,5 @@
 import features from '@src/feature-registry';
 import tiles from '@src/infrastructure/prun-ui/tiles';
-import {
-  observeReadyElementsByClassName,
-  observeReadyElementsByTagName,
-} from '@src/utils/mutation-observer';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { refTextContent } from '@src/utils/reactive-dom';
 import { computed, Ref } from 'vue';
@@ -13,20 +9,16 @@ import { formatEta } from '@src/utils/format';
 import { timestampEachSecond } from '@src/utils/dayjs';
 import { createReactiveSpan } from '@src/utils/reactive-element';
 import { keepLast } from '@src/utils/keep-last';
+import { subscribe } from '@src/utils/subscribe-async-generator';
+import { $$ } from '@src/utils/select-dom';
 
 function onTileReady(tile: PrunTile) {
   const ship = computed(() => shipsStore.getByRegistration(tile.parameter));
-  observeReadyElementsByClassName(PrunCss.MissionPlan.table, {
-    baseElement: tile.frame,
-    callback: x => onTableReady(x, ship),
-  });
+  subscribe($$(tile.frame, PrunCss.MissionPlan.table), x => onTableReady(x, ship));
 }
 
 function onTableReady(table: HTMLElement, ship: Ref<PrunApi.Ship | undefined>) {
-  observeReadyElementsByTagName('tr', {
-    baseElement: table,
-    callback: x => onRowReady(x, ship),
-  });
+  subscribe($$(table, 'tr'), x => onRowReady(x, ship));
 }
 
 function onRowReady(row: HTMLElement, ship: Ref<PrunApi.Ship | undefined>) {

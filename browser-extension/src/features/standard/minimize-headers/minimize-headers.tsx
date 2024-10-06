@@ -1,18 +1,17 @@
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
-import descendantPresent from '@src/utils/descendant-present';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import MinimizeRow from '@src/features/standard/minimize-headers/MinimizeRow.vue';
 import { reactive, ref } from 'vue';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
+import { $, $$, _$ } from '@src/utils/select-dom';
 
 async function onTileReady(tile: PrunTile) {
   if (companyStore.value?.code === 'KCB') {
     return;
   }
-  const header = await descendantPresent(tile.frame, PrunCss.FormComponent.containerPassive);
+  const header = await $(tile.frame, PrunCss.FormComponent.containerPassive);
   setHeaders(tile, true);
 
   const isMinimized = ref(true);
@@ -30,14 +29,13 @@ async function onTileReady(tile: PrunTile) {
 }
 
 function setHeaders(tile: PrunTile, isMinimized: boolean) {
-  const headers = _$$(PrunCss.FormComponent.containerPassive, tile.frame);
-  for (const header of headers) {
-    const label = _$(PrunCss.FormComponent.label, header);
+  for (const header of $$(tile.frame, PrunCss.FormComponent.containerPassive)) {
+    const label = _$(header, PrunCss.FormComponent.label);
     if (label?.textContent === 'Minimize') {
       continue;
     }
     if (label?.textContent === 'Termination request') {
-      const value = _$(PrunCss.FormComponent.input, header);
+      const value = _$(header, PrunCss.FormComponent.input);
       if (value?.textContent !== '--') {
         continue;
       }

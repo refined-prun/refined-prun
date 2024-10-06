@@ -1,29 +1,22 @@
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
-import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import tiles from '@src/infrastructure/prun-ui/tiles';
-import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import PpuLabel from './PpuLabel.vue';
 import { reactive } from 'vue';
 import { refValue } from '@src/utils/reactive-dom';
 import { fixed2 } from '@src/utils/format';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { localAdsStore } from '@src/infrastructure/prun-api/data/local-ads';
+import { $, $$, _$$ } from '@src/utils/select-dom';
+import { subscribe } from '@src/utils/subscribe-async-generator';
 
 function onLMTileReady(tile: PrunTile) {
-  observeReadyElementsByClassName(PrunCss.CommodityAd.container, {
-    baseElement: tile.frame,
-    callback: onAdContainerReady,
-  });
+  subscribe($$(tile.frame, PrunCss.CommodityAd.container), onAdContainerReady);
 }
 
-function onAdContainerReady(container: HTMLDivElement) {
-  const text = _$(PrunCss.CommodityAd.text, container);
-  if (!text) {
-    return;
-  }
-
+async function onAdContainerReady(container: HTMLElement) {
+  const text = await $(container, PrunCss.CommodityAd.text);
   const id = getPrunId(container);
   const ad = localAdsStore.getById(id);
   if (!ad || ad.type !== 'COMMODITY_SHIPPING') {
@@ -53,14 +46,11 @@ function onAdContainerReady(container: HTMLDivElement) {
 }
 
 function onLMPTileReady(tile: PrunTile) {
-  observeReadyElementsByClassName(PrunCss.LocalMarketPost.form, {
-    baseElement: tile.frame,
-    callback: onFormReady,
-  });
+  subscribe($$(tile.frame, PrunCss.LocalMarketPost.form), onFormReady);
 }
 
-function onFormReady(form: HTMLFormElement) {
-  const type = _$$(PrunCss.StaticInput.static, form);
+function onFormReady(form: HTMLElement) {
+  const type = _$$(form, PrunCss.StaticInput.static);
   if (!type.find(x => x.textContent === 'SHIPPING')) {
     return;
   }

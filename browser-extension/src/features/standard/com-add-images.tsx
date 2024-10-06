@@ -1,17 +1,14 @@
 import features from '@src/feature-registry';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import descendantPresent from '@src/utils/descendant-present';
-import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import { Fragment } from 'vue';
+import { $, $$ } from '@src/utils/select-dom';
+import { subscribe } from '@src/utils/subscribe-async-generator';
 
 async function onTileReady(tile: PrunTile) {
-  const messages = await descendantPresent(tile.frame, PrunCss.MessageList.messages);
-  observeReadyElementsByClassName(PrunCss.Link.link, {
-    baseElement: messages,
-    callback: processLink,
-  });
+  const messages = await $(tile.frame, PrunCss.MessageList.messages);
+  subscribe($$(messages, PrunCss.Link.link), processLink);
 }
 
 function processLink(element: HTMLElement) {

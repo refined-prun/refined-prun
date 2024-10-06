@@ -1,15 +1,14 @@
 import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import TabBar from '@src/features/standard/screen-tab-bar/TabBar.vue';
-
-function onContainerReady(container: HTMLDivElement) {
-  createFragmentApp(TabBar).appendTo(container);
-}
+import { subscribe } from '@src/utils/subscribe-async-generator';
+import { $$ } from '@src/utils/select-dom';
 
 export function init() {
-  observeReadyElementsByClassName(PrunCss.ScreenControls.container, onContainerReady);
+  subscribe($$(document, PrunCss.ScreenControls.container), container => {
+    createFragmentApp(TabBar).appendTo(container);
+  });
 }
 
 void features.add({

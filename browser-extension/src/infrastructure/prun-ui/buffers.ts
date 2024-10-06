@@ -1,12 +1,11 @@
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import { changeValue, sleep } from '@src/util';
 import onNodeDisconnected from '@src/utils/on-node-disconnected';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import { Ref } from 'vue';
 import { watchUntil } from '@src/utils/watch';
-import descendantPresent from '@src/utils/descendant-present';
+import { $, _$, _$$ } from '@src/utils/select-dom';
 
 let isBusy = false;
 const pendingResolvers: (() => void)[] = [];
@@ -29,7 +28,7 @@ export async function showBuffer(command: string, options?: ShowBufferOptions) {
     }
   }
   await acquireSlot();
-  const create = await descendantPresent(document.documentElement, PrunCss.Dock.create);
+  const create = await $(document.documentElement, PrunCss.Dock.create);
 
   try {
     create.click();
@@ -61,21 +60,23 @@ function releaseSlot() {
 }
 
 async function captureLastWindow(command: string, options?: ShowBufferOptions) {
-  const windows = _$$(PrunCss.Window.window);
+  const windows = _$$(document, PrunCss.Window.window);
   if (windows.length === 0) {
     return;
   }
   const window = windows[windows.length - 1] as HTMLDivElement;
-  const tile = _$(PrunCss.Tile.tile, window);
+  const tile = _$(window, PrunCss.Tile.tile);
   const id = getPrunId(tile!)?.padStart(2, '0');
   if (options?.autoClose) {
-    const dock = _$$(PrunCss.Dock.buffer).find(x => _$(PrunCss.Dock.title, x)?.textContent === id);
+    const dock = _$$(document, PrunCss.Dock.buffer).find(
+      x => _$(x, PrunCss.Dock.title)?.textContent === id,
+    );
     if (dock) {
       dock.style.display = 'none';
     }
     window.style.display = 'none';
   }
-  const input = _$(PrunCss.PanelSelector.input, window) as HTMLInputElement;
+  const input = _$(window, PrunCss.PanelSelector.input) as HTMLInputElement;
   changeValue(input, command);
   const form = input.form;
   if (!form?.isConnected || !(options?.autoSubmit ?? true)) {
@@ -96,7 +97,7 @@ async function closeWhenDone(window: HTMLDivElement, options?: ShowBufferOptions
   if (closeWhen) {
     await watchUntil(closeWhen);
   }
-  const buttons = _$$(PrunCss.Window.button, window);
+  const buttons = _$$(window, PrunCss.Window.button);
   const closeButton = buttons.find(x => x.textContent === 'x') as HTMLButtonElement;
   if (closeButton) {
     closeButton?.click();

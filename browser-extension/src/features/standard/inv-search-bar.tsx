@@ -1,7 +1,7 @@
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
-import { _$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
+import { $ } from '@src/utils/select-dom';
 
 async function onTileReady(tile: PrunTile) {
   // Only add search bar to the main INV tile
@@ -9,13 +9,9 @@ async function onTileReady(tile: PrunTile) {
     return;
   }
 
-  const inventoryFilters = _$(PrunCss.InventoriesListContainer.filter);
-  if (!inventoryFilters?.parentNode) {
-    return;
-  }
-
+  const inventoryFilters = await $(document, PrunCss.InventoriesListContainer.filter);
   const searchBarDiv = document.createElement('div');
-  inventoryFilters.parentNode.insertBefore(searchBarDiv, inventoryFilters.nextSibling);
+  inventoryFilters.after(searchBarDiv);
 
   // Create search bar
   const searchBar = document.createElement('input');

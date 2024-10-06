@@ -1,14 +1,9 @@
 import classes from './hide-redundant-info.module.css';
 import features from '@src/feature-registry';
 import tiles from '@src/infrastructure/prun-ui/tiles';
-import {
-  observeReadyElementsByClassName,
-  observeReadyElementsByTagName,
-} from '@src/utils/mutation-observer';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { computed } from 'vue';
 import { extractPlanetName } from '@src/util';
-import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import {
   applyClassCssRule,
@@ -21,120 +16,107 @@ import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-al
 import { localAdsStore } from '@src/infrastructure/prun-api/data/local-ads';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
+import { subscribe } from '@src/utils/subscribe-async-generator';
+import { $, $$ } from '@src/utils/select-dom';
 
 function cleanCOGCPEX(tile: PrunTile) {
   // Replace 'view details/vote' with 'vote'
-  observeReadyElementsByClassName(PrunCss.Button.darkInline, {
-    baseElement: tile.frame,
-    callback: button => {
-      button.textContent = 'vote';
-    },
+  subscribe($$(tile.frame, PrunCss.Button.darkInline), button => {
+    button.textContent = 'vote';
   });
 
   // Remove redundant title parts
-  observeReadyElementsByClassName(PrunCss.Link.link, {
-    baseElement: tile.frame,
-    callback: link => {
-      if (link.textContent) {
-        link.textContent = link
-          .textContent!.replace('Advertising Campaign: ', '')
-          .replace('Education Events: ', '');
-      }
-    },
+  subscribe($$(tile.frame, PrunCss.Link.link), link => {
+    if (link.textContent) {
+      link.textContent = link
+        .textContent!.replace('Advertising Campaign: ', '')
+        .replace('Education Events: ', '');
+    }
   });
 }
 
 function cleanFLT(tile: PrunTile) {
   // Cargo capacity labels
-  observeReadyElementsByClassName(PrunCss.ShipStore.store, {
-    baseElement: tile.frame,
-    callback: div => {
-      // div -> div
-      const label = div.children[2];
-      if (label) {
-        label.textContent = (label.textContent || '')
-          .replace(/(t|m³)/g, '')
-          .replace(/(\d+)([,.]?000)/g, (_, x) => `${x}k`);
-      }
-    },
+  subscribe($$(tile.frame, PrunCss.ShipStore.store), div => {
+    // div -> div
+    const label = div.children[2];
+    if (label) {
+      label.textContent = (label.textContent || '')
+        .replace(/(t|m³)/g, '')
+        .replace(/(\d+)([,.]?000)/g, (_, x) => `${x}k`);
+    }
   });
 
   // Shorten planet names
-  observeReadyElementsByClassName(PrunCss.Link.link, {
-    baseElement: tile.frame,
-    callback: link => {
-      if (link.textContent) {
-        link.textContent = extractPlanetName(link.textContent);
-      }
-    },
+  subscribe($$(tile.frame, PrunCss.Link.link), link => {
+    if (link.textContent) {
+      link.textContent = extractPlanetName(link.textContent);
+    }
   });
 
   // Shorten flight status
-  observeReadyElementsByTagName('tr', {
-    baseElement: tile.frame,
-    callback: row => {
-      const id = refPrunId(row);
-      const ship = computed(() => shipsStore.getById(id.value));
-      const flight = computed(() => flightsStore.getById(ship.value?.flightId));
+  subscribe($$(tile.frame, 'tr'), row => {
+    const id = refPrunId(row);
+    const ship = computed(() => shipsStore.getById(id.value));
+    const flight = computed(() => flightsStore.getById(ship.value?.flightId));
 
-      const labels = {
-        TAKE_OFF: '↑',
-        DEPARTURE: '↗',
-        CHARGE: '±',
-        JUMP: '⟿',
-        TRANSIT: '⟶',
-        APPROACH: '↘',
-        LANDING: '↓',
-      };
+    const labels = {
+      TAKE_OFF: '↑',
+      DEPARTURE: '↗',
+      CHARGE: '±',
+      JUMP: '⟿',
+      TRANSIT: '⟶',
+      APPROACH: '↘',
+      LANDING: '↓',
+    };
 
-      const statusLabel = computed(() => {
-        if (!ship.value) {
-          return undefined;
-        }
+    const statusLabel = computed(() => {
+      if (!ship.value) {
+        return undefined;
+      }
 
-        if (!flight.value) {
-          return '⦁';
-        }
+      if (!flight.value) {
+        return '⦁';
+      }
 
-        const segment = flight.value.segments[flight.value.currentSegmentIndex];
-        if (!segment) {
-          return undefined;
-        }
+      const segment = flight.value.segments[flight.value.currentSegmentIndex];
+      if (!segment) {
+        return undefined;
+      }
 
-        return labels[segment.type] ?? undefined;
-      });
+      return labels[segment.type] ?? undefined;
+    });
 
-      function replaceStatus() {
-        if (statusLabel.value === undefined) {
-          return;
-        }
-        const statusCell = row.children[3] as HTMLTableCellElement;
-        if (!statusCell) {
-          return;
-        }
+    function replaceStatus() {
+      if (statusLabel.value === undefined) {
+        return;
+      }
+      const statusCell = row.children[3] as HTMLTableCellElement;
+      if (!statusCell) {
+        return;
+      }
 
-        const nodes = Array.from(statusCell.childNodes).filter(
-          x => x.nodeType === Node.TEXT_NODE || x.nodeType === Node.ELEMENT_NODE,
-        );
-        if (nodes.length === 0) {
-          return;
-        }
-        if (statusCell.style.textAlign !== 'center') {
-          statusCell.style.textAlign = 'center';
-        }
-        if (nodes[0].textContent !== statusLabel.value) {
-          nodes[0].textContent = statusLabel.value;
-        }
-        for (const node of nodes.slice(1)) {
-          if (node.textContent) {
-            node.textContent = '';
-          }
+      const nodes = Array.from(statusCell.childNodes).filter(
+        x => x.nodeType === Node.TEXT_NODE || x.nodeType === Node.ELEMENT_NODE,
+      );
+      if (nodes.length === 0) {
+        return;
+      }
+      if (statusCell.style.textAlign !== 'center') {
+        statusCell.style.textAlign = 'center';
+      }
+      if (nodes[0].textContent !== statusLabel.value) {
+        nodes[0].textContent = statusLabel.value;
+      }
+      for (const node of nodes.slice(1)) {
+        if (node.textContent) {
+          node.textContent = '';
         }
       }
-      replaceStatus();
-      const observer = new MutationObserver(replaceStatus);
-      observer.observe(row, { childList: true, subtree: true, characterData: true });
-    },
+    }
+    replaceStatus();
+    const observer = new MutationObserver(replaceStatus);
+    observer.observe(row, { childList: true, subtree: true, characterData: true });
   });
 }
 
@@ -145,88 +127,75 @@ function cleanINV(tile: PrunTile) {
   }
 
   // Shorten planet names
-  observeReadyElementsByClassName(PrunCss.Link.link, {
-    baseElement: tile.frame,
-    callback: link => {
-      if (link.textContent) {
-        link.textContent = extractPlanetName(link.textContent);
-      }
-    },
+  subscribe($$(tile.frame, PrunCss.Link.link), link => {
+    if (link.textContent) {
+      link.textContent = extractPlanetName(link.textContent);
+    }
   });
 
   // Shorten storage types
-  observeReadyElementsByTagName('tr', {
-    baseElement: tile.frame,
-    callback: row => {
-      const id = refPrunId(row);
-      const name = computed(() => {
-        const storage = storagesStore.getById(id.value);
-        switch (storage?.type) {
-          case 'STORE':
-            return 'Base';
-          case 'WAREHOUSE_STORE':
-            return 'WAR';
-          case 'SHIP_STORE':
-            return 'Ship';
-          case 'STL_FUEL_STORE':
-            return 'STL';
-          case 'FTL_FUEL_STORE':
-            return 'FTL';
-          default:
-            return null;
-        }
-      });
-      watchEffectWhileNodeAlive(row, () => {
-        // tr -> td -> span
-        const typeLabel = row.firstChild?.firstChild;
-        if (typeLabel && name) {
-          typeLabel.textContent = name.value;
-        }
-      });
-    },
+  subscribe($$(tile.frame, 'tr'), row => {
+    const id = refPrunId(row);
+    const name = computed(() => {
+      const storage = storagesStore.getById(id.value);
+      switch (storage?.type) {
+        case 'STORE':
+          return 'Base';
+        case 'WAREHOUSE_STORE':
+          return 'WAR';
+        case 'SHIP_STORE':
+          return 'Ship';
+        case 'STL_FUEL_STORE':
+          return 'STL';
+        case 'FTL_FUEL_STORE':
+          return 'FTL';
+        default:
+          return null;
+      }
+    });
+    watchEffectWhileNodeAlive(row, () => {
+      // tr -> td -> span
+      const typeLabel = row.firstChild?.firstChild;
+      if (typeLabel && name) {
+        typeLabel.textContent = name.value;
+      }
+    });
   });
 }
 
 function cleanLM(tile: PrunTile) {
-  observeReadyElementsByClassName(PrunCss.CommodityAd.container, {
-    baseElement: tile.frame,
-    callback: container => {
-      const text = _$(PrunCss.CommodityAd.text, container);
-      if (!text) {
-        return;
+  subscribe($$(tile.frame, PrunCss.CommodityAd.container), async container => {
+    const text = await $(container, PrunCss.CommodityAd.text);
+    const id = getPrunId(container);
+    const ad = localAdsStore.getById(id);
+    if (!ad) {
+      return;
+    }
+    if (ad.type === 'COMMODITY_SHIPPING') {
+      cleanShipmentAd(tile, text);
+    }
+    for (const node of Array.from(text.childNodes)) {
+      if (!node.textContent) {
+        continue;
       }
-      const id = getPrunId(container);
-      const ad = localAdsStore.getById(id);
-      if (!ad) {
-        return;
-      }
-      if (ad.type === 'COMMODITY_SHIPPING') {
-        cleanShipmentAd(tile, text);
-      }
-      for (const node of Array.from(text.childNodes)) {
-        if (!node.textContent) {
-          continue;
-        }
 
-        node.textContent = node.textContent.replace('.00', '');
-        node.textContent = node.textContent
-          .replace(' for ', '')
-          .replace('delivery', '')
-          .replace('collection', '')
-          .replace(' within ', ' in ')
-          .replace('for delivery within', 'in');
-        node.textContent = node.textContent.replace(/(\d+)\s+days*/i, '$1d');
-      }
-      cleanContractType(text, ad);
-    },
+      node.textContent = node.textContent.replace('.00', '');
+      node.textContent = node.textContent
+        .replace(' for ', '')
+        .replace('delivery', '')
+        .replace('collection', '')
+        .replace(' within ', ' in ')
+        .replace('for delivery within', 'in');
+      node.textContent = node.textContent.replace(/(\d+)\s+days*/i, '$1d');
+    }
+    cleanContractType(text, ad);
   });
 }
 
 function cleanShipmentAd(tile: PrunTile, ad: HTMLElement) {
   // Shorten planet names
-  const links = _$$(PrunCss.Link.link, ad) as HTMLDivElement[];
   const parameter = tile.parameter;
-  for (const link of links) {
+  for (const link of $$(ad, PrunCss.Link.link)) {
     const planetName = extractPlanetName(link.textContent);
     const planet = planetsStore.find(planetName);
     if (parameter === planetName || parameter === planet?.naturalId) {

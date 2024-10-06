@@ -1,26 +1,23 @@
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { computed } from 'vue';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { formatEta } from '@src/utils/format';
 import { timestampEachSecond } from '@src/utils/dayjs';
-import { _$ } from '@src/utils/get-element-by-class-name';
 import { createReactiveDiv } from '@src/utils/reactive-element';
 import { keepLast } from '@src/utils/keep-last';
+import { $$, _$ } from '@src/utils/select-dom';
+import { subscribe } from '@src/utils/subscribe-async-generator';
 
 function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {
     return;
   }
 
-  observeReadyElementsByClassName(PrunCss.OrderSlot.container, {
-    baseElement: tile.frame,
-    callback: x => onOrderSlotReady(x, tile.parameter!),
-  });
+  subscribe($$(tile.frame, PrunCss.OrderSlot.container), x => onOrderSlotReady(x, tile.parameter!));
 }
 
 async function onOrderSlotReady(slot: HTMLElement, siteId: string) {
@@ -45,7 +42,7 @@ async function onOrderSlotReady(slot: HTMLElement, siteId: string) {
     return `(${formatEta(timestampEachSecond.value, completion.value)})`;
   });
   const div = createReactiveDiv(slot, eta);
-  keepLast(slot, () => _$(PrunCss.OrderSlot.info, slot), div);
+  keepLast(slot, () => _$(slot, PrunCss.OrderSlot.info), div);
 }
 
 function calcCompletionDate(line: PrunApi.ProductionLine, order: PrunApi.ProductionOrder) {

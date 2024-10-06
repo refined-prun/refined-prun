@@ -1,6 +1,5 @@
 import features from '@src/feature-registry';
 import tiles from '@src/infrastructure/prun-ui/tiles';
-import { observeReadyElementsByTagName } from '@src/utils/mutation-observer';
 import { computed } from 'vue';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
@@ -9,12 +8,11 @@ import { timestampEachSecond } from '@src/utils/dayjs';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { createReactiveSpan } from '@src/utils/reactive-element';
 import { keepLast } from '@src/utils/keep-last';
+import { subscribe } from '@src/utils/subscribe-async-generator';
+import { $$ } from '@src/utils/select-dom';
 
 function onTileReady(tile: PrunTile) {
-  observeReadyElementsByTagName('tr', {
-    baseElement: tile.frame,
-    callback: onRowReady,
-  });
+  subscribe($$(tile.frame, 'tr'), onRowReady);
 }
 
 function onRowReady(row: HTMLTableRowElement) {

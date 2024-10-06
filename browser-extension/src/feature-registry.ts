@@ -1,9 +1,7 @@
-import { Promisable } from 'type-fest';
-import asyncForEach from '@src/utils/async-foreach';
 import getBrowserVersion from '@src/utils/browser-version';
 import { castArray } from '@src/utils/cast-array';
 
-type FeatureInit = (signal: AbortSignal) => Promisable<void>;
+type FeatureInit = () => void;
 
 interface FeatureDescriptor {
   id: string;
@@ -53,24 +51,23 @@ function add(descriptor: FeatureDescriptor) {
 }
 
 async function init() {
-  const featureController = new AbortController();
   for (const feature of registry) {
-    await initializeFeature(feature, featureController.signal);
+    await initializeFeature(feature);
   }
 }
 
-async function initializeFeature(feature: FeatureDescriptor, signal: AbortSignal) {
+async function initializeFeature(feature: FeatureDescriptor) {
   let result = true;
   if (feature.init) {
     features.current = feature.id;
-    await asyncForEach(castArray(feature.init), async init => {
+    for (const init of castArray(feature.init)) {
       try {
-        await init(signal);
+        init();
       } catch (error) {
         log.error(feature.id, error);
         result = false;
       }
-    });
+    }
     features.current = undefined;
   }
   if (result) {

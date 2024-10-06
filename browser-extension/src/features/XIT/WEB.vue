@@ -1,12 +1,12 @@
 <script lang="ts">
 import xit from '@src/features/XIT/xit-registry';
 import { castArray } from '@src/utils/cast-array';
-import { _$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { changeValue } from '@src/util';
-import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import features from '@src/feature-registry';
 import WEB from '@src/features/XIT/WEB.vue';
+import { $, $$ } from '@src/utils/select-dom';
+import { subscribe } from '@src/utils/subscribe-async-generator';
 
 xit.add({
   command: 'WEB',
@@ -55,8 +55,8 @@ shortcut(['PLANNER', 'PLAN', 'PRUN PLANNER'], 'GOOGLE SHEETS', parameters => {
 
 shortcut('MAP', "Taiyi's Map", () => 'https://universemap.duckdns.org/');
 
-function onSelectorReady(selector: HTMLDivElement) {
-  const input = _$(PrunCss.PanelSelector.input, selector) as HTMLInputElement;
+async function onSelectorReady(selector: HTMLElement) {
+  const input: HTMLInputElement = await $(selector, PrunCss.PanelSelector.input);
   const form = input.form!;
   form.addEventListener('submit', ev => {
     const parts = input.value.split(' ');
@@ -97,7 +97,7 @@ function prunAtob(input: string) {
 }
 
 function init() {
-  observeReadyElementsByClassName(PrunCss.Tile.selector, onSelectorReady);
+  subscribe($$(document, PrunCss.Tile.selector), onSelectorReady);
 }
 
 features.add({

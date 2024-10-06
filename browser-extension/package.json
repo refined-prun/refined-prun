@@ -30,7 +30,6 @@
     "onetime": "^7.0.0",
     "pinia": "^2.2.1",
     "request-animation-frames": "^1.0.0",
-    "select-dom": "^9.0.0",
     "socket.io-parser": "^4.2.4",
     "type-fest": "^4.21.0",
     "typed-query-selector": "^2.11.2",

@@ -2,12 +2,12 @@ import { setSettings } from '@src/util';
 import features from '@src/feature-registry';
 import system from '@src/system';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
-import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import IconMarker from './IconMarker.vue';
 import { computed, reactive, ref, watch } from 'vue';
+import { $, $$ } from '@src/utils/select-dom';
+import { subscribe } from '@src/utils/subscribe-async-generator';
 
 export async function init() {
   if (companyStore.value?.code === 'KCB') {
@@ -15,29 +15,28 @@ export async function init() {
   }
   const result = await system.storage.local.get('PMMG-Markers');
   result['PMMG-Markers'] = result['PMMG-Markers'] ?? {};
-  observeReadyElementsByClassName(PrunCss.StoreView.container, container => {
-    const invNameElem = _$(PrunCss.Link.link, container);
-    const invName = invNameElem?.textContent;
+  subscribe($$(document, PrunCss.StoreView.container), async container => {
+    const invNameElem = await $(container, PrunCss.Link.link);
+    const invName = invNameElem.textContent;
     if (!invName) {
       return;
     }
 
-    const mats = _$$(PrunCss.GridItemView.image, container);
-    for (const mat of mats) {
+    for (const mat of $$(container, PrunCss.GridItemView.image)) {
       if (mat.children[1]) {
         continue;
       }
 
-      constructIcon(mat, invName, result);
+      void constructIcon(mat, invName, result);
     }
   });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function constructIcon(mat: HTMLElement, invName: string, storedData: any) {
+async function constructIcon(mat: HTMLElement, invName: string, storedData: any) {
   const markers = storedData['PMMG-Markers'];
-  const matTickerElem = _$(PrunCss.ColoredIcon.label, mat);
-  const ticker = matTickerElem?.textContent;
+  const matTickerElem = await $(mat, PrunCss.ColoredIcon.label);
+  const ticker = matTickerElem.textContent;
   if (!ticker) {
     return;
   }

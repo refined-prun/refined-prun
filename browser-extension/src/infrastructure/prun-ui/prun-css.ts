@@ -1,5 +1,6 @@
 import { CssClasses } from '@src/infrastructure/prun-ui/prun-css-types';
 import oneMutation from 'one-mutation';
+import { registerClassName } from '@src/utils/select-dom';
 
 // @ts-expect-error This object will be loaded via function below
 const PrunCss: CssClasses = {};
@@ -29,7 +30,7 @@ export async function parsePrunCss() {
       }
       const matches = selector.match(/[\w-]+__[\w-]+___[\w-]+/g);
       for (const match of matches ?? []) {
-        classSet.add(match);
+        classSet.add(match.replace('.', ''));
       }
     }
   }
@@ -39,7 +40,7 @@ export async function parsePrunCss() {
   const result = {};
   for (const cssClass of classes) {
     const camelize = (s: string) => s.replace(/-./g, x => x[1].toUpperCase());
-    const parts = cssClass.replaceAll('.', '').replace('__', '.').replace('___', '.').split('.');
+    const parts = cssClass.replace('__', '.').replace('___', '.').split('.');
     const parent = camelize(parts[0]);
     if (parent === '') {
       continue;
@@ -53,7 +54,8 @@ export async function parsePrunCss() {
     if (parentObject[child] !== undefined) {
       continue;
     }
-    parentObject[child] = cssClass.replace('.', '');
+    parentObject[child] = cssClass;
+    registerClassName(cssClass);
   }
   Object.assign(PrunCss, result);
 }

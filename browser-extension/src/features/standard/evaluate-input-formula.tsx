@@ -1,18 +1,16 @@
 import { changeValue } from '@src/util';
 import features from '@src/feature-registry';
 import tiles from '@src/infrastructure/prun-ui/tiles';
-import { observeReadyElementsByTagName } from '@src/utils/mutation-observer';
 import Mexp from 'math-expression-evaluator';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import { subscribe } from '@src/utils/subscribe-async-generator';
+import { $$ } from '@src/utils/select-dom';
 
 const mexp = new Mexp();
 
 function onTileReady(tile: PrunTile) {
-  observeReadyElementsByTagName('input', {
-    baseElement: tile.frame,
-    callback: input => {
-      input.addEventListener('keyup', e => onKeyUp(input, e));
-    },
+  subscribe($$(tile.frame, 'input'), input => {
+    input.addEventListener('keyup', e => onKeyUp(input, e));
   });
 }
 

@@ -1,22 +1,22 @@
 import {
+  changeSelectValue,
+  changeValue,
+  createTextSpan,
+  getBuffers,
+  getLocalStoragePromise,
   showSuccessDialog,
   sleep,
-  changeValue,
-  changeSelectValue,
-  getBuffers,
-  createTextSpan,
-  getLocalStoragePromise,
 } from '@src/util';
 import { Style } from '@src/Style';
 import { Selector } from '@src/Selector';
 import { Stations } from '@src/GameProperties';
 import { validateAction } from './Validate';
 import { parseActionPackage } from './Parse';
-import { needsConfiguration, createConfigureUI } from './Configure';
-import { _$, _$$ } from '@src/utils/get-element-by-class-name';
+import { createConfigureUI, needsConfiguration } from './Configure';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { starsStore } from '@src/infrastructure/prun-api/data/stars';
+import { _$, _$$ } from '@src/utils/select-dom';
 
 export async function createExecuteScreen(tile, packageName) {
   const title = document.createElement('h2');
@@ -244,7 +244,7 @@ async function executeAction(
       break;
     }
     case 'MTRA': {
-      button = _$(PrunCss.Button.disabled, buffer) || _$(PrunCss.Button.primary, buffer);
+      button = _$(buffer, PrunCss.Button.disabled) || _$(buffer, PrunCss.Button.primary);
       buttonOffset = -11;
       break;
     }
@@ -397,7 +397,7 @@ async function executeAction(
       });
 
       // Make the quantity change
-      const changeButton = _$(PrunCss.Button.darkInline, buffer) as HTMLButtonElement; // Change button
+      const changeButton = _$(buffer, PrunCss.Button.darkInline) as HTMLButtonElement; // Change button
       const allInputs = buffer.querySelectorAll('input'); // All the inputs on buffer, next find the "amount" input
       if (!allInputs[1] || !changeButton) {
         undoButtonMove(button, resetStyles, executeControls);
@@ -489,7 +489,7 @@ async function executeAction(
         }
       });
     } else if (action.type == 'mtraMatSelect') {
-      const matOptions = _$$(PrunCss.MaterialSelector.suggestionEntry, buffer); // MAT options in dropdown
+      const matOptions = _$$(buffer, PrunCss.MaterialSelector.suggestionEntry); // MAT options in dropdown
       let matFound = false;
       (Array.from(matOptions) as HTMLElement[]).forEach(matOption => {
         const tickerElem = matOption.firstChild;

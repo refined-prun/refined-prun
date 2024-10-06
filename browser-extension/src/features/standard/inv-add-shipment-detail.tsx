@@ -1,42 +1,35 @@
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { _$ } from '@src/utils/get-element-by-class-name';
 import { refAttributeValue } from '@src/utils/reactive-dom';
 import { computed, reactive } from 'vue';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ColoredIconDetail from '@src/components/ColoredIconDetail.vue';
-import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
+import { $, $$ } from '@src/utils/select-dom';
+import { subscribe } from '@src/utils/subscribe-async-generator';
 
 async function onTileReady(tile: PrunTile) {
-  observeReadyElementsByClassName(PrunCss.ColoredIcon.container, {
-    baseElement: tile.frame,
-    callback: element => {
-      const container = _$(PrunCss.ColoredIcon.labelContainer, element);
-      if (!container) {
-        return;
+  subscribe($$(tile.frame, PrunCss.ColoredIcon.container), async element => {
+    const container = await $(element, PrunCss.ColoredIcon.labelContainer);
+    const attribute = refAttributeValue(element, 'title');
+    const detail = computed(() => {
+      const regex = /#([a-zA-Z0-9]+)/;
+      const match = attribute.value?.match(regex);
+
+      if (!match) {
+        return undefined;
       }
 
-      const attribute = refAttributeValue(element, 'title');
-      const detail = computed(() => {
-        const regex = /#([a-zA-Z0-9]+)/;
-        const match = attribute.value?.match(regex);
-
-        if (!match) {
-          return undefined;
-        }
-
-        const shipmentId = match[1];
-        return contractsStore.getDestinationByShipmentId(shipmentId);
-      });
-      createFragmentApp(
-        ColoredIconDetail,
-        reactive({
-          detail,
-        }),
-      ).appendTo(container);
-    },
+      const shipmentId = match[1];
+      return contractsStore.getDestinationByShipmentId(shipmentId);
+    });
+    createFragmentApp(
+      ColoredIconDetail,
+      reactive({
+        detail,
+      }),
+    ).appendTo(container);
   });
 }
 

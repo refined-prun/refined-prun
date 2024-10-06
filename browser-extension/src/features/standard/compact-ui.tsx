@@ -1,15 +1,9 @@
 import { Style, WithStyles } from '@src/Style';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
-import { _$, _$$ } from '@src/utils/get-element-by-class-name';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { refAnimationFrame, refValue } from '@src/utils/reactive-dom';
 import { computed } from 'vue';
-import descendantPresent from '@src/utils/descendant-present';
-import {
-  observeReadyElementsByClassName,
-  observeReadyElementsByTagName,
-} from '@src/utils/mutation-observer';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { exchangeStore } from '@src/infrastructure/prun-api/data/exchanges';
@@ -17,23 +11,25 @@ import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data
 import { userData } from '@src/store/user-data';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
+import { $, $$, _$$ } from '@src/utils/select-dom';
+import { subscribe } from '@src/utils/subscribe-async-generator';
 
 function onBBLTileReady(tile: PrunTile) {
-  clearBuildingLists(tile.frame);
+  void clearBuildingLists(tile.frame);
 }
 
-export function clearBuildingLists(tile: HTMLDivElement) {
+async function clearBuildingLists(tile: HTMLDivElement) {
   if (!tile.isConnected) {
     return;
   }
   setTimeout(() => clearBuildingLists(tile), 1000);
   const tag = 'rp-compact-ui';
-  const nameElem = _$(PrunCss.SectionList.container, tile);
-  if (!nameElem || !nameElem.textContent) {
+  const nameElem = await $(tile, PrunCss.SectionList.container);
+  if (!nameElem.textContent) {
     return;
   }
 
-  for (const row of _$$(PrunCss.SectionList.divider, tile) as HTMLElement[]) {
+  for (const row of $$(tile, PrunCss.SectionList.divider)) {
     if (row.childNodes.length >= 2) {
       continue;
     }
@@ -195,24 +191,18 @@ export function showElement(element: HTMLElement, tag: string) {
 }
 
 function onCXOSTileReady(tile: PrunTile) {
-  observeReadyElementsByClassName(PrunCss.Link.link, {
-    baseElement: tile.frame,
-    callback: link => {
-      const exchange = exchangeStore.getByName(link.textContent);
-      const naturalId = getEntityNaturalIdFromAddress(exchange?.address);
-      if (naturalId) {
-        link.textContent = naturalId;
-      }
-    },
+  subscribe($$(tile.frame, PrunCss.Link.link), link => {
+    const exchange = exchangeStore.getByName(link.textContent);
+    const naturalId = getEntityNaturalIdFromAddress(exchange?.address);
+    if (naturalId) {
+      link.textContent = naturalId;
+    }
   });
 
-  observeReadyElementsByTagName('th', {
-    baseElement: tile.frame,
-    callback: header => {
-      if (header.textContent == 'Exchange') {
-        header.textContent = 'Exc.';
-      }
-    },
+  subscribe($$(tile.frame, 'th'), header => {
+    if (header.textContent == 'Exchange') {
+      header.textContent = 'Exc.';
+    }
   });
 }
 
@@ -222,18 +212,16 @@ async function onBSTileReady(tile: PrunTile) {
     return;
   }
 
-  await descendantPresent(tile.frame, PrunCss.Site.container);
+  await $(tile.frame, PrunCss.Site.container);
 
   processBSAreaProgressBar(tile);
 
-  observeReadyElementsByTagName('th', {
-    baseElement: tile.frame,
-    callback: x => (x.innerText = x.innerText.replace('Current Workforce', 'Current')),
+  subscribe($$(tile.frame, 'th'), header => {
+    header.innerText = header.innerText.replace('Current Workforce', 'Current');
   });
 
-  observeReadyElementsByTagName('tr', {
-    baseElement: tile.frame,
-    callback: x => onWorkforceTableRowReady(x, tile.parameter),
+  subscribe($$(tile.frame, 'tr'), row => {
+    onWorkforceTableRowReady(row, tile.parameter);
   });
 }
 
@@ -267,7 +255,7 @@ function onWorkforceTableRowReady(row: HTMLTableRowElement, siteId: string | und
 }
 
 function processBSAreaProgressBar(tile: PrunTile) {
-  const elements = _$$(PrunCss.FormComponent.containerPassive, tile.frame) as HTMLElement[];
+  const elements = _$$(tile.frame, PrunCss.FormComponent.containerPassive);
   if (elements.length < 2) {
     return;
   }

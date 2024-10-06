@@ -2,8 +2,6 @@ import './xit-commands.css';
 import features from '@src/feature-registry';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import descendantPresent from '@src/utils/descendant-present';
-import { _$ } from '@src/utils/get-element-by-class-name';
 import xit from '@src/features/XIT/xit-registry';
 import LegacyXITAdapter from '@src/features/XIT/LegacyXITAdapter.vue';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
@@ -11,10 +9,11 @@ import ContextControls from '@src/components/ContextControls.vue';
 
 import { tileStatePlugin } from '@src/store/user-data-tiles';
 import { startMeasure, stopMeasure } from '@src/utils/performance-measure';
+import { $ } from '@src/utils/select-dom';
 
 async function onTileReady(tile: PrunTile) {
   const frame = tile.frame;
-  const scrollView = await descendantPresent(frame, PrunCss.ScrollView.view);
+  const scrollView = await $(frame, PrunCss.ScrollView.view);
   // XIT command produces a tile with full-size green screen as its content.
   // Custom XIT tiles are just mounted inside this green screen.
   const container = scrollView.children[0] as HTMLDivElement;
@@ -55,13 +54,13 @@ async function onTileReady(tile: PrunTile) {
     return;
   }
 
-  _$(PrunCss.TileFrame.title, frame)!.textContent =
+  (await $(frame, PrunCss.TileFrame.title)).textContent =
     typeof xitCommand.name === 'string' ? xitCommand.name : xitCommand.name(parameters);
 
   if (xitCommand.contextItems) {
     const items = xitCommand.contextItems(parameters);
     if (items.length > 0) {
-      const header = _$(PrunCss.TileFrame.header, frame)!;
+      const header = await $(frame, PrunCss.TileFrame.header);
       createFragmentApp(ContextControls, { items }).after(header);
     }
   }

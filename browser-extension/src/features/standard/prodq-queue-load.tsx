@@ -3,23 +3,21 @@ import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { sumBy } from '@src/utils/sum-by';
 import { percent2 } from '@src/utils/format';
-import descendantPresent from '@src/utils/descendant-present';
-import { observeReadyElementsByTagName } from '@src/utils/mutation-observer';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { computed } from 'vue';
 import { createReactiveDiv } from '@src/utils/reactive-element';
 import { keepLast } from '@src/utils/keep-last';
+import { $, $$ } from '@src/utils/select-dom';
+import { subscribe } from '@src/utils/subscribe-async-generator';
 
 async function onTileReady(tile: PrunTile) {
-  if (!tile.parameter) {
+  const parameter = tile.parameter;
+  if (!parameter) {
     return;
   }
-  const table = await descendantPresent(tile.frame, PrunCss.ProductionQueue.table);
-  observeReadyElementsByTagName('tr', {
-    baseElement: table,
-    callback: x => onRowReady(x, tile.parameter!),
-  });
+  const table = await $(tile.frame, PrunCss.ProductionQueue.table);
+  subscribe($$(table, 'tr'), x => onRowReady(x, parameter));
 }
 
 function onRowReady(row: HTMLTableRowElement, lineId: string) {

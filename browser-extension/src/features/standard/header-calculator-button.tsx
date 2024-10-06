@@ -1,16 +1,16 @@
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import descendantPresent from '@src/utils/descendant-present';
 import system from '@src/system';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { $ } from '@src/utils/select-dom';
 
 async function onTileReady(tile: PrunTile) {
   if (!tile.firstActivation) {
     return;
   }
-  const tileControls = await descendantPresent(tile.frame, PrunCss.TileFrame.controls);
+  const tileControls = await $(tile.frame, PrunCss.TileFrame.controls);
   const path = system.runtime.getURL('images/calculator-button.svg');
   createFragmentApp(() => (
     <div

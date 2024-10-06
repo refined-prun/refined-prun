@@ -1,14 +1,14 @@
 import { changeValue } from '@src/util';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
-import { observeReadyElementsByClassName } from '@src/utils/mutation-observer';
-import { _$ } from '@src/utils/get-element-by-class-name';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import { $, $$ } from '@src/utils/select-dom';
+import { subscribe } from '@src/utils/subscribe-async-generator';
 
 const correctableCommands = new Set(['CXM', 'CXOB', 'CXP', 'CXPC', 'CXPO', 'MAT']);
 
-export function onSelectorReady(selector: HTMLDivElement) {
-  const input = _$(PrunCss.PanelSelector.input, selector) as HTMLInputElement;
+async function onSelectorReady(selector: HTMLElement) {
+  const input: HTMLInputElement = await $(selector, PrunCss.PanelSelector.input);
   const form = input.form!;
   form.addEventListener('submit', ev => {
     const commandParts = input.value.split(' ');
@@ -34,7 +34,7 @@ export function onSelectorReady(selector: HTMLDivElement) {
 }
 
 export function init() {
-  observeReadyElementsByClassName(PrunCss.Tile.selector, onSelectorReady);
+  subscribe($$(document, PrunCss.Tile.selector), onSelectorReady);
 }
 
 void features.add({
