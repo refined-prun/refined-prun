@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { computed, PropType, useCssModule } from 'vue';
-import ColoredIcon from '@src/components/ColoredIcon.vue';
+import ColoredIcon, { ColoredIconSize } from '@src/components/ColoredIcon.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
@@ -14,7 +14,7 @@ const props = defineProps({
     required: true,
   },
   size: {
-    type: String as PropType<'large' | 'medium' | 'small'>,
+    type: String as PropType<ColoredIconSize>,
     default: 'large',
   },
   warning: Boolean,

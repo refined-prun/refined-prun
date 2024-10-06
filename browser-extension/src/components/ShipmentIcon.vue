@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ColoredIcon from '@src/components/ColoredIcon.vue';
+import ColoredIcon, { ColoredIconSize } from '@src/components/ColoredIcon.vue';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { computed, PropType } from 'vue';
@@ -15,7 +15,7 @@ const props = defineProps({
     default: undefined,
   },
   size: {
-    type: String as PropType<'large' | 'medium' | 'small'>,
+    type: String as PropType<ColoredIconSize>,
     default: 'large',
   },
 });
