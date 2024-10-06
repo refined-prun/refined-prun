@@ -29,7 +29,7 @@ export const initialUserData = deepFreeze({
       ['FIN', 'FIN'],
       ['FLT', 'FLT'],
       ['INV', 'INV'],
-      ['MAP', 'MAP'],
+      ['MAP', 'MU'],
       ['PROD', 'PROD'],
       ['LEAD', 'LEAD'],
       ['CMDS', 'CMDS'],
