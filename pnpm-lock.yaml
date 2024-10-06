@@ -105,8 +105,8 @@ importers:
         specifier: ^2.0.5
         version: 2.0.5
       one-mutation:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^3.0.1
+        version: 3.0.1
       onetime:
         specifier: ^7.0.0
         version: 7.0.0
@@ -1695,8 +1695,8 @@ packages:
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
 
-  one-mutation@3.0.0:
-    resolution: {integrity: sha512-XQwKPm088gyoK/IGzud0j/c9gPc+slXWZI7Tpao/N4e7zYCJVlUYk4sfUvleyO66e0oj1ozlGoDa9h0RCqluvw==}
+  one-mutation@3.0.1:
+    resolution: {integrity: sha512-CrPfahxx3y6RBJ/mEJ+SvualP9PZPHdP9uwUKQaneET67RE+2KE+1mFwFtOYhVCJ2WeivY+zFhBW2N6ELdAOKg==}
     engines: {node: '>=18'}
 
   onetime@5.1.2:
@@ -3851,7 +3851,7 @@ snapshots:
       wrappy: 1.0.2
     optional: true
 
-  one-mutation@3.0.0: {}
+  one-mutation@3.0.1: {}
 
   onetime@5.1.2:
     dependencies:

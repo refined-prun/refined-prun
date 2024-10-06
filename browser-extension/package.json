@@ -26,7 +26,7 @@
     "dayjs": "^1.11.13",
     "engine.io-parser": "^5.2.3",
     "math-expression-evaluator": "^2.0.5",
-    "one-mutation": "^3.0.0",
+    "one-mutation": "^3.0.1",
     "onetime": "^7.0.0",
     "pinia": "^2.2.1",
     "request-animation-frames": "^1.0.0",
