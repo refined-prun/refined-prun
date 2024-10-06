@@ -7,9 +7,6 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { $ } from '@src/utils/select-dom';
 
 async function onTileReady(tile: PrunTile) {
-  if (!tile.firstActivation) {
-    return;
-  }
   const tileControls = await $(tile.frame, PrunCss.TileFrame.controls);
   const path = system.runtime.getURL('images/calculator-button.svg');
   createFragmentApp(() => (

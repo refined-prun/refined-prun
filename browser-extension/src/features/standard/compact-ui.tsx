@@ -11,25 +11,26 @@ import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data
 import { userData } from '@src/store/user-data';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
-import { $, $$, _$$ } from '@src/utils/select-dom';
+import { $$, _$$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 
 function onBBLTileReady(tile: PrunTile) {
-  void clearBuildingLists(tile.frame);
+  subscribe($$(tile.anchor, PrunCss.SectionList.container), nameElem =>
+    clearBuildingLists(tile.anchor, nameElem),
+  );
 }
 
-async function clearBuildingLists(tile: HTMLDivElement) {
-  if (!tile.isConnected) {
+function clearBuildingLists(anchor: HTMLElement, nameElem: HTMLElement) {
+  if (!anchor.isConnected) {
     return;
   }
-  setTimeout(() => clearBuildingLists(tile), 1000);
+  setTimeout(() => clearBuildingLists(anchor, nameElem), 1000);
   const tag = 'rp-compact-ui';
-  const nameElem = await $(tile, PrunCss.SectionList.container);
   if (!nameElem.textContent) {
     return;
   }
 
-  for (const row of $$(tile, PrunCss.SectionList.divider)) {
+  for (const row of $$(anchor, PrunCss.SectionList.divider)) {
     if (row.childNodes.length >= 2) {
       continue;
     }
@@ -191,7 +192,7 @@ export function showElement(element: HTMLElement, tag: string) {
 }
 
 function onCXOSTileReady(tile: PrunTile) {
-  subscribe($$(tile.frame, PrunCss.Link.link), link => {
+  subscribe($$(tile.anchor, PrunCss.Link.link), link => {
     const exchange = exchangeStore.getByName(link.textContent);
     const naturalId = getEntityNaturalIdFromAddress(exchange?.address);
     if (naturalId) {
@@ -199,7 +200,7 @@ function onCXOSTileReady(tile: PrunTile) {
     }
   });
 
-  subscribe($$(tile.frame, 'th'), header => {
+  subscribe($$(tile.anchor, 'th'), header => {
     if (header.textContent == 'Exchange') {
       header.textContent = 'Exc.';
     }
@@ -212,16 +213,16 @@ async function onBSTileReady(tile: PrunTile) {
     return;
   }
 
-  await $(tile.frame, PrunCss.Site.container);
+  subscribe($$(tile.anchor, PrunCss.Site.container), () => {
+    processBSAreaProgressBar(tile);
 
-  processBSAreaProgressBar(tile);
+    subscribe($$(tile.anchor, 'th'), header => {
+      header.innerText = header.innerText.replace('Current Workforce', 'Current');
+    });
 
-  subscribe($$(tile.frame, 'th'), header => {
-    header.innerText = header.innerText.replace('Current Workforce', 'Current');
-  });
-
-  subscribe($$(tile.frame, 'tr'), row => {
-    onWorkforceTableRowReady(row, tile.parameter);
+    subscribe($$(tile.anchor, 'tr'), row => {
+      onWorkforceTableRowReady(row, tile.parameter);
+    });
   });
 }
 
@@ -255,7 +256,7 @@ function onWorkforceTableRowReady(row: HTMLTableRowElement, siteId: string | und
 }
 
 function processBSAreaProgressBar(tile: PrunTile) {
-  const elements = _$$(tile.frame, PrunCss.FormComponent.containerPassive);
+  const elements = _$$(tile.anchor, PrunCss.FormComponent.containerPassive);
   if (elements.length < 2) {
     return;
   }

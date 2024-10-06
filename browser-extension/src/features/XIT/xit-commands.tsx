@@ -9,11 +9,16 @@ import ContextControls from '@src/components/ContextControls.vue';
 
 import { tileStatePlugin } from '@src/store/user-data-tiles';
 import { startMeasure, stopMeasure } from '@src/utils/performance-measure';
-import { $ } from '@src/utils/select-dom';
+import { $$, _$ } from '@src/utils/select-dom';
+import { subscribe } from '@src/utils/subscribe-async-generator';
 
-async function onTileReady(tile: PrunTile) {
-  const frame = tile.frame;
-  const scrollView = await $(frame, PrunCss.ScrollView.view);
+function onTileReady(tile: PrunTile) {
+  subscribe($$(tile.anchor, PrunCss.ScrollView.view), scrollView =>
+    onScrollViewReady(tile, scrollView),
+  );
+}
+
+function onScrollViewReady(tile: PrunTile, scrollView: HTMLElement) {
   // XIT command produces a tile with full-size green screen as its content.
   // Custom XIT tiles are just mounted inside this green screen.
   const container = scrollView.children[0] as HTMLDivElement;
@@ -54,13 +59,13 @@ async function onTileReady(tile: PrunTile) {
     return;
   }
 
-  (await $(frame, PrunCss.TileFrame.title)).textContent =
+  _$(tile.frame, PrunCss.TileFrame.title)!.textContent =
     typeof xitCommand.name === 'string' ? xitCommand.name : xitCommand.name(parameters);
 
   if (xitCommand.contextItems) {
     const items = xitCommand.contextItems(parameters);
     if (items.length > 0) {
-      const header = await $(frame, PrunCss.TileFrame.header);
+      const header = _$(tile.frame, PrunCss.TileFrame.header)!;
       createFragmentApp(ContextControls, { items }).after(header);
     }
   }

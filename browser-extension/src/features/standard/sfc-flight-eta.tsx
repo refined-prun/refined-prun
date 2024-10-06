@@ -14,7 +14,7 @@ import { $$ } from '@src/utils/select-dom';
 
 function onTileReady(tile: PrunTile) {
   const ship = computed(() => shipsStore.getByRegistration(tile.parameter));
-  subscribe($$(tile.frame, PrunCss.MissionPlan.table), x => onTableReady(x, ship));
+  subscribe($$(tile.anchor, PrunCss.MissionPlan.table), x => onTableReady(x, ship));
 }
 
 function onTableReady(table: HTMLElement, ship: Ref<PrunApi.Ship | undefined>) {

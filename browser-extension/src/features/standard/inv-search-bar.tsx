@@ -1,7 +1,8 @@
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { $ } from '@src/utils/select-dom';
+import { $$ } from '@src/utils/select-dom';
+import { subscribe } from '@src/utils/subscribe-async-generator';
 
 async function onTileReady(tile: PrunTile) {
   // Only add search bar to the main INV tile
@@ -9,30 +10,31 @@ async function onTileReady(tile: PrunTile) {
     return;
   }
 
-  const inventoryFilters = await $(document, PrunCss.InventoriesListContainer.filter);
-  const searchBarDiv = document.createElement('div');
-  inventoryFilters.after(searchBarDiv);
+  subscribe($$(tile.anchor, PrunCss.InventoriesListContainer.filter), inventoryFilters => {
+    const searchBarDiv = document.createElement('div');
+    inventoryFilters.after(searchBarDiv);
 
-  // Create search bar
-  const searchBar = document.createElement('input');
-  searchBar.classList.add('input-text');
-  searchBarDiv.appendChild(searchBar);
-  searchBar.style.width = '200px';
-  searchBar.placeholder = 'Enter location';
+    // Create search bar
+    const searchBar = document.createElement('input');
+    searchBar.classList.add('input-text');
+    searchBarDiv.appendChild(searchBar);
+    searchBar.style.width = '200px';
+    searchBar.placeholder = 'Enter location';
 
-  // Get table of inventories
-  const tableBody = tile.frame.querySelector('tbody')!;
+    // Get table of inventories
+    const tableBody = tile.anchor.querySelector('tbody')!;
 
-  // Add change listener to search bar to filter list
-  searchBar.addEventListener('input', () => {
-    for (let i = 0; i < tableBody.children.length; i++) {
-      const row = tableBody.children[i] as HTMLElement;
-      if (filterRow(row, searchBar.value)) {
-        row.style.display = 'table-row';
-      } else {
-        row.style.display = 'none';
+    // Add change listener to search bar to filter list
+    searchBar.addEventListener('input', () => {
+      for (let i = 0; i < tableBody.children.length; i++) {
+        const row = tableBody.children[i] as HTMLElement;
+        if (filterRow(row, searchBar.value)) {
+          row.style.display = 'table-row';
+        } else {
+          row.style.display = 'none';
+        }
       }
-    }
+    });
   });
 }
 

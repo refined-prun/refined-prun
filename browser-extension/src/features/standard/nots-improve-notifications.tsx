@@ -13,7 +13,7 @@ import { $, $$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.frame, PrunCss.AlertListItem.container), processNotification);
+  subscribe($$(tile.anchor, PrunCss.AlertListItem.container), processNotification);
 }
 
 async function processNotification(container: HTMLElement) {

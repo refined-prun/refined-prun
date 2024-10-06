@@ -6,30 +6,34 @@ import MinimizeRow from '@src/features/standard/minimize-headers/MinimizeRow.vue
 import { reactive, ref } from 'vue';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { $, $$, _$ } from '@src/utils/select-dom';
+import { subscribe } from '@src/utils/subscribe-async-generator';
+import { streamHtmlCollection } from '@src/utils/stream-html-collection';
 
 async function onTileReady(tile: PrunTile) {
   if (companyStore.value?.code === 'KCB') {
     return;
   }
-  const header = await $(tile.frame, PrunCss.FormComponent.containerPassive);
-  setHeaders(tile, true);
+  subscribe(streamHtmlCollection(tile.anchor, tile.anchor.children), async child => {
+    const header = await $(child, PrunCss.FormComponent.containerPassive);
+    setHeaders(tile, true);
 
-  const isMinimized = ref(true);
+    const isMinimized = ref(true);
 
-  createFragmentApp(
-    MinimizeRow,
-    reactive({
-      isMinimized,
-      onClick: () => {
-        isMinimized.value = !isMinimized.value;
-        setHeaders(tile, isMinimized.value);
-      },
-    }),
-  ).before(header);
+    createFragmentApp(
+      MinimizeRow,
+      reactive({
+        isMinimized,
+        onClick: () => {
+          isMinimized.value = !isMinimized.value;
+          setHeaders(tile, isMinimized.value);
+        },
+      }),
+    ).before(header);
+  });
 }
 
 function setHeaders(tile: PrunTile, isMinimized: boolean) {
-  for (const header of $$(tile.frame, PrunCss.FormComponent.containerPassive)) {
+  for (const header of $$(tile.anchor, PrunCss.FormComponent.containerPassive)) {
     const label = _$(header, PrunCss.FormComponent.label);
     if (label?.textContent === 'Minimize') {
       continue;

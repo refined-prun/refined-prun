@@ -5,14 +5,11 @@ import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContextControlsItem from '@src/components/ContextControlsItem.vue';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
-import { $ } from '@src/utils/select-dom';
+import { $, $$ } from '@src/utils/select-dom';
+import { subscribe } from '@src/utils/subscribe-async-generator';
 
 async function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {
-    return;
-  }
-
-  if (!tile.firstActivation) {
     return;
   }
 

@@ -17,7 +17,9 @@ function onTileReady(tile: PrunTile) {
     return;
   }
 
-  subscribe($$(tile.frame, PrunCss.OrderSlot.container), x => onOrderSlotReady(x, tile.parameter!));
+  subscribe($$(tile.anchor, PrunCss.OrderSlot.container), x =>
+    onOrderSlotReady(x, tile.parameter!),
+  );
 }
 
 async function onOrderSlotReady(slot: HTMLElement, siteId: string) {

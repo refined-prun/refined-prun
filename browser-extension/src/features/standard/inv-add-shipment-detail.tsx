@@ -10,9 +10,9 @@ import { $, $$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 
 async function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.frame, PrunCss.ColoredIcon.container), async element => {
-    const container = await $(element, PrunCss.ColoredIcon.labelContainer);
-    const attribute = refAttributeValue(element, 'title');
+  subscribe($$(tile.anchor, PrunCss.ColoredIcon.container), async container => {
+    const label = await $(container, PrunCss.ColoredIcon.labelContainer);
+    const attribute = refAttributeValue(container, 'title');
     const detail = computed(() => {
       const regex = /#([a-zA-Z0-9]+)/;
       const match = attribute.value?.match(regex);
@@ -29,7 +29,7 @@ async function onTileReady(tile: PrunTile) {
       reactive({
         detail,
       }),
-    ).appendTo(container);
+    ).appendTo(label);
   });
 }
 

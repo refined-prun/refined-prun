@@ -6,10 +6,6 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { $ } from '@src/utils/select-dom';
 
 async function onTileReady(tile: PrunTile) {
-  if (!tile.firstActivation) {
-    return;
-  }
-
   const splitControls = await $(tile.frame, PrunCss.TileControls.splitControls);
   createFragmentApp(() => (
     <div

@@ -21,12 +21,12 @@ import { $, $$ } from '@src/utils/select-dom';
 
 function cleanCOGCPEX(tile: PrunTile) {
   // Replace 'view details/vote' with 'vote'
-  subscribe($$(tile.frame, PrunCss.Button.darkInline), button => {
+  subscribe($$(tile.anchor, PrunCss.Button.darkInline), button => {
     button.textContent = 'vote';
   });
 
   // Remove redundant title parts
-  subscribe($$(tile.frame, PrunCss.Link.link), link => {
+  subscribe($$(tile.anchor, PrunCss.Link.link), link => {
     if (link.textContent) {
       link.textContent = link
         .textContent!.replace('Advertising Campaign: ', '')
@@ -37,7 +37,7 @@ function cleanCOGCPEX(tile: PrunTile) {
 
 function cleanFLT(tile: PrunTile) {
   // Cargo capacity labels
-  subscribe($$(tile.frame, PrunCss.ShipStore.store), div => {
+  subscribe($$(tile.anchor, PrunCss.ShipStore.store), div => {
     // div -> div
     const label = div.children[2];
     if (label) {
@@ -48,14 +48,14 @@ function cleanFLT(tile: PrunTile) {
   });
 
   // Shorten planet names
-  subscribe($$(tile.frame, PrunCss.Link.link), link => {
+  subscribe($$(tile.anchor, PrunCss.Link.link), link => {
     if (link.textContent) {
       link.textContent = extractPlanetName(link.textContent);
     }
   });
 
   // Shorten flight status
-  subscribe($$(tile.frame, 'tr'), row => {
+  subscribe($$(tile.anchor, 'tr'), row => {
     const id = refPrunId(row);
     const ship = computed(() => shipsStore.getById(id.value));
     const flight = computed(() => flightsStore.getById(ship.value?.flightId));
@@ -127,14 +127,14 @@ function cleanINV(tile: PrunTile) {
   }
 
   // Shorten planet names
-  subscribe($$(tile.frame, PrunCss.Link.link), link => {
+  subscribe($$(tile.anchor, PrunCss.Link.link), link => {
     if (link.textContent) {
       link.textContent = extractPlanetName(link.textContent);
     }
   });
 
   // Shorten storage types
-  subscribe($$(tile.frame, 'tr'), row => {
+  subscribe($$(tile.anchor, 'tr'), row => {
     const id = refPrunId(row);
     const name = computed(() => {
       const storage = storagesStore.getById(id.value);
@@ -164,7 +164,7 @@ function cleanINV(tile: PrunTile) {
 }
 
 function cleanLM(tile: PrunTile) {
-  subscribe($$(tile.frame, PrunCss.CommodityAd.container), async container => {
+  subscribe($$(tile.anchor, PrunCss.CommodityAd.container), async container => {
     const text = await $(container, PrunCss.CommodityAd.text);
     const id = getPrunId(container);
     const ad = localAdsStore.getById(id);

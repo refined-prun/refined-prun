@@ -10,7 +10,7 @@ import { $, $$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.frame, PrunCss.CommodityAd.container), onContainerReady);
+  subscribe($$(tile.anchor, PrunCss.CommodityAd.container), onContainerReady);
 }
 
 async function onContainerReady(container: HTMLElement) {

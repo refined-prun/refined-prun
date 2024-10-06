@@ -9,7 +9,7 @@ import { $$ } from '@src/utils/select-dom';
 const mexp = new Mexp();
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.frame, 'input'), input => {
+  subscribe($$(tile.anchor, 'input'), input => {
     input.addEventListener('keyup', e => onKeyUp(input, e));
   });
 }

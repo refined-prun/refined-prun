@@ -12,8 +12,8 @@ import { subscribe } from '@src/utils/subscribe-async-generator';
 import { $$ } from '@src/utils/select-dom';
 
 async function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.frame, 'thead'), onTableHeadReady);
-  subscribe($$(tile.frame, 'tbody'), onTableBodyReady);
+  subscribe($$(tile.anchor, 'thead'), onTableHeadReady);
+  subscribe($$(tile.anchor, 'tbody'), onTableBodyReady);
 }
 
 function onTableHeadReady(thead: HTMLTableSectionElement) {

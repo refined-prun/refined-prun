@@ -12,7 +12,7 @@ import { subscribe } from '@src/utils/subscribe-async-generator';
 import { $$ } from '@src/utils/select-dom';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.frame, 'tr'), onRowReady);
+  subscribe($$(tile.anchor, 'tr'), onRowReady);
 }
 
 function onRowReady(row: HTMLTableRowElement) {

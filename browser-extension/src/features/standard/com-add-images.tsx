@@ -3,12 +3,13 @@ import tiles from '@src/infrastructure/prun-ui/tiles';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import { Fragment } from 'vue';
-import { $, $$ } from '@src/utils/select-dom';
+import { $$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 
 async function onTileReady(tile: PrunTile) {
-  const messages = await $(tile.frame, PrunCss.MessageList.messages);
-  subscribe($$(messages, PrunCss.Link.link), processLink);
+  subscribe($$(tile.anchor, PrunCss.MessageList.messages), messages => {
+    subscribe($$(messages, PrunCss.Link.link), processLink);
+  });
 }
 
 function processLink(element: HTMLElement) {

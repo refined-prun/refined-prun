@@ -1,11 +1,12 @@
 import getMapArray from '@src/utils/get-map-array';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { castArray } from '@src/utils/cast-array';
-import { observeChildListChanged } from '@src/utils/mutation-observer';
 import onetime from 'onetime';
 import observeDocumentMutations from '@src/utils/document-mutation-observer';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
+import onNodeDisconnected from '@src/utils/on-node-disconnected';
+import { _$ } from '@src/utils/select-dom';
 
 interface PrunTileObserver {
   (tile: PrunTile): void;
@@ -26,9 +27,7 @@ function reconciliate() {
     }
   }
 
-  const frameElements = document.getElementsByClassName(
-    PrunCss.TileFrame.frame,
-  ) as HTMLCollectionOf<HTMLDivElement>;
+  const frameElements = document.getElementsByClassName(PrunCss.TileFrame.frame);
   if (frameElements.length === activeTiles.length) {
     let sameTiles = true;
     for (let i = 0; i < frameElements.length; i++) {
@@ -42,7 +41,7 @@ function reconciliate() {
     }
   }
 
-  const newFrames: Set<HTMLDivElement> = new Set();
+  const newFrames: Set<Element> = new Set();
 
   for (let i = 0; i < frameElements.length; i++) {
     newFrames.add(frameElements[i]);
@@ -52,36 +51,31 @@ function reconciliate() {
   }
 
   for (const frame of newFrames) {
-    const anchor = frame.getElementsByClassName(PrunCss.TileFrame.anchor)[0];
-    if (anchor?.children.length === 0) {
+    const anchor = _$(frame, PrunCss.TileFrame.anchor);
+    if (!anchor) {
       continue;
     }
 
-    activateFrame(frame, anchor);
+    activateFrame(frame as HTMLDivElement, anchor as HTMLDivElement);
   }
 }
 
-function activateFrame(frame: HTMLDivElement, anchor: Element) {
+function activateFrame(frame: HTMLDivElement, anchor: HTMLDivElement) {
   const id = getPrunId(frame.parentElement!)!;
-  const commandElement = frame.getElementsByClassName(PrunCss.TileFrame.cmd)[0];
-  const fullCommand = commandElement.textContent!;
+  const commandElement = _$(frame, PrunCss.TileFrame.cmd);
+  const fullCommand = commandElement!.textContent!;
   const indexOfSpace = fullCommand.indexOf(' ');
   const tile: PrunTile = {
     id,
     frame,
+    anchor,
     fullCommand,
     command: (indexOfSpace > 0 ? fullCommand.slice(0, indexOfSpace) : fullCommand).toUpperCase(),
     parameter: indexOfSpace > 0 ? fullCommand.slice(indexOfSpace + 1) : undefined,
-    firstActivation: true,
   };
   frame.setAttribute('data-rp-command', tile.command);
   activateTile(tile);
-
-  observeChildListChanged(anchor, () => {
-    if (anchor.children.length === 0) {
-      deactivateTile(tile);
-    }
-  });
+  onNodeDisconnected(frame, () => deactivateTile(tile));
 }
 
 function activateTile(tile: PrunTile) {
@@ -96,7 +90,6 @@ function activateTile(tile: PrunTile) {
   for (const observer of anyCommandObservers) {
     observer(tile);
   }
-  tile.firstActivation = false;
 }
 
 function deactivateTile(tile: PrunTile) {

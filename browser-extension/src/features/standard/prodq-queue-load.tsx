@@ -8,7 +8,7 @@ import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { computed } from 'vue';
 import { createReactiveDiv } from '@src/utils/reactive-element';
 import { keepLast } from '@src/utils/keep-last';
-import { $, $$ } from '@src/utils/select-dom';
+import { $$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 
 async function onTileReady(tile: PrunTile) {
@@ -16,8 +16,9 @@ async function onTileReady(tile: PrunTile) {
   if (!parameter) {
     return;
   }
-  const table = await $(tile.frame, PrunCss.ProductionQueue.table);
-  subscribe($$(table, 'tr'), x => onRowReady(x, parameter));
+  subscribe($$(tile.anchor, PrunCss.ProductionQueue.table), table => {
+    subscribe($$(table, 'tr'), x => onRowReady(x, parameter));
+  });
 }
 
 function onRowReady(row: HTMLTableRowElement, lineId: string) {

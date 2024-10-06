@@ -12,7 +12,7 @@ import { $, $$, _$$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 
 function onLMTileReady(tile: PrunTile) {
-  subscribe($$(tile.frame, PrunCss.CommodityAd.container), onAdContainerReady);
+  subscribe($$(tile.anchor, PrunCss.CommodityAd.container), onAdContainerReady);
 }
 
 async function onAdContainerReady(container: HTMLElement) {
@@ -46,7 +46,7 @@ async function onAdContainerReady(container: HTMLElement) {
 }
 
 function onLMPTileReady(tile: PrunTile) {
-  subscribe($$(tile.frame, PrunCss.LocalMarketPost.form), onFormReady);
+  subscribe($$(tile.anchor, PrunCss.LocalMarketPost.form), onFormReady);
 }
 
 function onFormReady(form: HTMLElement) {
