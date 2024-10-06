@@ -2,7 +2,6 @@ import { Component } from 'vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { createFragmentApp, FragmentAppData } from '@src/utils/vue-fragment-app';
 import Overlay from '@src/components/Overlay.vue';
-import { dot } from '@src/utils/dot';
 import ActionConfirmationOverlay from '@src/components/ActionConfirmationOverlay.vue';
 
 export function showTileOverlay(
@@ -53,5 +52,5 @@ function findMountContainer(baseElementOrEvent: Element | Event) {
   const target = (baseElementOrEvent as any).target
     ? ((baseElementOrEvent as Event).target as Element)
     : (baseElementOrEvent as Element);
-  return target.closest(dot(PrunCss.TileFrame.anchor));
+  return target.closest(`.${PrunCss.TileFrame.anchor}`);
 }
