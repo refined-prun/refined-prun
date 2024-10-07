@@ -78,7 +78,7 @@ const style = computed(() => ({
 }
 
 .inline {
-  height: 12px;
+  height: 14px;
   width: 32px;
   font-size: 11px;
 }
