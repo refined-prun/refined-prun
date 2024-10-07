@@ -58,7 +58,7 @@ watchEffect(() => {
       </tbody>
       <tbody>
         <tr>
-          <td colSpan="{2}" class="{PrunCss.ComExOrderBookPanel.spread}">
+          <td colSpan="2" :class="[PrunCss.ComExOrderBookPanel.spread, $style.spread]">
             Spread: <span :style="{ color: '#eee' }">{{ spread }}</span>
           </td>
         </tr>
@@ -86,5 +86,9 @@ watchEffect(() => {
   height: 248px;
   vertical-align: top;
   scrollbar-width: none;
+}
+
+.spread {
+  text-align: center;
 }
 </style>
