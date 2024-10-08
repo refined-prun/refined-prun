@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { PropType, ref } from 'vue';
 import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
-import { RowData } from '@src/features/XIT/FIN/balance-section';
-import { formatAmount, formatChange } from '@src/features/XIT/FIN/utils';
-import RowExpandButton from '@src/features/XIT/FIN/RowExpandButton.vue';
+import { RowData } from '@src/features/XIT/FINBS/balance-section';
+import { formatAmount, formatChange } from '@src/features/XIT/FINBS/utils';
+import RowExpandButton from '@src/features/XIT/FINBS/RowExpandButton.vue';
 
 const props = defineProps({
   current: {

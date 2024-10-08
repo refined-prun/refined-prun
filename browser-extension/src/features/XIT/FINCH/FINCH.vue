@@ -1,6 +1,6 @@
 <script lang="ts">
 import xit from '@src/features/XIT/xit-registry.js';
-import FINCH from '@src/features/XIT/FIN/FINCH.vue';
+import FINCH from '@src/features/XIT/FINCH/FINCH.vue';
 
 xit.add({
   command: ['FINCH'],
@@ -12,9 +12,9 @@ xit.add({
 
 <script setup lang="ts">
 import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';
-import EquityHistoryChart from '@src/features/XIT/FIN/EquityHistoryChart.vue';
-import AssetPieChart from '@src/features/XIT/FIN/AssetPieChart.vue';
-import LocationsPieChart from '@src/features/XIT/FIN/LocationsPieChart.vue';
+import EquityHistoryChart from '@src/features/XIT/FINCH/EquityHistoryChart.vue';
+import AssetPieChart from '@src/features/XIT/FINCH/AssetPieChart.vue';
+import LocationsPieChart from '@src/features/XIT/FINCH/LocationsPieChart.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { useXitParameters } from '@src/hooks/useXitParameters';
 

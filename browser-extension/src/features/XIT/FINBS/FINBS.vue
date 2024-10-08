@@ -1,6 +1,6 @@
 <script lang="ts">
 import xit from '@src/features/XIT/xit-registry.js';
-import FINBS from '@src/features/XIT/FIN/FINBS.vue';
+import FINBS from '@src/features/XIT/FINBS/FINBS.vue';
 
 xit.add({
   command: ['FINBS'],
@@ -12,9 +12,9 @@ xit.add({
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import BalanceSheetSection from '@src/features/XIT/FIN/BalanceSheetSection.vue';
+import BalanceSheetSection from '@src/features/XIT/FINBS/BalanceSheetSection.vue';
 import * as summary from '@src/core/balance/balance-sheet-summary';
-import { SectionData } from '@src/features/XIT/FIN/balance-section';
+import { SectionData } from '@src/features/XIT/FINBS/balance-section';
 import { liveBalanceSheet } from '@src/core/balance/balance-sheet-live';
 import { ddmmyyyy } from '@src/utils/format';
 import { lastBalance, previousBalance } from '@src/store/user-data-balance';
