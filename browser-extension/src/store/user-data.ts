@@ -33,7 +33,7 @@ export const initialUserData = deepFreeze({
       ['PROD', 'PROD'],
       ['LEAD', 'LEAD'],
       ['CMDS', 'CMDS'],
-      ['SET', 'XIT SETTINGS'],
+      ['SET', 'XIT SET'],
       ['HELP', 'XIT HELP'],
     ],
   },
