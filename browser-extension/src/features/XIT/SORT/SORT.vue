@@ -63,8 +63,8 @@ function deleteSortingMode(ev: Event, sorting: UserData.SortingMode) {
           <td>{{ mode.label }}</td>
           <td>{{ mode.categories.map(x => x.name).join(', ') }}</td>
           <td>
-            <PrunButton primary @click="ev => editSortingMode(ev, mode)">edit</PrunButton>
-            <PrunButton danger @click="ev => deleteSortingMode(ev, mode)">delete</PrunButton>
+            <PrunButton primary @click="editSortingMode($event, mode)">edit</PrunButton>
+            <PrunButton danger @click="deleteSortingMode($event, mode)">delete</PrunButton>
           </td>
         </tr>
       </tbody>
