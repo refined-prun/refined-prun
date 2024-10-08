@@ -62,7 +62,7 @@ function calculateChange(selector: (x: PartialBalanceSheet) => number | undefine
       <template v-if="indent > 0">
         <RowExpandButton v-for="i in indent" :key="i" :class="$style.hidden" />
       </template>
-      <RowExpandButton v-if="row.children" v-model="expanded" />
+      <RowExpandButton v-model="expanded" :class="!row.children ? $style.hidden : null" />
       <template v-if="row.less"> Less:</template>
       {{ row.name }}
     </td>
