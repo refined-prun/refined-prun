@@ -65,7 +65,7 @@ export const buildingsNetValueByLocation = computed(() => {
   const buildings = new Map<string, number>();
   for (const building of buildingsMarketValue.value) {
     const depreciation = accumulatedDepreciationByBuilding.value.get(building.building.id);
-    if (!depreciation) {
+    if (depreciation === undefined) {
       return undefined;
     }
     const value = building.value - depreciation;
