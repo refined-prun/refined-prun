@@ -285,6 +285,13 @@ class GenerateScreen {
           'Whether to count the materials currently in the base towards the totals.',
           undefined,
         );
+        popup.addPopupRow(
+          'checkbox',
+          'Workforce Only',
+          group.consumablesOnly == undefined ? false : group.consumablesOnly,
+          'Whether to limit the materials in the group to workforce consumables only',
+          undefined,
+        );
         break;
       }
       case 'Repair': {
@@ -394,6 +401,7 @@ class GenerateScreen {
             group.planet = popup.getRowByName('Planet').rowInput.value;
             group.days = parseFloat(popup.getRowByName('Days').rowInput.value || 0);
             group.useBaseInv = popup.getRowByName('Use Base Inv').rowInput.checked;
+            group.consumablesOnly = popup.getRowByName('Workforce Only').rowInput.checked;
             const exclusions = popup.getRowByName('Material Exclusions').rowInput.value;
             if (exclusions && exclusions != '') {
               group.exclusions = exclusions.replace(/ /g, '').split(',');
@@ -862,6 +870,7 @@ class GenerateScreen {
       showBuffer('XIT HELP_ACTION');
     });
   }
+
   // Creates a new form style row. Returns the input element, automatically adding the whole row to the "parent" element.
   // rowType: "text", "number", "label", "checkbox", "select", "button"; Determines what type of input the row has
   // rowColorType: "active", "command", "passive"; Determines the color of the row. Normal yellow input is "active"

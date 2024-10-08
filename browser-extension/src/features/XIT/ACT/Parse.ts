@@ -7,6 +7,7 @@ import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
+import { addMessage } from './Execute';
 
 // Turn stored action package (resupply base for 30 days) to series of actionable actions (buy 1000 RAT, then 1000 DW, etc)
 // Preview flag set to true will allow non-configured actions to be displayed
@@ -16,7 +17,7 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
 
   // If invalid return an empty action package and throw error
   if (!rawActionPackage.global || !rawActionPackage.actions || !rawActionPackage.groups) {
-    addMessage(messageBox, 'Error: Corrupted action package structure');
+    addMessage(messageBox, 'Corrupted action package structure', 'ERROR');
     return actionPackage;
   }
   let error = false;
@@ -38,7 +39,7 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
   rawActionPackage.actions.forEach((action, actionIndex) => {
     if (action.type == 'CX Buy') {
       if (!action.group) {
-        addMessage(messageBox, 'Error: Missing material group on CX buy');
+        addMessage(messageBox, 'Missing material group on CX buy', 'ERROR');
         return actionPackage;
       }
 
@@ -51,11 +52,11 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
       }, {});
 
       if (!groupNames.includes(action.group)) {
-        addMessage(messageBox, 'Error: Unrecognized material group on CX buy');
+        addMessage(messageBox, 'Unrecognized material group on CX buy', 'ERROR');
         return actionPackage;
       }
       if (!action.exchange) {
-        addMessage(messageBox, 'Error: Missing exchange on CX buy');
+        addMessage(messageBox, 'Missing exchange on CX buy', 'ERROR');
         return actionPackage;
       }
 
@@ -98,7 +99,7 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
             if (action.buyPartial) {
               continue; // Just ignore this one if we're fine with buying partial
             } else {
-              addMessage(messageBox, 'Error: No orders on ' + cxTicker);
+              addMessage(messageBox, 'No orders on ' + cxTicker, 'ERROR');
               error = true;
               continue;
             }
@@ -139,19 +140,19 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
             price > action.priceLimits[mat] &&
             !action.buyPartial
           ) {
-            addMessage(messageBox, 'Error: Price above limit on ' + cxTicker);
+            addMessage(messageBox, 'Price above limit on ' + cxTicker, 'ERROR');
             error = true;
             continue;
           }
           if (action.priceLimits && action.priceLimits[mat] && isNaN(action.priceLimits[mat])) {
-            addMessage(messageBox, 'Error: Non-numerical price limit on ' + cxTicker);
+            addMessage(messageBox, 'Non-numerical price limit on ' + cxTicker, 'ERROR');
             error = true;
             continue;
           }
 
           if (!price && !action.buyPartial) {
             // Not enough to buy it all
-            addMessage(messageBox, 'Error: Not enough materials on ' + cxTicker);
+            addMessage(messageBox, 'Not enough materials on ' + cxTicker, 'ERROR');
             error = true;
             continue;
           } else if (
@@ -178,13 +179,13 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
           };
           actionPackage.push(actionItem);
         } else {
-          addMessage(messageBox, 'Error: Stale/missing data on ' + cxTicker);
+          addMessage(messageBox, 'Stale/missing data on ' + cxTicker, 'ERROR');
           error = true;
         }
       }
     } else if (action.type == 'MTRA') {
       if (!action.group) {
-        addMessage(messageBox, 'Error: Missing material group on CX buy');
+        addMessage(messageBox, 'Missing material group on CX buy', 'ERROR');
         return actionPackage;
       }
 
@@ -197,15 +198,15 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
       }, {});
 
       if (!groupNames.includes(action.group)) {
-        addMessage(messageBox, 'Error: Unrecognized material group on MTRA');
+        addMessage(messageBox, 'Unrecognized material group on MTRA', 'ERROR');
         return actionPackage;
       }
       if (!action.origin) {
-        addMessage(messageBox, 'Error: Missing origin on MTRA');
+        addMessage(messageBox, 'Missing origin on MTRA', 'ERROR');
         return actionPackage;
       }
       if (!action.dest) {
-        addMessage(messageBox, 'Error: Missing dest on MTRA');
+        addMessage(messageBox, 'Missing dest on MTRA', 'ERROR');
         return actionPackage;
       }
 
@@ -215,7 +216,7 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
         action.origin == 'Configure on Execution' &&
         (!packageConfig.actions[actionIndex] || !packageConfig.actions[actionIndex].origin)
       ) {
-        addMessage(messageBox, 'Error: Missing origin configuration on MTRA');
+        addMessage(messageBox, 'Missing origin configuration on MTRA', 'ERROR');
         return actionPackage;
       }
       if (
@@ -223,7 +224,7 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
         action.dest == 'Configure on Execution' &&
         (!packageConfig.actions[actionIndex] || !packageConfig.actions[actionIndex].dest)
       ) {
-        addMessage(messageBox, 'Error: Missing destination configuration on MTRA');
+        addMessage(messageBox, 'Missing destination configuration on MTRA', 'ERROR');
         return actionPackage;
       }
 
@@ -272,7 +273,7 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
         actionPackage.push(actionItem);
       });
     } else {
-      addMessage(messageBox, 'Error: Unrecognized action type');
+      addMessage(messageBox, 'Unrecognized action type', 'ERROR');
       error = true;
     }
   });
@@ -287,12 +288,12 @@ export function parseGroup(group, messageBox, errorFlag) {
   if (group.type == 'Resupply') {
     // Interpret burn to get number of materials
     if (!group.planet) {
-      addMessage(messageBox, 'Error: Missing resupply planet');
+      addMessage(messageBox, 'Missing resupply planet', 'ERROR');
       errorFlag[0] = true;
       return parsedGroup;
     }
     if (!group.days) {
-      addMessage(messageBox, 'Error: Missing resupply days');
+      addMessage(messageBox, 'Missing resupply days', 'ERROR');
       errorFlag[0] = true;
       return parsedGroup;
     }
@@ -301,7 +302,9 @@ export function parseGroup(group, messageBox, errorFlag) {
     const exclusions = group.exclusions || [];
     const site = sitesStore.getByPlanetNaturalIdOrName(group.planet);
     const workforce = workforcesStore.getById(site?.siteId)?.workforces;
-    const production = productionStore.getBySiteId(site?.siteId);
+    const production = group.consumablesOnly
+      ? undefined
+      : productionStore.getBySiteId(site?.siteId);
     const stores = storagesStore.getByAddressableId(site?.siteId);
 
     if (workforce) {
@@ -326,13 +329,13 @@ export function parseGroup(group, messageBox, errorFlag) {
         }
       });
     } else {
-      addMessage(messageBox, 'Error: Missing burn data');
+      addMessage(messageBox, 'Missing burn data', 'ERROR');
       errorFlag[0] = true;
       return parsedGroup;
     }
   } else if (group.type == 'Repair') {
     if (!group.planet) {
-      addMessage(messageBox, 'Error: Missing resupply planet');
+      addMessage(messageBox, 'Missing resupply planet', 'ERROR');
       errorFlag[0] = true;
       return parsedGroup;
     }
@@ -390,7 +393,7 @@ export function parseGroup(group, messageBox, errorFlag) {
         });
       });
     } else {
-      addMessage(messageBox, 'Error: Missing data on repair planet');
+      addMessage(messageBox, 'Missing data on repair planet', 'ERROR');
       errorFlag[0] = true;
     }
   } else if (group.type == 'Manual') {
@@ -398,18 +401,12 @@ export function parseGroup(group, messageBox, errorFlag) {
     if (group.materials) {
       parsedGroup = group.materials;
     } else {
-      addMessage(messageBox, 'Error: Missing materials in manual group');
+      addMessage(messageBox, 'Missing materials in manual group', 'ERROR');
       errorFlag[0] = true;
     }
   } else {
-    addMessage(messageBox, 'Error: Unrecognized group type');
+    addMessage(messageBox, 'Unrecognized group type', 'ERROR');
   }
 
   return parsedGroup;
-}
-
-function addMessage(messageBox, message, clear?) {
-  messageBox.textContent = clear
-    ? message
-    : message + (messageBox.textContent == '' ? '' : '\n') + messageBox.textContent;
 }

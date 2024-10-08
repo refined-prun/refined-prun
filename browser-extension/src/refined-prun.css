@@ -58,7 +58,7 @@
   line-height: 1.5;
   tab-size: 4;
   width: calc(100% - 10px);
-  height: 86px;
+  flex-grow: 1;
   background-color: #23282b;
   color: #bbbbbb;
   border-color: #2b485a;
@@ -76,6 +76,19 @@
 
 .pb-read-textarea::-moz-scrollbar {
   width: 0;
+}
+
+.pb-bold-success {
+  color: #5cb85c;
+  font-weight: bold;
+}
+.pb-bold-failure {
+  color: #d9534f;
+  font-weight: bold;
+}
+.pb-bold-warning {
+  color: #f7a600;
+  font-weight: bold;
 }
 
 .select {

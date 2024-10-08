@@ -6,6 +6,7 @@ import {
   getLocalStoragePromise,
   showSuccessDialog,
   sleep,
+  clearChildren,
 } from '@src/util';
 import { Style } from '@src/Style';
 import { Selector } from '@src/Selector';
@@ -19,6 +20,10 @@ import { starsStore } from '@src/infrastructure/prun-api/data/stars';
 import { _$, _$$ } from '@src/utils/select-dom';
 
 export async function createExecuteScreen(tile, packageName) {
+  tile.style.display = 'flex';
+  tile.style.flexDirection = 'column';
+  tile.style.marginBottom = '10px';
+
   const title = document.createElement('h2');
   title.textContent = packageName;
   title.classList.add(...Style.DraftName);
@@ -31,17 +36,17 @@ export async function createExecuteScreen(tile, packageName) {
   const rawActionPackage = storedActions[packageName];
 
   // Create message box
-  const messageBox = document.createElement('textarea');
+  const messageBox = document.createElement('div');
   messageBox.classList.add('pb-read-textarea');
-  messageBox.readOnly = true;
   tile.appendChild(messageBox);
 
   if (!rawActionPackage) {
     addMessage(
       messageBox,
-      'Error: No action package detected. Open XIT ACTION_GEN_' +
+      'No action package detected. Open XIT ACTION_GEN_' +
         packageName.split(' ').join('_') +
         ' to create one',
+      'ERROR',
     );
     return;
   }
@@ -103,20 +108,20 @@ export async function createExecuteScreen(tile, packageName) {
 
   // Add action listener for viewing
   viewButton.addEventListener('click', function () {
-    addMessage(messageBox, '', true);
+    addMessage(messageBox, '', undefined, true);
     const actionPackage = parseActionPackage(rawActionPackage, packageConfig, messageBox, true);
     [...actionPackage].reverse().forEach(action => {
-      addMessage(messageBox, generatePrettyName(action));
+      addMessage(messageBox, generatePrettyName(action), 'ACTION');
     });
 
     if (actionPackage.length == 0) {
-      addMessage(messageBox, 'Error: No actions generated');
+      addMessage(messageBox, 'No actions generated', 'ERROR');
     }
   });
 
   // Add action listener for validation
   validateButton.addEventListener('click', function () {
-    addMessage(messageBox, '', true);
+    addMessage(messageBox, '', undefined, true);
     const actionPackage = parseActionPackage(rawActionPackage, packageConfig, messageBox);
     if (actionPackage.valid) {
       validateAction(actionPackage, messageBox);
@@ -125,7 +130,15 @@ export async function createExecuteScreen(tile, packageName) {
 
   // Execute the action!
   executeButton.addEventListener('click', async function () {
-    addMessage(messageBox, '', true);
+    if (
+      tile.children &&
+      tile.children[tile.children.length - 1].classList.contains('pb-execution')
+    ) {
+      // Don't double up on executions
+      return;
+    }
+
+    addMessage(messageBox, '', undefined, true);
     // Check validation
     const actionPackage = parseActionPackage(rawActionPackage, packageConfig, messageBox);
     const valid = actionPackage.valid && validateAction(actionPackage, messageBox);
@@ -135,6 +148,7 @@ export async function createExecuteScreen(tile, packageName) {
 
     // Create set of controls/info associated with execution
     const executionInfo = document.createElement('div');
+    executionInfo.classList.add('pb-execution');
     tile.appendChild(executionInfo);
 
     // Create area where current action is listed
@@ -194,7 +208,7 @@ async function executeAction(
 ) {
   const action = actionPackage[executionIndex];
   if (!action || !action.type || !action.buffer || !action.parameters) {
-    addMessage(messageBox, 'Error: Invalid action format');
+    addMessage(messageBox, 'Invalid action format', 'ERROR');
     tile.removeChild(executionInfo);
     return;
   }
@@ -207,7 +221,7 @@ async function executeAction(
 
   // Check buffer exists
   if (!relevantBuffers[0]) {
-    addMessage(messageBox, 'Error: No buffer found executing: ' + actionName);
+    addMessage(messageBox, 'No buffer found executing: ' + actionName, 'ERROR');
     tile.removeChild(executionInfo);
     return;
   }
@@ -251,7 +265,7 @@ async function executeAction(
   }
 
   if (!button) {
-    addMessage(messageBox, 'Error: No button found executing: ' + actionName);
+    addMessage(messageBox, 'No button found executing: ' + actionName, 'ERROR');
     tile.removeChild(executionInfo);
     return;
   }
@@ -275,13 +289,13 @@ async function executeAction(
 
       if (!quantityInput || !priceInput) {
         undoButtonMove(button, resetStyles, executeControls);
-        addMessage(messageBox, 'Error: Missing fields executing: ' + actionName);
+        addMessage(messageBox, 'Missing fields executing: ' + actionName, 'ERROR');
         tile.removeChild(executionInfo);
         return;
       }
       if (!action.parameters.amount || !action.parameters.priceLimit) {
         undoButtonMove(button, resetStyles, executeControls);
-        addMessage(messageBox, 'Error: Missing parameters executing: ' + actionName);
+        addMessage(messageBox, 'Missing parameters executing: ' + actionName, 'ERROR');
         tile.removeChild(executionInfo);
         return;
       }
@@ -295,13 +309,13 @@ async function executeAction(
 
       if (!originSelect) {
         undoButtonMove(button, resetStyles, executeControls);
-        addMessage(messageBox, 'Error: Missing fields executing: ' + actionName);
+        addMessage(messageBox, 'Missing fields executing: ' + actionName, 'ERROR');
         tile.removeChild(executionInfo);
         return;
       }
       if (!action.parameters.origin || !action.parameters.dest) {
         undoButtonMove(button, resetStyles, executeControls);
-        addMessage(messageBox, 'Error: Missing parameters executing: ' + actionName);
+        addMessage(messageBox, 'Missing parameters executing: ' + actionName, 'ERROR');
         tile.removeChild(executionInfo);
         return;
       }
@@ -320,7 +334,7 @@ async function executeAction(
       if (sourceIndex == undefined) {
         // Source not found
         undoButtonMove(button, resetStyles, executeControls);
-        addMessage(messageBox, 'Error: Source inventory not found executing: ' + actionName);
+        addMessage(messageBox, 'Source inventory not found executing: ' + actionName, 'ERROR');
         tile.removeChild(executionInfo);
         return;
       }
@@ -339,7 +353,7 @@ async function executeAction(
       const allSelects = buffer.querySelectorAll(Selector.StoreSelect);
       if (!allSelects[1]) {
         undoButtonMove(button, resetStyles, executeControls);
-        addMessage(messageBox, 'Error: Destination inventory not found executing: ' + actionName);
+        addMessage(messageBox, 'Destination inventory not found executing: ' + actionName, 'ERROR');
         tile.removeChild(executionInfo);
         button.disabled = false;
         return;
@@ -361,7 +375,7 @@ async function executeAction(
       if (destIndex == undefined) {
         // Dest not found
         undoButtonMove(button, resetStyles, executeControls);
-        addMessage(messageBox, 'Error: Destination inventory not found executing: ' + actionName);
+        addMessage(messageBox, 'Destination inventory not found executing: ' + actionName, 'ERROR');
         tile.removeChild(executionInfo);
         button.disabled = false;
         return;
@@ -401,7 +415,7 @@ async function executeAction(
       const allInputs = buffer.querySelectorAll('input'); // All the inputs on buffer, next find the "amount" input
       if (!allInputs[1] || !changeButton) {
         undoButtonMove(button, resetStyles, executeControls);
-        addMessage(messageBox, 'Error: Missing UI elements');
+        addMessage(messageBox, 'Missing UI elements', 'ERROR');
         tile.removeChild(executionInfo);
         button.disabled = false;
         return;
@@ -411,7 +425,11 @@ async function executeAction(
       if (action.parameters.amount > maxAmount) {
         addMessage(
           messageBox,
-          `Warning: ${(action.parameters.amount - maxAmount).toLocaleString()} ${action.parameters.ticker} will not be transferred.`,
+          (action.parameters.amount - maxAmount).toLocaleString() +
+            ' ' +
+            action.parameters.ticker +
+            ' will not be transferred.',
+          'WARNING',
         );
       }
 
@@ -432,7 +450,7 @@ async function executeAction(
   const buttonListener = function () {
     // If a popup is present, don't take any actions
     if (buffer.querySelector(Selector.ActionFeedback)) {
-      addMessage(messageBox, 'Error: Popup exists on buffer');
+      addMessage(messageBox, 'Popup exists on buffer', 'ERROR');
       return;
     }
     // Have to wait for "success" or "failure" screen
@@ -455,12 +473,12 @@ async function executeAction(
           cancelButton.removeEventListener('click', cancelButtonListener);
           undoButtonMove(button, resetStyles, executeControls);
           dismissButton.click();
-          addMessage(messageBox, 'Successfully executed: ' + actionName);
+          addMessage(messageBox, actionName, 'SUCCESS');
 
           // If at end of list, don't repeat
           if (executionIndex + 1 >= actionPackage.length) {
             tile.removeChild(executionInfo);
-            addMessage(messageBox, 'Successfully executed action package');
+            addMessage(messageBox, 'Successfully executed action package', 'SUCCESS');
             showSuccessDialog(tile, 'Action Package Successfully Executed!');
           } // Otherwise, increment and repeat
           else {
@@ -482,9 +500,9 @@ async function executeAction(
             buffer.querySelector(Selector.ActionFeedbackMain) ||
             buffer.querySelector(Selector.ActionConfirmationMessage);
           if (!feedback || !feedback.textContent) {
-            addMessage(messageBox, 'Error: An error was encountered but could not be read');
+            addMessage(messageBox, 'An error was encountered but could not be read', 'ERROR');
           } else {
-            addMessage(messageBox, 'Error: ' + feedback.textContent);
+            addMessage(messageBox, feedback.textContent, 'ERROR');
           }
         }
       });
@@ -494,7 +512,7 @@ async function executeAction(
       (Array.from(matOptions) as HTMLElement[]).forEach(matOption => {
         const tickerElem = matOption.firstChild;
         if (!tickerElem) {
-          addMessage(messageBox, 'Error: Unable to find ticker element on dropdown');
+          addMessage(messageBox, 'Unable to find ticker element on dropdown', 'ERROR');
           return;
         }
         if (action.parameters.ticker.toUpperCase() == tickerElem.textContent) {
@@ -513,12 +531,12 @@ async function executeAction(
         skipButton.removeEventListener('click', skipButtonListener);
         cancelButton.removeEventListener('click', cancelButtonListener);
         undoButtonMove(button, resetStyles, executeControls);
-        addMessage(messageBox, 'Successfully executed: ' + actionName);
+        addMessage(messageBox, actionName, 'SUCCESS');
 
         // If at end of list, don't repeat
         if (executionIndex + 1 >= actionPackage.length) {
           tile.removeChild(executionInfo);
-          addMessage(messageBox, 'Successfully executed action package');
+          addMessage(messageBox, 'Successfully executed action package', 'SUCCESS');
           showSuccessDialog(tile, 'Action Package Successfully Executed!');
         } // Otherwise, increment and repeat
         else {
@@ -536,7 +554,7 @@ async function executeAction(
           );
         }
       } else {
-        addMessage(messageBox, 'Error: ' + action.parameters.ticker + ' not found in inventory');
+        addMessage(messageBox, action.parameters.ticker + ' not found in inventory', 'ERROR');
       }
     } else if (action.type == 'MTRA') {
       // Add mutation listener to wait for dismiss screen
@@ -554,12 +572,12 @@ async function executeAction(
           cancelButton.removeEventListener('click', cancelButtonListener);
           undoButtonMove(button, resetStyles, executeControls);
           dismissButton.click();
-          addMessage(messageBox, 'Successfully executed: ' + actionName);
+          addMessage(messageBox, actionName, 'SUCCESS');
 
           // If at end of list, don't repeat
           if (executionIndex + 1 >= actionPackage.length) {
             tile.removeChild(executionInfo);
-            addMessage(messageBox, 'Successfully executed action package');
+            addMessage(messageBox, 'Successfully executed action package', 'SUCCESS');
             showSuccessDialog(tile, 'Action Package Successfully Executed!');
           } // Otherwise, increment and repeat
           else {
@@ -581,9 +599,9 @@ async function executeAction(
             buffer.querySelector(Selector.ActionFeedbackMain) ||
             buffer.querySelector(Selector.ActionConfirmationMessage);
           if (!feedback || !feedback.textContent) {
-            addMessage(messageBox, 'Error: An error was encountered but could not be read');
+            addMessage(messageBox, 'An error was encountered but could not be read', 'ERROR');
           } else {
-            addMessage(messageBox, 'Error: ' + feedback.textContent);
+            addMessage(messageBox, feedback.textContent, 'ERROR');
           }
         }
       });
@@ -599,12 +617,12 @@ async function executeAction(
     skipButton.removeEventListener('click', skipButtonListener);
     cancelButton.removeEventListener('click', cancelButtonListener);
     undoButtonMove(button, resetStyles, executeControls);
-    addMessage(messageBox, 'Skipped: ' + actionName);
+    addMessage(messageBox, 'Skipped ' + actionName, 'WARNING');
 
     // If at end of list, don't repeat
     if (executionIndex + 1 >= actionPackage.length) {
       tile.removeChild(executionInfo);
-      addMessage(messageBox, 'Successfully executed action package');
+      addMessage(messageBox, 'Successfully executed action package', 'SUCCESS');
       showSuccessDialog(tile, 'Action Package Successfully Executed!');
     } // Otherwise, increment and repeat
     else {
@@ -632,7 +650,7 @@ async function executeAction(
     skipButton.removeEventListener('click', skipButtonListener);
     cancelButton.removeEventListener('click', cancelButtonListener);
     undoButtonMove(button, resetStyles, executeControls);
-    addMessage(messageBox, 'Canceled action package');
+    addMessage(messageBox, 'Canceled action package', 'CANCEL');
     tile.removeChild(executionInfo);
   };
   cancelButton.removeEventListener('click', cancelButtonListener);
@@ -770,8 +788,28 @@ function mtraConvert(nameOrNaturalId: string) {
   return (system?.name + ' - ' + nameOrNaturalId).toLowerCase();
 }
 
-function addMessage(messageBox, message, clear?) {
-  messageBox.textContent = clear
-    ? message
-    : message + (messageBox.textContent == '' ? '' : '\n') + messageBox.textContent;
+export function addMessage(messageBox, message, header, clear?) {
+  if (clear) {
+    clearChildren(messageBox);
+  }
+
+  const lineDiv = document.createElement('div');
+
+  const headerSpan = createTextSpan(header ? header + ': ' : '');
+  lineDiv.appendChild(headerSpan);
+  switch (header) {
+    case 'ACTION':
+    case 'SUCCESS':
+      headerSpan.classList.add('pb-bold-success');
+      break;
+    case 'WARNING':
+      headerSpan.classList.add('pb-bold-warning');
+      break;
+    case 'ERROR':
+    case 'CANCEL':
+      headerSpan.classList.add('pb-bold-failure');
+      break;
+  }
+  lineDiv.appendChild(createTextSpan(message));
+  messageBox.insertBefore(lineDiv, messageBox.firstChild);
 }
