@@ -78,6 +78,10 @@ const currentAssets = computed<SectionData>(() => ({
           value: x => x.assets?.current?.inventory?.cxInventory,
         },
         {
+          name: 'Materials in Transit',
+          value: x => x.assets?.current?.inventory?.materialsInTransit,
+        },
+        {
           name: 'Base Inventory',
           value: summary.calcTotalBaseInventory,
           children: [
@@ -106,10 +110,6 @@ const currentAssets = computed<SectionData>(() => ({
         {
           name: 'Fuel Tanks',
           value: x => x.assets?.current?.inventory?.fuelTanks,
-        },
-        {
-          name: 'Materials in Transit',
-          value: x => x.assets?.current?.inventory?.materialsInTransit,
         },
         {
           name: 'Materials Receivable',

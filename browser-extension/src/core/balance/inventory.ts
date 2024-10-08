@@ -307,12 +307,12 @@ export const inventory = {
   byLocation,
   cxListedMaterials,
   cxInventory,
+  materialsInTransit,
   finishedGoods,
   workInProgress,
   rawMaterials,
   workforceConsumables,
   otherItems,
   fuelTanks,
-  materialsInTransit,
   materialsReceivable,
 };

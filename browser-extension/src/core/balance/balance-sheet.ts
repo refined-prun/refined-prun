@@ -21,6 +21,7 @@ export interface BalanceSheet {
       inventory: {
         cxListedMaterials: number;
         cxInventory: number;
+        materialsInTransit: number;
         baseInventory: {
           finishedGoods: number;
           workInProgress: number;
@@ -30,7 +31,6 @@ export interface BalanceSheet {
           total: number;
         };
         fuelTanks: number;
-        materialsInTransit: number;
         materialsReceivable: number;
         total: number;
       };

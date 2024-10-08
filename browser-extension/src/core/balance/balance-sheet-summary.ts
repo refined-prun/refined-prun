@@ -66,9 +66,9 @@ export function calcTotalInventory(sheet: PartialBalanceSheet) {
     sheet.assets?.current?.inventory,
     x => x.cxListedMaterials,
     x => x.cxInventory,
+    x => x.materialsInTransit,
     () => calcTotalBaseInventory(sheet),
     x => x.fuelTanks,
-    x => x.materialsInTransit,
     x => x.materialsReceivable,
   );
 }

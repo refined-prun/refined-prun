@@ -47,6 +47,7 @@ function createLiveBalanceSheet(): PartialBalanceSheet {
         inventory: unwrapRefProperties({
           cxListedMaterials: currentAssets.inventory.cxListedMaterials,
           cxInventory: currentAssets.inventory.cxInventory,
+          materialsInTransit: currentAssets.inventory.materialsInTransit,
           baseInventory: unwrapRefProperties({
             finishedGoods: currentAssets.inventory.finishedGoods,
             workInProgress: currentAssets.inventory.workInProgress,
@@ -55,7 +56,6 @@ function createLiveBalanceSheet(): PartialBalanceSheet {
             otherItems: currentAssets.inventory.otherItems,
           }),
           fuelTanks: currentAssets.inventory.fuelTanks,
-          materialsInTransit: currentAssets.inventory.materialsInTransit,
           materialsReceivable: currentAssets.inventory.materialsReceivable,
         }),
       }),

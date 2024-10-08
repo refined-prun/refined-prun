@@ -284,6 +284,7 @@ export function deserializeBalanceSheetV3Data(
         inventory: {
           cxListedMaterials,
           cxInventory,
+          materialsInTransit: materialsInTransitCurrent,
           baseInventory: {
             finishedGoods,
             workInProgress,
@@ -292,7 +293,6 @@ export function deserializeBalanceSheetV3Data(
             otherItems,
           },
           fuelTanks,
-          materialsInTransit: materialsInTransitCurrent,
           materialsReceivable: materialsReceivableCurrent,
         },
       },
