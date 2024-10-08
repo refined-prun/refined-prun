@@ -134,11 +134,11 @@ export function calculatePlanetBurn(
     burnValue.DailyAmount = burnValue.output;
     burnValue.Type = 'output';
     burnValue.DailyAmount -= burnValue.workforce;
-    if (burnValue.workforce > 0 && burnValue.DailyAmount < 0) {
+    if (burnValue.workforce > 0 && burnValue.DailyAmount <= 0) {
       burnValue.Type = 'workforce';
     }
     burnValue.DailyAmount -= burnValue.input;
-    if (burnValue.input > 0 && burnValue.DailyAmount < 0) {
+    if (burnValue.input > 0 && burnValue.DailyAmount <= 0) {
       burnValue.Type = 'input';
     }
   }
