@@ -20,6 +20,7 @@ const classes = computed(() => ({
   cursor: pointer;
   user-select: none;
   transform: scale(0.7);
+  transition: 0.1s ease-out;
 }
 
 .expanded {
