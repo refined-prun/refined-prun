@@ -6,6 +6,7 @@ import ActionBar from '@src/components/ActionBar.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 import { createNote, deleteNote } from '@src/store/notes';
+import { vDraggable } from 'vue-draggable-plus';
 
 function createNewNote(ev: Event) {
   showTileOverlay(ev, CreateNoteOverlay, {
@@ -35,7 +36,7 @@ function confirmDelete(ev: Event, note: UserData.Note) {
         <th />
       </tr>
     </thead>
-    <tbody>
+    <tbody v-draggable="[userData.notes, { animation: 150 }]">
       <tr v-for="note in userData.notes" :key="note.id">
         <td>
           <span>{{ note.name }}</span>
