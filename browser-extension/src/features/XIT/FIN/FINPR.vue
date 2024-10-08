@@ -15,7 +15,7 @@ import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addr
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';
 import { computed } from 'vue';
-import { formatAmount } from '@src/features/XIT/FIN/utils';
+import { formatCurrencyAmount } from '@src/features/XIT/FIN/utils';
 import KeyFigures from '@src/features/XIT/FIN/KeyFigures.vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { calculateSiteProfitability } from '@src/core/profitability';
@@ -60,9 +60,9 @@ const totalProfit = computed(() => sumBy(entries.value, x => x.profit));
 
 const figures = computed(() => {
   return [
-    { name: 'Daily Produced', value: formatAmount(totalProduced.value) },
-    { name: 'Daily Consumed', value: formatAmount(totalConsumed.value) },
-    { name: 'Daily Profit', value: formatAmount(totalProfit.value) },
+    { name: 'Daily Produced', value: formatCurrencyAmount(totalProduced.value) },
+    { name: 'Daily Consumed', value: formatCurrencyAmount(totalConsumed.value) },
+    { name: 'Daily Profit', value: formatCurrencyAmount(totalProfit.value) },
   ];
 });
 

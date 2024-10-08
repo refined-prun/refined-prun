@@ -36,14 +36,17 @@ export function sortMaterialsBy<T>(
   });
 }
 
-export function mergeMaterialAmounts(materials: PrunApi.MaterialAmount[]) {
+export function mergeMaterialAmounts(amounts: PrunApi.MaterialAmount[]) {
   const result: PrunApi.MaterialAmount[] = [];
-  for (const material of materials) {
-    const existing = result.find(x => x.material.ticker === material.material.ticker);
+  const added = new Map<string, PrunApi.MaterialAmount>();
+  for (const amount of amounts) {
+    const existing = added.get(amount.material.ticker);
     if (existing) {
-      existing.amount += material.amount;
+      existing.amount += amount.amount;
     } else {
-      result.push({ ...material });
+      const copy = { ...amount };
+      result.push(copy);
+      added.set(amount.material.ticker, copy);
     }
   }
   return result;

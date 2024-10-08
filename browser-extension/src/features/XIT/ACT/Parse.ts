@@ -25,7 +25,7 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
   const CXInvs = {};
   ['AI1', 'CI1', 'CI2', 'IC1', 'NC1', 'NC2'].forEach(ticker => {
     CXInvs[ticker] = {};
-    const warehouse = warehousesStore.getByNaturalId(ExchangeTickersReverse[ticker]);
+    const warehouse = warehousesStore.getByEntityNaturalId(ExchangeTickersReverse[ticker]);
     const inv = storagesStore.getById(warehouse?.storeId);
 
     if (inv) {
@@ -302,7 +302,7 @@ export function parseGroup(group, messageBox, errorFlag) {
     const site = sitesStore.getByPlanetNaturalIdOrName(group.planet);
     const workforce = workforcesStore.getById(site?.siteId)?.workforces;
     const production = productionStore.getBySiteId(site?.siteId);
-    const stores = storagesStore.getByAddress(site?.siteId);
+    const stores = storagesStore.getByAddressableId(site?.siteId);
 
     if (workforce) {
       const planetBurn = calculatePlanetBurn(production, workforce, stores); // The planet burn data

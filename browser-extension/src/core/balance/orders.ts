@@ -45,7 +45,7 @@ const orderValue = computed(() => {
   return orders;
 });
 
-export const currentOrderValue = computed(() => {
+export const workInProgressByLocation = computed(() => {
   if (orderValue.value === undefined) {
     return undefined;
   }
@@ -64,4 +64,4 @@ export const currentOrderValue = computed(() => {
   return orders;
 });
 
-export const totalOrderValue = computed(() => sumMapValues(currentOrderValue.value));
+export const workInProgress = computed(() => sumMapValues(workInProgressByLocation.value));

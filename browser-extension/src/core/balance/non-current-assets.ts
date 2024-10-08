@@ -5,28 +5,31 @@ import {
   sumAccountsPayable,
   sumLoanRepayments,
   sumDeliveries,
-  sumMaterialsShipment,
+  sumShipmentDeliveries,
   sumMaterialsPickup,
 } from '@src/core/balance/contract-conditions';
-import { buildingsTotal, currentBuildingValue } from '@src/core/balance/buildings';
+import { buildings, buildingsNetValueByLocation } from '@src/core/balance/buildings';
 import { sum } from '@src/utils/sum';
 
 const accountsReceivable = computed(() => sumAccountsPayable(partnerNonCurrentConditions));
 
 const longTermLoans = computed(() => sumLoanRepayments(partnerNonCurrentConditions));
 
-const materialsToReceive = computed(() =>
+const materialsInTransit = computed(() => sumShipmentDeliveries(partnerNonCurrentConditions));
+
+const materialsReceivable = computed(() =>
   sum(
     sumDeliveries(partnerNonCurrentConditions),
-    sumMaterialsShipment(partnerNonCurrentConditions),
+    sumShipmentDeliveries(partnerNonCurrentConditions),
     sumMaterialsPickup(selfNonCurrentConditions),
   ),
 );
 
 export const nonCurrentAssets = {
-  buildings: currentBuildingValue,
-  buildingsTotal,
+  buildings,
+  buildingsNetValueByLocation,
   accountsReceivable,
-  materialsToReceive,
+  materialsInTransit,
+  materialsReceivable,
   longTermLoans,
 };

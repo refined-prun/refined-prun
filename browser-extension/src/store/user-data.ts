@@ -41,6 +41,7 @@ export const initialUserData = deepFreeze({
   balanceHistory: {
     v1: [],
     v2: [],
+    v3: [],
   } as UserData.BalanceHistory,
 });
 
@@ -52,6 +53,7 @@ export function applyUserData(newData: any) {
   clone.balanceHistory = {
     v1: shallowReactive(clone.balanceHistory?.v1 ?? []),
     v2: shallowReactive(clone.balanceHistory?.v2 ?? []),
+    v3: shallowReactive(clone.balanceHistory?.v3 ?? []),
   };
   Object.assign(userData, clone);
   userData.settings.pricing.method = 'DEFAULT';
@@ -82,6 +84,7 @@ export function clearBalanceHistory() {
   userData.balanceHistory = reactive({
     v1: shallowReactive([]),
     v2: shallowReactive([]),
+    v3: shallowReactive([]),
   });
 }
 

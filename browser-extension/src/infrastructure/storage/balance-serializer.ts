@@ -11,6 +11,7 @@ export function importFinancialHistory() {
       userData.balanceHistory = {
         v1: shallowReactive(balanceHistory.v1),
         v2: shallowReactive(balanceHistory.v2),
+        v3: shallowReactive(balanceHistory.v3),
       };
     }
   });
@@ -39,6 +40,7 @@ function parseBalanceHistory(json: any) {
     return {
       v1: json.History.map((item: number[]) => item.map(Math.round)),
       v2: [],
+      v3: [],
     } as UserData.BalanceHistory;
   }
 

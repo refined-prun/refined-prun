@@ -154,7 +154,7 @@ export function sumPendingMaterialsPickup(conditions: MaybeConditions) {
   return sumBy(filtered, x => getMaterialQuantityValue(x.condition));
 }
 
-export function sumMaterialsShipment(conditions: MaybeConditions) {
+export function sumShipmentDeliveries(conditions: MaybeConditions) {
   let total = 0;
   const filtered = conditions.value?.filter(x => x.condition.type === 'DELIVERY_SHIPMENT');
   if (filtered === undefined) {

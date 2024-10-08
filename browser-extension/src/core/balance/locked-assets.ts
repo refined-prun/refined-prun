@@ -17,17 +17,7 @@ const builtShips = computed(() => {
 
 function calculateShipValue(ship: PrunApi.Ship) {
   const blueprint = blueprintsStore.getByNaturalId(ship.blueprintNaturalId);
-  if (blueprint === undefined) {
-    return undefined;
-  }
-
-  const shipValue = sumMaterialAmountPrice(blueprint.billOfMaterial.quantities);
-  const repairsCost = sumMaterialAmountPrice(ship.repairMaterials);
-  if (shipValue === undefined || repairsCost === undefined) {
-    return undefined;
-  }
-
-  return shipValue - repairsCost;
+  return sumMaterialAmountPrice(blueprint?.billOfMaterial.quantities);
 }
 
 const startedShips = computed(() =>
@@ -37,7 +27,11 @@ const startedShips = computed(() =>
   ),
 );
 
-const ships = computed(() => sum(builtShips.value, startedShips.value));
+const shipsMarketValue = computed(() => sum(builtShips.value, startedShips.value));
+
+const shipsDepreciation = computed(() => {
+  return sumBy(shipsStore.all.value, x => sumMaterialAmountPrice(x.repairMaterials));
+});
 
 const hqLevel = computed(() =>
   map([companyStore.value], x => clamp(x.headquarters.level, 0, maxHQLevel)),
@@ -56,7 +50,8 @@ const hqUpgrades = computed(() => map([hqBuiltLevels.value, hqAssignedItems.valu
 const arc = computed(() => companyStore.value?.representation.contributedTotal.amount);
 
 export const lockedAssets = {
-  ships,
+  shipsMarketValue,
+  shipsDepreciation,
   hqUpgrades,
   arc,
 };

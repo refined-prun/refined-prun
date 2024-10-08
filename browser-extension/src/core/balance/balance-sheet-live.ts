@@ -30,40 +30,75 @@ function createLiveBalanceSheet(): PartialBalanceSheet {
   return unwrapRefProperties({
     timestamp: timestampEachSecond,
 
-    currentAssets: unwrapRefProperties({
-      cash: currentAssets.cashTotal,
-      deposits: currentAssets.depositsTotal,
-      interestReceivable: currentAssets.interestReceivable,
-      accountsReceivable: currentAssets.accountsReceivable,
-      shortTermLoans: currentAssets.shortTermLoans,
-      marketListedMaterials: currentAssets.marketListedMaterials,
-      inventory: currentAssets.inventory,
-      ordersInProgress: currentAssets.totalOrderValue,
-      materialsToReceive: currentAssets.materialsToReceive,
-    }),
-
-    nonCurrentAssets: unwrapRefProperties({
-      buildings: nonCurrentAssets.buildingsTotal,
-      accountsReceivable: nonCurrentAssets.accountsReceivable,
-      longTermLoans: nonCurrentAssets.longTermLoans,
-      materialsToReceive: nonCurrentAssets.materialsToReceive,
-    }),
-
-    currentLiabilities: unwrapRefProperties({
-      accountsPayable: currentLiabilities.accountsPayable,
-      materialsToDeliver: currentLiabilities.materialsToDeliver,
-      shortTermDebt: currentLiabilities.shortTermDebt,
-      interestPayable: currentLiabilities.interestPayable,
-    }),
-
-    nonCurrentLiabilities: unwrapRefProperties({
-      accountsPayable: nonCurrentLiabilities.accountsPayable,
-      materialsToDeliver: nonCurrentLiabilities.materialsToDeliver,
-      longTermDebt: nonCurrentLiabilities.longTermDebt,
-    }),
+    assets: {
+      current: unwrapRefProperties({
+        cashAndCashEquivalents: unwrapRefProperties({
+          cash: currentAssets.cashTotal,
+          deposits: unwrapRefProperties({
+            cx: currentAssets.cxDepositsTotal,
+            fx: currentAssets.fxDepositsTotal,
+          }),
+        }),
+        accountsReceivable: currentAssets.accountsReceivable,
+        loansReceivable: unwrapRefProperties({
+          principal: currentAssets.shortTermLoans,
+          interest: currentAssets.interestReceivable,
+        }),
+        inventory: unwrapRefProperties({
+          cxListedMaterials: currentAssets.inventory.cxListedMaterials,
+          cxInventory: currentAssets.inventory.cxInventory,
+          baseInventory: unwrapRefProperties({
+            finishedGoods: currentAssets.inventory.finishedGoods,
+            workInProgress: currentAssets.inventory.workInProgress,
+            rawMaterials: currentAssets.inventory.rawMaterials,
+            workforceConsumables: currentAssets.inventory.workforceConsumables,
+            otherItems: currentAssets.inventory.otherItems,
+          }),
+          fuelTanks: currentAssets.inventory.fuelTanks,
+          materialsInTransit: currentAssets.inventory.materialsInTransit,
+          materialsReceivable: currentAssets.inventory.materialsReceivable,
+        }),
+      }),
+      nonCurrent: unwrapRefProperties({
+        buildings: unwrapRefProperties({
+          marketValue: unwrapRefProperties({
+            infrastructure: nonCurrentAssets.buildings.infrastructure,
+            resourceExtraction: nonCurrentAssets.buildings.resourceExtraction,
+            production: nonCurrentAssets.buildings.production,
+          }),
+          accumulatedDepreciation: nonCurrentAssets.buildings.accumulatedDepreciation,
+        }),
+        longTermReceivables: unwrapRefProperties({
+          accountsReceivable: nonCurrentAssets.accountsReceivable,
+          materialsInTransit: nonCurrentAssets.materialsInTransit,
+          materialsReceivable: nonCurrentAssets.materialsReceivable,
+          loansPrincipal: nonCurrentAssets.longTermLoans,
+        }),
+      }),
+    },
+    liabilities: {
+      current: unwrapRefProperties({
+        accountsPayable: currentLiabilities.accountsPayable,
+        materialsPayable: currentLiabilities.materialsPayable,
+        loansPayable: unwrapRefProperties({
+          principal: currentLiabilities.shortTermDebt,
+          interest: currentLiabilities.interestPayable,
+        }),
+      }),
+      nonCurrent: unwrapRefProperties({
+        longTermPayables: unwrapRefProperties({
+          accountsPayable: nonCurrentLiabilities.accountsPayable,
+          materialsPayable: nonCurrentLiabilities.materialsPayable,
+          loansPrincipal: nonCurrentLiabilities.longTermDebt,
+        }),
+      }),
+    },
 
     lockedAssets: unwrapRefProperties({
-      ships: lockedAssets.ships,
+      ships: unwrapRefProperties({
+        marketValue: lockedAssets.shipsMarketValue,
+        accumulatedDepreciation: lockedAssets.shipsDepreciation,
+      }),
       hqUpgrades: lockedAssets.hqUpgrades,
       arc: lockedAssets.arc,
     }),

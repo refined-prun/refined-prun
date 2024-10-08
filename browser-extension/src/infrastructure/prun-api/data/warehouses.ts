@@ -1,6 +1,7 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
+import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 
 const store = createEntityStore<PrunApi.Warehouse>(x => x.warehouseId);
 const state = store.state;
@@ -18,9 +19,11 @@ messages({
   },
 });
 
-const getByNaturalId = createMapGetter(state.all, x => x.address.lines[1].entity.naturalId);
+const getByEntityNaturalId = createMapGetter(state.all, x =>
+  getEntityNaturalIdFromAddress(x.address),
+);
 
 export const warehousesStore = {
   ...state,
-  getByNaturalId,
+  getByEntityNaturalId,
 };

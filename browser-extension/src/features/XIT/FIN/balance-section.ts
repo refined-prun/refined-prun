@@ -1,8 +1,17 @@
 import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
 
+type ValueGetter = (x: PartialBalanceSheet) => number | undefined;
+
 export interface SectionData {
   name: string;
-  important?: boolean;
-  total: (x: PartialBalanceSheet) => number | undefined;
-  rows: [string, (x: PartialBalanceSheet) => number | undefined][];
+  coloredTotal?: boolean;
+  total: ValueGetter;
+  children: RowData[];
+}
+
+export interface RowData {
+  name: string;
+  less?: boolean;
+  value: ValueGetter;
+  children?: RowData[];
 }

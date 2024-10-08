@@ -28,10 +28,13 @@ function confirmDataPointDelete(ev: Event, index: number) {
 }
 
 function deleteBalanceHistoryDataPoint(index: number) {
-  if (index < userData.balanceHistory.v1.length) {
-    userData.balanceHistory.v1.splice(index, 1);
+  const history = userData.balanceHistory;
+  if (index < history.v1.length) {
+    history.v1.splice(index, 1);
+  } else if (index - history.v1.length < history.v2.length) {
+    history.v2.splice(index - history.v1.length, 1);
   } else {
-    userData.balanceHistory.v2.splice(index - userData.balanceHistory.v1.length, 1);
+    history.v3.splice(index - history.v1.length - history.v2.length, 1);
   }
 }
 

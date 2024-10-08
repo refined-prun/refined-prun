@@ -1,6 +1,6 @@
-import { currentAssets } from '@src/core/balance/current-assets';
 import { nonCurrentAssets } from '@src/core/balance/non-current-assets';
 import { inventory } from '@src/core/balance/inventory';
+import { workInProgressByLocation } from '@src/core/balance/orders';
 
 interface LocationAssets {
   name: string;
@@ -35,19 +35,19 @@ export function calculateLocationAssets() {
     location.total += value;
   }
 
-  if (currentAssets.orders.value === undefined) {
+  if (workInProgressByLocation.value === undefined) {
     return undefined;
   }
-  for (const [name, value] of currentAssets.orders.value) {
+  for (const [name, value] of workInProgressByLocation.value) {
     const location = getLocation(name);
     location.current += value;
     location.total += value;
   }
 
-  if (nonCurrentAssets.buildings.value === undefined) {
+  if (nonCurrentAssets.buildingsNetValueByLocation.value === undefined) {
     return undefined;
   }
-  for (const [name, value] of nonCurrentAssets.buildings.value) {
+  for (const [name, value] of nonCurrentAssets.buildingsNetValueByLocation.value) {
     const location = getLocation(name);
     location.nonCurrent += value;
     location.total += value;

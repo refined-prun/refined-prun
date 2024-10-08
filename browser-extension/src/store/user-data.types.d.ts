@@ -19,6 +19,7 @@ declare namespace UserData {
   export type BalanceHistory = {
     v1: UserData.BalanceSheetDataV1[];
     v2: UserData.BalanceSheetDataV2[];
+    v3: UserData.BalanceSheetDataV3[];
   };
 
   type BalanceSheetDataV1 = [
@@ -62,6 +63,55 @@ declare namespace UserData {
 
     // Locked Assets
     ships: number,
+    hqUpgrades: number,
+    arc: number,
+  ];
+
+  type BalanceSheetDataV3 = [
+    timestamp: number,
+
+    // Current Assets
+    cash: number,
+    cx: number,
+    fx: number,
+    accountsReceivable: number,
+    loansPrincipal: number,
+    loansInterest: number,
+    cxListedMaterials: number,
+    cxInventory: number,
+    finishedGoods: number,
+    workInProgress: number,
+    rawMaterials: number,
+    workforceConsumables: number,
+    otherItems: number,
+    fuelTanks: number,
+    materialsInTransit: number,
+    materialsReceivable: number,
+
+    // Non-Current Assets
+    infrastructure: number,
+    resourceExtraction: number,
+    production: number,
+    accumulatedDepreciation: number,
+    accountsReceivable: number,
+    materialsInTransit: number,
+    materialsReceivable: number,
+    loansPrincipal: number,
+
+    // Current Liabilities
+    accountsPayable: number,
+    materialsPayable: number,
+    debtsPrincipal: number,
+    debtsInterest: number,
+
+    // Non-Current Liabilities
+    accountsPayable: number,
+    materialsPayable: number,
+    debtsPrincipal: number,
+
+    // Locked Assets
+    shipsMarketValue: number,
+    shipsDepreciation: number,
     hqUpgrades: number,
     arc: number,
   ];

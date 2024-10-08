@@ -158,7 +158,10 @@ export function calcMaterialAmountPrice(amount: PrunApi.MaterialAmount) {
   return price !== undefined ? price * amount.amount : undefined;
 }
 
-export function sumMaterialAmountPrice(amounts: PrunApi.MaterialAmount[]) {
+export function sumMaterialAmountPrice(amounts?: PrunApi.MaterialAmount[]) {
+  if (!amounts) {
+    return undefined;
+  }
   let result = 0;
   for (const item of amounts) {
     const price = calcMaterialAmountPrice(item);

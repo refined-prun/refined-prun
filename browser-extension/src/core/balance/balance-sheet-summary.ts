@@ -2,132 +2,203 @@ import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
 import { map } from '@src/utils/map-values';
 import { sum } from '@src/utils/sum';
 
-export function calcTotalCurrentAssets(sheet: PartialBalanceSheet) {
-  const assets = sheet.currentAssets;
-  if (!assets) {
+interface BalanceSheetSection {
+  [key: string]: BalanceSheetSection | number | undefined;
+  total?: number;
+}
+
+function calcSectionTotal<T extends BalanceSheetSection>(
+  section?: T,
+  ...args: ((section: T) => number | undefined)[]
+) {
+  if (section === undefined) {
     return undefined;
   }
 
-  return (
-    assets.total ??
-    mapSum(
-      assets.cash,
-      assets.deposits,
-      assets.interestReceivable,
-      assets.accountsReceivable,
-      assets.shortTermLoans,
-      assets.marketListedMaterials,
-      assets.inventory,
-      assets.ordersInProgress,
-      assets.materialsToReceive,
-    )
+  if (section.total !== undefined) {
+    return section.total;
+  }
+
+  return section.total ?? mapSum(...args.map(x => x(section)));
+}
+
+function less(value: number | undefined) {
+  return value !== undefined ? -value : value;
+}
+
+export function calcTotalDeposits(sheet: PartialBalanceSheet) {
+  return calcSectionTotal(
+    sheet.assets?.current?.cashAndCashEquivalents?.deposits,
+    x => x.cx,
+    x => x.fx,
+  );
+}
+
+export function calcTotalCashAndCashEquivalents(sheet: PartialBalanceSheet) {
+  return calcSectionTotal(
+    sheet.assets?.current?.cashAndCashEquivalents,
+    x => x.cash,
+    () => calcTotalDeposits(sheet),
+  );
+}
+
+export function calcTotalLoansReceivable(sheet: PartialBalanceSheet) {
+  return calcSectionTotal(
+    sheet.assets?.current?.loansReceivable,
+    x => x.principal,
+    x => x.interest,
+  );
+}
+
+export function calcTotalBaseInventory(sheet: PartialBalanceSheet) {
+  return calcSectionTotal(
+    sheet.assets?.current?.inventory?.baseInventory,
+    x => x.finishedGoods,
+    x => x.workInProgress,
+    x => x.rawMaterials,
+    x => x.workforceConsumables,
+    x => x.otherItems,
+  );
+}
+
+export function calcTotalInventory(sheet: PartialBalanceSheet) {
+  return calcSectionTotal(
+    sheet.assets?.current?.inventory,
+    x => x.cxListedMaterials,
+    x => x.cxInventory,
+    () => calcTotalBaseInventory(sheet),
+    x => x.fuelTanks,
+    x => x.materialsInTransit,
+    x => x.materialsReceivable,
+  );
+}
+
+export function calcTotalCurrentAssets(sheet: PartialBalanceSheet) {
+  return calcSectionTotal(
+    sheet.assets?.current,
+    () => calcTotalCashAndCashEquivalents(sheet),
+    x => x.accountsReceivable,
+    () => calcTotalLoansReceivable(sheet),
+    () => calcTotalInventory(sheet),
+  );
+}
+
+export function calcTotalBuildingsMarketValue(sheet: PartialBalanceSheet) {
+  return calcSectionTotal(
+    sheet.assets?.nonCurrent?.buildings?.marketValue,
+    x => x.infrastructure,
+    x => x.resourceExtraction,
+    x => x.production,
+  );
+}
+
+export function calcTotalBuildings(sheet: PartialBalanceSheet) {
+  return calcSectionTotal(
+    sheet.assets?.nonCurrent?.buildings,
+    () => calcTotalBuildingsMarketValue(sheet),
+    x => less(x.accumulatedDepreciation),
+  );
+}
+
+export function calcTotalLongTermReceivables(sheet: PartialBalanceSheet) {
+  return calcSectionTotal(
+    sheet.assets?.nonCurrent?.longTermReceivables,
+    x => x.accountsReceivable,
+    x => x.materialsInTransit,
+    x => x.materialsReceivable,
+    x => x.loansPrincipal,
   );
 }
 
 export function calcTotalNonCurrentAssets(sheet: PartialBalanceSheet) {
-  const assets = sheet.nonCurrentAssets;
-  if (!assets) {
-    return undefined;
-  }
-
-  return (
-    assets.total ??
-    mapSum(
-      assets.buildings,
-      assets.accountsReceivable,
-      assets.longTermLoans,
-      assets.materialsToReceive,
-    )
+  return calcSectionTotal(
+    sheet.assets?.nonCurrent,
+    () => calcTotalBuildings(sheet),
+    () => calcTotalLongTermReceivables(sheet),
   );
 }
 
 export function calcTotalAssets(sheet: PartialBalanceSheet) {
-  return (
-    sheet.totalAssets ?? mapSum(calcTotalCurrentAssets(sheet), calcTotalNonCurrentAssets(sheet))
+  return calcSectionTotal(
+    sheet.assets,
+    () => calcTotalCurrentAssets(sheet),
+    () => calcTotalNonCurrentAssets(sheet),
+  );
+}
+
+export function calcTotalLoansPayable(sheet: PartialBalanceSheet) {
+  return calcSectionTotal(
+    sheet.liabilities?.current?.loansPayable,
+    x => x.principal,
+    x => x.interest,
   );
 }
 
 export function calcTotalCurrentLiabilities(sheet: PartialBalanceSheet) {
-  const liabilities = sheet.currentLiabilities;
-  if (!liabilities) {
-    return undefined;
-  }
+  return calcSectionTotal(
+    sheet.liabilities?.current,
+    x => x.accountsPayable,
+    x => x.materialsPayable,
+    () => calcTotalLoansPayable(sheet),
+  );
+}
 
-  return (
-    liabilities.total ??
-    mapSum(
-      liabilities.accountsPayable,
-      liabilities.materialsToDeliver,
-      liabilities.shortTermDebt,
-      liabilities.interestPayable,
-    )
+export function calcTotalLongTermPayables(sheet: PartialBalanceSheet) {
+  return calcSectionTotal(
+    sheet.liabilities?.nonCurrent?.longTermPayables,
+    x => x.accountsPayable,
+    x => x.materialsPayable,
+    x => x.loansPrincipal,
   );
 }
 
 export function calcTotalNonCurrentLiabilities(sheet: PartialBalanceSheet) {
-  const liabilities = sheet.nonCurrentLiabilities;
-  if (!liabilities) {
-    return undefined;
-  }
-
-  return (
-    liabilities.total ??
-    mapSum(liabilities.accountsPayable, liabilities.materialsToDeliver, liabilities.longTermDebt)
-  );
+  return calcSectionTotal(sheet.liabilities?.nonCurrent, () => calcTotalLongTermPayables(sheet));
 }
 
 export function calcTotalLiabilities(sheet: PartialBalanceSheet) {
-  return (
-    sheet.totalLiabilities ??
-    mapSum(calcTotalCurrentLiabilities(sheet), calcTotalNonCurrentLiabilities(sheet))
+  return calcSectionTotal(
+    sheet.liabilities,
+    () => calcTotalCurrentLiabilities(sheet),
+    () => calcTotalNonCurrentLiabilities(sheet),
+  );
+}
+
+export function calcTotalShips(sheet: PartialBalanceSheet) {
+  return calcSectionTotal(
+    sheet.lockedAssets?.ships,
+    x => x.marketValue,
+    x => less(x.accumulatedDepreciation),
   );
 }
 
 export function calcTotalLockedAssets(sheet: PartialBalanceSheet) {
-  const assets = sheet.lockedAssets;
-  if (!assets) {
-    return undefined;
-  }
-
-  return assets.total ?? mapSum(assets.ships, assets.hqUpgrades, assets.arc);
-}
-
-export function calcEquity(sheet: PartialBalanceSheet) {
-  return (
-    sheet.equity ?? map([calcTotalAssets(sheet), calcTotalLiabilities(sheet)], (x, y) => x - y)
+  return calcSectionTotal(
+    sheet.lockedAssets,
+    () => calcTotalShips(sheet),
+    x => x.hqUpgrades,
+    x => x.arc,
   );
 }
 
+export function calcEquity(sheet: PartialBalanceSheet) {
+  return sheet.equity ?? mapSum(calcTotalAssets(sheet), less(calcTotalLiabilities(sheet)));
+}
+
 export function calcCompanyValue(sheet: PartialBalanceSheet) {
-  return sheet.companyValue ?? map([calcEquity(sheet), calcTotalLockedAssets(sheet)], sum);
+  return sheet.companyValue ?? mapSum(calcEquity(sheet), calcTotalLockedAssets(sheet));
 }
 
 export function calcQuickAssets(sheet: PartialBalanceSheet) {
-  const assets = sheet.currentAssets;
-  if (!assets) {
-    return undefined;
-  }
-
   return mapSum(
-    assets.cash,
-    assets.deposits,
-    assets.interestReceivable,
-    assets.accountsReceivable,
-    assets.shortTermLoans,
+    calcTotalCashAndCashEquivalents(sheet),
+    calcTotalLoansReceivable(sheet),
+    sheet?.assets?.current?.accountsReceivable,
   );
 }
 
 export function calcQuickLiabilities(sheet: PartialBalanceSheet) {
-  const liabilities = sheet.currentLiabilities;
-  if (!liabilities) {
-    return undefined;
-  }
-
-  return mapSum(
-    liabilities.accountsPayable,
-    liabilities.shortTermDebt,
-    liabilities.interestPayable,
-  );
+  return mapSum(calcTotalLoansPayable(sheet), sheet?.liabilities?.current?.accountsPayable);
 }
 
 export function calcAcidTestRatio(sheet: PartialBalanceSheet) {

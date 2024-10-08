@@ -4,20 +4,13 @@ import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
 import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
 import {
-  selfConditions,
   partnerCurrentConditions,
   sumLoanRepayments,
   sumAccountsPayable,
-  sumDeliveries,
-  sumPendingMaterialsPickup,
-  sumMaterialsShipment,
-  sumMaterialsPickup,
   sumLoanInterest,
 } from '@src/core/balance/contract-conditions';
-import { getPrice } from '@src/infrastructure/fio/cx';
 import { sumMapValues } from '@src/core/balance/utils';
 import { inventory } from '@src/core/balance/inventory';
-import { currentOrderValue, totalOrderValue } from './orders';
 import { sum } from '@src/utils/sum';
 
 const cashTotal = computed(() => sumBy(balancesStore.all.value, x => x.amount));
@@ -76,43 +69,15 @@ const accountsReceivable = computed(() => sumAccountsPayable(partnerCurrentCondi
 
 const shortTermLoans = computed(() => sumLoanRepayments(partnerCurrentConditions));
 
-const marketListedMaterials = computed(() => {
-  const sellOrders = cxosStore.all.value?.filter(
-    x => x.type === 'SELLING' && x.status !== 'FILLED',
-  );
-  return sumBy(sellOrders, x => {
-    const price = getPrice(x.material.ticker);
-    if (price === undefined) {
-      return undefined;
-    }
-    return price * x.amount;
-  });
-});
-
-const materialsToReceive = computed(() =>
-  sum(
-    sumDeliveries(partnerCurrentConditions),
-    sumMaterialsShipment(partnerCurrentConditions),
-    sumMaterialsPickup(selfConditions),
-    // After all dependencies are fulfilled,
-    // the player must pick up the materials via COMEX_PURCHASE_PICKUP condition.
-    // We'll consider these materials as a part of current assets, regardless of
-    // COMEX_PURCHASE_PICKUP deadline, since they can be picked up at any time.
-    sumPendingMaterialsPickup(selfConditions),
-  ),
-);
-
 export const currentAssets = {
   cashTotal,
   cxDeposits,
+  cxDepositsTotal,
   fxDeposits,
+  fxDepositsTotal,
   depositsTotal,
   interestReceivable,
   accountsReceivable,
   shortTermLoans,
-  orders: currentOrderValue,
-  totalOrderValue,
-  marketListedMaterials,
-  inventory: inventory.total,
-  materialsToReceive,
+  inventory,
 };

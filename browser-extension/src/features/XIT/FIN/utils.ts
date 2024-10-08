@@ -5,6 +5,13 @@ export function formatAmount(amount: number | undefined) {
   if (amount === undefined) {
     return '--';
   }
+  return fixed0(amount);
+}
+
+export function formatCurrencyAmount(amount: number | undefined) {
+  if (amount === undefined) {
+    return '--';
+  }
   const sign = amount < 0 ? '-' : '';
   return sign + userData.settings.currency + fixed0(Math.abs(amount));
 }

@@ -6,6 +6,7 @@ import {
   getEntityNameFromAddress,
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
+import { computed, Ref } from 'vue';
 
 export interface MaterialBurn {
   DailyAmount: number;
@@ -25,25 +26,43 @@ export interface PlanetBurn {
   burn: BurnValues;
 }
 
+const burnBySiteId = computed(() => {
+  if (sitesStore.all.value === undefined) {
+    return undefined;
+  }
+
+  const bySiteId = new Map<string, Ref<PlanetBurn | undefined>>();
+  for (const site of sitesStore.all.value) {
+    bySiteId.set(
+      site.siteId,
+      computed(() => {
+        const id = site.siteId;
+        const workforce = workforcesStore.getById(id)?.workforces;
+        const production = productionStore.getBySiteId(id);
+        const storage = storagesStore.getByAddressableId(id);
+        if (!workforce || !production) {
+          return undefined;
+        }
+
+        return {
+          storeId: storage?.[0]?.id,
+          planetName: getEntityNameFromAddress(site.address),
+          naturalId: getEntityNaturalIdFromAddress(site.address),
+          burn: calculatePlanetBurn(production, workforce, storage ?? []),
+        } as PlanetBurn;
+      }),
+    );
+  }
+  return bySiteId;
+});
+
 export function getPlanetBurn(siteOrId?: PrunApi.Site | string | null) {
   const site = typeof siteOrId === 'string' ? sitesStore.getById(siteOrId) : siteOrId;
   if (!site) {
     return undefined;
   }
-  const id = site.siteId;
-  const workforce = workforcesStore.getById(id)?.workforces;
-  const production = productionStore.getBySiteId(id);
-  const storage = storagesStore.getByAddress(id);
-  if (!workforce || !production) {
-    return undefined;
-  }
 
-  return {
-    storeId: storage?.[0]?.id,
-    planetName: getEntityNameFromAddress(site.address),
-    naturalId: getEntityNaturalIdFromAddress(site.address),
-    burn: calculatePlanetBurn(production, workforce, storage ?? []),
-  } as PlanetBurn;
+  return burnBySiteId.value?.get(site.siteId)?.value;
 }
 
 export function calculatePlanetBurn(
@@ -91,7 +110,7 @@ export function calculatePlanetBurn(
             const materialBurn = burnDict[mat.material.ticker];
             if (materialBurn) {
               materialBurn.DailyAmount -= (mat.amount * numLines) / totalDuration;
-              if (materialBurn.Type == 'output') {
+              if (materialBurn.Type === 'output' && materialBurn.DailyAmount < 0) {
                 materialBurn.Type = 'input';
               }
             } else {
@@ -119,7 +138,9 @@ export function calculatePlanetBurn(
         const materialBurn = burnDict[ticker];
         if (materialBurn) {
           materialBurn.DailyAmount -= need.unitsPerInterval;
-          materialBurn.Type = 'workforce';
+          if (materialBurn.Type === 'output' && materialBurn.DailyAmount < 0) {
+            materialBurn.Type = 'workforce';
+          }
         } else {
           burnDict[ticker] = {
             DailyAmount: -need.unitsPerInterval,

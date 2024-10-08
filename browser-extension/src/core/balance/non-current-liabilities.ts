@@ -11,7 +11,7 @@ import { sum } from '@src/utils/sum';
 
 const accountsPayable = computed(() => sumAccountsPayable(selfNonCurrentConditions));
 
-const materialsToDeliver = computed(() =>
+const materialsPayable = computed(() =>
   sum(
     sumDeliveries(selfNonCurrentConditions),
     sumProvisions(selfNonCurrentConditions),
@@ -23,6 +23,6 @@ const longTermDebt = computed(() => sumLoanRepayments(selfNonCurrentConditions))
 
 export const nonCurrentLiabilities = {
   accountsPayable,
-  materialsToDeliver,
+  materialsPayable,
   longTermDebt,
 };

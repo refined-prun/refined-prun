@@ -33,7 +33,7 @@ const bases = computed(() => {
       name: getEntityNameFromAddress(site.address)!,
       workforce: !!workforcesStore.getById(site.siteId),
       production: !!productionStore.getBySiteId(site.siteId),
-      storage: !!storagesStore.getByAddress(site.siteId),
+      storage: !!storagesStore.getByAddressableId(site.siteId),
     })) ?? []
   );
 });

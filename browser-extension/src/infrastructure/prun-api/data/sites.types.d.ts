@@ -21,7 +21,7 @@ declare namespace PrunApi {
     ticker: string;
     expertiseCategory: ExpertiseCategory | null;
     needsFertileSoil: boolean;
-    type: BuildOptionType;
+    type: PlatformModuleType;
     workforceCapacities: WorkforceCapacity[];
     materials: MaterialQuantities;
   }
@@ -37,7 +37,7 @@ declare namespace PrunApi {
     | 'METALLURGY'
     | 'RESOURCE_EXTRACTION';
 
-  export declare type BuildOptionType =
+  export declare type PlatformModuleType =
     | 'CORE'
     | 'HABITATION'
     | 'PRODUCTION'
@@ -76,6 +76,6 @@ declare namespace PrunApi {
     reactorId: string;
     reactorName: string;
     reactorTicker: string;
-    type: BuildOptionType;
+    type: PlatformModuleType;
   }
 }
