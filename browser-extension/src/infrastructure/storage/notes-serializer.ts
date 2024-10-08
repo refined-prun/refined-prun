@@ -18,19 +18,23 @@ export async function loadNotes() {
 }
 
 export function importNotes() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  uploadJson((json: any) => {
+  uploadJson(json => {
+    if (json?.type !== fileType) {
+      return;
+    }
+    applyNotes(json.data);
+  });
+}
+
+export function importPmmgNotes() {
+  uploadJson(json => {
     if (!json) {
       return;
     }
-    if (json.type === fileType) {
-      applyNotes(json.data);
-    } else {
-      const pmmg = json['PMMG-Notes'];
-      if (pmmg) {
-        const notes = Object.keys(pmmg).map(x => [x, pmmg[x]] as Note);
-        applyNotes({ notes });
-      }
+    const pmmg = json['PMMG-Notes'];
+    if (pmmg) {
+      const notes = Object.keys(pmmg).map(x => [x, pmmg[x]] as Note);
+      applyNotes({ notes });
     }
   });
 }

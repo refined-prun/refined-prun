@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function importPmmgUserData(pmmg: any): UserData.PmmgSettings | undefined {
+export function parsePmmgUserData(pmmg: any): UserData.PmmgSettings | undefined {
   if (!pmmg.loaded_before) {
     return undefined;
   }

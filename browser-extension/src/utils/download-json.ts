@@ -9,7 +9,8 @@ export function downloadJson(obj: object, fileName: string, options?: { pretty?:
   document.body.removeChild(link);
 }
 
-export function uploadJson(callback: (json: object) => void) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function uploadJson(callback: (json: any) => void) {
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = '.json';

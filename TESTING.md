@@ -31,13 +31,9 @@ properly test new features/changes and have fewer surprises overall**
 **Important: do not move the extracted folder around your file system,
 as browser always loads it from this folder**
 
-## How to import PMMG user data
+## How to import PMMG files
 
-- pmmg-settings: `XIT SET` -> `Import User Data`
-- pmmg-finance: `XIT SET` -> `Import Finances`
-- pmmg-notes: `XIT SET` -> `Import Notes`
-- pmmg-lists: not implemented yet
-- pmmg-actions: not implemented yet
+Open `XIT SET PMMG` and click the import buttons.
 
 ## How to update extension
 

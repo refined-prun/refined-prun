@@ -1,6 +1,6 @@
 import { downloadJson, uploadJson } from '@src/utils/download-json';
 import { migrateUserData } from '@src/infrastructure/storage/user-data-migrations';
-import { importPmmgUserData } from '@src/infrastructure/storage/pmmg-import';
+import { parsePmmgUserData } from '@src/infrastructure/storage/pmmg-files';
 import { applyPmmgUserData, applyUserData, userData, watchUserData } from '@src/store/user-data';
 import system from '@src/system';
 import { deepToRaw } from '@src/utils/deep-to-raw';
@@ -21,19 +21,23 @@ export async function loadUserData() {
 }
 
 export function importUserData() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  uploadJson((json: any) => {
+  uploadJson(json => {
+    if (json?.type !== fileType) {
+      return;
+    }
+    const userData = migrateUserData(json.data);
+    applyUserData(userData);
+  });
+}
+
+export function importPmmgSettings() {
+  uploadJson(json => {
     if (!json) {
       return;
     }
-    if (json.type === fileType) {
-      const userData = migrateUserData(json.data);
-      applyUserData(userData);
-    } else {
-      const pmmg = importPmmgUserData(json);
-      if (pmmg) {
-        applyPmmgUserData(pmmg);
-      }
+    const pmmg = parsePmmgUserData(json);
+    if (pmmg) {
+      applyPmmgUserData(pmmg);
     }
   });
 }
