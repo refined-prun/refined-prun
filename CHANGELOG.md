@@ -29,9 +29,11 @@
 - `XIT CONTS` displays `SHPT` for contracts with shipment condition.
 - `LM` BUYING/SELLING ads are highlighted green/red.
 - Own `LM` orders are highlighted.
+- `LM` ads are more compact, showing commodity/shipment icons.
 - Clicking on the APEX logo now opens player company information.
 - `XIT REP` shows a weight/volume/cost table.
 - `BS` displays a building list summary at the bottom.
+- `XIT NOTE` list is now reorderable.
 - Material ticker auto-capitalizes inputs for commands: `CXM`, `CXOB`, `CXP`, `CXPC`, `CXPO`, `MAT`.
   For example: `CXPO h2o.ai1` will change to `CXPO H2O.AI1` when you hit Enter.
 - Added compatibility with non-English localizations.
@@ -51,9 +53,9 @@
   - 4 new financial ratios are added. Look them up if you don't know them!
 - `XIT SHEETS` now display in minimalist mode.
 - The `Additional Days` burn setting was changed to `Resupply`, representing total days for resupply.
-- `LM` ads are more compact, showing commodity/shipment icons.
 - Burn material sorting was changed to favor outputs over inputs/consumables and inputs over consumables.
 - Equity history chart now shows only the latest point per day.
+- `XIT NOTE` notes are not deleted when empty.
 - Font size of material amount labels is 1px bigger.
 - New and old UIs now use vanilla PrUn styling where possible.
 - All XIT commands accept up to 3 space-separated arguments.
@@ -83,6 +85,8 @@
 Known bugs:
 - On PMMG setting import, selected inventory filters are reset. The filters themselves are imported properly, 
   so just select them again in `INV`.
+- `XIT NOTE` now uses ids, so your existing `XIT NOTE` buffers will fail to open.
+  You will need to reopen them from the main note list.
 - COM button in the sidebar DOES NOT BLINK on new messages. Open COM buffer directly to check for new messages.
 
 Removed features:
