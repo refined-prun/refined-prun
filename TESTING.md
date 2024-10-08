@@ -13,7 +13,7 @@ properly test new features/changes and have fewer surprises overall**
 - Report all bugs you encounter
 - Report all feedback and ideas that pop up in your head
 - Do not share screenshots and information about this extension publicly. I would like to
-  prevent possible confusion and misunderstanding with public.
+  prevent possible confusion and misunderstanding with the public.
 - Frequently export your settings/data - this extension is still WIP, so data loss is a possibility
 
 ## How to install
@@ -45,7 +45,7 @@ I will send you an archive with the new version when it's ready
 
 1. Export all data and settings: settings, finances, notes, lists, actions
 2. Close the game tab
-3. Backup the folder with current extension folder
+3. Backup the folder with the current extension
 4. Delete all contents in the folder and then unpack the new archive into it
 5. Go to Extensions page
 6. Press the ⟳ button in the Refined PrUn extension tile
