@@ -28,6 +28,7 @@
 - `XIT CONTS` displays a ! mark for contracts with unfulfilled own conditions.
 - `XIT CONTS` displays `SHPT` for contracts with shipment condition.
 - `LM` BUYING/SELLING ads are highlighted green/red.
+- Own `LM` orders are highlighted.
 - Clicking on the APEX logo now opens player company information.
 - `XIT REP` shows a weight/volume/cost table.
 - `BS` displays a building list summary at the bottom.

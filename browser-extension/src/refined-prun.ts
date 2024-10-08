@@ -18,6 +18,7 @@ import '@src/features/standard/inv-search-bar';
 import '@src/features/standard/lm-add-icons/lm-add-icons';
 import '@src/features/standard/lm-buy-sell-highlight';
 import '@src/features/standard/lm-hide-rating';
+import '@src/features/standard/lm-highlight-own-ads';
 import '@src/features/standard/lm-shipping-per-unit-price/lm-shipping-per-unit-price';
 import '@src/features/standard/nots-improve-notifications';
 import '@src/features/standard/sfc-flight-eta';
