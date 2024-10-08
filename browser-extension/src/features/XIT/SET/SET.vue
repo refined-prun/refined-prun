@@ -31,11 +31,7 @@ import Commands from '@src/components/forms/Commands.vue';
 import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import { initialUserData, resetAllData, userData } from '@src/store/user-data';
 import { exportUserData, importUserData } from '@src/infrastructure/storage/user-data-serializer';
-import { exportNotes, importNotes } from '@src/infrastructure/storage/notes-serializer';
-import {
-  exportFinancialHistory,
-  importFinancialHistory,
-} from '@src/infrastructure/storage/balance-serializer';
+import { importNotesLegacy } from '@src/infrastructure/storage/notes-serializer';
 
 function addSidebarButton() {
   userData.settings.sidebar.push(['SET', 'XIT SET']);
@@ -101,12 +97,7 @@ function confirmResetAllData(ev: Event) {
       <PrunButton primary @click="exportUserData">Export User Data</PrunButton>
     </Commands>
     <Commands>
-      <PrunButton primary @click="importFinancialHistory">Import Finances</PrunButton>
-      <PrunButton primary @click="exportFinancialHistory">Export Finances</PrunButton>
-    </Commands>
-    <Commands>
-      <PrunButton primary @click="importNotes">Import Notes</PrunButton>
-      <PrunButton primary @click="exportNotes">Export Notes</PrunButton>
+      <PrunButton primary @click="importNotesLegacy">Import Notes (legacy)</PrunButton>
     </Commands>
   </form>
   <SectionHeader>Danger Zone</SectionHeader>

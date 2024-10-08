@@ -1,33 +1,36 @@
-import { reactive, watch } from 'vue';
+import { userData } from '@src/store/user-data';
+import { v4 as uuidv4 } from 'uuid';
 
-export type Note = [string, string];
+export type LegacyNote = [string, string];
 
-export const notes = reactive({
-  notes: [] as Note[],
-});
-
-export function deleteNote(note: Note) {
-  notes.notes = notes.notes.filter(x => x !== note);
+export function createNote(name: string) {
+  const id = createId();
+  userData.notes.push({
+    id,
+    name,
+    text: '',
+  });
+  return id;
 }
 
-export function applyNotes(newNotes: { notes: Note[] }) {
-  notes.notes.push(...newNotes.notes);
+export function deleteNote(note: UserData.Note) {
+  userData.notes = userData.notes.filter(x => x !== note);
 }
 
-export async function watchNotes(save: () => void) {
-  let saveQueued = false;
-
-  watch(
-    notes,
-    () => {
-      if (!saveQueued) {
-        setTimeout(() => {
-          save();
-          saveQueued = false;
-        }, 1000);
-        saveQueued = true;
-      }
-    },
-    { deep: true },
-  );
+export function applyLegacyNotes(newNotes: LegacyNote[]) {
+  userData.notes = newNotes.map(x => ({
+    id: createId(),
+    name: x[0],
+    text: x[1],
+  }));
 }
+
+export function applyPmmgNotes(pmmg: Record<string, string>) {
+  userData.notes = Object.keys(pmmg).map(x => ({
+    id: createId(),
+    name: x,
+    text: pmmg[x],
+  }));
+}
+
+const createId = () => uuidv4().replaceAll('-', '');

@@ -16,11 +16,17 @@ declare namespace UserData {
 
   type TileState = Record<string, unknown>;
 
-  export type BalanceHistory = {
+  interface Note {
+    id: string;
+    name: string;
+    text: string;
+  }
+
+  interface BalanceHistory {
     v1: UserData.BalanceSheetDataV1[];
     v2: UserData.BalanceSheetDataV2[];
     v3: UserData.BalanceSheetDataV3[];
-  };
+  }
 
   type BalanceSheetDataV1 = [
     timestamp: number,

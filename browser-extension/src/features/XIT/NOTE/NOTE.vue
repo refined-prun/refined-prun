@@ -17,12 +17,12 @@ import NoteEditor from '@src/features/XIT/NOTE/NoteEditor.vue';
 import { useXitParameters } from '@src/hooks/useXitParameters';
 
 const parameters = useXitParameters();
-const noteName = parameters.join('_');
+const noteId = parameters[0];
 </script>
 
 <template>
   <div :style="{ height: '100%', flexGrow: 1, paddingTop: '4px' }">
-    <NoteList v-if="!noteName" />
-    <NoteEditor v-else :name="noteName!.split('_').join(' ')" />
+    <NoteList v-if="!noteId" />
+    <NoteEditor v-else :id="noteId" />
   </div>
 </template>

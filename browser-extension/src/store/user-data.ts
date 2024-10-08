@@ -43,6 +43,7 @@ export const initialUserData = deepFreeze({
     v2: [],
     v3: [],
   } as UserData.BalanceHistory,
+  notes: [] as UserData.Note[],
 });
 
 export const userData = reactive({} as typeof initialUserData);

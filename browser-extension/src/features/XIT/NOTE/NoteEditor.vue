@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, useCssModule, watch } from 'vue';
-import { notes } from '@src/store/notes';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { userData } from '@src/store/user-data';
 
 const props = defineProps({
-  name: {
+  id: {
     type: String,
     required: true,
   },
@@ -12,28 +12,15 @@ const props = defineProps({
 
 const $style = useCssModule();
 
-const note = computed(() => notes.notes.find(x => x[0] === props.name));
+const note = computed(() => userData.notes.find(x => x.id.startsWith(props.id)));
 
-const text = computed({
-  get: () => note.value?.[1] ?? '',
-  set: value => {
-    if (value.length === 0) {
-      notes.notes = notes.notes.filter(x => x[0] !== props.name);
-      return;
-    }
-    let savedNote = note.value;
-    if (!savedNote) {
-      savedNote = [props.name, value];
-      notes.notes.push(savedNote);
-    } else {
-      savedNote[1] = value;
-    }
-  },
-});
+const renderedText = computed(() => processText(note.value?.text));
 
-const renderedText = computed(() => processText(text.value));
+function processText(text?: string) {
+  if (text === undefined) {
+    return '';
+  }
 
-function processText(text: string) {
   // Account for final new lines
   if (text[text.length - 1] == '\n') {
     text += ' ';
@@ -89,12 +76,15 @@ watch(
 </script>
 
 <template>
-  <div :class="['title', $style.title]" :style="{ paddingLeft: '10px' }">{{ name }}</div>
-  <div>
-    <textarea ref="textbox" v-model="text" :class="$style.textarea" spellcheck="false" />
-    <!-- eslint-disable-next-line vue/no-v-html -->
-    <pre ref="overlay" :class="$style.overlay" v-html="renderedText" />
-  </div>
+  <div v-if="!note">Note with id {{ id }} not found.</div>
+  <template v-else>
+    <div :class="['title', $style.title]" :style="{ paddingLeft: '10px' }">{{ note.name }}</div>
+    <div>
+      <textarea ref="textbox" v-model="note.text" :class="$style.textarea" spellcheck="false" />
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <pre ref="overlay" :class="$style.overlay" v-html="renderedText" />
+    </div>
+  </template>
 </template>
 
 <style module>

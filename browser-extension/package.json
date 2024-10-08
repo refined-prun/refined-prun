@@ -19,6 +19,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@types/uuid": "^10.0.0",
     "chart.js": "^4.4.3",
     "chartjs-plugin-datalabels": "^2.2.0",
     "chartjs-plugin-zoom": "^2.0.1",
@@ -33,6 +34,7 @@
     "socket.io-parser": "^4.2.4",
     "type-fest": "^4.21.0",
     "typed-query-selector": "^2.11.2",
+    "uuid": "^10.0.0",
     "vue": "^3.4.37",
     "vue-chartjs": "^5.3.1",
     "webextension-polyfill": "^0.12.0"
