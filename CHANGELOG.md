@@ -52,6 +52,7 @@
 - `XIT SHEETS` now display in minimalist mode.
 - The `Additional Days` burn setting was changed to `Resupply`, representing total days for resupply.
 - `LM` ads are more compact, showing commodity/shipment icons.
+- Burn material sorting was changed to favor outputs over inputs/consumables and inputs over consumables.
 - Equity history chart now shows only the latest point per day.
 - Font size of material amount labels is 1px bigger.
 - New and old UIs now use vanilla PrUn styling where possible.

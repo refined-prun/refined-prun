@@ -7,8 +7,12 @@ import {
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
 import { computed, Ref } from 'vue';
+import { sumBy } from '@src/utils/sum-by';
 
 export interface MaterialBurn {
+  input: number;
+  output: number;
+  workforce: number;
   DailyAmount: number;
   Inventory: number;
   DaysLeft: number;
@@ -70,58 +74,43 @@ export function calculatePlanetBurn(
   workforces: PrunApi.Workforce[] | undefined,
   storage: PrunApi.Store[] | undefined,
 ) {
-  const burnDict: BurnValues = {};
+  const burnValues: BurnValues = {};
+
+  function getBurnValue(ticker: string) {
+    let burnValue = burnValues[ticker];
+    if (!burnValue) {
+      burnValue = {
+        input: 0,
+        output: 0,
+        workforce: 0,
+        DailyAmount: 0,
+        Inventory: 0,
+        DaysLeft: 0,
+        Type: 'output',
+      };
+      burnValues[ticker] = burnValue;
+    }
+    return burnValue;
+  }
 
   if (production) {
     for (const line of production) {
-      const numLines = line.capacity;
-      let hasRecurring = false;
-      let totalDuration = 0;
-      for (const order of line.orders) {
-        if (!order.started) {
-          // Only account for orders in the queue.
-          hasRecurring = hasRecurring || order.recurring;
-        }
-      }
-      for (const order of line.orders) {
-        if (!order.started && (!hasRecurring || order.recurring)) {
-          // Only account for orders in the queue.
-          totalDuration += order.duration?.millis || Infinity;
-        }
-      }
-      totalDuration /= 86400000; // Convert to days
+      const capacity = line.capacity;
+      const queuedOrders = line.orders.filter(x => !x.started);
+      const recurringOrders = queuedOrders.filter(x => x.recurring);
+      const burnOrders = recurringOrders.length > 0 ? recurringOrders : queuedOrders;
+      let totalDuration = sumBy(burnOrders, x => x.duration?.millis ?? Infinity);
+      // Convert to days
+      totalDuration /= 86400000;
 
-      for (const order of line.orders) {
-        if (!order.started && (!hasRecurring || order.recurring)) {
-          for (const mat of order.outputs) {
-            const materialBurn = burnDict[mat.material.ticker];
-            if (materialBurn) {
-              materialBurn.DailyAmount += (mat.amount * numLines) / totalDuration;
-            } else {
-              burnDict[mat.material.ticker] = {
-                DailyAmount: (mat.amount * numLines) / totalDuration,
-                Inventory: 0,
-                DaysLeft: 0,
-                Type: 'output',
-              };
-            }
-          }
-          for (const mat of order.inputs) {
-            const materialBurn = burnDict[mat.material.ticker];
-            if (materialBurn) {
-              materialBurn.DailyAmount -= (mat.amount * numLines) / totalDuration;
-              if (materialBurn.Type === 'output' && materialBurn.DailyAmount < 0) {
-                materialBurn.Type = 'input';
-              }
-            } else {
-              burnDict[mat.material.ticker] = {
-                DailyAmount: (-mat.amount * numLines) / totalDuration,
-                Inventory: 0,
-                DaysLeft: 0,
-                Type: 'input',
-              };
-            }
-          }
+      for (const order of burnOrders) {
+        for (const mat of order.outputs) {
+          const materialBurn = getBurnValue(mat.material.ticker);
+          materialBurn.output += (mat.amount * capacity) / totalDuration;
+        }
+        for (const mat of order.inputs) {
+          const materialBurn = getBurnValue(mat.material.ticker);
+          materialBurn.input += (mat.amount * capacity) / totalDuration;
         }
       }
     }
@@ -134,22 +123,23 @@ export function calculatePlanetBurn(
         continue;
       }
       for (const need of tier.needs) {
-        const ticker = need.material.ticker;
-        const materialBurn = burnDict[ticker];
-        if (materialBurn) {
-          materialBurn.DailyAmount -= need.unitsPerInterval;
-          if (materialBurn.Type === 'output' && materialBurn.DailyAmount < 0) {
-            materialBurn.Type = 'workforce';
-          }
-        } else {
-          burnDict[ticker] = {
-            DailyAmount: -need.unitsPerInterval,
-            Inventory: 0,
-            DaysLeft: 0,
-            Type: 'workforce',
-          };
-        }
+        const materialBurn = getBurnValue(need.material.ticker);
+        materialBurn.workforce += need.unitsPerInterval;
       }
+    }
+  }
+
+  for (const ticker of Object.keys(burnValues)) {
+    const burnValue = burnValues[ticker];
+    burnValue.DailyAmount = burnValue.output;
+    burnValue.Type = 'output';
+    burnValue.DailyAmount -= burnValue.workforce;
+    if (burnValue.workforce > 0 && burnValue.DailyAmount < 0) {
+      burnValue.Type = 'workforce';
+    }
+    burnValue.DailyAmount -= burnValue.input;
+    if (burnValue.input > 0 && burnValue.DailyAmount < 0) {
+      burnValue.Type = 'input';
     }
   }
 
@@ -160,7 +150,7 @@ export function calculatePlanetBurn(
         if (!quantity) {
           continue;
         }
-        const materialBurn = burnDict[quantity.material.ticker];
+        const materialBurn = burnValues[quantity.material.ticker];
         if (!materialBurn) {
           continue;
         }
@@ -175,5 +165,5 @@ export function calculatePlanetBurn(
     }
   }
 
-  return burnDict;
+  return burnValues;
 }
