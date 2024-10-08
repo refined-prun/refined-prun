@@ -83,8 +83,7 @@
 Known bugs:
 - On PMMG setting import, selected inventory filters are reset. The filters themselves are imported properly, 
   so just select them again in `INV`.
-- COM button in the sidebar DOES NOT BlINK on new messages. Open COM buffer directly to check for new messages.
-- LM ad list will display incorrect data if an ad added/removed/accepted. Please reopen the screen with LM on change.
+- COM button in the sidebar DOES NOT BLINK on new messages. Open COM buffer directly to check for new messages.
 
 Removed features:
 - Custom pricing scheme from Google Sheets for XIT FIN.
