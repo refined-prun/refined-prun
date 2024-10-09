@@ -1,17 +1,15 @@
-import MaterialAmount = PrunApi.MaterialAmount;
 import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getShipLastRepair, shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
-
-import { mergeMaterialAmounts } from '@src/core/sort-materials';
+import { getBuildingBuildMaterials, isRepairableBuilding } from '@src/core/buildings';
 
 export interface RepairEntry {
   ticker: string;
   target: string;
   lastRepair: number;
   condition: number;
-  materials: MaterialAmount[];
-  fullMaterials: MaterialAmount[];
+  materials: PrunApi.MaterialAmount[];
+  fullMaterials: PrunApi.MaterialAmount[];
 }
 
 export function calculateBuildingEntries(parameters: string[]) {
@@ -31,16 +29,14 @@ export function calculateBuildingEntries(parameters: string[]) {
   const entries: RepairEntry[] = [];
   for (const site of sites) {
     const target = getEntityNameFromAddress(site.address)!;
-    for (const building of site.platforms.filter(x => x.repairMaterials.length > 0)) {
+    for (const building of site.platforms.filter(isRepairableBuilding)) {
       entries.push({
         ticker: building.module.reactorTicker,
         target,
         lastRepair: getBuildingLastRepair(building),
         condition: building.condition,
         materials: building.repairMaterials,
-        fullMaterials: mergeMaterialAmounts(
-          building.repairMaterials.concat(building.reclaimableMaterials),
-        ),
+        fullMaterials: getBuildingBuildMaterials(building, site),
       });
     }
   }

@@ -11,7 +11,6 @@ xit.add({
 </script>
 
 <script setup lang="ts">
-import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';
 import { computed } from 'vue';
@@ -21,48 +20,38 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { calculateSiteProfitability } from '@src/core/profitability';
 import { sumBy } from '@src/utils/sum-by';
 import { fixed0, percent2 } from '@src/utils/format';
-
-interface ProductionEntry {
-  name: string;
-  produced: number;
-  consumed: number;
-  profit: number;
-  margin: number;
-}
+import { map } from '@src/utils/map-values';
 
 const entries = computed(() => {
-  const sites = sitesStore.all.value;
-  if (sites === undefined) {
-    return [];
-  }
-  const entries: ProductionEntry[] = [];
-  for (const site of sites) {
-    const profitability = calculateSiteProfitability(site.siteId);
-    if (profitability === undefined) {
-      continue;
-    }
-    entries.push({
-      name: getEntityNameFromAddress(site.address)!,
-      produced: profitability.produced,
-      consumed: profitability.consumed,
-      profit: profitability.profit,
-      margin: profitability.margin,
-    });
-  }
-
-  entries.sort((a, b) => b.profit - a.profit);
-  return entries;
+  return (
+    sitesStore.all.value
+      ?.map(x => calculateSiteProfitability(x)!)
+      .filter(x => !!x)
+      .sort((a, b) => b.profit - a.profit) ?? []
+  );
 });
 
-const totalProduced = computed(() => sumBy(entries.value, x => x.produced));
-const totalConsumed = computed(() => sumBy(entries.value, x => x.consumed));
-const totalProfit = computed(() => sumBy(entries.value, x => x.profit));
+const dailyCost = computed(() => sumBy(entries.value, x => x.cost));
+const dailyRepairs = computed(() => sumBy(entries.value, x => x.repairs));
+const dailyRevenue = computed(() => sumBy(entries.value, x => x.revenue));
+const dailyProfit = computed(() => sumBy(entries.value, x => x.profit));
+const dailyMargin = computed(() => {
+  return map([dailyCost.value, dailyRepairs.value, dailyProfit.value], (cost, repairs, profit) => {
+    const totalCost = cost + repairs;
+    return totalCost !== 0 ? profit / totalCost : 1;
+  });
+});
 
 const figures = computed(() => {
   return [
-    { name: 'Daily Produced', value: formatCurrencyAmount(totalProduced.value) },
-    { name: 'Daily Consumed', value: formatCurrencyAmount(totalConsumed.value) },
-    { name: 'Daily Profit', value: formatCurrencyAmount(totalProfit.value) },
+    { name: 'Daily Cost', value: formatCurrencyAmount(dailyCost.value) },
+    { name: 'Daily Repairs', value: formatCurrencyAmount(dailyRepairs.value) },
+    { name: 'Daily Revenue', value: formatCurrencyAmount(dailyRevenue.value) },
+    { name: 'Daily Profit', value: formatCurrencyAmount(dailyProfit.value) },
+    {
+      name: 'Daily Margin',
+      value: dailyMargin.value !== undefined ? percent2(dailyMargin.value) : '--',
+    },
   ];
 });
 
@@ -80,12 +69,13 @@ function profitClass(value: number) {
     <KeyFigures :figures="figures" />
     <FinHeader>Breakdown by Planet</FinHeader>
     <table>
-      <colgroup span="5" style="width: 20%"></colgroup>
+      <colgroup span="6" style="width: calc(100% / 6)"></colgroup>
       <thead>
         <tr>
           <th>Name</th>
-          <th>Produced</th>
-          <th>Consumed</th>
+          <th>Cost</th>
+          <th>Repairs</th>
+          <th>Revenue</th>
           <th>Profit</th>
           <th>Margin</th>
         </tr>
@@ -93,8 +83,9 @@ function profitClass(value: number) {
       <tbody>
         <tr v-for="entry in entries" :key="entry.name">
           <td>{{ entry.name }}</td>
-          <td>{{ fixed0(entry.produced) }}</td>
-          <td>{{ fixed0(entry.consumed) }}</td>
+          <td>{{ fixed0(entry.cost) }}</td>
+          <td>{{ fixed0(entry.repairs) }}</td>
+          <td>{{ fixed0(entry.revenue) }}</td>
           <td>{{ fixed0(entry.profit) }}</td>
           <td :class="profitClass(entry.margin)">{{ percent2(entry.margin) }}</td>
         </tr>

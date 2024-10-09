@@ -8,6 +8,7 @@ import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { addMessage } from './Execute';
+import { isRepairableBuilding } from '@src/core/buildings';
 
 // Turn stored action package (resupply base for 30 days) to series of actionable actions (buy 1000 RAT, then 1000 DW, etc)
 // Preview flag set to true will allow non-configured actions to be displayed
@@ -346,7 +347,7 @@ export function parseGroup(group, messageBox, errorFlag) {
 
     if (planetSite && planetSite.platforms) {
       planetSite.platforms.forEach(building => {
-        if (building.repairMaterials.length === 0) {
+        if (!isRepairableBuilding(building)) {
           return;
         }
 

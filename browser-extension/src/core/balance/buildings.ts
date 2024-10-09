@@ -1,12 +1,10 @@
-import { sumMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { sumMapValues } from '@src/core/balance/utils';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { timestampEachMinute } from '@src/utils/dayjs';
-import { calculateBuildingCondition } from '@src/core/buildings';
+import { calcBuildingCondition, calcBuildingMarketValue } from '@src/core/buildings';
 import { computed } from 'vue';
 import { diffDays } from '@src/utils/time-diff';
-import { sum } from '@src/utils/sum';
 import { sumBy } from '@src/utils/sum-by';
 
 interface Entry {
@@ -23,13 +21,16 @@ const buildingsMarketValue = computed(() => {
   const buildings: Entry[] = [];
   for (const site of sites) {
     const location = getEntityNameFromAddress(site.address)!;
+    const calculatedValues = new Map<string, number>();
     for (const building of site.platforms) {
-      const value = sum(
-        sumMaterialAmountPrice(building.reclaimableMaterials),
-        sumMaterialAmountPrice(building.repairMaterials),
-      );
+      const ticker = building.module.reactorTicker;
+      let value = calculatedValues.get(ticker);
       if (value === undefined) {
-        return undefined;
+        value = calcBuildingMarketValue(building, site);
+        if (value === undefined) {
+          return undefined;
+        }
+        calculatedValues.set(ticker, value);
       }
       buildings.push({
         location,
@@ -51,7 +52,7 @@ const accumulatedDepreciationByBuilding = computed(() => {
   for (const building of buildingsMarketValue.value) {
     const lastRepair = getBuildingLastRepair(building.building);
     const age = diffDays(lastRepair, now, true);
-    const value = building.value * (1 - calculateBuildingCondition(age));
+    const value = building.value * (1 - calcBuildingCondition(age));
     buildings.set(building.building.id, value);
   }
   return buildings;

@@ -21,7 +21,7 @@ import dayjs from 'dayjs';
 import { fixed1, percent1 } from '@src/utils/format';
 import MaterialPurchaseTable from '@src/components/MaterialPurchaseTable.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
-import { calculateBuildingCondition } from '@src/core/buildings';
+import { calcBuildingCondition } from '@src/core/buildings';
 import { diffDays } from '@src/utils/time-diff';
 import { userData } from '@src/store/user-data';
 import { mergeMaterialAmounts } from '@src/core/sort-materials';
@@ -64,7 +64,7 @@ const materials = computed(() => {
     for (const { material, amount } of building.fullMaterials) {
       materials.push({
         material,
-        amount: Math.ceil(amount * (1 - calculateBuildingCondition(plannedRepairDate))),
+        amount: Math.ceil(amount * (1 - calcBuildingCondition(plannedRepairDate))),
       });
     }
   }

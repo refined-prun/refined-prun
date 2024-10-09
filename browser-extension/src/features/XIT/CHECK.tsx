@@ -18,6 +18,7 @@ import { calculatePlanetBurn } from '@src/core/burn';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { ddmmyyyy } from '@src/utils/format';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { isRepairableBuilding } from '@src/core/buildings';
 
 class Checklists {
   private tile: HTMLElement;
@@ -504,7 +505,7 @@ function addChecklistItem(params) {
       if (site?.platforms) {
         site.platforms.forEach(building => {
           if (
-            building.repairMaterials.length !== 0 &&
+            isRepairableBuilding(building) &&
             Date.now() - getBuildingLastRepair(building) > parseFloat(info.days) * 86400000
           ) {
             // Old enough

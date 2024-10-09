@@ -22,7 +22,7 @@
 - `XIT BURN` now includes:
   - Total weight, volume, and cost of all required resources.
   - Context buttons: `BS` and `INV` for planets, `CXM` for materials.
-- `XIT FINPR` displays Margin = Profit / Cost.
+- `XIT FINPR` displays Repairs and Margin (Profit / Total Cost).
 - `XIT FINCH` Equity History chart now applies smoothing via SMA.
 - `FINLA` shows CX and FX deposits in addition to cash.
 - `XIT CONTS` displays a ! mark for contracts with unfulfilled own conditions.
