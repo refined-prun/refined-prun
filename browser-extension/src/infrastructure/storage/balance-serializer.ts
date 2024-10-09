@@ -17,20 +17,6 @@ export function importFinancialHistory() {
   });
 }
 
-export function importPmmgFinancialHistory() {
-  uploadJson(json => {
-    if (!json?.History) {
-      return undefined;
-    }
-
-    userData.balanceHistory = {
-      v1: shallowReactive(json.History.map((item: number[]) => item.map(Math.round))),
-      v2: shallowReactive([]),
-      v3: shallowReactive([]),
-    };
-  });
-}
-
 export function exportFinancialHistory() {
   const json = {
     type: fileType,

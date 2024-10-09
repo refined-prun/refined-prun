@@ -1,7 +1,6 @@
 import { downloadJson, uploadJson } from '@src/utils/download-json';
 import { migrateUserData } from '@src/infrastructure/storage/user-data-migrations';
-import { parsePmmgUserData } from '@src/infrastructure/storage/pmmg-files';
-import { applyPmmgUserData, applyUserData, userData, watchUserData } from '@src/store/user-data';
+import { applyUserData, userData, watchUserData } from '@src/store/user-data';
 import system from '@src/system';
 import { deepToRaw } from '@src/utils/deep-to-raw';
 
@@ -27,18 +26,6 @@ export function importUserData() {
     }
     const userData = migrateUserData(json.data);
     applyUserData(userData);
-  });
-}
-
-export function importPmmgSettings() {
-  uploadJson(json => {
-    if (!json) {
-      return;
-    }
-    const pmmg = parsePmmgUserData(json);
-    if (pmmg) {
-      applyPmmgUserData(pmmg);
-    }
   });
 }
 

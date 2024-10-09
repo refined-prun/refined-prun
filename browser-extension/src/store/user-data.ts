@@ -66,21 +66,6 @@ export function resetAllData() {
 
 resetAllData();
 
-export function applyPmmgUserData(pmmg: UserData.PmmgSettings) {
-  userData.settings.currency = pmmg.currency;
-  userData.settings.burn.red = pmmg.burn.red;
-  userData.settings.burn.yellow = pmmg.burn.yellow;
-  userData.settings.burn.resupply = pmmg.burn.resupply;
-  userData.settings.repair.threshold = pmmg.repair.threshold;
-  userData.settings.repair.offset = pmmg.repair.offset;
-  if (pmmg.sidebar) {
-    userData.settings.sidebar = pmmg.sidebar;
-  }
-  if (pmmg.sorting) {
-    userData.sorting = pmmg.sorting;
-  }
-}
-
 export function clearBalanceHistory() {
   userData.balanceHistory = reactive({
     v1: shallowReactive([]),
