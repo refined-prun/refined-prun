@@ -1,8 +1,6 @@
 import { userData } from '@src/store/user-data';
 import { v4 as uuidv4 } from 'uuid';
 
-export type LegacyNote = [string, string];
-
 export function createNote(name: string) {
   const id = createId();
   userData.notes.push({
@@ -15,14 +13,6 @@ export function createNote(name: string) {
 
 export function deleteNote(note: UserData.Note) {
   userData.notes = userData.notes.filter(x => x !== note);
-}
-
-export function applyLegacyNotes(newNotes: LegacyNote[]) {
-  userData.notes = newNotes.map(x => ({
-    id: createId(),
-    name: x[0],
-    text: x[1],
-  }));
 }
 
 export function applyPmmgNotes(pmmg: Record<string, string>) {
