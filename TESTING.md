@@ -25,7 +25,9 @@ properly test new features/changes and have fewer surprises overall**
 4. Go to Extensions page
 5. Disable PMMG (do not remove it) <- this is **very** important
 6. Enable developer mode (top right button)
-7. Load unpacked extension (top left button) from the unpacked archive
+7. Load unpacked extension (top left button) from the unpacked archive.
+  You will see a new "Refined PrUn" extension added to your browser.
+  Keep "PMMG Extended" disabled.
 8. Load the game
 9. Import PMMG files via `XIT SET PMMG`
 10. Enjoy! If everything works fine, let us know in the chat
