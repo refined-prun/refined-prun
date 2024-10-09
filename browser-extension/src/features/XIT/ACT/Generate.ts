@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-this-alias */
 import {
   clearChildren,
@@ -27,15 +26,15 @@ export async function createGenerateScreen(tile, packageName) {
     return;
   }
   const storageValue = await getLocalStoragePromise('PMMG-Action');
-  const storedActions = storageValue['PMMG-Action'] || {};
+  const storedActions = (storageValue['PMMG-Action'] || {}) as UserData.ActionPackages;
 
   const isNew = !storedActions[packageName]; // Whether or not the package is new or if we need to pull from memory
 
-  let actionPackage;
+  let actionPackage: UserData.ActionPackage;
   if (isNew) {
     actionPackage = { global: { name: packageName }, groups: [], actions: [] };
   } else {
-    actionPackage = storedActions[packageName];
+    actionPackage = storedActions[packageName]!;
     if (!actionPackage.global || !actionPackage.global.name || actionPackage.global.name == '') {
       tile.textContent = 'Error: Stored action package has no name';
       return;
@@ -62,10 +61,10 @@ class GenerateScreen {
 
   // Variables to store data inputted on screen
   public globalAttributes;
-  public actions: any[];
-  public groups: any[];
+  public actions: UserData.ActionPackageAction[];
+  public groups: UserData.ActionPackageGroup[];
 
-  constructor(tile, actionPackage) {
+  constructor(tile, actionPackage: UserData.ActionPackage) {
     this.tile = tile;
     this.globalAttributes = actionPackage.global || {};
     this.actions = actionPackage.actions || [];
@@ -117,7 +116,8 @@ class GenerateScreen {
       groupTable.appendChild(createEmptyTableRow(4, 'No groups found. Click add below'));
     }
     // Populate table otherwise
-    this.groups.forEach((group, groupIndex) => {
+    for (const group of this.groups) {
+      const groupIndex = this.groups.indexOf(group);
       let contentText;
       const row = document.createElement('tr');
 
@@ -140,13 +140,13 @@ class GenerateScreen {
         case 'Manual':
           if (group.materials) {
             contentText = '';
-            Object.keys(group.materials).forEach(mat => {
+            for (const mat of Object.keys(group.materials)) {
               contentText +=
                 group.materials[mat].toLocaleString(undefined, { maximumFractionDigits: 0 }) +
                 ' ' +
                 mat +
                 ', ';
-            });
+            }
             contentText = contentText.slice(0, -2); // Remove last comma and space
             contentColumn.appendChild(createTextSpan(contentText));
           } else {
@@ -207,7 +207,7 @@ class GenerateScreen {
       });
 
       groupTable.appendChild(row);
-    });
+    }
 
     // Dropdown for adding new groups
     const newGroupDropdown = this.createFormRow(
@@ -249,18 +249,18 @@ class GenerateScreen {
     switch (group.type) {
       case 'Resupply': {
         // Get list of planets
-        const possiblePlanets = [] as any[];
+        const possiblePlanets = [] as string[];
         for (const workforce of workforcesStore.all.value ?? []) {
-          possiblePlanets.push(getEntityNameFromAddress(workforce.address));
+          possiblePlanets.push(getEntityNameFromAddress(workforce.address)!);
         }
 
         possiblePlanets.sort(comparePlanets);
 
         // Add index of selected option to end of list because of poor design decisions in popup class
         if (group.planet && possiblePlanets.indexOf(group.planet)) {
-          possiblePlanets.push(possiblePlanets.indexOf(group.planet));
+          possiblePlanets.push(possiblePlanets.indexOf(group.planet) as unknown as string);
         } else {
-          possiblePlanets.push(0);
+          possiblePlanets.push(0 as unknown as string);
         }
 
         popup.addPopupRow('dropdown', 'Planet', possiblePlanets, undefined, undefined);
@@ -296,18 +296,18 @@ class GenerateScreen {
       }
       case 'Repair': {
         // Get list of planets
-        const possiblePlanets = [] as any[];
+        const possiblePlanets = [] as string[];
         for (const site of sitesStore.all.value ?? []) {
-          possiblePlanets.push(getEntityNameFromAddress(site.address));
+          possiblePlanets.push(getEntityNameFromAddress(site.address)!);
         }
 
         possiblePlanets.sort(comparePlanets);
 
         // Add index of selected option to end of list because of poor design decisions in popup class
         if (group.planet && possiblePlanets.indexOf(group.planet)) {
-          possiblePlanets.push(possiblePlanets.indexOf(group.planet));
+          possiblePlanets.push(possiblePlanets.indexOf(group.planet) as unknown as string);
         } else {
-          possiblePlanets.push(0);
+          possiblePlanets.push(0 as unknown as string);
         }
         popup.addPopupRow('dropdown', 'Planet', possiblePlanets, undefined, undefined);
         popup.addPopupRow(
@@ -330,7 +330,7 @@ class GenerateScreen {
         // Create rows corresponding to current materials stored in group
         let numMaterials = 0; // Stores how many materials there are listed
         if (group.materials) {
-          Object.keys(group.materials).forEach(mat => {
+          for (const mat of Object.keys(group.materials)) {
             popup.addPopupRow(
               'text',
               'Material Ticker #' + (numMaterials + 1).toLocaleString(),
@@ -346,7 +346,7 @@ class GenerateScreen {
               undefined,
             );
             numMaterials++;
-          });
+          }
         }
 
         // Row for adding more material rows above
@@ -468,7 +468,9 @@ class GenerateScreen {
     }
 
     // Populate table
-    this.actions.forEach((action, actionIndex) => {
+    for (let i = 0; i < this.actions.length; i++) {
+      const action = this.actions[i];
+      const actionIndex = i;
       // Create row
       const row = document.createElement('tr');
 
@@ -550,7 +552,7 @@ class GenerateScreen {
       });
 
       actionTable.appendChild(row);
-    });
+    }
 
     // Dropdown for adding new groups
     const newActionDropdown = this.createFormRow(
@@ -598,20 +600,20 @@ class GenerateScreen {
           .map(obj => obj.name);
         // Add index of selected option to end of list because of poor design decisions in popup class
         if (action.group && groupNames.indexOf(action.group)) {
-          groupNames.push(groupNames.indexOf(action.group));
+          groupNames.push(groupNames.indexOf(action.group) as unknown as string);
         } else {
-          groupNames.push(0);
+          groupNames.push(0 as unknown as string);
         }
 
         popup.addPopupRow('dropdown', 'Material Group', groupNames, undefined, undefined);
 
         // Add exchanges dropdown
         // Add index of selected option to end of list because of poor design decisions in popup class
-        const exchanges = ['AI1', 'CI1', 'IC1', 'NC1', 'CI2', 'NC2'] as any[];
+        const exchanges = ['AI1', 'CI1', 'IC1', 'NC1', 'CI2', 'NC2'];
         if (action.exchange && exchanges.indexOf(action.exchange)) {
-          exchanges.push(exchanges.indexOf(action.exchange));
+          exchanges.push(exchanges.indexOf(action.exchange) as unknown as string);
         } else {
-          exchanges.push(0);
+          exchanges.push(0 as unknown as string);
         }
 
         popup.addPopupRow('dropdown', 'Exchange', exchanges, undefined, undefined);
@@ -623,7 +625,7 @@ class GenerateScreen {
           // Create rows corresponding to current materials stored in action price limit
           let numMaterials = 0; // Stores how many materials there are listed
           if (action.priceLimits) {
-            Object.keys(action.priceLimits).forEach(mat => {
+            for (const mat of Object.keys(action.priceLimits)) {
               pricePopup.addPopupRow(
                 'text',
                 'Material Ticker #' + (numMaterials + 1).toLocaleString(),
@@ -639,7 +641,7 @@ class GenerateScreen {
                 undefined,
               );
               numMaterials++;
-            });
+            }
           }
 
           // Row for adding more material rows above
@@ -725,9 +727,9 @@ class GenerateScreen {
           .map(obj => obj.name);
         // Add index of selected option to end of list because of poor design decisions in popup class
         if (action.group && groupNames.indexOf(action.group)) {
-          groupNames.push(groupNames.indexOf(action.group));
+          groupNames.push(groupNames.indexOf(action.group) as unknown as string);
         } else {
-          groupNames.push(0);
+          groupNames.push(0 as unknown as string);
         }
 
         popup.addPopupRow('dropdown', 'Material Group', groupNames, undefined, undefined);
@@ -735,30 +737,30 @@ class GenerateScreen {
         // Generate list of inventories
         const originNames = [...(storagesStore.all.value ?? [])]
           .sort(storageSort)
-          .map(parseStorageName) as any[];
+          .map(parseStorageName);
 
         originNames.unshift('Configure on Execution');
 
         // Add index of selected option to end of list because of poor design decisions in popup class
         if (action.origin && originNames.indexOf(action.origin)) {
-          originNames.push(originNames.indexOf(action.origin));
+          originNames.push(originNames.indexOf(action.origin) as unknown as string);
         } else {
-          originNames.push(0);
+          originNames.push(0 as unknown as string);
         }
 
         popup.addPopupRow('dropdown', 'Origin', originNames, undefined, undefined);
 
         const destNames = [...(storagesStore.all.value ?? [])]
           .sort(storageSort)
-          .map(parseStorageName) as any[];
+          .map(parseStorageName);
 
         destNames.unshift('Configure on Execution');
 
         // Add index of selected option to end of list because of poor design decisions in popup class
         if (action.dest && destNames.indexOf(action.dest)) {
-          destNames.push(destNames.indexOf(action.dest));
+          destNames.push(destNames.indexOf(action.dest) as unknown as string);
         } else {
-          destNames.push(0);
+          destNames.push(0 as unknown as string);
         }
 
         popup.addPopupRow('dropdown', 'Destination', destNames, undefined, undefined);
@@ -825,7 +827,7 @@ class GenerateScreen {
     saveButton.addEventListener('click', async function () {
       // Get stored values
       const storageValue = await getLocalStoragePromise('PMMG-Action');
-      const storedActions = storageValue['PMMG-Action'] || {};
+      const storedActions = (storageValue['PMMG-Action'] || {}) as UserData.ActionPackages;
 
       // Store the current values
       if (thisObj.globalAttributes.name) {
@@ -952,12 +954,12 @@ class GenerateScreen {
         inputElem.style.width = '170.4px';
         inputSubDiv.appendChild(inputElem);
         if (params) {
-          params.forEach(option => {
+          for (const option of params) {
             const optionElem = document.createElement('option');
             inputElem.appendChild(optionElem);
             optionElem.value = option;
             optionElem.textContent = option;
-          });
+          }
 
           if (value) {
             inputElem.value = value;

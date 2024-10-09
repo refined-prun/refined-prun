@@ -13,7 +13,7 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 // All functions associated with the summary screen
 export async function createSummaryScreen(tile, parentBuffer) {
   let storageValue = await getLocalStoragePromise('PMMG-Action');
-  let storedActions = storageValue['PMMG-Action'] || {};
+  let storedActions = (storageValue['PMMG-Action'] || {}) as UserData.ActionPackages;
 
   // Add row on top for creating a new action package
   const createRow = document.createElement('div');
@@ -145,7 +145,8 @@ export async function createSummaryScreen(tile, parentBuffer) {
                 try {
                   parsedData = JSON.parse(e.target.result as string);
                   const storageValue = await getLocalStoragePromise('PMMG-Action');
-                  const storedActions = storageValue['PMMG-Action'] || {};
+                  const storedActions = (storageValue['PMMG-Action'] ||
+                    {}) as UserData.ActionPackages;
 
                   storedActions[parsedData.global.name] = parsedData;
                   setSettings({ 'PMMG-Action': storedActions });
@@ -170,7 +171,7 @@ export async function createSummaryScreen(tile, parentBuffer) {
       }
 
       const storageValue = await getLocalStoragePromise('PMMG-Action');
-      const storedActions = storageValue['PMMG-Action'] || {};
+      const storedActions = (storageValue['PMMG-Action'] || {}) as UserData.ActionPackages;
 
       storedActions[parsedData.global.name] = parsedData;
       setSettings({ 'PMMG-Action': storedActions });
@@ -190,7 +191,7 @@ export async function createSummaryScreen(tile, parentBuffer) {
     );
   }
 
-  packageNames.forEach(name => {
+  for (const name of packageNames) {
     const friendlyName = name.split('_').join(' ');
     const paramName = name.split(' ').join('_');
 
@@ -239,7 +240,7 @@ export async function createSummaryScreen(tile, parentBuffer) {
         'Confirm',
         async function () {
           storageValue = await getLocalStoragePromise('PMMG-Action');
-          storedActions = storageValue['PMMG-Action'] || {};
+          storedActions = (storageValue['PMMG-Action'] || {}) as UserData.ActionPackages;
 
           delete storedActions[name];
           setSettings({ 'PMMG-Action': storedActions });
@@ -249,5 +250,5 @@ export async function createSummaryScreen(tile, parentBuffer) {
     });
 
     table.appendChild(row);
-  });
+  }
 }

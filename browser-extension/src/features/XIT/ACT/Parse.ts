@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ExchangeTickersReverse } from '@src/GameProperties';
 import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
@@ -12,7 +11,13 @@ import { isRepairableBuilding } from '@src/core/buildings';
 
 // Turn stored action package (resupply base for 30 days) to series of actionable actions (buy 1000 RAT, then 1000 DW, etc)
 // Preview flag set to true will allow non-configured actions to be displayed
-export function parseActionPackage(rawActionPackage, packageConfig, messageBox, preview?) {
+export function parseActionPackage(
+  rawActionPackage: UserData.ActionPackage,
+  packageConfig,
+  messageBox,
+  preview?,
+) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const actionPackage = [] as any;
   actionPackage.valid = false;
 
@@ -25,19 +30,21 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
 
   // Generate arrays of CX inventories so nothing is double counted later on
   const CXInvs = {};
-  ['AI1', 'CI1', 'CI2', 'IC1', 'NC1', 'NC2'].forEach(ticker => {
+  for (const ticker of ['AI1', 'CI1', 'CI2', 'IC1', 'NC1', 'NC2']) {
     CXInvs[ticker] = {};
     const warehouse = warehousesStore.getByEntityNaturalId(ExchangeTickersReverse[ticker]);
     const inv = storagesStore.getById(warehouse?.storeId);
 
     if (inv) {
-      inv.items.forEach(mat => {
+      for (const mat of inv.items) {
         CXInvs[ticker][mat.quantity?.material.ticker] = mat.quantity?.amount;
-      });
+      }
     }
-  });
+  }
 
-  rawActionPackage.actions.forEach((action, actionIndex) => {
+  for (let i = 0; i < rawActionPackage.actions.length; i++) {
+    const action = rawActionPackage.actions[i];
+    const actionIndex = i;
     if (action.type == 'CX Buy') {
       if (!action.group) {
         addMessage(messageBox, 'Missing material group on CX buy', 'ERROR');
@@ -54,11 +61,9 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
 
       if (!groupNames.includes(action.group)) {
         addMessage(messageBox, 'Unrecognized material group on CX buy', 'ERROR');
-        return actionPackage;
       }
       if (!action.exchange) {
         addMessage(messageBox, 'Missing exchange on CX buy', 'ERROR');
-        return actionPackage;
       }
 
       const group = rawActionPackage.groups[groupIndexes[action.group]];
@@ -66,9 +71,9 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
       const parsedGroup = parseGroup(group, messageBox, errorFlag); // Parse materials needed. Object with keys equal to material tickers and values equal to number of materials
 
       // Take out materials in CX inventory if requested
-      if (action.useCXInv) {
-        Object.keys(parsedGroup).forEach(mat => {
-          Object.keys(CXInvs[action.exchange]).forEach(CXMat => {
+      if (action.useCXInv && action.exchange) {
+        for (const mat of Object.keys(parsedGroup)) {
+          for (const CXMat of Object.keys(CXInvs[action.exchange])) {
             if (CXMat == mat) {
               const used = Math.min(parsedGroup[mat], CXInvs[action.exchange][CXMat]); // Amount of material used (minimum of needed and had on hand)
               parsedGroup[mat] -= used;
@@ -78,12 +83,12 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
                 delete CXInvs[action.exchange][CXMat];
               }
             }
-          });
+          }
           if (parsedGroup[mat] <= 0) {
             // Remove material from list if you already have enough on the CX
             delete parsedGroup[mat];
           }
-        });
+        }
       }
 
       // Now turn into buying commands
@@ -187,7 +192,6 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
     } else if (action.type == 'MTRA') {
       if (!action.group) {
         addMessage(messageBox, 'Missing material group on CX buy', 'ERROR');
-        return actionPackage;
       }
 
       const groupNames = rawActionPackage.groups
@@ -200,15 +204,12 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
 
       if (!groupNames.includes(action.group)) {
         addMessage(messageBox, 'Unrecognized material group on MTRA', 'ERROR');
-        return actionPackage;
       }
       if (!action.origin) {
         addMessage(messageBox, 'Missing origin on MTRA', 'ERROR');
-        return actionPackage;
       }
       if (!action.dest) {
         addMessage(messageBox, 'Missing dest on MTRA', 'ERROR');
-        return actionPackage;
       }
 
       // Check configuration
@@ -218,7 +219,6 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
         (!packageConfig.actions[actionIndex] || !packageConfig.actions[actionIndex].origin)
       ) {
         addMessage(messageBox, 'Missing origin configuration on MTRA', 'ERROR');
-        return actionPackage;
       }
       if (
         !preview &&
@@ -226,7 +226,6 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
         (!packageConfig.actions[actionIndex] || !packageConfig.actions[actionIndex].dest)
       ) {
         addMessage(messageBox, 'Missing destination configuration on MTRA', 'ERROR');
-        return actionPackage;
       }
 
       // Set configuration
@@ -243,11 +242,11 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
           ? packageConfig.actions[actionIndex].dest
           : action.dest;
 
-      const group = rawActionPackage.groups[groupIndexes[action.group]];
+      const group = rawActionPackage.groups[groupIndexes[action.group!]];
       const errorFlag = [false];
       const parsedGroup = parseGroup(group, messageBox, errorFlag); // Parse materials needed. Object with keys equal to material tickers and values equal to number of materials
 
-      Object.keys(parsedGroup).forEach(mat => {
+      for (const mat of Object.keys(parsedGroup)) {
         // MAT change action action
         const changeAction = {
           type: 'mtraMatSelect',
@@ -272,19 +271,19 @@ export function parseActionPackage(rawActionPackage, packageConfig, messageBox, 
         };
         actionPackage.push(changeAction);
         actionPackage.push(actionItem);
-      });
+      }
     } else {
       addMessage(messageBox, 'Unrecognized action type', 'ERROR');
       error = true;
     }
-  });
+  }
 
   actionPackage.valid = !error;
   return actionPackage;
 }
 
 // Parse a material group into a list of materials
-export function parseGroup(group, messageBox, errorFlag) {
+export function parseGroup(group: UserData.ActionPackageGroup, messageBox, errorFlag) {
   let parsedGroup = {};
   if (group.type == 'Resupply') {
     // Interpret burn to get number of materials
@@ -311,10 +310,11 @@ export function parseGroup(group, messageBox, errorFlag) {
     if (workforce) {
       const planetBurn = calculatePlanetBurn(production, workforce, stores); // The planet burn data
 
-      Object.keys(planetBurn).forEach(mat => {
+      for (const mat of Object.keys(planetBurn)) {
         if (planetBurn[mat].DailyAmount < 0) {
           // Consuming not producing
-          let amount = Math.ceil(-planetBurn[mat].DailyAmount * group.days); // Calculate amount
+          const days = typeof group.days === 'number' ? group.days : parseFloat(group.days);
+          let amount = Math.ceil(-planetBurn[mat].DailyAmount * days); // Calculate amount
           if (group.useBaseInv) {
             // Take out base inventory if we're doing that
             amount -= planetBurn[mat].Inventory;
@@ -328,7 +328,7 @@ export function parseGroup(group, messageBox, errorFlag) {
             }
           }
         }
-      });
+      }
     } else {
       addMessage(messageBox, 'Missing burn data', 'ERROR');
       errorFlag[0] = true;
@@ -340,27 +340,30 @@ export function parseGroup(group, messageBox, errorFlag) {
       errorFlag[0] = true;
       return parsedGroup;
     }
-    const threshold = isNaN(parseFloat(group.days)) ? 0 : parseFloat(group.days); // The threshold to start repairing buildings [days]
-    const advanceDays = isNaN(parseFloat(group.advanceDays)) ? 0 : parseFloat(group.advanceDays); // The number of days forward looking
+    const days = typeof group.days === 'number' ? group.days : parseFloat(group.days!);
+    let advanceDays =
+      typeof group.advanceDays === 'number' ? group.advanceDays : parseFloat(group.advanceDays!);
+    const threshold = isNaN(days) ? 0 : days; // The threshold to start repairing buildings [days]
+    advanceDays = isNaN(advanceDays) ? 0 : advanceDays; // The number of days forward looking
 
     const planetSite = sitesStore.getByPlanetNaturalIdOrName(group.planet);
 
     if (planetSite && planetSite.platforms) {
-      planetSite.platforms.forEach(building => {
+      for (const building of planetSite.platforms) {
         if (!isRepairableBuilding(building)) {
-          return;
+          continue;
         }
 
         const lastRepair = getBuildingLastRepair(building);
         const date = (new Date().getTime() - lastRepair) / 86400000;
 
         if (date + advanceDays < threshold) {
-          return;
+          continue;
         } // Parse out too new of buildings
 
         // Calculate total building cost
         const buildingMaterials = {};
-        building.reclaimableMaterials.forEach(mat => {
+        for (const mat of building.reclaimableMaterials) {
           const amount = mat.amount;
           const ticker = mat.material.ticker;
           if (buildingMaterials[ticker]) {
@@ -368,8 +371,8 @@ export function parseGroup(group, messageBox, errorFlag) {
           } else {
             buildingMaterials[ticker] = amount;
           }
-        });
-        building.repairMaterials.forEach(mat => {
+        }
+        for (const mat of building.repairMaterials) {
           const amount = mat.amount;
           const ticker = mat.material.ticker;
           if (buildingMaterials[ticker]) {
@@ -377,10 +380,10 @@ export function parseGroup(group, messageBox, errorFlag) {
           } else {
             buildingMaterials[ticker] = amount;
           }
-        });
+        }
 
         const adjustedDate = date + advanceDays;
-        Object.keys(buildingMaterials).forEach(ticker => {
+        for (const ticker of Object.keys(buildingMaterials)) {
           const amount =
             adjustedDate > 180
               ? buildingMaterials[ticker]
@@ -391,8 +394,8 @@ export function parseGroup(group, messageBox, errorFlag) {
           } else {
             parsedGroup[ticker] = amount;
           }
-        });
-      });
+        }
+      }
     } else {
       addMessage(messageBox, 'Missing data on repair planet', 'ERROR');
       errorFlag[0] = true;

@@ -11,18 +11,18 @@ export function validateAction(actionPackage, messageBox) {
   const bufferDivs = getBuffers('');
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const buffers = [] as any[];
-  bufferDivs.forEach(buffer => {
+  for (const buffer of bufferDivs) {
     const header = buffer.querySelector(Selector.BufferHeader);
     if (!header) {
-      return;
+      continue;
     }
 
     const parameters = header.textContent;
 
     buffers.push([parameters, buffer]);
-  });
+  }
   let valid = true;
-  actionPackage.forEach(action => {
+  for (const action of actionPackage) {
     if (!action.type) {
       valid = false;
       addMessage(messageBox, 'Action Type Missing', 'ERROR');
@@ -88,7 +88,7 @@ export function validateAction(actionPackage, messageBox) {
         valid = false;
         addMessage(messageBox, 'Unrecognized action type', 'ERROR');
     }
-  });
+  }
 
   if (valid) {
     addMessage(messageBox, 'Successfully validated', 'SUCCESS');

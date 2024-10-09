@@ -7,7 +7,7 @@ import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { addMessage } from './Execute';
 
-export function needsConfiguration(action) {
+export function needsConfiguration(action: UserData.ActionPackageAction) {
   switch (action.type) {
     case 'MTRA':
       if (action.dest && action.dest == 'Configure on Execution') {
@@ -26,7 +26,7 @@ export function needsConfiguration(action) {
 export function createConfigureUI(
   packageConfig,
   tile,
-  rawActionPackage,
+  rawActionPackage: UserData.ActionPackage,
   validateButton,
   executeButton,
   messageBox,
@@ -151,9 +151,9 @@ export function createConfigureUI(
         originSelect.classList.add('select');
         originDiv.appendChild(originSelect);
 
-        storageNames.forEach(text => {
+        for (const text of storageNames) {
           originSelect.appendChild(createSelectOption(text, text));
-        });
+        }
 
         configControls.appendChild(originDiv);
       }
@@ -168,9 +168,9 @@ export function createConfigureUI(
         destSelect.classList.add('select');
         destDiv.appendChild(destSelect);
 
-        storageNames.forEach(text => {
+        for (const text of storageNames) {
           destSelect.appendChild(createSelectOption(text, text));
-        });
+        }
 
         configControls.appendChild(destDiv);
       }

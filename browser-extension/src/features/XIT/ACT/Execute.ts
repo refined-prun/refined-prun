@@ -1,12 +1,12 @@
 import {
   changeSelectValue,
   changeValue,
+  clearChildren,
   createTextSpan,
   getBuffers,
   getLocalStoragePromise,
   showSuccessDialog,
   sleep,
-  clearChildren,
 } from '@src/util';
 import { Style } from '@src/Style';
 import { Selector } from '@src/Selector';
@@ -31,7 +31,7 @@ export async function createExecuteScreen(tile, packageName) {
   tile.appendChild(title);
 
   const storageValue = await getLocalStoragePromise('PMMG-Action');
-  const storedActions = storageValue['PMMG-Action'] || {};
+  const storedActions = (storageValue['PMMG-Action'] || {}) as UserData.ActionPackages;
 
   const rawActionPackage = storedActions[packageName];
 
@@ -80,9 +80,9 @@ export async function createExecuteScreen(tile, packageName) {
   const packageConfig = { actions: [], groups: [] };
   if (rawActionPackage.actions) {
     let needsConfig = false;
-    rawActionPackage.actions.forEach(action => {
+    for (const action of rawActionPackage.actions) {
       needsConfig = needsConfig || needsConfiguration(action);
-    });
+    }
 
     if (needsConfig) {
       createConfigureUI(
@@ -110,9 +110,9 @@ export async function createExecuteScreen(tile, packageName) {
   viewButton.addEventListener('click', function () {
     addMessage(messageBox, '', undefined, true);
     const actionPackage = parseActionPackage(rawActionPackage, packageConfig, messageBox, true);
-    [...actionPackage].reverse().forEach(action => {
+    for (const action of [...actionPackage].reverse()) {
       addMessage(messageBox, generatePrettyName(action), 'ACTION');
-    });
+    }
 
     if (actionPackage.length == 0) {
       addMessage(messageBox, 'No actions generated', 'ERROR');
@@ -323,13 +323,12 @@ async function executeAction(
       // Select correct source inventory
       let sourceIndex;
       const sourceMatchText = storageNameToID(action.parameters.origin); // Convert PMMG name for storage into MTRA name for storage
-      (Array.from(originSelect.children) as HTMLOptionElement[]).forEach(
-        (optionElem, optionIndex) => {
-          if (optionElem.textContent && optionElem.textContent.toLowerCase() == sourceMatchText) {
-            sourceIndex = optionIndex;
-          }
-        },
-      );
+      const sourceChildren = Array.from(originSelect.children) as HTMLOptionElement[];
+      for (let i = 0; i < sourceChildren.length; i++) {
+        if (sourceChildren[i].textContent?.toLowerCase() === sourceMatchText) {
+          sourceIndex = i;
+        }
+      }
 
       if (sourceIndex == undefined) {
         // Source not found
@@ -364,13 +363,12 @@ async function executeAction(
       // Select correct source inventory
       let destIndex;
       const destMatchTest = storageNameToID(action.parameters.dest); // Convert PMMG name for storage into MTRA name for storage
-      (Array.from(destSelect.children) as HTMLOptionElement[]).forEach(
-        (optionElem, optionIndex) => {
-          if (optionElem.textContent && optionElem.textContent.toLowerCase() == destMatchTest) {
-            destIndex = optionIndex;
-          }
-        },
-      );
+      const destChildren = Array.from(destSelect.children) as HTMLOptionElement[];
+      for (let i = 0; i < destChildren.length; i++) {
+        if (destChildren[i].textContent?.toLowerCase() == destMatchTest) {
+          destIndex = i;
+        }
+      }
 
       if (destIndex == undefined) {
         // Dest not found
@@ -402,13 +400,15 @@ async function executeAction(
       // Determine how many can be transferred by reading the buffer
       button.disabled = true;
       await sleep(50); // Need to wait for buffer to update
-      const sliderNumbers = buffer.querySelectorAll("span[class~='rc-slider-mark-text']");
+      const sliderNumbers = Array.from(
+        buffer.querySelectorAll("span[class~='rc-slider-mark-text']"),
+      );
       let maxAmount = 0;
-      sliderNumbers.forEach(sliderNumber => {
+      for (const sliderNumber of sliderNumbers) {
         if (sliderNumber.textContent && parseInt(sliderNumber.textContent) > maxAmount) {
           maxAmount = parseInt(sliderNumber.textContent);
         }
-      });
+      }
 
       // Make the quantity change
       const changeButton = _$(buffer, PrunCss.Button.darkInline) as HTMLButtonElement; // Change button
@@ -509,17 +509,17 @@ async function executeAction(
     } else if (action.type == 'mtraMatSelect') {
       const matOptions = _$$(buffer, PrunCss.MaterialSelector.suggestionEntry); // MAT options in dropdown
       let matFound = false;
-      (Array.from(matOptions) as HTMLElement[]).forEach(matOption => {
+      for (const matOption of Array.from(matOptions) as HTMLElement[]) {
         const tickerElem = matOption.firstChild;
         if (!tickerElem) {
           addMessage(messageBox, 'Unable to find ticker element on dropdown', 'ERROR');
-          return;
+          continue;
         }
         if (action.parameters.ticker.toUpperCase() == tickerElem.textContent) {
           matFound = true;
           matOption.click();
         }
-      });
+      }
 
       button.disabled = false; // Reenable the button regardless of what happens
       button.style.cursor = 'pointer';

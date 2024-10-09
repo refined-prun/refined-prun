@@ -22,6 +22,43 @@ declare namespace UserData {
     text: string;
   }
 
+  type ActionPackages = Record<string, ActionPackage | undefined>;
+
+  interface ActionPackage {
+    global: {
+      name: string;
+    };
+    groups: ActionPackageGroup[];
+    actions: ActionPackageAction[];
+  }
+
+  interface ActionPackageGroup {
+    type: 'Manual' | 'Resupply' | 'Repair';
+    name?: string;
+    days?: number | string;
+    advanceDays?: number | string;
+    planet?: string;
+    useBaseInv?: boolean;
+    materials?: Record<string, number>;
+    exclusions?: string[];
+    consumablesOnly?: boolean;
+  }
+
+  interface ActionPackageAction {
+    type: 'CX Buy' | 'MTRA';
+
+    name?: string;
+    group?: string;
+
+    buyPartial?: boolean;
+    exchange?: string;
+    useCXInv?: boolean;
+    priceLimits?: Record<string, number>;
+
+    origin?: string;
+    dest?: string;
+  }
+
   interface PmmgSettings {
     currency: string;
     burn: {
