@@ -36,10 +36,9 @@ const dailyRepairs = computed(() => sumBy(entries.value, x => x.repairs));
 const dailyRevenue = computed(() => sumBy(entries.value, x => x.revenue));
 const dailyProfit = computed(() => sumBy(entries.value, x => x.profit));
 const dailyMargin = computed(() => {
-  return map([dailyCost.value, dailyRepairs.value, dailyProfit.value], (cost, repairs, profit) => {
-    const totalCost = cost + repairs;
-    return totalCost !== 0 ? profit / totalCost : 1;
-  });
+  return map([dailyRevenue.value, dailyProfit.value], (revenue, profit) =>
+    revenue !== 0 ? profit / revenue : 0,
+  );
 });
 
 const figures = computed(() => {

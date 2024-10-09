@@ -86,9 +86,8 @@ export function calculateSiteProfitability(site: PrunApi.Site): ProfitabilityEnt
     repairs += marketValue * oneDayDegradation;
   }
 
-  const totalCost = cost + repairs;
-  const profit = revenue - totalCost;
-  const margin = totalCost !== 0 ? profit / totalCost : 1;
+  const profit = revenue - cost - repairs;
+  const margin = revenue !== 0 ? profit / revenue : 0;
   return {
     name: getEntityNameFromAddress(site.address)!,
     cost,
