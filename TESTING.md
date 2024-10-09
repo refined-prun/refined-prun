@@ -26,14 +26,12 @@ properly test new features/changes and have fewer surprises overall**
 5. Disable PMMG (do not remove it) <- this is **very** important
 6. Enable developer mode (top right button)
 7. Load unpacked extension (top left button) from the unpacked archive
-8. Load the game, and enjoy!
+8. Load the game
+9. Import PMMG files via `XIT SET PMMG`
+10. Enjoy! If everything works fine, let us know in the chat
 
 **Important: do not move the extracted folder around your file system,
 as browser always loads it from this folder**
-
-## How to import PMMG files
-
-Open `XIT SET PMMG` and click the import buttons.
 
 ## How to update extension
 
