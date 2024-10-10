@@ -117,3 +117,19 @@ export function importPmmgNotes() {
     }
   });
 }
+
+export function importPmmgActions() {
+  uploadJson(json => {
+    if (!json) {
+      return;
+    }
+    const pmmg = json['PMMG-Action'];
+    if (pmmg) {
+      const packages = Object.values(pmmg as UserData.ActionPackages).map(x => x!);
+      for (const pkg of packages) {
+        pkg.id = createId();
+      }
+      userData.actionPackages = packages;
+    }
+  });
+}

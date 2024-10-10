@@ -1,13 +1,9 @@
-/* eslint-disable @typescript-eslint/no-this-alias */
 import {
   clearChildren,
   createEmptyTableRow,
   createTable,
   createTextSpan,
-  getLocalStoragePromise,
   Popup,
-  setSettings,
-  showSuccessDialog,
   showWarningDialog,
 } from '@src/util';
 import { comparePlanets } from '@src/util';
@@ -18,6 +14,8 @@ import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { createId } from '@src/store/create-id';
+import { userData } from '@src/store/user-data';
 
 // All functions associated with generating/editing action packages
 export async function createGenerateScreen(tile, packageName) {
@@ -25,20 +23,12 @@ export async function createGenerateScreen(tile, packageName) {
     tile.textContent = 'Error: Please name the action package by including an extra parameter';
     return;
   }
-  const storageValue = await getLocalStoragePromise('PMMG-Action');
-  const storedActions = (storageValue['PMMG-Action'] || {}) as UserData.ActionPackages;
 
-  const isNew = !storedActions[packageName]; // Whether or not the package is new or if we need to pull from memory
+  let actionPackage = userData.actionPackages.find(x => x.global?.name === packageName);
 
-  let actionPackage: UserData.ActionPackage;
-  if (isNew) {
-    actionPackage = { global: { name: packageName }, groups: [], actions: [] };
-  } else {
-    actionPackage = storedActions[packageName]!;
-    if (!actionPackage.global || !actionPackage.global.name || actionPackage.global.name == '') {
-      tile.textContent = 'Error: Stored action package has no name';
-      return;
-    }
+  if (!actionPackage) {
+    actionPackage = { id: createId(), global: { name: packageName }, groups: [], actions: [] };
+    userData.actionPackages.push(actionPackage);
   }
 
   new GenerateScreen(tile, actionPackage);
@@ -60,15 +50,11 @@ class GenerateScreen {
 	*/
 
   // Variables to store data inputted on screen
-  public globalAttributes;
-  public actions: UserData.ActionPackageAction[];
-  public groups: UserData.ActionPackageGroup[];
+  public actionPackage: UserData.ActionPackage;
 
   constructor(tile, actionPackage: UserData.ActionPackage) {
     this.tile = tile;
-    this.globalAttributes = actionPackage.global || {};
-    this.actions = actionPackage.actions || [];
-    this.groups = actionPackage.groups || [];
+    this.actionPackage = actionPackage;
 
     this.generateGlobalForm();
     this.generateGroupForm();
@@ -86,7 +72,7 @@ class GenerateScreen {
     }
 
     const title = document.createElement('h2');
-    title.textContent = this.globalAttributes.name || 'unnamed';
+    title.textContent = this.actionPackage.global.name || 'unnamed';
     title.classList.add(...Style.DraftName);
     title.style.marginLeft = '4px';
     this.globalSection.appendChild(title);
@@ -94,7 +80,6 @@ class GenerateScreen {
 
   // Generate the form for groups
   private generateGroupForm() {
-    const thisObj = this; // A way to pass this into subsequent functions like action listeners
     if (!this.groupSection) {
       this.groupSection = document.createElement('div');
       this.tile.appendChild(this.groupSection);
@@ -112,12 +97,12 @@ class GenerateScreen {
     this.groupSection.appendChild(tableContainer);
     const groupTable = createTable(tableContainer, ['Type', 'Name', 'Content', 'Cmds']); // Table body for table listing all material groups
     // Create empty row if no groups found
-    if (this.groups.length == 0) {
+    if (this.actionPackage.groups.length == 0) {
       groupTable.appendChild(createEmptyTableRow(4, 'No groups found. Click add below'));
     }
     // Populate table otherwise
-    for (const group of this.groups) {
-      const groupIndex = this.groups.indexOf(group);
+    for (const group of this.actionPackage.groups) {
+      const groupIndex = this.actionPackage.groups.indexOf(group);
       let contentText;
       const row = document.createElement('tr');
 
@@ -189,21 +174,21 @@ class GenerateScreen {
       commandColumn.appendChild(deleteButton);
 
       // Add delete button functionality
-      deleteButton.addEventListener('click', function () {
+      deleteButton.addEventListener('click', () => {
         showWarningDialog(
-          thisObj.tile,
+          this.tile,
           'Are you sure you want to delete this group?',
           'Confirm',
-          function () {
-            thisObj.groups.splice(groupIndex, 1);
-            thisObj.generateGroupForm();
+          () => {
+            this.actionPackage.groups.splice(groupIndex, 1);
+            this.generateGroupForm();
           },
         );
       });
 
       // Add edit button functionality
-      editButton.addEventListener('click', function () {
-        thisObj.createGroupPopup(groupIndex);
+      editButton.addEventListener('click', () => {
+        this.createGroupPopup(groupIndex);
       });
 
       groupTable.appendChild(row);
@@ -229,15 +214,15 @@ class GenerateScreen {
     );
 
     // Add method for adding a new group with default values
-    newGroupAdd.addEventListener('click', function () {
-      thisObj.groups.push({ type: newGroupDropdown.value });
-      thisObj.generateGroupForm();
+    newGroupAdd.addEventListener('click', () => {
+      this.actionPackage.groups.push({ type: newGroupDropdown.value });
+      this.generateGroupForm();
     });
   }
 
   // Create the oppup interface for editing a material group
   private createGroupPopup(groupIndex) {
-    const group = this.groups[groupIndex];
+    const group = this.actionPackage.groups[groupIndex];
 
     // Popup object for inputting group parameters
     const popup = new Popup(this.tile, 'Material Group Editor');
@@ -388,8 +373,7 @@ class GenerateScreen {
     }
 
     // Add row to save and corresponding function
-    const thisObj = this;
-    popup.addPopupRow('button', 'CMD', 'SAVE', undefined, function () {
+    popup.addPopupRow('button', 'CMD', 'SAVE', undefined, () => {
       const nameRow = popup.getRowByName('Name');
       const name = nameRow.rowInput.value;
 
@@ -435,7 +419,7 @@ class GenerateScreen {
           }
         }
         popup.destroy();
-        thisObj.generateGroupForm();
+        this.generateGroupForm();
       } // If no valid name, throw an error
       else {
         nameRow.row.classList.add(...Style.FormError);
@@ -445,7 +429,6 @@ class GenerateScreen {
 
   // Generate the form for actions
   private generateActionForm() {
-    const thisObj = this; // A way to pass this into subsequent functions like action listeners
     if (!this.actionSection) {
       this.actionSection = document.createElement('div');
       this.tile.appendChild(this.actionSection);
@@ -463,13 +446,13 @@ class GenerateScreen {
     this.actionSection.appendChild(tableContainer);
     const actionTable = createTable(tableContainer, ['Type', 'Name', 'Content', 'Cmds']); // Table body for table listing all material groups
     // Create empty row if no groups found
-    if (this.actions.length == 0) {
+    if (this.actionPackage.actions.length == 0) {
       actionTable.appendChild(createEmptyTableRow(4, 'No actions found. Click add below'));
     }
 
     // Populate table
-    for (let i = 0; i < this.actions.length; i++) {
-      const action = this.actions[i];
+    for (let i = 0; i < this.actionPackage.actions.length; i++) {
+      const action = this.actionPackage.actions[i];
       const actionIndex = i;
       // Create row
       const row = document.createElement('tr');
@@ -534,21 +517,21 @@ class GenerateScreen {
       commandColumn.appendChild(deleteButton);
 
       // Add delete button functionality
-      deleteButton.addEventListener('click', function () {
+      deleteButton.addEventListener('click', () => {
         showWarningDialog(
-          thisObj.tile,
+          this.tile,
           'Are you sure you want to delete this action?',
           'Confirm',
-          function () {
-            thisObj.actions.splice(actionIndex, 1);
-            thisObj.generateActionForm();
+          () => {
+            this.actionPackage.actions.splice(actionIndex, 1);
+            this.generateActionForm();
           },
         );
       });
 
       // Add edit button functionality
-      editButton.addEventListener('click', function () {
-        thisObj.createActionPopup(actionIndex);
+      editButton.addEventListener('click', () => {
+        this.createActionPopup(actionIndex);
       });
 
       actionTable.appendChild(row);
@@ -574,16 +557,15 @@ class GenerateScreen {
     );
 
     // Add method for adding a new group with default values
-    newActionAdd.addEventListener('click', function () {
-      thisObj.actions.push({ type: newActionDropdown.value });
-      thisObj.generateActionForm();
+    newActionAdd.addEventListener('click', () => {
+      this.actionPackage.actions.push({ type: newActionDropdown.value });
+      this.generateActionForm();
     });
   }
 
   // Create the oppup interface for editing an action
   private createActionPopup(actionIndex) {
-    const thisObj = this;
-    const action = this.actions[actionIndex];
+    const action = this.actionPackage.actions[actionIndex];
 
     // Popup object for inputting group parameters
     const popup = new Popup(this.tile, 'Action Editor');
@@ -595,7 +577,7 @@ class GenerateScreen {
     switch (action.type) {
       case 'CX Buy': {
         // Add group dropdown
-        const groupNames = this.groups
+        const groupNames = this.actionPackage.groups
           .filter(obj => obj.name && obj.name !== '')
           .map(obj => obj.name);
         // Add index of selected option to end of list because of poor design decisions in popup class
@@ -619,8 +601,8 @@ class GenerateScreen {
         popup.addPopupRow('dropdown', 'Exchange', exchanges, undefined, undefined);
 
         // Add row for editing price limits (will generate a popup on top of the other popup)
-        popup.addPopupRow('button', 'Price Limits', 'EDIT', undefined, function () {
-          const pricePopup = new Popup(thisObj.tile, 'Price Limit Editor', 51);
+        popup.addPopupRow('button', 'Price Limits', 'EDIT', undefined, () => {
+          const pricePopup = new Popup(this.tile, 'Price Limit Editor', 51);
 
           // Create rows corresponding to current materials stored in action price limit
           let numMaterials = 0; // Stores how many materials there are listed
@@ -722,7 +704,7 @@ class GenerateScreen {
 
       case 'MTRA': {
         // Add group dropdown
-        const groupNames = this.groups
+        const groupNames = this.actionPackage.groups
           .filter(obj => obj.name && obj.name !== '')
           .map(obj => obj.name);
         // Add index of selected option to end of list because of poor design decisions in popup class
@@ -769,7 +751,7 @@ class GenerateScreen {
     }
 
     // Add row to save and corresponding function
-    popup.addPopupRow('button', 'CMD', 'SAVE', undefined, function () {
+    popup.addPopupRow('button', 'CMD', 'SAVE', undefined, () => {
       const nameRow = popup.getRowByName('Name');
       const name = nameRow.rowInput.value;
 
@@ -790,7 +772,7 @@ class GenerateScreen {
             break;
         }
         popup.destroy();
-        thisObj.generateActionForm();
+        this.generateActionForm();
       } // If no valid name, throw an error
       else {
         nameRow.row.classList.add(...Style.FormError);
@@ -800,7 +782,6 @@ class GenerateScreen {
 
   // Create save button at bottom of interface
   private generateSaveForm() {
-    const thisObj = this; // A way to pass this into subsequent functions like action listeners
     if (!this.saveSection) {
       this.saveSection = document.createElement('div');
       this.tile.appendChild(this.saveSection);
@@ -813,39 +794,6 @@ class GenerateScreen {
     sectionTitle.textContent = 'CMDS';
     this.saveSection.appendChild(sectionTitle);
 
-    // Add save button
-    const saveButton = this.createFormRow(
-      this.saveSection,
-      'button',
-      'command',
-      'Save',
-      'saveButton',
-      'SAVE',
-    );
-
-    // Add action listener to save button
-    saveButton.addEventListener('click', async function () {
-      // Get stored values
-      const storageValue = await getLocalStoragePromise('PMMG-Action');
-      const storedActions = (storageValue['PMMG-Action'] || {}) as UserData.ActionPackages;
-
-      // Store the current values
-      if (thisObj.globalAttributes.name) {
-        // Remove old action package under previous name to prevent proliferation with name changes
-        storedActions[thisObj.globalAttributes.name] = undefined;
-      }
-      storedActions[thisObj.globalAttributes.name] = {
-        groups: thisObj.groups,
-        actions: thisObj.actions,
-        global: thisObj.globalAttributes,
-      };
-      setSettings({ 'PMMG-Action': storedActions });
-
-      // Update the screen and show success
-      thisObj.generateGlobalForm();
-      showSuccessDialog(thisObj.tile);
-    });
-
     // Add open button
     const openButton = this.createFormRow(
       this.saveSection,
@@ -855,8 +803,8 @@ class GenerateScreen {
       'openButton',
       'EXECUTE',
     );
-    openButton.addEventListener('click', function () {
-      showBuffer('XIT ACTION_' + thisObj.globalAttributes.name.split(' ').join('_'));
+    openButton.addEventListener('click', () => {
+      showBuffer('XIT ACTION_' + this.actionPackage.global.name.split(' ').join('_'));
     });
 
     // Add help button

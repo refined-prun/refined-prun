@@ -3,6 +3,7 @@ import SectionHeader from '@src/components/SectionHeader.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import Commands from '@src/components/forms/Commands.vue';
 import {
+  importPmmgActions,
   importPmmgFinancialHistory,
   importPmmgNotes,
   importPmmgSettings,
@@ -22,7 +23,7 @@ import {
       <PrunButton primary @click="importPmmgNotes">Import Notes</PrunButton>
     </Commands>
     <Commands label="pmmg-action.json">
-      <PrunButton primary disabled>Import Actions (Not Implemented)</PrunButton>
+      <PrunButton primary @click="importPmmgActions">Import Actions</PrunButton>
     </Commands>
     <Commands label="pmmg-lists.json">
       <PrunButton primary disabled>Import Lists (Not Implemented)</PrunButton>

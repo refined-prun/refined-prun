@@ -4,7 +4,6 @@ import {
   clearChildren,
   createTextSpan,
   getBuffers,
-  getLocalStoragePromise,
   showSuccessDialog,
   sleep,
 } from '@src/util';
@@ -18,8 +17,9 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { starsStore } from '@src/infrastructure/prun-api/data/stars';
 import { _$, _$$ } from '@src/utils/select-dom';
+import { userData } from '@src/store/user-data';
 
-export async function createExecuteScreen(tile, packageName) {
+export function createExecuteScreen(tile, packageName) {
   tile.style.display = 'flex';
   tile.style.flexDirection = 'column';
   tile.style.marginBottom = '10px';
@@ -30,10 +30,7 @@ export async function createExecuteScreen(tile, packageName) {
   title.style.marginLeft = '5px';
   tile.appendChild(title);
 
-  const storageValue = await getLocalStoragePromise('PMMG-Action');
-  const storedActions = (storageValue['PMMG-Action'] || {}) as UserData.ActionPackages;
-
-  const rawActionPackage = storedActions[packageName];
+  const rawActionPackage = userData.actionPackages.find(x => x.global?.name === packageName);
 
   // Create message box
   const messageBox = document.createElement('div');

@@ -476,15 +476,6 @@ export function showSuccessDialog(tile, message: string = 'Action succeeded!') {
   return;
 }
 
-/**
- * Gets one or more items from storage.
- * @param keys - A single key to get, list of keys to get, or a dictionary specifying default values. An empty list or object will return an empty result object. Pass in null to get the entire contents of storage.
- * @returns A Promise that resolves with an object containing items
- */
-export function getLocalStoragePromise(keys: string | string[]) {
-  return system.storage.local.get(keys);
-}
-
 export class Popup {
   private overlapDiv; // The popup element
   public form; // The form element to which all rows are added

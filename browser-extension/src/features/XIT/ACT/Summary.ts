@@ -1,20 +1,11 @@
-import {
-  setSettings,
-  getLocalStoragePromise,
-  showWarningDialog,
-  createLink,
-  createEmptyTableRow,
-  createTable,
-  Popup,
-} from '@src/util';
+import { showWarningDialog, createLink, createEmptyTableRow, createTable, Popup } from '@src/util';
 import { Style } from '@src/Style';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { userData } from '@src/store/user-data';
+import { createId } from '@src/store/create-id';
 
 // All functions associated with the summary screen
 export async function createSummaryScreen(tile, parentBuffer) {
-  let storageValue = await getLocalStoragePromise('PMMG-Action');
-  let storedActions = (storageValue['PMMG-Action'] || {}) as UserData.ActionPackages;
-
   // Add row on top for creating a new action package
   const createRow = document.createElement('div');
   createRow.classList.add(...Style.ActionBarContainer);
@@ -144,12 +135,8 @@ export async function createSummaryScreen(tile, parentBuffer) {
                 }
                 try {
                   parsedData = JSON.parse(e.target.result as string);
-                  const storageValue = await getLocalStoragePromise('PMMG-Action');
-                  const storedActions = (storageValue['PMMG-Action'] ||
-                    {}) as UserData.ActionPackages;
-
-                  storedActions[parsedData.global.name] = parsedData;
-                  setSettings({ 'PMMG-Action': storedActions });
+                  parsedData.id = createId();
+                  userData.actionPackages.push(parsedData);
                   popup.destroy();
                   parentBuffer.create_buffer();
                 } catch {
@@ -170,11 +157,8 @@ export async function createSummaryScreen(tile, parentBuffer) {
         }
       }
 
-      const storageValue = await getLocalStoragePromise('PMMG-Action');
-      const storedActions = (storageValue['PMMG-Action'] || {}) as UserData.ActionPackages;
-
-      storedActions[parsedData.global.name] = parsedData;
-      setSettings({ 'PMMG-Action': storedActions });
+      parsedData.id = createId();
+      userData.actionPackages.push(parsedData);
       popup.destroy();
       parentBuffer.create_buffer();
     });
@@ -183,7 +167,7 @@ export async function createSummaryScreen(tile, parentBuffer) {
   // Now generate table of all action packages
   const table = createTable(tile, ['Name', 'Execute', 'Edit', 'Cmds']);
 
-  const packageNames = Object.keys(storedActions);
+  const packageNames = userData.actionPackages.map(x => x.global.name);
 
   if (packageNames.length == 0) {
     table.appendChild(
@@ -239,11 +223,7 @@ export async function createSummaryScreen(tile, parentBuffer) {
         'Are you sure you want to delete this action package?',
         'Confirm',
         async function () {
-          storageValue = await getLocalStoragePromise('PMMG-Action');
-          storedActions = (storageValue['PMMG-Action'] || {}) as UserData.ActionPackages;
-
-          delete storedActions[name];
-          setSettings({ 'PMMG-Action': storedActions });
+          userData.actionPackages = userData.actionPackages.filter(x => x.global?.name !== name);
           parentBuffer.create_buffer();
         },
       );

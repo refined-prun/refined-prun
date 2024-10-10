@@ -25,6 +25,7 @@ declare namespace UserData {
   type ActionPackages = Record<string, ActionPackage | undefined>;
 
   interface ActionPackage {
+    id: string;
     global: {
       name: string;
     };
