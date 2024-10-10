@@ -15,6 +15,7 @@ export default ts.config(
   {
     rules: {
       'vue/multi-word-component-names': 'off',
+      'vue/no-mutating-props': ['error', { shallowOnly: true }],
     },
   },
   {

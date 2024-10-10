@@ -1,20 +1,17 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, useCssModule, watch } from 'vue';
+import { computed, nextTick, onMounted, PropType, ref, useCssModule, watch } from 'vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import { userData } from '@src/store/user-data';
 
 const props = defineProps({
-  id: {
-    type: String,
+  note: {
+    type: Object as PropType<UserData.Note>,
     required: true,
   },
 });
 
 const $style = useCssModule();
 
-const note = computed(() => userData.notes.find(x => x.id.startsWith(props.id)));
-
-const renderedText = computed(() => processText(note.value?.text));
+const renderedText = computed(() => processText(props.note.text));
 
 function processText(text?: string) {
   if (text === undefined) {
@@ -76,15 +73,12 @@ watch(
 </script>
 
 <template>
-  <div v-if="!note">Note with id {{ id }} not found.</div>
-  <template v-else>
-    <div :class="['title', $style.title]" :style="{ paddingLeft: '10px' }">{{ note.name }}</div>
-    <div>
-      <textarea ref="textbox" v-model="note.text" :class="$style.textarea" spellcheck="false" />
-      <!-- eslint-disable-next-line vue/no-v-html -->
-      <pre ref="overlay" :class="$style.overlay" v-html="renderedText" />
-    </div>
-  </template>
+  <div :class="['title', $style.title]" :style="{ paddingLeft: '10px' }">{{ note.name }}</div>
+  <div>
+    <textarea ref="textbox" v-model="note.text" :class="$style.textarea" spellcheck="false" />
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <pre ref="overlay" :class="$style.overlay" v-html="renderedText" />
+  </div>
 </template>
 
 <style module>
