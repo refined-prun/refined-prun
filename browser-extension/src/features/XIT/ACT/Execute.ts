@@ -104,7 +104,7 @@ export function createExecuteScreen(tile, packageName) {
   let executionIndex = 0; // Index of which action is being executed
 
   // Add action listener for viewing
-  viewButton.addEventListener('click', function () {
+  viewButton.addEventListener('click', () => {
     addMessage(messageBox, '', undefined, true);
     const actionPackage = parseActionPackage(rawActionPackage, packageConfig, messageBox, true);
     for (const action of [...actionPackage].reverse()) {
@@ -117,7 +117,7 @@ export function createExecuteScreen(tile, packageName) {
   });
 
   // Add action listener for validation
-  validateButton.addEventListener('click', function () {
+  validateButton.addEventListener('click', () => {
     addMessage(messageBox, '', undefined, true);
     const actionPackage = parseActionPackage(rawActionPackage, packageConfig, messageBox);
     if (actionPackage.valid) {
@@ -126,7 +126,7 @@ export function createExecuteScreen(tile, packageName) {
   });
 
   // Execute the action!
-  executeButton.addEventListener('click', async function () {
+  executeButton.addEventListener('click', async () => {
     if (
       tile.children &&
       tile.children[tile.children.length - 1].classList.contains('pb-execution')
@@ -228,7 +228,7 @@ async function executeAction(
   // Find button to move
   let button;
   let buttonOffset = 0;
-  const resetStyles = function (elem) {
+  const resetStyles = elem => {
     elem.classList.remove('pb-hide-input');
     return elem;
   }; // Function to reset any extra styles on the element besides the ones used in moving it
@@ -444,7 +444,7 @@ async function executeAction(
   }
 
   // Add listener to the button to start waiting for feedback. Then move button back and go to next action
-  const buttonListener = function () {
+  const buttonListener = () => {
     // If a popup is present, don't take any actions
     if (buffer.querySelector(Selector.ActionFeedback)) {
       addMessage(messageBox, 'Popup exists on buffer', 'ERROR');
@@ -456,7 +456,7 @@ async function executeAction(
 
     if (action.type == 'CXBuy') {
       // Add mutation listener to wait for dismiss screen
-      monitorStatus(buffer, function (dismissButton) {
+      monitorStatus(buffer, dismissButton => {
         // Detect success
         const success = buffer.querySelector(Selector.ActionSuccess);
         button.disabled = false; // Reenable the button regardless of what happens
@@ -555,7 +555,7 @@ async function executeAction(
       }
     } else if (action.type == 'MTRA') {
       // Add mutation listener to wait for dismiss screen
-      monitorStatus(buffer, function (dismissButton) {
+      monitorStatus(buffer, dismissButton => {
         // Detect success
         const success = buffer.querySelector(Selector.ActionSuccess);
         button.disabled = false; // Reenable the button regardless of what happens
@@ -608,7 +608,7 @@ async function executeAction(
   button.addEventListener('click', buttonListener);
 
   // Tackle skip button
-  const skipButtonListener = function () {
+  const skipButtonListener = () => {
     // Skip the current instruction (putting buttons back where they should be)
     button.removeEventListener('click', buttonListener); // Remove previous listeners
     skipButton.removeEventListener('click', skipButtonListener);
@@ -641,7 +641,7 @@ async function executeAction(
   skipButton.addEventListener('click', skipButtonListener);
 
   // Tackle cancel button
-  const cancelButtonListener = function () {
+  const cancelButtonListener = () => {
     // Cancel all instructions (putting buttons back where they should be)
     button.removeEventListener('click', buttonListener); // Remove previous listeners
     skipButton.removeEventListener('click', skipButtonListener);
@@ -668,7 +668,7 @@ function undoButtonMove(button, resetStyles, executeControls) {
 
 // Monitor for success/failure in action
 function monitorStatus(buffer, callback) {
-  const onMutationsObserved = function () {
+  const onMutationsObserved = () => {
     const dismiss =
       buffer.querySelector(Selector.ActionDismiss) ||
       buffer.querySelector(Selector.ActionConfirmation);

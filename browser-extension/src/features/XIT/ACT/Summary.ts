@@ -23,11 +23,11 @@ export async function createSummaryScreen(tile, parentBuffer) {
   createButtonContainer.appendChild(createButton);
 
   // Generate popup asking for name of package
-  createButton.addEventListener('click', function () {
+  createButton.addEventListener('click', () => {
     const popup = new Popup(tile, 'Create Action Package');
     popup.addPopupRow('text', 'Name', undefined, undefined, undefined);
 
-    popup.addPopupRow('button', 'CMD', 'OPEN', undefined, function () {
+    popup.addPopupRow('button', 'CMD', 'OPEN', undefined, () => {
       const nameRow = popup.getRowByName('Name');
       if (nameRow.rowInput.value && nameRow.rowInput.value != '') {
         showBuffer('XIT ACTION_GEN_' + nameRow.rowInput.value.split(' ').join('_'));
@@ -50,14 +50,14 @@ export async function createSummaryScreen(tile, parentBuffer) {
   importButtonContainer.appendChild(importButton);
 
   // Generate popup to deal with import
-  importButton.addEventListener('click', function () {
+  importButton.addEventListener('click', () => {
     const popup = new Popup(tile, 'Import Action Package');
     popup.addPopupRow(
       'dropdown',
       'Type',
       ['Paste JSON', 'Upload JSON', 0],
       'Which style of import to use. Ping Pi314 on Discord for format specifics. Official documentation coming soon.',
-      function () {
+      () => {
         // Change the next row to the correct type of import row
         popup.removePopupRow(1);
 
@@ -97,7 +97,7 @@ export async function createSummaryScreen(tile, parentBuffer) {
     popup.addPopupRow('text', 'Import', undefined, undefined, undefined);
 
     // Save row
-    popup.addPopupRow('button', 'CMD', 'IMPORT', undefined, async function () {
+    popup.addPopupRow('button', 'CMD', 'IMPORT', undefined, async () => {
       // Parse then save the imported data
       const typeRow = popup.getRowByName('Type');
       const importType = typeRow.rowInput.value;
@@ -194,7 +194,7 @@ export async function createSummaryScreen(tile, parentBuffer) {
     execButton.classList.add(...Style.ButtonPrimary);
     execColumn.appendChild(execButton);
     row.appendChild(execColumn);
-    execButton.addEventListener('click', function () {
+    execButton.addEventListener('click', () => {
       showBuffer('XIT ACTION_' + paramName);
     });
 
@@ -206,7 +206,7 @@ export async function createSummaryScreen(tile, parentBuffer) {
     editButton.classList.add(...Style.ButtonPrimary);
     editColumn.appendChild(editButton);
     row.appendChild(editColumn);
-    editButton.addEventListener('click', function () {
+    editButton.addEventListener('click', () => {
       showBuffer('XIT ACTION_EDIT_' + paramName);
     });
 
@@ -217,12 +217,12 @@ export async function createSummaryScreen(tile, parentBuffer) {
     deleteButton.classList.add(...Style.SmallButton);
     cmdColumn.appendChild(deleteButton);
     row.appendChild(cmdColumn);
-    deleteButton.addEventListener('click', function () {
+    deleteButton.addEventListener('click', () => {
       showWarningDialog(
         tile,
         'Are you sure you want to delete this action package?',
         'Confirm',
-        async function () {
+        async () => {
           userData.actionPackages = userData.actionPackages.filter(x => x.global?.name !== name);
           parentBuffer.create_buffer();
         },
