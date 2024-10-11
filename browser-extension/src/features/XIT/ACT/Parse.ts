@@ -12,7 +12,7 @@ import { isRepairableBuilding } from '@src/core/buildings';
 // Turn stored action package (resupply base for 30 days) to series of actionable actions (buy 1000 RAT, then 1000 DW, etc)
 // Preview flag set to true will allow non-configured actions to be displayed
 export function parseActionPackage(
-  rawActionPackage: UserData.ActionPackage,
+  rawActionPackage: UserData.ActionPackageData,
   packageConfig,
   messageBox,
   preview?,
@@ -22,7 +22,7 @@ export function parseActionPackage(
   actionPackage.valid = false;
 
   // If invalid return an empty action package and throw error
-  if (!rawActionPackage.global || !rawActionPackage.actions || !rawActionPackage.groups) {
+  if (!rawActionPackage.name || !rawActionPackage.actions || !rawActionPackage.groups) {
     addMessage(messageBox, 'Corrupted action package structure', 'ERROR');
     return actionPackage;
   }
@@ -45,7 +45,7 @@ export function parseActionPackage(
   for (let i = 0; i < rawActionPackage.actions.length; i++) {
     const action = rawActionPackage.actions[i];
     const actionIndex = i;
-    if (action.type == 'CX Buy') {
+    if (action.type == 'CX_BUY') {
       if (!action.group) {
         addMessage(messageBox, 'Missing material group on CX buy', 'ERROR');
         return actionPackage;
@@ -283,9 +283,9 @@ export function parseActionPackage(
 }
 
 // Parse a material group into a list of materials
-export function parseGroup(group: UserData.ActionPackageGroup, messageBox, errorFlag) {
+export function parseGroup(group: UserData.ActionGroupData, messageBox, errorFlag) {
   let parsedGroup = {};
-  if (group.type == 'Resupply') {
+  if (group.type == 'RESUPPLY') {
     // Interpret burn to get number of materials
     if (!group.planet) {
       addMessage(messageBox, 'Missing resupply planet', 'ERROR');
@@ -334,7 +334,7 @@ export function parseGroup(group: UserData.ActionPackageGroup, messageBox, error
       errorFlag[0] = true;
       return parsedGroup;
     }
-  } else if (group.type == 'Repair') {
+  } else if (group.type == 'REPAIR') {
     if (!group.planet) {
       addMessage(messageBox, 'Missing resupply planet', 'ERROR');
       errorFlag[0] = true;
@@ -400,7 +400,7 @@ export function parseGroup(group: UserData.ActionPackageGroup, messageBox, error
       addMessage(messageBox, 'Missing data on repair planet', 'ERROR');
       errorFlag[0] = true;
     }
-  } else if (group.type == 'Manual') {
+  } else if (group.type == 'MANUAL') {
     // Just return the list of materials
     if (group.materials) {
       parsedGroup = group.materials;

@@ -30,7 +30,7 @@ export function createExecuteScreen(tile, packageName) {
   title.style.marginLeft = '5px';
   tile.appendChild(title);
 
-  const rawActionPackage = userData.actionPackages.find(x => x.global?.name === packageName);
+  const rawActionPackage = userData.actionPackages.find(x => x.name === packageName);
 
   // Create message box
   const messageBox = document.createElement('div');

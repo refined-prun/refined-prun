@@ -24,10 +24,15 @@ export async function createGenerateScreen(tile, packageName) {
     return;
   }
 
-  let actionPackage = userData.actionPackages.find(x => x.global?.name === packageName);
+  let actionPackage = userData.actionPackages.find(x => x.name === packageName);
 
   if (!actionPackage) {
-    actionPackage = { id: createId(), global: { name: packageName }, groups: [], actions: [] };
+    actionPackage = {
+      id: createId(),
+      name: packageName,
+      groups: [],
+      actions: [],
+    };
     userData.actionPackages.push(actionPackage);
   }
 
@@ -50,9 +55,9 @@ class GenerateScreen {
 	*/
 
   // Variables to store data inputted on screen
-  public actionPackage: UserData.ActionPackage;
+  public actionPackage: UserData.ActionPackageData;
 
-  constructor(tile, actionPackage: UserData.ActionPackage) {
+  constructor(tile, actionPackage: UserData.ActionPackageData) {
     this.tile = tile;
     this.actionPackage = actionPackage;
 
@@ -72,7 +77,7 @@ class GenerateScreen {
     }
 
     const title = document.createElement('h2');
-    title.textContent = this.actionPackage.global.name || 'unnamed';
+    title.textContent = this.actionPackage.name || 'unnamed';
     title.classList.add(...Style.DraftName);
     title.style.marginLeft = '4px';
     this.globalSection.appendChild(title);
@@ -122,7 +127,7 @@ class GenerateScreen {
       switch (
         group.type // Populate content column based on material group type
       ) {
-        case 'Manual':
+        case 'MANUAL':
           if (group.materials) {
             contentText = '';
             for (const mat of Object.keys(group.materials)) {
@@ -138,7 +143,7 @@ class GenerateScreen {
             contentColumn.appendChild(createTextSpan('--'));
           }
           break;
-        case 'Resupply':
+        case 'RESUPPLY':
           if (group.planet && group.days) {
             contentText = `Resupply ${group.planet} with ${group.days} day${group.days == 1 ? '' : 's'} of supplies`;
             contentColumn.appendChild(createTextSpan(contentText));
@@ -146,7 +151,7 @@ class GenerateScreen {
             contentColumn.appendChild(createTextSpan('--'));
           }
           break;
-        case 'Repair':
+        case 'REPAIR':
           if (group.planet) {
             contentText = `Repair buildings on ${group.planet}${
               group.days && group.days != 0 && group.days != ''
@@ -202,7 +207,7 @@ class GenerateScreen {
       'Group Type',
       'groupType',
       undefined,
-      ['Resupply', 'Repair', 'Manual'],
+      ['RESUPPLY', 'REPAIR', 'MANUAL'],
     );
     const newGroupAdd = this.createFormRow(
       this.groupSection,
@@ -215,7 +220,7 @@ class GenerateScreen {
 
     // Add method for adding a new group with default values
     newGroupAdd.addEventListener('click', () => {
-      this.actionPackage.groups.push({ type: newGroupDropdown.value });
+      this.actionPackage.groups.push({ id: createId(), type: newGroupDropdown.value });
       this.generateGroupForm();
     });
   }
@@ -232,7 +237,7 @@ class GenerateScreen {
 
     // Add other rows depending on the group type
     switch (group.type) {
-      case 'Resupply': {
+      case 'RESUPPLY': {
         // Get list of planets
         const possiblePlanets = [] as string[];
         for (const workforce of workforcesStore.all.value ?? []) {
@@ -279,7 +284,7 @@ class GenerateScreen {
         );
         break;
       }
-      case 'Repair': {
+      case 'REPAIR': {
         // Get list of planets
         const possiblePlanets = [] as string[];
         for (const site of sitesStore.all.value ?? []) {
@@ -311,7 +316,7 @@ class GenerateScreen {
         );
         break;
       }
-      case 'Manual': {
+      case 'MANUAL': {
         // Create rows corresponding to current materials stored in group
         let numMaterials = 0; // Stores how many materials there are listed
         if (group.materials) {
@@ -381,7 +386,7 @@ class GenerateScreen {
         group.name = name;
 
         switch (group.type) {
-          case 'Resupply': {
+          case 'RESUPPLY': {
             group.planet = popup.getRowByName('Planet').rowInput.value;
             group.days = parseFloat(popup.getRowByName('Days').rowInput.value || 0);
             group.useBaseInv = popup.getRowByName('Use Base Inv').rowInput.checked;
@@ -394,13 +399,13 @@ class GenerateScreen {
             }
             break;
           }
-          case 'Repair': {
+          case 'REPAIR': {
             group.planet = popup.getRowByName('Planet').rowInput.value;
             group.days = popup.getRowByName('Day Threshold').rowInput.value;
             group.advanceDays = popup.getRowByName('Time Offset').rowInput.value;
             break;
           }
-          case 'Manual': {
+          case 'MANUAL': {
             group.materials = {};
 
             const numMaterials = (popup.rows.length - 3) / 2;
@@ -477,7 +482,7 @@ class GenerateScreen {
       // Column summarizing parameters of action
       const contentColumn = document.createElement('td');
       switch (action.type) {
-        case 'CX Buy':
+        case 'CX_BUY':
           if (action.group && action.exchange) {
             contentColumn.appendChild(
               createTextSpan('Buying group ' + action.group + ' from ' + action.exchange),
@@ -545,7 +550,7 @@ class GenerateScreen {
       'Action Type',
       'actionType',
       undefined,
-      ['CX Buy', 'MTRA'],
+      ['CX_BUY', 'MTRA'],
     );
     const newActionAdd = this.createFormRow(
       this.actionSection,
@@ -558,7 +563,7 @@ class GenerateScreen {
 
     // Add method for adding a new group with default values
     newActionAdd.addEventListener('click', () => {
-      this.actionPackage.actions.push({ type: newActionDropdown.value });
+      this.actionPackage.actions.push({ id: createId(), type: newActionDropdown.value });
       this.generateActionForm();
     });
   }
@@ -575,7 +580,7 @@ class GenerateScreen {
 
     // Add more rows depending on the type of the action
     switch (action.type) {
-      case 'CX Buy': {
+      case 'CX_BUY': {
         // Add group dropdown
         const groupNames = this.actionPackage.groups
           .filter(obj => obj.name && obj.name !== '')
@@ -759,7 +764,7 @@ class GenerateScreen {
         action.name = name;
 
         switch (action.type) {
-          case 'CX Buy':
+          case 'CX_BUY':
             action.group = popup.getRowByName('Material Group').rowInput.value;
             action.exchange = popup.getRowByName('Exchange').rowInput.value;
             action.buyPartial = popup.getRowByName('Buy Partial').rowInput.checked;
@@ -804,7 +809,7 @@ class GenerateScreen {
       'EXECUTE',
     );
     openButton.addEventListener('click', () => {
-      showBuffer('XIT ACTION_' + this.actionPackage.global.name.split(' ').join('_'));
+      showBuffer('XIT ACTION_' + this.actionPackage.name.split(' ').join('_'));
     });
 
     // Add help button

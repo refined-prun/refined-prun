@@ -22,19 +22,16 @@ declare namespace UserData {
     text: string;
   }
 
-  type ActionPackages = Record<string, ActionPackage | undefined>;
-
-  interface ActionPackage {
+  interface ActionPackageData {
     id: string;
-    global: {
-      name: string;
-    };
-    groups: ActionPackageGroup[];
-    actions: ActionPackageAction[];
+    name: string;
+    groups: ActionGroupData[];
+    actions: ActionData[];
   }
 
-  interface ActionPackageGroup {
-    type: 'Manual' | 'Resupply' | 'Repair';
+  interface ActionGroupData {
+    id: string;
+    type: 'MANUAL' | 'RESUPPLY' | 'REPAIR';
     name?: string;
     days?: number | string;
     advanceDays?: number | string;
@@ -45,8 +42,9 @@ declare namespace UserData {
     consumablesOnly?: boolean;
   }
 
-  interface ActionPackageAction {
-    type: 'CX Buy' | 'MTRA';
+  interface ActionData {
+    id: string;
+    type: 'CX_BUY' | 'MTRA';
 
     name?: string;
     group?: string;
@@ -58,20 +56,5 @@ declare namespace UserData {
 
     origin?: string;
     dest?: string;
-  }
-
-  interface PmmgSettings {
-    currency: string;
-    burn: {
-      red: number;
-      yellow: number;
-      resupply: number;
-    };
-    repair: {
-      threshold: number;
-      offset: number;
-    };
-    sidebar?: [string, string][];
-    sorting?: UserData.SortingMode[];
   }
 }

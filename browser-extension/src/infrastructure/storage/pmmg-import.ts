@@ -3,8 +3,23 @@ import { userData } from '@src/store/user-data';
 import { shallowReactive } from 'vue';
 import { createId } from '@src/store/create-id';
 
+interface PmmgSettings {
+  currency: string;
+  burn: {
+    red: number;
+    yellow: number;
+    resupply: number;
+  };
+  repair: {
+    threshold: number;
+    offset: number;
+  };
+  sidebar?: [string, string][];
+  sorting?: UserData.SortingMode[];
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function parsePmmgUserData(pmmg: any): UserData.PmmgSettings | undefined {
+export function parsePmmgUserData(pmmg: any): PmmgSettings | undefined {
   if (!pmmg.loaded_before) {
     return undefined;
   }
@@ -118,18 +133,94 @@ export function importPmmgNotes() {
   });
 }
 
+interface PmmgActionPackage {
+  global: {
+    name: string;
+  };
+  groups: PmmgActionGroup[];
+  actions: PmmgAction[];
+}
+
+interface PmmgActionGroup {
+  type: 'Manual' | 'Resupply' | 'Repair';
+  name?: string;
+  days?: number | string;
+  advanceDays?: number | string;
+  planet?: string;
+  useBaseInv?: boolean;
+  materials?: Record<string, number>;
+  exclusions?: string[];
+  consumablesOnly?: boolean;
+}
+
+interface PmmgAction {
+  type: 'CX Buy' | 'MTRA';
+
+  name?: string;
+  group?: string;
+
+  buyPartial?: boolean;
+  exchange?: string;
+  useCXInv?: boolean;
+  priceLimits?: Record<string, number>;
+
+  origin?: string;
+  dest?: string;
+}
+
 export function importPmmgActions() {
   uploadJson(json => {
     if (!json) {
       return;
     }
-    const pmmg = json['PMMG-Action'];
+    const pmmg = json['PMMG-Action'] as Record<string, PmmgActionPackage>;
     if (pmmg) {
-      const packages = Object.values(pmmg as UserData.ActionPackages).map(x => x!);
-      for (const pkg of packages) {
-        pkg.id = createId();
-      }
-      userData.actionPackages = packages;
+      userData.actionPackages = Object.values(pmmg).map(mapPmmgActionPackage);
     }
   });
+}
+
+export function mapPmmgActionPackage(pkg?: PmmgActionPackage): UserData.ActionPackageData {
+  return {
+    id: createId(),
+    name: pkg?.global?.name ?? 'ACTION_PACKAGE',
+    groups: pkg?.groups?.map(mapPmmgActionGroup) ?? [],
+    actions: pkg?.actions?.map(mapPmmgAction) ?? [],
+  };
+}
+
+function mapPmmgActionGroup(group: PmmgActionGroup): UserData.ActionGroupData {
+  return {
+    ...group,
+    id: createId(),
+    type: mapPmmgActionGroupType(group.type),
+  };
+}
+
+function mapPmmgActionGroupType(pmmgType: string) {
+  switch (pmmgType) {
+    case 'Resupply':
+      return 'RESUPPLY';
+    case 'Repair':
+      return 'REPAIR';
+    default:
+      return 'MANUAL';
+  }
+}
+
+function mapPmmgAction(action: PmmgAction): UserData.ActionData {
+  return {
+    ...action,
+    id: createId(),
+    type: mapPmmgActionType(action.type),
+  };
+}
+
+function mapPmmgActionType(pmmgType: string) {
+  switch (pmmgType) {
+    case 'CX Buy':
+      return 'CX_BUY';
+    default:
+      return 'MTRA';
+  }
 }

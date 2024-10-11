@@ -3,6 +3,8 @@ import { createSummaryScreen } from './Summary';
 import { createGenerateScreen } from './Generate';
 import { createExecuteScreen } from './Execute';
 import xit from '@src/features/XIT/xit-registry';
+import { watch } from 'vue';
+import { userData } from '@src/store/user-data';
 
 export class Execute {
   private tile: HTMLElement;
@@ -27,7 +29,8 @@ export class Execute {
 
     if (this.parameters.length == 1) {
       // Create table of all action packages with option to create more
-      void createSummaryScreen(this.tile, this);
+      void createSummaryScreen(this.tile);
+      watch(userData.actionPackages, () => this.create_buffer(), { once: true });
     } else if (
       this.parameters[1] &&
       (this.parameters[1].toLowerCase() == 'gen' || this.parameters[1].toLowerCase() == 'edit')

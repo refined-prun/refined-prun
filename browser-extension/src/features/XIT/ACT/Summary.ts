@@ -2,10 +2,11 @@ import { showWarningDialog, createLink, createEmptyTableRow, createTable, Popup 
 import { Style } from '@src/Style';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
-import { createId } from '@src/store/create-id';
+import { mapPmmgActionPackage } from '@src/infrastructure/storage/pmmg-import';
+import removeArrayElement from '@src/utils/remove-array-element';
 
 // All functions associated with the summary screen
-export async function createSummaryScreen(tile, parentBuffer) {
+export async function createSummaryScreen(tile) {
   // Add row on top for creating a new action package
   const createRow = document.createElement('div');
   createRow.classList.add(...Style.ActionBarContainer);
@@ -104,22 +105,25 @@ export async function createSummaryScreen(tile, parentBuffer) {
 
       const importRow = popup.getRowByName('Import');
 
-      let parsedData;
       switch (importType) {
         case 'Paste JSON': {
           const rawData = importRow.rowInput.value;
           try {
-            parsedData = JSON.parse(rawData);
+            const parsedData = JSON.parse(rawData);
 
-            if (!parsedData.global || !parsedData.global.name) {
+            if (!parsedData.name) {
               importRow.row.classList.add(...Style.FormError);
               return;
             }
+
+            const mappedAction = mapPmmgActionPackage(parsedData);
+            userData.actionPackages.push(mappedAction);
+            popup.destroy();
           } catch {
             importRow.row.classList.add(...Style.FormError);
             return;
           }
-          break;
+          return;
         }
         case 'Upload JSON': {
           const fileImport = importRow.rowInput.children[0];
@@ -134,11 +138,10 @@ export async function createSummaryScreen(tile, parentBuffer) {
                   return;
                 }
                 try {
-                  parsedData = JSON.parse(e.target.result as string);
-                  parsedData.id = createId();
-                  userData.actionPackages.push(parsedData);
+                  const parsedData = JSON.parse(e.target.result as string);
+                  const mappedAction = mapPmmgActionPackage(parsedData);
+                  userData.actionPackages.push(mappedAction);
                   popup.destroy();
-                  parentBuffer.create_buffer();
                 } catch {
                   importRow.row.classList.add(...Style.FormError);
                   return;
@@ -156,28 +159,21 @@ export async function createSummaryScreen(tile, parentBuffer) {
           break;
         }
       }
-
-      parsedData.id = createId();
-      userData.actionPackages.push(parsedData);
-      popup.destroy();
-      parentBuffer.create_buffer();
     });
   });
 
   // Now generate table of all action packages
   const table = createTable(tile, ['Name', 'Execute', 'Edit', 'Cmds']);
 
-  const packageNames = userData.actionPackages.map(x => x.global.name);
-
-  if (packageNames.length == 0) {
+  if (userData.actionPackages.length == 0) {
     table.appendChild(
       createEmptyTableRow(4, 'No action packages found. Click above to create one'),
     );
   }
 
-  for (const name of packageNames) {
-    const friendlyName = name.split('_').join(' ');
-    const paramName = name.split(' ').join('_');
+  for (const pkg of userData.actionPackages) {
+    const friendlyName = pkg.name.split('_').join(' ');
+    const paramName = pkg.name.split(' ').join('_');
 
     const row = document.createElement('tr');
 
@@ -222,9 +218,8 @@ export async function createSummaryScreen(tile, parentBuffer) {
         tile,
         'Are you sure you want to delete this action package?',
         'Confirm',
-        async () => {
-          userData.actionPackages = userData.actionPackages.filter(x => x.global?.name !== name);
-          parentBuffer.create_buffer();
+        () => {
+          removeArrayElement(userData.actionPackages, pkg);
         },
       );
     });

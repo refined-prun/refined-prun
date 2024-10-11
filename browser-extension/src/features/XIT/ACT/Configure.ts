@@ -7,7 +7,7 @@ import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { addMessage } from './Execute';
 import { parseStorageName } from '@src/features/XIT/ACT/utils';
 
-export function needsConfiguration(action: UserData.ActionPackageAction) {
+export function needsConfiguration(action: UserData.ActionData) {
   switch (action.type) {
     case 'MTRA':
       if (action.dest && action.dest == 'Configure on Execution') {
@@ -26,7 +26,7 @@ export function needsConfiguration(action: UserData.ActionPackageAction) {
 export function createConfigureUI(
   packageConfig,
   tile,
-  rawActionPackage: UserData.ActionPackage,
+  rawActionPackage: UserData.ActionPackageData,
   validateButton,
   executeButton,
   messageBox,
