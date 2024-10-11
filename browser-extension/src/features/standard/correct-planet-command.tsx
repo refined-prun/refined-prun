@@ -35,14 +35,15 @@ async function onSelectorReady(selector: HTMLElement) {
       return;
     }
 
-    const planet = planetsStore.getByName(commandParts[1]);
-    if (!planet || commandParts[1] === planet.naturalId) {
+    const parameter = commandParts.slice(1).join(' ');
+    const planet = planetsStore.find(parameter);
+    if (!planet || parameter === planet.naturalId) {
       return;
     }
 
     ev.stopPropagation();
-    commandParts[1] = planet.naturalId;
-    changeValue(input, commandParts.join(' '));
+    const newCommandParts = [commandParts[0], planet.naturalId];
+    changeValue(input, newCommandParts.join(' '));
     setTimeout(() => form.requestSubmit(), 0);
   });
 }
