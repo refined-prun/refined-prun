@@ -14,12 +14,10 @@ import { sumBy } from '@src/utils/sum-by';
 import { sum } from '@src/utils/sum';
 import {
   partnerCurrentConditions,
-  selfConditions,
   selfCurrentConditions,
   sumDeliveries,
   sumMaterialsPickup,
   sumShipmentDeliveries,
-  sumPendingMaterialsPickup,
 } from '@src/core/balance/contract-conditions';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getPlanetBurn } from '@src/core/burn';
@@ -292,15 +290,7 @@ const materialsInTransit = computed(() =>
 );
 
 const materialsReceivable = computed(() =>
-  sum(
-    sumDeliveries(partnerCurrentConditions),
-    sumMaterialsPickup(selfCurrentConditions),
-    // After all dependencies are fulfilled,
-    // the player must pick up the materials via COMEX_PURCHASE_PICKUP condition.
-    // We'll consider these materials as a part of current assets, regardless of
-    // COMEX_PURCHASE_PICKUP deadline, since they can be picked up at any time.
-    sumPendingMaterialsPickup(selfConditions),
-  ),
+  sum(sumDeliveries(partnerCurrentConditions), sumMaterialsPickup(selfCurrentConditions)),
 );
 
 export const inventory = {

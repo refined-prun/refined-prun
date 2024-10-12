@@ -39,6 +39,17 @@ const sortedConditions = computed(() => {
 });
 
 function calculateDeadline(contract: PrunApi.Contract, condition: PrunApi.ContractCondition) {
+  if (condition.type === 'COMEX_PURCHASE_PICKUP') {
+    // The COMEX_PURCHASE_PICKUP condition has unique handling:
+    // Once all its dependencies are fulfilled,
+    // the player needs to pick up the materials using this condition.
+    // For determining the deadline of the COMEX_PURCHASE_PICKUP condition,
+    // we will use the latest deadline among its dependencies.
+    // This is because the materials can be picked up at any time,
+    // making the COMEX_PURCHASE_PICKUP's own deadline irrelevant.
+    return getLatestDependencyDeadline(contract, condition);
+  }
+
   if (condition.deadline) {
     return condition.deadline.timestamp;
   }
@@ -47,6 +58,13 @@ function calculateDeadline(contract: PrunApi.Contract, condition: PrunApi.Contra
     return Number.POSITIVE_INFINITY;
   }
 
+  return getLatestDependencyDeadline(contract, condition) + condition.deadlineDuration.millis;
+}
+
+function getLatestDependencyDeadline(
+  contract: PrunApi.Contract,
+  condition: PrunApi.ContractCondition,
+) {
   let latestDependency = contract.date.timestamp;
   for (const dependency of condition.dependencies) {
     const dependencyCondition = contract.conditions.find(x => x.id === dependency);
@@ -57,8 +75,7 @@ function calculateDeadline(contract: PrunApi.Contract, condition: PrunApi.Contra
       );
     }
   }
-
-  return latestDependency + condition.deadlineDuration.millis;
+  return latestDependency;
 }
 
 const accountingPeriod = dayjs.duration(1, 'week').asMilliseconds();
@@ -70,10 +87,6 @@ const currentSplitIndex = computed(() => {
   }
   const currentSplitDate = timestampEachSecond.value + accountingPeriod;
   return binarySearch(currentSplitDate, sorted, x => x.deadline);
-});
-
-export const selfConditions = computed(() => {
-  return sortedConditions.value?.filter(x => x.isSelf);
 });
 
 export const currentConditions = computed(() => {
@@ -137,21 +150,7 @@ export function sumFactionProvisions(conditions: MaybeConditions) {
 }
 
 export function sumMaterialsPickup(conditions: MaybeConditions) {
-  const filtered = conditions.value?.filter(
-    x =>
-      x.condition.type === 'COMEX_PURCHASE_PICKUP' &&
-      x.dependencies.some(y => y.status !== 'FULFILLED'),
-  );
-  return sumBy(filtered, x => getMaterialQuantityValue(x.condition));
-}
-
-export function sumPendingMaterialsPickup(conditions: MaybeConditions) {
-  const filtered = conditions.value?.filter(
-    x =>
-      x.condition.type === 'COMEX_PURCHASE_PICKUP' &&
-      x.dependencies.every(y => y.status === 'FULFILLED'),
-  );
-  return sumBy(filtered, x => getMaterialQuantityValue(x.condition));
+  return sumConditions(conditions, ['COMEX_PURCHASE_PICKUP'], getMaterialQuantityValue);
 }
 
 export function sumShipmentDeliveries(conditions: MaybeConditions) {
