@@ -122,6 +122,9 @@ export function computedTileState<T extends TileState, K extends keyof T>(
       if (Array.isArray(value) && value.length === 0) {
         delete state.value[key];
         return;
+      } else if (typeof value === 'object' && Object.keys(value as object).length === 0) {
+        delete state.value[key];
+        return;
       }
       if (value === defaultValue) {
         delete state.value[key];
