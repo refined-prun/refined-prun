@@ -1,4 +1,4 @@
-import { getSpecial, sleep } from './util';
+import { sleep } from './util';
 import { appendStyle, RPrunStylesheet } from './Style';
 import features from '@src/feature-registry';
 import { initializePrunApi, loadGameData } from '@src/infrastructure/prun-api';
@@ -16,6 +16,8 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import oneMutation from 'one-mutation';
 import system from '@src/system';
 import { $ } from '@src/utils/select-dom';
+import { companyStore } from '@src/infrastructure/prun-api/data/company';
+import { watchWhile } from '@src/utils/watch';
 
 async function mainRun() {
   void fetchPrices();
@@ -29,12 +31,14 @@ async function mainRun() {
   await $(document.documentElement, PrunCss.App.container);
   await readPrunI18N(materialsStore.all);
   await backgroundTasks;
-
-  const specialTime = getSpecial();
+  await watchWhile(() => companyStore.value === undefined);
 
   // TODO
-  appendStyle(specialTime ? RPrunStylesheet.oldColors : RPrunStylesheet.enhancedColors);
-  //appendStyle(specialTime ? RPrunStylesheet.oldColors : RPrunStylesheet.icons);
+  if (companyStore.value?.code === 'SN') {
+    appendStyle(RPrunStylesheet.icons);
+  } else {
+    appendStyle(RPrunStylesheet.enhancedColors);
+  }
 
   await features.init();
 
