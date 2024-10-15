@@ -43,7 +43,7 @@ const manifest = {
   ],
   web_accessible_resources: [
     {
-      resources: ['*.js', '*.js.map', '*.css', '*.svg', '*.json'],
+      resources: ['*.js', '*.css', '*.svg', '*.json'],
       matches: [apex],
     },
   ],
