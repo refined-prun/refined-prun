@@ -30,6 +30,7 @@
 - `XIT REP` shows a weight/volume/cost table.
 - `BS` displays a building list summary at the bottom.
 - `XIT NOTE` list is now reorderable.
+- Table rows now alternate color between odd and even rows.
 - Material ticker auto-capitalizes inputs for commands: `CXM`, `CXOB`, `CXP`, `CXPC`, `CXPO`, `MAT`.
   For example: `CXPO h2o.ai1` will change to `CXPO H2O.AI1` when you hit Enter.
 - Added compatibility with non-English localizations.
