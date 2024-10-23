@@ -16,7 +16,7 @@ defineProps({
 
 const emit = defineEmits<{ (e: 'chart-click'): void }>();
 
-const averageFactor = useTileState('averageFactor', 0.2);
+const averageFactor = useTileState('averageFactor', 0.1);
 const averageFactorText = ref(averageFactor.value);
 watch(averageFactorText, x => {
   const parsed = parseFloat(x);
