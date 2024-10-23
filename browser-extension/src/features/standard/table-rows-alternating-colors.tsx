@@ -4,10 +4,10 @@ import features from '@src/feature-registry';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 export function init() {
-  applyCssRule('table tbody tr:nth-child(odd) td:nth-child(even)', classes.evenCell);
-  applyCssRule('table tbody tr:nth-child(odd) td:nth-child(odd)', classes.oddCell);
-  applyCssRule('table tbody tr:nth-child(odd):hover td', classes.hover);
-  applyCssRule(`table tbody tr.${highlight.highlight}:nth-child(odd) td`, classes.hover);
+  applyCssRule('table tbody tr:nth-child(even) td:nth-child(even)', classes.evenCell);
+  applyCssRule('table tbody tr:nth-child(even) td:nth-child(odd)', classes.oddCell);
+  applyCssRule('table tbody tr:nth-child(even):hover td', classes.hover);
+  applyCssRule(`table tbody tr.${highlight.highlight}:nth-child(even) td`, classes.hover);
 }
 
 void features.add({
