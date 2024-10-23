@@ -1,6 +1,7 @@
 import system from '@src/system';
 import { castArray } from '@src/utils/cast-array';
 import features from '@src/feature-registry';
+import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 
 let styleElement: HTMLStyleElement | undefined = undefined;
 
@@ -87,5 +88,5 @@ export function applyCssRule(selector: string, sourceClass: string) {
 }
 
 function selectCommand(command: string) {
-  return `div[data-rp-command='${command}']`;
+  return `.${PrunCss.TileFrame.frame}[data-rp-command='${command}']`;
 }
