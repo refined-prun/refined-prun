@@ -89,11 +89,11 @@ const green = useTileState('green');
 const inf = useTileState('inf');
 
 const fakeBurn: MaterialBurn = {
-  DailyAmount: -1000,
+  DailyAmount: -100000,
   DaysLeft: 10,
-  Inventory: 1000,
+  Inventory: 100000,
   Type: 'input',
-  input: 1000,
+  input: 100000,
   output: 0,
   workforce: 0,
 };

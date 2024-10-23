@@ -67,7 +67,7 @@ const needAmt = computed(() =>
       <MaterialIcon size="inline-table" :ticker="material.ticker" />
     </td>
     <td>
-      <span>{{ invAmount }}</span>
+      <span>{{ fixed0(invAmount) }}</span>
     </td>
     <td>
       <span :class="changeClass">{{ changeText }}</span>
