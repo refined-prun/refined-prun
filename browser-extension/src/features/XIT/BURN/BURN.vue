@@ -91,8 +91,11 @@ const inf = useTileState('inf');
 const fakeBurn: MaterialBurn = {
   DailyAmount: -1000,
   DaysLeft: 10,
-  Inventory: 0,
+  Inventory: 1000,
   Type: 'input',
+  input: 1000,
+  output: 0,
+  workforce: 0,
 };
 
 const rat = materialsStore.getByTicker('RAT');
@@ -111,6 +114,7 @@ const rat = materialsStore.getByTicker('RAT');
       <thead>
         <tr>
           <th />
+          <th>Inv</th>
           <th>
             <div :class="$style.header">
               Burn
@@ -126,8 +130,6 @@ const rat = materialsStore.getByTicker('RAT');
             </div>
           </th>
           <th>Days</th>
-          <th>Load</th>
-          <th>Cost</th>
           <th>CMD</th>
         </tr>
       </thead>

@@ -31,6 +31,8 @@ import { useXitParameters } from '@src/hooks/useXitParameters';
 
 const parameters = useXitParameters();
 
+const isRepAll = parameters.length === 0;
+
 const buildings = computed(() => calculateBuildingEntries(parameters));
 const ships = computed(() => calculateShipEntries(parameters));
 
@@ -89,7 +91,10 @@ function calculateAge(lastRepair: number) {
       </Active>
     </form>
     <SectionHeader>Shopping Cart</SectionHeader>
-    <MaterialPurchaseTable :materials="materials" />
+    <MaterialPurchaseTable
+      :collapsible="isRepAll"
+      :collapsed-by-default="true"
+      :materials="materials" />
     <SectionHeader>Buildings</SectionHeader>
     <table>
       <thead>

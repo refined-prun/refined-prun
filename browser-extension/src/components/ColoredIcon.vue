@@ -3,7 +3,7 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { computed, PropType, useCssModule } from 'vue';
 import ColoredIconDetail from '@src/components/ColoredIconDetail.vue';
 
-export type ColoredIconSize = 'large' | 'medium' | 'small' | 'inline';
+export type ColoredIconSize = 'large' | 'medium' | 'small' | 'inline' | 'inline-table';
 
 const props = defineProps({
   label: {
@@ -41,6 +41,7 @@ const classes = computed(() => ({
   [$style.medium]: props.size === 'medium',
   [$style.small]: props.size === 'small',
   [$style.inline]: props.size === 'inline',
+  [$style.inlineTable]: props.size === 'inline-table',
 }));
 
 const style = computed(() => ({
@@ -79,6 +80,12 @@ const style = computed(() => ({
 
 .inline {
   height: 14px;
+  width: 32px;
+  font-size: 11px;
+}
+
+.inlineTable {
+  height: 18px;
   width: 32px;
   font-size: 11px;
 }

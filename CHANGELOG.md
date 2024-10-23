@@ -15,9 +15,7 @@
 ## New features
 - `CONTD` partner search results are shown above the search bar.
 - `SHPT` and `BLCK` icons display a destination label.
-- `XIT BURN` now includes:
-  - Total weight, volume, and cost of all required resources.
-  - Context buttons: `BS` and `INV` for planets, `CXM` for materials.
+- `XIT BURN` now includes context buttons: `BS` and `INV` for planets, `CXM` for materials.
 - `XIT FINPR` displays Repairs and Margin (Profit / Revenue).
 - `XIT FINCH` Equity History chart now applies smoothing via SMA.
 - `FINLA` shows CX and FX deposits in addition to cash.
@@ -51,8 +49,10 @@
   - Company Value is added.
   - 4 new financial ratios are added. Look them up if you don't know them!
 - `XIT SHEETS` now display in minimalist mode.
-- The `Additional Days` burn setting was changed to `Resupply`, representing total days for resupply.
-- Burn material sorting was changed to favor outputs over inputs/consumables and inputs over consumables.
+- `XIT BURN` is more dense now.
+- The `Additional Days` `XIT BURN` setting was changed to `Resupply`, representing total days for resupply.
+- `INV` Burn material sorting was changed to favor outputs over inputs/consumables and inputs
+  over consumables.
 - Equity history chart now shows only the latest point per day.
 - `XIT NOTE` notes are not deleted when empty.
 - Font size of material amount labels is 1px bigger.
