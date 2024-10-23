@@ -48,11 +48,21 @@ export interface BalanceSheet {
         accumulatedDepreciation: number;
         total: number;
       };
+      ships: {
+        marketValue: number;
+        accumulatedDepreciation: number;
+        total: number;
+      };
       longTermReceivables: {
         accountsReceivable: number;
         materialsInTransit: number;
         materialsReceivable: number;
         loansPrincipal: number;
+        total: number;
+      };
+      intangibleAssets: {
+        hqUpgrades: number;
+        arc: number;
         total: number;
       };
       total: number;
@@ -87,19 +97,6 @@ export interface BalanceSheet {
   };
 
   equity: number;
-
-  lockedAssets: {
-    ships: {
-      marketValue: number;
-      accumulatedDepreciation: number;
-      total: number;
-    };
-    hqUpgrades: number;
-    arc: number;
-    total: number;
-  };
-
-  companyValue: number;
 }
 
 export type PartialBalanceSheet = DeepPartial<BalanceSheet> & { timestamp: number };

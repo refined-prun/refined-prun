@@ -154,6 +154,21 @@ const nonCurrentAssets = computed<SectionData>(() => ({
       ],
     },
     {
+      name: 'Ships, net',
+      value: summary.calcTotalShips,
+      children: [
+        {
+          name: 'Market Value',
+          value: x => x.assets?.nonCurrent?.ships?.marketValue,
+        },
+        {
+          name: 'Acc. Depreciation',
+          less: true,
+          value: x => x.assets?.nonCurrent?.ships?.accumulatedDepreciation,
+        },
+      ],
+    },
+    {
       name: 'Long-Term Receivables',
       value: summary.calcTotalLongTermReceivables,
       children: [
@@ -172,6 +187,20 @@ const nonCurrentAssets = computed<SectionData>(() => ({
         {
           name: 'Loans Principal',
           value: x => x.assets?.nonCurrent?.longTermReceivables?.loansPrincipal,
+        },
+      ],
+    },
+    {
+      name: 'Intangible Assets',
+      value: summary.calcTotalIntangibleAssets,
+      children: [
+        {
+          name: 'HQ Upgrades',
+          value: x => x.assets?.nonCurrent?.intangibleAssets?.hqUpgrades,
+        },
+        {
+          name: 'APEX Representation Center',
+          value: x => x.assets?.nonCurrent?.intangibleAssets?.arc,
         },
       ],
     },
@@ -249,60 +278,12 @@ const equity = computed<SectionData>(() => ({
   ],
 }));
 
-const lockedAssets = computed<SectionData>(() => ({
-  name: 'Locked Assets',
-  total: summary.calcTotalLockedAssets,
-  children: [
-    {
-      name: 'Ships, net',
-      value: summary.calcTotalShips,
-      children: [
-        {
-          name: 'Market Value',
-          value: x => x.lockedAssets?.ships?.marketValue,
-        },
-        {
-          name: 'Acc. Depreciation',
-          less: true,
-          value: x => x.lockedAssets?.ships?.accumulatedDepreciation,
-        },
-      ],
-    },
-    {
-      name: 'HQ Upgrades',
-      value: x => x.lockedAssets?.hqUpgrades,
-    },
-    {
-      name: 'APEX Representation Center',
-      value: x => x.lockedAssets?.arc,
-    },
-  ],
-}));
-
-const companyValue = computed<SectionData>(() => ({
-  name: 'Company Value',
-  coloredTotal: true,
-  total: summary.calcCompanyValue,
-  children: [
-    {
-      name: 'Equity',
-      value: summary.calcEquity,
-    },
-    {
-      name: 'Locked Assets',
-      value: summary.calcTotalLockedAssets,
-    },
-  ],
-}));
-
 const sections = [
   currentAssets,
   nonCurrentAssets,
   currentLiabilities,
   nonCurrentLiabilities,
   equity,
-  lockedAssets,
-  companyValue,
 ];
 </script>
 

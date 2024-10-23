@@ -188,11 +188,18 @@ export function deserializeBalanceSheetV2Data(
         buildings: {
           total: buildings,
         },
+        ships: {
+          total: ships,
+        },
         longTermReceivables: {
           accountsReceivable: accountsReceivableNonCurrent,
           materialsReceivable: materialsToReceiveNonCurrent,
           materialsInTransit: 0,
           loansPrincipal: longTermLoans,
+        },
+        intangibleAssets: {
+          hqUpgrades,
+          arc,
         },
       },
     },
@@ -212,13 +219,6 @@ export function deserializeBalanceSheetV2Data(
           loansPrincipal: longTermDebt,
         },
       },
-    },
-    lockedAssets: {
-      ships: {
-        total: ships,
-      },
-      hqUpgrades,
-      arc,
     },
   };
 }
@@ -305,11 +305,19 @@ export function deserializeBalanceSheetV3Data(
           },
           accumulatedDepreciation,
         },
+        ships: {
+          marketValue: shipsMarketValue,
+          accumulatedDepreciation: shipsDepreciation,
+        },
         longTermReceivables: {
           accountsReceivable: accountsReceivableNonCurrent,
           materialsReceivable: materialsReceivableNonCurrent,
           materialsInTransit: materialsInTransitNonCurrent,
           loansPrincipal: loansPrincipalNonCurrent,
+        },
+        intangibleAssets: {
+          hqUpgrades,
+          arc,
         },
       },
     },
@@ -329,14 +337,6 @@ export function deserializeBalanceSheetV3Data(
           loansPrincipal: debtsPrincipalNonCurrent,
         },
       },
-    },
-    lockedAssets: {
-      ships: {
-        marketValue: shipsMarketValue,
-        accumulatedDepreciation: shipsDepreciation,
-      },
-      hqUpgrades,
-      arc,
     },
   };
 }
@@ -377,10 +377,10 @@ export function serializeBalanceSheet(
     data.liabilities?.nonCurrent?.longTermPayables?.accountsPayable,
     data.liabilities?.nonCurrent?.longTermPayables?.materialsPayable,
     data.liabilities?.nonCurrent?.longTermPayables?.loansPrincipal,
-    data.lockedAssets?.ships?.marketValue,
-    data.lockedAssets?.ships?.accumulatedDepreciation,
-    data.lockedAssets?.hqUpgrades,
-    data.lockedAssets?.arc,
+    data.assets?.nonCurrent?.ships?.marketValue,
+    data.assets?.nonCurrent?.ships?.accumulatedDepreciation,
+    data.assets?.nonCurrent?.intangibleAssets?.hqUpgrades,
+    data.assets?.nonCurrent?.intangibleAssets?.arc,
   ];
   if (sheet.some(x => x === undefined)) {
     return undefined;

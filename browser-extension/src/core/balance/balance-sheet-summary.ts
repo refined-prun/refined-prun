@@ -100,6 +100,14 @@ export function calcTotalBuildings(sheet: PartialBalanceSheet) {
   );
 }
 
+export function calcTotalShips(sheet: PartialBalanceSheet) {
+  return calcSectionTotal(
+    sheet.assets?.nonCurrent?.ships,
+    x => x.marketValue,
+    x => less(x.accumulatedDepreciation),
+  );
+}
+
 export function calcTotalLongTermReceivables(sheet: PartialBalanceSheet) {
   return calcSectionTotal(
     sheet.assets?.nonCurrent?.longTermReceivables,
@@ -110,11 +118,21 @@ export function calcTotalLongTermReceivables(sheet: PartialBalanceSheet) {
   );
 }
 
+export function calcTotalIntangibleAssets(sheet: PartialBalanceSheet) {
+  return calcSectionTotal(
+    sheet.assets?.nonCurrent?.intangibleAssets,
+    x => x.hqUpgrades,
+    x => x.arc,
+  );
+}
+
 export function calcTotalNonCurrentAssets(sheet: PartialBalanceSheet) {
   return calcSectionTotal(
     sheet.assets?.nonCurrent,
     () => calcTotalBuildings(sheet),
+    () => calcTotalShips(sheet),
     () => calcTotalLongTermReceivables(sheet),
+    () => calcTotalIntangibleAssets(sheet),
   );
 }
 
@@ -164,29 +182,16 @@ export function calcTotalLiabilities(sheet: PartialBalanceSheet) {
   );
 }
 
-export function calcTotalShips(sheet: PartialBalanceSheet) {
-  return calcSectionTotal(
-    sheet.lockedAssets?.ships,
-    x => x.marketValue,
-    x => less(x.accumulatedDepreciation),
-  );
-}
-
-export function calcTotalLockedAssets(sheet: PartialBalanceSheet) {
-  return calcSectionTotal(
-    sheet.lockedAssets,
-    () => calcTotalShips(sheet),
-    x => x.hqUpgrades,
-    x => x.arc,
-  );
-}
-
 export function calcEquity(sheet: PartialBalanceSheet) {
   return sheet.equity ?? mapSum(calcTotalAssets(sheet), less(calcTotalLiabilities(sheet)));
 }
 
-export function calcCompanyValue(sheet: PartialBalanceSheet) {
-  return sheet.companyValue ?? mapSum(calcEquity(sheet), calcTotalLockedAssets(sheet));
+export function calcLiquidationValue(sheet: PartialBalanceSheet) {
+  return mapSum(
+    calcEquity(sheet),
+    less(calcTotalShips(sheet)),
+    less(calcTotalIntangibleAssets(sheet)),
+  );
 }
 
 export function calcQuickAssets(sheet: PartialBalanceSheet) {

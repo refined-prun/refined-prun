@@ -6,7 +6,7 @@ import PrunButton from '@src/components/PrunButton.vue';
 import { computed } from 'vue';
 import { fixed0, hhmm, ddmmyyyy } from '@src/utils/format';
 import { clearBalanceHistory, userData } from '@src/store/user-data';
-import { calcCompanyValue, calcEquity } from '@src/core/balance/balance-sheet-summary';
+import { calcEquity } from '@src/core/balance/balance-sheet-summary';
 import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import {
   balanceHistory,
@@ -76,7 +76,6 @@ function formatValue(number?: number) {
       <tr>
         <th>Date</th>
         <th>Equity</th>
-        <th>Company Value</th>
         <th>Command</th>
       </tr>
     </thead>
@@ -84,7 +83,6 @@ function formatValue(number?: number) {
       <tr v-for="(balance, i) in sortedData" :key="i">
         <td>{{ hhmm(balance.timestamp) }} {{ ddmmyyyy(balance.timestamp) }}</td>
         <td>{{ formatValue(calcEquity(balance)) }}</td>
-        <td>{{ formatValue(calcCompanyValue(balance)) }}</td>
         <td>
           <PrunButton dark inline @click="confirmDataPointDelete($event, i)">delete</PrunButton>
         </td>

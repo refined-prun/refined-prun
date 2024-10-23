@@ -4,11 +4,10 @@ import { currentAssets } from '@src/core/balance/current-assets';
 import { nonCurrentAssets } from '@src/core/balance/non-current-assets';
 import { currentLiabilities } from '@src/core/balance/current-liabilities';
 import { nonCurrentLiabilities } from '@src/core/balance/non-current-liabilities';
-import { lockedAssets } from '@src/core/balance/locked-assets';
 import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
 import {
   calcAcidTestRatio,
-  calcCompanyValue,
+  calcLiquidationValue,
   calcDebtRatio,
   calcDebtToEquityRatio,
   calcEquity,
@@ -18,10 +17,10 @@ import {
   calcTotalCurrentAssets,
   calcTotalCurrentLiabilities,
   calcTotalLiabilities,
-  calcTotalLockedAssets,
   calcTotalNonCurrentAssets,
   calcTotalNonCurrentLiabilities,
   calcWorkingCapitalRatio,
+  calcTotalIntangibleAssets,
 } from '@src/core/balance/balance-sheet-summary';
 
 export const liveBalanceSheet = createLiveBalanceSheet();
@@ -68,11 +67,19 @@ function createLiveBalanceSheet(): PartialBalanceSheet {
           }),
           accumulatedDepreciation: nonCurrentAssets.buildings.accumulatedDepreciation,
         }),
+        ships: unwrapRefProperties({
+          marketValue: nonCurrentAssets.shipsMarketValue,
+          accumulatedDepreciation: nonCurrentAssets.shipsDepreciation,
+        }),
         longTermReceivables: unwrapRefProperties({
           accountsReceivable: nonCurrentAssets.accountsReceivable,
           materialsInTransit: nonCurrentAssets.materialsInTransit,
           materialsReceivable: nonCurrentAssets.materialsReceivable,
           loansPrincipal: nonCurrentAssets.longTermLoans,
+        }),
+        intangibleAssets: unwrapRefProperties({
+          hqUpgrades: nonCurrentAssets.hqUpgrades,
+          arc: nonCurrentAssets.arc,
         }),
       }),
     },
@@ -93,15 +100,6 @@ function createLiveBalanceSheet(): PartialBalanceSheet {
         }),
       }),
     },
-
-    lockedAssets: unwrapRefProperties({
-      ships: unwrapRefProperties({
-        marketValue: lockedAssets.shipsMarketValue,
-        accumulatedDepreciation: lockedAssets.shipsDepreciation,
-      }),
-      hqUpgrades: lockedAssets.hqUpgrades,
-      arc: lockedAssets.arc,
-    }),
   });
 }
 
@@ -136,9 +134,9 @@ export const liveBalanceSummary = unwrapBalanceSheetExtras({
   currentLiabilities: calcTotalCurrentLiabilities,
   nonCurrentLiabilities: calcTotalNonCurrentLiabilities,
   liabilities: calcTotalLiabilities,
-  lockedAssets: calcTotalLockedAssets,
+  intangibleAssets: calcTotalIntangibleAssets,
   equity: calcEquity,
-  companyValue: calcCompanyValue,
+  liquidationValue: calcLiquidationValue,
   quickAssets: calcQuickAssets,
   quickLiabilities: calcQuickLiabilities,
   acidTestRatio: calcAcidTestRatio,

@@ -73,7 +73,7 @@ const figures = computed(() => {
       value: formatCurrencyAmount(liveBalanceSummary.currentLiabilities),
     },
     { name: 'Total Liabilities', value: formatCurrencyAmount(liveBalanceSummary.liabilities) },
-    { name: 'Company Value', value: formatCurrencyAmount(liveBalanceSummary.companyValue) },
+    { name: 'Liquidation Value', value: formatCurrencyAmount(liveBalanceSummary.liquidationValue) },
     { name: 'Acid-Test Ratio', value: formatRatio(liveBalanceSummary.acidTestRatio) },
     { name: 'Working Capital Ratio', value: formatRatio(liveBalanceSummary.workingCapitalRatio) },
     { name: 'Debt Ratio', value: formatPercentage(liveBalanceSummary.debtRatio) },
