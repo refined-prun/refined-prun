@@ -22,6 +22,7 @@ import '@src/features/standard/lm-highlight-own-ads';
 import '@src/features/standard/lm-shipping-per-unit-price/lm-shipping-per-unit-price';
 import '@src/features/standard/nots-improve-notifications';
 import '@src/features/standard/sfc-flight-eta';
+import '@src/features/standard/colored-icon-ticker-shadow';
 import '@src/features/standard/compact-ui';
 import '@src/features/standard/clickable-apex-logo';
 import '@src/features/standard/prod-burn-link';
