@@ -1,0 +1,29 @@
+.agriculturalProducts {
+  background: linear-gradient(135deg, #003800, #0a4708);
+  color: #8bb37b;
+}
+
+.consumablesBasic {
+  background: linear-gradient(135deg, #a62c2a, #ba363c);
+  color: #ff989e;
+}
+
+.consumablesLuxury {
+  background: linear-gradient(135deg, #680000, #7b0012);
+  color: #db9191;
+}
+
+.fuels {
+  background: linear-gradient(135deg, #548d22, #6ba23c);
+  color: #cbfaa3;
+}
+
+.liquids {
+  background: linear-gradient(135deg, #67a8da, #6098c3);
+  color: #f1ffff;
+}
+
+.plastics {
+  background: linear-gradient(135deg, #791f62, #92387b);
+  color: #f89ee1;
+}

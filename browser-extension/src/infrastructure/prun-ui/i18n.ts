@@ -1,5 +1,5 @@
-import { Ref } from 'vue';
 import { watchUntil } from '@src/utils/watch';
+import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 
 interface Entry {
   type: number;
@@ -10,7 +10,7 @@ export const PrunI18N: Record<string, Entry[] | undefined> = {};
 
 const materialsByName = new Map<string, PrunApi.Material>();
 
-export async function readPrunI18N(materials: Ref<PrunApi.Material[] | undefined>) {
+export async function readPrunI18N() {
   await new Promise<void>(resolve => {
     window.addEventListener('message', (event: MessageEvent) => {
       if (event.source !== window) {
@@ -27,8 +27,8 @@ export async function readPrunI18N(materials: Ref<PrunApi.Material[] | undefined
     window.postMessage({ type: 'rp-get-i18n' }, '*');
   });
 
-  await watchUntil(() => materials.value !== undefined);
-  buildMaterialNameMap(materials.value!);
+  await watchUntil(() => materialsStore.all.value !== undefined);
+  buildMaterialNameMap(materialsStore.all.value!);
 }
 
 function buildMaterialNameMap(materials: PrunApi.Material[]) {

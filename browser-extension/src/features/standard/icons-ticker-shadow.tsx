@@ -1,4 +1,4 @@
-import classes from './colored-icon-ticker-shadow.module.css';
+import classes from './icons-ticker-shadow.module.css';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
@@ -12,6 +12,6 @@ function init() {
 }
 
 void features.add({
-  id: 'colored-icon-ticker-shadow',
+  id: 'icons-ticker-shadow',
   init,
 });

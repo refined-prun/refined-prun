@@ -19,7 +19,6 @@
   },
   "type": "module",
   "dependencies": {
-    "@types/uuid": "^10.0.0",
     "chart.js": "^4.4.3",
     "chartjs-plugin-datalabels": "^2.2.0",
     "chartjs-plugin-zoom": "^2.0.1",
@@ -32,6 +31,8 @@
     "pinia": "^2.2.1",
     "request-animation-frames": "^1.0.0",
     "socket.io-parser": "^4.2.4",
+    "tinycolor2": "^1.6.0",
+    "ts-extras": "^0.13.0",
     "type-fest": "^4.21.0",
     "typed-query-selector": "^2.11.2",
     "uuid": "^10.0.0",
@@ -45,6 +46,8 @@
     "@refined-prun/hmr": "workspace:*",
     "@refined-prun/tsconfig": "workspace:*",
     "@types/chrome": "^0.0.268",
-    "@types/firefox-webext-browser": "^120.0.4"
+    "@types/firefox-webext-browser": "^120.0.4",
+    "@types/tinycolor2": "^1.4.6",
+    "@types/uuid": "^10.0.0"
   }
 }

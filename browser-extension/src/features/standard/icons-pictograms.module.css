@@ -1,0 +1,27 @@
+/* default :before element to prepare for new icon*/
+.container {
+  container-type: size;
+}
+
+.containerBefore {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  opacity: 0.3;
+  font-size: 2em;
+}
+
+.hide {
+  display: none;
+}
+
+/* colored overlay icon */
+.labelBefore {
+  position: absolute;
+  opacity: 0.1;
+  z-index: -1;
+  font-size: 2em;
+}

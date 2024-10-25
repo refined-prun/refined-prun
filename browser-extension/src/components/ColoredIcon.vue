@@ -21,11 +21,11 @@ const props = defineProps({
   },
   background: {
     type: String,
-    required: true,
+    default: undefined,
   },
   color: {
     type: String,
-    required: true,
+    default: undefined,
   },
   size: {
     type: String as PropType<ColoredIconSize>,

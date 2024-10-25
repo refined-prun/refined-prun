@@ -73,6 +73,20 @@ export function applyCssRule(selector: string, sourceClass: string) {
   if (!match) {
     throw new Error(`Failed to find css selector ${sourceSelector}`);
   }
+  applyRawCssRule(match.replace(sourceSelector, selector));
+}
+
+let at: string | undefined = undefined;
+
+export function startCssAtScope(scope: string) {
+  at = scope;
+}
+
+export function endCssAtScope() {
+  at = undefined;
+}
+
+export function applyRawCssRule(rule: string) {
   if (!styleElement) {
     styleElement = document.createElement('style');
     styleElement.id = 'rp-css-overrides';
@@ -84,7 +98,11 @@ export function applyCssRule(selector: string, sourceClass: string) {
   const attribute = `rp-${features.current}`;
   const prefix = `html[${attribute}]`;
   document.documentElement.setAttribute(attribute, '');
-  styleElement.textContent += match.replace(sourceSelector, `${prefix} ${selector}`);
+  let fullRule = `${prefix} ${rule}`;
+  if (at) {
+    fullRule = `${at} { ${fullRule} }`;
+  }
+  styleElement.textContent += fullRule;
 }
 
 function selectCommand(command: string) {

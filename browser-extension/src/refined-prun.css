@@ -210,3 +210,15 @@ div.Head__container___3ecBw0E > div:nth-child(2) {
 div.TileControls__splitControls___fcU57en {
   display: inline-flex;
 }
+
+div.GridItemView__container___xP2uJz8 {
+  background-color: unset;
+}
+
+/* full item name centering */
+span.GridItemView__name___h3yX9Lm {
+  display: block;
+  text-align: center;
+  padding-top: 1px;
+  width: 100%;
+}

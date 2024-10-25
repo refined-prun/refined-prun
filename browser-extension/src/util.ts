@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Selector } from './Selector';
-import { CategoryColors, Style, WithStyles } from './Style';
+import { Style, WithStyles } from './Style';
 import system from '@src/system';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/stars';
 import { Stations } from '@src/GameProperties';
@@ -151,7 +150,6 @@ export function createMaterialElement(
     return null;
   } // Return nothing if the material isn't recognized
   const name = getMaterialNameByTicker(ticker) ?? 'Shipment'; // The full name of the material (Basic Bulkhead)
-  const category = material ? materialCategoriesStore.getById(material.category)!.name : 'shipment'; // The category of the material
 
   const matText = createTextSpan(ticker, className); // The ticker text in the middle
   matText.classList.add(...WithStyles(Style.MatText)); // Apply styles
@@ -167,8 +165,6 @@ export function createMaterialElement(
     materialDiv.style.background = 'linear-gradient(135deg, rgb(52, 140, 160), rgb(77, 165, 185))'; // Apply colors
     materialDiv.style.color = 'rgb(179, 255, 255)';
   } else {
-    materialDiv.style.background = CategoryColors[category][0]; // Apply colors
-    materialDiv.style.color = CategoryColors[category][1];
     materialDiv.title = name; // Provide the material with a title when hovered over
   } // Provide the material with a title when hovered over
   materialDiv.addEventListener('click', () => {
