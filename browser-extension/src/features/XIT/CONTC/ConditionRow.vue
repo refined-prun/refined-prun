@@ -24,6 +24,9 @@ const eta = computed(() => {
   if (!isFinite(props.deadline)) {
     return '∞';
   }
+  if (props.deadline <= timestampEachSecond.value) {
+    return '-';
+  }
   let duration = dayjs.duration({ milliseconds: props.deadline - timestampEachSecond.value });
   const days = Math.floor(duration.asDays());
   duration = duration.subtract(days, 'days');
