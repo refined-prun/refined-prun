@@ -10,6 +10,7 @@ function init() {
   applyCategoryRule('fuels', classes.fuels);
   applyCategoryRule('liquids', classes.liquids);
   applyCategoryRule('plastics', classes.plastics);
+  applyCategoryRule('ship shields', classes.shipShields);
 }
 
 function applyCategoryRule(category: string, rule: string) {

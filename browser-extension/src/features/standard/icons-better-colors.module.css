@@ -27,3 +27,8 @@
   background: linear-gradient(135deg, #791f62, #92387b);
   color: #f89ee1;
 }
+
+.shipShields {
+  background: linear-gradient(135deg, #bf740a, #d98c21);
+  color: #dbdb79;
+}

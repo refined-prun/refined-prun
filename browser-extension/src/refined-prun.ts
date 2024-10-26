@@ -67,6 +67,7 @@ import '@src/features/XIT/HELP';
 import '@src/features/XIT/HQUC.vue';
 import '@src/features/XIT/INV';
 import '@src/features/XIT/LISTS';
+import '@src/features/XIT/MAT.vue';
 import '@src/features/XIT/NOTE/NOTE.vue';
 import '@src/features/XIT/REP/REP.vue';
 import '@src/features/XIT/SET/SET.vue';
