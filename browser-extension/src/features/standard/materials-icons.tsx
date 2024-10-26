@@ -1,4 +1,4 @@
-import classes from './icons-pictograms.module.css';
+import classes from './materials-icons.module.css';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import {
@@ -427,6 +427,6 @@ function shield(detail: Icon): Icon {
 }
 
 void features.add({
-  id: 'icons-pictograms',
+  id: 'materials-icons',
   init,
 });

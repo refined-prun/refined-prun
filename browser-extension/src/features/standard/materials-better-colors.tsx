@@ -1,4 +1,4 @@
-import classes from './icons-better-colors.module.css';
+import classes from './materials-better-colors.module.css';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
@@ -18,6 +18,6 @@ function applyCategoryRule(category: string, rule: string) {
 }
 
 void features.add({
-  id: 'icons-better-colors',
+  id: 'materials-better-colors',
   init,
 });
