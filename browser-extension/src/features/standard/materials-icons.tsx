@@ -219,7 +219,7 @@ const materials: Record<string, Icon> = {
   DIS: 'f26c',
   DOU: 'f085',
   DV: 'f200',
-  DW: 'e4f4',
+  DW: 'e4c5',
   EDC: 'f7c2',
   ES: circle('f7b9'),
   EES: circle('f7b9'),
