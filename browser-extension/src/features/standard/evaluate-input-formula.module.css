@@ -1,0 +1,17 @@
+.inputContainer {
+  position: relative;
+}
+
+.functionIcon {
+  position: absolute;
+  top: 2px;
+  opacity: 0.2;
+  content: '\f698';
+}
+
+.functionIconDynamic {
+  position: absolute;
+  left: 2px;
+  opacity: 0.2;
+  content: '\f698';
+}

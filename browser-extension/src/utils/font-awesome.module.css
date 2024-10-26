@@ -1,0 +1,16 @@
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  /*noinspection CssUnknownTarget*/
+  src: url('fonts/fa-solid-900.woff2') format('woff2'), url('fonts/fa-solid-900.ttf') format('truetype');
+}
+
+.fa {
+  /* Font Awesome required rules */
+  font-family: 'Font Awesome 6 Free', sans-serif;
+  font-weight: 900;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}

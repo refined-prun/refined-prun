@@ -1,3 +1,4 @@
+import fa from '@src/utils/font-awesome.module.css';
 import classes from './materials-icons.module.css';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
@@ -14,9 +15,9 @@ function init() {
   const label = PrunCss.ColoredIcon.label;
 
   applyCssRule(`.${container}`, classes.container);
-  applyCssRule(`.${container}:before`, classes.icon);
+  applyCssRule(`.${container}:before`, fa.fa);
   applyCssRule(`.${container}:before`, classes.main);
-  applyCssRule(`.${label}:before`, classes.icon);
+  applyCssRule(`.${label}:before`, fa.fa);
   applyCssRule(`.${label}:before`, classes.detail);
 
   startCssAtScope('@container (height < 24px)');

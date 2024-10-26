@@ -1,18 +1,15 @@
+import fa from '@src/utils/font-awesome.module.css';
+import classes from './evaluate-input-formula.module.css';
 import { changeValue } from '@src/util';
 import features from '@src/feature-registry';
-import tiles from '@src/infrastructure/prun-ui/tiles';
 import Mexp from 'math-expression-evaluator';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 import { $$ } from '@src/utils/select-dom';
+import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
+import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 
 const mexp = new Mexp();
-
-function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, 'input'), input => {
-    input.addEventListener('keyup', e => onKeyUp(input, e));
-  });
-}
 
 function onKeyUp(input: HTMLInputElement, e: KeyboardEvent) {
   if (e.key !== 'Enter') {
@@ -60,7 +57,26 @@ function replaceMaterialProperties(expression: string) {
 }
 
 export function init() {
-  tiles.observe(['CXPO', 'FXPO', 'LMP', 'CONTD', 'MTRA', 'MOTS'], onTileReady);
+  applyCssRules();
+  subscribe($$(document.documentElement, 'input'), input => {
+    if (input.inputMode !== 'numeric' && input.inputMode !== 'decimal') {
+      return;
+    }
+    input.addEventListener('keyup', e => onKeyUp(input, e));
+  });
+}
+
+function applyCssRules() {
+  const inputSelector = `div:has(> input:is([inputmode='numeric'], [inputmode='decimal']):focus)`;
+  // Remove hard-coded class when molp fixes class duplication
+  const selector = `.FormComponent__input___f43wqaQ ${inputSelector}`;
+  applyCssRule(selector, classes.inputContainer);
+  applyCssRule(`${selector}:before`, fa.fa);
+  applyCssRule(`${selector}:before`, classes.functionIcon);
+  const selectorDynamic = `.${PrunCss.DynamicInput.dynamic} ${inputSelector}`;
+  applyCssRule(selectorDynamic, classes.inputContainer);
+  applyCssRule(`${selectorDynamic}:before`, fa.fa);
+  applyCssRule(`${selectorDynamic}:before`, classes.functionIconDynamic);
 }
 
 void features.add({

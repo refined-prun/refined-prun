@@ -66,5 +66,10 @@ const currency = computed(() => {
 </script>
 
 <template>
-  <span>{{ totalSize }} {{ unit?.symbol }} | {{ currency }}{{ perUnit }}/{{ unit?.symbol }}</span>
+  <span>
+    <template v-if="material">
+      {{ totalSize }} {{ unit?.symbol }} | {{ currency }}{{ perUnit }}/{{ unit?.symbol }}
+    </template>
+    <template v-else>--</template>
+  </span>
 </template>

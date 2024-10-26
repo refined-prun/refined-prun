@@ -73,7 +73,7 @@ function onFormReady(form: HTMLElement) {
       totalPriceInput: refValue(totalPriceInput),
       currencyInput: refValue(currencyInput),
     }),
-  ).before(totalPriceInput);
+  ).before(totalPriceInput.parentElement!);
 }
 
 export function init() {
