@@ -16,11 +16,7 @@ function onKeyUp(input: HTMLInputElement, e: KeyboardEvent) {
     return;
   }
 
-  if (input.value.charAt(0) !== '=') {
-    return;
-  }
-
-  let expression = input.value.substring(1);
+  let expression = input.value;
   expression = replaceMaterialProperties(expression);
   const result = mexp.eval(expression);
   changeValue(input, result.toString());
