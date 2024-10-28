@@ -10,23 +10,6 @@
   color: rgba(1,1,1,0) !important;
 }
 
-.mat-element-large {
-  height: 48px;
-  width: 48px;
-}
-
-.mat-element-large div.ColoredIcon__container___djaR4r2 {
-  height: 48px;
-  width: 48px;
-  font-size: 15.84px;
-  cursor: pointer;
-}
-
-.mat-element-small {
-  height: 32px;
-  width: 32px;
-}
-
 .check-item {
   display: flex;
   justify-content: space-between;

@@ -3,7 +3,6 @@ export const Style = {
   // Styles coloring buttons
   Button: ['Button__btn___UJGZ1b7'],
   ButtonPrimary: ['Button__primary____lObPiw'],
-  ButtonSuccess: ['Button__success___bCiIVXw'],
   ButtonDisabled: ['Button__disabled____x8i7XF'],
   ButtonEnabled: ['Button__primary____lObPiw'],
   ButtonDanger: ['Button__danger___S2rSOES'],
@@ -15,27 +14,8 @@ export const Style = {
     'Button__inline___Ffw9bbn',
   ],
 
-  // Context bar styles
-  ContextButton: [
-    'ContextControls__item____QDkFMH',
-    'fonts__font-regular___Sxp1xjo',
-    'type__type-small___pMQhMQO',
-  ],
-  ContextCommand: ['ContextControls__cmd___BXQDTL_'],
-  ContextLabel: ['ContextControls__label___xomE3De'],
-
   // Misc styles
   SidebarSectionHead: ['Sidebar__sectionHead____NHLKDT', 'fonts__font-regular___Sxp1xjo'],
-  SidebarSectionContent: ['Sidebar__sectionContent___wgGYFop', 'fonts__font-regular___Sxp1xjo'],
-  SidebarLine: ['Sidebar__contract___J0gmlzN', 'Sidebar__sidebar-line___bE2rbRb'],
-  FontsRegular: ['fonts__font-regular___Sxp1xjo'],
-  SidebarText: [
-    'Frame__toggleLabel___BTFce8H',
-    'fonts__font-regular___Sxp1xjo',
-    'type__type-regular___k8nHUfI',
-  ],
-  SidebarSliver: ['Frame__toggleIndicatorSecondary___frX4CGi', 'Frame__toggleIndicator___ZKQQgAL'],
-  SidebarButton: ['Frame__toggle___V3iHpB7'],
   DraftName: [
     'Draft__name___gADQF2n',
     'Draft__heading___GbdKCJx',
@@ -55,16 +35,6 @@ export const Style = {
     'RadioItem__value___Yd1Gt1T',
     'fonts__font-regular___Sxp1xjo',
     'type__type-small___pMQhMQO',
-  ],
-  ScreenUnderlineUntoggled: [
-    'HeadItem__indicatorPrimary___rx46qOB',
-    'HeadItem__indicator___A_wijoE',
-  ],
-  ScreenUnderlineToggled: [
-    'HeadItem__indicatorPrimary___rx46qOB',
-    'HeadItem__indicator___A_wijoE',
-    'HeadItem__indicatorPrimaryActive___m718hwk',
-    'effects__shadowPrimary___EbXJQor',
   ],
 
   // Action bar stuff
@@ -151,25 +121,6 @@ export const Style = {
     'type__type-larger___VdpJIb1',
   ],
   ActionDismiss: ['ActionFeedback__dismiss___x5Ln7y1', 'type__type-small___pMQhMQO'],
-
-  // Styles coloring material icons
-  MatText: ['ColoredIcon__label___OU1I4oP'],
-  MatTextWrapper: ['ColoredIcon__labelContainer___YVfgzOk'],
-  MaterialElement: ['ColoredIcon__container___djaR4r2'],
-  MaterialWrapper: ['MaterialIcon__container___q8gKIx8'],
-  MaterialNumberWrapper: ['MaterialIcon__indicatorContainer___Cqtax_Y'],
-  MaterialNumber: [
-    'MaterialIcon__indicator___SHwlndJ',
-    'MaterialIcon__type-very-small___UMzQ3ir',
-    'MaterialIcon__neutral___SYsHXAa',
-  ],
-  MaterialWrapperWrapper: ['GridItemView__image___yMoKOZV'],
-  MaterialOuter: ['GridItemView__container___xP2uJz8'],
-  MaterialNameText: [
-    'GridItemView__name___h3yX9Lm',
-    'fonts__font-regular___Sxp1xjo',
-    'type__type-regular___k8nHUfI',
-  ],
 };
 
 // A function to apply multiple classes to an element in one go

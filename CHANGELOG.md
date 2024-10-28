@@ -89,4 +89,5 @@ Known bugs:
 - COM button in the sidebar DOES NOT BLINK on new messages. Open COM buffer directly to check for new messages.
 
 Removed features:
-- Custom pricing scheme from Google Sheets for XIT FIN.
+- `XIT INV`.
+- Custom pricing scheme from Google Sheets for `XIT FIN`.
