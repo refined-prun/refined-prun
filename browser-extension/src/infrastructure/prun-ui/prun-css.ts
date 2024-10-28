@@ -6,14 +6,19 @@ import { registerClassName } from '@src/utils/select-dom';
 const PrunCss: CssClasses = {};
 export default PrunCss;
 
-export async function parsePrunCss() {
-  const head = document.head;
-  const styles = head.getElementsByTagName('style');
-  if (styles.length === 0) {
-    await oneMutation(head, {
+export async function loadPrunCss() {
+  if (!readStyles()) {
+    await oneMutation(document.head, {
       childList: true,
-      filter: () => styles.length > 0,
+      filter: readStyles,
     });
+  }
+}
+
+function readStyles() {
+  const styles = document.head.getElementsByTagName('style');
+  if (styles.length === 0) {
+    return false;
   }
   const classSet = new Set<string>();
   for (let i = 0; i < styles.length; i++) {
@@ -33,6 +38,10 @@ export async function parsePrunCss() {
         classSet.add(match.replace('.', ''));
       }
     }
+  }
+
+  if (!classSet.has('App__container___QWpTbzo')) {
+    return false;
   }
 
   const classes = Array.from(classSet);
@@ -57,5 +66,7 @@ export async function parsePrunCss() {
     parentObject[child] = cssClass;
     registerClassName(cssClass);
   }
+
   Object.assign(PrunCss, result);
+  return true;
 }
