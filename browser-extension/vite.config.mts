@@ -54,7 +54,7 @@ export default defineConfig({
   build: {
     outDir,
     emptyOutDir: false,
-    sourcemap: 'inline',
+    sourcemap: isDev ? 'inline' : true,
     minify: isProduction,
     reportCompressedSize: false,
     modulePreload: true,
