@@ -4,7 +4,7 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 export function init() {
-  applyClassCssRule(PrunCss.MaterialIcon.indicator, classes.indicator);
+  applyClassCssRule(PrunCss.MaterialIcon.typeVerySmall, classes.indicator);
 }
 
 void features.add({
