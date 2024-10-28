@@ -10,9 +10,12 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  category: {
+    type: String,
+    default: undefined,
+  },
   detail: {
     type: String,
-    required: false,
     default: undefined,
   },
   title: {
@@ -51,7 +54,12 @@ const style = computed(() => ({
 </script>
 
 <template>
-  <div :class="classes" :style="style" :title="title">
+  <div
+    :class="classes"
+    :style="style"
+    :title="title"
+    :data-rp-ticker="label"
+    :data-rp-category="category">
     <div :class="PrunCss.ColoredIcon.labelContainer">
       <span :class="PrunCss.ColoredIcon.label">{{ label }}</span>
       <ColoredIconDetail :detail="detail" />
