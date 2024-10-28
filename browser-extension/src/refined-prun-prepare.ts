@@ -3,15 +3,21 @@
 {
   const processHead = (observer: MutationObserver) => {
     const appScripts = document.head?.getElementsByTagName('script');
-    if (appScripts) {
+    if (appScripts?.length > 0) {
       // Serialize app scripts to prevent PrUn loading before client-side proxies
       // are injected. The scripts will be attached back to head in the client script.
+      let foundBundle = false;
       for (let i = 0; i < appScripts.length; i++) {
         const appScript = appScripts[i];
-        appScript.textContent = appScript.src;
-        appScript.src = '';
+        if (appScript.src.includes('apex.prosperousuniverse.com')) {
+          foundBundle = true;
+          appScript.textContent = appScript.src;
+          appScript.src = '';
+        }
       }
-      observer.disconnect();
+      if (foundBundle) {
+        observer.disconnect();
+      }
     }
   };
   const observer = new MutationObserver(() => processHead(observer));
