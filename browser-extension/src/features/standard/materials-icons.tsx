@@ -15,9 +15,9 @@ function init() {
   const label = PrunCss.ColoredIcon.label;
 
   applyCssRule(`.${container}`, classes.container);
-  applyCssRule(`.${container}:before`, fa.fa);
+  applyCssRule(`.${container}:before`, fa.solid);
   applyCssRule(`.${container}:before`, classes.main);
-  applyCssRule(`.${label}:before`, fa.fa);
+  applyCssRule(`.${label}:before`, fa.solid);
   applyCssRule(`.${label}:before`, classes.detail);
 
   startCssAtScope('@container (height < 24px)');
@@ -26,38 +26,29 @@ function init() {
   endCssAtScope();
 
   for (const category of objectKeys(categories)) {
-    const icon = categories[category];
-    const selector = `.${container}[data-rp-category='${category}']:before `;
-    const rule = createRule(icon, 2.2);
-    if (rule) {
-      applyRawCssRule(selector + rule);
-    }
-    if (typeof icon !== 'string') {
-      const detail = icon[1].detail;
-      if (detail) {
-        const selector = `.${container}[data-rp-category='${category}'] .${label}:before `;
-        const rule = createRule(detail, 1);
-        if (rule) {
-          applyRawCssRule(selector + rule);
-        }
-      }
-    }
+    applyIconRules(`[data-rp-category='${category}']`, categories[category]);
   }
   for (const material of objectKeys(materials)) {
-    const icon = materials[material];
-    const selector = `.${container}[data-rp-ticker='${material}']:before `;
-    const rule = createRule(icon, 2.2);
-    if (rule) {
-      applyRawCssRule(selector + rule);
-    }
-    if (typeof icon !== 'string') {
-      const detail = icon[1].detail;
-      if (detail) {
-        const selector = `.${container}[data-rp-ticker='${material}'] .${label}:before `;
-        const rule = createRule(detail, 1);
-        if (rule) {
-          applyRawCssRule(selector + rule);
-        }
+    applyIconRules(`[data-rp-ticker='${material}']`, materials[material]);
+  }
+}
+
+function applyIconRules(attribute: string, icon: Icon) {
+  const container = PrunCss.ColoredIcon.container;
+  const label = PrunCss.ColoredIcon.label;
+
+  const selector = `.${container}${attribute}:before `;
+  const rule = createRule(icon, 2.2);
+  if (rule) {
+    applyRawCssRule(selector + rule);
+  }
+  if (typeof icon !== 'string') {
+    const detail = icon[1].detail;
+    if (detail) {
+      const selector = `.${container}${attribute} .${label}:before `;
+      const rule = createRule(detail, 1);
+      if (rule) {
+        applyRawCssRule(selector + rule);
       }
     }
   }
@@ -67,32 +58,47 @@ function createRule(icon: Icon, baseFontSize: number) {
   const hasOptions = typeof icon !== 'string';
   const character = hasOptions ? icon[0] : icon;
   let fontSize = iconFontSize[character];
-  let rule = '{';
+  let contents = '{';
   let hasRules = false;
+  const addRule = (rule: string) => {
+    contents += `  ${rule};`;
+    hasRules = true;
+  };
   if (hasOptions) {
     const options = icon[1];
     const opacity = options.opacity ?? (options.detail ? 0.15 : undefined);
     if (opacity) {
-      rule += ` opacity: ${opacity};`;
-      hasRules = true;
+      addRule(`opacity: ${opacity}`);
     }
     if (options.fontSize) {
       fontSize = options.fontSize;
     }
+    if (options.regular) {
+      addRule(`font-weight: 400`);
+    }
+    if (options.flip) {
+      addRule(`transform: scaleX(-1)`);
+    }
   }
   if (character) {
-    rule += ` content: '\\${character}';`;
-    hasRules = true;
+    addRule(`content: '\\${character}'`);
   }
   if (fontSize) {
-    rule += ` font-size: calc(${fontSize} * ${baseFontSize}em);`;
-    hasRules = true;
+    addRule(`font-size: calc(${fontSize} * ${baseFontSize}em)`);
   }
-  rule += ' }';
-  return hasRules ? rule : undefined;
+  contents += ' }';
+  return hasRules ? contents : undefined;
 }
 
-type Icon = string | [string, { opacity?: number; fontSize?: number; detail?: Icon }];
+type Icon = string | [string, IconOptions];
+
+interface IconOptions {
+  opacity?: number;
+  fontSize?: number;
+  regular?: boolean;
+  flip?: boolean;
+  detail?: Icon;
+}
 
 const iconFontSize: Record<string, number> = {
   f5d2: 1.1,
@@ -155,7 +161,7 @@ const materials: Record<string, Icon> = {
   APT: shield('f7e4'),
   ARP: shield('f7b9'),
   ASE: 'f0c1',
-  ATA: 'f2d0',
+  ATA: ['f0c8', { regular: true }],
   ATP: shield('f7e4'),
   AWF: 'f0b0',
   AWH: shield(['f753', { fontSize: 1 }]),
@@ -169,10 +175,10 @@ const materials: Record<string, Icon> = {
   BGC: 'f1e6',
   BGS: 'f6c0',
   BHP: shield(),
-  BID: 'f6fa',
+  BID: 'e54d',
   BL: 'e06e',
   BLE: 'e519',
-  BMF: 'f233',
+  BMF: ['f233', { fontSize: 1.2 }],
   BND: 'f462',
   BPT: shield('f7e4'),
   BR1: 'f120',
@@ -181,13 +187,13 @@ const materials: Record<string, Icon> = {
   BRS: 'f120',
   BSC: 'f030',
   BSE: 'f0c1',
-  BTA: 'f009',
+  BTA: ['f0c8', { regular: true }],
   BTS: 'e059',
   BWH: shield(['f753', { fontSize: 1 }]),
   BWS: 'f109',
   CAP: 'f5fd',
   CBL: ['f5df', { detail: 'f240' }],
-  CBM: ['f5df', { detail: 'f242' }],
+  CBM: ['f5df', { detail: 'f241' }],
   CBS: ['f5df', { detail: 'f243' }],
   CC: 'f76b',
   CCD: ['', { detail: 'e4f8' }],
@@ -202,10 +208,9 @@ const materials: Record<string, Icon> = {
   CQS: 'e525',
   CQT: 'e072',
   CRU: 'f2dc',
-  CST: 'f2dc',
+  CST: ['f2dc', { regular: true }],
   CTF: 'f7e5',
   DA: 'e13a',
-  DCH: 'f07a',
   DCL: ['f10a', { fontSize: 1.2 }],
   DCM: 'f10a',
   DCS: ['f10a', { fontSize: 0.8 }],
@@ -240,11 +245,11 @@ const materials: Record<string, Icon> = {
   GCH: 'e4f1',
   GEN: 'f135',
   GIN: 'f7a0',
-  GL: 'f5ce',
+  GL: ['f0c8', { regular: true }],
   GNZ: 'e4f1',
   GRN: 'e2cd',
   GV: 'e005',
-  H: 'f185',
+  H: ['f185', { regular: true }],
   H2O: 'f043',
   HAB: 'f015',
   HCC: 'e55b',
@@ -277,17 +282,17 @@ const materials: Record<string, Icon> = {
   LD: 'f1c0',
   LDE: 'e569',
   LDI: 'f04b',
-  LES: 'e4f4',
+  LES: ['e4f4', { detail: 'f7b9' }],
   LFE: 'e4f6',
   LFL: ['f1b3', { fontSize: 1.1 }],
   LFP: 'f52f',
   LHP: shield(),
   LIS: 'e591',
   LIT: 'f0eb',
-  LOG: 'f542',
+  LOG: 'f126',
   LSE: 'f0c1',
   LSL: ['f52f', { fontSize: 1.1 }],
-  LTA: 'f2d0',
+  LTA: ['f0c8', { regular: true }],
   LU: 'f610',
   MB: 'f2db',
   MCB: 'f468',
@@ -310,7 +315,7 @@ const materials: Record<string, Icon> = {
   NCS: 'e571',
   NF: 'f6ff',
   NFI: 'f7e5',
-  NG: 'f5cb',
+  NG: ['f0c8', { regular: true, detail: 'f5c7' }],
   NL: 'f7e5',
   NN: 'f5dc',
   NOZ: 'e4f1',
@@ -353,15 +358,15 @@ const materials: Record<string, Icon> = {
   REA: 'e4f3',
   RED: ['', { detail: 'f4c4' }],
   REP: 'f552',
-  RG: ['f0fc', { opacity: 0.2 }],
+  RG: ['f0c8', { regular: true }],
   RHP: shield(),
   ROM: 'f0a0',
   RSE: 'f0c1',
   RSH: shield('f7b9'),
   RSI: 'f7e5',
-  RTA: 'f2d0',
-  SA: 'f002',
-  SAL: 'f550',
+  RTA: ['f0c8', { regular: true }],
+  SA: ['f002', { flip: true }],
+  SAL: 'e473',
   SAR: 'f1e5',
   SC: 'f471',
   SCB: ['f468', { fontSize: 0.9 }],
@@ -377,7 +382,7 @@ const materials: Record<string, Icon> = {
   SIL: 'f7e5',
   SNM: 'f279',
   SOI: 'e52d',
-  SOL: 'f0e7',
+  SOL: ['f84c', { regular: false }],
   SP: 'f5ba',
   SRD: ['', { detail: 'f7d9' }],
   SRP: shield('f7b9'),
@@ -393,7 +398,7 @@ const materials: Record<string, Icon> = {
   TC: circle('f7b9'),
   TCB: ['f468', { fontSize: 0.75 }],
   TCL: 'f0c3',
-  TCS: circle(),
+  TCS: circle('f7b9'),
   TCU: 'f487',
   THF: ['f043', { opacity: 0.25, detail: 'f7e4' }],
   THP: shield('f7e4'),

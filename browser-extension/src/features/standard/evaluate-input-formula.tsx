@@ -71,11 +71,11 @@ function applyCssRules() {
   // Remove hard-coded class when molp fixes class duplication
   const selector = `.FormComponent__input___f43wqaQ ${inputSelector}`;
   applyCssRule(selector, classes.inputContainer);
-  applyCssRule(`${selector}:before`, fa.fa);
+  applyCssRule(`${selector}:before`, fa.solid);
   applyCssRule(`${selector}:before`, classes.functionIcon);
   const selectorDynamic = `.${PrunCss.DynamicInput.dynamic} ${inputSelector}`;
   applyCssRule(selectorDynamic, classes.inputContainer);
-  applyCssRule(`${selectorDynamic}:before`, fa.fa);
+  applyCssRule(`${selectorDynamic}:before`, fa.solid);
   applyCssRule(`${selectorDynamic}:before`, classes.functionIconDynamic);
 }
 
