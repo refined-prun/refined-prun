@@ -56,12 +56,12 @@
 - Equity history chart now shows only the latest point per day.
 - `XIT NOTE` notes are not deleted when empty.
 - Font size of material amount labels is 1px bigger.
+- Input fields with math support now show a math icon.
 - New and old UIs now use vanilla PrUn styling where possible.
 - All XIT commands accept up to 3 space-separated arguments.
 - Real-time updates for XIT buffers implemented, removing the need for refresh button.
 - Switched chart library to Chart.js, reducing plugin size and adding Firefox support.
 - `XIT CALC` changed to https://desmos.com/scientific
-- Custom math evaluator changed to https://github.com/bugwheels94/math-expression-evaluator
 
 ## Fixed
 - Various fixes to XIT FIN balance calculations:
