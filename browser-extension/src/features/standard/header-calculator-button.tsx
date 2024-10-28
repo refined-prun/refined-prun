@@ -13,7 +13,7 @@ async function onTileReady(tile: PrunTile) {
     <div
       class="button-upper-right"
       style={{ marginTop: __CHROME__ ? '-3px' : '-4px' }}
-      onClick={() => showBuffer('XIT CALCULATOR')}>
+      onClick={() => showBuffer('XIT CALC')}>
       <img src={path} alt="Calculator icon" />
     </div>
   )).before(tileControls.children[0]);
