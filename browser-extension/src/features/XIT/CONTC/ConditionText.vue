@@ -44,7 +44,8 @@ defineProps({
     Explore <AddressLink :address="condition.address!" />
   </template>
   <template v-else-if="condition.type === 'COMEX_PURCHASE_PICKUP'">
-    Pick up {{ condition.quantity!.amount }} {{ condition.quantity!.material.ticker }} @
+    Pick up {{ condition.quantity!.amount - condition.pickedUp!.amount }}
+    {{ condition.quantity!.material.ticker }} @
     <AddressLink :address="condition.address!" />
   </template>
   <template v-else>

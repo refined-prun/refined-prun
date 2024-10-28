@@ -25,7 +25,7 @@ function isActionable(contract: PrunApi.Contract) {
   }
 
   if (contract.status !== 'PARTIALLY_FULFILLED' && contract.status !== 'CLOSED') {
-    return;
+    return false;
   }
 
   const conditionsById: Map<string, PrunApi.ContractCondition> = new Map();

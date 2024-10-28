@@ -5,6 +5,7 @@ import { timestampEachSecond } from '@src/utils/dayjs';
 import { sumBy } from '@src/utils/sum-by';
 import { calcMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { binarySearch } from '@src/utils/binary-search';
+import { map } from '@src/utils/map-values';
 
 interface ContractCondition {
   contract: PrunApi.Contract;
@@ -150,7 +151,12 @@ export function sumFactionProvisions(conditions: MaybeConditions) {
 }
 
 export function sumMaterialsPickup(conditions: MaybeConditions) {
-  return sumConditions(conditions, ['COMEX_PURCHASE_PICKUP'], getMaterialQuantityValue);
+  return sumConditions(conditions, ['COMEX_PURCHASE_PICKUP'], x => {
+    return map(
+      [calcMaterialAmountPrice(x.quantity!), calcMaterialAmountPrice(x.pickedUp!)],
+      (quantity, pickedUp) => quantity - pickedUp,
+    );
+  });
 }
 
 export function sumShipmentDeliveries(conditions: MaybeConditions) {

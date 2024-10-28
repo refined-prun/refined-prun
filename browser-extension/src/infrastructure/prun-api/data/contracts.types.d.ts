@@ -48,7 +48,12 @@ declare namespace PrunApi {
 
   export type ContractParty = 'CUSTOMER' | 'PROVIDER';
 
-  export type ContractConditionStatus = 'PENDING' | 'IN_PROGRESS' | 'FULFILLED' | 'VIOLATED';
+  export type ContractConditionStatus =
+    | 'PENDING'
+    | 'IN_PROGRESS'
+    | 'FULFILLED'
+    | 'PARTLY_FULFILLED'
+    | 'VIOLATED';
 
   export type ContractConditionType =
     | 'BASE_CONSTRUCTION'
