@@ -367,7 +367,7 @@ const materials: Record<string, Icon> = {
   SC: 'f471',
   SCB: ['f468', { fontSize: 0.9 }],
   SCN: 'f566',
-  SEA: 'f4db',
+  SEA: 'f5bd',
   SEN: 'f491',
   SEQ: 'f48e',
   SF: 'f52f',
@@ -416,7 +416,7 @@ const materials: Record<string, Icon> = {
   WOR: 'f53f',
   WR: 'e4b5',
   WS: 'f610',
-  INS: 'f4db',
+  INS: 'f5bd',
 };
 
 function circle(detail: Icon): Icon {
