@@ -66,9 +66,8 @@ function createRule(icon: Icon, baseFontSize: number) {
   };
   if (hasOptions) {
     const options = icon[1];
-    const opacity = options.opacity ?? (options.detail ? 0.15 : undefined);
-    if (opacity) {
-      addRule(`opacity: ${opacity}`);
+    if (options.opacity) {
+      addRule(`opacity: ${options.opacity}`);
     }
     if (options.fontSize) {
       fontSize = options.fontSize;
@@ -400,7 +399,7 @@ const materials: Record<string, Icon> = {
   TCL: 'f0c3',
   TCS: circle('f7b9'),
   TCU: 'f487',
-  THF: ['f043', { opacity: 0.25, detail: 'f7e4' }],
+  THF: ['f043', { detail: 'f7e4' }],
   THP: shield('f7e4'),
   TK: 'f132',
   TPU: 'f1ec',
