@@ -170,28 +170,8 @@
   outline: none;
 }
 
-.button-upper-right {
-  background-color: transparent;
-  color: #bbb;
-  fill: #bbb;
-  cursor: pointer;
-  display: block;
-  font-size: 24px;
-  margin-top: -8px;
-}
-
-.button-upper-right:hover {
-  color: #000 !important;
-  fill: #000;
-  background-color: rgb(247, 166, 0);
-}
-
 div.Head__container___3ecBw0E > div:nth-child(2) {
   flex-shrink: 0;
-}
-
-div.TileControls__splitControls___fcU57en {
-  display: inline-flex;
 }
 
 div.GridItemView__container___xP2uJz8 {

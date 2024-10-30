@@ -4,22 +4,14 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { $ } from '@src/utils/select-dom';
+import TileControlsButton from '@src/components/TileControlsButton.vue';
 
 async function onTileReady(tile: PrunTile) {
   const splitControls = await $(tile.frame, PrunCss.TileControls.splitControls);
-  createFragmentApp(() => (
-    <div
-      class="button-upper-right"
-      style={{
-        marginTop: __CHROME__ ? '3px' : '-3px',
-        fontSize: __CHROME__ ? '16px' : '20px',
-        paddingRight: '1px',
-        paddingLeft: '1px',
-      }}
-      onClick={() => showBuffer(tile.fullCommand, { force: true })}>
-      ↗
-    </div>
-  )).before(splitControls.children[0]);
+  createFragmentApp(TileControlsButton, {
+    icon: '\uf24d',
+    onClick: () => showBuffer(tile.fullCommand, { force: true }),
+  }).before(splitControls);
 }
 
 export function init() {
