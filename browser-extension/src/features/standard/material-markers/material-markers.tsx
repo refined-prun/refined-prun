@@ -1,5 +1,4 @@
 import features from '@src/feature-registry';
-import system from '@src/system';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
@@ -10,7 +9,7 @@ import { subscribe } from '@src/utils/subscribe-async-generator';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import { computedTileState } from '@src/store/user-data-tiles';
 import { refTextContent } from '@src/utils/reactive-dom';
-import { getTileState } from '@src/features/standard/icon-markers/tile-state';
+import { getTileState } from './tile-state';
 
 async function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, PrunCss.StoreView.container), container => {
@@ -22,32 +21,38 @@ async function onTileReady(tile: PrunTile) {
   });
 }
 
-const icons = ['bookmark', 'star', 'rocket', 'tag', 'trash'];
+interface Icon {
+  character: string;
+  color: string;
+}
+
+const icons: Icon[] = [
+  { character: '\uf02e', color: '#CC220E' },
+  { character: '\uf005', color: '#F7A601' },
+  { character: '\uf135', color: '#088DBF' },
+  { character: '\uf02b', color: '#C9C9C9' },
+  { character: '\uf1f8', color: '#3A8018' },
+];
 
 async function addMarker(mat: HTMLElement, tile: PrunTile) {
   const matTickerElem = await $(mat, PrunCss.ColoredIcon.label);
   const ticker = refTextContent(matTickerElem);
-  const markers = computedTileState(getTileState(tile), 'markers', {});
+  const state = computedTileState(getTileState(tile), 'markers', {});
   const markerId = computed({
-    get: () => (ticker.value !== null ? markers.value[ticker.value] : 0) ?? 0,
+    get: () => (ticker.value !== null ? state.value[ticker.value] : 0) ?? 0,
     set: id => {
       if (ticker.value === null) {
         return;
       }
-      const result = { ...markers.value };
+      const result = { ...state.value };
       if (id === 0) {
         delete result[ticker.value];
       } else {
         result[ticker.value] = id;
       }
-      markers.value = result;
+      state.value = result;
     },
   });
-  const markerFile = computed(() =>
-    markerId.value > 0
-      ? system.runtime.getURL(`images/${icons[markerId.value - 1]}-icon.svg`)
-      : undefined,
-  );
   const wrapStatus = (value: number) => {
     if (value < 0) {
       return icons.length;
@@ -61,7 +66,8 @@ async function addMarker(mat: HTMLElement, tile: PrunTile) {
   createFragmentApp(
     IconMarker,
     reactive({
-      marker: markerFile,
+      marker: computed(() => icons[markerId.value - 1]?.character),
+      color: computed(() => icons[markerId.value - 1]?.color),
       onNext: () => (markerId.value = wrapStatus(markerId.value + 1)),
       onPrevious: () => (markerId.value = wrapStatus(markerId.value - 1)),
     }),
@@ -76,6 +82,6 @@ export function init() {
 }
 
 void features.add({
-  id: 'icon-markers',
+  id: 'material-markers',
   init,
 });

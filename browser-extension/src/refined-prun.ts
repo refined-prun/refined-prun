@@ -31,7 +31,7 @@ import '@src/features/standard/fix-z-order';
 import '@src/features/standard/header-calculator-button';
 import '@src/features/standard/header-duplicate-button';
 import '@src/features/advanced/hide-redundant-info/hide-redundant-info';
-import '@src/features/standard/icon-markers/icon-markers';
+import '@src/features/standard/material-markers/material-markers';
 import '@src/features/standard/materials-ticker-shadow';
 import '@src/features/standard/materials-better-colors';
 import '@src/features/standard/materials-icons';

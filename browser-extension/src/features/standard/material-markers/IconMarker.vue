@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { computed, PropType } from 'vue';
+import fa from '@src/utils/font-awesome.module.css';
 
 const props = defineProps({
   marker: {
+    type: String,
+    default: undefined,
+  },
+  color: {
     type: String,
     default: undefined,
   },
@@ -27,7 +32,7 @@ const boxStyle = computed(() => ({
     @click.left.prevent.stop="onNext"
     @click.right.prevent.stop="onPrevious">
     <div :class="$style.box" :style="boxStyle">
-      <img v-if="marker" :class="$style.icon" :src="marker" alt="Icon Marker" />
+      <div v-if="marker" :class="[fa.solid, $style.icon]" :style="{ color }">{{ marker }}</div>
     </div>
   </div>
 </template>
@@ -58,5 +63,10 @@ const boxStyle = computed(() => ({
 
 .icon {
   margin: 1px;
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  -webkit-text-stroke: 0.5px black;
 }
 </style>
