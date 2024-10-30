@@ -16,6 +16,9 @@
 ## New features
 - `CONTD` partner search results are shown above the search bar.
 - `SHPT` and `BLCK` icons display a destination label.
+- Material ticker auto-capitalizes inputs for commands: `CXM`, `CXOB`, `CXP`, `CXPC`, `CXPO`, `MAT`.
+  For example: `CXPO h2o.ai1` will change to `CXPO H2O.AI1` when you hit Enter.
+- Clicking on the APEX logo now opens player company information.
 - `XIT BURN` now includes context buttons: `BS` and `INV` for planets, `CXM` for materials.
 - `XIT FINPR` displays Repairs and Margin (Profit / Revenue).
 - `XIT FINCH` Equity History chart now applies smoothing via SMA.
@@ -26,13 +29,10 @@
 - Material category in `MAT` is clickable and opens `XIT MATS` with material category.
 - Own `LM` orders are highlighted.
 - `LM` ads are more compact, showing commodity/shipment icons.
-- Clicking on the APEX logo now opens player company information.
 - `XIT REP` shows a weight/volume/cost table.
 - `BS` displays a building list summary at the bottom.
 - `XIT NOTE` list is now reorderable.
 - Table rows now alternate color between odd and even rows.
-- Material ticker auto-capitalizes inputs for commands: `CXM`, `CXOB`, `CXP`, `CXPC`, `CXPO`, `MAT`.
-  For example: `CXPO h2o.ai1` will change to `CXPO H2O.AI1` when you hit Enter.
 - Added compatibility with non-English localizations.
 
 ## Changed
