@@ -1,0 +1,60 @@
+<script lang="ts">
+import xit from '@src/features/XIT/xit-registry.js';
+import MATS from '@src/features/XIT/MATS.vue';
+
+xit.add({
+  command: 'MATS',
+  name: 'MATERIALS',
+  component: () => MATS,
+});
+
+export default {};
+</script>
+
+<script setup lang="ts">
+import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import PrunCss from '@src/infrastructure/prun-ui/prun-css';
+import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
+import { useXitParameters } from '@src/hooks/useXitParameters';
+import { computed } from 'vue';
+import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
+
+const parameters = useXitParameters();
+const materials = computed(() => {
+  if (parameters.length === 0) {
+    return materialsStore.all.value;
+  }
+
+  const materials: PrunApi.Material[] = [];
+  let combo = '';
+  for (const parameter of parameters) {
+    const material = materialsStore.getByTicker(parameter);
+    if (material) {
+      materials.push(material);
+      combo = '';
+      continue;
+    }
+
+    let category: PrunApi.MaterialCategory | undefined = undefined;
+    if (combo) {
+      combo += ' ' + parameter;
+    } else {
+      combo = parameter;
+    }
+
+    category = materialCategoriesStore.getBySerializableName(combo);
+    if (category) {
+      materials.push(...category.materials);
+      combo = '';
+    }
+  }
+
+  return materials;
+});
+</script>
+
+<template>
+  <div :class="PrunCss.InventoryView.grid">
+    <GridMaterialIcon v-for="mat in materials" :key="mat.id" :ticker="mat.ticker" />
+  </div>
+</template>
