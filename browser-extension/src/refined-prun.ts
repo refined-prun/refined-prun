@@ -20,6 +20,7 @@ import '@src/features/standard/lm-buy-sell-highlight';
 import '@src/features/standard/lm-hide-rating';
 import '@src/features/standard/lm-highlight-own-ads';
 import '@src/features/standard/lm-shipping-per-unit-price/lm-shipping-per-unit-price';
+import '@src/features/standard/mat-clickable-category';
 import '@src/features/standard/nots-improve-notifications';
 import '@src/features/standard/sfc-flight-eta';
 import '@src/features/standard/compact-ui';

@@ -23,6 +23,7 @@
 - `XIT CONTS` displays a ! mark for contracts with unfulfilled own conditions.
 - `XIT CONTS` displays `SHPT` for contracts with shipment condition.
 - `LM` BUYING/SELLING ads are highlighted green/red.
+- Material category in `MAT` is clickable and opens `XIT MATS` with material category.
 - Own `LM` orders are highlighted.
 - `LM` ads are more compact, showing commodity/shipment icons.
 - Clicking on the APEX logo now opens player company information.
