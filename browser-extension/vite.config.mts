@@ -65,7 +65,7 @@ export default defineConfig({
         dir: outDir,
         entryFileNames: '[name].js',
         assetFileNames: assetInfo =>
-          assetInfo.name.endsWith('css') ? assetInfo.name : 'assets/[name]-[hash][extname]',
+          assetInfo.name?.endsWith('css') ? assetInfo.name : 'assets/[name]-[hash][extname]',
       },
       input: {
         'refined-prun': resolve(__dirname, 'src/refined-prun.ts'),
