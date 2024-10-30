@@ -22,7 +22,7 @@ export default defineConfig({
     alias: {
       '@root': rootDir,
       '@src': srcDir,
-      '@assets': resolve(srcDir, 'assets'),
+      '~': resolve(srcDir, 'assets'),
     },
   },
   plugins: [
@@ -53,18 +53,19 @@ export default defineConfig({
   publicDir: resolve(rootDir, 'public'),
   build: {
     outDir,
-    emptyOutDir: false,
+    emptyOutDir: true,
     sourcemap: isDev ? 'inline' : true,
     minify: isProduction,
     reportCompressedSize: false,
     modulePreload: true,
+    assetsInlineLimit: 0,
     rollupOptions: {
       external: ['chrome'],
       output: {
         dir: outDir,
         entryFileNames: '[name].js',
-        assetFileNames: '[name].[ext]',
-        chunkFileNames: '[name].js',
+        assetFileNames: assetInfo =>
+          assetInfo.name.endsWith('css') ? assetInfo.name : 'assets/[name]-[hash][extname]',
       },
       input: {
         'refined-prun': resolve(__dirname, 'src/refined-prun.ts'),
