@@ -19,8 +19,9 @@ messages({
   },
 });
 
-const getByEntityNaturalId = createMapGetter(state.all, x =>
-  getEntityNaturalIdFromAddress(x.address),
+const getByEntityNaturalId = createMapGetter(
+  state.all,
+  x => getEntityNaturalIdFromAddress(x.address)!,
 );
 
 export const warehousesStore = {

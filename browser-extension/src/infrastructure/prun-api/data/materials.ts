@@ -16,11 +16,7 @@ messages({
 const getByName = createMapGetter(state.all, x => x.name);
 
 const getByTicker = (() => {
-  const getter = createMapGetter(
-    state.all,
-    x => x.ticker,
-    x => x.toUpperCase(),
-  );
+  const getter = createMapGetter(state.all, x => x.ticker);
 
   return (value?: string | null) => {
     if (!value) {

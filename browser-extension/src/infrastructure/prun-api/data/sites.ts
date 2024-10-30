@@ -25,15 +25,10 @@ const getById = (value?: string | null) => state.getById(value) ?? getByShortId(
 
 const getByPlanetNaturalId = createMapGetter(
   state.all,
-  x => getEntityNaturalIdFromAddress(x.address)!.toLowerCase(),
-  x => x.toLowerCase(),
+  x => getEntityNaturalIdFromAddress(x.address)!,
 );
 
-const getByPlanetName = createMapGetter(
-  state.all,
-  x => getEntityNameFromAddress(x.address)!.toLowerCase(),
-  x => x.toLowerCase(),
-);
+const getByPlanetName = createMapGetter(state.all, x => getEntityNameFromAddress(x.address)!);
 
 const getByPlanetNaturalIdOrName = (value?: string | null) =>
   getByPlanetNaturalId(value) ?? getByPlanetName(value);

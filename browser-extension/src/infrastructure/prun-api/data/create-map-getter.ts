@@ -1,40 +1,40 @@
 import { computed, Ref } from 'vue';
 
-export function createMapGetter<T, K>(
+const upperCase = (value: string) => value.toUpperCase();
+
+export function createMapGetter<T>(
   items: Ref<T[] | undefined>,
-  selector: (item: T) => K,
-  valueTransformer?: (value: K) => K,
+  selector: (item: T) => string,
+  valueTransformer?: (value: string) => string,
 ) {
+  valueTransformer ??= upperCase;
   const map = computed(() => {
     if (items.value === undefined) {
       return undefined;
     }
-    const map = new Map<K, T>();
+    const map = new Map<string, T>();
     for (const item of items.value) {
-      map.set(selector(item), item);
+      map.set(valueTransformer(selector(item)), item);
     }
     return map;
   });
-  if (valueTransformer) {
-    return (value?: K | null) =>
-      map.value !== undefined && value ? map.value.get(valueTransformer(value)) : undefined;
-  }
-  return (value?: K | null) =>
-    map.value !== undefined && value ? map.value.get(value) : undefined;
+  return (value?: string | null) =>
+    map.value !== undefined && value ? map.value.get(valueTransformer(value)) : undefined;
 }
 
-export function createGroupMapGetter<T, K>(
+export function createGroupMapGetter<T>(
   items: Ref<T[] | undefined>,
-  selector: (item: T) => K,
-  valueTransformer?: (value: K) => K,
+  selector: (item: T) => string,
+  valueTransformer?: (value: string) => string,
 ) {
+  valueTransformer ??= upperCase;
   const map = computed(() => {
     if (items.value === undefined) {
       return undefined;
     }
-    const map = new Map<K, T[]>();
+    const map = new Map<string, T[]>();
     for (const item of items.value) {
-      const key = selector(item);
+      const key = valueTransformer(selector(item));
       let group = map.get(key);
       if (!group) {
         group = [];
@@ -44,10 +44,6 @@ export function createGroupMapGetter<T, K>(
     }
     return map;
   });
-  if (valueTransformer) {
-    return (value?: K | null) =>
-      map.value !== undefined && value ? map.value.get(valueTransformer(value)) : undefined;
-  }
-  return (value?: K | null) =>
-    map.value !== undefined && value ? map.value.get(value) : undefined;
+  return (value?: string | null) =>
+    map.value !== undefined && value ? map.value.get(valueTransformer(value)) : undefined;
 }

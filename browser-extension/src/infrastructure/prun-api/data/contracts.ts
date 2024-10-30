@@ -20,11 +20,7 @@ messages({
   },
 });
 
-const getByLocalId = createMapGetter(
-  state.all,
-  x => x.localId.toUpperCase(),
-  x => x.toUpperCase(),
-);
+const getByLocalId = createMapGetter(state.all, x => x.localId);
 
 function getByShipmentId(id?: string | undefined) {
   if (!id) {

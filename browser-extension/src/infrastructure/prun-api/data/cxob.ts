@@ -17,11 +17,7 @@ messages({
   },
 });
 
-const getByTicker = createMapGetter(
-  state.all,
-  x => x.ticker,
-  x => x.toUpperCase(),
-);
+const getByTicker = createMapGetter(state.all, x => x.ticker);
 
 export const cxobStore = {
   ...state,

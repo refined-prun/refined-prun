@@ -15,11 +15,7 @@ messages({
   },
 });
 
-const getByRegistration = createMapGetter(
-  state.all,
-  x => x.registration.toLowerCase(),
-  x => x.toLowerCase(),
-);
+const getByRegistration = createMapGetter(state.all, x => x.registration);
 
 export const getShipLastRepair = (ship: PrunApi.Ship) =>
   ship.lastRepair?.timestamp || ship.commissioningTime.timestamp;

@@ -19,17 +19,9 @@ messages({
   },
 });
 
-const getByNaturalId = createMapGetter(
-  state.all,
-  x => x.naturalId.toLowerCase(),
-  x => x.toLowerCase(),
-);
+const getByNaturalId = createMapGetter(state.all, x => x.naturalId);
 
-const getByName = createMapGetter(
-  state.all,
-  x => x.name.toLowerCase(),
-  x => x.toLowerCase(),
-);
+const getByName = createMapGetter(state.all, x => x.name);
 
 const find = (naturalIdOrName?: string | null) =>
   getByNaturalId(naturalIdOrName) ?? getByName(naturalIdOrName);

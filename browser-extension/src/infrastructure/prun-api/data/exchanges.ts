@@ -16,17 +16,9 @@ messages({
   },
 });
 
-const getByCode = createMapGetter(
-  state.all,
-  x => x.code,
-  x => x.toUpperCase(),
-);
+const getByCode = createMapGetter(state.all, x => x.code);
 
-const getByName = createMapGetter(
-  state.all,
-  x => x.name.toUpperCase(),
-  x => x.toUpperCase(),
-);
+const getByName = createMapGetter(state.all, x => x.name);
 
 export const exchangeStore = {
   ...state,
