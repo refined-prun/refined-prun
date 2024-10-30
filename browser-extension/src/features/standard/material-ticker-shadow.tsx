@@ -1,4 +1,4 @@
-import classes from './materials-ticker-shadow.module.css';
+import classes from './material-ticker-shadow.module.css';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
@@ -8,6 +8,6 @@ function init() {
 }
 
 void features.add({
-  id: 'materials-ticker-shadow',
+  id: 'material-ticker-shadow',
   init,
 });

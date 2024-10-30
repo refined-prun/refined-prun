@@ -1,5 +1,5 @@
 import fa from '@src/utils/font-awesome.module.css';
-import classes from './materials-icons.module.css';
+import classes from './material-icons.module.css';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
 import {
@@ -430,6 +430,6 @@ function shield(detail?: Icon): Icon {
 }
 
 void features.add({
-  id: 'materials-icons',
+  id: 'material-icons',
   init,
 });
