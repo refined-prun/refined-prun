@@ -18,40 +18,31 @@ messages({
     store.setOne(data);
   },
   SITE_PLATFORM_BUILT(data: PrunApi.Platform) {
-    const entities = state.entities.value;
-    const site = entities?.[data.siteId];
-    if (entities === undefined || site === undefined) {
-      return;
+    const site = state.getById(data.siteId);
+    if (site !== undefined) {
+      store.setOne({
+        ...site,
+        platforms: [...site.platforms, data],
+      });
     }
-
-    entities[data.siteId] = {
-      ...site,
-      platforms: [...site.platforms, data],
-    };
   },
   SITE_PLATFORM_UPDATED(data: PrunApi.Platform) {
-    const entities = state.entities.value;
-    const site = entities?.[data.siteId];
-    if (entities === undefined || site === undefined) {
-      return;
+    const site = state.getById(data.siteId);
+    if (site !== undefined) {
+      store.setOne({
+        ...site,
+        platforms: site.platforms.map(x => (x.id === data.id ? data : x)),
+      });
     }
-
-    entities[data.siteId] = {
-      ...site,
-      platforms: site.platforms.map(x => (x.id === data.id ? data : x)),
-    };
   },
   SITE_PLATFORM_REMOVED(data: { siteId: string; platformId: string }) {
-    const entities = state.entities.value;
-    const site = entities?.[data.siteId];
-    if (entities === undefined || site === undefined) {
-      return;
+    const site = state.getById(data.siteId);
+    if (site !== undefined) {
+      store.setOne({
+        ...site,
+        platforms: site.platforms.filter(x => x.id !== data.platformId),
+      });
     }
-
-    entities[data.siteId] = {
-      ...site,
-      platforms: site.platforms.filter(x => x.id !== data.platformId),
-    };
   },
 });
 

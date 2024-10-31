@@ -18,16 +18,13 @@ messages({
     store.addOne(data);
   },
   UI_SCREENS_RENAME(data: { id: string; name: string }) {
-    const entities = state.entities.value;
-    const screen = entities?.[data.id];
-    if (entities === undefined || screen === undefined) {
-      return;
+    const screen = state.getById(data.id);
+    if (screen !== undefined) {
+      store.setOne({
+        ...screen,
+        name: data.name,
+      });
     }
-
-    entities[data.id] = {
-      ...screen,
-      name: data.name,
-    };
   },
   UI_SCREENS_DELETE(data: { id: string }) {
     const screen = state.getById(data.id);
