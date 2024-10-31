@@ -47,6 +47,7 @@ import '@src/features/standard/remove-mobile-css-rules';
 import '@src/features/standard/sidebar-buttons/sidebar-buttons';
 import '@src/features/standard/screen-tab-bar/screen-tab-bar';
 import '@src/features/standard/table-rows-alternating-colors';
+import '@src/features/advanced/mat-hide-redundant-info';
 
 import '@src/features/XIT/xit-commands';
 import '@src/features/XIT/ACT/ACT';
