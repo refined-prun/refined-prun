@@ -1,3 +1,9 @@
-.row {
-  width: 33%;
+/* Disable CssRedundantUnit because it is necessary for .otherColumns to work */
+/*noinspection CssRedundantUnit*/
+.firstColumn {
+  width: 0%;
+}
+
+.otherColumns {
+  width: 1%;
 }
