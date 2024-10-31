@@ -1,3 +1,4 @@
+import css from '@src/utils/css-utils.module.css';
 import classes from './pending-contracts-add-details.module.css';
 import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
@@ -21,7 +22,7 @@ function onContractIdReady(id: HTMLElement) {
 }
 
 export function init() {
-  applyCssRule(`.${PrunCss.Sidebar.contract} .${PrunCss.Link.link}`, classes.link);
+  applyCssRule(`.${PrunCss.Sidebar.contract} .${PrunCss.Link.link}`, css.hidden);
   applyCssRule(`.${PrunCss.Sidebar.contractId}`, classes.contractId);
   applyCssRule(`.${PrunCss.Sidebar.contractId}:hover`, `${classes.contractId}:hover`);
   subscribe($$(document, PrunCss.Sidebar.contractId), onContractIdReady);

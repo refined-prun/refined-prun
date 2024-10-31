@@ -1,3 +1,4 @@
+import css from '@src/utils/css-utils.module.css';
 import classes from './hide-redundant-info.module.css';
 import features from '@src/feature-registry';
 import tiles from '@src/infrastructure/prun-ui/tiles';
@@ -227,23 +228,23 @@ function cleanContractType(text: HTMLElement, ad: PrunApi.LocalAd) {
 
 export function init() {
   // Hide Exchange column
-  applyScopedCssRule('CXOS', 'tr > *:first-child', classes.hide);
+  applyScopedCssRule('CXOS', 'tr > *:first-child', css.hidden);
   // Hide Transponder column
-  applyScopedCssRule('FLT', 'tr > *:first-child', classes.hide);
+  applyScopedCssRule('FLT', 'tr > *:first-child', css.hidden);
   // Hide sort options
-  applyScopedClassCssRule('SHPF', PrunCss.InventorySortControls.controls, classes.hide);
+  applyScopedClassCssRule('SHPF', PrunCss.InventorySortControls.controls, css.hidden);
   // Hide Weight and Volume labels
-  applyScopedClassCssRule('SHPF', PrunCss.StoreView.name, classes.hide);
+  applyScopedClassCssRule('SHPF', PrunCss.StoreView.name, css.hidden);
   // Hide item names in inventories
-  applyClassCssRule(PrunCss.GridItemView.name, classes.hide);
+  applyClassCssRule(PrunCss.GridItemView.name, css.hidden);
   // Remove gaps between items in GridView
   applyClassCssRule(PrunCss.GridItemView.container, classes.gridItem);
   // Hide error messages in form components
   // Remove hard-coded ones when molp fixes class duplication
   applyClassCssRule(PrunCss.FormComponent.containerError, classes.containerError);
   applyClassCssRule('FormComponent__containerError___pN__L1Q', classes.containerError);
-  applyClassCssRule(PrunCss.FormComponent.errorMessage, classes.hide);
-  applyClassCssRule('FormComponent__errorMessage___mBdvpz5', classes.hide);
+  applyClassCssRule(PrunCss.FormComponent.errorMessage, css.hidden);
+  applyClassCssRule('FormComponent__errorMessage___mBdvpz5', css.hidden);
   tiles.observe('COGCPEX', cleanCOGCPEX);
   tiles.observe('FLT', cleanFLT);
   tiles.observe('INV', cleanINV);

@@ -1,3 +1,4 @@
+import css from '@src/utils/css-utils.module.css';
 import classes from './inv-custom-sorting.module.css';
 import { BurnValues, getPlanetBurn } from '@src/core/burn';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
@@ -185,7 +186,7 @@ function createBurnSortingMode(storeId: string): UserData.SortingMode {
 }
 
 export function init() {
-  applyCssRule(`.${classes.custom} .${PrunCss.InventorySortControls.order} > div`, classes.hide);
+  applyCssRule(`.${classes.custom} .${PrunCss.InventorySortControls.order} > div`, css.hidden);
   tiles.observe(['INV', 'SHPI'], onTileReady);
   xit.add({
     command: 'SORT',

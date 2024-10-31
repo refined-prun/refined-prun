@@ -1,4 +1,5 @@
 import fa from '@src/utils/font-awesome.module.css';
+import css from '@src/utils/css-utils.module.css';
 import classes from './material-icons.module.css';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import features from '@src/feature-registry';
@@ -21,8 +22,8 @@ function init() {
   applyCssRule(`.${label}:before`, classes.detail);
 
   startCssAtScope('@container (height < 24px)');
-  applyCssRule(`.${container}:before`, classes.hide);
-  applyCssRule(`.${label}:before`, classes.hide);
+  applyCssRule(`.${container}:before`, css.hidden);
+  applyCssRule(`.${label}:before`, css.hidden);
   endCssAtScope();
 
   for (const category of objectKeys(categories)) {
