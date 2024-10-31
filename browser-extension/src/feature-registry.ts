@@ -1,11 +1,8 @@
 import getBrowserVersion from '@src/utils/browser-version';
-import { castArray } from '@src/utils/cast-array';
-
-type FeatureInit = () => void;
 
 interface FeatureDescriptor {
   id: string;
-  init?: Arrayable<FeatureInit>;
+  init: () => void;
 }
 
 const registry: FeatureDescriptor[] = [];
@@ -51,26 +48,15 @@ function add(descriptor: FeatureDescriptor) {
 
 async function init() {
   for (const feature of registry) {
-    await initializeFeature(feature);
-  }
-}
-
-async function initializeFeature(feature: FeatureDescriptor) {
-  let result = true;
-  if (feature.init) {
     features.current = feature.id;
-    for (const init of castArray(feature.init)) {
-      try {
-        init();
-      } catch (error) {
-        log.error(feature.id, error);
-        result = false;
-      }
+    try {
+      feature.init();
+      log.info('✅', feature.id);
+    } catch (error) {
+      log.error(feature.id, error);
+    } finally {
+      features.current = undefined;
     }
-    features.current = undefined;
-  }
-  if (result) {
-    log.info('✅', feature.id);
   }
 }
 
