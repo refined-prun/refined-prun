@@ -3,6 +3,7 @@ import './cogcpex-hide-redundant-info';
 import './com-hide-join-leave';
 import './cxos-hide-exchange-column';
 import './cxpo-shorten-names';
+import './finla-hide-ecd';
 import './flt-hide-transponder-column';
 import './flt-shorten-cargo-capacity';
 import './flt-shorten-flight-status';
