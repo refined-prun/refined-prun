@@ -11,5 +11,6 @@ export function init() {
 
 void features.add({
   id: 'lm-hide-rating',
+  advanced: true,
   init,
 });

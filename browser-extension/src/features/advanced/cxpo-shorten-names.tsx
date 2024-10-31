@@ -23,5 +23,6 @@ export function init() {
 
 void features.add({
   id: 'cxpo-shorten-names',
+  advanced: true,
   init,
 });

@@ -253,5 +253,6 @@ export function init() {
 
 void features.add({
   id: 'hide-redundant-info',
+  advanced: true,
   init,
 });

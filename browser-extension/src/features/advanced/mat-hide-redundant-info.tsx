@@ -18,5 +18,6 @@ function init() {
 
 void features.add({
   id: 'mat-hide-redundant-info',
+  advanced: true,
   init,
 });

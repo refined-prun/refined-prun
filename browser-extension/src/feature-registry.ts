@@ -2,6 +2,7 @@ import getBrowserVersion from '@src/utils/browser-version';
 
 interface FeatureDescriptor {
   id: string;
+  advanced?: boolean;
   init: () => void;
 }
 

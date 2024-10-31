@@ -12,5 +12,6 @@ export function init() {
 
 void features.add({
   id: 'com-hide-join-leave',
+  advanced: true,
   init,
 });
