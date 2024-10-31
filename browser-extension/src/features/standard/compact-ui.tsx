@@ -2,16 +2,8 @@ import { Style, WithStyles } from '@src/Style';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { refAnimationFrame, refValue } from '@src/utils/reactive-dom';
-import { computed } from 'vue';
-import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
-import { exchangeStore } from '@src/infrastructure/prun-api/data/exchanges';
-import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { userData } from '@src/store/user-data';
-import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
-import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
-import { $$, _$$ } from '@src/utils/select-dom';
+import { $$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 
 function onBBLTileReady(tile: PrunTile) {
@@ -191,94 +183,8 @@ export function showElement(element: HTMLElement, tag: string) {
   element.classList.remove(`${tag}-hidden`);
 }
 
-function onCXOSTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.Link.link), link => {
-    const exchange = exchangeStore.getByName(link.textContent);
-    const naturalId = getEntityNaturalIdFromAddress(exchange?.address);
-    if (naturalId) {
-      link.textContent = naturalId;
-    }
-  });
-
-  subscribe($$(tile.anchor, 'th'), header => {
-    if (header.textContent == 'Exchange') {
-      header.textContent = 'Exc.';
-    }
-  });
-}
-
-async function onBSTileReady(tile: PrunTile) {
-  // Only process BS {base} tiles
-  if (!tile.parameter) {
-    return;
-  }
-
-  subscribe($$(tile.anchor, PrunCss.Site.container), () => {
-    processBSAreaProgressBar(tile);
-
-    subscribe($$(tile.anchor, 'th'), header => {
-      header.innerText = header.innerText.replace('Current Workforce', 'Current');
-    });
-
-    subscribe($$(tile.anchor, 'tr'), row => {
-      onWorkforceTableRowReady(row, tile.parameter);
-    });
-  });
-}
-
-function onWorkforceTableRowReady(row: HTMLTableRowElement, siteId: string | undefined) {
-  const cells = row.getElementsByTagName('td');
-  if (cells.length === 0) {
-    return;
-  }
-
-  const levelId = refPrunId(row);
-  const shouldHideRow = computed(() => {
-    const site = sitesStore.getByPlanetNaturalId(siteId);
-    const workforce = workforcesStore
-      .getById(site?.siteId)
-      ?.workforces.find(x => x.level === levelId.value);
-    return (
-      workforce && workforce.capacity < 1 && workforce.required < 1 && workforce.population < 1
-    );
-  });
-  watchEffectWhileNodeAlive(row, () => (row.style.display = shouldHideRow.value ? 'none' : ''));
-
-  const bar = cells[4].getElementsByTagName('div')[0];
-  bar.style.display = 'flex';
-  bar.style.flexDirection = 'row';
-  bar.style.justifyContent = 'left';
-  const progress = bar.getElementsByTagName('progress')[0];
-  const progressTitle = refAnimationFrame(progress, x => x.title);
-  const progressText = document.createElement('span');
-  bar.appendChild(progressText);
-  watchEffectWhileNodeAlive(progress, () => (progressText.textContent = progressTitle.value));
-}
-
-function processBSAreaProgressBar(tile: PrunTile) {
-  const elements = _$$(tile.anchor, PrunCss.FormComponent.containerPassive);
-  if (elements.length < 2) {
-    return;
-  }
-
-  const areaRow = elements[0];
-  areaRow.style.display = 'none';
-  const areaBar = areaRow.getElementsByTagName('progress')[0];
-  if (!areaBar) {
-    return;
-  }
-
-  const areaBarCopy = areaBar.cloneNode(true) as HTMLProgressElement;
-  const areaValue = refValue(areaBar);
-  watchEffectWhileNodeAlive(areaBar, () => (areaBarCopy.value = areaValue.value));
-  const editDiv = elements[1].getElementsByTagName('div')[0] as HTMLElement;
-  editDiv.insertBefore(areaBarCopy, editDiv.lastChild);
-}
-
 export function init() {
   tiles.observe('BBL', onBBLTileReady);
-  tiles.observe('CXOS', onCXOSTileReady);
-  tiles.observe('BS', onBSTileReady);
 }
 
 void features.add({

@@ -1,4 +1,6 @@
 import './bs-building-list/bs-building-list';
+import './bs-add-satisfaction-percentage';
+import './bs-merge-area-stats';
 import './com-add-images';
 import './com-move-delete-button';
 import './contd-search-results-above-search-bar';

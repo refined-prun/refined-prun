@@ -1,3 +1,4 @@
+import './bs-hide-zero-workforce';
 import './cogcpex-hide-redundant-info';
 import './com-hide-join-leave';
 import './cxos-hide-exchange-column';
