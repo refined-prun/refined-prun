@@ -8,23 +8,25 @@ import { getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/
 
 const correctableCommands = new Set([
   'ADM',
+  'BBC',
+  'BRA',
+  'BS',
   'BSC',
   'COGC',
   'COGCPEX',
   'COGCU',
   'FLTP',
-  'LR',
-  'LMP',
+  'GOV',
+  'INV',
   'LM',
+  'LMP',
+  'LR',
   'PLI',
   'POPI',
   'POPR',
   'PPS',
   'SHY',
   'WAR',
-  'BS',
-  'BRA',
-  'GOV',
 ]);
 
 async function onSelectorReady(selector: HTMLElement) {
