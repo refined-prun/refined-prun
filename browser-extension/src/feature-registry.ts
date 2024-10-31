@@ -6,7 +6,6 @@ type FeatureInit = () => void;
 interface FeatureDescriptor {
   id: string;
   init?: Arrayable<FeatureInit>;
-  attribute?: boolean;
 }
 
 const registry: FeatureDescriptor[] = [];
@@ -71,9 +70,6 @@ async function initializeFeature(feature: FeatureDescriptor) {
     features.current = undefined;
   }
   if (result) {
-    if (feature.attribute) {
-      document.documentElement.setAttribute(`rp-${feature.id}`, '');
-    }
     log.info('✅', feature.id);
   }
 }

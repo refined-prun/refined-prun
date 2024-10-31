@@ -31,5 +31,4 @@ export function init() {
 void features.add({
   id: 'pending-contracts-add-details',
   init,
-  attribute: true,
 });

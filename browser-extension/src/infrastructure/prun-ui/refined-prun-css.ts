@@ -87,15 +87,16 @@ export function endCssAtScope() {
 }
 
 export function applyRawCssRule(rule: string) {
-  if (!styleElement) {
+  const styleId = `rp-${features.current}`;
+  if (!styleElement || styleElement.id !== styleId) {
     styleElement = document.createElement('style');
-    styleElement.id = 'rp-css-overrides';
+    styleElement.id = styleId;
     styleElement.textContent = '';
     document.head.appendChild(styleElement);
   } else {
     styleElement.textContent += '\n\n';
   }
-  const attribute = `rp-${features.current}`;
+  const attribute = 'rp-css-override';
   const prefix = `html[${attribute}]`;
   document.documentElement.setAttribute(attribute, '');
   let fullRule = `${prefix} ${rule}`;
