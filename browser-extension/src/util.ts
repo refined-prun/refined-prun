@@ -592,7 +592,7 @@ export function comparePlanets(idOrNameA: string, idOrNameB: string) {
 
 export function extractPlanetName(text?: string | null) {
   if (!text) {
-    return undefined;
+    return text;
   }
   text = text
     // Clear parenthesis

@@ -28,8 +28,7 @@ async function onContainerReady(container: HTMLElement) {
   }
   if ((type === 'COMMODITY_BUYING' || type === 'COMMODITY_SELLING') && quantity) {
     const ticker = quantity.material.ticker;
-    const amount = quantity.amount;
-    text.childNodes[1].textContent = ` ${amount} @ `;
+    text.childNodes[1].textContent = text.childNodes[1].textContent!.replace(`(${ticker})`, '');
     createFragmentApp(LMMaterialIcon, { ticker }).before(container.firstElementChild!);
   }
 }

@@ -85,10 +85,18 @@ function activateTile(tile: PrunTile) {
 
   activeTiles.push(tile);
   for (const observer of getMapArray(commandObservers, tile.command)) {
-    observer(tile);
+    runObserver(observer, tile);
   }
   for (const observer of anyCommandObservers) {
+    runObserver(observer, tile);
+  }
+}
+
+function runObserver(observer: PrunTileObserver, tile: PrunTile) {
+  try {
     observer(tile);
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -108,7 +116,7 @@ function observeTiles(commands: Arrayable<string>, observer: PrunTileObserver) {
     observers.push(observer);
     for (const tile of activeTiles) {
       if (tile.command === command) {
-        observer(tile);
+        runObserver(observer, tile);
       }
     }
   }
@@ -118,7 +126,7 @@ function observeAllTiles(observer: PrunTileObserver) {
   setupObserver();
   anyCommandObservers.push(observer);
   for (const tile of activeTiles) {
-    observer(tile);
+    runObserver(observer, tile);
   }
 }
 

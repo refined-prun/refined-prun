@@ -46,11 +46,23 @@ import '@src/features/standard/screen-tab-bar/screen-tab-bar';
 import '@src/features/standard/table-rows-alternating-colors';
 import '@src/features/advanced/mat-hide-redundant-info';
 
+import '@src/features/advanced/cogcpex-hide-redundant-info';
 import '@src/features/advanced/com-hide-join-leave';
+import '@src/features/advanced/cxos-hide-exchange-column';
 import '@src/features/advanced/cxpo-shorten-names';
-import '@src/features/advanced/hide-redundant-info/hide-redundant-info';
+import '@src/features/advanced/flt-hide-transponder-column';
+import '@src/features/advanced/flt-shorten-cargo-capacity';
+import '@src/features/advanced/flt-shorten-flight-status';
+import '@src/features/advanced/flt-shorten-planet-names';
+import '@src/features/advanced/hide-form-errors';
+import '@src/features/advanced/hide-item-names';
+import '@src/features/advanced/hide-weight-volume-labels';
+import '@src/features/advanced/inv-shorten-planet-names';
+import '@src/features/advanced/inv-shorten-storage-types';
 import '@src/features/advanced/lm-hide-rating';
+import '@src/features/advanced/lm-shorten-ads';
 import '@src/features/advanced/minimize-headers/minimize-headers';
+import '@src/features/advanced/shpf-hide-sort-options';
 
 import '@src/features/XIT/xit-commands';
 import '@src/features/XIT/ACT/ACT';
