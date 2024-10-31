@@ -46,34 +46,18 @@ async function processNotification(container: HTMLElement) {
   }
 
   const patch = patchMap.get(alert.type);
-  if (patch) {
-    createFragmentApp(() => (
-      <div class={classes.type} style={{ color: patch.color }}>
-        {patch.label}
-      </div>
-    )).before(textSpan);
-    const newText = patch.replace?.(alert, alertText);
-    if (newText !== undefined && alertText !== newText) {
-      textSpan.textContent = newText;
-    }
+  if (!patch) {
     return;
   }
 
-  for (const search of searchers) {
-    const match = alertText.toLowerCase().match(new RegExp(search[0]));
-    if (match == null) {
-      continue;
-    }
-
-    createFragmentApp(() => (
-      <div class={classes.type} style={{ color: search[2] }}>
-        {search[1].toUpperCase()}
-      </div>
-    )).before(textSpan);
-    if (search[0] === 'contract') {
-      textSpan.textContent = alertText.replace(/Your partner /, '');
-    }
-    break;
+  createFragmentApp(() => (
+    <div class={classes.type} style={{ color: patch.color }}>
+      {patch.label}
+    </div>
+  )).before(textSpan);
+  const newText = patch.replace?.(alert, alertText);
+  if (newText !== undefined && alertText !== newText) {
+    textSpan.textContent = newText;
   }
 }
 
@@ -86,18 +70,25 @@ interface AlertPatch {
 
 const patches: AlertPatch[] = [
   {
-    types: ['ADMIN_CENTER_MOTION_PASSED'],
+    types: [
+      'ADMIN_CENTER_MOTION_PASSED',
+      'ADMIN_CENTER_MOTION_ENDED',
+      'ADMIN_CENTER_MOTION_VOTING_STARTED',
+    ],
     label: 'MOTION',
     color: '#ffda94',
   },
   {
     types: [
       'CONTRACT_CONDITION_FULFILLED',
+      'CONTRACT_CONTRACT_BREACHED',
       'CONTRACT_CONTRACT_RECEIVED',
       'CONTRACT_CONTRACT_CLOSED',
+      'CONTRACT_CONTRACT_EXTENDED',
       'CONTRACT_CONTRACT_TERMINATED',
       'CONTRACT_CONTRACT_TERMINATION_REQUESTED',
       'CONTRACT_CONTRACT_CANCELLED',
+      'CONTRACT_DEADLINE_EXCEEDED_WITHOUT_CONTROL',
       'CONTRACT_DEADLINE_EXCEEDED_WITH_CONTROL',
       'CONTRACT_CONTRACT_REJECTED',
     ],
@@ -166,7 +157,7 @@ const patches: AlertPatch[] = [
     color: '#ff8a00',
   },
   {
-    types: ['COGC_PROGRAM_CHANGED', 'COGC_UPKEEP_STARTED'],
+    types: ['COGC_PROGRAM_CHANGED', 'COGC_UPKEEP_STARTED', 'COGC_STATUS_CHANGED'],
     label: 'COGC',
     color: '#8f52cc',
     replace(alert: PrunApi.Alert, text: string) {
@@ -212,19 +203,51 @@ const patches: AlertPatch[] = [
     },
   },
   {
-    types: ['ADMIN_CENTER_ELECTION_STARTED'],
+    types: [
+      'ADMIN_CENTER_RUN_SUCCEEDED',
+      'ADMIN_CENTER_GOVERNOR_ELECTED',
+      'ADMIN_CENTER_NO_GOVERNOR_ELECTED',
+      'ADMIN_CENTER_ELECTION_STARTED',
+    ],
     label: 'ELECTION',
     color: '#ffda94',
   },
   {
-    types: ['ADMIN_CENTER_GOVERNOR_ELECTED'],
-    label: 'GOV',
-    color: '#ffda94',
-  },
-  {
-    types: ['WORKFORCE_LOW_SUPPLIES'],
+    types: ['WORKFORCE_LOW_SUPPLIES', 'WORKFORCE_OUT_OF_SUPPLIES', 'WORKFORCE_UNSATISFIED'],
     label: 'SUPPLIES',
     color: '#b37b32',
+  },
+  {
+    types: [
+      'CORPORATION_MANAGER_INVITE_ACCEPTED',
+      'CORPORATION_MANAGER_INVITE_REJECTED',
+      'CORPORATION_SHAREHOLDER_DIVIDEND_RECEIVED',
+      'CORPORATION_SHAREHOLDER_INVITE_RECEIVED',
+      'CORPORATION_MANAGER_SHAREHOLDER_LEFT',
+      'CORPORATION_PROJECT_FINISHED',
+    ],
+    label: 'CORP',
+    color: '#8f52cc',
+  },
+  {
+    types: ['PLANETARY_PROJECT_FINISHED'],
+    label: 'INFRA',
+    color: '#8f52cc',
+  },
+  {
+    types: ['SHIPYARD_PROJECT_FINISHED'],
+    label: 'SHIP',
+    color: '#8f52cc',
+  },
+  {
+    types: ['WAREHOUSE_STORE_LOCKED_INSUFFICIENT_FUNDS', 'WAREHOUSE_STORE_UNLOCKED'],
+    label: 'WAR',
+    color: '#cc2929',
+  },
+  {
+    types: ['TUTORIAL_TASK_FINISHED'],
+    label: 'HELLO',
+    color: '#8f52cc',
   },
 ];
 
@@ -238,31 +261,3 @@ void features.add({
   id: 'nots-improve-notifications',
   init,
 });
-
-// Words to search for, their types, and colors courtesy of Ray K
-// Searches must be lower case
-const searchers = [
-  // German searchers
-  ['antrag', 'antrag', '#ffda94'],
-  ['vertrag', 'vertrag', 'rgb(247, 166, 0)'],
-  ['vertragskondition erfüllt', 'vertrag', 'rgb(247, 166, 0)'],
-  ['einladung', 'konzern', '#8f52cc'],
-  ['kandidatur', 'parlament', '#ffda94'],
-  ['rules', 'rules', '#ffda94'], // Missing
-  ['warehous', 'war', '#cc2929'], // Missing
-  ['shipbuilding project', 'ship', '#8f52cc'], // Missing
-  ['planetary project', 'infra', '#8f52cc'], // Missing
-
-  // English searchers
-  ['motion', 'motion', '#ffda94'],
-  ['contract', 'contract', 'rgb(247, 166, 0)'],
-  ['our corporation', 'corp', '#8f52cc'],
-  ['accepted our invitation', 'corp', '#8f52cc'],
-  ['received an invitation', 'corp', '#8f52cc'],
-  ['your run', 'parliment', '#ffda94'],
-  ['rules', 'rules', '#ffda94'],
-  ['apex', 'update', '#00aa77'],
-  ['warehous', 'war', '#cc2929'],
-  ['shipbuilding project', 'ship', '#8f52cc'],
-  ['planetary project', 'infra', '#8f52cc'],
-];
