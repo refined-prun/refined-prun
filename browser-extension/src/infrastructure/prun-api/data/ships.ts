@@ -17,10 +17,13 @@ messages({
 
 const getByRegistration = createMapGetter(state.all, x => x.registration);
 
+const getByName = createMapGetter(state.all, x => x.name);
+
 export const getShipLastRepair = (ship: PrunApi.Ship) =>
   ship.lastRepair?.timestamp || ship.commissioningTime.timestamp;
 
 export const shipsStore = {
   ...state,
   getByRegistration,
+  getByName,
 };

@@ -34,6 +34,7 @@
 - `XIT NOTE` list is now reorderable.
 - More planet commands (like `INV`) now support planet names.
 - System commands (`FLTS`, `INF`, `MS`, and `SYSI`) now accept system names.
+- Ship commands (`SFC`, `SHP`, `SHPF`, `SHPI`, and `SI`) now accept ship names.
 - Table rows now alternate color between odd and even rows.
 - Added compatibility with non-English localizations.
 

@@ -63,7 +63,7 @@ function correctByStarName(commandParts: string[]) {
     return undefined;
   }
   const systemName = commandParts.slice(0, -1).join(' ');
-  const star = starsStore.find(systemName);
+  const star = starsStore.getByName(systemName);
   if (!star) {
     return undefined;
   }
