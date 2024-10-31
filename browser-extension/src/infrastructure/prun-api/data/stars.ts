@@ -24,9 +24,13 @@ const getByNaturalId = createMapGetter(state.all, getStarNaturalId);
 const getByName = createMapGetter(state.all, getStarName);
 const getByPlanetNaturalId = (id?: string | null) => getByNaturalId(id?.slice(0, -1));
 
+const find = (value?: string | null) =>
+  getByNaturalId(value) ?? getByName(value) ?? getByPlanetNaturalId(value);
+
 export const starsStore = {
   ...state,
   getByNaturalId,
   getByName,
   getByPlanetNaturalId,
+  find,
 };
