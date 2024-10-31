@@ -38,6 +38,7 @@ import '@src/features/standard/material-better-colors';
 import '@src/features/standard/material-icons';
 import '@src/features/standard/correct-material-command';
 import '@src/features/standard/correct-planet-command';
+import '@src/features/standard/correct-system-command';
 import '@src/features/standard/evaluate-input-formula';
 import '@src/features/standard/material-icon-bigger-indicator';
 import '@src/features/standard/minimize-headers/minimize-headers';

@@ -32,6 +32,7 @@
 - `XIT REP` shows a weight/volume/cost table.
 - `BS` displays a building list summary at the bottom.
 - `XIT NOTE` list is now reorderable.
+- System commands (`FLTS`, `INF`, `MS`, and `SYSI`) now accept system names.
 - Table rows now alternate color between odd and even rows.
 - Added compatibility with non-English localizations.
 
