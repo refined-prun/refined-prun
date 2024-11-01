@@ -67,6 +67,6 @@ const boxStyle = computed(() => ({
   display: flex;
   justify-content: center;
   align-items: center;
-  -webkit-text-stroke: 0.5px black;
+  text-shadow: 1px 1px #222;
 }
 </style>
