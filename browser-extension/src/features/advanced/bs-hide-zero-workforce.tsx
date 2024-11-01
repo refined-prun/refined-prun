@@ -47,5 +47,7 @@ export function init() {
 
 void features.add({
   id: 'bs-hide-zero-workforce',
+  description:
+    'BS: Renames the "Current Workforce" column header to "Current" and hides rows with zero workforce.',
   init,
 });

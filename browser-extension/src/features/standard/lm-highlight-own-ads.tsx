@@ -25,5 +25,6 @@ export function init() {
 
 void features.add({
   id: 'lm-highlight-own-ads',
+  description: 'LM: Highlights own ads.',
   init,
 });

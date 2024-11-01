@@ -432,5 +432,6 @@ function shield(detail?: Icon): Icon {
 
 void features.add({
   id: 'material-icons',
+  description: 'Adds icons to materials.',
   init,
 });

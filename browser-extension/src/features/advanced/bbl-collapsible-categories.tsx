@@ -48,5 +48,7 @@ export function init() {
 
 void features.add({
   id: 'bbl-collapsible-categories',
+  description:
+    'BBL: Makes categories collapsible and collapses the "Infrastructure" category by default.',
   init,
 });

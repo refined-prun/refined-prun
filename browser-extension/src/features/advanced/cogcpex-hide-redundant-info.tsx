@@ -26,6 +26,8 @@ export function init() {
 
 void features.add({
   id: 'cogcpex-hide-redundant-info',
+  description:
+    'COGCPEX: Hides "Advertising Campaign:" and "Education Events:" parts of the campaign labels.',
   advanced: true,
   init,
 });

@@ -39,5 +39,6 @@ export function init() {
 
 void features.add({
   id: 'lm-add-icons',
+  description: 'LM: Adds material and shipment icons to ads.',
   init,
 });

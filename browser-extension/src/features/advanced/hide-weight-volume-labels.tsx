@@ -9,6 +9,7 @@ export function init() {
 
 void features.add({
   id: 'hide-weight-volume-labels',
+  description: 'Hides "Weight" and "Volume" labels in all inventories.',
   advanced: true,
   init,
 });

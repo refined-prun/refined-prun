@@ -45,5 +45,6 @@ export function init() {
 
 void features.add({
   id: 'com-add-images',
+  description: 'COM: Adds images to messages containing image URLs.',
   init,
 });

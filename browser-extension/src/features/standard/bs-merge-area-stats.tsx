@@ -39,5 +39,6 @@ export function init() {
 
 void features.add({
   id: 'bs-merge-area-stats',
+  description: 'BS: Merges the area progress bar field with the detailed area stats row.',
   init,
 });

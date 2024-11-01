@@ -12,6 +12,7 @@ export function init() {
 
 void features.add({
   id: 'com-hide-join-leave',
+  description: 'COM: Hides "User joined" and "User left" messages.',
   advanced: true,
   init,
 });

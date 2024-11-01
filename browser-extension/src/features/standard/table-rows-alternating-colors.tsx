@@ -12,5 +12,6 @@ export function init() {
 
 void features.add({
   id: 'table-rows-alternating-colors',
+  description: 'Colors even rows in lighter color in all tables.',
   init,
 });

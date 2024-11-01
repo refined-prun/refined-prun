@@ -39,5 +39,6 @@ export function init() {
 
 void features.add({
   id: 'correct-material-command',
+  description: 'Corrects material commands.',
   init,
 });

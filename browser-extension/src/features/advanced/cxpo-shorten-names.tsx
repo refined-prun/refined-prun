@@ -23,6 +23,7 @@ export function init() {
 
 void features.add({
   id: 'cxpo-shorten-names',
+  description: 'CXPO: Shortens values of "Exchange" and "Material" fields.',
   advanced: true,
   init,
 });

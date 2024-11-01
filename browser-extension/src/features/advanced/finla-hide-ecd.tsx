@@ -9,6 +9,7 @@ export function init() {
 
 void features.add({
   id: 'finla-hide-ecd',
+  description: 'FINLA: Hides the row with ECD currency.',
   advanced: true,
   init,
 });

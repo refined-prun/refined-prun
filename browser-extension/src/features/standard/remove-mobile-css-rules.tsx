@@ -19,5 +19,6 @@ export function init() {
 
 void features.add({
   id: 'remove-mobile-css-rules',
+  description: 'Removes mobile CSS rules.',
   init,
 });

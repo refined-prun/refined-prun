@@ -10,5 +10,6 @@ export function init() {
 
 void features.add({
   id: 'fix-z-order',
+  description: 'Fixes the CSS z-order of some elements.',
   init,
 });

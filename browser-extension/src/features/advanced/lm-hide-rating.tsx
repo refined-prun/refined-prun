@@ -11,6 +11,7 @@ export function init() {
 
 void features.add({
   id: 'lm-hide-rating',
+  description: 'LM: Hides rating icon from ads.',
   advanced: true,
   init,
 });

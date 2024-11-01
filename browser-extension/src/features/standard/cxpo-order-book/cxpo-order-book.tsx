@@ -32,5 +32,6 @@ export function init() {
 
 void features.add({
   id: 'cxpo-order-book',
+  description: 'CXPO: Adds a compact order book.',
   init,
 });

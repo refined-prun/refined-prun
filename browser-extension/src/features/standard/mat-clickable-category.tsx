@@ -38,5 +38,7 @@ export function init() {
 
 void features.add({
   id: 'mat-clickable-category',
+  description:
+    'MAT: Makes material category clickable and leading to XIT MATS with the material category.',
   init,
 });

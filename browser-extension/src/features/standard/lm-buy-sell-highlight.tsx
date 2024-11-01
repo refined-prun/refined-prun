@@ -35,5 +35,6 @@ export function init() {
 
 void features.add({
   id: 'lm-buy-sell-highlight',
+  description: 'LM: Colors the BUYING and SELLING in green and red respectively.',
   init,
 });

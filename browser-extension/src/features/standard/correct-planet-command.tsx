@@ -76,5 +76,6 @@ export function init() {
 
 void features.add({
   id: 'correct-planet-command',
+  description: 'Corrects planet commands.',
   init,
 });

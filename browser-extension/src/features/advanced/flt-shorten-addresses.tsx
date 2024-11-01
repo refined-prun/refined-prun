@@ -18,7 +18,8 @@ export function init() {
 }
 
 void features.add({
-  id: 'flt-shorten-planet-names',
+  id: 'flt-shorten-addresses',
+  description: 'FLT: Shortens addresses in "Location" and "Destination".',
   advanced: true,
   init,
 });

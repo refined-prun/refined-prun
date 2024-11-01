@@ -19,5 +19,6 @@ function applyCategoryRule(category: string, rule: string) {
 
 void features.add({
   id: 'material-better-colors',
+  description: 'Changes material colors to more recognizable and distinguishable ones.',
   init,
 });

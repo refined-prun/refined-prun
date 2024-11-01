@@ -41,5 +41,6 @@ export function init() {
 
 void features.add({
   id: 'correct-system-command',
+  description: 'Corrects system commands.',
   init,
 });

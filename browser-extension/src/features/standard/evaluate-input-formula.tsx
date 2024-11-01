@@ -77,5 +77,6 @@ function applyCssRules() {
 
 void features.add({
   id: 'evaluate-input-formula',
+  description: 'Evaluates input formulas in numeric text fields on Enter.',
   init,
 });

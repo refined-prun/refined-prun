@@ -83,5 +83,6 @@ export function init() {
 
 void features.add({
   id: 'material-markers',
+  description: 'Adds material markers.',
   init,
 });

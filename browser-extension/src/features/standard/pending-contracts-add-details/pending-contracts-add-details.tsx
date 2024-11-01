@@ -30,5 +30,6 @@ export function init() {
 
 void features.add({
   id: 'pending-contracts-add-details',
+  description: 'Adds a partner name to contracts in the sidebar.',
   init,
 });

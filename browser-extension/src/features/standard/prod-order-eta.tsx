@@ -90,5 +90,6 @@ export function init() {
 
 void features.add({
   id: 'prod-order-eta',
+  description: 'PROD: Adds a finish ETA label to orders.',
   init,
 });

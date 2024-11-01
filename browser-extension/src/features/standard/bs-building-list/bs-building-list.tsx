@@ -23,5 +23,6 @@ export function init() {
 
 void features.add({
   id: 'bs-building-list',
+  description: 'BS: Adds a building summary list.',
   init,
 });

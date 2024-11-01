@@ -26,5 +26,6 @@ export function init() {
 
 void features.add({
   id: 'order-book-highlight-own-orders',
+  description: 'Highlights own orders in CXOB and FXOB.',
   init,
 });

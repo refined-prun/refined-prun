@@ -24,6 +24,7 @@ export function init() {
 
 void features.add({
   id: 'inv-shorten-planet-names',
+  description: 'INV: Shortens addresses in the main INV command.',
   advanced: true,
   init,
 });

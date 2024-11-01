@@ -38,5 +38,7 @@ export function init() {
 
 void features.add({
   id: 'bs-add-satisfaction-percentage',
+  description:
+    'BS: Adds a workforce satisfaction percentage label to the satisfaction progress bar.',
   init,
 });

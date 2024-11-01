@@ -41,5 +41,7 @@ export function init() {
 
 void features.add({
   id: 'bbl-repair-danger',
+  description:
+    'BBL: Applies the "danger" style to the "Repair" button if the building condition is >98%.',
   init,
 });

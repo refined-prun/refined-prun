@@ -16,5 +16,6 @@ export function init() {
 
 void features.add({
   id: 'sidebar-buttons',
+  description: 'Adds a customizable sidebar with navigation buttons.',
   init,
 });

@@ -43,5 +43,6 @@ export function init() {
 
 void features.add({
   id: 'bbl-add-condition-progress-bar',
+  description: 'BBL: Adds a progress bar to the building condition row.',
   init,
 });

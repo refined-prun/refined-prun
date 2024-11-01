@@ -35,5 +35,6 @@ function init() {
 
 void features.add({
   id: 'flt-arrival-eta',
+  description: 'FLT: Adds an arrival date to the "ETA" column.',
   init,
 });

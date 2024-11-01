@@ -85,6 +85,7 @@ export function init() {
 
 void features.add({
   id: 'lm-shorten-ads',
+  description: 'LM: Hides redundant text from ads.',
   advanced: true,
   init,
 });

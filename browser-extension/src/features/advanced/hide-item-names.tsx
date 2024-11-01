@@ -12,6 +12,7 @@ export function init() {
 
 void features.add({
   id: 'hide-item-names',
+  description: 'Hides item names and removes item grid gaps in all inventories.',
   advanced: true,
   init,
 });

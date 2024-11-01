@@ -83,5 +83,6 @@ export function init() {
 
 void features.add({
   id: 'lm-shipping-per-unit-price',
+  description: 'LM: Adds a per-unit price label to ads. Also adds this info to LMA and LMP.',
   init,
 });

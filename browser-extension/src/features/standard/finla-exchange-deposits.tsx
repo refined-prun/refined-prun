@@ -72,5 +72,6 @@ export function init() {
 
 void features.add({
   id: 'finla-exchange-deposits',
+  description: 'FINLA: Adds a "CX Deposits" and "FX Deposits" columns.',
   init,
 });

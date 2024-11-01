@@ -8,6 +8,7 @@ export function init() {
 
 void features.add({
   id: 'flt-hide-transponder-column',
+  description: 'FLT: Hides the "Transponder" column.',
   advanced: true,
   init,
 });

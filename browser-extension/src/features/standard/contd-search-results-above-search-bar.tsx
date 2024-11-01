@@ -9,5 +9,6 @@ export function init() {
 
 void features.add({
   id: 'contd-search-results-above-search-bar',
+  description: 'CONTD: Moves the search bar results above the search bar.',
   init,
 });

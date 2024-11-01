@@ -39,5 +39,6 @@ export function init() {
 
 void features.add({
   id: 'inv-add-shipment-detail',
+  description: 'INV/SHPI: Adds a shipment destination detail to the SHPT items.',
   init,
 });

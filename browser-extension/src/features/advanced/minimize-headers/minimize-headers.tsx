@@ -54,6 +54,7 @@ function init() {
 
 void features.add({
   id: 'minimize-headers',
+  description: 'Adds a button to minimize headers in CX, CONT, LM, and SYSI.',
   advanced: true,
   init,
 });

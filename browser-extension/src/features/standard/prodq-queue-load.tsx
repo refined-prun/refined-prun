@@ -47,5 +47,6 @@ function init() {
 
 void features.add({
   id: 'prodq-queue-load',
+  description: 'PROD!: Adds a daily load percentage label to queued orders.',
   init,
 });

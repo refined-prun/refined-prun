@@ -197,5 +197,6 @@ export function init() {
 
 void features.add({
   id: 'inv-custom-sorting',
+  description: 'INV: Adds custom sorting modes.',
   init,
 });

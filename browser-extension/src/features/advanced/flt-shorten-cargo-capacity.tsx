@@ -22,6 +22,7 @@ export function init() {
 
 void features.add({
   id: 'flt-shorten-cargo-capacity',
+  description: 'FLT: Removes "t" and "m³" and convert cargo capacity label to k-notation.',
   advanced: true,
   init,
 });

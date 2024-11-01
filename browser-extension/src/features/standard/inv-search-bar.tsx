@@ -71,5 +71,6 @@ export function init() {
 
 void features.add({
   id: 'inv-search-bar',
+  description: 'INV: Adds a search bar to the main INV buffer.',
   init,
 });

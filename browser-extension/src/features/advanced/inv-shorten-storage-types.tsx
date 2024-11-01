@@ -49,6 +49,7 @@ export function init() {
 
 void features.add({
   id: 'inv-shorten-storage-types',
+  description: 'INV: Shortens storage type names in the first column.',
   advanced: true,
   init,
 });

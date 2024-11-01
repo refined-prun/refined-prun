@@ -15,6 +15,7 @@ export function init() {
 
 void features.add({
   id: 'hide-form-errors',
+  description: 'Hides the error labels from form fields with incorrect input.',
   advanced: true,
   init,
 });

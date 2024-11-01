@@ -9,5 +9,6 @@ function init() {
 
 void features.add({
   id: 'material-ticker-shadow',
+  description: 'Adds a shadow to material tickers.',
   init,
 });

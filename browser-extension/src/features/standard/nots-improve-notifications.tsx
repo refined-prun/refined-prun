@@ -259,5 +259,6 @@ function init() {
 
 void features.add({
   id: 'nots-improve-notifications',
+  description: 'NOTS: Adds a colored label to notifications and shortens the notification text.',
   init,
 });

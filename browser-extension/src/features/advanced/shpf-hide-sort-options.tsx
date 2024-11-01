@@ -9,6 +9,7 @@ export function init() {
 
 void features.add({
   id: 'shpf-hide-sort-options',
+  description: 'SHPF: Hides inventory sort options.',
   advanced: true,
   init,
 });

@@ -8,6 +8,7 @@ export function init() {
 
 void features.add({
   id: 'cxos-hide-exchange-column',
+  description: 'CXOS: Hides the "Exchange" column.',
   advanced: true,
   init,
 });

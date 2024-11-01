@@ -80,6 +80,7 @@ export function init() {
 
 void features.add({
   id: 'flt-shorten-flight-status',
+  description: 'FLT: Replaces the flight status text with arrow icons.',
   advanced: true,
   init,
 });

@@ -20,5 +20,6 @@ export function init() {
 
 void features.add({
   id: 'header-duplicate-button',
+  description: 'Adds a tile duplicate button to the buffer header.',
   init,
 });

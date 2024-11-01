@@ -17,5 +17,6 @@ export function init() {
 
 void features.add({
   id: 'bbl-demolish-danger',
+  description: 'BBL: Applies the "danger" style to the "Demolish" button.',
   init,
 });

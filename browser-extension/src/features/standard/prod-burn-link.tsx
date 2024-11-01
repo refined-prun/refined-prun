@@ -35,5 +35,6 @@ export function init() {
 
 void features.add({
   id: 'prod-burn-link',
+  description: 'PROD: Adds a XIT BURN link to the context bar.',
   init,
 });

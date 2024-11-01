@@ -14,5 +14,6 @@ export function init() {
 
 void features.add({
   id: 'com-move-delete-button',
+  description: 'COM: Moves the "delete" button to prevent the message layout shift.',
   init,
 });

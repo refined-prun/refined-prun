@@ -36,5 +36,6 @@ export function init() {
 
 void features.add({
   id: 'correct-ship-command',
+  description: 'Corrects ship commands.',
   init,
 });

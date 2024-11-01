@@ -68,5 +68,6 @@ function init() {
 
 void features.add({
   id: 'sfc-arrival-eta',
+  description: 'SFC: Adds an arrival date to the "Duration" column.',
   init,
 });

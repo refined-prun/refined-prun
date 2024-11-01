@@ -9,5 +9,6 @@ export function init() {
 
 void features.add({
   id: 'material-icon-bigger-indicator',
+  description: 'Makes the material count label font bigger.',
   init,
 });

@@ -13,5 +13,6 @@ export function init() {
 
 void features.add({
   id: 'screen-tab-bar',
+  description: 'Adds a tab bar for user screens.',
   init,
 });

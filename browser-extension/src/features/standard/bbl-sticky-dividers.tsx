@@ -9,5 +9,6 @@ export function init() {
 
 void features.add({
   id: 'bbl-sticky-dividers',
+  description: 'BBL: Makes building category dividers sticky.',
   init,
 });

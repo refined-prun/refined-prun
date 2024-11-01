@@ -21,5 +21,6 @@ export function init() {
 
 void features.add({
   id: 'header-calculator-button',
+  description: 'Adds a calculator button to the buffer header of LM, CX and XIT commands.',
   init,
 });
