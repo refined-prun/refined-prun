@@ -4,7 +4,6 @@ export const Style = {
   Button: ['Button__btn___UJGZ1b7'],
   ButtonPrimary: ['Button__primary____lObPiw'],
   ButtonDisabled: ['Button__disabled____x8i7XF'],
-  ButtonEnabled: ['Button__primary____lObPiw'],
   ButtonDanger: ['Button__danger___S2rSOES'],
   ButtonNeutral: ['Button__neutral___OAFOaNs'],
   SmallButton: [
@@ -23,20 +22,6 @@ export const Style = {
     'type__type-very-large____Hxqf3q',
   ],
 
-  // More misc styles
-  RadioButton: ['RadioItem__container___CSczqmG'],
-  RadioButtonUnToggled: ['RadioItem__indicator___QzQtjhA'],
-  RadioButtonToggled: [
-    'RadioItem__indicator___QzQtjhA',
-    'RadioItem__active___CDscOQV',
-    'effects__shadowPrimary___EbXJQor',
-  ],
-  RadioButtonValue: [
-    'RadioItem__value___Yd1Gt1T',
-    'fonts__font-regular___Sxp1xjo',
-    'type__type-small___pMQhMQO',
-  ],
-
   // Action bar stuff
   ActionBarContainer: ['ActionBar__container___p760bSs'],
   ActionBarElement: ['ActionBar__element___WJlsFch'],
@@ -45,17 +30,6 @@ export const Style = {
   OverlappingDiv: ['Overlay__overlay___NA9HV8y'],
   GreyStripes: ['Overlay__background___ieZpHiF', 'Overlay__overlay___NA9HV8y'],
   Spacer: ['Overlay__close___bxGoMIl'],
-  ProgressBar: ['ProgressBar__primary___O30jBqq', 'ProgressBar__progress___eb4KhuW'],
-  ProgressBarColors: [
-    'ProgressBar__primary___O30jBqq',
-    'grey-progress-bar',
-    'good-progress-bar',
-    'warning-progress-bar',
-    'danger-progress-bar',
-  ],
-  ProgressBarGood: ['good-progress-bar'],
-  ProgressBarWarning: ['warning-progress-bar'],
-  ProgressBarDanger: ['danger-progress-bar'],
   CenterInterface: ['Overlay__children___rgtVaxc'],
 
   // Styles coloring forms
@@ -121,11 +95,6 @@ export const Style = {
     'type__type-larger___VdpJIb1',
   ],
   ActionDismiss: ['ActionFeedback__dismiss___x5Ln7y1', 'type__type-small___pMQhMQO'],
-};
-
-// A function to apply multiple classes to an element in one go
-export const WithStyles = (...style: string[][]): string[] => {
-  return style.reduce((previousValue, currentValue) => previousValue.concat(currentValue));
 };
 
 // The text colors used in PrUN

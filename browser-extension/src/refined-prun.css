@@ -120,33 +120,6 @@
   padding: 5px 8px;
 }
 
-.progress-bar {
-  width: 30px;
-  height: 9px;
-  border: 1px solid #999;
-  margin: 1px 2px;
-}
-
-.progress-bar::-webkit-progress-value {
-  background: #f7a600;
-}
-
-.grey-progress-bar::-webkit-progress-value {
-  background: #d9534f;
-}
-
-.good-progress-bar::-webkit-progress-value {
-  background: #5cb85c;
-}
-
-.warning-progress-bar::-webkit-progress-value {
-  background: #ffc856;
-}
-
-.danger-progress-bar::-webkit-progress-value {
-  background: #d9534f;
-}
-
 .link {
   color: #3fa2de;
   cursor: pointer;
