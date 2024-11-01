@@ -1,3 +1,5 @@
+import './bbl-collapsible-categories';
+import './bbl-hide-redundant-info';
 import './bs-hide-zero-workforce';
 import './cogcpex-hide-redundant-info';
 import './com-hide-join-leave';

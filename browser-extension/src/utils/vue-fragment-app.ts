@@ -36,24 +36,24 @@ export class FragmentApp {
     this.app.unmount();
   }
 
-  appendTo(parent: Element) {
+  appendTo(parent: Node) {
     const instance = this.mount();
     onNodeDisconnected(parent, () => this.app.unmount());
     parent.appendChild(this.fragment);
     return instance;
   }
 
-  before(sibling: Element) {
+  before(sibling: Node) {
     const instance = this.mount();
     onNodeDisconnected(sibling.parentElement!, () => this.app.unmount());
-    sibling.before(this.fragment);
+    sibling.parentElement!.insertBefore(this.fragment, sibling);
     return instance;
   }
 
-  after(sibling: Element) {
+  after(sibling: Node) {
     const instance = this.mount();
     onNodeDisconnected(sibling.parentElement!, () => this.app.unmount());
-    sibling.after(this.fragment);
+    sibling.parentElement!.insertBefore(this.fragment, sibling.nextSibling);
     return instance;
   }
 

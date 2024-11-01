@@ -7,7 +7,7 @@ export function calcBuildingCondition(age: number) {
 }
 
 export function isRepairableBuilding(building: PrunApi.Platform) {
-  return building.repairMaterials.length > 0;
+  return building.module.type === 'RESOURCES' || building.module.type === 'PRODUCTION';
 }
 
 export function getBuildingBuildMaterials(building: PrunApi.Platform, site: PrunApi.Site) {

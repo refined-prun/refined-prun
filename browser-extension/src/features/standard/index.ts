@@ -1,10 +1,13 @@
+import './bbl-add-condition-progress-bar';
+import './bbl-demolish-danger';
+import './bbl-repair-danger';
+import './bbl-sticky-dividers';
 import './bs-add-satisfaction-percentage';
 import './bs-building-list/bs-building-list';
 import './bs-merge-area-stats';
 import './clickable-apex-logo';
 import './com-add-images';
 import './com-move-delete-button';
-import './compact-ui';
 import './contd-search-results-above-search-bar';
 import './correct-material-command';
 import './correct-planet-command';
