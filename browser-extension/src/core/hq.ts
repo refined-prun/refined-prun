@@ -481,6 +481,17 @@ export const hqUpgradeMaterials: UpgradeMap = [
     [8471, 'MCG'],
     [3388, 'TRU'],
   ],
+  [
+    [2256, 'ABH'],
+    [1504, 'ADE'],
+    [6, 'ADS'],
+    [1504, 'ASE'],
+    [752, 'ATA'],
+    [6, 'COM'],
+    [6, 'LOG'],
+    [9400, 'MCG'],
+    [3760, 'TRU'],
+  ],
 ];
 
 export const maxHQLevel = hqUpgradeMaterials.length - 1;
