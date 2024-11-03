@@ -28,6 +28,7 @@ import { mergeMaterialAmounts } from '@src/core/sort-materials';
 import Active from '@src/components/forms/Active.vue';
 import SectionHeader from '@src/components/SectionHeader.vue';
 import { useXitParameters } from '@src/hooks/useXitParameters';
+import PrunLink from '@src/components/PrunLink.vue';
 
 const parameters = useXitParameters();
 
@@ -108,7 +109,9 @@ function calculateAge(lastRepair: number) {
       <tbody>
         <tr v-for="(entry, i) in visibleBuildings" :key="i">
           <td>{{ entry.ticker }}</td>
-          <td>{{ entry.target }}</td>
+          <td>
+            <PrunLink :command="`XIT REP ${entry.target}`">{{ entry.target }}</PrunLink>
+          </td>
           <td>{{ fixed1(calculateAge(entry.lastRepair)) }}</td>
           <td>{{ percent1(entry.condition) }}</td>
         </tr>
