@@ -93,5 +93,6 @@ export function init() {
 
 void features.add({
   id: 'xit-commands',
+  description: 'Adds XIT commands support',
   init,
 });
