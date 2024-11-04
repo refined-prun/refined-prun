@@ -11,8 +11,8 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 
 const mexp = new Mexp();
 
-function onKeyUp(input: HTMLInputElement, e: KeyboardEvent) {
-  if (e.key !== 'Enter') {
+function onKeyDown(input: HTMLInputElement, e: KeyboardEvent) {
+  if (e.key !== 'Enter' && e.key !== 'Tab') {
     return;
   }
 
@@ -58,7 +58,7 @@ export function init() {
     if (input.inputMode !== 'numeric' && input.inputMode !== 'decimal') {
       return;
     }
-    input.addEventListener('keyup', e => onKeyUp(input, e));
+    input.addEventListener('keydown', e => onKeyDown(input, e));
   });
 }
 
