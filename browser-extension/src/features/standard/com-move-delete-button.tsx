@@ -3,7 +3,7 @@ import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { applyClassCssRule, applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
-export function init() {
+function init() {
   applyClassCssRule(PrunCss.Message.controlsAndText, classes.container);
   applyClassCssRule(PrunCss.Message.controls, classes.delete);
   applyCssRule(
@@ -12,7 +12,7 @@ export function init() {
   );
 }
 
-void features.add({
+features.add({
   id: 'com-move-delete-button',
   description: 'COM: Moves the "delete" button to prevent the message layout shift.',
   init,

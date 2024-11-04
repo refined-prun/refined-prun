@@ -15,11 +15,11 @@ async function onTileReady(tile: PrunTile) {
   return;
 }
 
-export function init() {
+function init() {
   tiles.observe(['LM', 'CX', 'XIT'], onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'header-calculator-button',
   description: 'Adds a calculator button to the buffer header of LM, CX and XIT commands.',
   init,

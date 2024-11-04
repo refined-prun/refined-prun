@@ -37,7 +37,7 @@ function setAttribute(element: HTMLElement, attribute: string, value: boolean) {
   }
 }
 
-export function init() {
+function init() {
   // Hide 'Last repair'
   applyScopedCssRule(
     'BBL',
@@ -65,7 +65,7 @@ export function init() {
   tiles.observe('BBL', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'bbl-hide-redundant-info',
   description:
     'BBL: Hides "Last repair", "Established", and "Repair costs" rows if they are empty' +

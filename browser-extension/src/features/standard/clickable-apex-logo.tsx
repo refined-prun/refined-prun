@@ -14,7 +14,7 @@ function init() {
   });
 }
 
-void features.add({
+features.add({
   id: 'clickable-apex-logo',
   description: 'Makes the APEX logo clickable and leading to the user company info screen.',
   init,

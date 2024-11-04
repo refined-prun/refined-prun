@@ -36,7 +36,7 @@ function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   applyScopedCssRule(
     'BBL',
     `.${PrunCss.SectionList.divider}:not(:has(.${PrunCss.RadioItem.active})) + div`,
@@ -46,7 +46,7 @@ export function init() {
   tiles.observe('BBL', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'bbl-collapsible-categories',
   description:
     'BBL: Makes categories collapsible and collapses the "Infrastructure" category by default.',

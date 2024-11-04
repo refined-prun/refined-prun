@@ -32,11 +32,11 @@ function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('MAT', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'mat-clickable-category',
   description:
     'MAT: Makes material category clickable and leading to XIT MATS with the material category.',

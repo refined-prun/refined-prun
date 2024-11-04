@@ -3,11 +3,11 @@ import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { applyScopedClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
-export function init() {
+function init() {
   applyScopedClassCssRule('SHPF', PrunCss.InventorySortControls.controls, css.hidden);
 }
 
-void features.add({
+features.add({
   id: 'shpf-hide-sort-options',
   description: 'SHPF: Hides inventory sort options.',
   advanced: true,

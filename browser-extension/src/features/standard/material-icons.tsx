@@ -430,7 +430,7 @@ function shield(detail?: Icon): Icon {
   return detail ? ['f132', { detail }] : 'f132';
 }
 
-void features.add({
+features.add({
   id: 'material-icons',
   description: 'Adds icons to materials.',
   init,

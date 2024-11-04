@@ -16,11 +16,11 @@ function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('FLT', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'flt-shorten-cargo-capacity',
   description: 'FLT: Removes "t" and "m³" and convert cargo capacity label to k-notation.',
   advanced: true,

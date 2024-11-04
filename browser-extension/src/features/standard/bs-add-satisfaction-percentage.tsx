@@ -6,7 +6,7 @@ import { refAnimationFrame } from '@src/utils/reactive-dom';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   // Only process BS tiles with parameter
   if (!tile.parameter) {
     return;
@@ -32,11 +32,11 @@ async function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('BS', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'bs-add-satisfaction-percentage',
   description:
     'BS: Adds a workforce satisfaction percentage label to the satisfaction progress bar.',

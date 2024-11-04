@@ -3,11 +3,11 @@ import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
-export function init() {
+function init() {
   applyClassCssRule(PrunCss.MaterialIcon.typeVerySmall, classes.indicator);
 }
 
-void features.add({
+features.add({
   id: 'material-icon-bigger-indicator',
   description: 'Makes the material count label font bigger.',
   init,

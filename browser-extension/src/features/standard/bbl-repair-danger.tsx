@@ -9,7 +9,7 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 import { isRepairableBuilding } from '@src/core/buildings';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   const siteId = tile.parameter;
   const site = computed(() => sitesStore.getById(siteId));
   subscribe($$(tile.anchor, PrunCss.SectionList.section), section => {
@@ -35,11 +35,11 @@ async function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('BBL', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'bbl-repair-danger',
   description:
     'BBL: Applies the "danger" style to the "Repair" button if the building condition is >98%.',

@@ -4,7 +4,7 @@ import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
-export function init() {
+function init() {
   // Hide error messages in form components
   // Remove hard-coded ones when molp fixes class duplication
   applyClassCssRule(PrunCss.FormComponent.containerError, classes.containerError);
@@ -13,7 +13,7 @@ export function init() {
   applyClassCssRule('FormComponent__errorMessage___mBdvpz5', css.hidden);
 }
 
-void features.add({
+features.add({
   id: 'hide-form-errors',
   description: 'Hides the error labels from form fields with incorrect input.',
   advanced: true,

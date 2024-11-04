@@ -14,11 +14,11 @@ async function onTileReady(tile: PrunTile) {
   }).before(splitControls);
 }
 
-export function init() {
+function init() {
   tiles.observeAll(onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'header-duplicate-button',
   description: 'Adds a tile duplicate button to the buffer header.',
   init,

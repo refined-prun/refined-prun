@@ -15,11 +15,11 @@ function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('FINLA', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'finla-hide-ecd',
   description: 'FINLA: Hides the row with ECD currency.',
   advanced: true,

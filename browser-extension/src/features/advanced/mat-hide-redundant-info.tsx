@@ -16,7 +16,7 @@ function init() {
   );
 }
 
-void features.add({
+features.add({
   id: 'mat-hide-redundant-info',
   description: 'MAT: Hides "Ticker" and "Natural resource" fields.',
   advanced: true,

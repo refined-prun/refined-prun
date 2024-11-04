@@ -33,11 +33,11 @@ async function onContainerReady(container: HTMLElement) {
   }
 }
 
-export function init() {
+function init() {
   tiles.observe('LM', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'lm-add-icons',
   description: 'LM: Adds material and shipment icons to ads.',
   init,

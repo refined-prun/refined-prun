@@ -4,7 +4,7 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { $$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   // Replace 'view details/vote' with 'vote'
   subscribe($$(tile.anchor, PrunCss.Button.darkInline), button => {
     button.textContent = 'vote';
@@ -20,11 +20,11 @@ async function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('COGCPEX', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'cogcpex-hide-redundant-info',
   description:
     'COGCPEX: Hides "Advertising Campaign:" and "Education Events:" parts of the campaign labels.',

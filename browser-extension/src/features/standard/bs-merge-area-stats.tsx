@@ -6,7 +6,7 @@ import { refValue } from '@src/utils/reactive-dom';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   // Only process BS tiles with parameter
   if (!tile.parameter) {
     return;
@@ -33,11 +33,11 @@ async function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('BS', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'bs-merge-area-stats',
   description: 'BS: Merges the area progress bar field with the detailed area stats row.',
   init,

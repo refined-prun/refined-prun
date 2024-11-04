@@ -6,7 +6,7 @@ import BuildingCountSection from './BuildingCountSection.vue';
 import { $$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   const naturalId = tile.parameter;
   if (!naturalId) {
     return;
@@ -17,11 +17,11 @@ async function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('BS', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'bs-building-list',
   description: 'BS: Adds a building summary list.',
   init,

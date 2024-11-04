@@ -74,11 +74,11 @@ function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('FLT', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'flt-shorten-flight-status',
   description: 'FLT: Replaces the flight status text with arrow icons.',
   advanced: true,

@@ -19,12 +19,12 @@ function onTileReady(tile: PrunTile) {
   observer.observe(tile.anchor, { childList: true, subtree: true, characterData: true });
 }
 
-export function init() {
+function init() {
   tiles.observe('CXOB', onTileReady);
   tiles.observe('FXOB', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'order-book-highlight-own-orders',
   description: 'Highlights own orders in CXOB and FXOB.',
   init,

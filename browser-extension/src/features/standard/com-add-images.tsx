@@ -7,7 +7,7 @@ import { $$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, PrunCss.MessageList.messages), messages => {
     subscribe($$(messages, PrunCss.Link.link), processLink);
   });
@@ -36,14 +36,14 @@ function isImage(url: string) {
   return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
 }
 
-export function init() {
+function init() {
   if (companyStore.value?.code === 'TEP') {
     return;
   }
   tiles.observe(['COMG', 'COMP', 'COMU'], onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'com-add-images',
   description: 'COM: Adds images to messages containing image URLs.',
   init,

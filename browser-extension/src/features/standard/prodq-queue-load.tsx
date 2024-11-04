@@ -11,7 +11,7 @@ import { keepLast } from '@src/utils/keep-last';
 import { $$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   const parameter = tile.parameter;
   if (!parameter) {
     return;
@@ -45,7 +45,7 @@ function init() {
   tiles.observe('PRODQ', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'prodq-queue-load',
   description: 'PROD!: Adds a daily load percentage label to queued orders.',
   init,

@@ -4,13 +4,13 @@ import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
-export function init() {
+function init() {
   applyClassCssRule(PrunCss.GridItemView.name, css.hidden);
   // Remove gaps between items in GridView
   applyClassCssRule(PrunCss.GridItemView.container, classes.gridItem);
 }
 
-void features.add({
+features.add({
   id: 'hide-item-names',
   description: 'Hides item names and removes item grid gaps in all inventories.',
   advanced: true,

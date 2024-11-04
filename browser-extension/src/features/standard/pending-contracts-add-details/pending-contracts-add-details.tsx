@@ -21,14 +21,14 @@ function onContractIdReady(id: HTMLElement) {
   ).after(id);
 }
 
-export function init() {
+function init() {
   applyCssRule(`.${PrunCss.Sidebar.contract} .${PrunCss.Link.link}`, css.hidden);
   applyCssRule(`.${PrunCss.Sidebar.contractId}`, classes.contractId);
   applyCssRule(`.${PrunCss.Sidebar.contractId}:hover`, `${classes.contractId}:hover`);
   subscribe($$(document, PrunCss.Sidebar.contractId), onContractIdReady);
 }
 
-void features.add({
+features.add({
   id: 'pending-contracts-add-details',
   description: 'Adds a partner name to contracts in the sidebar.',
   init,

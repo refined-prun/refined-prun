@@ -22,7 +22,7 @@ function onTileReady(tile: PrunTile) {
   );
 }
 
-async function onOrderSlotReady(slot: HTMLElement, siteId: string) {
+function onOrderSlotReady(slot: HTMLElement, siteId: string) {
   const orderId = refPrunId(slot);
   const completion = computed(() => {
     const site = sitesStore.getById(siteId);
@@ -84,11 +84,11 @@ function calcCompletionDate(line: PrunApi.ProductionLine, order: PrunApi.Product
   return undefined;
 }
 
-export function init() {
+function init() {
   tiles.observe('PROD', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'prod-order-eta',
   description: 'PROD: Adds a finish ETA label to orders.',
   init,

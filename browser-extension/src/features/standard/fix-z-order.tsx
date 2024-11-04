@@ -3,12 +3,12 @@ import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
-export function init() {
+function init() {
   applyClassCssRule([PrunCss.ComExOrdersPanel.filter, PrunCss.LocalMarket.filter], classes.filter);
   applyClassCssRule(PrunCss.ScrollView.track, classes.scrollTrack);
 }
 
-void features.add({
+features.add({
   id: 'fix-z-order',
   description: 'Fixes the CSS z-order of some elements.',
   init,

@@ -29,11 +29,11 @@ async function onTileReady(tile: PrunTile) {
   }
 }
 
-export function init() {
+function init() {
   tiles.observe('PROD', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'prod-burn-link',
   description: 'PROD: Adds a XIT BURN link to the context bar.',
   init,

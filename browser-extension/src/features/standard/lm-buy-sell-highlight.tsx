@@ -29,11 +29,11 @@ async function onAdContainerReady(container: HTMLElement) {
   element.replaceChild(span, element.firstChild!);
 }
 
-export function init() {
+function init() {
   tiles.observe(['LM', 'LMA'], onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'lm-buy-sell-highlight',
   description: 'LM: Colors the BUYING and SELLING in green and red respectively.',
   init,

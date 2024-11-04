@@ -70,11 +70,11 @@ function correctByStarName(commandParts: string[]) {
   return getStarNaturalId(star) + commandParts[commandParts.length - 1];
 }
 
-export function init() {
+function init() {
   subscribe($$(document, PrunCss.Tile.selector), onSelectorReady);
 }
 
-void features.add({
+features.add({
   id: 'correct-planet-command',
   description: 'Corrects planet commands.',
   init,

@@ -33,11 +33,11 @@ async function onSelectorReady(selector: HTMLElement) {
   });
 }
 
-export function init() {
+function init() {
   subscribe($$(document, PrunCss.Tile.selector), onSelectorReady);
 }
 
-void features.add({
+features.add({
   id: 'correct-material-command',
   description: 'Corrects material commands.',
   init,

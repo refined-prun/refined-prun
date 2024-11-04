@@ -66,7 +66,7 @@ function init() {
   tiles.observe('SFC', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'sfc-arrival-eta',
   description: 'SFC: Adds an arrival date to the "Duration" column.',
   init,

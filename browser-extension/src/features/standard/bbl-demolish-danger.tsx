@@ -4,18 +4,18 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, PrunCss.SectionList.button), buttons => {
     const demolish = buttons.children[1];
     demolish?.classList.add(PrunCss.Button.danger);
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('BBL', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'bbl-demolish-danger',
   description: 'BBL: Applies the "danger" style to the "Demolish" button.',
   init,

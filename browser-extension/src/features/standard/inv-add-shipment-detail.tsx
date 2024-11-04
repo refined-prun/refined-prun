@@ -9,7 +9,7 @@ import ColoredIconDetail from '@src/components/ColoredIconDetail.vue';
 import { $, $$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, PrunCss.ColoredIcon.container), async container => {
     const label = await $(container, PrunCss.ColoredIcon.labelContainer);
     const attribute = refAttributeValue(container, 'title');
@@ -33,11 +33,11 @@ async function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe(['INV', 'SHPI'], onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'inv-add-shipment-detail',
   description: 'INV/SHPI: Adds a shipment destination detail to the SHPT items.',
   init,

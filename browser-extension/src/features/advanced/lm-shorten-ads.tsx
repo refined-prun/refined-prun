@@ -79,11 +79,11 @@ function cleanContractType(text: HTMLElement, ad: PrunApi.LocalAd) {
   }
 }
 
-export function init() {
+function init() {
   tiles.observe('LM', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'lm-shorten-ads',
   description: 'LM: Hides redundant text from ads.',
   advanced: true,

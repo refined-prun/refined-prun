@@ -9,7 +9,7 @@ import { computed } from 'vue';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   // Only process BS {base} tiles
   if (!tile.parameter) {
     return;
@@ -41,11 +41,11 @@ async function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('BS', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'bs-hide-zero-workforce',
   description:
     'BS: Renames the "Current Workforce" column header to "Current" and hides rows with zero workforce.',

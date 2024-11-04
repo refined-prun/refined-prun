@@ -4,7 +4,7 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { $$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   // Only add search bar to the main INV tile
   if (tile.parameter) {
     return;
@@ -65,11 +65,11 @@ function filterRow(row: HTMLElement, search: string) {
   return false;
 }
 
-export function init() {
+function init() {
   tiles.observe(['INV', 'SHPI'], onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'inv-search-bar',
   description: 'INV: Adds a search bar to the main INV buffer.',
   init,

@@ -52,7 +52,7 @@ function replaceMaterialProperties(expression: string) {
   return expression;
 }
 
-export function init() {
+function init() {
   applyCssRules();
   subscribe($$(document.documentElement, 'input'), input => {
     if (input.inputMode !== 'numeric' && input.inputMode !== 'decimal') {
@@ -75,7 +75,7 @@ function applyCssRules() {
   applyCssRule(`${selectorDynamic}:before`, classes.functionIconDynamic);
 }
 
-void features.add({
+features.add({
   id: 'evaluate-input-formula',
   description: 'Evaluates input formulas in numeric text fields on Enter.',
   init,

@@ -76,12 +76,12 @@ function onFormReady(form: HTMLElement) {
   ).before(totalPriceInput.parentElement!);
 }
 
-export function init() {
+function init() {
   tiles.observe(['LM', 'LMA'], onLMTileReady);
   tiles.observe('LMP', onLMPTileReady);
 }
 
-void features.add({
+features.add({
   id: 'lm-shipping-per-unit-price',
   description: 'LM: Adds a per-unit price label to ads. Also adds this info to LMA and LMP.',
   init,

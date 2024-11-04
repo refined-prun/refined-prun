@@ -30,11 +30,11 @@ async function onSelectorReady(selector: HTMLElement) {
   });
 }
 
-export function init() {
+function init() {
   subscribe($$(document, PrunCss.Tile.selector), onSelectorReady);
 }
 
-void features.add({
+features.add({
   id: 'correct-ship-command',
   description: 'Corrects ship commands.',
   init,

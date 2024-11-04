@@ -5,13 +5,13 @@ import TabBar from '@src/features/standard/screen-tab-bar/TabBar.vue';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 import { $$ } from '@src/utils/select-dom';
 
-export function init() {
+function init() {
   subscribe($$(document, PrunCss.ScreenControls.container), container => {
     createFragmentApp(TabBar).appendTo(container);
   });
 }
 
-void features.add({
+features.add({
   id: 'screen-tab-bar',
   description: 'Adds a tab bar for user screens.',
   init,

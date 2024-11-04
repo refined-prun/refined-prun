@@ -33,7 +33,7 @@ function init() {
   tiles.observe('FLT', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'flt-arrival-eta',
   description: 'FLT: Adds an arrival date to the "ETA" column.',
   init,

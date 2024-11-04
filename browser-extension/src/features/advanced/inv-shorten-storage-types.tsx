@@ -43,11 +43,11 @@ function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('INV', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'inv-shorten-storage-types',
   description: 'INV: Shortens storage type names in the first column.',
   advanced: true,

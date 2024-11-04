@@ -9,7 +9,7 @@ import { $, $$, _$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 import { streamHtmlCollection } from '@src/utils/stream-html-collection';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   if (companyStore.value?.code === 'KCB') {
     return;
   }
@@ -52,7 +52,7 @@ function init() {
   tiles.observe(['CX', 'CONT', 'LM', 'SYSI'], onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'minimize-headers',
   description: 'Adds a button to minimize headers in CX, CONT, LM, and SYSI.',
   advanced: true,

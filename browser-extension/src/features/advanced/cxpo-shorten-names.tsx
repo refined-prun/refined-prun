@@ -4,7 +4,7 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { $, $$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, PrunCss.ComExPlaceOrderForm.form), form => {
     const parts = tile.parameter!.split('.');
     void replaceRowValue(form.children[0], parts[1]);
@@ -17,11 +17,11 @@ async function replaceRowValue(row: Element, value: string) {
   label.textContent = value;
 }
 
-export function init() {
+function init() {
   tiles.observe('CXPO', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'cxpo-shorten-names',
   description: 'CXPO: Shortens values of "Exchange" and "Material" fields.',
   advanced: true,

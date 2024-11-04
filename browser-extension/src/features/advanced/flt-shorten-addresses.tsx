@@ -13,11 +13,11 @@ function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('FLT', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'flt-shorten-addresses',
   description: 'FLT: Shortens addresses in "Location" and "Destination".',
   advanced: true,

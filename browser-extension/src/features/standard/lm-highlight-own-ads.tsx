@@ -19,11 +19,11 @@ function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('LM', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'lm-highlight-own-ads',
   description: 'LM: Highlights own ads.',
   init,

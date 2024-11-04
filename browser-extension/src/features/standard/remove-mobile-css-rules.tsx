@@ -1,6 +1,6 @@
 import features from '@src/feature-registry';
 
-export function init() {
+function init() {
   for (let i = 0; i < document.styleSheets.length; i++) {
     const styleSheet = document.styleSheets[i];
     const rules = styleSheet.cssRules;
@@ -17,7 +17,7 @@ export function init() {
   }
 }
 
-void features.add({
+features.add({
   id: 'remove-mobile-css-rules',
   description: 'Removes mobile CSS rules.',
   init,

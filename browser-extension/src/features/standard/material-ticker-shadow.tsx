@@ -7,7 +7,7 @@ function init() {
   applyClassCssRule(PrunCss.ColoredIcon.label, classes.shadow);
 }
 
-void features.add({
+features.add({
   id: 'material-ticker-shadow',
   description: 'Adds a shadow to material tickers.',
   init,

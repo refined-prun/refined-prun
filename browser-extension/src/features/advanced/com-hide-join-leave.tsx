@@ -3,14 +3,14 @@ import features from '@src/feature-registry';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
-export function init() {
+function init() {
   applyCssRule(
     `.${PrunCss.Message.message}:not(:has(> .${PrunCss.Message.name} > div))`,
     css.hidden,
   );
 }
 
-void features.add({
+features.add({
   id: 'com-hide-join-leave',
   description: 'COM: Hides "User joined" and "User left" messages.',
   advanced: true,

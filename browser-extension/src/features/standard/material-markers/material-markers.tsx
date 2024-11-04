@@ -11,7 +11,7 @@ import { computedTileState } from '@src/store/user-data-tiles';
 import { refTextContent } from '@src/utils/reactive-dom';
 import { getTileState } from './tile-state';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, PrunCss.StoreView.container), container => {
     subscribe($$(container, PrunCss.GridItemView.image), item => {
       if (!item.children[1]) {
@@ -74,14 +74,14 @@ async function addMarker(mat: HTMLElement, tile: PrunTile) {
   ).appendTo(mat);
 }
 
-export function init() {
+function init() {
   if (companyStore.value?.code === 'KCB') {
     return;
   }
   tiles.observe(['INV', 'SHPI'], onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'material-markers',
   description: 'Adds material markers.',
   init,

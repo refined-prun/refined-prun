@@ -23,7 +23,7 @@ import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-al
 import { $, $$, _$, _$$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, PrunCss.InventoryView.container), container =>
     applyCustomSorting(tile, container),
   );
@@ -185,7 +185,7 @@ function createBurnSortingMode(storeId: string): UserData.SortingMode {
   };
 }
 
-export function init() {
+function init() {
   applyCssRule(`.${classes.custom} .${PrunCss.InventorySortControls.order} > div`, css.hidden);
   tiles.observe(['INV', 'SHPI'], onTileReady);
   xit.add({
@@ -195,7 +195,7 @@ export function init() {
   });
 }
 
-void features.add({
+features.add({
   id: 'inv-custom-sorting',
   description: 'INV: Adds custom sorting modes.',
   init,

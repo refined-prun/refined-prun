@@ -10,7 +10,7 @@ import { isRepairableBuilding } from '@src/core/buildings';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ProgressBar from '@src/components/ProgressBar.vue';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   const siteId = tile.parameter;
   const site = computed(() => sitesStore.getById(siteId));
   subscribe($$(tile.anchor, PrunCss.SectionList.section), section => {
@@ -37,11 +37,11 @@ async function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('BBL', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'bbl-add-condition-progress-bar',
   description: 'BBL: Adds a progress bar to the building condition row.',
   init,

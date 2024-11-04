@@ -12,7 +12,7 @@ import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-al
 import { subscribe } from '@src/utils/subscribe-async-generator';
 import { $$ } from '@src/utils/select-dom';
 
-async function onTileReady(tile: PrunTile) {
+function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'thead'), onTableHeadReady);
   subscribe($$(tile.anchor, 'tbody'), onTableBodyReady);
 }
@@ -64,13 +64,13 @@ function hideCellIfZeroTotal(cell: HTMLTableCellElement, total: Ref<number | und
   });
 }
 
-export function init() {
+function init() {
   applyCssRule(`.${PrunCss.LiquidAssetsPanel.row} td:first-child`, classes.firstColumn);
   applyCssRule(`.${PrunCss.LiquidAssetsPanel.row} td:not(:first-child)`, classes.otherColumns);
   tiles.observe('FINLA', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'finla-exchange-deposits',
   description: 'FINLA: Adds a "CX Deposits" and "FX Deposits" columns.',
   init,

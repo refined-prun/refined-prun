@@ -18,11 +18,11 @@ function onTileReady(tile: PrunTile) {
   });
 }
 
-export function init() {
+function init() {
   tiles.observe('INV', onTileReady);
 }
 
-void features.add({
+features.add({
   id: 'inv-shorten-planet-names',
   description: 'INV: Shortens addresses in the main INV command.',
   advanced: true,
