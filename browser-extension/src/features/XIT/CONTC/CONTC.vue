@@ -20,6 +20,7 @@ import {
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import ConditionRow from '@src/features/XIT/CONTC/ConditionRow.vue';
+import { isEmpty } from 'ts-extras';
 
 const current = computed(() =>
   selfCurrentConditions.value!.filter(x => x.dependencies.every(x => x.status === 'FULFILLED')),
@@ -46,7 +47,7 @@ const nonCurrent = computed(() =>
       </tr>
     </thead>
     <tbody>
-      <tr v-if="current.length === 0">
+      <tr v-if="isEmpty(current)">
         <td colspan="3">No pending conditions</td>
       </tr>
       <template v-else>
@@ -64,7 +65,7 @@ const nonCurrent = computed(() =>
       </tr>
     </thead>
     <tbody>
-      <tr v-if="nonCurrent.length === 0">
+      <tr v-if="isEmpty(nonCurrent)">
         <td colspan="3">No pending conditions</td>
       </tr>
       <template v-else>

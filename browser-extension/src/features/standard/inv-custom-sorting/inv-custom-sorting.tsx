@@ -22,6 +22,7 @@ import { computedTileState } from '@src/store/user-data-tiles';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 import { $, $$, _$, _$$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
+import { isDefined, isEmpty } from 'ts-extras';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, PrunCss.InventoryView.container), container =>
@@ -136,9 +137,9 @@ function sortInventory(
   for (const category of categories) {
     let materials = category.materials
       .filter(x => !addedItems.has(x))
-      .map(x => materialsStore.getByTicker(x)!)
-      .filter(x => x!);
-    if (materials.length === 0) {
+      .map(x => materialsStore.getByTicker(x))
+      .filter(isDefined);
+    if (isEmpty(materials)) {
       continue;
     }
 

@@ -8,6 +8,7 @@ import {
 } from '@src/infrastructure/prun-api/data/addresses';
 import { computed, Ref } from 'vue';
 import { sumBy } from '@src/utils/sum-by';
+import { isEmpty } from 'ts-extras';
 
 export interface MaterialBurn {
   input: number;
@@ -98,7 +99,7 @@ export function calculatePlanetBurn(
       const capacity = line.capacity;
       const queuedOrders = line.orders.filter(x => !x.started);
       const recurringOrders = queuedOrders.filter(x => x.recurring);
-      const burnOrders = recurringOrders.length > 0 ? recurringOrders : queuedOrders;
+      const burnOrders = isEmpty(recurringOrders) ? queuedOrders : recurringOrders;
       let totalDuration = sumBy(burnOrders, x => x.duration?.millis ?? Infinity);
       // Convert to days
       totalDuration /= 86400000;

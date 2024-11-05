@@ -1,10 +1,11 @@
 import { subscribe } from '@src/utils/subscribe-async-generator';
-import { $$ } from '@src/utils/select-dom';
+import { $$, _$$ } from '@src/utils/select-dom';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 import { refAnimationFrame } from '@src/utils/reactive-dom';
 import tiles from '@src/infrastructure/prun-ui/tiles';
 import features from '@src/feature-registry';
+import { isEmpty } from 'ts-extras';
 
 function onTileReady(tile: PrunTile) {
   // Only process BS tiles with parameter
@@ -14,8 +15,8 @@ function onTileReady(tile: PrunTile) {
 
   subscribe($$(tile.anchor, PrunCss.Site.workforces), workforces => {
     subscribe($$(workforces, 'tr'), row => {
-      const cells = row.getElementsByTagName('td');
-      if (cells.length === 0) {
+      const cells = _$$(row, 'td');
+      if (isEmpty(cells)) {
         return;
       }
 

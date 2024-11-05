@@ -6,6 +6,7 @@ import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { computed } from 'vue';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
+import { isEmpty } from 'ts-extras';
 
 function onTileReady(tile: PrunTile) {
   // Shorten flight status
@@ -53,7 +54,7 @@ function onTileReady(tile: PrunTile) {
       const nodes = Array.from(statusCell.childNodes).filter(
         x => x.nodeType === Node.TEXT_NODE || x.nodeType === Node.ELEMENT_NODE,
       );
-      if (nodes.length === 0) {
+      if (isEmpty(nodes)) {
         return;
       }
       if (statusCell.style.textAlign !== 'center') {

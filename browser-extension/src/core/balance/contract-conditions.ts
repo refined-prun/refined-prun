@@ -6,6 +6,7 @@ import { sumBy } from '@src/utils/sum-by';
 import { calcMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { binarySearch } from '@src/utils/binary-search';
 import { map } from '@src/utils/map-values';
+import { isDefined } from 'ts-extras';
 
 interface ContractCondition {
   contract: PrunApi.Contract;
@@ -30,8 +31,8 @@ const sortedConditions = computed(() => {
         isSelf: condition.party === contract.party,
         deadline: calculateDeadline(contract, condition),
         dependencies: condition.dependencies
-          .map(id => contract.conditions.find(x => x.id === id)!)
-          .filter(x => !!x),
+          .map(id => contract.conditions.find(x => x.id === id))
+          .filter(isDefined),
       });
     }
   }

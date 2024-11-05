@@ -4,6 +4,7 @@ import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
 import OrderRow from './OrderRow.vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { fixed2 } from '@src/utils/format';
+import { isEmpty } from 'ts-extras';
 
 const props = defineProps({
   ticker: {
@@ -49,7 +50,7 @@ watchEffect(() => {
         <tr>
           <th colSpan="2">Offers</th>
         </tr>
-        <template v-if="offers.length > 0">
+        <template v-if="!isEmpty(offers)">
           <OrderRow v-for="order in offers" :key="order.id" :order="order" />
         </template>
         <tr v-else>
@@ -67,7 +68,7 @@ watchEffect(() => {
         <tr>
           <th colSpan="2">Requests</th>
         </tr>
-        <template v-if="requests.length > 0">
+        <template v-if="!isEmpty(requests)">
           <OrderRow v-for="order in requests" :key="order.id" request :order="order" />
         </template>
         <tr v-else>

@@ -18,10 +18,11 @@ import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
 import { useXitParameters } from '@src/hooks/useXitParameters';
 import { computed } from 'vue';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
+import { isEmpty } from 'ts-extras';
 
 const parameters = useXitParameters();
 const materials = computed(() => {
-  if (parameters.length === 0) {
+  if (isEmpty(parameters)) {
     return materialsStore.all.value;
   }
 

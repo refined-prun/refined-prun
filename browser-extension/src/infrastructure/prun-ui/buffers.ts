@@ -6,6 +6,7 @@ import tiles from '@src/infrastructure/prun-ui/tiles';
 import { Ref } from 'vue';
 import { watchUntil } from '@src/utils/watch';
 import { $, _$, _$$ } from '@src/utils/select-dom';
+import { isEmpty } from 'ts-extras';
 
 let isBusy = false;
 const pendingResolvers: (() => void)[] = [];
@@ -52,16 +53,16 @@ async function acquireSlot() {
 }
 
 function releaseSlot() {
-  if (pendingResolvers.length > 0) {
-    setTimeout(pendingResolvers.shift()!, 0);
-  } else {
+  if (isEmpty(pendingResolvers)) {
     isBusy = false;
+  } else {
+    setTimeout(pendingResolvers.shift()!, 0);
   }
 }
 
 async function captureLastWindow(command: string, options?: ShowBufferOptions) {
   const windows = _$$(document, PrunCss.Window.window);
-  if (windows.length === 0) {
+  if (isEmpty(windows)) {
     return;
   }
   const window = windows[windows.length - 1] as HTMLDivElement;

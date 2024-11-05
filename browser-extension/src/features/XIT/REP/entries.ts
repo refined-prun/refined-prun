@@ -2,6 +2,7 @@ import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/
 import { getShipLastRepair, shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { getBuildingBuildMaterials, isRepairableBuilding } from '@src/core/buildings';
+import { isEmpty } from 'ts-extras';
 
 export interface RepairEntry {
   ticker: string;
@@ -14,7 +15,7 @@ export interface RepairEntry {
 
 export function calculateBuildingEntries(parameters: string[]) {
   let sites: PrunApi.Site[] = [];
-  if (parameters.length === 0) {
+  if (isEmpty(parameters)) {
     if (sitesStore.all.value === undefined) {
       return undefined;
     }

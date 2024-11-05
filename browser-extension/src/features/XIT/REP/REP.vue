@@ -29,10 +29,10 @@ import Active from '@src/components/forms/Active.vue';
 import SectionHeader from '@src/components/SectionHeader.vue';
 import { useXitParameters } from '@src/hooks/useXitParameters';
 import PrunLink from '@src/components/PrunLink.vue';
+import { isEmpty } from 'ts-extras';
 
 const parameters = useXitParameters();
-
-const isRepAll = parameters.length === 0;
+const isRepAll = isEmpty(parameters);
 
 const buildings = computed(() => calculateBuildingEntries(parameters));
 const ships = computed(() => calculateShipEntries(parameters));

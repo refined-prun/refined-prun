@@ -27,7 +27,7 @@ export default {};
 import FilterButton from '@src/features/XIT/BURN/FilterButton.vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { computed } from 'vue';
-import { getPlanetBurn, MaterialBurn, PlanetBurn } from '@src/core/burn';
+import { getPlanetBurn, MaterialBurn } from '@src/core/burn';
 import { comparePlanets } from '@src/util';
 import BurnSection from '@src/features/XIT/BURN/BurnSection.vue';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
@@ -36,21 +36,21 @@ import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import MaterialRow from '@src/features/XIT/BURN/MaterialRow.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { useXitParameters } from '@src/hooks/useXitParameters';
+import { isDefined, isEmpty } from 'ts-extras';
 
 const parameters = useXitParameters();
-const isBurnAll = parameters.length === 0 || parameters[0].toLowerCase() == 'all';
+const isBurnAll = isEmpty(parameters) || parameters[0].toLowerCase() == 'all';
 
 const sites = computed(() => {
   if (isBurnAll) {
     return sitesStore.all.value;
   }
 
-  return parameters.map(x => sitesStore.getByPlanetNaturalIdOrName(x)!).filter(x => x);
+  return parameters.map(x => sitesStore.getByPlanetNaturalIdOrName(x)).filter(isDefined);
 });
 
 const planetBurn = computed(() => {
-  const burn = sites.value!.map(getPlanetBurn);
-  const filtered = burn.filter((x): x is PlanetBurn => x !== undefined);
+  const filtered = sites.value!.map(getPlanetBurn).filter(isDefined);
   if (filtered.length <= 1) {
     return filtered;
   }

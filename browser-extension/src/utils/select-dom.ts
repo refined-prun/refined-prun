@@ -57,6 +57,7 @@ const tagNames = new Set<string>([
   'th',
   'button',
   'progress',
+  'style',
 ]);
 const classNames = new Set<string>();
 

@@ -11,6 +11,7 @@ import { tileStatePlugin } from '@src/store/user-data-tiles';
 import { startMeasure, stopMeasure } from '@src/utils/performance-measure';
 import { $$, _$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
+import { isEmpty } from 'ts-extras';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, PrunCss.ScrollView.view), scrollView =>
@@ -38,7 +39,7 @@ function onScrollViewReady(tile: PrunTile, scrollView: HTMLElement) {
   } else {
     parameters = rawParameter.split(/[_ ]+/g);
   }
-  if (parameters.length === 0) {
+  if (isEmpty(parameters)) {
     return;
   }
 
@@ -64,7 +65,7 @@ function onScrollViewReady(tile: PrunTile, scrollView: HTMLElement) {
 
   if (xitCommand.contextItems) {
     const items = xitCommand.contextItems(parameters);
-    if (items.length > 0) {
+    if (!isEmpty(items)) {
       const header = _$(tile.frame, PrunCss.TileFrame.header)!;
       createFragmentApp(ContextControls, { items }).after(header);
     }

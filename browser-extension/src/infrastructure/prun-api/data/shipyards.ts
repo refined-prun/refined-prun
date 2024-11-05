@@ -2,13 +2,14 @@ import { createEntityStore } from '@src/infrastructure/prun-api/data/create-enti
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 import { request } from '@src/infrastructure/prun-api/data/request-hooks';
 import { castArray } from '@src/utils/cast-array';
+import { isEmpty } from 'ts-extras';
 
 const store = createEntityStore<PrunApi.Shipyard>();
 const state = store.state;
 
 messages({
   DATA_DATA(data: { body: Arrayable<PrunApi.Shipyard>; path: string[] }) {
-    if (data.path.length === 0 || data.path[0] !== 'shipyards') {
+    if (isEmpty(data.path) || data.path[0] !== 'shipyards') {
       return;
     }
     store.setMany(castArray(data.body));

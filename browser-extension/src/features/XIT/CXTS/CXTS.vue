@@ -18,6 +18,7 @@ import DateRow from '@src/features/XIT/CXTS/DateRow.vue';
 import TradeRow from '@src/features/XIT/CXTS/TradeRow.vue';
 import dayjs from 'dayjs';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
+import { isEmpty } from 'ts-extras';
 
 const orders = computed(() => cxosStore.all.value);
 
@@ -46,7 +47,7 @@ const days = computed(() => {
   }
   trades.sort((a, b) => b.date - a.date);
   const days: DayTrades[] = [];
-  if (trades.length === 0) {
+  if (isEmpty(trades)) {
     return days;
   }
 
@@ -98,9 +99,9 @@ const days = computed(() => {
         </tr>
       </thead>
       <tbody>
-        <tr v-if="days.length === 0">
+        <tr v-if="isEmpty(days)">
           <td colSpan="7">
-            <template v-if="orders.length === 0">No (partially) filled orders</template>
+            <template v-if="isEmpty(orders)">No (partially) filled orders</template>
             <template v-else>No recent trades</template>
           </td>
         </tr>

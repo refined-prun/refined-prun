@@ -1,17 +1,19 @@
+import { isEmpty } from 'ts-extras';
+
 type MutationCallback = (mutations: MutationRecord[]) => boolean | void;
 
 let callbacks: MutationCallback[] = [];
 const observer = new MutationObserver(runCallbacks);
 
 export default function observeDocumentMutations(callback: MutationCallback) {
-  if (callbacks.length === 0) {
+  if (isEmpty(callbacks)) {
     observer.observe(document, { childList: true, subtree: true });
   }
   callbacks.push(callback);
 }
 
 function runCallbacks(mutations: MutationRecord[]) {
-  let removed: MutationCallback[] | undefined;
+  let removed: MutationCallback[] | undefined = undefined;
   for (const callback of callbacks) {
     try {
       if (callback(mutations)) {
@@ -24,7 +26,7 @@ function runCallbacks(mutations: MutationRecord[]) {
   }
   if (removed) {
     callbacks = callbacks.filter(x => !removed?.includes(x));
-    if (callbacks.length === 0) {
+    if (isEmpty(callbacks)) {
       observer.disconnect();
     }
   }

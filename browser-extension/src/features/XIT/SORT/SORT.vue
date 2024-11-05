@@ -7,6 +7,7 @@ import { showConfirmationOverlay, showTileOverlay } from '@src/infrastructure/pr
 import SortingModeEditor from './SortingModeEditor.vue';
 import { userData } from '@src/store/user-data';
 import { useXitParameters } from '@src/hooks/useXitParameters';
+import { isEmpty } from 'ts-extras';
 
 const parameters = useXitParameters();
 const storeId = parameters[0];
@@ -58,7 +59,7 @@ function deleteSortingMode(ev: Event, sorting: UserData.SortingMode) {
           <th />
         </tr>
       </thead>
-      <tbody v-if="sorting.length > 0">
+      <tbody v-if="!isEmpty(sorting)">
         <tr v-for="mode in sorting" :key="mode.label">
           <td>{{ mode.label }}</td>
           <td>{{ mode.categories.map(x => x.name).join(', ') }}</td>

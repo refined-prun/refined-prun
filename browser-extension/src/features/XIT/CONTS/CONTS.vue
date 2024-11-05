@@ -16,6 +16,7 @@ import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import { computed } from 'vue';
 import ContractRow from '@src/features/XIT/CONTS/ContractRow.vue';
+import { isEmpty } from 'ts-extras';
 
 const filtered = computed(() =>
   contractsStore.all.value!.filter(shouldShowContract).sort(compareContracts),
@@ -52,7 +53,7 @@ function compareContracts(a: PrunApi.Contract, b: PrunApi.Contract) {
       </tr>
     </thead>
     <tbody>
-      <tr v-if="filtered.length === 0">
+      <tr v-if="isEmpty(filtered)">
         <td colspan="4">No active contracts</td>
       </tr>
       <template v-else>

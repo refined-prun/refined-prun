@@ -7,6 +7,7 @@ import features from '@src/feature-registry';
 import WEB from '@src/features/XIT/WEB.vue';
 import { $, $$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
+import { isEmpty } from 'ts-extras';
 
 xit.add({
   command: 'WEB',
@@ -42,7 +43,7 @@ shortcut('PROSPERITY', 'PROSPERITY', parameters => {
 });
 
 shortcut(['SHEET', 'SHEETS'], 'GOOGLE SHEETS', parameters => {
-  if (parameters.length === 0) {
+  if (isEmpty(parameters)) {
     return undefined;
   }
   let url = parameters.join('_');

@@ -17,10 +17,9 @@ import NoteEditor from '@src/features/XIT/NOTE/NoteEditor.vue';
 import { useXitParameters } from '@src/hooks/useXitParameters';
 import { computed } from 'vue';
 import { userData } from '@src/store/user-data';
+import { isEmpty } from 'ts-extras';
 
 const parameters = useXitParameters();
-const hasParameters = parameters.length > 0;
-
 const note = computed(() => {
   const byId = userData.notes.find(x => x.id.startsWith(parameters[0]));
   if (byId) {
@@ -32,7 +31,7 @@ const note = computed(() => {
 </script>
 
 <template>
-  <NoteList v-if="!hasParameters" />
+  <NoteList v-if="isEmpty(parameters)" />
   <NoteEditor v-else-if="note" :note="note" />
   <div v-else>Note not found.</div>
 </template>
