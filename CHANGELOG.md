@@ -64,7 +64,7 @@
 - Font size of material amount labels is 1px bigger.
 - Input fields with math support don't require a '=' sign at the beginning.
 - Input fields with math support show a math icon.
-- New and old UIs now use vanilla PrUn styling where possible.
+- Math formula are evaluated on Tab press in addition to Enter. 
 - All XIT commands accept up to 3 space-separated arguments.
 - Real-time updates for XIT buffers implemented, removing the need for refresh button.
 - Switched chart library to Chart.js, reducing plugin size and adding Firefox support.
