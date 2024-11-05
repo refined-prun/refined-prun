@@ -89,10 +89,7 @@
 ---
 
 Known bugs:
-- On PMMG setting import, selected inventory filters are reset. The filters themselves are imported properly, 
-  so just select them again in `INV`.
-- `XIT NOTE` now uses ids, so your existing `XIT NOTE` buffers will fail to open.
-  You will need to reopen them from the main note list.
+- Buffer settings are not imported from PMMG settings (like BURN or INV filters).
 - COM button in the sidebar DOES NOT BLINK on new messages. Open COM buffer directly to check for new messages.
 
 Removed features:
