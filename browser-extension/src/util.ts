@@ -590,7 +590,7 @@ export function comparePlanets(idOrNameA: string, idOrNameB: string) {
       : -1;
 }
 
-export function extractPlanetName(text?: string | null) {
+export function extractPlanetName(text: string | null) {
   if (!text) {
     return text;
   }
@@ -601,7 +601,7 @@ export function extractPlanetName(text?: string | null) {
     .replace(/(\d)\s+(?=[a-zA-Z])/, '$1')
     // Clear system name in named systems
     .replace(/.*\s-\s/, '');
-  return Stations[text] ?? text;
+  return (Stations[text] ?? text) as string;
 }
 
 export function changeSelectValue(input, selectIndex) {

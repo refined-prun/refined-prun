@@ -48,12 +48,12 @@ function onTileReady(tile: PrunTile) {
 
 function cleanShipmentAd(tile: PrunTile, ad: HTMLElement) {
   // Shorten planet names
-  const parameter = tile.parameter;
+  const parameter = tile.parameter?.toUpperCase();
   for (const link of $$(ad, PrunCss.Link.link)) {
     const planetName = extractPlanetName(link.textContent);
     const planet = planetsStore.find(planetName);
-    if (parameter === planetName || parameter === planet?.naturalId) {
-      // Hide 'from' links from shipment ads on the same planet/station.
+    if (parameter === planetName?.toUpperCase() || parameter === planet?.naturalId.toUpperCase()) {
+      // Hide 'from' and 'to' links from shipment ads on the same planet/station.
       link.previousSibling!.textContent = '';
       link.style.display = 'none';
       continue;
