@@ -8,6 +8,7 @@ import WEB from '@src/features/XIT/WEB.vue';
 import { $, $$ } from '@src/utils/select-dom';
 import { subscribe } from '@src/utils/subscribe-async-generator';
 import { isEmpty } from 'ts-extras';
+import { prunBtoa } from '@src/infrastructure/prun-ui/base64';
 
 xit.add({
   command: 'WEB',
@@ -84,19 +85,6 @@ function isValidUrl(url: string) {
   }
 }
 
-function prunBtoa(input: string) {
-  const base64 = btoa(input);
-  return base64.replaceAll('+', '-').replaceAll('/', '.').replaceAll('=', '');
-}
-
-function prunAtob(input: string) {
-  let base64 = input.replaceAll('-', '+').replaceAll('.', '/');
-  while (base64.length % 4) {
-    base64 += '=';
-  }
-  return atob(base64);
-}
-
 function init() {
   subscribe($$(document, PrunCss.Tile.selector), onSelectorReady);
 }
@@ -110,6 +98,7 @@ features.add({
 <script setup lang="ts">
 import { useXitParameters } from '@src/hooks/useXitParameters';
 import { inject } from 'vue';
+import { prunAtob } from '@src/infrastructure/prun-ui/base64';
 
 const command = inject(xit.command)!;
 const parameters = useXitParameters();
