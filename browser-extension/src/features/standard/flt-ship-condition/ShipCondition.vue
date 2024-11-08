@@ -15,15 +15,13 @@ const $style = useCssModule();
 
 const ship = computed(() => shipsStore.getById(props.id));
 
+const condition = computed(() => Math.floor((ship.value?.condition ?? 1) * 100) / 100);
+
 const labelClass = computed(() => {
-  const condition = ship.value?.condition;
-  if (condition === undefined) {
-    return undefined;
-  }
-  if (condition <= 0.8) {
+  if (condition.value <= 0.8) {
     return PrunCss.ColoredValue.negative;
   }
-  if (condition <= 0.85) {
+  if (condition.value <= 0.85) {
     return $style.warning;
   }
   return PrunCss.ColoredValue.positive;
@@ -31,7 +29,7 @@ const labelClass = computed(() => {
 </script>
 
 <template>
-  <span v-if="ship" :class="labelClass">&nbsp;{{ percent0(ship.condition) }}</span>
+  <span v-if="ship" :class="labelClass">&nbsp;{{ percent0(condition) }}</span>
 </template>
 
 <style module>
