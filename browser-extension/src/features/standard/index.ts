@@ -18,6 +18,7 @@ import './evaluate-input-formula';
 import './finla-exchange-deposits';
 import './fix-z-order';
 import './flt-arrival-eta';
+import './flt-repair-icon';
 import './header-calculator-button';
 import './header-duplicate-button';
 import './inv-add-shipment-detail';
