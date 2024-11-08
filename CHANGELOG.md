@@ -32,7 +32,7 @@
 - `XIT REP` shows a weight/volume/cost table.
 - `BS` displays a building list summary at the bottom.
 - `XIT NOTE` list is now reorderable.
-- Ships with low condition display a repair warning in `FLT`.
+- Ships display condition in `FLT`.
 - ECD is hidden in `FINLA`.
 - More planet commands (like `INV`) now support planet names.
 - System commands (`FLTS`, `INF`, `MS`, and `SYSI`) now accept system names.
