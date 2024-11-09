@@ -6,14 +6,15 @@ export async function* streamHtmlCollection<T extends Element>(
 ) {
   const seenElements = new WeakSet<T>();
 
-  for (let i = 0; i < elements.length; i++) {
-    const element = elements[i];
+  // Enumerate elements via Array.from to prevent
+  // bugs when the HTMLCollection is modified during yield.
+  for (const element of Array.from(elements)) {
     seenElements.add(element);
     yield element;
   }
 
   while (true) {
-    const newElements: T[] = [];
+    const newElements = new Set<T>();
     await oneMutation(root, {
       childList: true,
       subtree: true,
@@ -21,10 +22,10 @@ export async function* streamHtmlCollection<T extends Element>(
         for (let i = 0; i < elements.length; i++) {
           const element = elements[i];
           if (!seenElements.has(element)) {
-            newElements.push(element);
+            newElements.add(element);
           }
         }
-        return newElements.length > 0;
+        return newElements.size > 0;
       },
     });
 
