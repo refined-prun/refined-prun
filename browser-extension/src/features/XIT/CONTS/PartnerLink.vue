@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { PropType } from 'vue';
 import PrunLink from '@src/components/PrunLink.vue';
-import { TextColors } from '@src/Style';
 import { isFactionContract } from '@src/features/XIT/CONTS/utils';
+import coloredValue from '@src/infrastructure/prun-ui/colored-value.module.css';
 
 defineProps({
   contract: {
@@ -14,7 +14,7 @@ defineProps({
 
 <template>
   <PrunLink v-if="isFactionContract(contract)" :command="`FA ${contract.partner.countryCode}`">
-    <span :style="{ color: TextColors.Yellow, fontWeight: 'bold' }" title="Faction Contract">
+    <span :class="coloredValue.warning" :style="{ fontWeight: 'bold' }" title="Faction Contract">
       ✦
     </span>
     {{ contract.partner.name }}

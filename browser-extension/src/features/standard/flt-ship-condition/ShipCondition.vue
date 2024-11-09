@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, useCssModule } from 'vue';
+import { computed } from 'vue';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { percent0 } from '@src/utils/format';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
+import coloredValue from '@src/infrastructure/prun-ui/colored-value.module.css';
 
 const props = defineProps({
   id: {
@@ -10,8 +11,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-const $style = useCssModule();
 
 const ship = computed(() => shipsStore.getById(props.id));
 
@@ -22,7 +21,7 @@ const labelClass = computed(() => {
     return PrunCss.ColoredValue.negative;
   }
   if (condition.value <= 0.85) {
-    return $style.warning;
+    return coloredValue.warning;
   }
   return PrunCss.ColoredValue.positive;
 });
@@ -31,9 +30,3 @@ const labelClass = computed(() => {
 <template>
   <span v-if="ship" :class="labelClass">&nbsp;{{ percent0(condition) }}</span>
 </template>
-
-<style module>
-.warning {
-  color: #f7a700;
-}
-</style>
