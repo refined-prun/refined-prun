@@ -430,7 +430,7 @@ async function executeAction(
         );
       }
 
-      changeValue(amountInput, Math.min(action.parameters.amount, maxAmount)); // Transfer the max amount possible (could add a setting here to error out instead)
+      changeValue(amountInput, Math.min(action.parameters.amount, maxAmount).toString()); // Transfer the max amount possible (could add a setting here to error out instead)
 
       amountInput.focus(); // Need to focus for some reason
       changeButton.focus();
