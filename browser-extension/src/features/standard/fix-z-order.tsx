@@ -4,7 +4,14 @@ import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {
-  applyClassCssRule([PrunCss.ComExOrdersPanel.filter, PrunCss.LocalMarket.filter], classes.filter);
+  applyClassCssRule(
+    [
+      PrunCss.ComExOrdersPanel.filter,
+      PrunCss.LocalMarket.filter,
+      PrunCss.ContractsListTable.filter,
+    ],
+    classes.filter,
+  );
   applyClassCssRule(PrunCss.ScrollView.track, classes.scrollTrack);
 }
 
