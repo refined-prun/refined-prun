@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, PropType } from 'vue';
 import PrunLink from '@src/components/PrunLink.vue';
-import { isFactionContract, isPartnerCondition } from '@src/features/XIT/CONTS/utils';
+import { canAcceptContract, isFactionContract } from '@src/features/XIT/CONTS/utils';
+import fa from '@src/utils/font-awesome.module.css';
 
 const props = defineProps({
   contract: {
@@ -10,47 +11,22 @@ const props = defineProps({
   },
 });
 
-const actionMark = computed(() => (isActionable(props.contract) ? '❗' : ''));
+const canAccept = computed(() => canAcceptContract(props.contract));
+
 const linkStyle = computed(() => ({
   display: isFactionContract(props.contract) ? 'inline' : 'block',
 }));
-
-function isActionable(contract: PrunApi.Contract) {
-  if (isFactionContract(contract)) {
-    return false;
-  }
-
-  if (contract.party === 'CUSTOMER' && contract.status === 'OPEN') {
-    return true;
-  }
-
-  if (contract.status !== 'PARTIALLY_FULFILLED' && contract.status !== 'CLOSED') {
-    return false;
-  }
-
-  const conditionsById: Map<string, PrunApi.ContractCondition> = new Map();
-  for (const condition of contract.conditions) {
-    conditionsById.set(condition.id, condition);
-  }
-  for (const condition of contract.conditions) {
-    if (isPartnerCondition(contract, condition) || condition.status === 'FULFILLED') {
-      continue;
-    }
-
-    const hasPendingDependencies = condition.dependencies
-      .map(x => conditionsById.get(x))
-      .some(x => x && x.status === 'PENDING' && isPartnerCondition(contract, x));
-    if (!hasPendingDependencies) {
-      return true;
-    }
-  }
-
-  return false;
-}
 </script>
 
 <template>
   <PrunLink :command="`CONT ${contract.localId}`" :style="linkStyle">
-    {{ actionMark }}{{ contract.name || contract.localId }}
+    {{ contract.name || contract.localId }}
+    <span v-if="canAccept" :class="[fa.solid, $style.yellow]">{{ '\uf0e0' }}</span>
   </PrunLink>
 </template>
+
+<style module>
+.yellow {
+  color: #f7a700;
+}
+</style>

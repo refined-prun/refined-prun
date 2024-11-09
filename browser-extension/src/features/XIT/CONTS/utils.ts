@@ -2,6 +2,10 @@ export function isFactionContract(contract: PrunApi.Contract) {
   return !!contract.partner.countryCode;
 }
 
+export function canAcceptContract(contract: PrunApi.Contract) {
+  return contract.party === 'CUSTOMER' && contract.status === 'OPEN';
+}
+
 export function isSelfCondition(contract: PrunApi.Contract, condition: PrunApi.ContractCondition) {
   return contract.party === condition.party;
 }

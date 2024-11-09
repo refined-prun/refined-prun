@@ -23,7 +23,7 @@
 - `XIT FINPR` displays Repairs and Margin (Profit / Revenue).
 - `XIT FINCH` Equity History chart now applies smoothing via SMA.
 - `FINLA` shows CX and FX deposits in addition to cash.
-- `XIT CONTS` displays a ! mark for contracts with unfulfilled own conditions.
+- `XIT CONTS` displays an inbox icon for contracts that the player can accept.
 - `XIT CONTS` displays `SHPT` for contracts with shipment condition.
 - `LM` BUYING/SELLING ads are highlighted green/red.
 - Material category in `MAT` is clickable and opens `XIT MATS` with material category.
@@ -61,6 +61,7 @@
 - `INV` Burn material sorting was changed to favor outputs over inputs/consumables and inputs
   over consumables.
 - Equity history chart now shows only the latest point per day.
+- `XIT CONTS` is sorted in the opposite direction, with the newest contracts being at the top of the list.
 - `XIT NOTE` notes are not deleted when empty.
 - Font size of material amount labels is 1px bigger.
 - Input fields with math support don't require a '=' sign at the beginning.

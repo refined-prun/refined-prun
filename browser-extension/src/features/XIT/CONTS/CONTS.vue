@@ -17,6 +17,7 @@ import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import { computed } from 'vue';
 import ContractRow from '@src/features/XIT/CONTS/ContractRow.vue';
 import { isEmpty } from 'ts-extras';
+import { canAcceptContract } from '@src/features/XIT/CONTS/utils';
 
 const filtered = computed(() =>
   contractsStore.all.value!.filter(shouldShowContract).sort(compareContracts),
@@ -37,7 +38,13 @@ function shouldShowContract(contract: PrunApi.Contract) {
 }
 
 function compareContracts(a: PrunApi.Contract, b: PrunApi.Contract) {
-  return (a.date?.timestamp ?? 0) - (b.date?.timestamp ?? 0);
+  if (canAcceptContract(a) && !canAcceptContract(b)) {
+    return -1;
+  }
+  if (canAcceptContract(b) && !canAcceptContract(a)) {
+    return 1;
+  }
+  return (b.date?.timestamp ?? 0) - (a.date?.timestamp ?? 0);
 }
 </script>
 
