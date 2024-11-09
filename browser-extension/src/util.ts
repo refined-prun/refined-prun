@@ -86,31 +86,12 @@ export function createLink(text, command, autoSubmit = true) {
 }
 
 // Change the value of a new buffer box
-export function changeValue(input, value) {
-  // Get the property descriptor for the input element's value property
-  const propDescriptor = Object.getOwnPropertyDescriptor(
-    window['HTMLInputElement'].prototype,
-    'value',
-  );
-  // Return if the property descriptor is undefined
-  if (propDescriptor == undefined) {
-    return;
-  }
-  // Get the native input value setter
-  const nativeInputValueSetter = propDescriptor.set;
-  // Return if the native input value setter is undefined
-  if (nativeInputValueSetter == undefined) {
-    return;
-  }
-  // Call the native input value setter with the input element and the new value
-  nativeInputValueSetter.call(input, value);
-
-  // Create a new input event
-  const inputEvent = document.createEvent('Event');
-  // Initialize the event as an "input" event, bubbling and cancelable
-  inputEvent.initEvent('input', true, true);
-  // Dispatch the event to the input element
-  input.dispatchEvent(inputEvent);
+export function changeValue(input: HTMLInputElement, value: string) {
+  input.value = value;
+  const event = new Event('input', { bubbles: true, cancelable: true });
+  input.dispatchEvent(event);
+  const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+  input.dispatchEvent(changeEvent);
 }
 
 // Return all matching buffers
@@ -606,11 +587,7 @@ export function extractPlanetName(text: string | null) {
 
 export function changeSelectValue(input, selectIndex) {
   input.selectedIndex = selectIndex;
-  // Create a new change event
-  const changeEvent = document.createEvent('Event');
-  // Initialize the event as an "change" event, bubbling and cancelable
-  changeEvent.initEvent('change', true, true);
-  // Dispatch the event to the change element
+  const changeEvent = new Event('change', { bubbles: true, cancelable: true });
   input.dispatchEvent(changeEvent);
 }
 
