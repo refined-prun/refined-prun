@@ -18,6 +18,7 @@
 - `SHPT` and `BLCK` icons display a destination label.
 - Material ticker auto-capitalizes inputs for commands: `CXM`, `CXOB`, `CXP`, `CXPC`, `CXPO`, `MAT`.
   For example: `CXPO h2o.ai1` will change to `CXPO H2O.AI1` when you hit Enter.
+- Tile controls are always visible.
 - Clicking on the APEX logo now opens player company information.
 - `XIT BURN` now includes context buttons: `BS` and `INV` for planets, `CXM` for materials.
 - `XIT FINPR` displays Repairs and Margin (Profit / Revenue).

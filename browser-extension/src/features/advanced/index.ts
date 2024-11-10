@@ -5,6 +5,7 @@ import './cogcpex-hide-redundant-info';
 import './com-hide-join-leave';
 import './cxos-hide-exchange-column';
 import './cxpo-shorten-names';
+import './expanded-tile-controls';
 import './finla-hide-ecd';
 import './flt-hide-transponder-column';
 import './flt-shorten-addresses';
