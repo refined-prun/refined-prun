@@ -599,3 +599,51 @@ export function getMaterialNameByTicker(ticker?: string | null) {
   const material = materialsStore.getByTicker(ticker);
   return getMaterialName(material);
 }
+
+export async function clickElement(element?: HTMLElement | null) {
+  if (!element) {
+    return;
+  }
+
+  element.dispatchEvent(
+    new PointerEvent('pointerdown', {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+    }),
+  );
+
+  element.dispatchEvent(
+    new MouseEvent('mousedown', {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+    }),
+  );
+
+  await sleep(0);
+
+  element.dispatchEvent(
+    new PointerEvent('pointerup', {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+    }),
+  );
+
+  element.dispatchEvent(
+    new MouseEvent('mouseup', {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+    }),
+  );
+
+  element.dispatchEvent(
+    new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+    }),
+  );
+}

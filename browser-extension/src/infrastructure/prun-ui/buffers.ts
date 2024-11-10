@@ -1,5 +1,5 @@
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { changeValue, sleep } from '@src/util';
+import { changeValue, clickElement, sleep } from '@src/util';
 import onNodeDisconnected from '@src/utils/on-node-disconnected';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import tiles from '@src/infrastructure/prun-ui/tiles';
@@ -24,6 +24,8 @@ export async function showBuffer(command: string, options?: ShowBufferOptions) {
     for (const tile of activeTiles) {
       const tileWindow = tile.frame.closest(`.${PrunCss.Window.window}`) as HTMLElement;
       if (tileWindow) {
+        const header = _$(tileWindow, PrunCss.Window.header);
+        void clickElement(header);
         return false;
       }
     }
