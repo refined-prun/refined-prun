@@ -73,6 +73,7 @@ declare namespace PrunApi {
     | 'PROVISION_SHIPMENT'
     | 'REPUTATION'
     | 'START_FLIGHT'
+    | 'HEADQUARTERS_UPGRADE'
     | 'POWER';
 
   export interface ContractPartner {

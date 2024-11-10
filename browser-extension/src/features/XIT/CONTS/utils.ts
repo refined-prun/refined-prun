@@ -59,6 +59,8 @@ export function friendlyConditionText(type: PrunApi.ContractConditionType) {
       return 'Start Flight';
     case 'POWER':
       return 'Become Governor';
+    case 'HEADQUARTERS_UPGRADE':
+      return 'Upgrade HQ';
     default:
       return type;
   }
