@@ -16,9 +16,13 @@ function onKeyDown(input: HTMLInputElement, e: KeyboardEvent) {
     return;
   }
 
+  if (!input.value) {
+    return;
+  }
+
   let expression = input.value.charAt(0) === '=' ? input.value.substring(1) : input.value;
   expression = replaceMaterialProperties(expression);
-  const result = mexp.eval(expression);
+  const result = parseFloat(mexp.eval(expression).toFixed(6));
   changeValue(input, result.toString());
 }
 
