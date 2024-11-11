@@ -1,15 +1,3 @@
-<script lang="ts">
-import xit from '@src/features/XIT/xit-registry.js';
-import FINPR from '@src/features/XIT/FIN/FINPR.vue';
-
-xit.add({
-  command: ['FINPR'],
-  name: 'Profitability Report',
-  contextItems: () => [{ cmd: 'XIT FIN' }, { cmd: 'XIT FINCH' }, { cmd: 'XIT SET FIN' }],
-  component: () => FINPR,
-});
-</script>
-
 <script setup lang="ts">
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';

@@ -2,8 +2,6 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import libAssetsPlugin from '@laynezh/vite-plugin-lib-assets';
 import makeManifestPlugin from './dev-tools/make-manifest-plugin';
-import { watchPublicPlugin, watchRebuildPlugin } from '@refined-prun/hmr';
-import { disableChunksPlugin } from './dev-tools/disable-chunks-plugin';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import vueDevTools from 'vite-plugin-vue-devtools';
@@ -14,7 +12,21 @@ const srcDir = resolve(rootDir, 'src');
 const manifestFile = resolve(__dirname, 'manifest.js');
 
 const isDev = process.env.__DEV__ === 'true';
-const isProduction = !isDev;
+
+const noise = new Set([
+  'index',
+  'dist',
+  'src',
+  'source',
+  'distribution',
+  'node_modules',
+  '.pnpm',
+  'main',
+  'esm',
+  'cjs',
+  'build',
+  'built',
+]);
 
 const outDir = resolve(rootDir, '..', 'dist');
 export default defineConfig({
@@ -29,45 +41,49 @@ export default defineConfig({
     vue(),
     vueJsx(),
     vueDevTools(),
-    disableChunksPlugin(['src/system.ts']),
     libAssetsPlugin({
       outputPath: outDir,
     }),
-    watchPublicPlugin(),
     makeManifestPlugin({
       outDir,
       manifestFile,
     }),
-    isDev &&
-      watchRebuildPlugin({
-        options: {
-          'refined-prun-prepare': {
-            skip: true,
-          },
-          'prun-connector': {
-            skip: true,
-          },
-        },
-      }),
   ],
   publicDir: resolve(rootDir, 'public'),
   build: {
     outDir,
+    cssCodeSplit: false,
     emptyOutDir: true,
-    sourcemap: isDev ? 'inline' : true,
-    minify: isProduction,
+    sourcemap: false,
+    minify: false,
     reportCompressedSize: false,
-    modulePreload: true,
     assetsInlineLimit: 0,
     rollupOptions: {
       external: ['chrome'],
+      preserveEntrySignatures: 'strict',
       output: {
         dir: outDir,
-        entryFileNames: '[name].js',
+        preserveModules: true,
+        preserveModulesRoot: 'source',
+        sanitizeFileName: name => name.replace('_virtual', 'virtual').replace('\x00', ''),
         assetFileNames: assetInfo =>
-          assetInfo.name?.endsWith('css') ? assetInfo.name : 'assets/[name]-[hash][extname]',
+          assetInfo.name?.endsWith('css')
+            ? assetInfo.name.replace('style.css', 'refined-prun.css')
+            : 'assets/[name]-[hash][extname]',
+        entryFileNames(chunkInfo) {
+          if (chunkInfo.name.includes('node_modules')) {
+            const cleanName = chunkInfo.name
+              .split('/')
+              .filter(part => !noise.has(part))
+              .join('-');
+            return `npm/${cleanName}.js`;
+          }
+
+          return chunkInfo.name + '.js';
+        },
       },
       input: {
+        'content-script': resolve(__dirname, 'src/content-script.ts'),
         'refined-prun': resolve(__dirname, 'src/refined-prun.ts'),
         'refined-prun-prepare': resolve(__dirname, 'src/refined-prun-prepare.ts'),
         'prun-connector': resolve(__dirname, 'src/prun-connector.ts'),

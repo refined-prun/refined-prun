@@ -1,16 +1,3 @@
-<script lang="ts">
-import xit from '@src/features/XIT/xit-registry';
-import CXTS from '@src/features/XIT/CXTS/CXTS.vue';
-
-xit.add({
-  command: ['CXTS'],
-  name: 'COMMODITY EXCHANGE TRADES',
-  component: () => CXTS,
-});
-
-export default {};
-</script>
-
 <script setup lang="ts">
 import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import { computed } from 'vue';

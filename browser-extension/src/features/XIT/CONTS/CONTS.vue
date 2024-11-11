@@ -1,16 +1,3 @@
-<script lang="ts">
-import xit from '@src/features/XIT/xit-registry';
-import CONTS from '@src/features/XIT/CONTS/CONTS.vue';
-
-xit.add({
-  command: ['CONTS', 'CONTRACTS'],
-  name: 'ACTIVE CONTRACTS',
-  component: () => CONTS,
-});
-
-export default {};
-</script>
-
 <script setup lang="ts">
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';

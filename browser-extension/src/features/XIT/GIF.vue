@@ -1,14 +1,3 @@
-<script lang="ts">
-import xit from '@src/features/XIT/xit-registry';
-import GIF from '@src/features/XIT/GIF.vue';
-
-xit.add({
-  command: 'GIF',
-  name: 'RANDOM GIF',
-  component: () => GIF,
-});
-</script>
-
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';

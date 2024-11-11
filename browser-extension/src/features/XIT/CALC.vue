@@ -1,16 +1,3 @@
-<script lang="ts">
-import xit from './xit-registry';
-import CALC from '@src/features/XIT/CALC.vue';
-
-xit.add({
-  command: ['CALC', 'CALCULATOR'],
-  name: 'CALCULATOR',
-  component: () => CALC,
-});
-
-export default {};
-</script>
-
 <template>
   <iframe
     src="https://www.desmos.com/scientific"

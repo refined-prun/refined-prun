@@ -1,16 +1,3 @@
-<script lang="ts">
-import xit from '@src/features/XIT/xit-registry.js';
-import DEBUG from '@src/features/XIT/DEBUG/DEBUG.vue';
-
-xit.add({
-  command: 'DEBUG',
-  name: 'DEBUG',
-  component: () => DEBUG,
-});
-
-export default {};
-</script>
-
 <script setup lang="ts">
 import { downloadFile } from '@src/util';
 import DebugButton from '@src/features/XIT/DEBUG/DebugButton.vue';

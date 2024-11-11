@@ -17,9 +17,8 @@ const manifest = {
   permissions: ['storage', 'scripting'],
   host_permissions: [
     'https://apex.prosperousuniverse.com/',
-    'https://script.google.com/',
-    'https://script.googleusercontent.com/',
     'https://rest.fnar.net/',
+    'https://refined-prun.github.io/',
   ],
   action: {
     default_icon: {
@@ -37,7 +36,7 @@ const manifest = {
   content_scripts: [
     {
       matches: [apex],
-      js: ['refined-prun-prepare.js', 'refined-prun.js'],
+      js: ['refined-prun-prepare.js', 'content-script.js'],
       run_at: 'document_start',
     },
   ],

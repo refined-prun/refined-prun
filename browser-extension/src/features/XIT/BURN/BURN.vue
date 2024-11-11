@@ -1,28 +1,3 @@
-<script lang="ts">
-import xit from '@src/features/XIT/xit-registry';
-import BURN from '@src/features/XIT/BURN/BURN.vue';
-import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
-
-xit.add({
-  command: 'BURN',
-  name: parameters => {
-    if (parameters[1] && !parameters[2]) {
-      const site = sitesStore.getByPlanetNaturalIdOrName(parameters[1]);
-      if (site) {
-        const name = getEntityNameFromAddress(site.address);
-        return `ENHANCED BURN - ${name}`;
-      }
-    }
-
-    return 'ENHANCED BURN';
-  },
-  component: () => BURN,
-});
-
-export default {};
-</script>
-
 <script setup lang="ts">
 import FilterButton from '@src/features/XIT/BURN/FilterButton.vue';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';
@@ -37,6 +12,7 @@ import MaterialRow from '@src/features/XIT/BURN/MaterialRow.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { useXitParameters } from '@src/hooks/useXitParameters';
 import { isDefined, isEmpty } from 'ts-extras';
+import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 
 const parameters = useXitParameters();
 const isBurnAll = isEmpty(parameters) || parameters[0].toLowerCase() == 'all';

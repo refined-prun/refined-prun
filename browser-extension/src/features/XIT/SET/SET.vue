@@ -1,25 +1,3 @@
-<script lang="ts">
-import xit from '@src/features/XIT/xit-registry.js';
-import SET from '@src/features/XIT/SET/SET.vue';
-import FIN from '@src/features/XIT/SET/FIN.vue';
-import PMMG from '@src/features/XIT/SET/PMMG.vue';
-
-xit.add({
-  command: ['SET', 'SETTINGS'],
-  name: 'REFINED PRUN SETTINGS',
-  component: parameters => {
-    switch (parameters[1]?.toUpperCase()) {
-      case 'FIN':
-        return FIN;
-      case 'PMMG':
-        return PMMG;
-      default:
-        return SET;
-    }
-  },
-});
-</script>
-
 <script setup lang="ts">
 import PrunButton from '@src/components/PrunButton.vue';
 import SectionHeader from '@src/components/SectionHeader.vue';

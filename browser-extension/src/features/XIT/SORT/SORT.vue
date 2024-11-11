@@ -77,5 +77,3 @@ function deleteSortingMode(ev: Event, sorting: UserData.SortingMode) {
     </table>
   </template>
 </template>
-
-<style module></style>

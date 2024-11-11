@@ -1,16 +1,3 @@
-<script lang="ts">
-import xit from '@src/features/XIT/xit-registry';
-import HEALTH from '@src/features/XIT/HEALTH.vue';
-
-xit.add({
-  command: 'HEALTH',
-  name: 'DATA HEALTH',
-  component: () => HEALTH,
-});
-
-export default {};
-</script>
-
 <script setup lang="ts">
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';

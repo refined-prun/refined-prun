@@ -1,16 +1,3 @@
-<script lang="ts">
-import xit from '@src/features/XIT/xit-registry.js';
-import MATS from '@src/features/XIT/MATS.vue';
-
-xit.add({
-  command: 'MATS',
-  name: 'MATERIALS',
-  component: () => MATS,
-});
-
-export default {};
-</script>
-
 <script setup lang="ts">
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import PrunCss from '@src/infrastructure/prun-ui/prun-css';

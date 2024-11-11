@@ -1,16 +1,3 @@
-<script lang="ts">
-import xit from './xit-registry';
-import HQUC from '@src/features/XIT/HQUC.vue';
-
-xit.add({
-  command: ['HQUC'],
-  name: 'HQ UPGRADE CALCULATOR',
-  component: () => HQUC,
-});
-
-export default {};
-</script>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { calculateHQUpgradeMaterials, maxHQLevel } from '@src/core/hq';

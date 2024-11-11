@@ -43,6 +43,7 @@ async function injectConnector() {
   }
   const connector = document.createElement('script');
   connector.src = system.runtime.getURL('prun-connector.js');
+  connector.type = 'module';
   document.head.appendChild(connector);
 }
 
