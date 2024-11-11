@@ -9,7 +9,7 @@
     "strict": true,
     "noImplicitAny": false,
     "strictNullChecks": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -32,6 +32,7 @@
   },
   "include": [
     "src/**/*.ts",
+    "dev-tools/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.vue",
     "vite.config.mts",

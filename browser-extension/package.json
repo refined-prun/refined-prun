@@ -43,8 +43,6 @@
   },
   "devDependencies": {
     "@laynezh/vite-plugin-lib-assets": "^0.5.23",
-    "@refined-prun/hmr": "workspace:*",
-    "@refined-prun/tsconfig": "workspace:*",
     "@types/chrome": "^0.0.268",
     "@types/firefox-webext-browser": "^120.0.4",
     "@types/tinycolor2": "^1.4.6",

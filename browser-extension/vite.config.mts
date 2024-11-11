@@ -42,7 +42,8 @@ export default defineConfig({
     vueJsx(),
     vueDevTools(),
     libAssetsPlugin({
-      outputPath: outDir,
+      outputPath: 'assets',
+      name: '[name].[contenthash:8].[ext]',
     }),
     makeManifestPlugin({
       outDir,
@@ -52,15 +53,22 @@ export default defineConfig({
   publicDir: resolve(rootDir, 'public'),
   build: {
     outDir,
-    cssCodeSplit: false,
     emptyOutDir: true,
     sourcemap: false,
     minify: false,
     reportCompressedSize: false,
-    assetsInlineLimit: 0,
+    lib: {
+      entry: {
+        'content-script': resolve(__dirname, 'src/content-script.ts'),
+        'refined-prun': resolve(__dirname, 'src/refined-prun.ts'),
+        'refined-prun-prepare': resolve(__dirname, 'src/refined-prun-prepare.ts'),
+        'prun-connector': resolve(__dirname, 'src/prun-connector.ts'),
+        popup: resolve(__dirname, 'src/popup/popup.ts'),
+      },
+      formats: ['es'],
+    },
     rollupOptions: {
       external: ['chrome'],
-      preserveEntrySignatures: 'strict',
       output: {
         dir: outDir,
         preserveModules: true,
@@ -81,13 +89,6 @@ export default defineConfig({
 
           return chunkInfo.name + '.js';
         },
-      },
-      input: {
-        'content-script': resolve(__dirname, 'src/content-script.ts'),
-        'refined-prun': resolve(__dirname, 'src/refined-prun.ts'),
-        'refined-prun-prepare': resolve(__dirname, 'src/refined-prun-prepare.ts'),
-        'prun-connector': resolve(__dirname, 'src/prun-connector.ts'),
-        popup: resolve(__dirname, 'src/popup/popup.ts'),
       },
     },
   },
