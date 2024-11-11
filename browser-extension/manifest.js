@@ -19,6 +19,7 @@ const manifest = {
     'https://apex.prosperousuniverse.com/',
     'https://rest.fnar.net/',
     'https://refined-prun.github.io/',
+    'https://api.giphy.com/',
   ],
   action: {
     default_icon: {
