@@ -48,9 +48,7 @@ defineProps({
     {{ condition.quantity!.material.ticker }} @
     <AddressLink :address="condition.address!" />
   </template>
-  <template v-else-if="condition.type === 'HEADQUARTERS_UPGRADE'">
-    Upgrade HQ
-  </template>
+  <template v-else-if="condition.type === 'HEADQUARTERS_UPGRADE'"> Upgrade HQ </template>
   <template v-else>
     {{ condition.type }}
   </template>

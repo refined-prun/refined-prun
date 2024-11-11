@@ -47,6 +47,9 @@ export default ts.config(
         UserData: 'readonly',
       },
     },
-    ignores: ['eslint.config.js', 'browser-extension/manifest.js'],
+  },
+
+  {
+    ignores: ['dist/**/*', 'src/manifest.js'],
   },
 );

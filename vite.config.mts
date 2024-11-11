@@ -7,9 +7,8 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 import vueDevTools from 'vite-plugin-vue-devtools';
 import { createHash } from 'crypto';
 
-const rootDir = resolve(__dirname);
-const srcDir = resolve(rootDir, 'src');
-const manifestFile = resolve(__dirname, 'manifest.js');
+const srcDir = resolve(__dirname, 'src');
+const manifestFile = resolve(srcDir, 'manifest.js');
 
 const isDev = process.env.__DEV__ === 'true';
 
@@ -28,11 +27,11 @@ const noise = new Set([
   'built',
 ]);
 
-const outDir = resolve(rootDir, '..', 'dist');
+const outDir = resolve(__dirname, 'dist');
+
 export default defineConfig({
   resolve: {
     alias: {
-      '@root': rootDir,
       '@src': srcDir,
       '~': resolve(srcDir, 'assets'),
     },
@@ -50,27 +49,25 @@ export default defineConfig({
       manifestFile,
     }),
   ],
-  publicDir: resolve(rootDir, 'public'),
+  publicDir: resolve(__dirname, 'public'),
   build: {
     outDir,
-    emptyOutDir: true,
     sourcemap: false,
     minify: false,
     reportCompressedSize: false,
     lib: {
       entry: {
-        'content-script': resolve(__dirname, 'src/content-script.ts'),
-        'refined-prun': resolve(__dirname, 'src/refined-prun.ts'),
-        'refined-prun-prepare': resolve(__dirname, 'src/refined-prun-prepare.ts'),
-        'prun-connector': resolve(__dirname, 'src/prun-connector.ts'),
-        popup: resolve(__dirname, 'src/popup/popup.ts'),
+        'content-script': resolve(srcDir, 'content-script.ts'),
+        'refined-prun': resolve(srcDir, 'refined-prun.ts'),
+        'refined-prun-prepare': resolve(srcDir, 'refined-prun-prepare.ts'),
+        'prun-connector': resolve(srcDir, 'prun-connector.ts'),
+        popup: resolve(srcDir, 'popup/popup.ts'),
       },
       formats: ['es'],
     },
     rollupOptions: {
       external: ['chrome'],
       output: {
-        dir: outDir,
         preserveModules: true,
         preserveModulesRoot: 'source',
         sanitizeFileName: name => name.replace('_virtual', 'virtual').replace('\x00', ''),

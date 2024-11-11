@@ -1,0 +1,15 @@
+.solid {
+  /* Font Awesome required rules */
+  font-family: 'Font Awesome 6 Free', sans-serif;
+  font-weight: 900;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+.regular {
+  /* Font Awesome required rules */
+  font-family: 'Font Awesome 6 Free', sans-serif;
+  font-weight: 400;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}

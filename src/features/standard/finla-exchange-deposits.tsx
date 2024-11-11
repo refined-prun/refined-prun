@@ -40,14 +40,14 @@ function onTableBodyReady(tbody: HTMLTableSectionElement) {
     const cx = row.appendChild(document.createElement('td'));
     cx.classList.add(PrunCss.LiquidAssetsPanel.number);
     const cxDeposits = computed(() =>
-      currency.value ? currentAssets.cxDeposits.value?.get(currency.value) ?? 0 : 0,
+      currency.value ? (currentAssets.cxDeposits.value?.get(currency.value) ?? 0) : 0,
     );
     watchEffectWhileNodeAlive(row, () => (cx.textContent = fixed0(cxDeposits.value)));
     hideCellIfZeroTotal(cx, currentAssets.cxDepositsTotal);
     const fx = row.appendChild(document.createElement('td'));
     fx.classList.add(PrunCss.LiquidAssetsPanel.number);
     const fxDeposits = computed(() =>
-      currency.value ? currentAssets.fxDeposits.value?.get(currency.value) ?? 0 : 0,
+      currency.value ? (currentAssets.fxDeposits.value?.get(currency.value) ?? 0) : 0,
     );
     watchEffectWhileNodeAlive(row, () => (fx.textContent = fixed0(fxDeposits.value)));
     hideCellIfZeroTotal(fx, currentAssets.fxDepositsTotal);
