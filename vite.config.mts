@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
-import libAssetsPlugin from '@laynezh/vite-plugin-lib-assets';
+// import libAssetsPlugin from '@laynezh/vite-plugin-lib-assets';
 import makeManifestPlugin from './dev-tools/make-manifest-plugin';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
@@ -40,10 +40,10 @@ export default defineConfig({
     vue(),
     vueJsx(),
     vueDevTools(),
-    libAssetsPlugin({
-      outputPath: 'assets',
-      name: '[name].[contenthash:8].[ext]',
-    }),
+    // libAssetsPlugin({
+    //   outputPath: 'assets',
+    //   name: '[name].[contenthash:8].[ext]',
+    // }),
     makeManifestPlugin({
       outDir,
       manifestFile,
