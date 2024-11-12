@@ -38,8 +38,4 @@ function init() {
   tiles.observe(['COMG', 'COMP', 'COMU'], onTileReady);
 }
 
-features.add({
-  id: 'com-add-images',
-  description: 'COM: Adds images to messages containing image URLs.',
-  init,
-});
+features.add(import.meta.url, init, 'COM: Adds images to messages containing image URLs.');

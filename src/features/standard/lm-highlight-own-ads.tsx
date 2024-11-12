@@ -18,8 +18,4 @@ function init() {
   tiles.observe('LM', onTileReady);
 }
 
-features.add({
-  id: 'lm-highlight-own-ads',
-  description: 'LM: Highlights own ads.',
-  init,
-});
+features.add(import.meta.url, init, 'LM: Highlights own ads.');

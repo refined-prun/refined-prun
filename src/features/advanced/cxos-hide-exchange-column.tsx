@@ -5,9 +5,4 @@ function init() {
   applyScopedCssRule('CXOS', 'tr > *:first-child', css.hidden);
 }
 
-features.add({
-  id: 'cxos-hide-exchange-column',
-  description: 'CXOS: Hides the "Exchange" column.',
-  advanced: true,
-  init,
-});
+features.add(import.meta.url, init, 'CXOS: Hides the "Exchange" column.');

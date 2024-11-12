@@ -65,8 +65,4 @@ function init() {
   tiles.observe(['INV', 'SHPI'], onTileReady);
 }
 
-features.add({
-  id: 'inv-search-bar',
-  description: 'INV: Adds a search bar to the main INV buffer.',
-  init,
-});
+features.add(import.meta.url, init, 'INV: Adds a search bar to the main INV buffer.');

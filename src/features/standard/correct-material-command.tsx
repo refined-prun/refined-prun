@@ -33,8 +33,4 @@ function init() {
   subscribe($$(document, C.Tile.selector), onSelectorReady);
 }
 
-features.add({
-  id: 'correct-material-command',
-  description: 'Corrects material commands.',
-  init,
-});
+features.add(import.meta.url, init, 'Corrects material commands.');

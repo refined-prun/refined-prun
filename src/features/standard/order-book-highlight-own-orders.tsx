@@ -22,8 +22,4 @@ function init() {
   tiles.observe('FXOB', onTileReady);
 }
 
-features.add({
-  id: 'order-book-highlight-own-orders',
-  description: 'Highlights own orders in CXOB and FXOB.',
-  init,
-});
+features.add(import.meta.url, init, 'Highlights own orders in CXOB and FXOB.');

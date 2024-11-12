@@ -40,9 +40,8 @@ function init() {
   tiles.observe('BBL', onTileReady);
 }
 
-features.add({
-  id: 'bbl-collapsible-categories',
-  description:
-    'BBL: Makes categories collapsible and collapses the "Infrastructure" category by default.',
+features.add(
+  import.meta.url,
   init,
-});
+  'BBL: Makes categories collapsible and collapses the "Infrastructure" category by default.',
+);

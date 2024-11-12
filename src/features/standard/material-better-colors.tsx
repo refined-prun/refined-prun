@@ -15,8 +15,8 @@ function applyCategoryRule(category: string, rule: string) {
   applyCssRule(`.${C.ColoredIcon.container}[data-rp-category='${category}']`, rule);
 }
 
-features.add({
-  id: 'material-better-colors',
-  description: 'Changes material colors to more recognizable and distinguishable ones.',
+features.add(
+  import.meta.url,
   init,
-});
+  'Changes material colors to more recognizable and distinguishable ones.',
+);

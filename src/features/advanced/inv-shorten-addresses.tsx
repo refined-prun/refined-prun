@@ -17,9 +17,4 @@ function init() {
   tiles.observe('INV', onTileReady);
 }
 
-features.add({
-  id: 'inv-shorten-planet-names',
-  description: 'INV: Shortens addresses in the main INV command.',
-  advanced: true,
-  init,
-});
+features.add(import.meta.url, init, 'INV: Shortens addresses in the main INV command.');

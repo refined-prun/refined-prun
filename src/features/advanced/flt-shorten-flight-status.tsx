@@ -74,9 +74,4 @@ function init() {
   tiles.observe('FLT', onTileReady);
 }
 
-features.add({
-  id: 'flt-shorten-flight-status',
-  description: 'FLT: Replaces the flight status text with arrow icons.',
-  advanced: true,
-  init,
-});
+features.add(import.meta.url, init, 'FLT: Replaces the flight status text with arrow icons.');

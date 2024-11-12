@@ -5,8 +5,4 @@ function init() {
   applyClassCssRule(C.MaterialIcon.typeVerySmall, classes.indicator);
 }
 
-features.add({
-  id: 'material-icon-bigger-indicator',
-  description: 'Makes the material count label font bigger.',
-  init,
-});
+features.add(import.meta.url, init, 'Makes the material count label font bigger.');

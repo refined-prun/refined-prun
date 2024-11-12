@@ -11,9 +11,8 @@ function init() {
   applyClassCssRule('FormComponent__errorMessage___mBdvpz5', css.hidden);
 }
 
-features.add({
-  id: 'hide-form-errors',
-  description: 'Hides the error labels from form fields with incorrect input.',
-  advanced: true,
+features.add(
+  import.meta.url,
   init,
-});
+  'Hides the error labels from form fields with incorrect input.',
+);

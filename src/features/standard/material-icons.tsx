@@ -428,8 +428,4 @@ function shield(detail?: Icon): Icon {
   return detail ? ['f132', { detail }] : 'f132';
 }
 
-features.add({
-  id: 'material-icons',
-  description: 'Adds icons to materials.',
-  init,
-});
+features.add(import.meta.url, init, 'Adds icons to materials.');

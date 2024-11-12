@@ -8,9 +8,8 @@ function init() {
   applyClassCssRule(C.GridItemView.container, classes.gridItem);
 }
 
-features.add({
-  id: 'hide-item-names',
-  description: 'Hides item names and removes item grid gaps in all inventories.',
-  advanced: true,
+features.add(
+  import.meta.url,
   init,
-});
+  'Hides item names and removes item grid gaps in all inventories.',
+);

@@ -14,8 +14,4 @@ function init() {
   tiles.observeAll(onTileReady);
 }
 
-features.add({
-  id: 'header-duplicate-button',
-  description: 'Adds a tile duplicate button to the buffer header.',
-  init,
-});
+features.add(import.meta.url, init, 'Adds a tile duplicate button to the buffer header.');

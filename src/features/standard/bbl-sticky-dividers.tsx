@@ -5,8 +5,4 @@ function init() {
   applyScopedClassCssRule('BBL', C.SectionList.divider, classes.divider);
 }
 
-features.add({
-  id: 'bbl-sticky-dividers',
-  description: 'BBL: Makes building category dividers sticky.',
-  init,
-});
+features.add(import.meta.url, init, 'BBL: Makes building category dividers sticky.');

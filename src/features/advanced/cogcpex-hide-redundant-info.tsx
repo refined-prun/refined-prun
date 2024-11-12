@@ -20,10 +20,8 @@ function init() {
   tiles.observe('COGCPEX', onTileReady);
 }
 
-features.add({
-  id: 'cogcpex-hide-redundant-info',
-  description:
-    'COGCPEX: Hides "Advertising Campaign:" and "Education Events:" parts of the campaign labels.',
-  advanced: true,
+features.add(
+  import.meta.url,
   init,
-});
+  'COGCPEX: Hides "Advertising Campaign:" and "Education Events:" parts of the campaign labels.',
+);

@@ -16,9 +16,8 @@ function init() {
   tiles.observe('FLT', onTileReady);
 }
 
-features.add({
-  id: 'flt-shorten-cargo-capacity',
-  description: 'FLT: Removes "t" and "m³" and convert cargo capacity label to k-notation.',
-  advanced: true,
+features.add(
+  import.meta.url,
   init,
-});
+  'FLT: Removes "t" and "m³" and convert cargo capacity label to k-notation.',
+);

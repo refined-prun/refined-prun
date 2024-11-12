@@ -15,8 +15,4 @@ function init() {
   }
 }
 
-features.add({
-  id: 'remove-mobile-css-rules',
-  description: 'Removes mobile CSS rules.',
-  init,
-});
+features.add(import.meta.url, init, 'Removes mobile CSS rules.');

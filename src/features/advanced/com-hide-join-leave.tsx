@@ -5,9 +5,4 @@ function init() {
   applyCssRule(`.${C.Message.message}:not(:has(> .${C.Message.name} > div))`, css.hidden);
 }
 
-features.add({
-  id: 'com-hide-join-leave',
-  description: 'COM: Hides "User joined" and "User left" messages.',
-  advanced: true,
-  init,
-});
+features.add(import.meta.url, init, 'COM: Hides "User joined" and "User left" messages.');

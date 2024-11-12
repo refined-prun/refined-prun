@@ -10,8 +10,8 @@ function init() {
   );
 }
 
-features.add({
-  id: 'com-move-delete-button',
-  description: 'COM: Moves the "delete" button to prevent the message layout shift.',
+features.add(
+  import.meta.url,
   init,
-});
+  'COM: Moves the "delete" button to prevent the message layout shift.',
+);

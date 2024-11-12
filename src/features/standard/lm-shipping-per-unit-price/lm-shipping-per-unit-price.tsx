@@ -75,8 +75,8 @@ function init() {
   tiles.observe('LMP', onLMPTileReady);
 }
 
-features.add({
-  id: 'lm-shipping-per-unit-price',
-  description: 'LM: Adds a per-unit price label to ads. Also adds this info to LMA and LMP.',
+features.add(
+  import.meta.url,
   init,
-});
+  'LM: Adds a per-unit price label to ads. Also adds this info to LMA and LMP.',
+);

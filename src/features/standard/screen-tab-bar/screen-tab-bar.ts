@@ -7,8 +7,4 @@ function init() {
   });
 }
 
-features.add({
-  id: 'screen-tab-bar',
-  description: 'Adds a tab bar for user screens.',
-  init,
-});
+features.add(import.meta.url, init, 'Adds a tab bar for user screens.');

@@ -10,8 +10,8 @@ function init() {
   });
 }
 
-features.add({
-  id: 'clickable-apex-logo',
-  description: 'Makes the APEX logo clickable and leading to the user company info screen.',
+features.add(
+  import.meta.url,
   init,
-});
+  'Makes the APEX logo clickable and leading to the user company info screen.',
+);

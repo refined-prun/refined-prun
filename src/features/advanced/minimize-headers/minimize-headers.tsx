@@ -46,9 +46,4 @@ function init() {
   tiles.observe(['CX', 'CONT', 'LM', 'SYSI'], onTileReady);
 }
 
-features.add({
-  id: 'minimize-headers',
-  description: 'Adds a button to minimize headers in CX, CONT, LM, and SYSI.',
-  advanced: true,
-  init,
-});
+features.add(import.meta.url, init, 'Adds a button to minimize headers in CX, CONT, LM, and SYSI.');

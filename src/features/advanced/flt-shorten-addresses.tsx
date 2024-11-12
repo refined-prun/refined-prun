@@ -12,9 +12,4 @@ function init() {
   tiles.observe('FLT', onTileReady);
 }
 
-features.add({
-  id: 'flt-shorten-addresses',
-  description: 'FLT: Shortens addresses in "Location" and "Destination".',
-  advanced: true,
-  init,
-});
+features.add(import.meta.url, init, 'FLT: Shortens addresses in "Location" and "Destination".');

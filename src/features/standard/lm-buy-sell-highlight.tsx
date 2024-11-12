@@ -28,8 +28,8 @@ function init() {
   tiles.observe(['LM', 'LMA'], onTileReady);
 }
 
-features.add({
-  id: 'lm-buy-sell-highlight',
-  description: 'LM: Colors the BUYING and SELLING in green and red respectively.',
+features.add(
+  import.meta.url,
   init,
-});
+  'LM: Colors the BUYING and SELLING in green and red respectively.',
+);

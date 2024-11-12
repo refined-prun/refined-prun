@@ -16,8 +16,4 @@ function init() {
   tiles.observe('BS', onTileReady);
 }
 
-features.add({
-  id: 'bs-building-list',
-  description: 'BS: Adds a building summary list.',
-  init,
-});
+features.add(import.meta.url, init, 'BS: Adds a building summary list.');

@@ -33,8 +33,4 @@ function init() {
   subscribe($$(document, C.Tile.selector), onSelectorReady);
 }
 
-features.add({
-  id: 'xit-web-correct-command',
-  description: 'Corrects the command for XIT WEB',
-  init,
-});
+features.add(import.meta.url, init, 'Corrects the command for XIT WEB');

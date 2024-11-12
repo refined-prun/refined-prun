@@ -7,9 +7,4 @@ function init() {
   applyCssRule(`.${C.TileControls.container} > .${C.TileControls.controls}`, classes.show);
 }
 
-features.add({
-  id: 'expanded-tile-controls',
-  description: 'Makes tile controls always visible.',
-  advanced: true,
-  init,
-});
+features.add(import.meta.url, init, 'Makes tile controls always visible.');

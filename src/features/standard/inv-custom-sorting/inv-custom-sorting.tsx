@@ -189,8 +189,4 @@ function init() {
   });
 }
 
-features.add({
-  id: 'inv-custom-sorting',
-  description: 'INV: Adds custom sorting modes.',
-  init,
-});
+features.add(import.meta.url, init, 'INV: Adds custom sorting modes.');

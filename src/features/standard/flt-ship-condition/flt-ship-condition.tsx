@@ -17,8 +17,4 @@ function init() {
   tiles.observe('FLT', onTileReady);
 }
 
-features.add({
-  id: 'flt-ship-condition',
-  description: 'FLT: Adds a ship condition label to the "Name" column.',
-  init,
-});
+features.add(import.meta.url, init, 'FLT: Adds a ship condition label to the "Name" column.');

@@ -28,8 +28,4 @@ function init() {
   tiles.observe('FLT', onTileReady);
 }
 
-features.add({
-  id: 'flt-arrival-eta',
-  description: 'FLT: Adds an arrival date to the "ETA" column.',
-  init,
-});
+features.add(import.meta.url, init, 'FLT: Adds an arrival date to the "ETA" column.');

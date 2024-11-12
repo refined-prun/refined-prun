@@ -11,8 +11,4 @@ function init() {
   tiles.observe('BBL', onTileReady);
 }
 
-features.add({
-  id: 'bbl-demolish-danger',
-  description: 'BBL: Applies the "danger" style to the "Demolish" button.',
-  init,
-});
+features.add(import.meta.url, init, 'BBL: Applies the "danger" style to the "Demolish" button.');

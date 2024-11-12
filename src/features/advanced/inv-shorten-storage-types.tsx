@@ -42,9 +42,4 @@ function init() {
   tiles.observe('INV', onTileReady);
 }
 
-features.add({
-  id: 'inv-shorten-storage-types',
-  description: 'INV: Shortens storage type names in the first column.',
-  advanced: true,
-  init,
-});
+features.add(import.meta.url, init, 'INV: Shortens storage type names in the first column.');

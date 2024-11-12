@@ -9,8 +9,4 @@ function init() {
   applyClassCssRule(C.ScrollView.track, classes.scrollTrack);
 }
 
-features.add({
-  id: 'fix-z-order',
-  description: 'Fixes the CSS z-order of some elements.',
-  init,
-});
+features.add(import.meta.url, init, 'Fixes the CSS z-order of some elements.');

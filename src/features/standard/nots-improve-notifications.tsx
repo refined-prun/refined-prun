@@ -252,8 +252,8 @@ function init() {
   tiles.observe('NOTS', onTileReady);
 }
 
-features.add({
-  id: 'nots-improve-notifications',
-  description: 'NOTS: Adds a colored label to notifications and shortens the notification text.',
+features.add(
+  import.meta.url,
   init,
-});
+  'NOTS: Adds a colored label to notifications and shortens the notification text.',
+);

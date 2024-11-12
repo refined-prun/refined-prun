@@ -6,8 +6,4 @@ function init() {
   applyCssRule('table tbody tr:nth-child(even) td:before', classes.overlay);
 }
 
-features.add({
-  id: 'table-rows-alternating-colors',
-  description: 'Colors even rows in lighter color in all tables.',
-  init,
-});
+features.add(import.meta.url, init, 'Colors even rows in lighter color in all tables.');

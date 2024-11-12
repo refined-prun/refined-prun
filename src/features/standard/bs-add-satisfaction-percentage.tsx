@@ -32,9 +32,8 @@ function init() {
   tiles.observe('BS', onTileReady);
 }
 
-features.add({
-  id: 'bs-add-satisfaction-percentage',
-  description:
-    'BS: Adds a workforce satisfaction percentage label to the satisfaction progress bar.',
+features.add(
+  import.meta.url,
   init,
-});
+  'BS: Adds a workforce satisfaction percentage label to the satisfaction progress bar.',
+);

@@ -84,8 +84,4 @@ function init() {
   tiles.observe('XIT', onTileReady);
 }
 
-features.add({
-  id: 'xit-commands',
-  description: 'Adds XIT commands support',
-  init,
-});
+features.add(import.meta.url, init, 'Adds XIT commands support');

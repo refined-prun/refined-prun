@@ -25,8 +25,4 @@ function init() {
   tiles.observe('CXPO', onTileReady);
 }
 
-features.add({
-  id: 'cxpo-order-book',
-  description: 'CXPO: Adds a compact order book.',
-  init,
-});
+features.add(import.meta.url, init, 'CXPO: Adds a compact order book.');

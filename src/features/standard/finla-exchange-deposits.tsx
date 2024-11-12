@@ -64,8 +64,4 @@ function init() {
   tiles.observe('FINLA', onTileReady);
 }
 
-features.add({
-  id: 'finla-exchange-deposits',
-  description: 'FINLA: Adds a "CX Deposits" and "FX Deposits" columns.',
-  init,
-});
+features.add(import.meta.url, init, 'FINLA: Adds a "CX Deposits" and "FX Deposits" columns.');

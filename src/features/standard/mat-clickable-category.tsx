@@ -31,9 +31,8 @@ function init() {
   tiles.observe('MAT', onTileReady);
 }
 
-features.add({
-  id: 'mat-clickable-category',
-  description:
-    'MAT: Makes material category clickable and leading to XIT MATS with the material category.',
+features.add(
+  import.meta.url,
   init,
-});
+  'MAT: Makes material category clickable and leading to XIT MATS with the material category.',
+);

@@ -75,8 +75,4 @@ function init() {
   tiles.observe(['INV', 'SHPI'], onTileReady);
 }
 
-features.add({
-  id: 'material-markers',
-  description: 'Adds material markers.',
-  init,
-});
+features.add(import.meta.url, init, 'Adds material markers.');

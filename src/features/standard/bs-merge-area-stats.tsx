@@ -32,8 +32,8 @@ function init() {
   tiles.observe('BS', onTileReady);
 }
 
-features.add({
-  id: 'bs-merge-area-stats',
-  description: 'BS: Merges the area progress bar field with the detailed area stats row.',
+features.add(
+  import.meta.url,
   init,
-});
+  'BS: Merges the area progress bar field with the detailed area stats row.',
+);

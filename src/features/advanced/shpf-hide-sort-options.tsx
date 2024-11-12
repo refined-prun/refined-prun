@@ -5,9 +5,4 @@ function init() {
   applyScopedClassCssRule('SHPF', C.InventorySortControls.controls, css.hidden);
 }
 
-features.add({
-  id: 'shpf-hide-sort-options',
-  description: 'SHPF: Hides inventory sort options.',
-  advanced: true,
-  init,
-});
+features.add(import.meta.url, init, 'SHPF: Hides inventory sort options.');

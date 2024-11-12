@@ -10,8 +10,4 @@ function init() {
   });
 }
 
-features.add({
-  id: 'sidebar-buttons',
-  description: 'Adds a customizable sidebar with navigation buttons.',
-  init,
-});
+features.add(import.meta.url, init, 'Adds a customizable sidebar with navigation buttons.');

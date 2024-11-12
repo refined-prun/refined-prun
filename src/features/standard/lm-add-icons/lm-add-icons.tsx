@@ -32,8 +32,4 @@ function init() {
   tiles.observe('LM', onTileReady);
 }
 
-features.add({
-  id: 'lm-add-icons',
-  description: 'LM: Adds material and shipment icons to ads.',
-  init,
-});
+features.add(import.meta.url, init, 'LM: Adds material and shipment icons to ads.');

@@ -70,8 +70,4 @@ function init() {
   subscribe($$(document, C.Tile.selector), onSelectorReady);
 }
 
-features.add({
-  id: 'correct-planet-command',
-  description: 'Corrects planet commands.',
-  init,
-});
+features.add(import.meta.url, init, 'Corrects planet commands.');

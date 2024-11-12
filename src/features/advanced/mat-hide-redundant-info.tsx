@@ -14,9 +14,4 @@ function init() {
   );
 }
 
-features.add({
-  id: 'mat-hide-redundant-info',
-  description: 'MAT: Hides "Ticker" and "Natural resource" fields.',
-  advanced: true,
-  init,
-});
+features.add(import.meta.url, init, 'MAT: Hides "Ticker" and "Natural resource" fields.');

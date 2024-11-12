@@ -59,10 +59,9 @@ function init() {
   tiles.observe('BBL', onTileReady);
 }
 
-features.add({
-  id: 'bbl-hide-redundant-info',
-  description:
-    'BBL: Hides "Last repair", "Established", and "Repair costs" rows if they are empty' +
-    ' or irrelevant to repairs. Also hides the "Book value" row.',
+features.add(
+  import.meta.url,
   init,
-});
+  'BBL: Hides "Last repair", "Established", and "Repair costs" rows if they are empty' +
+    ' or irrelevant to repairs. Also hides the "Book value" row.',
+);

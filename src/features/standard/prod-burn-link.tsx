@@ -29,8 +29,4 @@ function init() {
   tiles.observe('PROD', onTileReady);
 }
 
-features.add({
-  id: 'prod-burn-link',
-  description: 'PROD: Adds a XIT BURN link to the context bar.',
-  init,
-});
+features.add(import.meta.url, init, 'PROD: Adds a XIT BURN link to the context bar.');

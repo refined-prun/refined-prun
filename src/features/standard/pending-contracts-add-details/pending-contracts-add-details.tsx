@@ -23,8 +23,4 @@ function init() {
   subscribe($$(document, C.Sidebar.contractId), onContractIdReady);
 }
 
-features.add({
-  id: 'pending-contracts-add-details',
-  description: 'Adds a partner name to contracts in the sidebar.',
-  init,
-});
+features.add(import.meta.url, init, 'Adds a partner name to contracts in the sidebar.');

@@ -75,8 +75,4 @@ function applyCssRules() {
   applyCssRule(`${selectorDynamic}:before`, classes.functionIconDynamic);
 }
 
-features.add({
-  id: 'evaluate-input-formula',
-  description: 'Evaluates input formulas in numeric text fields on Enter.',
-  init,
-});
+features.add(import.meta.url, init, 'Evaluates input formulas in numeric text fields on Enter.');

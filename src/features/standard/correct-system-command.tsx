@@ -35,8 +35,4 @@ function init() {
   subscribe($$(document, C.Tile.selector), onSelectorReady);
 }
 
-features.add({
-  id: 'correct-system-command',
-  description: 'Corrects system commands.',
-  init,
-});
+features.add(import.meta.url, init, 'Corrects system commands.');

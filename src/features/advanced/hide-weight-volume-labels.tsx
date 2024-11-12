@@ -5,9 +5,4 @@ function init() {
   applyClassCssRule(C.StoreView.name, css.hidden);
 }
 
-features.add({
-  id: 'hide-weight-volume-labels',
-  description: 'Hides "Weight" and "Volume" labels in all inventories.',
-  advanced: true,
-  init,
-});
+features.add(import.meta.url, init, 'Hides "Weight" and "Volume" labels in all inventories.');

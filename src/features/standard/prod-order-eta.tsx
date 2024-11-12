@@ -80,8 +80,4 @@ function init() {
   tiles.observe('PROD', onTileReady);
 }
 
-features.add({
-  id: 'prod-order-eta',
-  description: 'PROD: Adds a finish ETA label to orders.',
-  init,
-});
+features.add(import.meta.url, init, 'PROD: Adds a finish ETA label to orders.');

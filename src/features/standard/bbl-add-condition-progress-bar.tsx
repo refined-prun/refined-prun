@@ -35,8 +35,4 @@ function init() {
   tiles.observe('BBL', onTileReady);
 }
 
-features.add({
-  id: 'bbl-add-condition-progress-bar',
-  description: 'BBL: Adds a progress bar to the building condition row.',
-  init,
-});
+features.add(import.meta.url, init, 'BBL: Adds a progress bar to the building condition row.');

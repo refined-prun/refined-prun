@@ -7,9 +7,4 @@ function init() {
   applyScopedClassCssRule('LM', C.CommodityAd.text, classes.text);
 }
 
-features.add({
-  id: 'lm-hide-rating',
-  description: 'LM: Hides rating icon from ads.',
-  advanced: true,
-  init,
-});
+features.add(import.meta.url, init, 'LM: Hides rating icon from ads.');

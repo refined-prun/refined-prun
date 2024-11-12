@@ -15,8 +15,8 @@ function init() {
   tiles.observe(['LM', 'CX', 'XIT'], onTileReady);
 }
 
-features.add({
-  id: 'header-calculator-button',
-  description: 'Adds a calculator button to the buffer header of LM, CX and XIT commands.',
+features.add(
+  import.meta.url,
   init,
-});
+  'Adds a calculator button to the buffer header of LM, CX and XIT commands.',
+);

@@ -5,9 +5,4 @@ function init() {
   applyScopedCssRule('FLT', 'tr > *:first-child', css.hidden);
 }
 
-features.add({
-  id: 'flt-hide-transponder-column',
-  description: 'FLT: Hides the "Transponder" column.',
-  advanced: true,
-  init,
-});
+features.add(import.meta.url, init, 'FLT: Hides the "Transponder" column.');

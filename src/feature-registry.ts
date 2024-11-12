@@ -41,11 +41,22 @@ function logError(id: string, error: unknown): void {
   console.groupEnd();
 }
 
-function add(descriptor: FeatureDescriptor) {
-  if (__DEV__ && registry.some(x => x.id === descriptor.id)) {
-    throw Error(`Duplicate feature id: ${descriptor.id}`);
+function add(path: string, init: () => void, description: string) {
+  const parts = path.split('/');
+  const id = parts.pop()!.split('.')[0];
+  let mode = parts.pop()!;
+  if (mode === id) {
+    mode = parts.pop()!;
   }
-  registry.push(descriptor);
+  if (__DEV__ && registry.some(x => x.id === id)) {
+    throw Error(`Duplicate feature id: ${id}`);
+  }
+  registry.push({
+    id,
+    description,
+    init,
+    advanced: mode === 'advanced',
+  });
 }
 
 async function init() {
