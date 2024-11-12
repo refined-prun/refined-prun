@@ -1,6 +1,6 @@
-import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 import { refAnimationFrame } from '@src/utils/reactive-dom';
 import { isEmpty } from 'ts-extras';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 
 function onTileReady(tile: PrunTile) {
   // Only process BS tiles with parameter
@@ -21,9 +21,7 @@ function onTileReady(tile: PrunTile) {
       bar.style.justifyContent = 'left';
       const progress = bar.getElementsByTagName('progress')[0];
       const progressTitle = refAnimationFrame(progress, x => x.title);
-      const progressText = document.createElement('span');
-      bar.appendChild(progressText);
-      watchEffectWhileNodeAlive(progress, () => (progressText.textContent = progressTitle.value));
+      createFragmentApp(() => <span>{progressTitle.value}</span>).appendTo(bar);
     });
   });
 }

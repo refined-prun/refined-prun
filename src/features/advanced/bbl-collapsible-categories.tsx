@@ -4,28 +4,20 @@ import {
   applyScopedClassCssRule,
   applyScopedCssRule,
 } from '@src/infrastructure/prun-ui/refined-prun-css';
-import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.SectionList.container), container => {
     for (const divider of $$(container, C.SectionList.divider)) {
       // Hide Infrastructure (which is the first category) by default
-      const enabled = ref(divider.parentElement?.firstChild !== divider);
-      const indicator = document.createElement('div');
-      indicator.classList.add(C.RadioItem.indicator);
-      divider.firstChild!.before(indicator);
-      watchEffectWhileNodeAlive(divider, () => {
-        if (enabled.value) {
-          indicator.classList.add(C.RadioItem.active);
-          indicator.classList.add(C.effects.shadowPrimary);
-        } else {
-          indicator.classList.remove(C.RadioItem.active);
-          indicator.classList.remove(C.effects.shadowPrimary);
-        }
-      });
-      divider.addEventListener('click', () => {
-        enabled.value = !enabled.value;
-      });
+      const enabled = ref(container.firstChild !== divider);
+      divider.addEventListener('click', () => (enabled.value = !enabled.value));
+      const indicatorClass = computed(() => ({
+        [C.RadioItem.indicator]: true,
+        [C.RadioItem.active]: enabled.value,
+        [C.effects.shadowPrimary]: enabled.value,
+      }));
+      createFragmentApp(() => <div class={indicatorClass} />).before(divider.firstChild!);
     }
   });
 }

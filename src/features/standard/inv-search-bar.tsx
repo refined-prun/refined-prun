@@ -1,4 +1,6 @@
 import features from '@src/feature-registry';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
+import css from '@src/utils/css-utils.module.css';
 
 function onTileReady(tile: PrunTile) {
   // Only add search bar to the main INV tile
@@ -6,31 +8,31 @@ function onTileReady(tile: PrunTile) {
     return;
   }
 
-  subscribe($$(tile.anchor, C.InventoriesListContainer.filter), inventoryFilters => {
-    const searchBarDiv = document.createElement('div');
-    inventoryFilters.after(searchBarDiv);
+  subscribe($$(tile.anchor, C.InventoriesListContainer.filter), async inventoryFilters => {
+    const tableBody = await $(tile.anchor, 'tbody');
 
-    // Create search bar
-    const searchBar = document.createElement('input');
-    searchBar.classList.add('input-text');
-    searchBarDiv.appendChild(searchBar);
-    searchBar.style.width = '200px';
-    searchBar.placeholder = 'Enter location';
-
-    // Get table of inventories
-    const tableBody = tile.anchor.querySelector('tbody')!;
-
-    // Add change listener to search bar to filter list
-    searchBar.addEventListener('input', () => {
+    const onInput = (e: Event) => {
+      const input = e.target as HTMLInputElement;
       for (let i = 0; i < tableBody.children.length; i++) {
         const row = tableBody.children[i] as HTMLElement;
-        if (filterRow(row, searchBar.value)) {
-          row.style.display = 'table-row';
+        if (filterRow(row, input.value)) {
+          row.classList.remove(css.hidden);
         } else {
-          row.style.display = 'none';
+          row.classList.add(css.hidden);
         }
       }
-    });
+    };
+
+    createFragmentApp(() => (
+      <div>
+        <input
+          class="input-text"
+          style="width: 200px"
+          placeholder="Enter location"
+          onInput={onInput}
+        />
+      </div>
+    )).after(inventoryFilters);
   });
 }
 
