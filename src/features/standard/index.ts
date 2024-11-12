@@ -21,6 +21,7 @@ import './flt-arrival-eta';
 import './flt-ship-condition/flt-ship-condition';
 import './header-calculator-button';
 import './header-duplicate-button';
+import './hide-inactive-close-button';
 import './inv-add-shipment-detail';
 import './inv-custom-sorting/inv-custom-sorting';
 import './inv-search-bar';

@@ -39,6 +39,7 @@
 - System commands (`FLTS`, `INF`, `MS`, and `SYSI`) now accept system names.
 - Ship commands (`SFC`, `SHP`, `SHPF`, `SHPI`, and `SI`) now accept ship names.
 - Table rows now alternate color between odd and even rows.
+- The close button is hidden on single tile windows where it does nothing.
 - Added compatibility with non-English localizations.
 
 ## Changed
