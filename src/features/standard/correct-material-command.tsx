@@ -23,6 +23,7 @@ async function onSelectorReady(selector: HTMLElement) {
     }
 
     ev.stopPropagation();
+    ev.preventDefault();
     commandParts[1] = parameter.toUpperCase();
     changeValue(input, commandParts.join(' '));
     setTimeout(() => form.requestSubmit(), 0);

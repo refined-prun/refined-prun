@@ -20,6 +20,7 @@ async function onSelectorReady(selector: HTMLElement) {
     }
 
     ev.stopPropagation();
+    ev.preventDefault();
     parts[2] =
       prunBtoa(parts[2])
         .match(/.{1,200}/g)

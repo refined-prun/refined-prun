@@ -42,6 +42,7 @@ async function onSelectorReady(selector: HTMLElement) {
     }
 
     ev.stopPropagation();
+    ev.preventDefault();
     const newCommandParts = [fullCommand[0], naturalId];
     changeValue(input, newCommandParts.join(' '));
     setTimeout(() => form.requestSubmit(), 0);
