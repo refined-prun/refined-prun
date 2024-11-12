@@ -28,7 +28,7 @@ import './inv-search-bar';
 import './lm-add-icons/lm-add-icons';
 import './lm-buy-sell-highlight';
 import './lm-highlight-own-ads';
-import './lm-shipping-per-unit-price/lm-shipping-per-unit-price';
+import '@src/features/standard/shipping-per-unit-price/shipping-per-unit-price';
 import './mat-clickable-category';
 import './material-better-colors';
 import './material-icon-bigger-indicator';

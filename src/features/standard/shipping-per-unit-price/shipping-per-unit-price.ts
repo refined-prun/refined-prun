@@ -72,8 +72,4 @@ function init() {
   tiles.observe('LMP', onLMPTileReady);
 }
 
-features.add(
-  import.meta.url,
-  init,
-  'LM: Adds a per-unit price label to ads. Also adds this info to LMA and LMP.',
-);
+features.add(import.meta.url, init, 'Adds a per-unit price label to ads in LM, LMA, and LMP.');
