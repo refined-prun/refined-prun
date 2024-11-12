@@ -1,4 +1,3 @@
-import { shallowReactive } from 'vue';
 import { userData } from '@src/store/user-data';
 import dayjs from 'dayjs';
 

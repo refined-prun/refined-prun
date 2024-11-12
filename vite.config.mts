@@ -5,6 +5,7 @@ import makeManifestPlugin from './dev-tools/make-manifest-plugin';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import vueDevTools from 'vite-plugin-vue-devtools';
+import unimport from 'unimport/unplugin';
 import { createHash } from 'crypto';
 
 const srcDir = resolve(__dirname, 'src');
@@ -40,6 +41,26 @@ export default defineConfig({
     vue(),
     vueJsx(),
     vueDevTools(),
+    unimport.vite({
+      presets: [
+        'vue',
+        {
+          from: '@src/utils/select-dom',
+          imports: ['$', '$$', '_$', '_$$'],
+        },
+      ],
+      imports: [
+        { name: 'default', as: 'PrunCss', from: '@src/infrastructure/prun-ui/prun-css' },
+        { name: 'subscribe', from: '@src/utils/subscribe-async-generator' },
+        { name: 'default', as: 'tiles', from: '@src/infrastructure/prun-ui/tiles' },
+        { name: 'default', as: 'features', from: '@src/feature-registry' },
+        { name: 'default', as: 'xit', from: '@src/features/XIT/xit-registry' },
+      ],
+      dts: 'src/unimport.d.ts',
+      addons: {
+        vueTemplate: true,
+      },
+    }),
     // libAssetsPlugin({
     //   outputPath: 'assets',
     //   name: '[name].[contenthash:8].[ext]',

@@ -9,6 +9,13 @@ export default ts.config(
 
   // ts
   ...ts.configs.recommended,
+  {
+    files: ['**/*.{ts,tsx,mts,cts,vue}'],
+    rules: {
+      // This check is already provided by TypeScript.
+      'no-undef': 'off',
+    },
+  },
 
   // vue
   ...vue.configs['flat/recommended'],
@@ -41,15 +48,10 @@ export default ts.config(
       parserOptions: {
         ecmaVersion: 'latest',
       },
-      globals: {
-        chrome: 'readonly',
-        PrunApi: 'readonly',
-        UserData: 'readonly',
-      },
     },
   },
 
   {
-    ignores: ['dist/**/*', 'src/manifest.js'],
+    ignores: ['dist/**/*', 'src/manifest.js', 'src/unimport.d.ts'],
   },
 );

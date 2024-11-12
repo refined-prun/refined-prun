@@ -1,5 +1,3 @@
-import system from '@src/system';
-
 const clearButton = document.getElementById('clearbutton')!;
 
 clearButton.addEventListener('click', () => {
@@ -7,6 +5,6 @@ clearButton.addEventListener('click', () => {
 });
 
 function OnClear_Click() {
-  system.storage.local.remove('PMMG-Lists');
-  system.storage.local.remove('PMMG-Checklists');
+  chrome.storage.local.remove('PMMG-Lists');
+  chrome.storage.local.remove('PMMG-Checklists');
 }

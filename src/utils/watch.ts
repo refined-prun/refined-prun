@@ -1,4 +1,4 @@
-import { Ref, watch, WatchStopHandle } from 'vue';
+import { WatchStopHandle } from 'vue';
 
 export async function watchUntil(condition: Ref<boolean> | (() => boolean)) {
   await new Promise<void>(resolve => {

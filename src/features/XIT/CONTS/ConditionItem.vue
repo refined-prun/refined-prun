@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import fa from '@src/utils/font-awesome.module.css';
-import { computed, PropType } from 'vue';
 import { friendlyConditionText, isConditionFulfilled } from '@src/features/XIT/CONTS/utils';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 
 const props = defineProps({
   condition: {

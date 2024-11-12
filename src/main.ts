@@ -1,6 +1,5 @@
 import './refined-prun.css';
 import { sleep } from './util';
-import features from '@src/feature-registry';
 import { initializePrunApi, loadGameData } from '@src/infrastructure/prun-api';
 import { fetchPrices } from '@src/infrastructure/fio/cx';
 import { trackBalanceHistory } from '@src/store/user-data-balance';
@@ -8,7 +7,6 @@ import { initializeTileListener } from '@src/store/user-data-tiles';
 import { loadUserData } from '@src/infrastructure/storage/user-data-serializer';
 import { userData } from '@src/store/user-data';
 import oneMutation from 'one-mutation';
-import system from '@src/system';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { watchWhile } from '@src/utils/watch';
 import { initializeUI } from '@src/infrastructure/prun-ui';
@@ -42,7 +40,7 @@ async function injectConnector() {
     });
   }
   const connector = document.createElement('script');
-  connector.src = system.runtime.getURL('prun-connector.js');
+  connector.src = chrome.runtime.getURL('prun-connector.js');
   connector.type = 'module';
   document.head.appendChild(connector);
 }

@@ -1,7 +1,6 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
-import { computed } from 'vue';
 import {
   getEntityNameFromAddress,
   getLocationLineFromAddress,

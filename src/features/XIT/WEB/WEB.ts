@@ -1,10 +1,5 @@
-import xit from '@src/features/XIT/xit-registry';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { changeValue } from '@src/util';
-import features from '@src/feature-registry';
 import WEB from '@src/features/XIT/WEB/WEB.vue';
-import { $, $$ } from '@src/utils/select-dom';
-import { subscribe } from '@src/utils/subscribe-async-generator';
 import { prunBtoa } from '@src/infrastructure/prun-ui/base64';
 import { isValidUrl } from '@src/features/XIT/WEB/shared';
 

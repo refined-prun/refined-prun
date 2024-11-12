@@ -1,16 +1,10 @@
 import classes from './finla-exchange-deposits.module.css';
 import css from '@src/utils/css-utils.module.css';
-import tiles from '@src/infrastructure/prun-ui/tiles';
-import features from '@src/feature-registry';
 import { refTextContent } from '@src/utils/reactive-dom';
-import { computed, Ref } from 'vue';
 import { fixed0 } from '@src/utils/format';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { currentAssets } from '@src/core/balance/current-assets';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
-import { subscribe } from '@src/utils/subscribe-async-generator';
-import { $$ } from '@src/utils/select-dom';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'thead'), onTableHeadReady);

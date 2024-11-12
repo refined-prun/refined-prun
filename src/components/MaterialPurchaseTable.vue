@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { fixed0, fixed2 } from '@src/utils/format';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
-import { computed, PropType, ref } from 'vue';
 import { calcMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { userData } from '@src/store/user-data';
 import { sortMaterialAmounts } from '@src/core/sort-materials';

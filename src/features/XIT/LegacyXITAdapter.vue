@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, PropType, onMounted } from 'vue';
 import { XITModule } from '@src/features/XIT/xit-registry';
 
 const props = defineProps({

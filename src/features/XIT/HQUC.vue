@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { calculateHQUpgradeMaterials, maxHQLevel } from '@src/core/hq';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import MaterialPurchaseTable from '@src/components/MaterialPurchaseTable.vue';

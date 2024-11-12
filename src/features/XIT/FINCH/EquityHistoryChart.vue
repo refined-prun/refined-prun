@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
 import LineChart from '@src/features/XIT/FINCH/LineChart.vue';
 import { percent0 } from '@src/utils/format';
 import { userData } from '@src/store/user-data';

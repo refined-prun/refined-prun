@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { ddmm, hhmm } from '@src/utils/format';
 import { useXitParameters } from '@src/hooks/useXitParameters';

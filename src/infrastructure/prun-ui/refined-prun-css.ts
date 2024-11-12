@@ -1,7 +1,4 @@
-import system from '@src/system';
 import { castArray } from '@src/utils/cast-array';
-import features from '@src/feature-registry';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 
 let styleElement: HTMLStyleElement | undefined = undefined;
 
@@ -9,7 +6,7 @@ const rules: { [id: string]: string } = {};
 
 export async function loadRefinedPrunCss() {
   const css = document.createElement('link');
-  css.href = system.runtime.getURL(`refined-prun.css`);
+  css.href = chrome.runtime.getURL(`refined-prun.css`);
   css.id = 'refined-prun-css';
   css.rel = 'stylesheet';
   await new Promise(resolve => {

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { PropType } from 'vue';
 import SortingOrderIcon from '@src/features/standard/inv-custom-sorting/SortingOrderIcon.vue';
 
 defineProps({

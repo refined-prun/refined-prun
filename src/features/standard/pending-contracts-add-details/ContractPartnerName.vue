@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import PrunLink from '@src/components/PrunLink.vue';
 

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { PropType } from 'vue';
 import PrunLink from '@src/components/PrunLink.vue';
 import { isFactionContract } from '@src/features/XIT/CONTS/utils';
 import fa from '@src/utils/font-awesome.module.css';

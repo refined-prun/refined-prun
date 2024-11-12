@@ -3,7 +3,6 @@ import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data
 import { implementRequestHooks } from '@src/infrastructure/prun-api/data/request-hooks';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
-import { computed } from 'vue';
 import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
 import { blueprintsStore } from '@src/infrastructure/prun-api/data/blueprints';

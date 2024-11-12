@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed, PropType } from 'vue';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import PrunLink from '@src/components/PrunLink.vue';
 import { fixed2, hhmmss } from '@src/utils/format';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';

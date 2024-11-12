@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Selector } from './Selector';
 import { Style } from './Style';
-import system from '@src/system';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/stars';
@@ -49,8 +48,8 @@ export function createTextSpan(text, className: string = 'prun-remove-js') {
 
 // Get the data in local storage for a given storageName. Then call the callback function.
 // Also pass the params through to the callback function
-export function getLocalStorage(storageName, callbackFunction, params?) {
-  system.storage.local.get(storageName).then(result => {
+export function getLocalStorage(storageName: string, callbackFunction, params?) {
+  chrome.storage.local.get(storageName).then(result => {
     callbackFunction(result, params);
   });
 }
@@ -66,7 +65,7 @@ export function clearChildren(elem) {
 
 // Set the data in local storage. Pass it the result of a getLocalStorage call
 export function setSettings(result) {
-  system.storage.local.set(result);
+  chrome.storage.local.set(result);
 }
 
 // Creates an element that links to a buffer with command "command"
@@ -503,7 +502,7 @@ class PopupRow {
 }
 
 export async function loadLocalFile(path: string) {
-  return await fetch(system.runtime.getURL(path));
+  return await fetch(chrome.runtime.getURL(path));
 }
 
 export async function loadLocalJson(path: string) {

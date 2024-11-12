@@ -1,12 +1,10 @@
 import getMapArray from '@src/utils/get-map-array';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { castArray } from '@src/utils/cast-array';
 import onetime from 'onetime';
 import observeDocumentMutations from '@src/utils/document-mutation-observer';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import onNodeDisconnected from '@src/utils/on-node-disconnected';
-import { _$ } from '@src/utils/select-dom';
 
 interface PrunTileObserver {
   (tile: PrunTile): void;

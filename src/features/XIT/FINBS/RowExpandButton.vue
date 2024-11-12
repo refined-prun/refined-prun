@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed, useCssModule } from 'vue';
-
 const model = defineModel<boolean>();
 
 const $style = useCssModule();

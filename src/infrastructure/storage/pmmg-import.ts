@@ -1,6 +1,5 @@
 import { uploadJson } from '@src/utils/download-json';
 import { userData } from '@src/store/user-data';
-import { shallowReactive } from 'vue';
 import { createId } from '@src/store/create-id';
 
 interface PmmgSettings {

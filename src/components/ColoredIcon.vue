@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { computed, PropType, useCssModule } from 'vue';
 import ColoredIconDetail from '@src/components/ColoredIconDetail.vue';
 
 export type ColoredIconSize = 'large' | 'medium' | 'small' | 'inline' | 'inline-table';

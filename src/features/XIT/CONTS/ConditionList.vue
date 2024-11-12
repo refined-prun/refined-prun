@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import ConditionItem from '@src/features/XIT/CONTS/ConditionItem.vue';
 import { isConditionFulfilled } from '@src/features/XIT/CONTS/utils';
 

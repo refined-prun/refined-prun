@@ -1,16 +1,10 @@
-import features from '@src/feature-registry';
-import tiles from '@src/infrastructure/prun-ui/tiles';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { refTextContent } from '@src/utils/reactive-dom';
-import { computed, Ref } from 'vue';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
 import { formatEta } from '@src/utils/format';
 import { timestampEachSecond } from '@src/utils/dayjs';
 import { createReactiveSpan } from '@src/utils/reactive-element';
 import { keepLast } from '@src/utils/keep-last';
-import { subscribe } from '@src/utils/subscribe-async-generator';
-import { $$ } from '@src/utils/select-dom';
 
 function onTileReady(tile: PrunTile) {
   const ship = computed(() => shipsStore.getByRegistration(tile.parameter));

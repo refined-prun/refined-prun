@@ -1,5 +1,3 @@
-import { Component } from 'vue';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { createFragmentApp, FragmentAppData } from '@src/utils/vue-fragment-app';
 import Overlay from '@src/components/Overlay.vue';
 import ActionConfirmationOverlay from '@src/components/ActionConfirmationOverlay.vue';

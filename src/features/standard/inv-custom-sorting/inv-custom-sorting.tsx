@@ -2,15 +2,10 @@ import css from '@src/utils/css-utils.module.css';
 import classes from './inv-custom-sorting.module.css';
 import { BurnValues, getPlanetBurn } from '@src/core/burn';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import tiles from '@src/infrastructure/prun-ui/tiles';
-import features from '@src/feature-registry';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import CategoryHeader from './CategoryHeader.vue';
 import InventorySortControls from './InventorySortControls.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { computed, reactive } from 'vue';
 import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
-import xit from '@src/features/XIT/xit-registry.js';
 import SORT from '@src/features/XIT/SORT/SORT.vue';
 import { getTileState } from '@src/features/standard/inv-custom-sorting/tile-state';
 import { createFragmentApp, FragmentAppScope } from '@src/utils/vue-fragment-app';
@@ -20,8 +15,6 @@ import { userData } from '@src/store/user-data';
 import { sortMaterials, sortMaterialsBy } from '@src/core/sort-materials';
 import { computedTileState } from '@src/store/user-data-tiles';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
-import { $, $$, _$, _$$ } from '@src/utils/select-dom';
-import { subscribe } from '@src/utils/subscribe-async-generator';
 import { isDefined, isEmpty } from 'ts-extras';
 
 function onTileReady(tile: PrunTile) {

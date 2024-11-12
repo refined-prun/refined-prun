@@ -1,5 +1,4 @@
 import { castArray } from '@src/utils/cast-array';
-import { Component, InjectionKey } from 'vue';
 
 export interface XITModule {
   create_buffer();

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 

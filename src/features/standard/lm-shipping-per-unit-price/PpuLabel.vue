@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { CurrencySymbols } from '@src/GameProperties';
-import { computed } from 'vue';
 import { fixed0 } from '@src/utils/format';
 import { getMaterialByName } from '@src/infrastructure/prun-ui/i18n';
 

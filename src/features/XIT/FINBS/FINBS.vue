@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import BalanceSheetSection from '@src/features/XIT/FINBS/BalanceSheetSection.vue';
 import * as summary from '@src/core/balance/balance-sheet-summary';
 import { SectionData } from '@src/features/XIT/FINBS/balance-section';

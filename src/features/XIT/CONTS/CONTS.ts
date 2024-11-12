@@ -1,4 +1,3 @@
-import xit from '@src/features/XIT/xit-registry';
 import CONTS from '@src/features/XIT/CONTS/CONTS.vue';
 
 xit.add({

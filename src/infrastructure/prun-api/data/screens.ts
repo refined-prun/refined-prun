@@ -1,6 +1,5 @@
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { computed, ref, shallowReactive } from 'vue';
 
 const store = createEntityStore<PrunApi.Screen>();
 const state = store.state;

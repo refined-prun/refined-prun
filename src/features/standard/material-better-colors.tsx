@@ -1,6 +1,4 @@
 import classes from './material-better-colors.module.css';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import features from '@src/feature-registry';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {

@@ -10,8 +10,6 @@ import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
 import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
 import { cxStore } from '@src/infrastructure/fio/cx';
-import { computed } from 'vue';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { dayjsEachSecond } from '@src/utils/dayjs';
 
 const bases = computed(() => {

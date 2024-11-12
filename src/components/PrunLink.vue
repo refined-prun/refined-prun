@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useCssModule } from 'vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 const props = defineProps({

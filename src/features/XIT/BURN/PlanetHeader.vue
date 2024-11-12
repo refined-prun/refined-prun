@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, PropType } from 'vue';
 import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import PrunButton from '@src/components/PrunButton.vue';

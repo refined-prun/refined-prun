@@ -1,16 +1,10 @@
-import tiles from '@src/infrastructure/prun-ui/tiles';
-import features from '@src/feature-registry';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { computed } from 'vue';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { formatEta } from '@src/utils/format';
 import { timestampEachSecond } from '@src/utils/dayjs';
 import { createReactiveDiv } from '@src/utils/reactive-element';
 import { keepLast } from '@src/utils/keep-last';
-import { $$, _$ } from '@src/utils/select-dom';
-import { subscribe } from '@src/utils/subscribe-async-generator';
 
 function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {

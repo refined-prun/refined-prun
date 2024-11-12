@@ -1,5 +1,3 @@
-import { Ref, ref } from 'vue';
-
 export function refTextContent(element: Node) {
   const textContent = ref(element.textContent);
   const observer = new MutationObserver(() => (textContent.value = element.textContent));

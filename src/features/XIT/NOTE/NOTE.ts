@@ -1,4 +1,3 @@
-import xit from '@src/features/XIT/xit-registry';
 import NOTE from '@src/features/XIT/NOTE/NOTE.vue';
 
 xit.add({

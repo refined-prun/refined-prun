@@ -13,10 +13,8 @@ import { Stations } from '@src/GameProperties';
 import { validateAction } from './Validate';
 import { parseActionPackage } from './Parse';
 import { createConfigureUI, needsConfiguration } from './Configure';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { starsStore } from '@src/infrastructure/prun-api/data/stars';
-import { _$, _$$ } from '@src/utils/select-dom';
 import { userData } from '@src/store/user-data';
 
 export function createExecuteScreen(tile, packageName) {

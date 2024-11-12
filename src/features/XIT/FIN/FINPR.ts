@@ -1,4 +1,3 @@
-import xit from '@src/features/XIT/xit-registry';
 import FINPR from '@src/features/XIT/FIN/FINPR.vue';
 
 xit.add({

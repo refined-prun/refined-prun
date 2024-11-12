@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, PropType } from 'vue';
 import ContractLink from '@src/features/XIT/CONTC/ContractLink.vue';
 import { timestampEachSecond } from '@src/utils/dayjs';
 import dayjs from 'dayjs';

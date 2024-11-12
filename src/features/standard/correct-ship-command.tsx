@@ -1,8 +1,4 @@
 import { changeValue } from '@src/util';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import features from '@src/feature-registry';
-import { $, $$ } from '@src/utils/select-dom';
-import { subscribe } from '@src/utils/subscribe-async-generator';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 
 const correctableCommands = new Set(['SFC', 'SHP', 'SHPF', 'SHPI', 'SI']);

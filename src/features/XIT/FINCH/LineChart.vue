@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Line } from 'vue-chartjs';
-import { computed, onMounted, ref } from 'vue';
 import {
   CategoryScale,
   Chart,

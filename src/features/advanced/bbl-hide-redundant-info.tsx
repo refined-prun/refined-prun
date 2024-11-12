@@ -1,11 +1,5 @@
 import css from '@src/utils/css-utils.module.css';
-import tiles from '@src/infrastructure/prun-ui/tiles';
-import features from '@src/feature-registry';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { $$ } from '@src/utils/select-dom';
-import { subscribe } from '@src/utils/subscribe-async-generator';
 import { applyScopedCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
-import { computed } from 'vue';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';

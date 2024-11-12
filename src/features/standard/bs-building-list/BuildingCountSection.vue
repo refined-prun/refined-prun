@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { computed } from 'vue';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import BuildingIcon from '@src/components/BuildingIcon.vue';
 

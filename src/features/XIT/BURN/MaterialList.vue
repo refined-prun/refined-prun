@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { computed, PropType } from 'vue';
 import { PlanetBurn } from '@src/core/burn';
 import MaterialRow from '@src/features/XIT/BURN/MaterialRow.vue';
 import { sortMaterials } from '@src/core/sort-materials';

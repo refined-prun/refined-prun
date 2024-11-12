@@ -1,4 +1,3 @@
-import xit from '@src/features/XIT/xit-registry';
 import FIN from '@src/features/XIT/FIN/FIN.vue';
 
 xit.add({

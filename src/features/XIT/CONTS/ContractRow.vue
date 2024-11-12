@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, PropType } from 'vue';
 import ContractLink from '@src/features/XIT/CONTS/ContractLink.vue';
 import MaterialList from '@src/features/XIT/CONTS/MaterialList.vue';
 import PartnerLink from '@src/features/XIT/CONTS/PartnerLink.vue';

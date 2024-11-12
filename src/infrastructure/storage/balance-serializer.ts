@@ -1,6 +1,5 @@
 import { downloadJson, uploadJson } from '@src/utils/download-json';
 import { userData } from '@src/store/user-data';
-import { shallowReactive } from 'vue';
 
 const fileType = 'rp-balance';
 

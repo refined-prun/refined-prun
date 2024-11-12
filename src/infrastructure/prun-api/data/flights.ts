@@ -1,6 +1,5 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
-import { ref } from 'vue';
 
 const store = createEntityStore<PrunApi.Flight>();
 const state = store.state;

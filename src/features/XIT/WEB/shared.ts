@@ -1,4 +1,3 @@
-import xit from '@src/features/XIT/xit-registry';
 import WEB from '@src/features/XIT/WEB/WEB.vue';
 import { castArray } from '@src/utils/cast-array';
 import { isEmpty } from 'ts-extras';

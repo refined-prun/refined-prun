@@ -1,6 +1,6 @@
 import { CssClasses } from '@src/infrastructure/prun-ui/prun-css-types';
 import oneMutation from 'one-mutation';
-import { _$$, registerClassName } from '@src/utils/select-dom';
+import { registerClassName } from '@src/utils/select-dom';
 import { isEmpty } from 'ts-extras';
 
 // @ts-expect-error This object will be loaded via function below

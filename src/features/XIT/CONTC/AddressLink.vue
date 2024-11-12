@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import PrunLink from '@src/components/PrunLink.vue';
-import { computed, PropType } from 'vue';
 
 const props = defineProps({
   address: {

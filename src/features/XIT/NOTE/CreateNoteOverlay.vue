@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { PropType, ref } from 'vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import SectionHeader from '@src/components/SectionHeader.vue';
 import Active from '@src/components/forms/Active.vue';

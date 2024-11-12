@@ -1,15 +1,5 @@
 import { userData } from '@src/store/user-data';
-import {
-  App,
-  computed,
-  inject,
-  InjectionKey,
-  Plugin,
-  reactive,
-  Ref,
-  watch,
-  WritableComputedRef,
-} from 'vue';
+import { App, Plugin } from 'vue';
 import { deepFreeze } from '@src/utils/deep-freeze';
 import { tilesStore } from '@src/infrastructure/prun-api/data/tiles';
 import { isEmpty } from 'ts-extras';

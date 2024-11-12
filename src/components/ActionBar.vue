@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { VNode } from 'vue';
-
 const slots = defineSlots<{
   default(): VNode[];
 }>();

@@ -6,7 +6,6 @@ import {
   getEntityNameFromAddress,
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
-import { computed, Ref } from 'vue';
 import { sumBy } from '@src/utils/sum-by';
 import { isEmpty } from 'ts-extras';
 

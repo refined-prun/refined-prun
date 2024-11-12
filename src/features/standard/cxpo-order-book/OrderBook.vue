@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect } from 'vue';
 import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
 import OrderRow from './OrderRow.vue';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { fixed2 } from '@src/utils/format';
 import { isEmpty } from 'ts-extras';
 

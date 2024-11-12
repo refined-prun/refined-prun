@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import highlight from '@src/infrastructure/prun-ui/table-row-highlight.module.css';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { computed, PropType } from 'vue';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { fixed0, fixed2 } from '@src/utils/format';
 

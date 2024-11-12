@@ -1,4 +1,4 @@
-import { watchEffect, WatchEffect, WatchOptionsBase } from 'vue';
+import { WatchEffect, WatchOptionsBase } from 'vue';
 import onNodeDisconnected from '@src/utils/on-node-disconnected';
 
 export function watchEffectWhileNodeAlive(

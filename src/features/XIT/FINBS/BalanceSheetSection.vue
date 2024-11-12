@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { formatCurrencyAmount, formatChange } from '@src/features/XIT/FINBS/utils';
-import { computed, PropType } from 'vue';
 import { SectionData } from '@src/features/XIT/FINBS/balance-section';
 import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
 import BalanceSheetRow from '@src/features/XIT/FINBS/BalanceSheetRow.vue';

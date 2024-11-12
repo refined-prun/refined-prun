@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { computed } from 'vue';
 import { userData } from '@src/store/user-data';
 
 const props = defineProps({

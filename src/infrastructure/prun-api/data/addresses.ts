@@ -1,5 +1,4 @@
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
-import { shallowReactive } from 'vue';
 
 type SliceState = Record<string, PrunApi.Address | null | undefined>;
 

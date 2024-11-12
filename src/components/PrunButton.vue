@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-
 const props = defineProps({
   inline: Boolean,
   primary: Boolean,

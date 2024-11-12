@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, PropType } from 'vue';
 import { PlanetBurn } from '@src/core/burn';
 import PlanetHeader from '@src/features/XIT/BURN/PlanetHeader.vue';
 import MaterialList from '@src/features/XIT/BURN/MaterialList.vue';

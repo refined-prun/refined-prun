@@ -1,15 +1,9 @@
 import css from '@src/utils/css-utils.module.css';
 import classes from './bbl-collapsible-categories.module.css';
-import tiles from '@src/infrastructure/prun-ui/tiles';
-import features from '@src/feature-registry';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { $$ } from '@src/utils/select-dom';
-import { subscribe } from '@src/utils/subscribe-async-generator';
 import {
   applyScopedClassCssRule,
   applyScopedCssRule,
 } from '@src/infrastructure/prun-ui/refined-prun-css';
-import { ref } from 'vue';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 
 function onTileReady(tile: PrunTile) {

@@ -1,4 +1,3 @@
-import { reactive, shallowReactive, watch } from 'vue';
 import { deepFreeze } from '@src/utils/deep-freeze';
 
 export const initialUserData = deepFreeze({

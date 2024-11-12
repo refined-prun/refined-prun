@@ -2,7 +2,6 @@
 import NoteList from '@src/features/XIT/NOTE/NoteList.vue';
 import NoteEditor from '@src/features/XIT/NOTE/NoteEditor.vue';
 import { useXitParameters } from '@src/hooks/useXitParameters';
-import { computed } from 'vue';
 import { userData } from '@src/store/user-data';
 import { isEmpty } from 'ts-extras';
 

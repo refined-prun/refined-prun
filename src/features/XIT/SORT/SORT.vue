@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import PrunButton from '@src/components/PrunButton.vue';
 import ActionBar from '@src/components/ActionBar.vue';

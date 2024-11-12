@@ -1,4 +1,3 @@
-import xit from '@src/features/XIT/xit-registry';
 import FINCH from '@src/features/XIT/FINCH/FINCH.vue';
 
 xit.add({

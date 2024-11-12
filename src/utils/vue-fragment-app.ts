@@ -1,4 +1,4 @@
-import { App, Component, createApp, h, InjectionKey, Plugin } from 'vue';
+import { App, Plugin } from 'vue';
 import onNodeDisconnected from '@src/utils/on-node-disconnected';
 
 export type FragmentAppData = Record<string, unknown>;

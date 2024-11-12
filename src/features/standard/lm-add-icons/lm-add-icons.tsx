@@ -1,13 +1,8 @@
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import features from '@src/feature-registry';
-import tiles from '@src/infrastructure/prun-ui/tiles';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import LMMaterialIcon from './LMMaterialIcon.vue';
 import LMShipmentIcon from './LMShipmentIcon.vue';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { localAdsStore } from '@src/infrastructure/prun-api/data/local-ads';
-import { $, $$ } from '@src/utils/select-dom';
-import { subscribe } from '@src/utils/subscribe-async-generator';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, PrunCss.CommodityAd.container), onContainerReady);

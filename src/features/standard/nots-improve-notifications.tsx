@@ -1,7 +1,4 @@
 import classes from './nots-improve-notifications.module.css';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import features from '@src/feature-registry';
-import tiles from '@src/infrastructure/prun-ui/tiles';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import oneMutation from 'one-mutation';
@@ -9,8 +6,6 @@ import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { alertsStore } from '@src/infrastructure/prun-api/data/alerts';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
-import { $, $$ } from '@src/utils/select-dom';
-import { subscribe } from '@src/utils/subscribe-async-generator';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, PrunCss.AlertListItem.container), processNotification);

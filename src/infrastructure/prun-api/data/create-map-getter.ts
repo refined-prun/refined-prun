@@ -1,5 +1,3 @@
-import { computed, Ref } from 'vue';
-
 const upperCase = (value: string) => value.toUpperCase();
 
 export function createMapGetter<T>(

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
-import { computed } from 'vue';
 import DateRow from '@src/features/XIT/CXTS/DateRow.vue';
 import TradeRow from '@src/features/XIT/CXTS/TradeRow.vue';
 import dayjs from 'dayjs';

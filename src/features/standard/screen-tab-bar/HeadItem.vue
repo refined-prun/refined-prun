@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { computed } from 'vue';
-
 const props = defineProps({
   label: {
     type: String,

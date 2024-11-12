@@ -1,4 +1,3 @@
-import { computed, Ref } from 'vue';
 import { contractsStore, isFactionContract } from '@src/infrastructure/prun-api/data/contracts';
 import dayjs from 'dayjs';
 import { timestampEachSecond } from '@src/utils/dayjs';

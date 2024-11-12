@@ -1,12 +1,6 @@
-import tiles from '@src/infrastructure/prun-ui/tiles';
-import features from '@src/feature-registry';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import MinimizeRow from './MinimizeRow.vue';
-import { reactive, ref } from 'vue';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
-import { $, $$, _$ } from '@src/utils/select-dom';
-import { subscribe } from '@src/utils/subscribe-async-generator';
 import { streamHtmlCollection } from '@src/utils/stream-html-collection';
 
 function onTileReady(tile: PrunTile) {

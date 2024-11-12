@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, PropType, ref, useCssModule, watch } from 'vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 const props = defineProps({

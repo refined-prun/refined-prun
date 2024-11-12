@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { useXitParameters } from '@src/hooks/useXitParameters';
-import { inject } from 'vue';
 import { prunAtob } from '@src/infrastructure/prun-ui/base64';
-import xit from '@src/features/XIT/xit-registry';
 import { isValidUrl, shortcuts } from '@src/features/XIT/WEB/shared';
 
 const command = inject(xit.command)!;

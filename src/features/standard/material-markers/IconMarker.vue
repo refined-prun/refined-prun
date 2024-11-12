@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, PropType } from 'vue';
 import fa from '@src/utils/font-awesome.module.css';
 
 const props = defineProps({

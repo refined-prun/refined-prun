@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { percent0 } from '@src/utils/format';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import coloredValue from '@src/infrastructure/prun-ui/colored-value.module.css';
 
 const props = defineProps({

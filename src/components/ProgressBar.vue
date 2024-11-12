@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { computed, useCssModule } from 'vue';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-
 const props = defineProps({
   value: {
     type: Number,

@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';
-import { computed } from 'vue';
 import { formatCurrencyAmount } from '@src/features/XIT/FIN/utils';
 import KeyFigures from '@src/features/XIT/FIN/KeyFigures.vue';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { calculateSiteProfitability } from '@src/core/profitability';
 import { sumBy } from '@src/utils/sum-by';
 import { fixed0, percent2 } from '@src/utils/format';

@@ -4,7 +4,6 @@ import {
   createGroupMapGetter,
   createMapGetter,
 } from '@src/infrastructure/prun-api/data/create-map-getter';
-import { reactive, ref } from 'vue';
 import { request } from '@src/infrastructure/prun-api/data/request-hooks';
 
 const store = createEntityStore<PrunApi.ProductionLine>();

@@ -1,4 +1,3 @@
-import { computed } from 'vue';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 

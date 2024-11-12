@@ -1,9 +1,5 @@
-import tiles from '@src/infrastructure/prun-ui/tiles';
-import features from '@src/feature-registry';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import { $ } from '@src/utils/select-dom';
 import TileControlsButton from '@src/components/TileControlsButton.vue';
 
 async function onTileReady(tile: PrunTile) {

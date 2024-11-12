@@ -1,12 +1,6 @@
-import features from '@src/feature-registry';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import IconMarker from './IconMarker.vue';
-import { computed, reactive } from 'vue';
-import { $, $$ } from '@src/utils/select-dom';
-import { subscribe } from '@src/utils/subscribe-async-generator';
-import tiles from '@src/infrastructure/prun-ui/tiles';
 import { computedTileState } from '@src/store/user-data-tiles';
 import { refTextContent } from '@src/utils/reactive-dom';
 import { getTileState } from './tile-state';

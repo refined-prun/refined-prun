@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { useXitParameters } from '@src/hooks/useXitParameters';
 

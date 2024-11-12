@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { PropType } from 'vue';
 import PrunButton from '@src/components/PrunButton.vue';
 
 defineProps({

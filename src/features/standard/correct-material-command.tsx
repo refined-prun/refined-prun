@@ -1,9 +1,5 @@
 import { changeValue } from '@src/util';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import features from '@src/feature-registry';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { $, $$ } from '@src/utils/select-dom';
-import { subscribe } from '@src/utils/subscribe-async-generator';
 
 const correctableCommands = new Set(['CXM', 'CXOB', 'CXP', 'CXPC', 'CXPO', 'MAT']);
 

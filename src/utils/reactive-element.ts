@@ -1,4 +1,3 @@
-import { Ref } from 'vue';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 
 export function createReactiveSpan(owner: Node, text: Ref<string | undefined>) {

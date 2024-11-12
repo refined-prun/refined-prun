@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { PropType } from 'vue';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-
 export type TooltipPosition = 'left' | 'right' | 'top' | 'bottom';
 
 defineProps({

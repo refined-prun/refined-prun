@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import FilterButton from '@src/features/XIT/BURN/FilterButton.vue';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { computed } from 'vue';
 import { getPlanetBurn, MaterialBurn } from '@src/core/burn';
 import { comparePlanets } from '@src/util';
 import BurnSection from '@src/features/XIT/BURN/BurnSection.vue';

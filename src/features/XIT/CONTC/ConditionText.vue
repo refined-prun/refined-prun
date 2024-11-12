@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { PropType } from 'vue';
 import { fixed0 } from '@src/utils/format';
 import AddressLink from '@src/features/XIT/CONTC/AddressLink.vue';
 

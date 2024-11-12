@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed, PropType } from 'vue';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { fixed2, ddmmyyyy } from '@src/utils/format';
 
 const props = defineProps({

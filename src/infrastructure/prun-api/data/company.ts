@@ -1,5 +1,4 @@
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
-import { shallowRef } from 'vue';
 
 export const companyStore = shallowRef<PrunApi.CompanyData | undefined>(undefined);
 

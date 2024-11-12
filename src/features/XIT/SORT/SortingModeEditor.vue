@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import SectionHeader from '@src/components/SectionHeader.vue';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import Active from '@src/components/forms/Active.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
 import Commands from '@src/components/forms/Commands.vue';
 import PrunButton from '@src/components/PrunButton.vue';
-import { computed, PropType, ref } from 'vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 

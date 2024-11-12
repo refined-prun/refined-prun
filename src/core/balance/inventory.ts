@@ -1,4 +1,3 @@
-import { computed } from 'vue';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { getStoreLocationName, sumMapValues } from '@src/core/balance/utils';
 import { shipyardProjectsStore } from '@src/infrastructure/prun-api/data/shipyard-projects';

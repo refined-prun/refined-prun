@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { downloadFile } from '@src/util';
 import DebugButton from '@src/features/XIT/DEBUG/DebugButton.vue';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { userData } from '@src/store/user-data';
 
 function logUserData() {

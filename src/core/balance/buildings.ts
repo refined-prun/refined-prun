@@ -3,7 +3,6 @@ import { sumMapValues } from '@src/core/balance/utils';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { timestampEachMinute } from '@src/utils/dayjs';
 import { calcBuildingCondition, calcBuildingMarketValue } from '@src/core/buildings';
-import { computed } from 'vue';
 import { diffDays } from '@src/utils/time-diff';
 import { sumBy } from '@src/utils/sum-by';
 

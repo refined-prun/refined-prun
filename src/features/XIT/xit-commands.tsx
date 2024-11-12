@@ -1,16 +1,10 @@
 import './xit-commands.css';
-import features from '@src/feature-registry';
-import tiles from '@src/infrastructure/prun-ui/tiles';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import xit from '@src/features/XIT/xit-registry';
 import LegacyXITAdapter from '@src/features/XIT/LegacyXITAdapter.vue';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContextControls from '@src/components/ContextControls.vue';
 
 import { tileStatePlugin } from '@src/store/user-data-tiles';
 import { startMeasure, stopMeasure } from '@src/utils/performance-measure';
-import { $$, _$ } from '@src/utils/select-dom';
-import { subscribe } from '@src/utils/subscribe-async-generator';
 import { isEmpty } from 'ts-extras';
 
 function onTileReady(tile: PrunTile) {

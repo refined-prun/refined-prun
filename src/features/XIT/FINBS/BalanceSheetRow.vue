@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { PropType, ref } from 'vue';
 import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
 import { RowData } from '@src/features/XIT/FINBS/balance-section';
 import { formatAmount, formatChange } from '@src/features/XIT/FINBS/utils';

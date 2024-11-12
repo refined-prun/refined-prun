@@ -1,4 +1,3 @@
-import xit from '@src/features/XIT/xit-registry';
 import HEALTH from '@src/features/XIT/HEALTH.vue';
 
 xit.add({

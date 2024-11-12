@@ -1,5 +1,4 @@
 import classes from './table-rows-alternating-colors.module.css';
-import features from '@src/feature-registry';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {

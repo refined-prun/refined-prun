@@ -1,9 +1,5 @@
 import { changeValue } from '@src/util';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import features from '@src/feature-registry';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
-import { $, $$ } from '@src/utils/select-dom';
-import { subscribe } from '@src/utils/subscribe-async-generator';
 import { getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/stars';
 
 const correctableCommands = new Set([

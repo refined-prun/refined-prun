@@ -9,3 +9,4 @@ node_modules
 LICENSE
 *.md
 pnpm-lock.yaml
+src/unimport.d.ts

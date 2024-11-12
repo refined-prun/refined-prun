@@ -38,15 +38,13 @@
     "uuid": "^10.0.0",
     "vue": "^3.4.37",
     "vue-chartjs": "^5.3.1",
-    "vue-draggable-plus": "^0.5.3",
-    "webextension-polyfill": "^0.12.0"
+    "vue-draggable-plus": "^0.5.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
     "@laynezh/vite-plugin-lib-assets": "^0.5.25",
     "@types/chrome": "^0.0.268",
     "@types/eslint__js": "^8.42.3",
-    "@types/firefox-webext-browser": "^120.0.4",
     "@types/node": "^20.14.10",
     "@types/tinycolor2": "^1.4.6",
     "@types/uuid": "^10.0.0",
@@ -66,6 +64,7 @@
     "tslib": "^2.6.3",
     "typescript": "5.4.5",
     "typescript-eslint": "^8.0.0",
+    "unimport": "^3.13.1",
     "vite": "^5.2.14",
     "vite-bundle-visualizer": "^1.2.1",
     "vite-plugin-vue-devtools": "^7.3.7",

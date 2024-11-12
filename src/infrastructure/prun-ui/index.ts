@@ -1,6 +1,5 @@
 import PrunCss, { loadPrunCss } from '@src/infrastructure/prun-ui/prun-css';
 import { loadRefinedPrunCss } from '@src/infrastructure/prun-ui/refined-prun-css';
-import { $ } from '@src/utils/select-dom';
 import { readPrunI18N } from '@src/infrastructure/prun-ui/i18n';
 import { overrideIconColorStyle } from '@src/infrastructure/prun-ui/icon-color-override';
 

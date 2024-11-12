@@ -1,5 +1,4 @@
 import { clamp } from '@src/utils/clamp';
-import { computed } from 'vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 
 type MaterialAmount = [number, string];

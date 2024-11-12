@@ -3,7 +3,6 @@ import SectionHeader from '@src/components/SectionHeader.vue';
 import Tooltip from '@src/components/Tooltip.vue';
 import Commands from '@src/components/forms/Commands.vue';
 import PrunButton from '@src/components/PrunButton.vue';
-import { computed } from 'vue';
 import { fixed0, hhmm, ddmmyyyy } from '@src/utils/format';
 import { clearBalanceHistory, userData } from '@src/store/user-data';
 import { calcEquity } from '@src/core/balance/balance-sheet-summary';

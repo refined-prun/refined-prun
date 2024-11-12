@@ -1,9 +1,3 @@
-import { subscribe } from '@src/utils/subscribe-async-generator';
-import { $$, _$$ } from '@src/utils/select-dom';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import tiles from '@src/infrastructure/prun-ui/tiles';
-import features from '@src/feature-registry';
-import { computed, reactive } from 'vue';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { isRepairableBuilding } from '@src/core/buildings';

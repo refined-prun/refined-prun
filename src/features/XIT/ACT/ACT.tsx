@@ -2,8 +2,6 @@ import { clearChildren } from '@src/util';
 import { createSummaryScreen } from './Summary';
 import { createGenerateScreen } from './Generate';
 import { createExecuteScreen } from './Execute';
-import xit from '@src/features/XIT/xit-registry';
-import { watch } from 'vue';
 import { userData } from '@src/store/user-data';
 
 export class Execute {

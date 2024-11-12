@@ -1,5 +1,3 @@
-import features from '@src/feature-registry';
-
 function init() {
   for (let i = 0; i < document.styleSheets.length; i++) {
     const styleSheet = document.styleSheets[i];

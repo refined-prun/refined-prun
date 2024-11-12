@@ -1,4 +1,3 @@
-import xit from '@src/features/XIT/xit-registry';
 import CONTC from '@src/features/XIT/CONTC/CONTC.vue';
 
 xit.add({

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, PropType } from 'vue';
 import { isSelfCondition } from '@src/features/XIT/CONTS/utils';
 import ShipmentIcon from '@src/components/ShipmentIcon.vue';
 import MaterialIcon from '@src/components/MaterialIcon.vue';

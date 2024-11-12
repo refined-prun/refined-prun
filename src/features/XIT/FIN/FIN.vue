@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { calculateLocationAssets } from '@src/core/financials';
 import KeyFigures from '@src/features/XIT/FIN/KeyFigures.vue';
 import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';

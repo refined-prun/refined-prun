@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
-import { computed } from 'vue';
 import ContractRow from '@src/features/XIT/CONTS/ContractRow.vue';
 import { isEmpty } from 'ts-extras';
 import { canAcceptContract } from '@src/features/XIT/CONTS/utils';

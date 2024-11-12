@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import fa from '@src/utils/font-awesome.module.css';
-import { PropType } from 'vue';
 
 defineProps({
   icon: {

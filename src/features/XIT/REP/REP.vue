@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import NumberInput from '@src/components/forms/NumberInput.vue';
 import { calculateBuildingEntries, calculateShipEntries } from '@src/features/XIT/REP/entries';
 import { timestampEachSecond } from '@src/utils/dayjs';

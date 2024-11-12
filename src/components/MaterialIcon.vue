@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
-import { computed, PropType, useCssModule } from 'vue';
 import ColoredIcon, { ColoredIconSize } from '@src/components/ColoredIcon.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';

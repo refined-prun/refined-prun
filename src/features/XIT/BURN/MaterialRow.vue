@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { computed, PropType } from 'vue';
 import { MaterialBurn } from '@src/core/burn';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
 import { fixed0, fixed1, fixed2 } from '@src/utils/format';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
 import PrunButton from '@src/components/PrunButton.vue';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 

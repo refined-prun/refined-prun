@@ -1,7 +1,6 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 import { request } from '@src/infrastructure/prun-api/data/request-hooks';
-import { computed } from 'vue';
 
 const store = createEntityStore<PrunApi.CXOrder>();
 const state = store.state;

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, PropType } from 'vue';
 import PrunLink from '@src/components/PrunLink.vue';
 import { isFactionContract } from '@src/features/XIT/CONTS/utils';
 

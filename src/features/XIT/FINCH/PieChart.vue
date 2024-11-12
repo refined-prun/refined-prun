@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Pie } from 'vue-chartjs';
-import { computed } from 'vue';
 import {
   ArcElement,
   CategoryScale,

@@ -1,13 +1,9 @@
 import fa from '@src/utils/font-awesome.module.css';
 import classes from './evaluate-input-formula.module.css';
 import { changeValue } from '@src/util';
-import features from '@src/feature-registry';
 import Mexp from 'math-expression-evaluator';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { subscribe } from '@src/utils/subscribe-async-generator';
-import { $$ } from '@src/utils/select-dom';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
-import PrunCss from '@src/infrastructure/prun-ui/prun-css';
 
 const mexp = new Mexp();
 
