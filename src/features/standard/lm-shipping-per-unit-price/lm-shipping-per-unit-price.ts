@@ -28,12 +28,9 @@ async function onAdContainerReady(container: HTMLElement) {
   for (let i = 0; i < text.childNodes.length; i++) {
     const child = text.childNodes[i];
     if (child.nodeValue && child.nodeValue.includes(ad.price.currency)) {
-      createFragmentApp(() => (
-        <span>
-          {' '}
-          ({fixed2(total / amount)}/{unit})
-        </span>
-      )).after(child as Element);
+      const span = document.createElement('span');
+      span.textContent = ` (${fixed2(total / amount)}/${unit})`;
+      child.after(span);
       break;
     }
   }
