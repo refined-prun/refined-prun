@@ -1,5 +1,4 @@
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
-import { Fragment } from 'vue';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 
 function onTileReady(tile: PrunTile) {
@@ -20,10 +19,10 @@ function processLink(element: HTMLElement) {
   };
 
   createFragmentApp(() => (
-    <Fragment>
+    <>
       <br />
       <img src={link} alt="Chat image" style={style} />
-    </Fragment>
+    </>
   )).appendTo(element.parentElement!);
 }
 
