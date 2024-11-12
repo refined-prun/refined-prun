@@ -1,3 +1,3 @@
 <template>
-  <div :class="PrunCss.Loading.loader" title="Loading…" />
+  <div :class="C.Loading.loader" title="Loading…" />
 </template>

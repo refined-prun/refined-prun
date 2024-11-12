@@ -1,9 +1,5 @@
 <script setup lang="ts">
-const classes = [
-  PrunCss.FinanceOverviewPanel.header,
-  PrunCss.ui.header2,
-  PrunCss.fonts.fontRegular,
-];
+const classes = [C.FinanceOverviewPanel.header, C.ui.header2, C.fonts.fontRegular];
 </script>
 
 <template>

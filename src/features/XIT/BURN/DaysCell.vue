@@ -10,9 +10,9 @@ const props = defineProps({
 
 const days = computed(() => Math.floor(props.days));
 const burnClass = computed(() => ({
-  [PrunCss.Workforces.daysMissing]: days.value <= userData.settings.burn.red,
-  [PrunCss.Workforces.daysWarning]: days.value <= userData.settings.burn.yellow,
-  [PrunCss.Workforces.daysSupplied]: days.value > userData.settings.burn.yellow,
+  [C.Workforces.daysMissing]: days.value <= userData.settings.burn.red,
+  [C.Workforces.daysWarning]: days.value <= userData.settings.burn.yellow,
+  [C.Workforces.daysSupplied]: days.value > userData.settings.burn.yellow,
 }));
 </script>
 

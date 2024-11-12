@@ -4,8 +4,7 @@ import { registerClassName } from '@src/utils/select-dom';
 import { isEmpty } from 'ts-extras';
 
 // @ts-expect-error This object will be loaded via function below
-const PrunCss: CssClasses = {};
-export default PrunCss;
+export const C: CssClasses = {};
 
 export async function loadPrunCss() {
   if (!readStyles()) {
@@ -68,6 +67,6 @@ function readStyles() {
     registerClassName(cssClass);
   }
 
-  Object.assign(PrunCss, result);
+  Object.assign(C, result);
   return true;
 }

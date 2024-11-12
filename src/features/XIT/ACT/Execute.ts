@@ -253,7 +253,7 @@ async function executeAction(
       break;
     }
     case 'MTRA': {
-      button = _$(buffer, PrunCss.Button.disabled) || _$(buffer, PrunCss.Button.primary);
+      button = _$(buffer, C.Button.disabled) || _$(buffer, C.Button.primary);
       buttonOffset = -11;
       break;
     }
@@ -406,7 +406,7 @@ async function executeAction(
       }
 
       // Make the quantity change
-      const changeButton = _$(buffer, PrunCss.Button.darkInline) as HTMLButtonElement; // Change button
+      const changeButton = _$(buffer, C.Button.darkInline) as HTMLButtonElement; // Change button
       const allInputs = buffer.querySelectorAll('input'); // All the inputs on buffer, next find the "amount" input
       if (!allInputs[1] || !changeButton) {
         undoButtonMove(button, resetStyles, executeControls);
@@ -502,7 +502,7 @@ async function executeAction(
         }
       });
     } else if (action.type == 'mtraMatSelect') {
-      const matOptions = _$$(buffer, PrunCss.MaterialSelector.suggestionEntry); // MAT options in dropdown
+      const matOptions = _$$(buffer, C.MaterialSelector.suggestionEntry); // MAT options in dropdown
       let matFound = false;
       for (const matOption of Array.from(matOptions) as HTMLElement[]) {
         const tickerElem = matOption.firstChild;

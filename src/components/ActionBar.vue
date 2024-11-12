@@ -5,8 +5,8 @@ const slots = defineSlots<{
 </script>
 
 <template>
-  <div :class="PrunCss.ActionBar.container">
-    <div v-for="(slot, i) in slots.default()" :key="i" :class="PrunCss.ActionBar.element">
+  <div :class="C.ActionBar.container">
+    <div v-for="(slot, i) in slots.default()" :key="i" :class="C.ActionBar.element">
       <component :is="slot" />
     </div>
   </div>

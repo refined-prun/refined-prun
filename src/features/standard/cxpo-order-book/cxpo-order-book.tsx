@@ -6,14 +6,14 @@ function onTileReady(tile: PrunTile) {
     return;
   }
 
-  subscribe($$(tile.anchor, PrunCss.ComExPlaceOrderForm.form), form => {
+  subscribe($$(tile.anchor, C.ComExPlaceOrderForm.form), form => {
     const formParent = form.parentElement!;
     formParent.style.display = 'flex';
     form.style.flex = '1';
-    for (const label of $$(form, PrunCss.FormComponent.label)) {
+    for (const label of $$(form, C.FormComponent.label)) {
       (label as HTMLLabelElement).style.minWidth = '95px';
     }
-    for (const span of $$(form, PrunCss.Tooltip.container)) {
+    for (const span of $$(form, C.Tooltip.container)) {
       span.setAttribute('data-tooltip-position', 'right');
     }
 

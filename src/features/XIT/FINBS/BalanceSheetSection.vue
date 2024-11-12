@@ -49,8 +49,8 @@ const totalClass = computed(() => {
   }
 
   return {
-    [PrunCss.ColoredValue.positive]: change > 0,
-    [PrunCss.ColoredValue.negative]: change < 0,
+    [C.ColoredValue.positive]: change > 0,
+    [C.ColoredValue.negative]: change < 0,
   };
 });
 </script>
@@ -68,8 +68,8 @@ const totalClass = computed(() => {
       :previous="previous"
       :row="row"
       :indent="0" />
-    <tr :class="PrunCss.IncomeStatementPanel.totals">
-      <td :class="PrunCss.IncomeStatementPanel.number">Total</td>
+    <tr :class="C.IncomeStatementPanel.totals">
+      <td :class="C.IncomeStatementPanel.number">Total</td>
       <td>{{ formatCurrencyAmount(calculate(current, section.total)) }}</td>
       <td>{{ formatCurrencyAmount(calculate(last, section.total)) }}</td>
       <td>{{ formatCurrencyAmount(calculate(previous, section.total)) }}</td>

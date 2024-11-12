@@ -11,17 +11,11 @@ const symbol = computed(() => (props.isMinimized ? '+' : '-'));
 </script>
 
 <template>
-  <div
-    :class="[
-      PrunCss.FormComponent.containerPassive,
-      PrunCss.forms.passive,
-      PrunCss.forms.formComponent,
-    ]">
-    <label
-      :class="[PrunCss.FormComponent.label, PrunCss.fonts.fontRegular, PrunCss.type.typeRegular]"
+  <div :class="[C.FormComponent.containerPassive, C.forms.passive, C.forms.formComponent]">
+    <label :class="[C.FormComponent.label, C.fonts.fontRegular, C.type.typeRegular]"
       >Minimize</label
     >
-    <div :class="[PrunCss.FormComponent.input, PrunCss.forms.input]">
+    <div :class="[C.FormComponent.input, C.forms.input]">
       <div>
         <div :class="$style.minimize" @click="onClick">{{ symbol }}</div>
       </div>

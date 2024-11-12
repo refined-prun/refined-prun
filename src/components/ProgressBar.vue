@@ -19,8 +19,8 @@ const primary = computed(() => !props.good && !props.warning && !props.danger);
 
 const classes = computed(() => {
   return {
-    [PrunCss.ProgressBar.progress]: true,
-    [PrunCss.ProgressBar.primary]: primary.value,
+    [C.ProgressBar.progress]: true,
+    [C.ProgressBar.primary]: primary.value,
     [$style.good]: props.good,
     [$style.warning]: props.warning,
     [$style.danger]: props.danger,

@@ -2,11 +2,11 @@ import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { localAdsStore } from '@src/infrastructure/prun-api/data/local-ads';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.CommodityAd.container), onAdContainerReady);
+  subscribe($$(tile.anchor, C.CommodityAd.container), onAdContainerReady);
 }
 
 async function onAdContainerReady(container: HTMLElement) {
-  const element = await $(container, PrunCss.CommodityAd.text);
+  const element = await $(container, C.CommodityAd.text);
   const id = getPrunId(container);
   const ad = localAdsStore.getById(id);
   if (!ad || (ad.type !== 'COMMODITY_BUYING' && ad.type !== 'COMMODITY_SELLING')) {
@@ -19,7 +19,7 @@ async function onAdContainerReady(container: HTMLElement) {
   const type = element.firstChild?.nodeValue ?? null;
   const span = document.createElement('span');
   span.className =
-    ad.type === 'COMMODITY_BUYING' ? PrunCss.OrderTypeLabel.BUYING : PrunCss.OrderTypeLabel.SELLING;
+    ad.type === 'COMMODITY_BUYING' ? C.OrderTypeLabel.BUYING : C.OrderTypeLabel.SELLING;
   span.textContent = type;
   element.replaceChild(span, element.firstChild!);
 }

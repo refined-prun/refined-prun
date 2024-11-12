@@ -3,14 +3,10 @@ import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css'
 
 function init() {
   applyClassCssRule(
-    [
-      PrunCss.ComExOrdersPanel.filter,
-      PrunCss.LocalMarket.filter,
-      PrunCss.ContractsListTable.filter,
-    ],
+    [C.ComExOrdersPanel.filter, C.LocalMarket.filter, C.ContractsListTable.filter],
     classes.filter,
   );
-  applyClassCssRule(PrunCss.ScrollView.track, classes.scrollTrack);
+  applyClassCssRule(C.ScrollView.track, classes.scrollTrack);
 }
 
 features.add({

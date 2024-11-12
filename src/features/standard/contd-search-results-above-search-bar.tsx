@@ -2,7 +2,7 @@ import classes from './contd-search-results-above-search-bar.module.css';
 import { applyScopedClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {
-  applyScopedClassCssRule('CONTD', PrunCss.UserSelector.suggestionsContainer, classes.suggestions);
+  applyScopedClassCssRule('CONTD', C.UserSelector.suggestionsContainer, classes.suggestions);
 }
 
 features.add({

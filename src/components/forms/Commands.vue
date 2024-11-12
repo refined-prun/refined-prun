@@ -8,17 +8,11 @@ defineProps({
 </script>
 
 <template>
-  <div
-    :class="[
-      PrunCss.FormComponent.containerCommand,
-      PrunCss.forms.cmd,
-      PrunCss.forms.formComponent,
-    ]">
-    <label
-      :class="[PrunCss.FormComponent.label, PrunCss.fonts.fontRegular, PrunCss.type.typeRegular]">
+  <div :class="[C.FormComponent.containerCommand, C.forms.cmd, C.forms.formComponent]">
+    <label :class="[C.FormComponent.label, C.fonts.fontRegular, C.type.typeRegular]">
       <span>{{ label }}</span>
     </label>
-    <div :class="[PrunCss.FormComponent.input, PrunCss.forms.input]">
+    <div :class="[C.FormComponent.input, C.forms.input]">
       <slot />
     </div>
   </div>

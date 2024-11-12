@@ -7,8 +7,8 @@ function onTileReady(tile: PrunTile) {
     return;
   }
 
-  subscribe($$(tile.anchor, PrunCss.Site.info), info => {
-    const elements = _$$(info, PrunCss.FormComponent.containerPassive);
+  subscribe($$(tile.anchor, C.Site.info), info => {
+    const elements = _$$(info, C.FormComponent.containerPassive);
     if (elements.length < 2) {
       return;
     }

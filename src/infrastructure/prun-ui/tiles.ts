@@ -25,7 +25,7 @@ function reconciliate() {
     }
   }
 
-  const frameElements = document.getElementsByClassName(PrunCss.TileFrame.frame);
+  const frameElements = document.getElementsByClassName(C.TileFrame.frame);
   if (frameElements.length === activeTiles.length) {
     let sameTiles = true;
     for (let i = 0; i < frameElements.length; i++) {
@@ -49,7 +49,7 @@ function reconciliate() {
   }
 
   for (const frame of newFrames) {
-    const anchor = _$(frame, PrunCss.TileFrame.anchor);
+    const anchor = _$(frame, C.TileFrame.anchor);
     if (!anchor) {
       continue;
     }
@@ -60,7 +60,7 @@ function reconciliate() {
 
 function activateFrame(frame: HTMLDivElement, anchor: HTMLDivElement) {
   const id = getPrunId(frame.parentElement!)!;
-  const commandElement = _$(frame, PrunCss.TileFrame.cmd);
+  const commandElement = _$(frame, C.TileFrame.cmd);
   const fullCommand = commandElement!.textContent!;
   const indexOfSpace = fullCommand.indexOf(' ');
   const tile: PrunTile = {

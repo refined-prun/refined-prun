@@ -2,7 +2,7 @@ import css from '@src/utils/css-utils.module.css';
 import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {
-  applyClassCssRule(PrunCss.StoreView.name, css.hidden);
+  applyClassCssRule(C.StoreView.name, css.hidden);
 }
 
 features.add({

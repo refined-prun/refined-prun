@@ -12,7 +12,7 @@ function init() {
 }
 
 function applyCategoryRule(category: string, rule: string) {
-  applyCssRule(`.${PrunCss.ColoredIcon.container}[data-rp-category='${category}']`, rule);
+  applyCssRule(`.${C.ColoredIcon.container}[data-rp-category='${category}']`, rule);
 }
 
 features.add({

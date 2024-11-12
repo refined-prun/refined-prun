@@ -15,11 +15,11 @@ function onTableHeadReady(thead: HTMLTableSectionElement) {
   subscribe($$(thead, 'tr'), row => {
     const cx = row.appendChild(document.createElement('th'));
     cx.textContent = 'CX Deposits';
-    cx.classList.add(PrunCss.LiquidAssetsPanel.number);
+    cx.classList.add(C.LiquidAssetsPanel.number);
     hideCellIfZeroTotal(cx, currentAssets.cxDepositsTotal);
     const fx = row.appendChild(document.createElement('th'));
     fx.textContent = 'FX Deposits';
-    fx.classList.add(PrunCss.LiquidAssetsPanel.number);
+    fx.classList.add(C.LiquidAssetsPanel.number);
     hideCellIfZeroTotal(fx, currentAssets.fxDepositsTotal);
   });
 }
@@ -32,14 +32,14 @@ function onTableBodyReady(tbody: HTMLTableSectionElement) {
     }
     const currency = refTextContent(currencyCell);
     const cx = row.appendChild(document.createElement('td'));
-    cx.classList.add(PrunCss.LiquidAssetsPanel.number);
+    cx.classList.add(C.LiquidAssetsPanel.number);
     const cxDeposits = computed(() =>
       currency.value ? (currentAssets.cxDeposits.value?.get(currency.value) ?? 0) : 0,
     );
     watchEffectWhileNodeAlive(row, () => (cx.textContent = fixed0(cxDeposits.value)));
     hideCellIfZeroTotal(cx, currentAssets.cxDepositsTotal);
     const fx = row.appendChild(document.createElement('td'));
-    fx.classList.add(PrunCss.LiquidAssetsPanel.number);
+    fx.classList.add(C.LiquidAssetsPanel.number);
     const fxDeposits = computed(() =>
       currency.value ? (currentAssets.fxDeposits.value?.get(currency.value) ?? 0) : 0,
     );
@@ -59,8 +59,8 @@ function hideCellIfZeroTotal(cell: HTMLTableCellElement, total: Ref<number | und
 }
 
 function init() {
-  applyCssRule(`.${PrunCss.LiquidAssetsPanel.row} td:first-child`, classes.firstColumn);
-  applyCssRule(`.${PrunCss.LiquidAssetsPanel.row} td:not(:first-child)`, classes.otherColumns);
+  applyCssRule(`.${C.LiquidAssetsPanel.row} td:first-child`, classes.firstColumn);
+  applyCssRule(`.${C.LiquidAssetsPanel.row} td:not(:first-child)`, classes.otherColumns);
   tiles.observe('FINLA', onTileReady);
 }
 

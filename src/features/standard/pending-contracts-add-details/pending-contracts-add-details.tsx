@@ -17,10 +17,10 @@ function onContractIdReady(id: HTMLElement) {
 }
 
 function init() {
-  applyCssRule(`.${PrunCss.Sidebar.contract} .${PrunCss.Link.link}`, css.hidden);
-  applyCssRule(`.${PrunCss.Sidebar.contractId}`, classes.contractId);
-  applyCssRule(`.${PrunCss.Sidebar.contractId}:hover`, `${classes.contractId}:hover`);
-  subscribe($$(document, PrunCss.Sidebar.contractId), onContractIdReady);
+  applyCssRule(`.${C.Sidebar.contract} .${C.Link.link}`, css.hidden);
+  applyCssRule(`.${C.Sidebar.contractId}`, classes.contractId);
+  applyCssRule(`.${C.Sidebar.contractId}:hover`, `${classes.contractId}:hover`);
+  subscribe($$(document, C.Sidebar.contractId), onContractIdReady);
 }
 
 features.add({

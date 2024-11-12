@@ -69,7 +69,7 @@ function applyCssRules() {
   applyCssRule(selector, classes.inputContainer);
   applyCssRule(`${selector}:before`, fa.solid);
   applyCssRule(`${selector}:before`, classes.functionIcon);
-  const selectorDynamic = `.${PrunCss.DynamicInput.dynamic} ${inputSelector}`;
+  const selectorDynamic = `.${C.DynamicInput.dynamic} ${inputSelector}`;
   applyCssRule(selectorDynamic, classes.inputContainer);
   applyCssRule(`${selectorDynamic}:before`, fa.solid);
   applyCssRule(`${selectorDynamic}:before`, classes.functionIconDynamic);

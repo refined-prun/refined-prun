@@ -43,8 +43,8 @@ const figures = computed(() => {
 
 function profitClass(value: number) {
   return {
-    [PrunCss.ColoredValue.positive]: value > 0,
-    [PrunCss.ColoredValue.negative]: value < 0,
+    [C.ColoredValue.positive]: value > 0,
+    [C.ColoredValue.negative]: value < 0,
   };
 }
 </script>

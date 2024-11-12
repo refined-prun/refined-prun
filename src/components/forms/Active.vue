@@ -18,19 +18,13 @@ defineProps({
 </script>
 
 <template>
-  <div
-    :class="[
-      PrunCss.FormComponent.containerActive,
-      PrunCss.forms.active,
-      PrunCss.forms.formComponent,
-    ]">
-    <label
-      :class="[PrunCss.FormComponent.label, PrunCss.fonts.fontRegular, PrunCss.type.typeRegular]">
+  <div :class="[C.FormComponent.containerActive, C.forms.active, C.forms.formComponent]">
+    <label :class="[C.FormComponent.label, C.fonts.fontRegular, C.type.typeRegular]">
       <span>{{ label }}</span>
       <Tooltip v-if="tooltip" :position="tooltipPosition" :tooltip="tooltip" />
     </label>
-    <div :class="[PrunCss.FormComponent.input, PrunCss.forms.input]">
-      <div :class="[PrunCss.DynamicInput.dynamic, PrunCss.forms.dynamic]">
+    <div :class="[C.FormComponent.input, C.forms.input]">
+      <div :class="[C.DynamicInput.dynamic, C.forms.dynamic]">
         <slot />
       </div>
     </div>

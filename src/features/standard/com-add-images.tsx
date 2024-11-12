@@ -3,8 +3,8 @@ import { Fragment } from 'vue';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.MessageList.messages), messages => {
-    subscribe($$(messages, PrunCss.Link.link), processLink);
+  subscribe($$(tile.anchor, C.MessageList.messages), messages => {
+    subscribe($$(messages, C.Link.link), processLink);
   });
 }
 

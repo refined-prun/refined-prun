@@ -26,7 +26,7 @@ const correctableCommands = new Set([
 ]);
 
 async function onSelectorReady(selector: HTMLElement) {
-  const input: HTMLInputElement = await $(selector, PrunCss.PanelSelector.input);
+  const input: HTMLInputElement = await $(selector, C.PanelSelector.input);
   const form = input.form!;
   form.addEventListener('submit', ev => {
     const fullCommand = input.value.split(' ');
@@ -67,7 +67,7 @@ function correctByStarName(commandParts: string[]) {
 }
 
 function init() {
-  subscribe($$(document, PrunCss.Tile.selector), onSelectorReady);
+  subscribe($$(document, C.Tile.selector), onSelectorReady);
 }
 
 features.add({

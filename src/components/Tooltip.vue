@@ -14,7 +14,7 @@ defineProps({
 </script>
 
 <template>
-  <span :data-tooltip="tooltip" :data-tooltip-position="position" :class="PrunCss.Tooltip.container"
+  <span :data-tooltip="tooltip" :data-tooltip-position="position" :class="C.Tooltip.container"
     >ⓘ</span
   >
 </template>

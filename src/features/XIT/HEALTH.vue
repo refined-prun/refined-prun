@@ -38,8 +38,8 @@ const otherData = computed(() => [
   ['Last CX Price Update', cxStore.fetched ? `${dayjsEachSecond.value.to(cxStore.age)}` : false],
 ]);
 
-const positive = PrunCss.ColoredValue.positive;
-const negative = PrunCss.ColoredValue.negative;
+const positive = C.ColoredValue.positive;
+const negative = C.ColoredValue.negative;
 </script>
 
 <template>

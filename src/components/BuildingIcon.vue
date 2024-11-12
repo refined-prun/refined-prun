@@ -13,9 +13,9 @@ const props = defineProps({
 });
 
 const amountClasses = [
-  PrunCss.MaterialIcon.indicator,
-  PrunCss.MaterialIcon.neutral,
-  PrunCss.MaterialIcon.typeVerySmall,
+  C.MaterialIcon.indicator,
+  C.MaterialIcon.neutral,
+  C.MaterialIcon.typeVerySmall,
 ];
 
 function onClick(): void {
@@ -24,11 +24,11 @@ function onClick(): void {
 </script>
 
 <template>
-  <div :class="[PrunCss.BuildingIcon.container, $style.container]" :title="ticker" @click="onClick">
-    <div :class="PrunCss.BuildingIcon.tickerContainer">
-      <span :class="PrunCss.BuildingIcon.ticker">{{ ticker }}</span>
+  <div :class="[C.BuildingIcon.container, $style.container]" :title="ticker" @click="onClick">
+    <div :class="C.BuildingIcon.tickerContainer">
+      <span :class="C.BuildingIcon.ticker">{{ ticker }}</span>
     </div>
-    <div v-if="amount" :class="[PrunCss.MaterialIcon.indicatorContainer]">
+    <div v-if="amount" :class="[C.MaterialIcon.indicatorContainer]">
       <div :class="amountClasses">{{ amount }}</div>
     </div>
   </div>

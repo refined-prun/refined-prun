@@ -25,10 +25,10 @@ defineProps({
   <div
     v-for="mode in sorting.map(x => x.label)"
     :key="mode"
-    :class="PrunCss.InventorySortControls.criteria"
+    :class="C.InventorySortControls.criteria"
     @click="onModeClick(mode)">
     <div>{{ mode }}</div>
     <SortingOrderIcon v-if="mode === activeSort" />
   </div>
-  <div :class="PrunCss.InventorySortControls.criteria" @click="onAddClick"><div>+</div></div>
+  <div :class="C.InventorySortControls.criteria" @click="onAddClick"><div>+</div></div>
 </template>

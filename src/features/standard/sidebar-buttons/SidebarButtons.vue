@@ -2,13 +2,9 @@
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 
-const textClasses = [
-  PrunCss.Frame.toggleLabel,
-  PrunCss.fonts.fontRegular,
-  PrunCss.type.typeRegular,
-];
+const textClasses = [C.Frame.toggleLabel, C.fonts.fontRegular, C.type.typeRegular];
 
-const sliverClasses = [PrunCss.Frame.toggleIndicator, PrunCss.Frame.toggleIndicatorSecondary];
+const sliverClasses = [C.Frame.toggleIndicator, C.Frame.toggleIndicatorSecondary];
 </script>
 
 <template>
@@ -16,7 +12,7 @@ const sliverClasses = [PrunCss.Frame.toggleIndicator, PrunCss.Frame.toggleIndica
     <div
       v-for="(button, i) in userData.settings.sidebar"
       :key="i"
-      :class="PrunCss.Frame.toggle"
+      :class="C.Frame.toggle"
       @click="() => showBuffer(button[1])">
       <span :class="textClasses">{{ button[0] }}</span>
       <div :class="sliverClasses" />

@@ -78,7 +78,7 @@ const rat = materialsStore.getByTicker('RAT');
 <template>
   <LoadingSpinner v-if="sites === undefined" />
   <template v-else>
-    <div :class="PrunCss.ComExOrdersPanel.filter">
+    <div :class="C.ComExOrdersPanel.filter">
       <FilterButton v-model="red">RED</FilterButton>
       <FilterButton v-model="yellow">YELLOW</FilterButton>
       <FilterButton v-model="green">GREEN</FilterButton>

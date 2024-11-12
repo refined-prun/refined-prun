@@ -4,12 +4,12 @@ import { applyScopedCssRule } from '@src/infrastructure/prun-ui/refined-prun-css
 function init() {
   applyScopedCssRule(
     'MAT',
-    `.${PrunCss.MaterialInformation.container} > .${PrunCss.FormComponent.containerPassive}:nth-child(2)`,
+    `.${C.MaterialInformation.container} > .${C.FormComponent.containerPassive}:nth-child(2)`,
     css.hidden,
   );
   applyScopedCssRule(
     'MAT',
-    `.${PrunCss.MaterialInformation.container} > .${PrunCss.FormComponent.containerPassive}:nth-child(6)`,
+    `.${C.MaterialInformation.container} > .${C.FormComponent.containerPassive}:nth-child(6)`,
     css.hidden,
   );
 }

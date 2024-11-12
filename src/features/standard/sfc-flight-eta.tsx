@@ -8,7 +8,7 @@ import { keepLast } from '@src/utils/keep-last';
 
 function onTileReady(tile: PrunTile) {
   const ship = computed(() => shipsStore.getByRegistration(tile.parameter));
-  subscribe($$(tile.anchor, PrunCss.MissionPlan.table), x => onTableReady(x, ship));
+  subscribe($$(tile.anchor, C.MissionPlan.table), x => onTableReady(x, ship));
 }
 
 function onTableReady(table: HTMLElement, ship: Ref<PrunApi.Ship | undefined>) {

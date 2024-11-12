@@ -104,5 +104,5 @@ export function applyRawCssRule(rule: string) {
 }
 
 function selectCommand(command: string) {
-  return `.${PrunCss.TileFrame.frame}[data-rp-command='${command}']`;
+  return `.${C.TileFrame.frame}[data-rp-command='${command}']`;
 }

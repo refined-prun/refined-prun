@@ -1,9 +1,9 @@
 import features from '@src/feature-registry';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.SectionList.button), buttons => {
+  subscribe($$(tile.anchor, C.SectionList.button), buttons => {
     const demolish = buttons.children[1];
-    demolish?.classList.add(PrunCss.Button.danger);
+    demolish?.classList.add(C.Button.danger);
   });
 }
 

@@ -8,7 +8,7 @@ function onTileReady(tile: PrunTile) {
     return;
   }
 
-  subscribe($$(tile.anchor, PrunCss.Site.workforces), workforces => {
+  subscribe($$(tile.anchor, C.Site.workforces), workforces => {
     subscribe($$(workforces, 'tr'), row => {
       const cells = _$$(row, 'td');
       if (isEmpty(cells)) {

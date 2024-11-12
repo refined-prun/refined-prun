@@ -3,8 +3,8 @@ import classes from './lm-hide-rating.module.css';
 import { applyScopedClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {
-  applyScopedClassCssRule('LM', PrunCss.RatingIcon.container, css.hidden);
-  applyScopedClassCssRule('LM', PrunCss.CommodityAd.text, classes.text);
+  applyScopedClassCssRule('LM', C.RatingIcon.container, css.hidden);
+  applyScopedClassCssRule('LM', C.CommodityAd.text, classes.text);
 }
 
 features.add({

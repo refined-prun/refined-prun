@@ -22,33 +22,33 @@ defineProps({
 </script>
 
 <template>
-  <div :class="[PrunCss.ActionConfirmationOverlay.container, PrunCss.ActionFeedback.overlay]">
+  <div :class="[C.ActionConfirmationOverlay.container, C.ActionFeedback.overlay]">
     <div
       :class="[
-        PrunCss.ActionConfirmationOverlay.message,
-        PrunCss.ActionFeedback.message,
-        PrunCss.fonts.fontRegular,
-        PrunCss.type.typeLarger,
+        C.ActionConfirmationOverlay.message,
+        C.ActionFeedback.message,
+        C.fonts.fontRegular,
+        C.type.typeLarger,
       ]">
       <span
         :class="[
-          PrunCss.ActionConfirmationOverlay.message,
-          PrunCss.ActionFeedback.message,
-          PrunCss.fonts.fontRegular,
-          PrunCss.type.typeLarger,
+          C.ActionConfirmationOverlay.message,
+          C.ActionFeedback.message,
+          C.fonts.fontRegular,
+          C.type.typeLarger,
         ]"
         >Confirmation required</span
       >
       <span
         :class="[
-          PrunCss.ActionConfirmationOverlay.text,
-          PrunCss.ActionFeedback.text,
-          PrunCss.fonts.fontRegular,
-          PrunCss.type.typeRegular,
+          C.ActionConfirmationOverlay.text,
+          C.ActionFeedback.text,
+          C.fonts.fontRegular,
+          C.type.typeRegular,
         ]"
         >{{ message }}</span
       >
-      <div :class="[PrunCss.ActionConfirmationOverlay.buttons]">
+      <div :class="[C.ActionConfirmationOverlay.buttons]">
         <PrunButton neutral @click="onClose">Cancel</PrunButton>
         <PrunButton danger @click="onConfirm">{{ confirmLabel }}</PrunButton>
       </div>

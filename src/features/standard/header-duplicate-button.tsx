@@ -3,7 +3,7 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import TileControlsButton from '@src/components/TileControlsButton.vue';
 
 async function onTileReady(tile: PrunTile) {
-  const splitControls = await $(tile.frame, PrunCss.TileControls.splitControls);
+  const splitControls = await $(tile.frame, C.TileControls.splitControls);
   createFragmentApp(TileControlsButton, {
     icon: '\uf24d',
     onClick: () => showBuffer(tile.fullCommand, { force: true }),

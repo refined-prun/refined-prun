@@ -8,22 +8,16 @@ const props = defineProps({
 });
 
 const classes = computed(() => ({
-  [PrunCss.HeadItem.indicator]: true,
-  [PrunCss.HeadItem.indicatorPrimary]: true,
-  [PrunCss.HeadItem.indicatorPrimaryActive]: props.active,
-  [PrunCss.effects.shadowPrimary]: props.active,
+  [C.HeadItem.indicator]: true,
+  [C.HeadItem.indicatorPrimary]: true,
+  [C.HeadItem.indicatorPrimaryActive]: props.active,
+  [C.effects.shadowPrimary]: props.active,
 }));
 </script>
 
 <template>
-  <div
-    :class="[
-      PrunCss.HeadItem.container,
-      PrunCss.fonts.fontRegular,
-      PrunCss.type.typeRegular,
-      PrunCss.HeadItem.link,
-    ]">
-    <span :class="PrunCss.HeadItem.label">{{ label }}</span>
+  <div :class="[C.HeadItem.container, C.fonts.fontRegular, C.type.typeRegular, C.HeadItem.link]">
+    <span :class="C.HeadItem.label">{{ label }}</span>
     <div :class="classes" />
   </div>
 </template>

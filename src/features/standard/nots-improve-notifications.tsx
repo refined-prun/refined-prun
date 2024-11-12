@@ -8,11 +8,11 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.AlertListItem.container), processNotification);
+  subscribe($$(tile.anchor, C.AlertListItem.container), processNotification);
 }
 
 async function processNotification(container: HTMLElement) {
-  const content = await $(container, PrunCss.AlertListItem.content);
+  const content = await $(container, C.AlertListItem.content);
   // Don't mess with loading notifications
   const isLoaded = () => !content.textContent?.includes('…');
   if (!isLoaded()) {

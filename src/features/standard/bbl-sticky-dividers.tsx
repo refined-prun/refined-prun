@@ -2,7 +2,7 @@ import classes from './bbl-sticky-dividers.module.css';
 import { applyScopedClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {
-  applyScopedClassCssRule('BBL', PrunCss.SectionList.divider, classes.divider);
+  applyScopedClassCssRule('BBL', C.SectionList.divider, classes.divider);
 }
 
 features.add({

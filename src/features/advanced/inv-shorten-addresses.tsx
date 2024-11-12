@@ -6,7 +6,7 @@ function onTileReady(tile: PrunTile) {
     return;
   }
 
-  subscribe($$(tile.anchor, PrunCss.Link.link), link => {
+  subscribe($$(tile.anchor, C.Link.link), link => {
     if (link.textContent) {
       link.textContent = extractPlanetName(link.textContent);
     }

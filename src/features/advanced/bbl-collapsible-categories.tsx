@@ -7,20 +7,20 @@ import {
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.SectionList.container), container => {
-    for (const divider of $$(container, PrunCss.SectionList.divider)) {
+  subscribe($$(tile.anchor, C.SectionList.container), container => {
+    for (const divider of $$(container, C.SectionList.divider)) {
       // Hide Infrastructure (which is the first category) by default
       const enabled = ref(divider.parentElement?.firstChild !== divider);
       const indicator = document.createElement('div');
-      indicator.classList.add(PrunCss.RadioItem.indicator);
+      indicator.classList.add(C.RadioItem.indicator);
       divider.firstChild!.before(indicator);
       watchEffectWhileNodeAlive(divider, () => {
         if (enabled.value) {
-          indicator.classList.add(PrunCss.RadioItem.active);
-          indicator.classList.add(PrunCss.effects.shadowPrimary);
+          indicator.classList.add(C.RadioItem.active);
+          indicator.classList.add(C.effects.shadowPrimary);
         } else {
-          indicator.classList.remove(PrunCss.RadioItem.active);
-          indicator.classList.remove(PrunCss.effects.shadowPrimary);
+          indicator.classList.remove(C.RadioItem.active);
+          indicator.classList.remove(C.effects.shadowPrimary);
         }
       });
       divider.addEventListener('click', () => {
@@ -33,10 +33,10 @@ function onTileReady(tile: PrunTile) {
 function init() {
   applyScopedCssRule(
     'BBL',
-    `.${PrunCss.SectionList.divider}:not(:has(.${PrunCss.RadioItem.active})) + div`,
+    `.${C.SectionList.divider}:not(:has(.${C.RadioItem.active})) + div`,
     css.hidden,
   );
-  applyScopedClassCssRule('BBL', PrunCss.SectionList.divider, classes.divider);
+  applyScopedClassCssRule('BBL', C.SectionList.divider, classes.divider);
   tiles.observe('BBL', onTileReady);
 }
 

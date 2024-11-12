@@ -32,7 +32,7 @@ const totals = computed(() => {
     </td>
     <!-- This <tr> is needed so both other <tr>s are the same color -->
     <td :style="{ display: 'none' }" />
-    <td colspan="5" :style="style" :class="PrunCss.ComExOrdersTable.number">
+    <td colspan="5" :style="style" :class="C.ComExOrdersTable.number">
       <template v-for="(total, i) in totals" :key="total">
         <span>{{ total }}</span>
         <br v-if="i !== totals.length - 1" />

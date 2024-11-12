@@ -6,8 +6,8 @@ import { refTextContent } from '@src/utils/reactive-dom';
 import { getTileState } from './tile-state';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.StoreView.container), container => {
-    subscribe($$(container, PrunCss.GridItemView.image), item => {
+  subscribe($$(tile.anchor, C.StoreView.container), container => {
+    subscribe($$(container, C.GridItemView.image), item => {
       if (!item.children[1]) {
         void addMarker(item, tile);
       }
@@ -29,7 +29,7 @@ const icons: Icon[] = [
 ];
 
 async function addMarker(mat: HTMLElement, tile: PrunTile) {
-  const matTickerElem = await $(mat, PrunCss.ColoredIcon.label);
+  const matTickerElem = await $(mat, C.ColoredIcon.label);
   const ticker = refTextContent(matTickerElem);
   const state = computedTileState(getTileState(tile), 'markers', {});
   const markerId = computed({

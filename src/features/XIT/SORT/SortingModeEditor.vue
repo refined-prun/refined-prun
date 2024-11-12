@@ -71,7 +71,7 @@ function onSaveClick() {
 </script>
 
 <template>
-  <div :class="PrunCss.DraftConditionEditor.form">
+  <div :class="C.DraftConditionEditor.form">
     <SectionHeader>Sorting Mode</SectionHeader>
     <form>
       <Active

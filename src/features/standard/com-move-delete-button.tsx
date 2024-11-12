@@ -2,10 +2,10 @@ import classes from './com-move-delete-button.module.css';
 import { applyClassCssRule, applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {
-  applyClassCssRule(PrunCss.Message.controlsAndText, classes.container);
-  applyClassCssRule(PrunCss.Message.controls, classes.delete);
+  applyClassCssRule(C.Message.controlsAndText, classes.container);
+  applyClassCssRule(C.Message.controls, classes.delete);
   applyCssRule(
-    `.${PrunCss.Message.message}:has(.${PrunCss.Message.controlsAndText} .${PrunCss.Message.controls}) .${PrunCss.Sender.name}`,
+    `.${C.Message.message}:has(.${C.Message.controlsAndText} .${C.Message.controls}) .${C.Sender.name}`,
     classes.username,
   );
 }

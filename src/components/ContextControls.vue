@@ -15,7 +15,7 @@ defineProps({
 </script>
 
 <template>
-  <div :class="PrunCss.ContextControls.container">
+  <div :class="C.ContextControls.container">
     <ContextControlsItem
       v-for="item in items"
       :key="item.cmd"

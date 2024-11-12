@@ -16,13 +16,13 @@ defineProps({
 </script>
 
 <template>
-  <div :class="PrunCss.Overlay.overlay">
-    <div :class="[PrunCss.Overlay.background, PrunCss.Overlay.overlay]">
-      <div :class="PrunCss.Overlay.close" @click="onClose" />
-      <div :class="PrunCss.Overlay.children">
+  <div :class="C.Overlay.overlay">
+    <div :class="[C.Overlay.background, C.Overlay.overlay]">
+      <div :class="C.Overlay.close" @click="onClose" />
+      <div :class="C.Overlay.children">
         <Component :is="child" v-bind="props" @close="onClose" />
       </div>
-      <div :class="PrunCss.Overlay.close" @click="onClose" />
+      <div :class="C.Overlay.close" @click="onClose" />
     </div>
   </div>
 </template>

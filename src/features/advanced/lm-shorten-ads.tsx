@@ -4,8 +4,8 @@ import { extractPlanetName } from '@src/util';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.CommodityAd.container), async container => {
-    const text = await $(container, PrunCss.CommodityAd.text);
+  subscribe($$(tile.anchor, C.CommodityAd.container), async container => {
+    const text = await $(container, C.CommodityAd.text);
     const id = getPrunId(container);
     const ad = localAdsStore.getById(id);
     if (!ad) {
@@ -44,7 +44,7 @@ function onTileReady(tile: PrunTile) {
 function cleanShipmentAd(tile: PrunTile, ad: HTMLElement) {
   // Shorten planet names
   const parameter = tile.parameter?.toUpperCase();
-  for (const link of $$(ad, PrunCss.Link.link)) {
+  for (const link of $$(ad, C.Link.link)) {
     const planetName = extractPlanetName(link.textContent);
     const planet = planetsStore.find(planetName);
     if (parameter === planetName?.toUpperCase() || parameter === planet?.naturalId.toUpperCase()) {

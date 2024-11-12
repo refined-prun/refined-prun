@@ -13,14 +13,14 @@ function onTileReady(tile: PrunTile) {
     return;
   }
 
-  subscribe($$(tile.anchor, PrunCss.MaterialInformation.container), async container => {
-    const fields = _$$(container, PrunCss.StaticInput.static);
+  subscribe($$(tile.anchor, C.MaterialInformation.container), async container => {
+    const fields = _$$(container, C.StaticInput.static);
     const categoryField = fields[1];
     if (!categoryField) {
       return;
     }
 
-    categoryField.classList.add(PrunCss.Link.link);
+    categoryField.classList.add(C.Link.link);
     categoryField.addEventListener('click', () => {
       showBuffer('XIT MATS ' + toSerializableCategoryName(category.name));
     });

@@ -23,7 +23,7 @@ const buildings = computed(() => {
 </script>
 
 <template>
-  <h2 :class="[PrunCss.Site.header, PrunCss.ui.header2, PrunCss.fonts.fontRegular]">Buildings</h2>
+  <h2 :class="[C.Site.header, C.ui.header2, C.fonts.fontRegular]">Buildings</h2>
   <div :class="$style.list">
     <BuildingIcon
       v-for="building in buildings"

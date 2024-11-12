@@ -5,11 +5,11 @@ import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { localAdsStore } from '@src/infrastructure/prun-api/data/local-ads';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.CommodityAd.container), onContainerReady);
+  subscribe($$(tile.anchor, C.CommodityAd.container), onContainerReady);
 }
 
 async function onContainerReady(container: HTMLElement) {
-  const text = await $(container, PrunCss.CommodityAd.text);
+  const text = await $(container, C.CommodityAd.text);
   const id = getPrunId(container);
   const ad = localAdsStore.getById(id);
   if (!ad) {

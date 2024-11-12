@@ -10,20 +10,20 @@ const props = defineProps({
 });
 
 const classes = computed(() => ({
-  [PrunCss.Button.btn]: true,
-  [PrunCss.Button.inline]: props.inline,
-  [PrunCss.Button.primary]: props.primary,
-  [PrunCss.Button.primaryInline]: props.primary && props.inline,
-  [PrunCss.Button.disabled]: props.disabled,
-  [PrunCss.Button.disabledInline]: props.disabled && props.inline,
-  [PrunCss.Button.neutral]: props.neutral,
-  [PrunCss.Button.neutralInline]: props.neutral && props.inline,
-  [PrunCss.Button.success]: props.success,
-  [PrunCss.Button.successInline]: props.success && props.inline,
-  [PrunCss.Button.danger]: props.danger,
-  [PrunCss.Button.dangerInline]: props.danger && props.inline,
-  [PrunCss.Button.dark]: props.dark,
-  [PrunCss.Button.darkInline]: props.dark && props.inline,
+  [C.Button.btn]: true,
+  [C.Button.inline]: props.inline,
+  [C.Button.primary]: props.primary,
+  [C.Button.primaryInline]: props.primary && props.inline,
+  [C.Button.disabled]: props.disabled,
+  [C.Button.disabledInline]: props.disabled && props.inline,
+  [C.Button.neutral]: props.neutral,
+  [C.Button.neutralInline]: props.neutral && props.inline,
+  [C.Button.success]: props.success,
+  [C.Button.successInline]: props.success && props.inline,
+  [C.Button.danger]: props.danger,
+  [C.Button.dangerInline]: props.danger && props.inline,
+  [C.Button.dark]: props.dark,
+  [C.Button.darkInline]: props.dark && props.inline,
 }));
 </script>
 

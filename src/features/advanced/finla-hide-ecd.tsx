@@ -3,7 +3,7 @@ import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-al
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.LiquidAssetsPanel.row), row => {
+  subscribe($$(tile.anchor, C.LiquidAssetsPanel.row), row => {
     const currency = refTextContent(row.children[0]);
     watchEffectWhileNodeAlive(row, () => {
       row.style.display = currency.value === 'ECD' ? 'none' : '';

@@ -13,13 +13,13 @@ function downloadCssDefinition() {
   }
 
   let definition = `export interface CssClasses {\n`;
-  for (const key of Object.keys(PrunCss)) {
+  for (const key of Object.keys(C)) {
     definition += `  ${key}: ${capitalize(key)};\n`;
   }
   definition += '}\n';
-  for (const key of Object.keys(PrunCss)) {
+  for (const key of Object.keys(C)) {
     definition += `\ninterface ${capitalize(key)} {\n`;
-    for (const childKey of Object.keys(PrunCss[key])) {
+    for (const childKey of Object.keys(C[key])) {
       definition += `  ${childKey}: string;\n`;
     }
     definition += `}\n`;

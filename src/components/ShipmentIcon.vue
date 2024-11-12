@@ -35,7 +35,7 @@ const onClick = () => {
 </script>
 
 <template>
-  <div :class="[PrunCss.MaterialIcon.container, $style.container]">
+  <div :class="[C.MaterialIcon.container, $style.container]">
     <ColoredIcon
       label="SHPT"
       title="Shipment"

@@ -26,7 +26,7 @@ function onCreateClick() {
 </script>
 
 <template>
-  <div :class="PrunCss.DraftConditionEditor.form">
+  <div :class="C.DraftConditionEditor.form">
     <SectionHeader>New Note</SectionHeader>
     <form>
       <Active

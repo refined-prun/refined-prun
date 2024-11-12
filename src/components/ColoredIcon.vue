@@ -37,7 +37,7 @@ const props = defineProps({
 const $style = useCssModule();
 
 const classes = computed(() => ({
-  [PrunCss.ColoredIcon.container]: true,
+  [C.ColoredIcon.container]: true,
   [$style.large]: props.size === 'large',
   [$style.medium]: props.size === 'medium',
   [$style.small]: props.size === 'small',
@@ -58,8 +58,8 @@ const style = computed(() => ({
     :title="title"
     :data-rp-ticker="label"
     :data-rp-category="category">
-    <div :class="PrunCss.ColoredIcon.labelContainer">
-      <span :class="PrunCss.ColoredIcon.label">{{ label }}</span>
+    <div :class="C.ColoredIcon.labelContainer">
+      <span :class="C.ColoredIcon.label">{{ label }}</span>
       <ColoredIconDetail :detail="detail" />
     </div>
   </div>

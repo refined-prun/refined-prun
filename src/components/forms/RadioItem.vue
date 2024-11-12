@@ -2,10 +2,10 @@
 const model = defineModel<boolean>();
 
 const classes = computed(() => [
-  PrunCss.RadioItem.indicator,
+  C.RadioItem.indicator,
   {
-    [PrunCss.RadioItem.active]: model.value,
-    [PrunCss.effects.shadowPrimary]: model.value,
+    [C.RadioItem.active]: model.value,
+    [C.effects.shadowPrimary]: model.value,
   },
 ]);
 
@@ -15,9 +15,9 @@ function onClick() {
 </script>
 
 <template>
-  <span :class="[PrunCss.RadioItem.container]" @click="onClick">
+  <span :class="[C.RadioItem.container]" @click="onClick">
     <div :class="classes" />
-    <div :class="[PrunCss.RadioItem.value, PrunCss.fonts.fontRegular, PrunCss.type.typeSmall]">
+    <div :class="[C.RadioItem.value, C.fonts.fontRegular, C.type.typeSmall]">
       <slot />
     </div>
   </span>

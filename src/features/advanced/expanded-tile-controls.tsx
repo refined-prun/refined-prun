@@ -3,11 +3,8 @@ import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import css from '@src/utils/css-utils.module.css';
 
 function init() {
-  applyCssRule(`.${PrunCss.TileControls.container} > .${PrunCss.TileControls.icon}`, css.hidden);
-  applyCssRule(
-    `.${PrunCss.TileControls.container} > .${PrunCss.TileControls.controls}`,
-    classes.show,
-  );
+  applyCssRule(`.${C.TileControls.container} > .${C.TileControls.icon}`, css.hidden);
+  applyCssRule(`.${C.TileControls.container} > .${C.TileControls.controls}`, classes.show);
 }
 
 features.add({

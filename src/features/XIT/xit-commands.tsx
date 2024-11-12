@@ -8,9 +8,7 @@ import { startMeasure, stopMeasure } from '@src/utils/performance-measure';
 import { isEmpty } from 'ts-extras';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.ScrollView.view), scrollView =>
-    onScrollViewReady(tile, scrollView),
-  );
+  subscribe($$(tile.anchor, C.ScrollView.view), scrollView => onScrollViewReady(tile, scrollView));
 }
 
 function onScrollViewReady(tile: PrunTile, scrollView: HTMLElement) {
@@ -54,13 +52,13 @@ function onScrollViewReady(tile: PrunTile, scrollView: HTMLElement) {
     return;
   }
 
-  _$(tile.frame, PrunCss.TileFrame.title)!.textContent =
+  _$(tile.frame, C.TileFrame.title)!.textContent =
     typeof xitCommand.name === 'string' ? xitCommand.name : xitCommand.name(parameters);
 
   if (xitCommand.contextItems) {
     const items = xitCommand.contextItems(parameters);
     if (!isEmpty(items)) {
-      const header = _$(tile.frame, PrunCss.TileFrame.header)!;
+      const header = _$(tile.frame, C.TileFrame.header)!;
       createFragmentApp(ContextControls, { items }).after(header);
     }
   }

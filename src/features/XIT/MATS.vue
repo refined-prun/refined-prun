@@ -40,7 +40,7 @@ const materials = computed(() => {
 </script>
 
 <template>
-  <div :class="PrunCss.InventoryView.grid">
+  <div :class="C.InventoryView.grid">
     <GridMaterialIcon v-for="mat in materials" :key="mat.id" :ticker="mat.ticker" />
   </div>
 </template>

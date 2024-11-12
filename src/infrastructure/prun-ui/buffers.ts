@@ -18,16 +18,16 @@ export async function showBuffer(command: string, options?: ShowBufferOptions) {
   if (!options?.force) {
     const activeTiles = tiles.find(command);
     for (const tile of activeTiles) {
-      const tileWindow = tile.frame.closest(`.${PrunCss.Window.window}`) as HTMLElement;
+      const tileWindow = tile.frame.closest(`.${C.Window.window}`) as HTMLElement;
       if (tileWindow) {
-        const header = _$(tileWindow, PrunCss.Window.header);
+        const header = _$(tileWindow, C.Window.header);
         void clickElement(header);
         return false;
       }
     }
   }
   await acquireSlot();
-  const create = await $(document.documentElement, PrunCss.Dock.create);
+  const create = await $(document.documentElement, C.Dock.create);
 
   try {
     create.click();
@@ -59,23 +59,21 @@ function releaseSlot() {
 }
 
 async function captureLastWindow(command: string, options?: ShowBufferOptions) {
-  const windows = _$$(document, PrunCss.Window.window);
+  const windows = _$$(document, C.Window.window);
   if (isEmpty(windows)) {
     return;
   }
   const window = windows[windows.length - 1] as HTMLDivElement;
-  const tile = _$(window, PrunCss.Tile.tile);
+  const tile = _$(window, C.Tile.tile);
   const id = getPrunId(tile!)?.padStart(2, '0');
   if (options?.autoClose) {
-    const dock = _$$(document, PrunCss.Dock.buffer).find(
-      x => _$(x, PrunCss.Dock.title)?.textContent === id,
-    );
+    const dock = _$$(document, C.Dock.buffer).find(x => _$(x, C.Dock.title)?.textContent === id);
     if (dock) {
       dock.style.display = 'none';
     }
     window.style.display = 'none';
   }
-  const input = _$(window, PrunCss.PanelSelector.input) as HTMLInputElement;
+  const input = _$(window, C.PanelSelector.input) as HTMLInputElement;
   changeValue(input, command);
   const form = input.form;
   if (!form?.isConnected || !(options?.autoSubmit ?? true)) {
@@ -96,7 +94,7 @@ async function closeWhenDone(window: HTMLDivElement, options?: ShowBufferOptions
   if (closeWhen) {
     await watchUntil(closeWhen);
   }
-  const buttons = _$$(window, PrunCss.Window.button);
+  const buttons = _$$(window, C.Window.button);
   const closeButton = buttons.find(x => x.textContent === 'x') as HTMLButtonElement;
   if (closeButton) {
     closeButton?.click();

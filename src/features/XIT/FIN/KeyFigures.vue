@@ -11,17 +11,13 @@ defineProps({
   },
 });
 
-const containerClasses = [PrunCss.FinanceOverviewPanel.data, PrunCss.figures.container];
-const figureClasses = [
-  PrunCss.FinanceOverviewPanel.info,
-  PrunCss.figures.figure,
-  PrunCss.type.typeLarge,
-];
+const containerClasses = [C.FinanceOverviewPanel.data, C.figures.container];
+const figureClasses = [C.FinanceOverviewPanel.info, C.figures.figure, C.type.typeLarge];
 const labelClasses = [
-  PrunCss.FinanceOverviewPanel.label,
-  PrunCss.figures.label,
-  PrunCss.type.typeRegular,
-  PrunCss.type.typeSmall,
+  C.FinanceOverviewPanel.label,
+  C.figures.label,
+  C.type.typeRegular,
+  C.type.typeSmall,
 ];
 </script>
 

@@ -4,7 +4,7 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 const correctableCommands = new Set(['CXM', 'CXOB', 'CXP', 'CXPC', 'CXPO', 'MAT']);
 
 async function onSelectorReady(selector: HTMLElement) {
-  const input: HTMLInputElement = await $(selector, PrunCss.PanelSelector.input);
+  const input: HTMLInputElement = await $(selector, C.PanelSelector.input);
   const form = input.form!;
   form.addEventListener('submit', ev => {
     const commandParts = input.value.split(' ');
@@ -30,7 +30,7 @@ async function onSelectorReady(selector: HTMLElement) {
 }
 
 function init() {
-  subscribe($$(document, PrunCss.Tile.selector), onSelectorReady);
+  subscribe($$(document, C.Tile.selector), onSelectorReady);
 }
 
 features.add({

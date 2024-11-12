@@ -28,7 +28,7 @@ const price = computed(() => fixed2(props.trade.price.amount));
 const currency = computed(() => props.trade.price.currency);
 
 const typeClass = computed(() =>
-  props.order.type === 'SELLING' ? PrunCss.OrderTypeLabel.SELLING : PrunCss.OrderTypeLabel.BUYING,
+  props.order.type === 'SELLING' ? C.OrderTypeLabel.SELLING : C.OrderTypeLabel.BUYING,
 );
 const fullTicker = computed(() => `${props.order.material.ticker}.${props.order.exchange.code}`);
 
@@ -39,7 +39,7 @@ const onTickerClick = () => showBuffer(`CXOB ${fullTicker.value}`);
 <template>
   <tr>
     <td>
-      <span :class="PrunCss.Link.link" @click="onTimeClick">
+      <span :class="C.Link.link" @click="onTimeClick">
         {{ hhmmss(date) }}
       </span>
     </td>
@@ -47,15 +47,15 @@ const onTickerClick = () => showBuffer(`CXOB ${fullTicker.value}`);
       <span :class="typeClass">{{ order.type === 'SELLING' ? 'SELL' : 'BUY' }}</span>
     </td>
     <td>
-      <span :class="PrunCss.Link.link" @click="onTickerClick">
+      <span :class="C.Link.link" @click="onTickerClick">
         {{ fullTicker }}
       </span>
     </td>
     <td>
       <PrunLink :command="`CO ${trade.partner.code}`">{{ trade.partner.name }}</PrunLink>
     </td>
-    <td :class="PrunCss.ComExOrdersTable.number">{{ trade.amount }}</td>
-    <td :class="PrunCss.ComExOrdersTable.number">{{ price }} {{ currency }}</td>
-    <td :class="PrunCss.ComExOrdersTable.number">{{ total }} {{ currency }}</td>
+    <td :class="C.ComExOrdersTable.number">{{ trade.amount }}</td>
+    <td :class="C.ComExOrdersTable.number">{{ price }} {{ currency }}</td>
+    <td :class="C.ComExOrdersTable.number">{{ total }} {{ currency }}</td>
   </tr>
 </template>

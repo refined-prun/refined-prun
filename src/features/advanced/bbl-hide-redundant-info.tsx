@@ -8,7 +8,7 @@ import { isRepairableBuilding } from '@src/core/buildings';
 function onTileReady(tile: PrunTile) {
   const siteId = tile.parameter;
   const site = computed(() => sitesStore.getById(siteId));
-  subscribe($$(tile.anchor, PrunCss.SectionList.section), section => {
+  subscribe($$(tile.anchor, C.SectionList.section), section => {
     const id = refPrunId(section);
     const building = computed(() => site.value?.platforms.find(p => p.id == id.value));
     watchEffectWhileNodeAlive(section, () => {
@@ -35,25 +35,25 @@ function init() {
   // Hide 'Last repair'
   applyScopedCssRule(
     'BBL',
-    `.${PrunCss.SectionList.section}[data-rp-established] .${PrunCss.SectionList.table} tr:nth-child(2)`,
+    `.${C.SectionList.section}[data-rp-established] .${C.SectionList.table} tr:nth-child(2)`,
     css.hidden,
   );
   // Hide 'Established'
   applyScopedCssRule(
     'BBL',
-    `.${PrunCss.SectionList.section}[data-rp-repaired] .${PrunCss.SectionList.table} tr:nth-child(1)`,
+    `.${C.SectionList.section}[data-rp-repaired] .${C.SectionList.table} tr:nth-child(1)`,
     css.hidden,
   );
   // Hide 'Repair costs'
   applyScopedCssRule(
     'BBL',
-    `.${PrunCss.SectionList.section}[data-rp-infrastructure] .${PrunCss.SectionList.table} tr:nth-child(3)`,
+    `.${C.SectionList.section}[data-rp-infrastructure] .${C.SectionList.table} tr:nth-child(3)`,
     css.hidden,
   );
   // Hide 'Book value'
   applyScopedCssRule(
     'BBL',
-    `.${PrunCss.SectionList.section} .${PrunCss.SectionList.table} tr:nth-child(5)`,
+    `.${C.SectionList.section} .${C.SectionList.table} tr:nth-child(5)`,
     css.hidden,
   );
   tiles.observe('BBL', onTileReady);

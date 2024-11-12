@@ -7,16 +7,12 @@ defineProps({
   },
 });
 
-const textElementClass = [
-  PrunCss.GridItemView.name,
-  PrunCss.fonts.fontRegular,
-  PrunCss.type.typeRegular,
-];
+const textElementClass = [C.GridItemView.name, C.fonts.fontRegular, C.type.typeRegular];
 </script>
 
 <template>
-  <div :class="PrunCss.GridItemView.container">
-    <div :class="PrunCss.GridItemView.image">
+  <div :class="C.GridItemView.container">
+    <div :class="C.GridItemView.image">
       <slot />
     </div>
     <span :class="textElementClass">{{ name }}</span>

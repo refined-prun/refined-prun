@@ -2,8 +2,8 @@ export {}
 declare global {
   const $$: typeof import('@src/utils/select-dom')['$$']
   const $: typeof import('@src/utils/select-dom')['$']
+  const C: typeof import('@src/infrastructure/prun-ui/prun-css')['C']
   const EffectScope: typeof import('vue')['EffectScope']
-  const PrunCss: typeof import('@src/infrastructure/prun-ui/prun-css')['default']
   const _$$: typeof import('@src/utils/select-dom')['_$$']
   const _$: typeof import('@src/utils/select-dom')['_$']
   const computed: typeof import('vue')['computed']
@@ -78,8 +78,8 @@ declare module 'vue' {
   interface ComponentCustomProperties {
     readonly $$: UnwrapRef<typeof import('@src/utils/select-dom')['$$']>
     readonly $: UnwrapRef<typeof import('@src/utils/select-dom')['$']>
+    readonly C: UnwrapRef<typeof import('@src/infrastructure/prun-ui/prun-css')['C']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
-    readonly PrunCss: UnwrapRef<typeof import('@src/infrastructure/prun-ui/prun-css')['default']>
     readonly _$$: UnwrapRef<typeof import('@src/utils/select-dom')['_$$']>
     readonly _$: UnwrapRef<typeof import('@src/utils/select-dom')['_$']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>

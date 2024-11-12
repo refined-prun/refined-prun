@@ -1,20 +1,20 @@
 <script setup lang="ts">
 const toggled = defineModel<boolean>();
 
-const buttonClass = [PrunCss.RadioItem.container, PrunCss.RadioItem.containerHorizontal];
+const buttonClass = [C.RadioItem.container, C.RadioItem.containerHorizontal];
 const barClass = computed(() => [
-  PrunCss.RadioItem.indicator,
-  PrunCss.RadioItem.indicatorHorizontal,
+  C.RadioItem.indicator,
+  C.RadioItem.indicatorHorizontal,
   {
-    [PrunCss.RadioItem.active]: toggled.value,
-    [PrunCss.effects.shadowPrimary]: toggled.value,
+    [C.RadioItem.active]: toggled.value,
+    [C.effects.shadowPrimary]: toggled.value,
   },
 ]);
 const labelClass = [
-  PrunCss.RadioItem.value,
-  PrunCss.RadioItem.valueHorizontal,
-  PrunCss.fonts.fontRegular,
-  PrunCss.type.typeSmall,
+  C.RadioItem.value,
+  C.RadioItem.valueHorizontal,
+  C.fonts.fontRegular,
+  C.type.typeSmall,
 ];
 
 const onClick = () => (toggled.value = !toggled.value);

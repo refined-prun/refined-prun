@@ -7,8 +7,8 @@ import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/mater
 
 export function overrideIconColorStyle() {
   appendStylesheet();
-  subscribe($$(document.documentElement, PrunCss.ColoredIcon.label), label => {
-    const container = label.closest(`.${PrunCss.ColoredIcon.container}`) as HTMLElement;
+  subscribe($$(document.documentElement, C.ColoredIcon.label), label => {
+    const container = label.closest(`.${C.ColoredIcon.container}`) as HTMLElement;
     if (!container) {
       return;
     }
@@ -34,7 +34,7 @@ function appendStylesheet() {
   const gradientEnd = defaultColor.brighten(10).toHexString();
   const fontColor = defaultColor.brighten(40).toHexString();
   const defaultStyle =
-    `.${PrunCss.ColoredIcon.container}[data-rp-category] {\n` +
+    `.${C.ColoredIcon.container}[data-rp-category] {\n` +
     `  background: linear-gradient(135deg, ${gradientStart}, ${gradientEnd});\n` +
     `  color: ${fontColor};\n` +
     '}\n\n';
@@ -48,7 +48,7 @@ function createCssRule<T extends keyof typeof categoryColors>(category: T) {
   const gradientEnd = color.brighten(10).toHexString();
   const fontColor = color.brighten(40).toHexString();
   return (
-    `.${PrunCss.ColoredIcon.container}[data-rp-category="${category}"] {\n` +
+    `.${C.ColoredIcon.container}[data-rp-category="${category}"] {\n` +
     `  background: linear-gradient(135deg, ${gradientStart}, ${gradientEnd});\n` +
     `  color: ${fontColor};\n` +
     '}'

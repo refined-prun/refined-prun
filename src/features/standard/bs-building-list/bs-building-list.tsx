@@ -7,7 +7,7 @@ function onTileReady(tile: PrunTile) {
     return;
   }
 
-  subscribe($$(tile.anchor, PrunCss.Site.container), container => {
+  subscribe($$(tile.anchor, C.Site.container), container => {
     createFragmentApp(BuildingCountSection, { naturalId }).appendTo(container);
   });
 }

@@ -6,11 +6,11 @@ import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { localAdsStore } from '@src/infrastructure/prun-api/data/local-ads';
 
 function onLMTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.CommodityAd.container), onAdContainerReady);
+  subscribe($$(tile.anchor, C.CommodityAd.container), onAdContainerReady);
 }
 
 async function onAdContainerReady(container: HTMLElement) {
-  const text = await $(container, PrunCss.CommodityAd.text);
+  const text = await $(container, C.CommodityAd.text);
   const id = getPrunId(container);
   const ad = localAdsStore.getById(id);
   if (!ad || ad.type !== 'COMMODITY_SHIPPING') {
@@ -40,11 +40,11 @@ async function onAdContainerReady(container: HTMLElement) {
 }
 
 function onLMPTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.LocalMarketPost.form), onFormReady);
+  subscribe($$(tile.anchor, C.LocalMarketPost.form), onFormReady);
 }
 
 function onFormReady(form: HTMLElement) {
-  const type = _$$(form, PrunCss.StaticInput.static);
+  const type = _$$(form, C.StaticInput.static);
   if (!type.find(x => x.textContent === 'SHIPPING')) {
     return;
   }

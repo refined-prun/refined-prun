@@ -6,7 +6,7 @@ function onTileReady(tile: PrunTile) {
     return;
   }
 
-  subscribe($$(tile.anchor, PrunCss.InventoriesListContainer.filter), inventoryFilters => {
+  subscribe($$(tile.anchor, C.InventoriesListContainer.filter), inventoryFilters => {
     const searchBarDiv = document.createElement('div');
     inventoryFilters.after(searchBarDiv);
 

@@ -1,9 +1,5 @@
-<script setup lang="ts">
-import PrunCss from '@src/infrastructure/prun-ui/prun-css.js';
-</script>
-
 <template>
-  <div :class="PrunCss.InventorySortControls.order" style="display: inline">
+  <div :class="C.InventorySortControls.order" style="display: inline">
     <div style="display: block">
       <svg
         aria-hidden="true"

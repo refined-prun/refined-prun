@@ -10,8 +10,8 @@ import {
 import { objectKeys } from 'ts-extras';
 
 function init() {
-  const container = PrunCss.ColoredIcon.container;
-  const label = PrunCss.ColoredIcon.label;
+  const container = C.ColoredIcon.container;
+  const label = C.ColoredIcon.label;
 
   applyCssRule(`.${container}`, classes.container);
   applyCssRule(`.${container}:before`, fa.solid);
@@ -33,8 +33,8 @@ function init() {
 }
 
 function applyIconRules(attribute: string, icon: Icon) {
-  const container = PrunCss.ColoredIcon.container;
-  const label = PrunCss.ColoredIcon.label;
+  const container = C.ColoredIcon.container;
+  const label = C.ColoredIcon.label;
 
   const selector = `.${container}${attribute}:before `;
   const rule = createRule(icon, 2.2);

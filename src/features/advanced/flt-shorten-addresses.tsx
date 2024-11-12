@@ -1,7 +1,7 @@
 import { extractPlanetName } from '@src/util';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.Link.link), link => {
+  subscribe($$(tile.anchor, C.Link.link), link => {
     if (link.textContent) {
       link.textContent = extractPlanetName(link.textContent);
     }

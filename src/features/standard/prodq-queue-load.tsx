@@ -10,7 +10,7 @@ function onTileReady(tile: PrunTile) {
   if (!parameter) {
     return;
   }
-  subscribe($$(tile.anchor, PrunCss.ProductionQueue.table), table => {
+  subscribe($$(tile.anchor, C.ProductionQueue.table), table => {
     subscribe($$(table, 'tr'), x => onRowReady(x, parameter));
   });
 }

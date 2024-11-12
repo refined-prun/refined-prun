@@ -52,12 +52,12 @@ watchEffect(() => {
           <OrderRow v-for="order in offers" :key="order.id" :order="order" />
         </template>
         <tr v-else>
-          <td :class="PrunCss.ComExOrderBookPanel.empty" colSpan="2">No offers.</td>
+          <td :class="C.ComExOrderBookPanel.empty" colSpan="2">No offers.</td>
         </tr>
       </tbody>
       <tbody>
         <tr>
-          <td colSpan="2" :class="[PrunCss.ComExOrderBookPanel.spread, $style.spread]">
+          <td colSpan="2" :class="[C.ComExOrderBookPanel.spread, $style.spread]">
             Spread: <span :style="{ color: '#eee' }">{{ spread }}</span>
           </td>
         </tr>
@@ -70,7 +70,7 @@ watchEffect(() => {
           <OrderRow v-for="order in requests" :key="order.id" request :order="order" />
         </template>
         <tr v-else>
-          <td :class="PrunCss.ComExOrderBookPanel.empty" colSpan="2">No requests.</td>
+          <td :class="C.ComExOrderBookPanel.empty" colSpan="2">No requests.</td>
         </tr>
       </tbody>
     </table>

@@ -4,8 +4,8 @@ import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css'
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 function init() {
-  applyClassCssRule(PrunCss.Frame.logo, classes.logo);
-  subscribe($$(document, PrunCss.Frame.logo), logo => {
+  applyClassCssRule(C.Frame.logo, classes.logo);
+  subscribe($$(document, C.Frame.logo), logo => {
     logo.addEventListener('click', () => showBuffer(`CO ${companyStore.value?.code}`));
   });
 }

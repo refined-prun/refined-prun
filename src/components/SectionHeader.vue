@@ -1,3 +1,3 @@
 <template>
-  <div :class="[PrunCss.SectionHeader.container, PrunCss.fonts.fontRegular]"><slot /></div>
+  <div :class="[C.SectionHeader.container, C.fonts.fontRegular]"><slot /></div>
 </template>

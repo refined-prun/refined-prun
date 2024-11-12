@@ -18,7 +18,7 @@ import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-al
 import { isDefined, isEmpty } from 'ts-extras';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.InventoryView.container), container =>
+  subscribe($$(tile.anchor, C.InventoryView.container), container =>
     applyCustomSorting(tile, container),
   );
 }
@@ -30,8 +30,8 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
   }
 
   const activeSort = computedTileState(getTileState(tile), 'activeSort', undefined);
-  const sortOptions = await $(container, PrunCss.InventorySortControls.controls);
-  const inventory = await $(container, PrunCss.InventoryView.grid);
+  const sortOptions = await $(container, C.InventorySortControls.controls);
+  const inventory = await $(container, C.InventoryView.grid);
 
   // Skip the first sorting option because it is the grid/list view switch.
   for (let i = 1; i < sortOptions.children.length; i++) {
@@ -96,9 +96,9 @@ function sortInventory(
     return;
   }
 
-  const gridItems = _$$(inventory, PrunCss.GridItemView.container).map(div => ({
+  const gridItems = _$$(inventory, C.GridItemView.container).map(div => ({
     div,
-    ticker: _$(div, PrunCss.ColoredIcon.label)?.textContent,
+    ticker: _$(div, C.ColoredIcon.label)?.textContent,
   }));
   const categories = sorting.categories.slice();
 
@@ -180,7 +180,7 @@ function createBurnSortingMode(storeId: string): UserData.SortingMode {
 }
 
 function init() {
-  applyCssRule(`.${classes.custom} .${PrunCss.InventorySortControls.order} > div`, css.hidden);
+  applyCssRule(`.${classes.custom} .${C.InventorySortControls.order} > div`, css.hidden);
   tiles.observe(['INV', 'SHPI'], onTileReady);
   xit.add({
     command: 'SORT',

@@ -1,7 +1,7 @@
 import features from '@src/feature-registry';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.ShipStore.store), div => {
+  subscribe($$(tile.anchor, C.ShipStore.store), div => {
     // div -> div
     const label = div.children[2];
     if (label) {

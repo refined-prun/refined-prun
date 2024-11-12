@@ -11,8 +11,8 @@ const props = defineProps({
 
 const isFulfilled = computed(() => isConditionFulfilled(props.condition));
 const iconClass = computed(() => ({
-  [PrunCss.ColoredValue.positive]: isFulfilled.value,
-  [PrunCss.ColoredValue.negative]: !isFulfilled.value,
+  [C.ColoredValue.positive]: isFulfilled.value,
+  [C.ColoredValue.negative]: !isFulfilled.value,
 }));
 const icon = computed(() => (isFulfilled.value ? '\uf00c' : '\uf00d'));
 </script>

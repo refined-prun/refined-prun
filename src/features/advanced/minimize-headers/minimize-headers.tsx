@@ -8,7 +8,7 @@ function onTileReady(tile: PrunTile) {
     return;
   }
   subscribe(streamHtmlCollection(tile.anchor, tile.anchor.children), async child => {
-    const header = await $(child, PrunCss.FormComponent.containerPassive);
+    const header = await $(child, C.FormComponent.containerPassive);
     setHeaders(tile, true);
 
     const isMinimized = ref(true);
@@ -27,13 +27,13 @@ function onTileReady(tile: PrunTile) {
 }
 
 function setHeaders(tile: PrunTile, isMinimized: boolean) {
-  for (const header of $$(tile.anchor, PrunCss.FormComponent.containerPassive)) {
-    const label = _$(header, PrunCss.FormComponent.label);
+  for (const header of $$(tile.anchor, C.FormComponent.containerPassive)) {
+    const label = _$(header, C.FormComponent.label);
     if (label?.textContent === 'Minimize') {
       continue;
     }
     if (label?.textContent === 'Termination request') {
-      const value = _$(header, PrunCss.FormComponent.input);
+      const value = _$(header, C.FormComponent.input);
       if (value?.textContent !== '--') {
         continue;
       }

@@ -6,10 +6,10 @@ import { isRepairableBuilding } from '@src/core/buildings';
 function onTileReady(tile: PrunTile) {
   const siteId = tile.parameter;
   const site = computed(() => sitesStore.getById(siteId));
-  subscribe($$(tile.anchor, PrunCss.SectionList.section), section => {
+  subscribe($$(tile.anchor, C.SectionList.section), section => {
     const id = refPrunId(section);
     const building = computed(() => site.value?.platforms.find(p => p.id == id.value));
-    return subscribe($$(tile.anchor, PrunCss.SectionList.button), buttons => {
+    return subscribe($$(tile.anchor, C.SectionList.button), buttons => {
       const repair = buttons.children[0];
       if (!repair) {
         return;
@@ -20,9 +20,9 @@ function onTileReady(tile: PrunTile) {
         }
 
         if (building.value.condition > 0.98) {
-          repair.classList.add(PrunCss.Button.danger);
+          repair.classList.add(C.Button.danger);
         } else {
-          repair.classList.remove(PrunCss.Button.danger);
+          repair.classList.remove(C.Button.danger);
         }
       });
     });

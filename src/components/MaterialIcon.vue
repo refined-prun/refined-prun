@@ -43,11 +43,11 @@ const amountText = computed(() => {
 });
 
 const indicatorClasses = [
-  PrunCss.MaterialIcon.indicator,
-  PrunCss.MaterialIcon.neutral,
-  PrunCss.MaterialIcon.typeVerySmall,
+  C.MaterialIcon.indicator,
+  C.MaterialIcon.neutral,
+  C.MaterialIcon.typeVerySmall,
   {
-    [PrunCss.ColoredValue.negative]: props.warning,
+    [C.ColoredValue.negative]: props.warning,
     [$style.indicatorSmall]: props.size === 'medium',
   },
 ];
@@ -56,7 +56,7 @@ const onClick = () => showBuffer(`MAT ${props.ticker.toUpperCase()}`);
 </script>
 
 <template>
-  <div :class="[PrunCss.MaterialIcon.container, $style.container]">
+  <div :class="[C.MaterialIcon.container, $style.container]">
     <ColoredIcon
       :label="ticker"
       :category="category?.name"
@@ -65,7 +65,7 @@ const onClick = () => showBuffer(`MAT ${props.ticker.toUpperCase()}`);
       @click="onClick" />
     <div
       v-if="amountText !== undefined"
-      :class="PrunCss.MaterialIcon.indicatorContainer"
+      :class="C.MaterialIcon.indicatorContainer"
       @click="onClick">
       <div :class="indicatorClasses">{{ amountText }}</div>
     </div>

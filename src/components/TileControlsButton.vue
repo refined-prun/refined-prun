@@ -14,7 +14,7 @@ defineProps({
 </script>
 
 <template>
-  <button :class="[PrunCss.TileControls.control, fa.solid, $style.button]" @click="onClick">
+  <button :class="[C.TileControls.control, fa.solid, $style.button]" @click="onClick">
     {{ icon }}
   </button>
 </template>

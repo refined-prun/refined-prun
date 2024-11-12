@@ -16,12 +16,12 @@ const condition = computed(() => Math.floor((ship.value?.condition ?? 1) * 100) 
 
 const labelClass = computed(() => {
   if (condition.value <= 0.8) {
-    return PrunCss.ColoredValue.negative;
+    return C.ColoredValue.negative;
   }
   if (condition.value <= 0.85) {
     return coloredValue.warning;
   }
-  return PrunCss.ColoredValue.positive;
+  return C.ColoredValue.positive;
 });
 </script>
 

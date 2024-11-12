@@ -50,7 +50,7 @@ export default defineConfig({
         },
       ],
       imports: [
-        { name: 'default', as: 'PrunCss', from: '@src/infrastructure/prun-ui/prun-css' },
+        { name: 'C', from: '@src/infrastructure/prun-ui/prun-css' },
         { name: 'subscribe', from: '@src/utils/subscribe-async-generator' },
         { name: 'default', as: 'tiles', from: '@src/infrastructure/prun-ui/tiles' },
         { name: 'default', as: 'features', from: '@src/feature-registry' },

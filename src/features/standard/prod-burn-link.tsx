@@ -16,7 +16,7 @@ async function onTileReady(tile: PrunTile) {
   const props = {
     cmd: `XIT BURN ${getEntityNaturalIdFromAddress(site.address)}`,
   };
-  const contextBar = await $(tile.frame, PrunCss.ContextControls.container);
+  const contextBar = await $(tile.frame, C.ContextControls.container);
   const fragmentApp = createFragmentApp(ContextControlsItem, props);
   if (contextBar.children[0]) {
     fragmentApp.before(contextBar.children[0]);

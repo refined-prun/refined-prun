@@ -11,9 +11,7 @@ function onTileReady(tile: PrunTile) {
     return;
   }
 
-  subscribe($$(tile.anchor, PrunCss.OrderSlot.container), x =>
-    onOrderSlotReady(x, tile.parameter!),
-  );
+  subscribe($$(tile.anchor, C.OrderSlot.container), x => onOrderSlotReady(x, tile.parameter!));
 }
 
 function onOrderSlotReady(slot: HTMLElement, siteId: string) {
@@ -38,7 +36,7 @@ function onOrderSlotReady(slot: HTMLElement, siteId: string) {
     return `(${formatEta(timestampEachSecond.value, completion.value)})`;
   });
   const div = createReactiveDiv(slot, eta);
-  keepLast(slot, () => _$(slot, PrunCss.OrderSlot.info), div);
+  keepLast(slot, () => _$(slot, C.OrderSlot.info), div);
 }
 
 function calcCompletionDate(line: PrunApi.ProductionLine, order: PrunApi.ProductionOrder) {

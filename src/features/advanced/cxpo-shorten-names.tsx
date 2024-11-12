@@ -1,7 +1,7 @@
 import features from '@src/feature-registry';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.ComExPlaceOrderForm.form), form => {
+  subscribe($$(tile.anchor, C.ComExPlaceOrderForm.form), form => {
     const parts = tile.parameter!.split('.');
     void replaceRowValue(form.children[0], parts[1]);
     void replaceRowValue(form.children[1], parts[0]);
@@ -9,7 +9,7 @@ function onTileReady(tile: PrunTile) {
 }
 
 async function replaceRowValue(row: Element, value: string) {
-  const label = await $(row, PrunCss.StaticInput.static);
+  const label = await $(row, C.StaticInput.static);
   label.textContent = value;
 }
 

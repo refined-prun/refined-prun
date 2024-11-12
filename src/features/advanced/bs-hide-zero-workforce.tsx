@@ -10,7 +10,7 @@ function onTileReady(tile: PrunTile) {
     return;
   }
 
-  subscribe($$(tile.anchor, PrunCss.Site.container), () => {
+  subscribe($$(tile.anchor, C.Site.container), () => {
     subscribe($$(tile.anchor, 'th'), header => {
       header.innerText = header.innerText.replace('Current Workforce', 'Current');
     });

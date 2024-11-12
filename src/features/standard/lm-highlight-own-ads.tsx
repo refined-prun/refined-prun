@@ -4,8 +4,8 @@ import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { localAdsStore } from '@src/infrastructure/prun-api/data/local-ads';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.LocalMarket.item), async item => {
-    const container = await $(item, PrunCss.CommodityAd.container);
+  subscribe($$(tile.anchor, C.LocalMarket.item), async item => {
+    const container = await $(item, C.CommodityAd.container);
     const id = getPrunId(container);
     const ad = localAdsStore.getById(id);
     if (ad?.creator.id === companyStore.value?.id) {

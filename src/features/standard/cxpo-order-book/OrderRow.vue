@@ -17,13 +17,13 @@ const ownOrderClass = computed(() => ({
 const amount = computed(() => (props.order.amount ? fixed0(props.order.amount) : '∞'));
 const price = computed(() => fixed2(props.order.limit.amount));
 const priceClass = computed(() =>
-  props.request ? PrunCss.ComExOrderBookPanel.requestPrice : PrunCss.ComExOrderBookPanel.offerPrice,
+  props.request ? C.ComExOrderBookPanel.requestPrice : C.ComExOrderBookPanel.offerPrice,
 );
 </script>
 
 <template>
   <tr :class="ownOrderClass">
-    <td :class="PrunCss.ComExOrderBookPanel.amount">{{ amount }}</td>
+    <td :class="C.ComExOrderBookPanel.amount">{{ amount }}</td>
     <td :class="[priceClass, $style.price]">{{ price }}</td>
   </tr>
 </template>

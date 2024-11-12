@@ -4,8 +4,8 @@ import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ColoredIconDetail from '@src/components/ColoredIconDetail.vue';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, PrunCss.ColoredIcon.container), async container => {
-    const label = await $(container, PrunCss.ColoredIcon.labelContainer);
+  subscribe($$(tile.anchor, C.ColoredIcon.container), async container => {
+    const label = await $(container, C.ColoredIcon.labelContainer);
     const attribute = refAttributeValue(container, 'title');
     const detail = computed(() => {
       const regex = /#([a-zA-Z0-9]+)/;

@@ -49,7 +49,7 @@ const changeText = computed(() => {
 });
 
 const changeClass = computed(() => ({
-  [PrunCss.ColoredValue.positive]: production.value > 0,
+  [C.ColoredValue.positive]: production.value > 0,
 }));
 
 const needAmt = computed(() =>
