@@ -91,7 +91,8 @@ export default defineConfig({
       output: {
         preserveModules: true,
         preserveModulesRoot: 'source',
-        sanitizeFileName: name => name.replace('_virtual', 'virtual').replace('\x00', ''),
+        sanitizeFileName: name =>
+          name.replace('_virtual', 'virtual').replace('\x00', '').replace(':', '_'),
         assetFileNames: assetInfo =>
           assetInfo.name?.endsWith('css')
             ? assetInfo.name.replace('style.css', 'refined-prun.css')
