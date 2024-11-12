@@ -15,7 +15,7 @@ const log = {
   error: logError,
 };
 
-const { version } = (__CHROME__ ? chrome : browser).runtime.getManifest();
+const { version } = chrome.runtime.getManifest();
 
 function logError(id: string, error: unknown): void {
   const message = error instanceof Error ? error.message : String(error);
