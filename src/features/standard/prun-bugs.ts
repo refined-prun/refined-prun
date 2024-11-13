@@ -40,4 +40,4 @@ function init() {
   applyClassCssRule(C.GridItemView.name, classes.gridItemName);
 }
 
-features.add(import.meta.url, init, 'Fixes vanilla CSS bugs.');
+features.add(import.meta.url, init, 'Fixes CSS bugs.');

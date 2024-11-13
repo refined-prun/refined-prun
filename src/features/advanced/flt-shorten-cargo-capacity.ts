@@ -19,5 +19,5 @@ function init() {
 features.add(
   import.meta.url,
   init,
-  'FLT: Removes "t" and "m³" and convert cargo capacity label to k-notation.',
+  'FLT: Removes "t" and "m³" and converts cargo capacity label to k-notation.',
 );
