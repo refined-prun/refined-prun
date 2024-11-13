@@ -8,6 +8,8 @@ import Active from '@src/components/forms/Active.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
 import { computed, ref } from 'vue';
 import { isEmpty } from 'ts-extras';
+import PrunButton from '@src/components/PrunButton.vue';
+import { reloadPage } from '@src/infrastructure/prun-ui/page-functions';
 
 const sorted = features.registry.sort((a, b) => a.id.localeCompare(b.id));
 
@@ -46,9 +48,13 @@ function toggleFeature(id: string) {
       <Active label="Search">
         <TextInput v-model="searchQuery" />
       </Active>
-      <div v-if="!isEmpty(Object.keys(changed))" :class="$style.warning">
+      <PrunButton
+        v-if="!isEmpty(Object.keys(changed))"
+        primary
+        :class="$style.warning"
+        @click="reloadPage()">
         RESTART THE GAME TO APPLY CHANGES
-      </div>
+      </PrunButton>
     </form>
     <table>
       <thead>
@@ -106,11 +112,6 @@ function toggleFeature(id: string) {
 }
 
 .warning {
-  background-color: #f7a600;
-  line-height: 17px;
-  text-align: center;
-  color: black;
-  font-weight: bold;
-  text-transform: uppercase;
+  width: 100%;
 }
 </style>

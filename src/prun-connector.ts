@@ -1,5 +1,6 @@
 import '@src/infrastructure/prun-api/socket-io-proxy';
 import '@src/infrastructure/prun-ui/i18n-reader';
+import '@src/infrastructure/prun-ui/page-functions-bridge';
 
 // Deserialize app scripts.
 const scripts = document.head.getElementsByTagName('script');
