@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useXitParameters } from '@src/hooks/useXitParameters';
 import { prunAtob } from '@src/infrastructure/prun-ui/base64';
-import { isValidUrl, shortcuts } from '@src/features/XIT/WEB/shared';
+import { isValidUrl } from '@src/utils/is-valid-url';
+import { shortcuts } from '@src/features/XIT/WEB/shortcuts';
 
 const command = inject(xit.command)!;
 const parameters = useXitParameters();

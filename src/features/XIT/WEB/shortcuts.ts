@@ -2,14 +2,6 @@ import WEB from '@src/features/XIT/WEB/WEB.vue';
 import { castArray } from '@src/utils/cast-array';
 import { isEmpty } from 'ts-extras';
 
-export function isValidUrl(url: string) {
-  try {
-    return Boolean(new URL(url));
-  } catch {
-    return false;
-  }
-}
-
 export const shortcuts = new Map<string, (parameters: string[]) => string | undefined>();
 
 function shortcut(

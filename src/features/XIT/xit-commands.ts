@@ -84,4 +84,4 @@ function init() {
   tiles.observe('XIT', onTileReady);
 }
 
-features.add(import.meta.url, init, 'Adds XIT commands support');
+features.add(import.meta.url, init, 'Adds XIT commands support.');
