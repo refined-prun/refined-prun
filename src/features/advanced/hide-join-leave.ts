@@ -5,4 +5,4 @@ function init() {
   applyCssRule(`.${C.Message.message}:not(:has(> .${C.Message.name} > div))`, css.hidden);
 }
 
-features.add(import.meta.url, init, 'COM: Hides "User joined" and "User left" messages.');
+features.add(import.meta.url, init, 'Hides "User joined" and "User left" messages in chats.');
