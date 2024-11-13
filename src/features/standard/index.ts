@@ -27,7 +27,7 @@ import './inv-search-bar';
 import './inv-shipment-detail';
 import './item-icons';
 import './item-markers/item-markers';
-import './lm-add-icons/lm-add-icons';
+import './lm-item-icons/lm-item-icons';
 import './lm-colored-buy-sell';
 import './lm-highlight-own-ads';
 import './mat-linkify-category';
