@@ -12,7 +12,7 @@ import './chat-images';
 import './clickable-apex-logo';
 import './contd-upward-search-results';
 import './correct-commands/correct-commands';
-import './custom-left-sidebar/customizable-sidebar';
+import './custom-left-sidebar/custom-left-sidebar';
 import './cxpo-order-book/cxpo-order-book';
 import './finla-more-columns';
 import './flt-arrival-eta';
