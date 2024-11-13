@@ -1,3 +1,6 @@
+import { applyClassCssRule, applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
+import classes from '@src/features/standard/prun-bugs.module.css';
+
 function removeMobileCssRules() {
   for (let i = 0; i < document.styleSheets.length; i++) {
     const styleSheet = document.styleSheets[i];
@@ -15,8 +18,26 @@ function removeMobileCssRules() {
   }
 }
 
-function init() {
-  removeMobileCssRules();
+function fixZOrder() {
+  applyClassCssRule(
+    [C.ComExOrdersPanel.filter, C.LocalMarket.filter, C.ContractsListTable.filter],
+    classes.filter,
+  );
+  applyClassCssRule(C.ScrollView.track, classes.scrollTrack);
 }
 
-features.add(import.meta.url, init, 'Fixes PrUn CSS bugs.');
+function init() {
+  removeMobileCssRules();
+  fixZOrder();
+
+  // Prevents top-right user info from shrinking.
+  applyCssRule(`.${C.Head.container} > div:nth-child(2)`, classes.userInfo);
+
+  // Removes GridItemView background color.
+  applyClassCssRule(C.GridItemView.container, classes.gridItem);
+
+  // Adds text centering to GridItemView name.
+  applyClassCssRule(C.GridItemView.name, classes.gridItemName);
+}
+
+features.add(import.meta.url, init, 'Fixes vanilla CSS bugs.');

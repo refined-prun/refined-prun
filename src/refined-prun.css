@@ -158,19 +158,3 @@
 .input-text:focus {
   outline: none;
 }
-
-div.Head__container___3ecBw0E > div:nth-child(2) {
-  flex-shrink: 0;
-}
-
-div.GridItemView__container___xP2uJz8 {
-  background-color: unset;
-}
-
-/* full item name centering */
-span.GridItemView__name___h3yX9Lm {
-  display: block;
-  text-align: center;
-  padding-top: 1px;
-  width: 100%;
-}

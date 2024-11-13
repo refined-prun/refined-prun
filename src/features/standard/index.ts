@@ -15,7 +15,6 @@ import './correct-commands/correct-commands';
 import './custom-left-sidebar/customizable-sidebar';
 import './cxpo-order-book/cxpo-order-book';
 import './finla-more-columns';
-import './fix-z-order';
 import './flt-arrival-eta';
 import './flt-ship-condition/flt-ship-condition';
 import './header-calculator-button';

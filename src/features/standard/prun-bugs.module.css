@@ -1,0 +1,22 @@
+.filter {
+  z-index: 1;
+}
+
+.scrollTrack {
+  z-index: 2;
+}
+
+.userInfo {
+  flex-shrink: 0;
+}
+
+.gridItem {
+  background-color: unset;
+}
+
+.gridItemName {
+  display: block;
+  text-align: center;
+  padding-top: 1px;
+  width: 100%;
+}
