@@ -75,4 +75,4 @@ function init() {
   tiles.observe(['INV', 'SHPI'], onTileReady);
 }
 
-features.add(import.meta.url, init, 'Adds material markers.');
+features.add(import.meta.url, init, 'Adds bottom-left item markers.');

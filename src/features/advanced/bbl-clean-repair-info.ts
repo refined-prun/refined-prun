@@ -50,18 +50,12 @@ function init() {
     `.${C.SectionList.section}[data-rp-infrastructure] .${C.SectionList.table} tr:nth-child(3)`,
     css.hidden,
   );
-  // Hide 'Book value'
-  applyScopedCssRule(
-    'BBL',
-    `.${C.SectionList.section} .${C.SectionList.table} tr:nth-child(5)`,
-    css.hidden,
-  );
   tiles.observe('BBL', onTileReady);
 }
 
 features.add(
   import.meta.url,
   init,
-  'BBL: Hides "Last repair", "Established", and "Repair costs" rows if they are empty' +
-    ' or irrelevant to repairs. Also hides the "Book value" row.',
+  'BBL: Hides "Last repair", "Established", and "Repair costs" rows ' +
+    'if they are empty or irrelevant to repairs.',
 );

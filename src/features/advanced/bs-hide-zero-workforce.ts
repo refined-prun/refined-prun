@@ -39,8 +39,4 @@ function init() {
   tiles.observe('BS', onTileReady);
 }
 
-features.add(
-  import.meta.url,
-  init,
-  'BS: Renames the "Current Workforce" column header to "Current" and hides rows with zero workforce.',
-);
+features.add(import.meta.url, init, 'BS: Hides workforce rows with zero current workforce.');

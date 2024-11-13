@@ -1,4 +1,4 @@
-import classes from './material-better-colors.module.css';
+import classes from './better-item-colors.module.css';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {
@@ -15,8 +15,4 @@ function applyCategoryRule(category: string, rule: string) {
   applyCssRule(`.${C.ColoredIcon.container}[data-rp-category='${category}']`, rule);
 }
 
-features.add(
-  import.meta.url,
-  init,
-  'Changes material colors to more recognizable and distinguishable ones.',
-);
+features.add(import.meta.url, init, 'Alters item colors to be more easily recognized.');

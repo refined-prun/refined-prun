@@ -1,4 +1,4 @@
-import classes from './com-move-delete-button.module.css';
+import classes from './com-align-delete-button.module.css';
 import { applyClassCssRule, applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {

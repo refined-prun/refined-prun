@@ -32,4 +32,4 @@ function init() {
   tiles.observe('FINLA', onTileReady);
 }
 
-features.add(import.meta.url, init, 'FINLA: Hides the row with ECD currency.');
+features.add(import.meta.url, init, 'FINLA: Hides the ECD row.');

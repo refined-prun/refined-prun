@@ -10,4 +10,4 @@ function init() {
   });
 }
 
-features.add(import.meta.url, init, 'Adds a customizable sidebar with navigation buttons.');
+features.add(import.meta.url, init, 'Makes the sidebar on the left customizable via options.');

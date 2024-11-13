@@ -17,4 +17,8 @@ function init() {
   tiles.observe('CXPO', onTileReady);
 }
 
-features.add(import.meta.url, init, 'CXPO: Shortens values of "Exchange" and "Material" fields.');
+features.add(
+  import.meta.url,
+  init,
+  'CXPO: Replaces values of "Exchange" and "Material" fields with corresponding tickers.',
+);

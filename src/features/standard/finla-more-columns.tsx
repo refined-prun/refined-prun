@@ -1,4 +1,4 @@
-import classes from './finla-exchange-deposits.module.css';
+import classes from './finla-more-columns.module.css';
 import css from '@src/utils/css-utils.module.css';
 import { refTextContent } from '@src/utils/reactive-dom';
 import { fixed0 } from '@src/utils/format';

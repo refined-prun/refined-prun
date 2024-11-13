@@ -1,6 +1,6 @@
 import fa from '@src/utils/font-awesome.module.css';
 import css from '@src/utils/css-utils.module.css';
-import classes from './material-icons.module.css';
+import classes from './item-icons.module.css';
 import {
   applyCssRule,
   applyRawCssRule,
@@ -428,4 +428,4 @@ function shield(detail?: Icon): Icon {
   return detail ? ['f132', { detail }] : 'f132';
 }
 
-features.add(import.meta.url, init, 'Adds icons to materials.');
+features.add(import.meta.url, init, 'Adds icons to items.');

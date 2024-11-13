@@ -1,4 +1,4 @@
-function init() {
+function removeMobileCssRules() {
   for (let i = 0; i < document.styleSheets.length; i++) {
     const styleSheet = document.styleSheets[i];
     const rules = styleSheet.cssRules;
@@ -15,4 +15,8 @@ function init() {
   }
 }
 
-features.add(import.meta.url, init, 'Removes mobile CSS rules.');
+function init() {
+  removeMobileCssRules();
+}
+
+features.add(import.meta.url, init, 'Fixes PrUn CSS bugs.');

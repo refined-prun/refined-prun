@@ -1,4 +1,4 @@
-import classes from './contd-search-results-above-search-bar.module.css';
+import classes from './contd-upward-search-results.module.css';
 import { applyScopedClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {

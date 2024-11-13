@@ -1,5 +1,5 @@
 import css from '@src/utils/css-utils.module.css';
-import classes from './pending-contracts-add-details.module.css';
+import classes from './sidebar-contracts-details.module.css';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContractPartnerName from './ContractPartnerName.vue';
 import { refTextContent } from '@src/utils/reactive-dom';
@@ -23,4 +23,8 @@ function init() {
   subscribe($$(document, C.Sidebar.contractId), onContractIdReady);
 }
 
-features.add(import.meta.url, init, 'Adds a partner name to contracts in the sidebar.');
+features.add(
+  import.meta.url,
+  init,
+  'Adds a partner name to contracts in the sidebar on the right.',
+);

@@ -1,5 +1,5 @@
 import fa from '@src/utils/font-awesome.module.css';
-import classes from './evaluate-input-formula.module.css';
+import classes from './input-math.module.css';
 import { changeValue } from '@src/util';
 import Mexp from 'math-expression-evaluator';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
@@ -75,4 +75,8 @@ function applyCssRules() {
   applyCssRule(`${selectorDynamic}:before`, classes.functionIconDynamic);
 }
 
-features.add(import.meta.url, init, 'Evaluates input formulas in numeric text fields on Enter.');
+features.add(
+  import.meta.url,
+  init,
+  'Evaluates math expressions in numeric text fields on Enter or Tab.',
+);

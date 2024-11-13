@@ -78,4 +78,4 @@ function init() {
   tiles.observe('LM', onTileReady);
 }
 
-features.add(import.meta.url, init, 'LM: Hides redundant text from ads.');
+features.add(import.meta.url, init, 'LM: Hides redundant information from ads.');
