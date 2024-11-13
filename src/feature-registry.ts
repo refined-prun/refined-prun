@@ -77,6 +77,7 @@ const features = {
   add,
   init,
   current: undefined as string | undefined,
+  registry,
 };
 
 export default features;
