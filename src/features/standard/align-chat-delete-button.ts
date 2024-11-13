@@ -1,4 +1,4 @@
-import classes from './com-align-delete-button.module.css';
+import classes from './align-chat-delete-button.module.css';
 import { applyClassCssRule, applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {
@@ -13,5 +13,5 @@ function init() {
 features.add(
   import.meta.url,
   init,
-  'COM: Moves the "delete" button to prevent the message layout shift.',
+  'Moves the "delete" button to prevent chat message layout shift.',
 );

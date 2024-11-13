@@ -1,3 +1,4 @@
+import './align-chat-delete-button';
 import './bbl-condition-progress-bar';
 import './bbl-dangerous-demolish';
 import './bbl-dangerous-repair';
@@ -9,7 +10,6 @@ import './bs-merge-area-stats';
 import './bs-satisfaction-percentage';
 import './chat-images';
 import './clickable-apex-logo';
-import './com-align-delete-button';
 import './contd-upward-search-results';
 import './correct-commands/correct-commands';
 import './custom-left-sidebar/customizable-sidebar';
