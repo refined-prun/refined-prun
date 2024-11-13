@@ -1,37 +1,40 @@
 <script setup lang="ts">
 import PrunLink from '@src/components/PrunLink.vue';
+import PrunButton from '@src/components/PrunButton.vue';
 </script>
 
 <template>
   <div :class="$style.container">
-    <h1 class="rp-XIT-title" :style="{ paddingLeft: '0' }">
-      Thank you for using <s>PMMG Extended</s> Refined PrUn!
-    </h1>
-    <p>This is a short tutorial on how to get the most out of the extension.</p>
+    <h1 :class="$style.title">Thank you for using Refined PrUn!</h1>
     <p>
-      Details on what PMMG offers can be found here:&nbsp;
-      <PrunLink inline href="https://sites.google.com/view/pmmgextended/home?authuser=0">
-        PMMG Extended
-      </PrunLink>
+      Please select a feature set (you can change it later using
+      <PrunLink inline command="XIT SET FEAT" />)
     </p>
+    <div :class="$style.features">
+      <PrunButton primary :class="$style.feature">
+        <div :class="$style.featureTitle">
+          <div :class="$style.title">BASIC</div>
+        </div>
+        <div :class="$style.featureDescription">Includes features to enhance the APEX UI</div>
+      </PrunButton>
+      <PrunButton primary :class="$style.feature">
+        <div :class="$style.featureTitle">
+          <div :class="$style.title">FULL</div>
+          <div>(requires restart)</div>
+        </div>
+        <div :class="$style.featureDescription">
+          Includes all Basic features plus additional UI refinements for experienced players
+        </div>
+      </PrunButton>
+    </div>
     <p>
-      You can find a list of all of the PMMG commands using&nbsp;
+      You can find a list of all of the XIT commands using
       <PrunLink inline command="XIT HELP" />
     </p>
     <p>
-      PMMG&apos;s settings can be accessed using&nbsp;
-      <PrunLink inline command="XIT SETTINGS" />
+      You can change settings using
+      <PrunLink inline command="XIT SET" />
     </p>
-    <p>
-      To get PMMG to show you data about your space empire, you need to &apos;scan in&apos; your
-      bases by refreshing the page, then opening each of your production lines. You can check how
-      much data has been scanned in using the XIT HEALTH buffer.
-    </p>
-    <p>
-      Once you have scanned in your data, one of the biggest PMMG features is in the XIT FIN buffer.
-      It tracks your finances more accurately than the in game FIN buffer.
-    </p>
-    <p>Contact PiBoy314 in game or on Discord if you have questions.</p>
   </div>
 </template>
 
@@ -39,5 +42,37 @@ import PrunLink from '@src/components/PrunLink.vue';
 .container {
   font-size: 12px;
   padding-left: 4px;
+}
+
+.title {
+  font-weight: bold;
+  display: block;
+  font-size: 16px;
+}
+
+.features {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.feature {
+  width: 49%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  text-transform: none;
+}
+
+.featureTitle {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.featureDescription {
+  padding-top: 4px;
 }
 </style>
