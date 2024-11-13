@@ -17,7 +17,7 @@ function onTileReady(tile: PrunTile) {
         [C.RadioItem.active]: enabled.value,
         [C.effects.shadowPrimary]: enabled.value,
       }));
-      createFragmentApp(() => <div class={indicatorClass} />).before(divider.firstChild!);
+      createFragmentApp(() => <div class={indicatorClass.value} />).before(divider.firstChild!);
     }
   });
 }
