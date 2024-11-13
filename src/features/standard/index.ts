@@ -31,7 +31,7 @@ import './lm-add-icons/lm-add-icons';
 import './lm-colored-buy-sell';
 import './lm-highlight-own-ads';
 import './mat-linkify-category';
-import './material-ticker-shadow';
+import './item-ticker-shadow';
 import './nots-material-ticker';
 import './nots-notification-type-label';
 import './nots-ship-name';

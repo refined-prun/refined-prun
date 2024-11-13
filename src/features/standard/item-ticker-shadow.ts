@@ -1,4 +1,4 @@
-import classes from './material-ticker-shadow.module.css';
+import classes from './item-ticker-shadow.module.css';
 import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {
@@ -6,4 +6,4 @@ function init() {
   applyClassCssRule(C.BuildingIcon.ticker, classes.shadow);
 }
 
-features.add(import.meta.url, init, 'Adds a shadow to material tickers.');
+features.add(import.meta.url, init, 'Adds a shadow to item tickers.');
