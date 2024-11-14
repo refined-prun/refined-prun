@@ -52,6 +52,6 @@ export default ts.config(
   },
 
   {
-    ignores: ['dist/**/*', 'src/manifest.js', 'src/unimport.d.ts'],
+    ignores: ['dist/**/*', 'src/manifest.js', 'src/types/unimport.d.ts'],
   },
 );
