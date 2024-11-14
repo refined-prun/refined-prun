@@ -98,4 +98,5 @@ Known bugs:
 
 Removed features:
 - `XIT INV`.
+- `XIT LIST`.
 - Custom pricing scheme from Google Sheets for `XIT FIN`.

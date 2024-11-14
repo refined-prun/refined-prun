@@ -180,35 +180,6 @@ export function makePopupSpacer(tile, toRemove) {
   return spacer;
 }
 
-// Create an input row for the editing interface
-export function createPopupInputRow(label, text: string = '', tooltip: string = '') {
-  const inputRow = document.createElement('div');
-  inputRow.classList.add(...Style.FormRow);
-  const inputLabel = document.createElement('label');
-  inputLabel.textContent = label;
-  if (tooltip != '') {
-    inputLabel.appendChild(createToolTip(tooltip, 'right'));
-  }
-  inputLabel.classList.add(...Style.FormLabel);
-  inputRow.appendChild(inputLabel);
-  const inputInputDiv = document.createElement('div');
-  inputInputDiv.classList.add(...Style.FormInput);
-  inputRow.appendChild(inputInputDiv);
-  const inputInput = document.createElement('input');
-  inputInput.style.width = '80%';
-  inputInputDiv.appendChild(inputInput);
-  inputInput.value = text;
-  return inputRow;
-}
-
-// Gets the value of the text box in a row in the add interface (should move to util)
-export function getValueOfPopupRow(row) {
-  if (!row || !row.children[1] || !row.children[1].firstChild) {
-    return '';
-  }
-  return row.children[1].firstChild.value || '';
-}
-
 // Create a warning dialog with a confirmation button before running the callback function with the passed parameters
 export function showWarningDialog(
   tile,

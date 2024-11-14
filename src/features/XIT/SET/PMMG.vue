@@ -26,7 +26,7 @@ import {
       <PrunButton primary @click="importPmmgActions">Import Actions</PrunButton>
     </Commands>
     <Commands label="pmmg-lists.json">
-      <PrunButton primary disabled>Import Lists (Not Implemented)</PrunButton>
+      <PrunButton primary disabled>Not supported</PrunButton>
     </Commands>
   </form>
 </template>
