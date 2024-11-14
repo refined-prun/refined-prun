@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Selector } from './Selector';
-import { Style } from './Style';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/stars';
-import { Stations } from '@src/GameProperties';
+import { Stations, Selector, Style } from '@src/legacy';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
 

@@ -1,5 +1,5 @@
 import { getBuffersFromList, getBuffers } from '@src/util';
-import { Selector } from '@src/Selector';
+import { Selector } from '@src/legacy';
 import { addMessage } from './Execute';
 
 export function validateAction(actionPackage, messageBox) {

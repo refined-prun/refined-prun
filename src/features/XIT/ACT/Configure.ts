@@ -1,5 +1,5 @@
 import { createTextSpan, createSelectOption } from '@src/util';
-import { Style } from '@src/Style';
+import { Style } from '@src/legacy';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';

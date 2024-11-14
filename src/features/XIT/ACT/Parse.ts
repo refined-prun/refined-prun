@@ -1,4 +1,4 @@
-import { ExchangeTickersReverse } from '@src/GameProperties';
+import { ExchangeTickersReverse } from '@src/legacy';
 import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
 import { calculatePlanetBurn } from '@src/core/burn';

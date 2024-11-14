@@ -9,7 +9,7 @@ import {
   Popup,
   showWarningDialog,
 } from '@src/util';
-import { Style, TextColors } from '@src/Style';
+import { Style, TextColors } from '@src/legacy';
 import xit from './xit-registry';
 import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';

@@ -7,9 +7,7 @@ import {
   showSuccessDialog,
   sleep,
 } from '@src/util';
-import { Style } from '@src/Style';
-import { Selector } from '@src/Selector';
-import { Stations } from '@src/GameProperties';
+import { Stations, Selector, Style } from '@src/legacy';
 import { validateAction } from './Validate';
 import { parseActionPackage } from './Parse';
 import { createConfigureUI, needsConfiguration } from './Configure';

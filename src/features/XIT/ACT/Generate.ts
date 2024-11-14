@@ -7,7 +7,7 @@ import {
   showWarningDialog,
 } from '@src/util';
 import { comparePlanets } from '@src/util';
-import { Style } from '@src/Style';
+import { Style } from '@src/legacy';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';

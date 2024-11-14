@@ -1,5 +1,5 @@
 import { showWarningDialog, createLink, createEmptyTableRow, createTable, Popup } from '@src/util';
-import { Style } from '@src/Style';
+import { Style } from '@src/legacy';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 import { mapPmmgActionPackage } from '@src/infrastructure/storage/pmmg-import';
