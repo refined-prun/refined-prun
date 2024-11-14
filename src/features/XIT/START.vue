@@ -7,6 +7,18 @@ import PrunButton from '@src/components/PrunButton.vue';
   <div :class="$style.container">
     <h1 :class="$style.title">Thank you for using Refined PrUn!</h1>
     <p>
+      You can find a list of all of the XIT commands using
+      <PrunLink inline command="XIT CMDS" />
+    </p>
+    <p>
+      You can change settings using
+      <PrunLink inline command="XIT SET" />
+    </p>
+    <p>
+      For additional help, check
+      <PrunLink inline command="XIT HELP" />
+    </p>
+    <p>
       Please select a feature set (you can change it later using
       <PrunLink inline command="XIT SET FEAT" />)
     </p>
@@ -27,14 +39,6 @@ import PrunButton from '@src/components/PrunButton.vue';
         </div>
       </PrunButton>
     </div>
-    <p>
-      You can find a list of all of the XIT commands using
-      <PrunLink inline command="XIT CMDS" />
-    </p>
-    <p>
-      You can change settings using
-      <PrunLink inline command="XIT SET" />
-    </p>
   </div>
 </template>
 
