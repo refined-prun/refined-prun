@@ -23,11 +23,11 @@ export const initialUserData = deepFreeze({
     },
     sidebar: [
       ['BS', 'BS'],
-      ['CONT', 'CONTS'],
+      ['CONT', 'XIT CONTS'],
       ['COM', 'COM'],
       ['CORP', 'CORP'],
       ['CXL', 'CXL'],
-      ['FIN', 'FIN'],
+      ['FIN', 'XIT FIN'],
       ['FLT', 'FLT'],
       ['INV', 'INV'],
       ['MAP', 'MU'],
@@ -36,7 +36,7 @@ export const initialUserData = deepFreeze({
       ['CMDS', 'CMDS'],
       ['SET', 'XIT SET'],
       ['HELP', 'XIT HELP'],
-    ],
+    ] as [string, string][],
   },
   sorting: [] as UserData.SortingMode[],
   balanceHistory: {
