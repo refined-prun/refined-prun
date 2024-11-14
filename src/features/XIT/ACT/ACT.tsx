@@ -54,5 +54,7 @@ xit.add({
     }
     return 'EXECUTE ACTION PACKAGE';
   },
+  description: 'Allows to automate certain tasks.',
+  optionalParameters: 'GEN and/or Action Name',
   module: Execute,
 });

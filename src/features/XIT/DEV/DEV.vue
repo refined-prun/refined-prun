@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { downloadFile } from '@src/util';
-import DebugButton from '@src/features/XIT/DEBUG/DebugButton.vue';
+import DebugButton from '@src/features/XIT/DEV/DevButton.vue';
 import { userData } from '@src/store/user-data';
 
 function logUserData() {

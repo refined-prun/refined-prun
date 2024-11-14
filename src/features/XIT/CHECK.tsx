@@ -897,5 +897,7 @@ function checkSort(a, b) {
 xit.add({
   command: ['CHECK', 'CHECKLIST', 'CHECKLISTS'],
   name: 'CHECKLIST',
+  description: 'Provides a to-do checklist.',
+  optionalParameters: 'Checklist Name',
   module: Checklists,
 });

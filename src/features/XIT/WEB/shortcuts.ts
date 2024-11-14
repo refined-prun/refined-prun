@@ -7,11 +7,17 @@ export const shortcuts = new Map<string, (parameters: string[]) => string | unde
 function shortcut(
   commands: string | string[],
   name: string,
+  description: string,
   url: (parameters: string[]) => string | undefined,
+  mandatoryParameters?: string,
+  optionalParameters?: string,
 ) {
   xit.add({
     command: commands,
-    name: name,
+    name,
+    description,
+    optionalParameters,
+    mandatoryParameters,
     component: () => WEB,
   });
   for (const command of castArray(commands)) {
@@ -19,9 +25,14 @@ function shortcut(
   }
 }
 
-shortcut('PRUN', 'PRUN-CEPTION', () => 'https://apex.prosperousuniverse.com/');
+shortcut(
+  'PRUN',
+  'PRUN-CEPTION',
+  'Opens PrUn... in PrUn!',
+  () => 'https://apex.prosperousuniverse.com/',
+);
 
-shortcut('PROSPERITY', 'PROSPERITY', parameters => {
+shortcut('PROSPERITY', 'PROSPERITY', 'Prosperity map.', parameters => {
   let url = 'https://prosperity-prun.netlify.app/';
   if (parameters.length == 2) {
     url += `?from=${parameters[0]}&to=${parameters[1]}`;
@@ -29,16 +40,22 @@ shortcut('PROSPERITY', 'PROSPERITY', parameters => {
   return url;
 });
 
-shortcut(['SHEET', 'SHEETS'], 'GOOGLE SHEETS', parameters => {
-  if (isEmpty(parameters)) {
-    return undefined;
-  }
-  const url = parameters.join('_');
-  return `https://docs.google.com/spreadsheets/d/${url}/edit?usp=sharing&rm=minimal`;
-});
+shortcut(
+  ['SHEET', 'SHEETS'],
+  'GOOGLE SHEETS',
+  'Opens Google Sheets.',
+  parameters => {
+    if (isEmpty(parameters)) {
+      return undefined;
+    }
+    const url = parameters.join('_');
+    return `https://docs.google.com/spreadsheets/d/${url}/edit?usp=sharing&rm=minimal`;
+  },
+  'Sheet ID',
+);
 
-shortcut(['PLANNER', 'PLAN', 'PRUN PLANNER'], 'GOOGLE SHEETS', parameters => {
+shortcut(['PLANNER', 'PLAN', 'PRUN PLANNER'], 'PRUN PLANNER', 'PrUn Planner.', parameters => {
   return 'https://prunplanner.org/' + parameters.join('/');
 });
 
-shortcut('MAP', "Taiyi's Map", () => 'https://universemap.duckdns.org/');
+shortcut('MAP', "Taiyi's Map", "Taiyi's map.", () => 'https://universemap.duckdns.org/');

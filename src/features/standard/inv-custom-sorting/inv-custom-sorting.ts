@@ -185,6 +185,8 @@ function init() {
   xit.add({
     command: 'SORT',
     name: 'SORTING MODES',
+    description: 'Sorting mode editor.',
+    mandatoryParameters: 'Inventory Identifier',
     component: () => SORT,
   });
 }

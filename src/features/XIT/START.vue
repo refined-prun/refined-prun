@@ -29,7 +29,7 @@ import PrunButton from '@src/components/PrunButton.vue';
     </div>
     <p>
       You can find a list of all of the XIT commands using
-      <PrunLink inline command="XIT HELP" />
+      <PrunLink inline command="XIT CMDS" />
     </p>
     <p>
       You can change settings using

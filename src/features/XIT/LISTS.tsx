@@ -351,5 +351,7 @@ function createEditInterface(tile, result, parameters, settings: any[] = [], lis
 xit.add({
   command: ['LIST', 'LISTS'],
   name: 'COMMAND LIST',
+  description: 'Provides a customizable list of command links.',
+  optionalParameters: 'List Name',
   module: CommandLists,
 });

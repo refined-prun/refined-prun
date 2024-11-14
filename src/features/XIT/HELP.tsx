@@ -202,7 +202,7 @@ class Help {
     });
     createCommandRow(body, {
       name: 'Debug',
-      command: 'XIT DEBUG',
+      command: 'XIT DEV',
       description: 'Debugging menu.',
     });
     createCommandRow(body, {
@@ -388,5 +388,6 @@ function createTextDiv(contentText) {
 xit.add({
   command: 'HELP',
   name: 'HELP',
+  description: 'Useful information to get started with Refined PrUn.',
   module: Help,
 });

@@ -13,6 +13,10 @@ const props = defineProps({
     required: false,
     default: undefined,
   },
+  autoSubmit: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const $style = useCssModule();
@@ -27,7 +31,7 @@ const classes = computed(() => ({
     <slot v-if="$slots.default"></slot>
     <template v-else>{{ href }}</template>
   </a>
-  <div v-else :class="classes" @click="() => showBuffer(command!)">
+  <div v-else :class="classes" @click="() => showBuffer(command!, { autoSubmit })">
     <slot v-if="$slots.default"></slot>
     <template v-else>{{ command }}</template>
   </div>

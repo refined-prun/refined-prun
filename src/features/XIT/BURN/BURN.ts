@@ -15,5 +15,7 @@ xit.add({
 
     return 'ENHANCED BURN';
   },
+  description: 'Shows the number of days of consumables left.',
+  optionalParameters: 'Planet Identifier(s)',
   component: () => BURN,
 });
