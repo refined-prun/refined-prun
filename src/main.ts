@@ -12,6 +12,7 @@ import { watchWhile } from '@src/utils/watch';
 import { initializeUI } from '@src/infrastructure/prun-ui';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { initializeXitCommands } from '@src/features/XIT/xit-commands';
+import { alert, checkPmmgPresent } from '@src/infrastructure/prun-ui/page-functions';
 
 async function mainRun() {
   void fetchPrices();
@@ -23,6 +24,15 @@ async function mainRun() {
   initializeTileListener();
   await backgroundTasks;
   await watchWhile(() => companyStore.value === undefined);
+
+  if (await checkPmmgPresent()) {
+    await alert('[Refined PrUn]: PMMG is currently running. Please follow the migration guide.');
+    window.open(
+      'https://github.com/refined-prun/refined-prun/blob/main/docs/PMMG-MIGRATION.md',
+      '_blank',
+    );
+    return;
+  }
 
   await features.init();
   initializeXitCommands();
@@ -45,6 +55,15 @@ async function injectConnector() {
   connector.src = chrome.runtime.getURL('prun-connector.js');
   connector.type = 'module';
   document.head.appendChild(connector);
+  await new Promise<void>(resolve => {
+    const listener = (e: MessageEvent) => {
+      if (e.source === window && e.data === 'prun-connector-ready') {
+        resolve();
+        window.removeEventListener('message', listener);
+      }
+    };
+    window.addEventListener('message', listener);
+  });
 }
 
 void mainRun();

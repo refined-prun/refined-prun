@@ -16,3 +16,5 @@ for (let i = 0; i < scripts.length; i++) {
     script.remove();
   }
 }
+
+window.postMessage('prun-connector-ready', '*');
