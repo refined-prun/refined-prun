@@ -1,10 +1,34 @@
 <script setup lang="ts">
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
+import { canAcceptContract } from '@src/features/XIT/CONTS/utils';
+import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 
-const textClasses = [C.Frame.toggleLabel, C.fonts.fontRegular, C.type.typeRegular];
+const props = defineProps({
+  comPulse: Boolean,
+});
 
-const sliverClasses = [C.Frame.toggleIndicator, C.Frame.toggleIndicatorSecondary];
+const pendingContracts = computed(
+  () => contractsStore.all.value?.filter(canAcceptContract).length ?? 0,
+);
+const hasPendingContracts = computed(() => pendingContracts.value > 0);
+
+const activeIndicator = [
+  C.Frame.toggleIndicator,
+  C.Frame.toggleIndicatorPulseActive,
+  C.effects.shadowPulseSuccess,
+];
+const inactiveIndicator = [C.Frame.toggleIndicator, C.Frame.toggleIndicatorSecondary];
+
+function indicatorClass(command: string) {
+  if (command === 'COM' && props.comPulse) {
+    return activeIndicator;
+  }
+  if (['CONTS', 'XIT CONTS'].includes(command) && hasPendingContracts.value) {
+    return activeIndicator;
+  }
+  return inactiveIndicator;
+}
 </script>
 
 <template>
@@ -14,8 +38,10 @@ const sliverClasses = [C.Frame.toggleIndicator, C.Frame.toggleIndicatorSecondary
       :key="i"
       :class="C.Frame.toggle"
       @click="() => showBuffer(button[1])">
-      <span :class="textClasses">{{ button[0] }}</span>
-      <div :class="sliverClasses" />
+      <span :class="[C.Frame.toggleLabel, C.fonts.fontRegular, C.type.typeRegular]">
+        {{ button[0] }}
+      </span>
+      <div :class="indicatorClass(button[1])" />
     </div>
   </div>
 </template>

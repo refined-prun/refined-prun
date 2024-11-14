@@ -65,6 +65,7 @@
 - Equity history chart now shows only the latest point per day.
 - `XIT CONTS` is sorted in the opposite direction, with the newest contracts being at the top of the list.
 - `XIT NOTE` notes are not deleted when empty.
+- `CONT` button on the left sidebar pulsates when there are contracts yet to be accepted.
 - Font size of material amount labels is 1px bigger.
 - Input fields with math support don't require a '=' sign at the beginning.
 - Input fields with math support show a math icon.
@@ -94,7 +95,6 @@
 
 Known bugs:
 - Buffer settings are not imported from PMMG settings (like BURN or INV filters).
-- COM button in the sidebar DOES NOT BLINK on new messages. Open COM buffer directly to check for new messages.
 
 Removed features:
 - `XIT INV`.
