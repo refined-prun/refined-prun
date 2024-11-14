@@ -1,4 +1,5 @@
 import { changeValue, clickElement, sleep } from '@src/util';
+import css from '@src/utils/css-utils.module.css';
 import onNodeDisconnected from '@src/utils/on-node-disconnected';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { watchUntil } from '@src/utils/watch';
@@ -64,25 +65,26 @@ async function captureLastWindow(command: string, options?: ShowBufferOptions) {
     return;
   }
   const window = windows[windows.length - 1] as HTMLDivElement;
-  const tile = _$(window, C.Tile.tile);
-  const id = getPrunId(tile!)?.padStart(2, '0');
-  if (options?.autoClose) {
-    const dock = _$$(document, C.Dock.buffer).find(x => _$(x, C.Dock.title)?.textContent === id);
-    if (dock) {
-      dock.style.display = 'none';
-    }
-    window.style.display = 'none';
-  }
   const input = _$(window, C.PanelSelector.input) as HTMLInputElement;
   changeValue(input, command);
   const form = input.form;
   if (!form?.isConnected || !(options?.autoSubmit ?? true)) {
     return;
   }
+  window.classList.add(css.hidden);
+  if (options?.autoClose) {
+    const tile = _$(window, C.Tile.tile);
+    const id = getPrunId(tile!)?.padStart(2, '0');
+    const dock = _$$(document, C.Dock.buffer).find(x => _$(x, C.Dock.title)?.textContent === id);
+    if (dock) {
+      dock.classList.add(css.hidden);
+    }
+  }
   await sleep(0);
   form.requestSubmit();
   await new Promise<void>(resolve => onNodeDisconnected(input, resolve));
   if (!options?.autoClose) {
+    window.classList.remove(css.hidden);
     return;
   }
   void closeWhenDone(window, options);
