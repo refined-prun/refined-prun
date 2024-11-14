@@ -1,14 +1,16 @@
 import { deepFreeze } from '@src/utils/deep-freeze';
 
 export const initialUserData = deepFreeze({
-  version: 1,
-  first: true,
+  version: 0,
+  firstLoad: Date.now(),
   tileState: {} as Record<string, UserData.TileState | undefined>,
   settings: {
+    mode: undefined as 'BASIC' | 'FULL' | undefined,
+    disabled: [] as string[],
     currency: '₳',
     pricing: {
       exchange: 'UNIVERSE',
-      method: 'BALANCED' as UserData.PricingMethod,
+      method: 'DEFAULT' as UserData.PricingMethod,
     },
     burn: {
       red: 3,
@@ -56,22 +58,15 @@ export function applyUserData(newData: any) {
     v2: shallowReactive(clone.balanceHistory?.v2 ?? []),
     v3: shallowReactive(clone.balanceHistory?.v3 ?? []),
   };
-  Object.assign(userData, clone);
-  userData.settings.pricing.method = 'DEFAULT';
+  Object.assign(userData, newData);
 }
 
-export function resetAllData() {
-  applyUserData(initialUserData);
-}
-
-resetAllData();
+applyUserData(initialUserData);
 
 export function clearBalanceHistory() {
-  userData.balanceHistory = reactive({
-    v1: shallowReactive([]),
-    v2: shallowReactive([]),
-    v3: shallowReactive([]),
-  });
+  userData.balanceHistory.v1.length = 0;
+  userData.balanceHistory.v2.length = 0;
+  userData.balanceHistory.v3.length = 0;
 }
 
 export function watchUserData(save: () => void) {

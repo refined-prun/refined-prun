@@ -10,6 +10,7 @@ import oneMutation from 'one-mutation';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { watchWhile } from '@src/utils/watch';
 import { initializeUI } from '@src/infrastructure/prun-ui';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 async function mainRun() {
   void fetchPrices();
@@ -25,10 +26,9 @@ async function mainRun() {
   await features.init();
 
   void trackBalanceHistory();
-  if (userData.first) {
+  if (userData.settings.mode === undefined) {
     await sleep(1000);
-    // TODO: await showBuffer('XIT START');
-    userData.first = true;
+    await showBuffer('XIT START');
   }
 }
 

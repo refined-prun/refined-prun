@@ -7,8 +7,12 @@ import Active from '@src/components/forms/Active.vue';
 import NumberInput from '@src/components/forms/NumberInput.vue';
 import Commands from '@src/components/forms/Commands.vue';
 import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
-import { initialUserData, resetAllData, userData } from '@src/store/user-data';
-import { exportUserData, importUserData } from '@src/infrastructure/storage/user-data-serializer';
+import { initialUserData, userData } from '@src/store/user-data';
+import {
+  exportUserData,
+  importUserData,
+  resetUserData,
+} from '@src/infrastructure/storage/user-data-serializer';
 
 function addSidebarButton() {
   userData.settings.sidebar.push(['SET', 'XIT SET']);
@@ -25,7 +29,7 @@ function confirmResetSidebar(ev: Event) {
 }
 
 function confirmResetAllData(ev: Event) {
-  showConfirmationOverlay(ev, resetAllData);
+  showConfirmationOverlay(ev, resetUserData);
 }
 </script>
 

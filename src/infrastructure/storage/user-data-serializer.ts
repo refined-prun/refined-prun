@@ -1,6 +1,6 @@
 import { downloadJson, uploadJson } from '@src/utils/download-json';
 import { migrateUserData } from '@src/infrastructure/storage/user-data-migrations';
-import { applyUserData, userData, watchUserData } from '@src/store/user-data';
+import { applyUserData, initialUserData, userData, watchUserData } from '@src/store/user-data';
 import { deepToRaw } from '@src/utils/deep-to-raw';
 
 const fileType = 'rp-user-data';
@@ -10,11 +10,15 @@ export async function loadUserData() {
   if (saved[fileType]) {
     const userData = migrateUserData(saved[fileType]);
     applyUserData(userData);
+  } else {
+    migrateUserData(userData);
   }
-  watchUserData(() => {
-    void chrome.storage.local.set({
-      [fileType]: deepToRaw(userData),
-    });
+  watchUserData(saveUserData);
+}
+
+export async function saveUserData() {
+  await chrome.storage.local.set({
+    [fileType]: deepToRaw(userData),
   });
 }
 
@@ -34,4 +38,9 @@ export function exportUserData() {
     data: userData,
   };
   downloadJson(json, `${fileType}-${Date.now()}.json`);
+}
+
+export function resetUserData() {
+  applyUserData(initialUserData);
+  migrateUserData(userData);
 }

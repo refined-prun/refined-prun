@@ -1,4 +1,5 @@
 import getBrowserVersion from '@src/utils/browser-version';
+import { userData } from '@src/store/user-data';
 
 interface FeatureDescriptor {
   id: string;
@@ -60,7 +61,15 @@ function add(path: string, init: () => void, description: string) {
 }
 
 async function init() {
+  const disabledFeatures = new Set(userData.settings.disabled);
   for (const feature of registry) {
+    if (userData.settings.mode !== 'FULL' && feature.advanced) {
+      continue;
+    }
+    if (disabledFeatures.has(feature.id)) {
+      log.info('↩️', 'Skipping ' + feature.id);
+      continue;
+    }
     features.current = feature.id;
     try {
       feature.init();

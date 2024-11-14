@@ -1,6 +1,19 @@
 <script setup lang="ts">
 import PrunLink from '@src/components/PrunLink.vue';
 import PrunButton from '@src/components/PrunButton.vue';
+import { userData } from '@src/store/user-data';
+import { reloadPage } from '@src/infrastructure/prun-ui/page-functions';
+import { saveUserData } from '@src/infrastructure/storage/user-data-serializer';
+
+function onBasicClick() {
+  userData.settings.mode = 'BASIC';
+}
+
+async function onFullClick() {
+  userData.settings.mode = 'FULL';
+  await saveUserData();
+  reloadPage();
+}
 </script>
 
 <template>
@@ -18,27 +31,33 @@ import PrunButton from '@src/components/PrunButton.vue';
       For additional help, check
       <PrunLink inline command="XIT HELP" />
     </p>
-    <p>
-      Please select a feature set (you can change it later using
-      <PrunLink inline command="XIT SET FEAT" />)
+    <template v-if="!userData.settings.mode">
+      <p>
+        Please select a feature set (you can change it later using
+        <PrunLink inline command="XIT SET FEAT" />)
+      </p>
+      <div :class="$style.features">
+        <PrunButton primary :class="$style.feature" @click="onBasicClick">
+          <div :class="$style.featureTitle">
+            <div :class="$style.title">BASIC</div>
+          </div>
+          <div :class="$style.featureDescription">Includes features to enhance the APEX UI</div>
+        </PrunButton>
+        <PrunButton primary :class="$style.feature" @click="onFullClick">
+          <div :class="$style.featureTitle">
+            <div :class="$style.title">FULL</div>
+            <div>(requires restart)</div>
+          </div>
+          <div :class="$style.featureDescription">
+            Includes all Basic features plus additional UI refinements for experienced players
+          </div>
+        </PrunButton>
+      </div>
+    </template>
+    <p v-else>
+      You can change the feature set at any time using
+      <PrunLink inline command="XIT SET FEAT" />
     </p>
-    <div :class="$style.features">
-      <PrunButton primary :class="$style.feature">
-        <div :class="$style.featureTitle">
-          <div :class="$style.title">BASIC</div>
-        </div>
-        <div :class="$style.featureDescription">Includes features to enhance the APEX UI</div>
-      </PrunButton>
-      <PrunButton primary :class="$style.feature">
-        <div :class="$style.featureTitle">
-          <div :class="$style.title">FULL</div>
-          <div>(requires restart)</div>
-        </div>
-        <div :class="$style.featureDescription">
-          Includes all Basic features plus additional UI refinements for experienced players
-        </div>
-      </PrunButton>
-    </div>
   </div>
 </template>
 

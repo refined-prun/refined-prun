@@ -1,5 +1,24 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+const migrations: Migration[] = [
+  userData => {
+    userData.settings.disabled = [];
+    userData.settings.pricing.method = 'DEFAULT';
+    delete userData.first;
+  },
+  userData => {
+    // Fast-forward initial user data version.
+    userData.version = migrations.length - 1;
+  },
+];
+
+type Migration = (userData: any) => void;
+
 export function migrateUserData(userData: any) {
-  userData.version = 1;
+  while (userData.version < migrations.length) {
+    const migration = migrations.length - userData.version - 1;
+    migrations[migration](userData);
+    userData.version++;
+  }
   return userData;
 }
