@@ -5,22 +5,31 @@ import { objectKeys } from 'ts-extras';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
 
-export function overrideIconColorStyle() {
+export function trackItemTickers() {
   appendStylesheet();
   subscribe($$(document.documentElement, C.ColoredIcon.label), label => {
     const container = label.closest(`.${C.ColoredIcon.container}`) as HTMLElement;
     if (!container) {
       return;
     }
+    const currentClasses: string[] = [];
     const ticker = refTextContent(label);
     watchEffectWhileNodeAlive(label, () => {
-      container.setAttribute('data-rp-ticker', ticker.value ?? '');
+      for (const className of currentClasses) {
+        container.classList.remove(className);
+      }
+      currentClasses.length = 0;
+      if (!ticker.value) {
+        return;
+      }
+      currentClasses.push('rp-ticker-' + ticker.value);
       const material = materialsStore.getByTicker(ticker.value);
       const category = materialCategoriesStore.getById(material?.category);
       if (category) {
-        container.setAttribute('data-rp-category', category.name);
-        container.style.removeProperty('background');
-        container.style.removeProperty('color');
+        currentClasses.push('rp-category-' + sanitizeCategoryName(category.name));
+      }
+      for (const className of currentClasses) {
+        container.classList.add(className);
       }
     });
   });
@@ -34,7 +43,7 @@ function appendStylesheet() {
   const gradientEnd = defaultColor.brighten(10).toHexString();
   const fontColor = defaultColor.brighten(40).toHexString();
   const defaultStyle =
-    `.${C.ColoredIcon.container}[data-rp-category] {\n` +
+    `.rp-category- {\n` +
     `  background: linear-gradient(135deg, ${gradientStart}, ${gradientEnd});\n` +
     `  color: ${fontColor};\n` +
     '}\n\n';
@@ -48,11 +57,15 @@ function createCssRule<T extends keyof typeof categoryColors>(category: T) {
   const gradientEnd = color.brighten(10).toHexString();
   const fontColor = color.brighten(40).toHexString();
   return (
-    `.${C.ColoredIcon.container}[data-rp-category="${category}"] {\n` +
+    `.rp-category-${sanitizeCategoryName(category)} {\n` +
     `  background: linear-gradient(135deg, ${gradientStart}, ${gradientEnd});\n` +
     `  color: ${fontColor};\n` +
     '}'
   );
+}
+
+export function sanitizeCategoryName(name: string) {
+  return name.replaceAll(' ', '-').replaceAll('(', '').replaceAll(')', '');
 }
 
 // Copied from PrUn js bundle.

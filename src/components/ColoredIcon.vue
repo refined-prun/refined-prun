@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ColoredIconDetail from '@src/components/ColoredIconDetail.vue';
+import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
 
 export type ColoredIconSize = 'large' | 'medium' | 'small' | 'inline' | 'inline-table';
 
@@ -43,6 +44,8 @@ const classes = computed(() => ({
   [$style.small]: props.size === 'small',
   [$style.inline]: props.size === 'inline',
   [$style.inlineTable]: props.size === 'inline-table',
+  [`rp-ticker-${props.label}`]: true,
+  [`rp-category-${sanitizeCategoryName(props.category ?? '')}`]: props.category !== undefined,
 }));
 
 const style = computed(() => ({
@@ -52,12 +55,7 @@ const style = computed(() => ({
 </script>
 
 <template>
-  <div
-    :class="classes"
-    :style="style"
-    :title="title"
-    :data-rp-ticker="label"
-    :data-rp-category="category">
+  <div :class="classes" :style="style" :title="title">
     <div :class="C.ColoredIcon.labelContainer">
       <span :class="C.ColoredIcon.label">{{ label }}</span>
       <ColoredIconDetail :detail="detail" />

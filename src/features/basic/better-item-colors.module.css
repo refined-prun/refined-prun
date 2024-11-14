@@ -1,34 +1,34 @@
 .agriculturalProducts {
-  background: linear-gradient(135deg, #003800, #0a4708);
-  color: #8bb37b;
+  background: linear-gradient(135deg, #003800, #0a4708) !important;
+  color: #8bb37b !important;
 }
 
 .consumablesBasic {
-  background: linear-gradient(135deg, #a62c2a, #ba363c);
-  color: #ff989e;
+  background: linear-gradient(135deg, #a62c2a, #ba363c) !important;
+  color: #ff989e !important;
 }
 
 .consumablesLuxury {
-  background: linear-gradient(135deg, #680000, #7b0012);
-  color: #db9191;
+  background: linear-gradient(135deg, #680000, #7b0012) !important;
+  color: #db9191 !important;
 }
 
 .fuels {
-  background: linear-gradient(135deg, #548d22, #6ba23c);
-  color: #cbfaa3;
+  background: linear-gradient(135deg, #548d22, #6ba23c) !important;
+  color: #cbfaa3 !important;
 }
 
 .liquids {
-  background: linear-gradient(135deg, #67a8da, #6098c3);
-  color: #f1ffff;
+  background: linear-gradient(135deg, #67a8da, #6098c3) !important;
+  color: #f1ffff !important;
 }
 
 .plastics {
-  background: linear-gradient(135deg, #791f62, #92387b);
-  color: #f89ee1;
+  background: linear-gradient(135deg, #791f62, #92387b) !important;
+  color: #f89ee1 !important;
 }
 
 .shipShields {
-  background: linear-gradient(135deg, #bf740a, #d98c21);
-  color: #dbdb79;
+  background: linear-gradient(135deg, #bf740a, #d98c21) !important;
+  color: #dbdb79 !important;
 }

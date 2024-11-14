@@ -8,6 +8,7 @@ import {
   startCssAtScope,
 } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { objectKeys } from 'ts-extras';
+import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
 
 function init() {
   const container = C.ColoredIcon.container;
@@ -25,18 +26,15 @@ function init() {
   endCssAtScope();
 
   for (const category of objectKeys(categories)) {
-    applyIconRules(`[data-rp-category='${category}']`, categories[category]);
+    applyIconRules(`.rp-category-${sanitizeCategoryName(category)}`, categories[category]);
   }
   for (const material of objectKeys(materials)) {
-    applyIconRules(`[data-rp-ticker='${material}']`, materials[material]);
+    applyIconRules(`.rp-ticker-${material}`, materials[material]);
   }
 }
 
-function applyIconRules(attribute: string, icon: Icon) {
-  const container = C.ColoredIcon.container;
-  const label = C.ColoredIcon.label;
-
-  const selector = `.${container}${attribute}:before `;
+function applyIconRules(root: string, icon: Icon) {
+  const selector = `${root}:before `;
   const rule = createRule(icon, 2.2);
   if (rule) {
     applyRawCssRule(selector + rule);
@@ -44,7 +42,7 @@ function applyIconRules(attribute: string, icon: Icon) {
   if (typeof icon !== 'string') {
     const detail = icon[1].detail;
     if (detail) {
-      const selector = `.${container}${attribute} .${label}:before `;
+      const selector = `${root} .${C.ColoredIcon.label}:before `;
       const rule = createRule(detail, 1);
       if (rule) {
         applyRawCssRule(selector + rule);
