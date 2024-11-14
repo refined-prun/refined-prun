@@ -52,16 +52,17 @@ export const userData = reactive({} as typeof initialUserData);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function applyUserData(newData: any) {
-  const clone = structuredClone(newData);
-  clone.balanceHistory = {
-    v1: shallowReactive(clone.balanceHistory?.v1 ?? []),
-    v2: shallowReactive(clone.balanceHistory?.v2 ?? []),
-    v3: shallowReactive(clone.balanceHistory?.v3 ?? []),
-  };
+  newData.balanceHistory.v1 = shallowReactive(newData.balanceHistory.v1);
+  newData.balanceHistory.v2 = shallowReactive(newData.balanceHistory.v2);
+  newData.balanceHistory.v3 = shallowReactive(newData.balanceHistory.v3);
   Object.assign(userData, newData);
 }
 
-applyUserData(initialUserData);
+export function applyInitialUserData() {
+  applyUserData(structuredClone(initialUserData));
+}
+
+applyInitialUserData();
 
 export function clearBalanceHistory() {
   userData.balanceHistory.v1.length = 0;

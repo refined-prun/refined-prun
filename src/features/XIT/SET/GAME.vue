@@ -24,7 +24,7 @@ function deleteSidebarButton(index: number) {
 
 function confirmResetSidebar(ev: Event) {
   showConfirmationOverlay(ev, () => {
-    userData.settings.sidebar = [...initialUserData.settings.sidebar].map(x => [...x]);
+    userData.settings.sidebar = structuredClone(initialUserData.settings.sidebar);
   });
 }
 

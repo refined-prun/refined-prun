@@ -1,6 +1,6 @@
 import { downloadJson, uploadJson } from '@src/utils/download-json';
 import { migrateUserData } from '@src/infrastructure/storage/user-data-migrations';
-import { applyUserData, initialUserData, userData, watchUserData } from '@src/store/user-data';
+import { applyInitialUserData, applyUserData, userData, watchUserData } from '@src/store/user-data';
 import { deepToRaw } from '@src/utils/deep-to-raw';
 
 const fileType = 'rp-user-data';
@@ -41,6 +41,6 @@ export function exportUserData() {
 }
 
 export function resetUserData() {
-  applyUserData(initialUserData);
+  applyInitialUserData();
   migrateUserData(userData);
 }
