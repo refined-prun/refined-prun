@@ -4,6 +4,7 @@ import { correctPlanetCommand } from './planet-commands';
 import { correctShipCommand } from './ship-commands';
 import { correctSystemCommand } from './system-commands';
 import { correctXitWeb } from './xit-web';
+import { correctXitArgs } from '@src/features/basic/correct-commands/xit-args';
 
 const transformers = [
   correctMaterialCommand,
@@ -11,6 +12,7 @@ const transformers = [
   correctShipCommand,
   correctSystemCommand,
   correctXitWeb,
+  correctXitArgs,
 ];
 
 async function onSelectorReady(selector: HTMLElement) {
