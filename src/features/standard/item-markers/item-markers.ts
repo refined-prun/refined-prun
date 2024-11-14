@@ -1,4 +1,3 @@
-import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import IconMarker from './IconMarker.vue';
 import { computedTileState } from '@src/store/user-data-tiles';
@@ -69,9 +68,6 @@ async function addMarker(mat: HTMLElement, tile: PrunTile) {
 }
 
 function init() {
-  if (companyStore.value?.code === 'KCB') {
-    return;
-  }
   tiles.observe(['INV', 'SHPI'], onTileReady);
 }
 

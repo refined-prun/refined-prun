@@ -1,12 +1,8 @@
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import MinimizeRow from './MinimizeRow.vue';
-import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { streamHtmlCollection } from '@src/utils/stream-html-collection';
 
 function onTileReady(tile: PrunTile) {
-  if (companyStore.value?.code === 'KCB') {
-    return;
-  }
   subscribe(streamHtmlCollection(tile.anchor, tile.anchor.children), async child => {
     const header = await $(child, C.FormComponent.containerPassive);
     setHeaders(tile, true);

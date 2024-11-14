@@ -1,5 +1,4 @@
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
-import { companyStore } from '@src/infrastructure/prun-api/data/company';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.MessageList.messages), messages => {
@@ -31,9 +30,6 @@ function isImage(url: string) {
 }
 
 function init() {
-  if (companyStore.value?.code === 'TEP') {
-    return;
-  }
   tiles.observe(['COMG', 'COMP', 'COMU'], onTileReady);
 }
 
