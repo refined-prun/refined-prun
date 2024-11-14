@@ -8,7 +8,7 @@ export function correctMaterialCommand(parts: string[]) {
   }
 
   const material = materialsStore.getByTicker(parts[1]);
-  if (material && parts[1] !== material.ticker) {
-    parts[1] = material.ticker;
+  if (material) {
+    parts[1] = parts[1].toUpperCase();
   }
 }
