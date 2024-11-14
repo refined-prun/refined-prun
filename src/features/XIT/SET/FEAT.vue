@@ -89,7 +89,10 @@ async function onChangeModeClick() {
 
 <template>
   <div>
-    <SectionHeader>Features ({{ sorted.length }})</SectionHeader>
+    <SectionHeader>
+      Features: {{ sorted.length }}
+      <span v-if="disabledFeatures.size > 0">({{ disabledFeatures.size }} off)</span>
+    </SectionHeader>
     <form :class="$style.form">
       <Commands label="Change feature set">
         <PrunButton primary @click="onChangeModeClick">
