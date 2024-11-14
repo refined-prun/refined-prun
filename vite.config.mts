@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 // import libAssetsPlugin from '@laynezh/vite-plugin-lib-assets';
-import makeManifestPlugin from './dev-tools/make-manifest-plugin';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import vueDevTools from 'vite-plugin-vue-devtools';
@@ -9,7 +8,6 @@ import unimport from 'unimport/unplugin';
 import { createHash } from 'crypto';
 
 const srcDir = resolve(__dirname, 'src');
-const manifestFile = resolve(srcDir, 'manifest.js');
 
 const isDev = process.env.__DEV__ === 'true';
 
@@ -65,10 +63,6 @@ export default defineConfig({
     //   outputPath: 'assets',
     //   name: '[name].[contenthash:8].[ext]',
     // }),
-    makeManifestPlugin({
-      outDir,
-      manifestFile,
-    }),
   ],
   publicDir: resolve(__dirname, 'public'),
   build: {
