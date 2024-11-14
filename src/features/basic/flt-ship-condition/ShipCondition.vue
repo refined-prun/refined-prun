@@ -6,7 +6,7 @@ import coloredValue from '@src/infrastructure/prun-ui/colored-value.module.css';
 const props = defineProps({
   id: {
     type: String,
-    required: true,
+    default: null,
   },
 });
 
