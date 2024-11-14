@@ -1,5 +1,5 @@
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
-import TabBar from '@src/features/standard/screen-tab-bar/TabBar.vue';
+import TabBar from './TabBar.vue';
 
 function init() {
   subscribe($$(document, C.ScreenControls.container), container => {

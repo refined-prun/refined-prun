@@ -13,7 +13,7 @@ import { userData } from '@src/store/user-data';
 import { mergeMaterialAmounts } from '@src/core/sort-materials';
 import Active from '@src/components/forms/Active.vue';
 import SectionHeader from '@src/components/SectionHeader.vue';
-import { useXitParameters } from '@src/hooks/useXitParameters';
+import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import PrunLink from '@src/components/PrunLink.vue';
 import { isEmpty } from 'ts-extras';
 

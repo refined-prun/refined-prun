@@ -1,5 +1,5 @@
 import { applyClassCssRule, applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
-import classes from '@src/features/standard/prun-bugs.module.css';
+import classes from './prun-bugs.module.css';
 
 function removeMobileCssRules() {
   for (let i = 0; i < document.styleSheets.length; i++) {

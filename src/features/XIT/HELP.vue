@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useXitParameters } from '@src/hooks/useXitParameters';
+import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import SectionHeader from '@src/components/SectionHeader.vue';
 import PrunLink from '@src/components/PrunLink.vue';
 

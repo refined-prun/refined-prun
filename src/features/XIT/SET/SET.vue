@@ -3,7 +3,7 @@ import Tabs, { Tab } from '@src/components/Tabs.vue';
 import GAME from '@src/features/XIT/SET/GAME.vue';
 import FEAT from '@src/features/XIT/SET/FEAT.vue';
 import FIN from '@src/features/XIT/SET/FIN.vue';
-import { useXitParameters } from '@src/hooks/useXitParameters';
+import { useXitParameters } from '@src/hooks/use-xit-parameters';
 
 const tabs: Tab[] = [
   {

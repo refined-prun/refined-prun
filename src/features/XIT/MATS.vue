@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
-import { useXitParameters } from '@src/hooks/useXitParameters';
+import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
 import { isEmpty } from 'ts-extras';
 

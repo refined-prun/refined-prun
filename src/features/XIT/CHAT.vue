@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { ddmm, hhmm } from '@src/utils/format';
-import { useXitParameters } from '@src/hooks/useXitParameters';
+import { useXitParameters } from '@src/hooks/use-xit-parameters';
 
 interface FioChatMessage {
   MessageTimestamp: number;

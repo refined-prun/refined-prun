@@ -5,7 +5,7 @@ import ActionBar from '@src/components/ActionBar.vue';
 import { showConfirmationOverlay, showTileOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import SortingModeEditor from './SortingModeEditor.vue';
 import { userData } from '@src/store/user-data';
-import { useXitParameters } from '@src/hooks/useXitParameters';
+import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { isEmpty } from 'ts-extras';
 
 const parameters = useXitParameters();

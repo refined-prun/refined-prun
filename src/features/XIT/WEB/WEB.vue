@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useXitParameters } from '@src/hooks/useXitParameters';
+import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { prunAtob } from '@src/infrastructure/prun-ui/base64';
 import { isValidUrl } from '@src/utils/is-valid-url';
 import { shortcuts } from '@src/features/XIT/WEB/shortcuts';

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HeadItem from '@src/features/standard/screen-tab-bar/HeadItem.vue';
+import HeadItem from './HeadItem.vue';
 import { screensStore } from '@src/infrastructure/prun-api/data/screens';
 
 const sorted = computed(() => screensStore.sorted.value);

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SortingOrderIcon from '@src/features/standard/inv-custom-sorting/SortingOrderIcon.vue';
+import SortingOrderIcon from './SortingOrderIcon.vue';
 
 defineProps({
   sorting: {

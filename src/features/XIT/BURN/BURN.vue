@@ -8,7 +8,7 @@ import Tooltip from '@src/components/Tooltip.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import MaterialRow from '@src/features/XIT/BURN/MaterialRow.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { useXitParameters } from '@src/hooks/useXitParameters';
+import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { isDefined, isEmpty } from 'ts-extras';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 

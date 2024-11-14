@@ -1,9 +1,9 @@
 import { changeValue } from '@src/util';
-import { correctMaterialCommand } from '@src/features/standard/correct-commands/material-commands';
-import { correctPlanetCommand } from '@src/features/standard/correct-commands/planet-commands';
-import { correctShipCommand } from '@src/features/standard/correct-commands/ship-commands';
-import { correctSystemCommand } from '@src/features/standard/correct-commands/system-commands';
-import { correctXitWeb } from '@src/features/standard/correct-commands/xit-web';
+import { correctMaterialCommand } from './material-commands';
+import { correctPlanetCommand } from './planet-commands';
+import { correctShipCommand } from './ship-commands';
+import { correctSystemCommand } from './system-commands';
+import { correctXitWeb } from './xit-web';
 
 const transformers = [
   correctMaterialCommand,

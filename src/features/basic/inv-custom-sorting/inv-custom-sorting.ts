@@ -7,7 +7,7 @@ import InventorySortControls from './InventorySortControls.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
 import SORT from '@src/features/XIT/SORT/SORT.vue';
-import { getTileState } from '@src/features/standard/inv-custom-sorting/tile-state';
+import { getTileState } from './tile-state';
 import { createFragmentApp, FragmentAppScope } from '@src/utils/vue-fragment-app';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';

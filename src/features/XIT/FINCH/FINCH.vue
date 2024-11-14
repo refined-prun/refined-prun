@@ -4,7 +4,7 @@ import EquityHistoryChart from '@src/features/XIT/FINCH/EquityHistoryChart.vue';
 import AssetPieChart from '@src/features/XIT/FINCH/AssetPieChart.vue';
 import LocationsPieChart from '@src/features/XIT/FINCH/LocationsPieChart.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import { useXitParameters } from '@src/hooks/useXitParameters';
+import { useXitParameters } from '@src/hooks/use-xit-parameters';
 
 const parameters = useXitParameters();
 const parameter = parameters[0]?.toUpperCase();
