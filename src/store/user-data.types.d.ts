@@ -29,6 +29,12 @@ declare namespace UserData {
     actions: ActionData[];
   }
 
+  interface SystemMessages {
+    chat: string;
+    hideJoined: boolean;
+    hideDeleted: boolean;
+  }
+
   interface ActionGroupData {
     id: string;
     type: 'MANUAL' | 'RESUPPLY' | 'REPAIR';

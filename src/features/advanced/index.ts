@@ -13,7 +13,7 @@ import './flt-shorten-addresses';
 import './flt-shorten-cargo-capacity';
 import './hide-form-errors';
 import './hide-item-names';
-import './hide-join-leave';
+import './hide-system-chat-messages/hide-system-chat-messages';
 import './hide-weight-volume-labels';
 import './inv-shorten-addresses';
 import './inv-shorten-storage-types';

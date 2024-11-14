@@ -2,6 +2,9 @@
 
 const migrations: Migration[] = [
   userData => {
+    userData.systemMessages = [];
+  },
+  userData => {
     userData.settings.disabled = [];
     userData.settings.pricing.method = 'DEFAULT';
     delete userData.first;

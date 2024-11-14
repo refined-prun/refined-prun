@@ -35,6 +35,7 @@
 - `XIT NOTE` list is now reorderable.
 - Ships display condition in `FLT`.
 - ECD is hidden in `FINLA`.
+- "User deleted this message" messages are hidden in chats.
 - More planet commands (like `INV`) now support planet names.
 - System commands (`FLTS`, `INF`, `MS`, and `SYSI`) now accept system names.
 - Ship commands (`SFC`, `SHP`, `SHPF`, `SHPI`, and `SI`) now accept ship names.
