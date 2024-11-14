@@ -79,8 +79,6 @@ function onScrollViewReady(tile: PrunTile, scrollView: HTMLElement) {
   }
 }
 
-function init() {
+export function initializeXitCommands() {
   tiles.observe('XIT', onTileReady);
 }
-
-features.add(import.meta.url, init, 'Adds XIT commands support.');

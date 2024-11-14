@@ -11,6 +11,7 @@ import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { watchWhile } from '@src/utils/watch';
 import { initializeUI } from '@src/infrastructure/prun-ui';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { initializeXitCommands } from '@src/features/XIT/xit-commands';
 
 async function mainRun() {
   void fetchPrices();
@@ -24,6 +25,7 @@ async function mainRun() {
   await watchWhile(() => companyStore.value === undefined);
 
   await features.init();
+  initializeXitCommands();
 
   void trackBalanceHistory();
   if (userData.settings.mode === undefined) {
