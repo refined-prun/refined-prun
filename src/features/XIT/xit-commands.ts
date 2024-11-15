@@ -1,4 +1,3 @@
-import LegacyXITAdapter from '@src/features/XIT/LegacyXITAdapter.vue';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContextControls from '@src/components/ContextControls.vue';
 
@@ -62,21 +61,13 @@ function onScrollViewReady(tile: PrunTile, scrollView: HTMLElement) {
     }
   }
 
-  if (xitCommand.module) {
-    createFragmentApp(LegacyXITAdapter, {
-      module: (container: HTMLDivElement) => {
-        return new xitCommand.module!(container, parameters);
-      },
-    }).appendTo(container);
-  } else if (xitCommand.component) {
-    startMeasure(tile.fullCommand);
-    createFragmentApp(xitCommand.component(parameters))
-      .use(tileStatePlugin, { tile })
-      .provide(xit.command, command)
-      .provide(xit.parameters, parameters.slice(1))
-      .appendTo(container);
-    stopMeasure();
-  }
+  startMeasure(tile.fullCommand);
+  createFragmentApp(xitCommand.component(parameters))
+    .use(tileStatePlugin, { tile })
+    .provide(xit.command, command)
+    .provide(xit.parameters, parameters.slice(1))
+    .appendTo(container);
+  stopMeasure();
 }
 
 export function initializeXitCommands() {

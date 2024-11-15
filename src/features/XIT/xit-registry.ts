@@ -1,9 +1,5 @@
 import { castArray } from '@src/utils/cast-array';
 
-export interface XITModule {
-  create_buffer();
-}
-
 interface ContextItem {
   cmd: string;
   label?: string;
@@ -15,10 +11,8 @@ interface CommandDescriptor {
   description: string;
   mandatoryParameters?: string;
   optionalParameters?: string;
-  component?: (parameters: string[]) => Component;
+  component: (parameters: string[]) => Component;
   contextItems?: (parameters: string[]) => ContextItem[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  module?: new (...args: any[]) => XITModule;
 }
 
 const registry: CommandDescriptor[] = [];
