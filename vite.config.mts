@@ -54,7 +54,7 @@ export default defineConfig({
         { name: 'default', as: 'features', from: '@src/feature-registry' },
         { name: 'default', as: 'xit', from: '@src/features/XIT/xit-registry' },
       ],
-      dts: 'src/types/unimport.d.ts',
+      //dts: 'src/types/unimport.d.ts',
       addons: {
         vueTemplate: true,
       },
