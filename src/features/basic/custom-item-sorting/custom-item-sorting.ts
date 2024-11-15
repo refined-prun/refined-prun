@@ -12,10 +12,11 @@ import { createFragmentApp, FragmentAppScope } from '@src/utils/vue-fragment-app
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
-import { sortMaterials, sortMaterialsBy } from '@src/core/sort-materials';
+import { sortByMaterial, sortMaterials } from '@src/core/sort-materials';
 import { computedTileState } from '@src/store/user-data-tiles';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
 import { isDefined, isEmpty } from 'ts-extras';
+import SortCriteria from '@src/features/basic/custom-item-sorting/SortCriteria.vue';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.InventoryView.container), container =>
@@ -29,14 +30,49 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
     return;
   }
 
-  const activeSort = computedTileState(getTileState(tile), 'activeSort', undefined);
+  const activeSortId = computedTileState(getTileState(tile), 'activeSort', undefined);
+  const reverseSort = computedTileState(getTileState(tile), 'reverseSort', false);
   const sortOptions = await $(container, C.InventorySortControls.controls);
   const inventory = await $(container, C.InventoryView.grid);
 
+  // Enumerate children in advance because we will modify the collection in the loop.
+  const criterion = Array.from(sortOptions.children);
+
+  // Synthetic id for CAT.
+  const CAT = '__CAT__';
+
   // Skip the first sorting option because it is the grid/list view switch.
-  for (let i = 1; i < sortOptions.children.length; i++) {
-    const option = sortOptions.children.item(i) as HTMLElement;
-    option.addEventListener('click', () => (activeSort.value = undefined));
+  for (let i = 1; i < criterion.length; i++) {
+    const option = criterion[i] as HTMLElement;
+    option.addEventListener('click', () => {
+      activeSortId.value = undefined;
+    });
+    const isCategorySort = i === 2;
+    if (!isCategorySort) {
+      continue;
+    }
+    const orderMarker = _$(option, C.InventorySortControls.order);
+    const isSelected = (orderMarker?.children.length ?? 0) > 0;
+    if (isSelected && !activeSortId.value) {
+      activeSortId.value = CAT;
+    }
+    const catActive = computed(() => activeSortId.value === CAT);
+    createFragmentApp(
+      SortCriteria,
+      reactive({
+        label: option.textContent ?? 'CAT',
+        active: catActive,
+        reverse: reverseSort,
+        onClick: () => {
+          if (catActive.value) {
+            reverseSort.value = !reverseSort.value;
+          } else {
+            activeSortId.value = CAT;
+            reverseSort.value = false;
+          }
+        },
+      }),
+    ).after(option);
   }
 
   const burn = computed(() => getPlanetBurn(storagesStore.getById(storeId)?.addressableId));
@@ -49,10 +85,8 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
     return modes;
   });
 
-  const activeSorting = computed(() => sorting.value.find(x => x.label === activeSort.value));
-
   watchEffectWhileNodeAlive(sortOptions, () => {
-    if (activeSorting.value) {
+    if (activeSortId.value) {
       sortOptions.classList.add(classes.custom);
     } else {
       sortOptions.classList.remove(classes.custom);
@@ -63,17 +97,32 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
     InventorySortControls,
     reactive({
       sorting,
-      activeSort,
-      onModeClick: (mode: string) => (activeSort.value = mode),
+      activeSort: activeSortId,
+      reverse: reverseSort,
+      onModeClick: (mode: string) => {
+        if (activeSortId.value === mode) {
+          reverseSort.value = !reverseSort.value;
+        } else {
+          activeSortId.value = mode;
+          reverseSort.value = false;
+        }
+      },
       onAddClick: () => showBuffer(`XIT SORT ${storeId}`),
     }),
   ).appendTo(sortOptions);
+
+  const activeMode = computed(() => sorting.value.find(x => x.label === activeSortId.value));
 
   const scope = new FragmentAppScope();
   const runSort = () => {
     observer.disconnect();
     scope.begin();
-    sortInventory(inventory, activeSorting.value, burn.value?.burn);
+    sortInventory(
+      inventory,
+      activeSortId.value === CAT ? createCategorySortingMode(storeId) : activeMode.value,
+      burn.value?.burn,
+      reverseSort.value,
+    );
     scope.end();
     setTimeout(() => observer.observe(inventory, { childList: true, subtree: true }), 0);
   };
@@ -81,16 +130,16 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
   watchEffectWhileNodeAlive(inventory, () => {
     // Touch reactive values.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const _ = activeSorting.value && burn.value;
+    const _ = activeSortId.value && burn.value;
     runSort();
   });
-  runSort();
 }
 
 function sortInventory(
   inventory: Element,
   sorting: UserData.SortingMode | undefined,
   burn: BurnValues | undefined,
+  reverse: boolean,
 ) {
   if (!sorting) {
     return;
@@ -127,6 +176,10 @@ function sortInventory(
   const addedItems = new Set<string>();
   const remainingItems = new Set(gridItems);
 
+  if (reverse) {
+    categories.reverse();
+  }
+
   for (const category of categories) {
     let materials = category.materials
       .filter(x => !addedItems.has(x))
@@ -138,6 +191,9 @@ function sortInventory(
 
     createFragmentApp(CategoryHeader, { label: category.name }).appendTo(inventory);
     materials = sortMaterials(materials);
+    if (reverse) {
+      materials.reverse();
+    }
     for (const material of materials) {
       const gridItem = gridItems.find(x => x.ticker === material.ticker);
       if (gridItem) {
@@ -158,15 +214,30 @@ function sortInventory(
     return;
   }
 
-  createFragmentApp(CategoryHeader, { label: 'Other' }).appendTo(inventory);
+  if (addedItems.size > 0) {
+    createFragmentApp(CategoryHeader, { label: 'Other' }).appendTo(inventory);
+  }
   let otherItems = [...remainingItems].map(x => ({
     div: x.div,
     material: materialsStore.getByTicker(x.ticker),
   }));
-  otherItems = sortMaterialsBy(otherItems, x => x.material);
+  otherItems = sortByMaterial(otherItems, x => x.material);
+  if (reverse) {
+    otherItems.reverse();
+  }
   for (const item of otherItems) {
     inventory.appendChild(item.div);
   }
+}
+
+function createCategorySortingMode(storeId: string): UserData.SortingMode {
+  return {
+    label: 'CAT',
+    storeId,
+    categories: [],
+    burn: false,
+    zero: false,
+  };
 }
 
 function createBurnSortingMode(storeId: string): UserData.SortingMode {
@@ -181,6 +252,10 @@ function createBurnSortingMode(storeId: string): UserData.SortingMode {
 
 function init() {
   applyCssRule(`.${classes.custom} .${C.InventorySortControls.order} > div`, css.hidden);
+  applyCssRule(
+    `.${C.InventorySortControls.controls} .${C.InventorySortControls.criteria}:nth-child(3)`,
+    css.hidden,
+  );
   tiles.observe(['INV', 'SHPI'], onTileReady);
   xit.add({
     command: 'SORT',

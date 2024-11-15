@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SortingOrderIcon from './SortingOrderIcon.vue';
+import SortCriteria from '@src/features/basic/custom-item-sorting/SortCriteria.vue';
 
 defineProps({
   sorting: {
@@ -10,6 +10,7 @@ defineProps({
     type: String,
     default: undefined,
   },
+  reverse: Boolean,
   onModeClick: {
     type: Function as PropType<(sorting: string) => void>,
     required: true,
@@ -22,13 +23,12 @@ defineProps({
 </script>
 
 <template>
-  <div
+  <SortCriteria
     v-for="mode in sorting.map(x => x.label)"
     :key="mode"
-    :class="C.InventorySortControls.criteria"
-    @click="onModeClick(mode)">
-    <div>{{ mode }}</div>
-    <SortingOrderIcon v-if="mode === activeSort" />
-  </div>
-  <div :class="C.InventorySortControls.criteria" @click="onAddClick"><div>+</div></div>
+    :label="mode"
+    :active="mode === activeSort"
+    :reverse="reverse"
+    @click="onModeClick(mode)" />
+  <SortCriteria label="+" @click="onAddClick" />
 </template>

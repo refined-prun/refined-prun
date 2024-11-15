@@ -1,17 +1,14 @@
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
 
 export function sortMaterials(materials: PrunApi.Material[]) {
-  return sortMaterialsBy(materials, x => x);
+  return sortByMaterial(materials, x => x);
 }
 
 export function sortMaterialAmounts(materials: PrunApi.MaterialAmount[]) {
-  return sortMaterialsBy(materials, x => x.material);
+  return sortByMaterial(materials, x => x.material);
 }
 
-export function sortMaterialsBy<T>(
-  items: T[],
-  selector: (item: T) => PrunApi.Material | undefined,
-) {
+export function sortByMaterial<T>(items: T[], selector: (item: T) => PrunApi.Material | undefined) {
   const categories = materialCategoriesStore.entities.value;
   if (categories === undefined) {
     return items;
@@ -30,10 +27,82 @@ export function sortMaterialsBy<T>(
     }
     const categoryA = categories[materialA.category].name;
     const categoryB = categories[materialB.category].name;
-    return categoryA === categoryB
-      ? materialA.ticker.localeCompare(materialB.ticker)
-      : categoryA.localeCompare(categoryB);
+    if (categoryA !== categoryB) {
+      return categoryA.localeCompare(categoryB);
+    }
+
+    const categoryOrder = sortOrder[categoryA];
+    if (categoryOrder) {
+      const indexA = categoryOrder.get(materialA.ticker);
+      const indexB = categoryOrder.get(materialB.ticker);
+      if (indexA && !indexB) {
+        return 1;
+      }
+      if (!indexA && indexB) {
+        return -1;
+      }
+      return indexA - indexB;
+    }
+    return materialA.ticker.localeCompare(materialB.ticker);
   });
+}
+
+const sortOrder = {
+  'consumables (luxury)': makeSortOrderMap([
+    'COF',
+    'PWO',
+    'KOM',
+    'REP',
+    'ALE',
+    'SC',
+    'GIN',
+    'VG',
+    'WIN',
+    'NST',
+  ]),
+  'consumables (basic)': makeSortOrderMap([
+    'DW',
+    'RAT',
+    'OVE',
+    'EXO',
+    'PT',
+    'MED',
+    'HMS',
+    'SCN',
+    'FIM',
+    'HSS',
+    'PDA',
+    'MEA',
+    'LC',
+    'WS',
+  ]),
+  'construction prefabs': makeSortOrderMap([
+    'BBH',
+    'BDE',
+    'BSE',
+    'BTA',
+    'LBH',
+    'LDE',
+    'LSE',
+    'LTA',
+    'RBH',
+    'RDE',
+    'RSE',
+    'RTA',
+    'ABH',
+    'ADE',
+    'ASE',
+    'ATA',
+    'HSE',
+  ]),
+};
+
+function makeSortOrderMap(materials: string[]) {
+  const map = new Map<string, number>();
+  for (let i = 0; i < materials.length; i++) {
+    map.set(materials[i], i);
+  }
+  return map;
 }
 
 export function mergeMaterialAmounts(amounts: PrunApi.MaterialAmount[]) {

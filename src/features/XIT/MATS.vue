@@ -4,6 +4,7 @@ import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
 import { isEmpty } from 'ts-extras';
+import { sortMaterials } from '@src/core/sort-materials';
 
 const parameters = useXitParameters();
 const materials = computed(() => {
@@ -37,10 +38,12 @@ const materials = computed(() => {
 
   return materials;
 });
+
+const sorted = computed(() => sortMaterials(materials.value ?? []));
 </script>
 
 <template>
   <div :class="C.InventoryView.grid">
-    <GridMaterialIcon v-for="mat in materials" :key="mat.id" :ticker="mat.ticker" />
+    <GridMaterialIcon v-for="mat in sorted" :key="mat.id" :ticker="mat.ticker" />
   </div>
 </template>

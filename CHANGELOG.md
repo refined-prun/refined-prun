@@ -66,6 +66,8 @@
 - The `Additional Days` `XIT BURN` setting was changed to `Resupply`, representing total days for resupply.
 - `INV` Burn material sorting was changed to favor outputs over inputs/consumables and inputs
   over consumables.
+- CAT material sorting is enhanced for consumables and prefabs, and SHPT is now always last.
+- Custom sorting modes (like BRN) support reverse sorting.
 - Equity history chart now shows only the latest point per day.
 - `XIT CONTS` is sorted in the opposite direction, with the newest contracts being at the top of the list.
 - `XIT CHECK` was changed to `XIT TODO`.
