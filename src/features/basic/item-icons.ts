@@ -237,7 +237,7 @@ const materials: Record<string, Icon> = {
   FOD: 'e55a',
   FSE: 'f135',
   FUN: 'f522',
-  GC: 'f28d',
+  GC: 'f134',
   GCH: 'e4f1',
   GEN: 'f135',
   GIN: 'f7a0',
