@@ -1,29 +1,13 @@
-@font-face {
-  font-family: 'Font Awesome 6 Free';
-  font-style: normal;
-  font-weight: 900;
-  font-display: block;
-  src: url('fonts/fa-solid-900.woff2') format('woff2'), url('fonts/fa-solid-900.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Font Awesome 6 Free';
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: url('fonts/fa-regular-400.woff2') format('woff2'), url('fonts/fa-regular-400.ttf') format('truetype');
-}
-
 .pb-hide-input {
   width: 64px;
-  color: rgba(1,1,1,0) !important;
-  background-color: rgba(1,1,1,0) !important;
+  color: rgba(1, 1, 1, 0) !important;
+  background-color: rgba(1, 1, 1, 0) !important;
   cursor: pointer !important;
   border: none !important;
 }
 
 .pb-hide-input::placeholder {
-  color: rgba(1,1,1,0) !important;
+  color: rgba(1, 1, 1, 0) !important;
 }
 
 .pb-read-textarea {
@@ -59,10 +43,12 @@
   color: #5cb85c;
   font-weight: bold;
 }
+
 .pb-bold-failure {
   color: #d9534f;
   font-weight: bold;
 }
+
 .pb-bold-warning {
   color: #f7a600;
   font-weight: bold;
@@ -76,23 +62,6 @@
   outline: none;
 }
 
-.title {
-  font-weight: bold;
-  display: block;
-  font-size: 16px;
-  padding-left: 5px;
-}
-
-.flex-table {
-  width: 100%;
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: left;
-  align-items: left;
-}
-
 .link {
   color: #3fa2de;
   cursor: pointer;
@@ -101,17 +70,4 @@
 
 .link:hover {
   color: #f7a600 !important;
-}
-
-.input-text {
-  padding: 0px 5px;
-  margin: 5px;
-  background-color: #42361d;
-  border-width: 0px;
-  border-bottom: 1px solid #8d6411;
-  color: #cccccc;
-}
-
-.input-text:focus {
-  outline: none;
 }

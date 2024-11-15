@@ -1,3 +1,4 @@
+import classes from './inv-search.module.css';
 import features from '@src/feature-registry';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import css from '@src/utils/css-utils.module.css';
@@ -27,7 +28,7 @@ function onTileReady(tile: PrunTile) {
       <div>
         <input
           class="input-text"
-          style="width: 200px"
+          style={classes.inputText}
           placeholder="Enter location"
           onInput={onInput}
         />

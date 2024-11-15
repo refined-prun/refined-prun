@@ -1,4 +1,3 @@
-import './refined-prun.css';
 import { sleep } from './util';
 import { initializePrunApi, loadGameData } from '@src/infrastructure/prun-api';
 import { fetchPrices } from '@src/infrastructure/fio/cx';

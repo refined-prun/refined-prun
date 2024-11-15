@@ -1,3 +1,4 @@
+import './ACT.css';
 import ACT from '@src/features/XIT/ACT/ACT.vue';
 
 xit.add({

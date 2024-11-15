@@ -72,7 +72,7 @@ watch(
 </script>
 
 <template>
-  <div :class="['title', $style.title]" :style="{ paddingLeft: '10px' }">{{ note.name }}</div>
+  <div :class="$style.title" :style="{ paddingLeft: '10px' }">{{ note.name }}</div>
   <div>
     <textarea ref="textbox" v-model="note.text" :class="$style.textarea" spellcheck="false" />
     <!-- eslint-disable-next-line vue/no-v-html -->
@@ -83,6 +83,10 @@ watch(
 <style module>
 .title {
   padding-top: 5px;
+  font-weight: bold;
+  display: block;
+  font-size: 16px;
+  padding-left: 5px;
 }
 
 .textarea {
