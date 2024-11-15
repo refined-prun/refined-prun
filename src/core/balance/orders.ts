@@ -20,7 +20,6 @@ const orderValue = computed(() => {
   }
   const orders: Entry[] = [];
   for (const site of sites) {
-    const location = getEntityNameFromAddress(site.address)!;
     const lines = productionStore.getBySiteId(site.siteId);
     if (!lines) {
       return undefined;
@@ -33,7 +32,7 @@ const orderValue = computed(() => {
           return undefined;
         }
         orders.push({
-          location,
+          location: getEntityNameFromAddress(site.address)!,
           order,
           inputs: inputs + order.productionFee.amount,
           outputs,
@@ -50,15 +49,12 @@ export const workInProgressByLocation = computed(() => {
   }
   const now = timestampEachMinute.value;
   const orders = new Map<string, number>();
-  for (const order of orderValue.value) {
-    const duration = order.order.duration!.millis;
-    const elapsed = now - order.order.started!.timestamp;
+  for (const entry of orderValue.value) {
+    const duration = entry.order.duration?.millis ?? Infinity;
+    const elapsed = now - entry.order.started!.timestamp;
     const t = clamp(elapsed / duration, 0, 1);
-    const value = order.inputs * (1 - t) + order.outputs * t;
-    if (value === 0) {
-      continue;
-    }
-    orders.set(order.location, (orders.get(order.location) ?? 0) + value);
+    const value = entry.inputs * (1 - t) + entry.outputs * t;
+    orders.set(entry.location, (orders.get(entry.location) ?? 0) + value);
   }
   return orders;
 });
