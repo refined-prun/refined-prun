@@ -2,10 +2,10 @@ import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import MinimizeRow from './MinimizeRow.vue';
 import { streamHtmlCollection } from '@src/utils/stream-html-collection';
 import { computedTileState } from '@src/store/user-data-tiles';
-import { getTileState } from '@src/features/basic/inv-custom-sorting/tile-state';
+import { getTileState } from './tile-state';
 
 function onTileReady(tile: PrunTile) {
-  const isMinimized = computedTileState(getTileState(tile), 'minimizeHeader', true) as Ref<boolean>;
+  const isMinimized = computedTileState(getTileState(tile), 'minimizeHeader', true);
 
   subscribe(streamHtmlCollection(tile.anchor, tile.anchor.children), async child => {
     const header = await $(child, C.FormComponent.containerPassive);
