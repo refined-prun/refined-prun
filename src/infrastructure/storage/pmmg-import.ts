@@ -1,6 +1,7 @@
 import { uploadJson } from '@src/utils/download-json';
 import { userData } from '@src/store/user-data';
 import { createId } from '@src/store/create-id';
+import { isDefined } from 'ts-extras';
 
 interface PmmgSettings {
   currency: string;
@@ -15,6 +16,7 @@ interface PmmgSettings {
   };
   sidebar?: [string, string][];
   sorting?: UserData.SortingMode[];
+  disabled: string[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,6 +47,7 @@ export function parsePmmgUserData(pmmg: any): PmmgSettings | undefined {
     },
     sidebar: pmmg.sidebar,
     sorting: pmmg.sorting?.map(parseSortingMode),
+    disabled: (pmmg.disabled ?? []).flatMap(mapPmmgFeature).filter(isDefined),
   };
 }
 
@@ -98,6 +101,7 @@ export function importPmmgSettings() {
       if (pmmg.sorting) {
         userData.sorting = pmmg.sorting;
       }
+      userData.settings.disabled = pmmg.disabled;
     }
   });
 }
@@ -221,5 +225,69 @@ function mapPmmgActionType(pmmgType: string) {
       return 'CX_BUY';
     default:
       return 'MTRA';
+  }
+}
+
+function mapPmmgFeature(feature: string) {
+  switch (feature) {
+    case 'CXOBHighlighter':
+      return ['highlight-own-exchange-orders'];
+    case 'CXPOOrderBook':
+      return ['cxpo-order-book'];
+    case 'ChatDeleteButton':
+      // RPrUn equivalent is align-chat-delete-button which works better.
+      return undefined;
+    case 'CommandCorrecter':
+      return ['correct-commands'];
+    case 'CompactUI':
+      // Map only features that conform to 'CompactUI' definition.
+      return [
+        'bbl-collapsible-categories',
+        'bbl-hide-book-value',
+        'bs-hide-zero-workforce',
+        'bs-merge-area-stats',
+        'cxos-hide-exchange',
+      ];
+    case 'FleetETAs':
+      return ['flt-arrival-eta'];
+    case 'FlightETAs':
+      return ['sfc-flight-eta'];
+    case 'FormulaReplacer':
+      return ['input-math'];
+    case 'HeaderMinimizer':
+      return ['minimize-headers'];
+    case 'IconMarkers':
+      return ['item-markers'];
+    case 'ImageCreator':
+      return ['chat-images'];
+    case 'InventoryOrganizer':
+      return ['custom-item-sorting'];
+    case 'InventorySearch':
+      return ['inv-search'];
+    case 'Notifications':
+      return [
+        'nots-material-ticker',
+        'nots-notification-type-label',
+        'nots-ship-name',
+        'nots-clean-notifications',
+      ];
+    case 'OrderETAs':
+      return ['prod-order-eta'];
+    case 'PendingContracts':
+      return ['sidebar-contracts-details'];
+    case 'PostLM':
+      return ['shipping-per-unit-price'];
+    case 'ProdBurnLink':
+      return ['prod-burn-link'];
+    case 'QueueLoad':
+      return ['prodq-queue-load'];
+    case 'ScreenUnpack':
+      return ['screen-tab-bar'];
+    case 'Sidebar':
+      return ['custom-left-sidebar'];
+    case 'TopRightButtons':
+      return ['header-calculator-button', 'header-duplicate-button'];
+    default:
+      return undefined;
   }
 }
