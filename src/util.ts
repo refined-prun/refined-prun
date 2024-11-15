@@ -44,14 +44,6 @@ export function createTextSpan(text, className: string = 'prun-remove-js') {
   return newSpan;
 }
 
-// Get the data in local storage for a given storageName. Then call the callback function.
-// Also pass the params through to the callback function
-export function getLocalStorage(storageName: string, callbackFunction, params?) {
-  chrome.storage.local.get(storageName).then(result => {
-    callbackFunction(result, params);
-  });
-}
-
 // Remove all the children of a given element
 export function clearChildren(elem) {
   elem.textContent = '';
@@ -59,11 +51,6 @@ export function clearChildren(elem) {
     elem.removeChild(elem.children[0]);
   }
   return;
-}
-
-// Set the data in local storage. Pass it the result of a getLocalStorage call
-export function setSettings(result) {
-  chrome.storage.local.set(result);
 }
 
 // Creates an element that links to a buffer with command "command"

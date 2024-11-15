@@ -63,4 +63,25 @@ declare namespace UserData {
     origin?: string;
     dest?: string;
   }
+
+  export interface TaskList {
+    id: string;
+    name: string;
+    tasks: Task[];
+  }
+
+  export interface Task {
+    id: string;
+    type: TaskType;
+    completed?: boolean;
+    text?: string;
+    dueDate?: string;
+    recurring?: number;
+    planet?: string;
+    days?: number;
+    buildingAge?: number;
+    subtasks?: Task[];
+  }
+
+  export type TaskType = 'Text' | 'Resupply' | 'Repair';
 }

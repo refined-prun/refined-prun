@@ -142,11 +142,3 @@ export const Style = {
   ],
   ActionDismiss: ['ActionFeedback__dismiss___x5Ln7y1', 'type__type-small___pMQhMQO'],
 };
-
-// The text colors used in PrUN
-export const TextColors = {
-  Failure: '#d9534f',
-  Success: '#5cb85c',
-  Standard: '#bbbbbb',
-  Yellow: '#f7a600',
-};

@@ -2,6 +2,9 @@
 
 const migrations: Migration[] = [
   userData => {
+    userData.todo = [];
+  },
+  userData => {
     userData.systemMessages = [];
   },
   userData => {

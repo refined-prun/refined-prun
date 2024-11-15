@@ -26,28 +26,6 @@
   color: rgba(1,1,1,0) !important;
 }
 
-.check-item {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: solid 1px #555;
-}
-
-.delete-button {
-  background-color: #d9534f;
-  border: none;
-  color: #fff;
-  line-height: 17px;
-  font-weight: bold;
-  outline: none;
-  padding: 0 8px;
-  font-size: 11px;
-  cursor: pointer;
-}
-
-.delete-button:hover {
-  color: #222;
-}
-
 .pb-read-textarea {
   margin: 5px;
   resize: none;
@@ -113,27 +91,6 @@
   flex-wrap: wrap;
   justify-content: left;
   align-items: left;
-}
-
-.list {
-  display: block;
-  padding: 5px;
-}
-
-.inv-header {
-  display: inline;
-  padding: 2px 8px;
-  color: #3fa2de;
-}
-
-.inv-body {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-items: stretch;
-  margin-bottom: 23px;
-  padding: 5px 8px;
 }
 
 .link {

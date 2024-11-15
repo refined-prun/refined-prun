@@ -1,4 +1,5 @@
 ## New commands
+
 - `XIT CXTS`: Commodity Exchange Trades
 - `XIT FINBS`: Balance Statement
 - `XIT HQUC`: HQ Upgrade Calculator
@@ -14,6 +15,7 @@
   - Old `XIT FIN` landing page was removed in favor of context buttons
 
 ## New features
+
 - `CONTD` partner search results are shown above the search bar.
 - `SHPT` and `BLCK` icons display a destination label.
 - Material ticker auto-capitalizes inputs for commands: `CXM`, `CXOB`, `CXP`, `CXPC`, `CXPO`, `MAT`.
@@ -44,6 +46,7 @@
 - Added compatibility with non-English localizations.
 
 ## Changed
+
 - Prices are now calculated using the following method (falling back if data is unavailable):
   UNIVERSE_VWAP7D => UNIVERSE_VWAP30D => UNIVERSE_AVG => UNIVERSE_ASK => UNIVERSE_BID
 - Equity now includes ships, HQ upgrades and APEX Representation Center. A new "Liquidation Value"
@@ -65,18 +68,19 @@
   over consumables.
 - Equity history chart now shows only the latest point per day.
 - `XIT CONTS` is sorted in the opposite direction, with the newest contracts being at the top of the list.
-- `XIT NOTE` notes are not deleted when empty.
+- `XIT CHECK` was changed to `XIT TODO`.
 - `CONT` button on the left sidebar pulsates when there are contracts yet to be accepted.
 - Font size of material amount labels is 1px bigger.
 - Input fields with math support don't require a '=' sign at the beginning.
 - Input fields with math support show a math icon.
-- Math formula are evaluated on Tab press in addition to Enter. 
+- Math formula are evaluated on Tab press in addition to Enter.
 - All XIT commands accept up to 3 space-separated arguments.
 - Real-time updates for XIT buffers implemented, removing the need for refresh button.
 - Switched chart library to Chart.js, reducing plugin size and adding Firefox support.
 - `XIT CALC` changed to https://desmos.com/scientific
 
 ## Fixed
+
 - Various fixes to XIT FIN balance calculations:
   - Blocked/Shipped materials are now included in assets.
   - Materials in "Pick up shipment" contract condition are now included in assets.
@@ -95,9 +99,11 @@
 ---
 
 Known bugs:
+
 - Buffer settings are not imported from PMMG settings (like BURN or INV filters).
 
 Removed features:
+
 - `XIT INV`.
 - `XIT LIST`.
 - Custom pricing scheme from Google Sheets for `XIT FIN`.

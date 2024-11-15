@@ -1,0 +1,140 @@
+<script setup lang="ts">
+import grip from './grip.module.css';
+import Checkmark from '@src/features/XIT/TODO/Checkmark.vue';
+import dayjs from 'dayjs';
+import { showTileOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
+import { ddmmyyyy } from '@src/utils/format';
+import fa from '@src/utils/font-awesome.module.css';
+import TaskEditor from '@src/features/XIT/TODO/EditTask.vue';
+import removeArrayElement from '@src/utils/remove-array-element';
+import { toDueDate } from '@src/features/XIT/TODO/utils';
+import TaskText from '@src/features/XIT/TODO/TaskText.vue';
+
+const props = defineProps({
+  list: {
+    type: Object as PropType<UserData.TaskList>,
+    required: true,
+  },
+  task: {
+    type: Object as PropType<UserData.Task>,
+    required: true,
+  },
+  subtask: Boolean,
+  dragging: Boolean,
+});
+
+const $style = useCssModule();
+
+const taskClass = computed(() => [
+  $style.task,
+  {
+    [$style.taskCompleted]: props.task.completed,
+    [$style.subtask]: props.subtask,
+  },
+]);
+
+function onContentClick(ev: Event) {
+  if (props.subtask) {
+    return;
+  }
+  showTileOverlay(ev, TaskEditor, {
+    task: props.task,
+    onDelete: () => removeArrayElement(props.list.tasks, props.task),
+  });
+}
+
+function onCheckmarkClick() {
+  const task = props.task;
+  if (task.recurring && task.dueDate) {
+    task.dueDate = toDueDate(
+      new Date(task.dueDate).getTime() + dayjs.duration(task.recurring, 'days').asMilliseconds(),
+    );
+    for (const subtask of task.subtasks ?? []) {
+      subtask.completed = false;
+    }
+  } else {
+    task.completed = !task.completed;
+    for (const subtask of task.subtasks ?? []) {
+      subtask.completed = task.completed;
+    }
+  }
+}
+</script>
+
+<template>
+  <div>
+    <div :class="taskClass">
+      <div v-if="!subtask && !dragging" :class="[fa.solid, $style.grip, grip.grip]">
+        {{ '\uf58e' }}
+      </div>
+      <Checkmark :task="task" :class="$style.checkmark" @click.stop="onCheckmarkClick" />
+      <div
+        :class="[$style.content, { [$style.contentCompleted]: task.completed }]"
+        @click="onContentClick">
+        <TaskText :text="task.text" />
+        <div v-if="task.dueDate" :class="$style.dueDate">
+          {{ ddmmyyyy(new Date(task.dueDate)) }}
+          <span v-if="task.recurring">(every {{ task.recurring }}d)</span>
+        </div>
+      </div>
+    </div>
+    <TaskItem v-for="x in task.subtasks ?? []" :key="x.id" :task="x" subtask />
+  </div>
+</template>
+
+<style module>
+.task {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  border-bottom: solid 1px #333;
+  user-select: none;
+  cursor: pointer;
+  padding-left: 12px;
+}
+
+.subtask {
+  padding-left: 27px;
+  cursor: initial;
+  user-select: initial;
+}
+
+.taskCompleted {
+  color: #787878;
+}
+
+.grip {
+  position: absolute;
+  left: 0;
+  top: 5px;
+  cursor: move;
+  transition: opacity 0.2s ease-in-out;
+  opacity: 0;
+}
+
+.task:hover .grip {
+  opacity: 1;
+}
+
+.checkmark {
+  padding-right: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.content {
+  flex: 1;
+  min-height: 24px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.contentCompleted {
+  text-decoration: line-through;
+}
+
+.dueDate {
+  color: #787878;
+}
+</style>
