@@ -31,4 +31,4 @@ function init() {
   tiles.observe(['INV', 'SHPI'], onTileReady);
 }
 
-features.add(import.meta.url, init, 'INV/SHPI: Adds a shipment destination detail to SHPT items.');
+features.add(import.meta.url, init, 'Adds a shipment destination detail to SHPT items.');

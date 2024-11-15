@@ -1,5 +1,5 @@
 import css from '@src/utils/css-utils.module.css';
-import classes from './inv-custom-sorting.module.css';
+import classes from './custom-item-sorting.module.css';
 import { BurnValues, getPlanetBurn } from '@src/core/burn';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import CategoryHeader from './CategoryHeader.vue';
@@ -191,4 +191,4 @@ function init() {
   });
 }
 
-features.add(import.meta.url, init, 'INV: Adds custom sorting modes.');
+features.add(import.meta.url, init, 'Adds custom sorting modes to inventories.');
