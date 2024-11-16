@@ -28,10 +28,8 @@ function confirmDelete(ev: Event, list: UserData.TaskList) {
   });
 }
 
-function countIncompleteTasks(list: UserData.TaskList) {
-  const countForTask = (task: UserData.Task) =>
-    (sumBy(task.subtasks, countForTask) ?? 0) + (task.completed ? 0 : 1);
-  return sumBy(list.tasks, countForTask);
+function countCompletedTasks(list: UserData.TaskList) {
+  return sumBy(list.tasks, x => (x.completed ? 1 : 0));
 }
 
 function getDueDate(list: UserData.TaskList) {
@@ -47,6 +45,9 @@ function getDueDate(list: UserData.TaskList) {
   for (const task of list.tasks) {
     add(task);
   }
+  if (dates.length === 0) {
+    return undefined;
+  }
   dates.sort();
   return ddmmyyyy(new Date(dates[0]));
 }
@@ -60,7 +61,7 @@ function getDueDate(list: UserData.TaskList) {
     <thead>
       <tr>
         <th>Name</th>
-        <th>Incomplete</th>
+        <th>Tasks</th>
         <th>Due Date</th>
         <th />
       </tr>
@@ -71,7 +72,7 @@ function getDueDate(list: UserData.TaskList) {
           <PrunLink :command="`XIT TODO ${list.id.substring(0, 8)}`">{{ list.name }}</PrunLink>
         </td>
         <td>
-          <span>{{ countIncompleteTasks(list.tasks) }}</span>
+          <span>{{ countCompletedTasks(list) }}/{{ list.tasks.length }}</span>
         </td>
         <td>
           <span>{{ getDueDate(list) }}</span>
