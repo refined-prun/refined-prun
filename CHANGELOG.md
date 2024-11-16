@@ -63,6 +63,7 @@
   - 4 new financial ratios are added. Look them up if you don't know them!
 - `XIT SHEETS` now display in minimalist mode.
 - `XIT BURN` is more dense now.
+- `XIT BURN` is sorted by days remaining.
 - The `Additional Days` `XIT BURN` setting was changed to `Resupply`, representing total days for resupply.
 - `INV` Burn material sorting was changed to favor outputs over inputs/consumables and inputs
   over consumables.

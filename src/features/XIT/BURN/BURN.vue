@@ -11,6 +11,7 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { isDefined, isEmpty } from 'ts-extras';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
+import { countDays } from '@src/features/XIT/BURN/utils';
 
 const parameters = useXitParameters();
 const isBurnAll = isEmpty(parameters) || parameters[0].toLowerCase() == 'all';
@@ -29,7 +30,14 @@ const planetBurn = computed(() => {
     return filtered;
   }
 
-  filtered.sort((a, b) => comparePlanets(a.naturalId, b.naturalId));
+  filtered.sort((a, b) => {
+    const daysA = countDays(a.burn);
+    const daysB = countDays(b.burn);
+    if (daysA !== daysB) {
+      return daysA - daysB;
+    }
+    return comparePlanets(a.naturalId, b.naturalId);
+  });
 
   const overallBurn = {};
   for (const burn of filtered) {

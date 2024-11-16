@@ -3,6 +3,7 @@ import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import PrunButton from '@src/components/PrunButton.vue';
 import { PlanetBurn } from '@src/core/burn';
+import { countDays } from '@src/features/XIT/BURN/utils';
 
 const props = defineProps({
   burn: {
@@ -17,16 +18,7 @@ const props = defineProps({
   },
 });
 
-const days = computed(() => {
-  let days = 1000;
-  for (const key of Object.keys(props.burn.burn)) {
-    const mat = props.burn.burn[key];
-    if (!isNaN(mat.DailyAmount) && mat.DailyAmount < 0 && mat.DaysLeft < days) {
-      days = mat.DaysLeft;
-    }
-  }
-  return days;
-});
+const days = computed(() => countDays(props.burn.burn));
 </script>
 
 <template>
