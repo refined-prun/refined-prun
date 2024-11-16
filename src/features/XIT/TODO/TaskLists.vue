@@ -10,7 +10,7 @@ import { createId } from '@src/store/create-id';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { sumBy } from '@src/utils/sum-by';
 import PrunLink from '@src/components/PrunLink.vue';
-import { ddmmyyyy } from '../../../utils/format';
+import { ddmmyyyy } from '@src/utils/format';
 
 function createNewList(ev: Event) {
   showTileOverlay(ev, CreateTaskList, {
