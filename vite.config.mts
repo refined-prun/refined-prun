@@ -76,7 +76,6 @@ export default defineConfig({
         'refined-prun': resolve(srcDir, 'refined-prun.ts'),
         'refined-prun-prepare': resolve(srcDir, 'refined-prun-prepare.ts'),
         'prun-connector': resolve(srcDir, 'prun-connector.ts'),
-        popup: resolve(srcDir, 'popup/popup.ts'),
       },
       formats: ['es'],
     },
