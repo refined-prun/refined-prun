@@ -3,6 +3,7 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 import { canAcceptContract } from '@src/features/XIT/CONTS/utils';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
+import { vDraggable } from 'vue-draggable-plus';
 
 const props = defineProps({
   comPulse: Boolean,
@@ -32,7 +33,7 @@ function indicatorClass(command: string) {
 </script>
 
 <template>
-  <div>
+  <div v-draggable="[userData.settings.sidebar, { animation: 150 }]">
     <div
       v-for="(button, i) in userData.settings.sidebar"
       :key="i"
