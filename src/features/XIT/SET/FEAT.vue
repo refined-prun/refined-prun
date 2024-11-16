@@ -15,11 +15,17 @@ import removeArrayElement from '@src/utils/remove-array-element';
 import { saveUserData } from '@src/infrastructure/storage/user-data-serializer';
 import Commands from '@src/components/forms/Commands.vue';
 
+if (userData.settings.mode === undefined) {
+  userData.settings.mode = 'BASIC';
+}
+
 const isFullMode = userData.settings.mode === 'FULL';
 
 const disabledFeatures = computed(() => new Set(userData.settings.disabled));
 
 const available = isFullMode ? features.registry : features.registry.filter(x => !x.advanced);
+
+const advanced = features.registry.filter(x => x.advanced);
 
 const sorted = available.sort((a, b) => {
   const aDisabled = disabledFeatures.value.has(a.id);
@@ -91,7 +97,8 @@ async function onChangeModeClick() {
   <div>
     <SectionHeader>
       Features: {{ sorted.length }}
-      <span v-if="disabledFeatures.size > 0">({{ disabledFeatures.size }} off)</span>
+      <span v-if="disabledFeatures.size > 0">({{ disabledFeatures.size }} off) </span>
+      <span v-if="!isFullMode">(+{{ advanced.length }} more available in full mode)</span>
     </SectionHeader>
     <form :class="$style.form">
       <Commands label="Change feature set">
@@ -111,11 +118,6 @@ async function onChangeModeClick() {
       </Active>
     </form>
     <table>
-      <thead>
-        <tr>
-          <th>Feature</th>
-        </tr>
-      </thead>
       <tbody>
         <tr v-for="feature in filtered" :key="feature.id">
           <td :class="$style.row" @click="toggleFeature(feature.id)">
@@ -128,6 +130,22 @@ async function onChangeModeClick() {
         </tr>
       </tbody>
     </table>
+    <template v-if="!isFullMode">
+      <SectionHeader>Full Mode Features</SectionHeader>
+      <table>
+        <tbody>
+          <tr v-for="feature in advanced" :key="feature.id">
+            <td :class="[$style.row, $style.rowFull]">
+              <div :class="[C.RadioItem.indicator, C.RadioItem.disabled, $style.indicator]" />
+              <div>
+                <div :class="$style.id">{{ feature.id }}</div>
+                <div :class="$style.description">{{ feature.description }}</div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
   </div>
 </template>
 
@@ -147,6 +165,10 @@ async function onChangeModeClick() {
   display: flex;
   flex-direction: row;
   cursor: pointer;
+}
+
+.rowFull {
+  cursor: not-allowed;
 }
 
 .indicator {

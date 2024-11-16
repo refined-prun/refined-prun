@@ -5,11 +5,15 @@ import { userData } from '@src/store/user-data';
 import { reloadPage } from '@src/infrastructure/prun-ui/page-functions';
 import { saveUserData } from '@src/infrastructure/storage/user-data-serializer';
 
+const needsToChoose = ref(userData.settings.mode === undefined);
+
 function onBasicClick() {
+  needsToChoose.value = false;
   userData.settings.mode = 'BASIC';
 }
 
 async function onFullClick() {
+  needsToChoose.value = false;
   userData.settings.mode = 'FULL';
   await saveUserData();
   reloadPage();
@@ -31,10 +35,11 @@ async function onFullClick() {
       For additional help, check
       <PrunLink inline command="XIT HELP" />
     </p>
-    <template v-if="!userData.settings.mode">
+    <template v-if="needsToChoose">
       <p>
         Please select a feature set (you can change it later using
-        <PrunLink inline command="XIT SET FEAT" />)
+        <PrunLink inline command="XIT SET FEAT" />
+        )
       </p>
       <div :class="$style.features">
         <PrunButton primary :class="$style.feature" @click="onBasicClick">
