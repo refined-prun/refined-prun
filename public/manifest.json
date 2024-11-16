@@ -5,8 +5,7 @@
   "version": "1",
   "description": "__MSG_extensionDescription__",
   "permissions": [
-    "storage",
-    "scripting"
+    "storage"
   ],
   "host_permissions": [
     "https://apex.prosperousuniverse.com/"
