@@ -11,19 +11,15 @@
         const appScript = appScripts[i];
         if (appScript.src.includes('apex.prosperousuniverse.com')) {
           foundBundle = true;
-
-          if (__FIREFOX__) {
-            window.addEventListener(
-              'beforescriptexecute',
-              e => {
-                if (e.target.src === appScript.src) {
-                  e.preventDefault();
-                }
-              },
-              true,
-            );
-          }
-
+          window.addEventListener(
+            'beforescriptexecute',
+            e => {
+              if (e.target.src === appScript.src) {
+                e.preventDefault();
+              }
+            },
+            true,
+          );
           appScript.textContent = appScript.src;
           appScript.src = '';
         }
