@@ -14,6 +14,7 @@ import { initializeXitCommands } from '@src/features/XIT/xit-commands';
 import { alert, checkPmmgPresent } from '@src/infrastructure/prun-ui/page-functions';
 
 async function mainRun() {
+  console.log(navigator.userAgent);
   void fetchPrices();
   initializePrunApi();
   await injectConnector();

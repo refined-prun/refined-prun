@@ -111,8 +111,6 @@ export default defineConfig({
     },
   },
   define: {
-    __FIREFOX__: process.env.__FIREFOX__ === 'true',
-    __CHROME__: process.env.__FIREFOX__ !== 'true',
     __DEV__: isDev,
     'process.env.NODE_ENV': isDev ? `"development"` : `"production"`,
   },

@@ -11,10 +11,8 @@
   "scripts": {
     "analyze": "vite-bundle-visualizer --sourcemap",
     "build": "pnpm run clean && tsc --noEmit && vite build",
-    "build:firefox": "tsc --noEmit && cross-env __FIREFOX__=true vite build",
     "clean": "rimraf dist",
     "dev": "cross-env __DEV__=true vite build -w --mode development",
-    "dev:firefox": "cross-env __DEV__=true __FIREFOX__=true vite build -w --mode development",
     "fix": "pnpx eslint ./ --fix",
     "lint": "pnpx eslint",
     "prepare": "husky",
