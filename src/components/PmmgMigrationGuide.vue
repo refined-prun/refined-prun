@@ -36,7 +36,10 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers.js';
                   </li>
                   <li>Open the Extensions page in your browser.</li>
                   <li>Disable the PMMG Extended extension.</li>
-                  <li>Reload the game and import PMMG files using XIT SET PMMG.</li>
+                  <li>
+                    Reload the game, and, after selecting a preferred feature set, import PMMG files
+                    using XIT SET PMMG.
+                  </li>
                 </ol>
               </div>
             </div>
