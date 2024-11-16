@@ -18,23 +18,6 @@ export async function checkPmmgPresent() {
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function alert(message: any) {
-  return await new Promise<void>(resolve => {
-    const listener = (event: MessageEvent) => {
-      if (event.source !== window) {
-        return;
-      }
-      if (event.data.type === 'rp-alert-result') {
-        resolve();
-        window.removeEventListener('message', listener);
-      }
-    };
-    window.addEventListener('message', listener);
-    window.postMessage({ type: 'rp-alert', message }, '*');
-  });
-}
-
 export function reloadPage() {
   window.postMessage({ type: 'rp-reload-page' }, '*');
 }

@@ -12,10 +12,6 @@ function startPageFunctionBridge() {
         '*',
       );
     }
-    if (event.data.type === 'rp-alert') {
-      alert(event.data.message);
-      window.postMessage({ type: 'rp-alert-result' }, '*');
-    }
   });
 }
 

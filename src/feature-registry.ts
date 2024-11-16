@@ -60,7 +60,7 @@ function add(path: string, init: () => void, description: string) {
   });
 }
 
-async function init() {
+function init() {
   const disabledFeatures = new Set(userData.settings.disabled);
   for (const feature of registry) {
     if (userData.settings.mode !== 'FULL' && feature.advanced) {

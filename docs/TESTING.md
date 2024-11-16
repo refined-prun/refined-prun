@@ -20,23 +20,18 @@ properly test new features/changes and have fewer surprises overall**
 
 Note: Refined PrUn is a separate extension from PMMG Extended.
 
-1. Export all user data from PMMG
-   - `XIT SET`: settings, finances, notes, lists, actions
-2. Close the game tab
-3. Create a new folder in your file system, where the new extension will live.
-  **Important: do not move this folder around your file system, as the browser will
-  run the extension directly from it**
-4. Unpack the extension archive into this folder
-5. Go to Extensions page in your browser
-6. Disable PMMG (do not remove it) <- this is **very** important
-7. Enable developer mode (top right button)
-8. Load unpacked extension (top left button) from the unpacked archive.
-  In the file picker, pick the whole folder with the unpacked extension.
-  After selecting, you will see a new "Refined PrUn" extension added to your browser.
-  Keep "PMMG Extended" disabled.
-9. Load the game
-10. Import PMMG files via `XIT SET PMMG`
-11. Enjoy! If everything works fine, let us know in the chat
+1. Create a new folder in your file system, where the new extension will live.
+   **Important: do not move this folder around your file system, as the browser will
+   run the extension directly from it**
+2. Unpack the extension archive into this folder
+3. Go to Extensions page in your browser
+4. Enable developer mode (top right button)
+5. Load unpacked extension (top left button) from the unpacked archive.
+   In the file picker, pick the whole folder with the unpacked extension.
+   After selecting, you will see a new "Refined PrUn" extension added to your browser.
+6. Reload the game
+7. Follow the migration guide
+8. Enjoy! If everything works fine, let us know in the chat
 
 **Important: do not move the extracted folder around your file system,
 as browser always loads it from this folder**

@@ -11,7 +11,9 @@ import { watchWhile } from '@src/utils/watch';
 import { initializeUI } from '@src/infrastructure/prun-ui';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { initializeXitCommands } from '@src/features/XIT/xit-commands';
-import { alert, checkPmmgPresent } from '@src/infrastructure/prun-ui/page-functions';
+import { checkPmmgPresent } from '@src/infrastructure/prun-ui/page-functions';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
+import PmmgMigrationGuide from '@src/components/PmmgMigrationGuide.vue';
 
 async function mainRun() {
   console.log(navigator.userAgent);
@@ -26,15 +28,11 @@ async function mainRun() {
   await watchWhile(() => companyStore.value === undefined);
 
   if (await checkPmmgPresent()) {
-    await alert('[Refined PrUn]: PMMG is currently running. Please follow the migration guide.');
-    window.open(
-      'https://github.com/refined-prun/refined-prun/blob/main/docs/PMMG-MIGRATION.md',
-      '_blank',
-    );
+    createFragmentApp(PmmgMigrationGuide).before(_$(document, C.App.container)!);
     return;
   }
 
-  await features.init();
+  features.init();
   initializeXitCommands();
 
   void trackBalanceHistory();
