@@ -1,9 +1,13 @@
 {
+  "name": "Refined PrUn",
+  "version": "0.0.0",
+  "description": "Browser extension that simplifies the Prosperous Universe interface and adds useful features",
   "manifest_version": 3,
-  "default_locale": "en",
-  "name": "__MSG_extensionName__",
-  "version": "1",
-  "description": "__MSG_extensionDescription__",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{c35c3edc-0acc-4531-b01c-35b6bede69fb}"
+    }
+  },
   "permissions": [
     "storage"
   ],
