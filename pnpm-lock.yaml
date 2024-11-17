@@ -64,8 +64,8 @@ importers:
         specifier: ^9.8.0
         version: 9.14.0
       '@laynezh/vite-plugin-lib-assets':
-        specifier: ^0.5.25
-        version: 0.5.25(vite@5.4.11(@types/node@20.17.6))
+        specifier: ^0.5.26
+        version: 0.5.26(vite@5.4.11(@types/node@20.17.6))
       '@types/chrome':
         specifier: ^0.0.268
         version: 0.0.268
@@ -507,8 +507,8 @@ packages:
   '@kurkle/color@0.3.2':
     resolution: {integrity: sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==}
 
-  '@laynezh/vite-plugin-lib-assets@0.5.25':
-    resolution: {integrity: sha512-fzQiZPxLTVNoUgT4BC7LgHr9jWJtNf0yb8UDc2srDwMZ6I2VAEN6AK5K0hk4pyn0eQo8jFvpY3T1DfCAHSLqHw==}
+  '@laynezh/vite-plugin-lib-assets@0.5.26':
+    resolution: {integrity: sha512-WObL2hZZyAYHQXOzGs7TyWKJUrIOF9IABEaiwtwIY08/repd14dLfig11LV4EKSIEkfQpITSQoWsjuyhrkldpw==}
     peerDependencies:
       vite: ^3.0.0 || ^4.0.0 || ^5.0.0
 
@@ -2370,7 +2370,7 @@ snapshots:
 
   '@kurkle/color@0.3.2': {}
 
-  '@laynezh/vite-plugin-lib-assets@0.5.25(vite@5.4.11(@types/node@20.17.6))':
+  '@laynezh/vite-plugin-lib-assets@0.5.26(vite@5.4.11(@types/node@20.17.6))':
     dependencies:
       escape-string-regexp: 4.0.0
       loader-utils: 3.3.1

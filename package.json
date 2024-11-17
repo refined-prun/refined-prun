@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
-    "@laynezh/vite-plugin-lib-assets": "^0.5.25",
+    "@laynezh/vite-plugin-lib-assets": "^0.5.26",
     "@types/chrome": "^0.0.268",
     "@types/eslint__js": "^8.42.3",
     "@types/node": "^20.14.10",

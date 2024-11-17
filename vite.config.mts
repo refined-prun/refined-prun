@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
-// import libAssetsPlugin from '@laynezh/vite-plugin-lib-assets';
+import libAssetsPlugin from '@laynezh/vite-plugin-lib-assets';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import vueDevTools from 'vite-plugin-vue-devtools';
@@ -59,10 +59,10 @@ export default defineConfig({
         vueTemplate: true,
       },
     }),
-    // libAssetsPlugin({
-    //   outputPath: 'assets',
-    //   name: '[name].[contenthash:8].[ext]',
-    // }),
+    libAssetsPlugin({
+      outputPath: 'assets',
+      name: '[name].[contenthash:8].[ext]',
+    }),
   ],
   publicDir: resolve(__dirname, 'public'),
   build: {
