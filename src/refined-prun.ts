@@ -1,3 +1,5 @@
+import './refined-prun.css';
+
 import '@src/utils/dayjs';
 import '@src/utils/chartjs-dayjs';
 import '@src/request-hooks';
