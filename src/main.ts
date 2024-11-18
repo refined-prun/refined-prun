@@ -16,7 +16,6 @@ import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import PmmgMigrationGuide from '@src/components/PmmgMigrationGuide.vue';
 
 async function mainRun() {
-  console.log(navigator.userAgent);
   void fetchPrices();
   initializePrunApi();
   await injectConnector();
@@ -25,6 +24,8 @@ async function mainRun() {
   await initializeUI();
   initializeTileListener();
   await backgroundTasks;
+  const { version } = chrome.runtime.getManifest();
+  console.log(`Refined PrUn ${version}`);
   await watchWhile(() => companyStore.value === undefined);
 
   if (await checkPmmgPresent()) {

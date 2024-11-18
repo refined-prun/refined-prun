@@ -35,8 +35,8 @@ function logError(id: string, error: unknown): void {
   );
 
   // Don't change this to `throw Error` because Firefox doesn't show extensions' errors in the console
-  console.group(`❌ ${id}`); // Safari supports only one parameter
-  console.log(`📕 Refined PrUn v${version}`, error); // One parameter improves Safari formatting
+  console.group(`❌ Refined PrUn: ${id}`); // Safari supports only one parameter
+  console.log(`📕 ${version}`, error); // One parameter improves Safari formatting
   console.log('🔍 Search issue', searchIssueUrl.href);
   console.log('🚨 Report issue', newIssueUrl.href);
   console.groupEnd();
