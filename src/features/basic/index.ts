@@ -20,6 +20,7 @@ import './flt-arrival-eta';
 import './flt-ship-condition/flt-ship-condition';
 import './header-calculator-button';
 import './header-duplicate-button';
+import './hide-bfrs-button';
 import './hide-inactive-close-button';
 import './highlight-own-exchange-orders';
 import './input-math';
