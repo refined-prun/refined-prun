@@ -1,0 +1,14 @@
+name: 🆕 Suggest an improvement or new feature
+description: ———
+labels: enhancement, under discussion
+body:
+  - type: markdown
+    attributes:
+      value: |
+        🏞️ You can provide screenshots/mockups to better visualize your idea. Files can be dropped in this field
+  - id: description
+    type: textarea
+    attributes:
+      label: Description
+    validations:
+      required: true
