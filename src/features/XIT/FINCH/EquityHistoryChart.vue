@@ -6,6 +6,7 @@ import { calcEquity } from '@src/core/balance/balance-sheet-summary';
 import { balanceHistory } from '@src/store/user-data-balance';
 import { useTileState } from '@src/store/user-data-tiles';
 import dayjs from 'dayjs';
+import RangeInput from '@src/components/forms/RangeInput.vue';
 
 defineProps({
   pan: Boolean,
@@ -56,14 +57,7 @@ const lineChartData = computed(() => {
 
 <template>
   <div :class="$style.wide">Smoothing: {{ percent0(averageFactor) }}</div>
-  <input
-    v-model="averageFactorText"
-    :class="$style.wide"
-    type="range"
-    name="volume"
-    min="0"
-    max="1"
-    step="0.01" />
+  <RangeInput v-model="averageFactorText" :class="$style.wide" min="0" max="1" step="0.01" />
   <LineChart
     :maintain-aspect-ratio="maintainAspectRatio"
     :average-factor="averageFactor"
