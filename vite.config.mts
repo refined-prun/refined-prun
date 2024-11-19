@@ -67,6 +67,7 @@ export default defineConfig({
   publicDir: resolve(__dirname, 'public'),
   build: {
     outDir,
+    emptyOutDir: false,
     sourcemap: false,
     minify: false,
     reportCompressedSize: false,
