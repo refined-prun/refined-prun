@@ -39,6 +39,7 @@ import './prod-burn-link';
 import './prod-order-eta';
 import './prodq-queue-load';
 import './prun-bugs';
+import './rprun-version-label';
 import './screen-tab-bar/screen-tab-bar';
 import './sfc-flight-eta';
 import './shipment-item-detail';

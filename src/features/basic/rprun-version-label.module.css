@@ -1,0 +1,12 @@
+.grow {
+  flex-grow: 1;
+}
+
+.container {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.label {
+  padding: 2px 6px 3px;
+}
