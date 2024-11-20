@@ -26,7 +26,7 @@ jobs:
         uses: fregante/daily-version-action@v2
       - name: Update manifest.json with version ${{ env.DAILY_VERSION }}
         if: env.DAILY_VERSION_CREATED
-        run: pnpx dot-json@1 "$DIRECTORY/manifest.json" version "$DAILY_VERSION"
+        run: npx dot-json@1 "$DIRECTORY/manifest.json" version "$DAILY_VERSION"
       - name: Ready for "submit" jobs
         if: env.DAILY_VERSION_CREATED
         uses: actions/upload-artifact@v4
@@ -52,7 +52,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
-      - run: pnpx chrome-webstore-upload-cli@3
+      - run: npx chrome-webstore-upload-cli@3
         working-directory: artifact
         env:
           EXTENSION_ID: ${{ secrets.EXTENSION_ID }}
@@ -73,7 +73,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
       - name: Upload build and source code
-        run: pnpx web-ext@8 sign --channel listed --upload-source-code ../source.zip
+        run: npx web-ext@8 sign --channel listed --upload-source-code ../source.zip
         working-directory: artifact
         env:
           WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
