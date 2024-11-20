@@ -4,7 +4,7 @@ import PrunLink from '@src/components/PrunLink.vue';
 const props = defineProps({
   text: {
     type: String,
-    required: true,
+    default: undefined,
   },
 });
 
@@ -16,6 +16,9 @@ interface Part {
 const parts = computed(() => {
   const parts: Part[] = [];
   let text = props.text;
+  if (!text) {
+    return parts;
+  }
   const matches = [...text.matchAll(/\[\[([a-zA-Z]):([^:\]]+)]]/g)];
   let cut = 0;
   for (const match of matches) {

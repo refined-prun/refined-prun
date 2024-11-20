@@ -78,7 +78,7 @@ function onCheckmarkClick() {
         </div>
       </div>
     </div>
-    <TaskItem v-for="x in task.subtasks ?? []" :key="x.id" :task="x" subtask />
+    <TaskItem v-for="x in task.subtasks ?? []" :key="x.id" :list="list" :task="x" subtask />
   </div>
 </template>
 
