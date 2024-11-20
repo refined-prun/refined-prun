@@ -35,6 +35,8 @@ async function onFooterReady(footer: HTMLElement) {
   function onClick() {
     if (updateReady.value) {
       reloadPage();
+    } else {
+      window.open('https://github.com/refined-prun/refined-prun/blob/main/CHANGELOG.md', '_blank');
     }
   }
 
