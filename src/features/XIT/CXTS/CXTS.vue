@@ -5,6 +5,7 @@ import TradeRow from '@src/features/XIT/CXTS/TradeRow.vue';
 import dayjs from 'dayjs';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { isEmpty } from 'ts-extras';
+import { clamp } from '@src/utils/clamp';
 
 const orders = computed(() => cxosStore.all.value);
 
@@ -19,6 +20,8 @@ interface DayTrades {
   trades: OrderTrade[];
   totals: { [currency: string]: number };
 }
+
+const msInDay = dayjs.duration(1, 'day').asMilliseconds();
 
 const days = computed(() => {
   const trades: OrderTrade[] = [];
@@ -38,7 +41,7 @@ const days = computed(() => {
   }
 
   let day: DayTrades = {
-    date: trades[0].date,
+    date: getDateComponent(trades[0].date),
     trades: [],
     totals: {},
   };
@@ -50,9 +53,9 @@ const days = computed(() => {
       continue;
     }
 
-    if (!dayjs(day.date).isSame(trade.date, 'day')) {
+    if (trade.date < day.date) {
       day = {
-        date: trade.date,
+        date: day.date - msInDay,
         trades: [],
         totals: {},
       };
@@ -67,6 +70,25 @@ const days = computed(() => {
   }
   return days;
 });
+
+function getDateComponent(dateTime: number) {
+  return new Date(new Date(dateTime).toDateString()).getTime();
+}
+
+const daysToRender = ref(1);
+let id = 0;
+
+function stepRender() {
+  id = requestAnimationFrame(stepRender);
+  if (!orders.value) {
+    daysToRender.value = 1;
+  } else {
+    daysToRender.value = clamp(daysToRender.value + 1, 0, days.value.length);
+  }
+}
+
+onBeforeUnmount(() => cancelAnimationFrame(id));
+stepRender();
 </script>
 
 <template>
@@ -86,16 +108,13 @@ const days = computed(() => {
       </thead>
       <tbody>
         <tr v-if="isEmpty(days)">
-          <td colSpan="7">
-            <template v-if="isEmpty(orders)">No (partially) filled orders</template>
-            <template v-else>No recent trades</template>
-          </td>
+          <td colSpan="7">No recent trades</td>
         </tr>
         <template v-else>
-          <template v-for="group in days" :key="group.date">
-            <DateRow :date="group.date" :totals="group.totals" />
+          <template v-for="group in daysToRender" :key="days[group - 1].date">
+            <DateRow :date="days[group - 1].date" :totals="days[group - 1].totals" />
             <TradeRow
-              v-for="trade in group.trades"
+              v-for="trade in days[group - 1].trades"
               :key="trade.trade.id"
               :date="trade.date"
               :order="trade.order"
