@@ -95,11 +95,6 @@ async function onChangeModeClick() {
 
 <template>
   <div>
-    <SectionHeader>
-      Features: {{ sorted.length }}
-      <span v-if="disabledFeatures.size > 0">({{ disabledFeatures.size }} off) </span>
-      <span v-if="!isFullMode">(+{{ advanced.length }} more available in full mode)</span>
-    </SectionHeader>
     <form :class="$style.form">
       <Commands label="Change feature set">
         <PrunButton primary @click="onChangeModeClick">
@@ -117,6 +112,11 @@ async function onChangeModeClick() {
         </PrunButton>
       </Active>
     </form>
+    <SectionHeader>
+      Features: {{ sorted.length }}
+      <span v-if="disabledFeatures.size > 0">({{ disabledFeatures.size }} off) </span>
+      <span v-if="!isFullMode">(+{{ advanced.length }} more available in full mode)</span>
+    </SectionHeader>
     <table>
       <tbody>
         <tr v-for="feature in filtered" :key="feature.id">
@@ -155,6 +155,7 @@ async function onChangeModeClick() {
   top: 0;
   background-color: #222222;
   z-index: 1;
+  margin-bottom: 18px;
 }
 
 .warningRoot {
