@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import grip from './grip.module.css';
+import fa from '@src/utils/font-awesome.module.css';
 import { showTileOverlay, showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import PrunButton from '@src/components/PrunButton.vue';
 import ActionBar from '@src/components/ActionBar.vue';
@@ -51,6 +53,15 @@ function getDueDate(list: UserData.TaskList) {
   dates.sort();
   return ddmmyyyy(new Date(dates[0]));
 }
+
+const dragging = ref(false);
+
+const draggableOptions = {
+  animation: 150,
+  handle: `.${grip.grip}`,
+  onStart: () => (dragging.value = true),
+  onEnd: () => (dragging.value = false),
+};
 </script>
 
 <template>
@@ -66,10 +77,17 @@ function getDueDate(list: UserData.TaskList) {
         <th />
       </tr>
     </thead>
-    <tbody v-draggable="[userData.todo, { animation: 150 }]">
+    <tbody
+      v-draggable="[userData.todo, draggableOptions]"
+      :class="dragging ? $style.dragging : null">
       <tr v-for="list in userData.todo" :key="list.id">
         <td>
-          <PrunLink :command="`XIT TODO ${list.id.substring(0, 8)}`">{{ list.name }}</PrunLink>
+          <span :class="[grip.grip, fa.solid, $style.grip]">
+            {{ '\uf58e' }}
+          </span>
+          <PrunLink inline :command="`XIT TODO ${list.id.substring(0, 8)}`">
+            {{ list.name }}
+          </PrunLink>
         </td>
         <td>
           <span>{{ countCompletedTasks(list) }}/{{ list.tasks.length }}</span>
@@ -84,3 +102,20 @@ function getDueDate(list: UserData.TaskList) {
     </tbody>
   </table>
 </template>
+
+<style module>
+.grip {
+  cursor: move;
+  transition: opacity 0.2s ease-in-out;
+  opacity: 0;
+  margin-right: 5px;
+}
+
+tr:hover .grip {
+  opacity: 1;
+}
+
+.dragging td .grip {
+  opacity: 0;
+}
+</style>

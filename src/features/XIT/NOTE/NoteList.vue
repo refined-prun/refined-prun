@@ -7,6 +7,9 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 import { createNote, deleteNote } from '@src/store/notes';
 import { vDraggable } from 'vue-draggable-plus';
+import grip from '@src/features/XIT/TODO/grip.module.css';
+import fa from '@src/utils/font-awesome.module.css';
+import PrunLink from '@src/components/PrunLink.vue';
 
 function createNewNote(ev: Event) {
   showTileOverlay(ev, CreateNoteOverlay, {
@@ -22,6 +25,15 @@ function confirmDelete(ev: Event, note: UserData.Note) {
     message: `Are you sure you want to delete the note "${note.name}"?`,
   });
 }
+
+const dragging = ref(false);
+
+const draggableOptions = {
+  animation: 150,
+  handle: `.${grip.grip}`,
+  onStart: () => (dragging.value = true),
+  onEnd: () => (dragging.value = false),
+};
 </script>
 
 <template>
@@ -36,10 +48,17 @@ function confirmDelete(ev: Event, note: UserData.Note) {
         <th />
       </tr>
     </thead>
-    <tbody v-draggable="[userData.notes, { animation: 150 }]">
+    <tbody
+      v-draggable="[userData.notes, draggableOptions]"
+      :class="dragging ? $style.dragging : null">
       <tr v-for="note in userData.notes" :key="note.id">
         <td>
-          <span>{{ note.name }}</span>
+          <span :class="[grip.grip, fa.solid, $style.grip]">
+            {{ '\uf58e' }}
+          </span>
+          <PrunLink inline :command="`XIT NOTE ${note.id.substring(0, 8)}`">
+            {{ note.name }}
+          </PrunLink>
         </td>
         <td>
           <span>
@@ -47,10 +66,26 @@ function confirmDelete(ev: Event, note: UserData.Note) {
           </span>
         </td>
         <td>
-          <PrunButton primary @click="showBuffer(`XIT NOTE ${note.id}`)">VIEW</PrunButton>
           <PrunButton danger @click="confirmDelete($event, note)">DELETE</PrunButton>
         </td>
       </tr>
     </tbody>
   </table>
 </template>
+
+<style module>
+.grip {
+  cursor: move;
+  transition: opacity 0.2s ease-in-out;
+  opacity: 0;
+  margin-right: 5px;
+}
+
+tr:hover .grip {
+  opacity: 1;
+}
+
+.dragging td .grip {
+  opacity: 0;
+}
+</style>
