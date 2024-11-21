@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 function injectSocketIOProxy() {
-  window['REFINED_PRUN'] = true;
-
   interface PendingMessage {
     id: number;
     context?: string;

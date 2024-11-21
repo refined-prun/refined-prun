@@ -14,8 +14,19 @@ import { initializeXitCommands } from '@src/features/XIT/xit-commands';
 import { checkPmmgPresent } from '@src/infrastructure/prun-ui/page-functions';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import PmmgMigrationGuide from '@src/components/PmmgMigrationGuide.vue';
+import {
+  reloadedInFirefox,
+  reloadExtension,
+  trackReloadInChrome,
+} from '@src/infrastructure/extension-update';
 
 async function mainRun() {
+  if (reloadedInFirefox()) {
+    void reloadExtension();
+    return;
+  }
+  trackReloadInChrome();
+  document.documentElement.setAttribute('refined-prun', 'true');
   void fetchPrices();
   initializePrunApi();
   await injectConnector();
