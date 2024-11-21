@@ -3,7 +3,7 @@ import { userData } from '@src/store/user-data';
 import dayjs from 'dayjs';
 import { diffHours } from '@src/utils/time-diff';
 import { liveBalanceSheet } from '@src/core/balance/balance-sheet-live';
-import { sleep } from '@src/util';
+import { sleep } from '@src/utils/sleep';
 import { timestampEachMinute } from '@src/utils/dayjs';
 
 const v1 = computed(() => userData.balanceHistory.v1.map(deserializeBalanceSheetV1Data));

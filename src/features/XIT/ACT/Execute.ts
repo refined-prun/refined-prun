@@ -5,8 +5,8 @@ import {
   createTextSpan,
   getBuffers,
   showSuccessDialog,
-  sleep,
 } from '@src/util';
+import { sleep } from '@src/utils/sleep';
 import { Stations, Selector, Style } from '@src/legacy';
 import { validateAction } from './Validate';
 import { parseActionPackage } from './Parse';

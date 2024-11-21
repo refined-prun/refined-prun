@@ -1,4 +1,4 @@
-import { sleep } from './util';
+import { sleep } from './utils/sleep';
 import { initializePrunApi, loadGameData } from '@src/infrastructure/prun-api';
 import { fetchPrices } from '@src/infrastructure/fio/cx';
 import { trackBalanceHistory } from '@src/store/user-data-balance';

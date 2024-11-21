@@ -5,6 +5,7 @@ import { getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/
 import { Stations, Selector, Style } from '@src/legacy';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
+import { sleep } from './utils/sleep';
 
 // Download a file containing fileData with fileName
 export function downloadFile(fileData, fileName, isJSON: boolean = true) {
@@ -544,10 +545,6 @@ export function changeSelectValue(input, selectIndex) {
   input.selectedIndex = selectIndex;
   const changeEvent = new Event('change', { bubbles: true, cancelable: true });
   input.dispatchEvent(changeEvent);
-}
-
-export function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export function getMaterialNameByTicker(ticker?: string | null) {
