@@ -12,10 +12,6 @@ import {
   canCollectFinDataPoint,
   collectFinDataPoint,
 } from '@src/store/user-data-balance';
-import {
-  exportFinancialHistory,
-  importFinancialHistory,
-} from '@src/infrastructure/storage/balance-serializer';
 
 const sortedData = computed(() => balanceHistory.value.slice().reverse());
 
@@ -49,16 +45,6 @@ function formatValue(number?: number) {
 </script>
 
 <template>
-  <SectionHeader>
-    Import/Export Data
-    <Tooltip :class="$style.tooltip" tooltip="Import or export financial data to a json file" />
-  </SectionHeader>
-  <form>
-    <Commands>
-      <PrunButton primary @click="importFinancialHistory">Import Data</PrunButton>
-      <PrunButton primary @click="exportFinancialHistory">Export Data</PrunButton>
-    </Commands>
-  </form>
   <SectionHeader>
     Collected Data
     <Tooltip :class="$style.tooltip" tooltip="All collected data points" />
