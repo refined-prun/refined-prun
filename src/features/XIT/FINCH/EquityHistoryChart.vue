@@ -57,7 +57,7 @@ const lineChartData = computed(() => {
 
 <template>
   <div :class="$style.wide">Smoothing: {{ percent0(averageFactor) }}</div>
-  <RangeInput v-model="averageFactorText" :class="$style.wide" min="0" max="1" step="0.01" />
+  <RangeInput v-model="averageFactorText" :class="$style.wide" :min="0" :max="1" :step="0.01" />
   <LineChart
     :maintain-aspect-ratio="maintainAspectRatio"
     :average-factor="averageFactor"
