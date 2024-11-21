@@ -16,19 +16,15 @@ export async function loadPrunCss() {
 }
 
 function readStyles() {
-  const styles = _$$(document.head, 'style');
+  const styles = getPrunCssStylesheets();
   if (isEmpty(styles)) {
     return false;
   }
   const classSet = new Set<string>();
-  for (let i = 0; i < styles.length; i++) {
-    const style = styles[i];
-    const sheet = style.sheet;
-    if (!sheet) {
-      continue;
-    }
-    for (let i = 0; i < sheet.cssRules.length; i++) {
-      const rule = sheet.cssRules.item(i) as CSSStyleRule;
+  for (const style of styles) {
+    const cssRules = style.sheet!.cssRules;
+    for (let i = 0; i < cssRules.length; i++) {
+      const rule = cssRules.item(i) as CSSStyleRule;
       const selector = rule?.selectorText;
       if (!selector?.includes('___')) {
         continue;
@@ -69,4 +65,24 @@ function readStyles() {
 
   Object.assign(C, result);
   return true;
+}
+
+export function getPrunCssStylesheets() {
+  const all = _$$(document.head, 'style');
+  const valid: HTMLStyleElement[] = [];
+  for (const style of all) {
+    const sheet = style.sheet;
+    if (!sheet) {
+      continue;
+    }
+    try {
+      if (sheet.cssRules) {
+        valid.push(style);
+      }
+    } catch {
+      // SecurityError: CSSStyleSheet.cssRules getter: Not allowed to access cross-origin stylesheet
+      // This exception can be thrown if we try to inspect stylesheets injected by other extensions.
+    }
+  }
+  return valid;
 }

@@ -1,9 +1,11 @@
 import { applyClassCssRule, applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import classes from './prun-bugs.module.css';
+import { getPrunCssStylesheets } from '@src/infrastructure/prun-ui/prun-css';
 
 function removeMobileCssRules() {
-  for (let i = 0; i < document.styleSheets.length; i++) {
-    const styleSheet = document.styleSheets[i];
+  const styles = getPrunCssStylesheets();
+  for (const style of styles) {
+    const styleSheet = style.sheet!;
     const rules = styleSheet.cssRules;
     try {
       for (let j = rules.length - 1; j >= 0; j--) {
