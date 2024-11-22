@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { formatCurrencyAmount, formatChange } from '@src/features/XIT/FINBS/utils';
+import { formatChange } from '@src/features/XIT/FINBS/utils';
 import { SectionData } from '@src/features/XIT/FINBS/balance-section';
 import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
 import BalanceSheetRow from '@src/features/XIT/FINBS/BalanceSheetRow.vue';
+import { formatCurrency } from '@src/utils/format';
 
 const props = defineProps({
   current: {
@@ -70,9 +71,9 @@ const totalClass = computed(() => {
       :indent="0" />
     <tr :class="C.IncomeStatementPanel.totals">
       <td :class="C.IncomeStatementPanel.number">Total</td>
-      <td>{{ formatCurrencyAmount(calculate(current, section.total)) }}</td>
-      <td>{{ formatCurrencyAmount(calculate(last, section.total)) }}</td>
-      <td>{{ formatCurrencyAmount(calculate(previous, section.total)) }}</td>
+      <td>{{ formatCurrency(calculate(current, section.total)) }}</td>
+      <td>{{ formatCurrency(calculate(last, section.total)) }}</td>
+      <td>{{ formatCurrency(calculate(previous, section.total)) }}</td>
       <td :class="totalClass">{{ formatChange(calculateChange(section.total)) }}</td>
     </tr>
   </tbody>

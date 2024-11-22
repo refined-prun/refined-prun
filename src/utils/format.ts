@@ -1,4 +1,6 @@
 import { diffDays } from '@src/utils/time-diff';
+import { userData } from '@src/store/user-data';
+import { isPresent } from 'ts-extras';
 
 export const hhmm = new Intl.DateTimeFormat(undefined, {
   hour: '2-digit',
@@ -60,4 +62,13 @@ export function formatEta(from: number, to: number) {
     ret += ` +${days}d`;
   }
   return ret;
+}
+
+export function formatCurrency(currency?: number | null, format?: (value: number) => string) {
+  if (!isPresent(currency)) {
+    return '--';
+  }
+  format ??= fixed0;
+  const sign = currency < 0 ? '-' : '';
+  return sign + userData.settings.currency + format(Math.abs(currency));
 }

@@ -2,8 +2,15 @@
 import { calculateLocationAssets } from '@src/core/financials';
 import KeyFigures from '@src/features/XIT/FIN/KeyFigures.vue';
 import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';
-import { formatCurrencyAmount } from '@src/features/XIT/FIN/utils';
-import { fixed0, fixed1, fixed2, percent0, percent1, percent2 } from '@src/utils/format';
+import {
+  fixed0,
+  fixed1,
+  fixed2,
+  formatCurrency,
+  percent0,
+  percent1,
+  percent2,
+} from '@src/utils/format';
 import { liveBalanceSummary } from '@src/core/balance/balance-sheet-live';
 
 const locations = computed(() => calculateLocationAssets());
@@ -50,17 +57,17 @@ function formatPercentage(ratio: number | undefined) {
 
 const figures = computed(() => {
   return [
-    { name: 'Quick Assets', value: formatCurrencyAmount(liveBalanceSummary.quickAssets) },
-    { name: 'Current Assets', value: formatCurrencyAmount(liveBalanceSummary.currentAssets) },
-    { name: 'Total Assets', value: formatCurrencyAmount(liveBalanceSummary.assets) },
-    { name: 'Equity', value: formatCurrencyAmount(liveBalanceSummary.equity) },
-    { name: 'Quick Liabilities', value: formatCurrencyAmount(liveBalanceSummary.quickLiabilities) },
+    { name: 'Quick Assets', value: formatCurrency(liveBalanceSummary.quickAssets) },
+    { name: 'Current Assets', value: formatCurrency(liveBalanceSummary.currentAssets) },
+    { name: 'Total Assets', value: formatCurrency(liveBalanceSummary.assets) },
+    { name: 'Equity', value: formatCurrency(liveBalanceSummary.equity) },
+    { name: 'Quick Liabilities', value: formatCurrency(liveBalanceSummary.quickLiabilities) },
     {
       name: 'Current Liabilities',
-      value: formatCurrencyAmount(liveBalanceSummary.currentLiabilities),
+      value: formatCurrency(liveBalanceSummary.currentLiabilities),
     },
-    { name: 'Total Liabilities', value: formatCurrencyAmount(liveBalanceSummary.liabilities) },
-    { name: 'Liquidation Value', value: formatCurrencyAmount(liveBalanceSummary.liquidationValue) },
+    { name: 'Total Liabilities', value: formatCurrency(liveBalanceSummary.liabilities) },
+    { name: 'Liquidation Value', value: formatCurrency(liveBalanceSummary.liquidationValue) },
     { name: 'Acid-Test Ratio', value: formatRatio(liveBalanceSummary.acidTestRatio) },
     { name: 'Working Capital Ratio', value: formatRatio(liveBalanceSummary.workingCapitalRatio) },
     { name: 'Debt Ratio', value: formatPercentage(liveBalanceSummary.debtRatio) },

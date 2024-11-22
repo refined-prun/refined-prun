@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';
-import { formatCurrencyAmount } from '@src/features/XIT/FIN/utils';
 import KeyFigures from '@src/features/XIT/FIN/KeyFigures.vue';
 import { calculateSiteProfitability } from '@src/core/profitability';
 import { sumBy } from '@src/utils/sum-by';
-import { fixed0, percent2 } from '@src/utils/format';
+import { fixed0, formatCurrency, percent2 } from '@src/utils/format';
 import { map } from '@src/utils/map-values';
 import { isDefined } from 'ts-extras';
 
@@ -30,10 +29,10 @@ const dailyMargin = computed(() => {
 
 const figures = computed(() => {
   return [
-    { name: 'Daily Cost', value: formatCurrencyAmount(dailyCost.value) },
-    { name: 'Daily Repairs', value: formatCurrencyAmount(dailyRepairs.value) },
-    { name: 'Daily Revenue', value: formatCurrencyAmount(dailyRevenue.value) },
-    { name: 'Daily Profit', value: formatCurrencyAmount(dailyProfit.value) },
+    { name: 'Daily Cost', value: formatCurrency(dailyCost.value) },
+    { name: 'Daily Repairs', value: formatCurrency(dailyRepairs.value) },
+    { name: 'Daily Revenue', value: formatCurrency(dailyRevenue.value) },
+    { name: 'Daily Profit', value: formatCurrency(dailyProfit.value) },
     {
       name: 'Daily Margin',
       value: dailyMargin.value !== undefined ? percent2(dailyMargin.value) : '--',

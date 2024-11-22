@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
-import { fixed0, hhmm, ddmm, ddmmyyyy } from '@src/utils/format';
+import { fixed0, hhmm, ddmm, ddmmyyyy, formatCurrency } from '@src/utils/format';
 
 Chart.register(
   LineController,
@@ -34,10 +34,6 @@ const props = defineProps({
   },
   ydata: {
     type: Array<number>,
-    required: true,
-  },
-  yprefix: {
-    type: String,
     required: true,
   },
   averageFactor: {
@@ -189,7 +185,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
           if (label) {
             label += ': ';
           }
-          label += props.yprefix + fixed0(item.parsed.y);
+          label += formatCurrency(item.parsed.y);
           return label;
         },
       },

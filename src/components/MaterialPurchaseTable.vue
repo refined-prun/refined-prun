@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { fixed0, fixed2 } from '@src/utils/format';
+import { fixed0, fixed2, formatCurrency } from '@src/utils/format';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import { calcMaterialAmountPrice } from '@src/infrastructure/fio/cx';
-import { userData } from '@src/store/user-data';
 import { sortMaterialAmounts } from '@src/core/sort-materials';
 import { sumBy } from '@src/utils/sum-by';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
@@ -20,10 +19,6 @@ const props = defineProps({
 const collapsed = ref(props.collapsible && props.collapsedByDefault);
 
 const sorted = computed(() => sortMaterialAmounts(props.materials));
-
-function formatPrice(price: number | undefined): string {
-  return price !== undefined ? userData.settings.currency + fixed0(price) : '--';
-}
 
 function calculateWeight(amount: PrunApi.MaterialAmount) {
   return (amount.material?.weight ?? 0) * amount.amount;
@@ -53,7 +48,7 @@ function calculateVolume(amount: PrunApi.MaterialAmount) {
         </td>
         <td v-else />
         <td :class="$style.total">Total</td>
-        <td>{{ formatPrice(sumBy(sorted, calcMaterialAmountPrice)) }}</td>
+        <td>{{ formatCurrency(sumBy(sorted, calcMaterialAmountPrice)) }}</td>
         <td>{{ fixed2(sumBy(sorted, calculateWeight)) }}t</td>
         <td>{{ fixed2(sumBy(sorted, calculateVolume)) }}m³</td>
         <td />
@@ -65,10 +60,12 @@ function calculateVolume(amount: PrunApi.MaterialAmount) {
           <MaterialIcon size="inline-table" ticker="MCG" />
         </td>
         <td>{{ fixed0(100000) }}</td>
-        <td>{{ formatPrice(1000000) }}</td>
+        <td>{{ formatCurrency(1000000) }}</td>
         <td>{{ fixed2(1000.01) }}t</td>
         <td>{{ fixed2(1000.01) }}m³</td>
-        <td><PrunButton dark inline>CXM</PrunButton></td>
+        <td>
+          <PrunButton dark inline>CXM</PrunButton>
+        </td>
       </tr>
     </tbody>
     <tbody v-if="!collapsed">
@@ -77,7 +74,7 @@ function calculateVolume(amount: PrunApi.MaterialAmount) {
           <MaterialIcon size="inline-table" :ticker="material.material.ticker" />
         </td>
         <td>{{ fixed0(material.amount) }}</td>
-        <td>{{ formatPrice(calcMaterialAmountPrice(material)) }}</td>
+        <td>{{ formatCurrency(calcMaterialAmountPrice(material)) }}</td>
         <td>{{ fixed2(calculateWeight(material)) }}t</td>
         <td>{{ fixed2(calculateVolume(material)) }}m³</td>
         <td>

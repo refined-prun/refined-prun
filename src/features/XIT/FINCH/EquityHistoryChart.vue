@@ -61,7 +61,6 @@ const lineChartData = computed(() => {
   <LineChart
     :maintain-aspect-ratio="maintainAspectRatio"
     :average-factor="averageFactor"
-    :yprefix="userData.settings.currency"
     :ydata="lineChartData.equity"
     :xdata="lineChartData.date"
     :pan="pan"
