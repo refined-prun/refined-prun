@@ -104,7 +104,12 @@ const chartOptions = computed<ChartOptions<'pie'>>(() => ({
     },
   },
   layout: {
-    padding: 20,
+    padding: {
+      left: 60,
+      top: 0,
+      right: 60,
+      bottom: 0,
+    },
   },
 }));
 
