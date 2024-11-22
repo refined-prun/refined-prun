@@ -7,7 +7,12 @@ export const initialUserData = deepFreeze({
   settings: {
     mode: undefined as 'BASIC' | 'FULL' | undefined,
     disabled: [] as string[],
-    currency: '₳',
+    currency: {
+      preset: 'DEFAULT' as UserData.CurrencyPreset,
+      custom: '$',
+      position: 'BEFORE' as UserData.CurrencyPosition,
+      spacing: 'NO_SPACE' as UserData.CurrencySpacing,
+    },
     pricing: {
       exchange: 'UNIVERSE',
       method: 'DEFAULT' as UserData.PricingMethod,

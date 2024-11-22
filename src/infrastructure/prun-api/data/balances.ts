@@ -8,9 +8,11 @@ interface Payload {
 
 const store = createEntityStore<PrunApi.CurrencyAmount>(x => x.currency);
 const state = store.state;
+const ownCurrency = ref('');
 
 messages({
   ACCOUNTING_CASH_BALANCES(data: Payload) {
+    ownCurrency.value = data.ownCurrency.code;
     store.setAll(data.currencyAccounts.map(x => x.currencyBalance));
     store.setFetched();
   },
@@ -29,5 +31,6 @@ const currencies = computed(() => state.all.value?.map(x => x.currency));
 
 export const balancesStore = {
   ...state,
+  ownCurrency,
   currencies,
 };

@@ -1,6 +1,7 @@
 import { diffDays } from '@src/utils/time-diff';
 import { userData } from '@src/store/user-data';
 import { isPresent } from 'ts-extras';
+import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
 
 export const hhmm = new Intl.DateTimeFormat(undefined, {
   hour: '2-digit',
@@ -69,6 +70,32 @@ export function formatCurrency(currency?: number | null, format?: (value: number
     return '--';
   }
   format ??= fixed0;
+  const settings = userData.settings.currency;
+  const symbol = getCurrencySymbol(settings);
+  const spacing = settings.preset === 'DEFAULT' ? 'HAS_SPACE' : settings.spacing;
+  const position = settings.preset === 'DEFAULT' ? 'AFTER' : settings.position;
+  if (position === 'AFTER') {
+    return spacing === 'HAS_SPACE' ? format(currency) + ' ' + symbol : format(currency) + symbol;
+  }
   const sign = currency < 0 ? '-' : '';
-  return sign + userData.settings.currency + format(Math.abs(currency));
+  return spacing === 'HAS_SPACE'
+    ? sign + symbol + ' ' + format(Math.abs(currency))
+    : sign + symbol + format(Math.abs(currency));
+}
+
+function getCurrencySymbol(settings: typeof userData.settings.currency) {
+  switch (settings.preset) {
+    case 'DEFAULT':
+      return balancesStore.ownCurrency.value;
+    case 'AIC':
+      return '₳';
+    case 'ICA':
+      return 'ǂ';
+    case 'CIS':
+      return '₡';
+    case 'NCC':
+      return '₦';
+    case 'CUSTOM':
+      return settings.custom;
+  }
 }

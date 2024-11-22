@@ -13,6 +13,58 @@ import {
   importUserData,
   resetUserData,
 } from '@src/infrastructure/storage/user-data-serializer';
+import SelectInput from '@src/components/forms/SelectInput.vue';
+
+const currencySettings = computed(() => userData.settings.currency);
+
+const currencyPresets: { label: string; value: UserData.CurrencyPreset }[] = [
+  {
+    label: 'Default',
+    value: 'DEFAULT',
+  },
+  {
+    label: '₳',
+    value: 'AIC',
+  },
+  {
+    label: '₡',
+    value: 'CIS',
+  },
+  {
+    label: 'ǂ',
+    value: 'ICA',
+  },
+  {
+    label: '₦',
+    value: 'NCC',
+  },
+  {
+    label: 'Custom',
+    value: 'CUSTOM',
+  },
+];
+
+const currencyPosition: { label: string; value: UserData.CurrencyPosition }[] = [
+  {
+    label: 'After',
+    value: 'AFTER',
+  },
+  {
+    label: 'Before',
+    value: 'BEFORE',
+  },
+];
+
+const currencySpacing: { label: string; value: UserData.CurrencySpacing }[] = [
+  {
+    label: 'Has space',
+    value: 'HAS_SPACE',
+  },
+  {
+    label: 'No space',
+    value: 'NO_SPACE',
+  },
+];
 
 function addSidebarButton() {
   userData.settings.sidebar.push(['SET', 'XIT SET']);
@@ -34,6 +86,30 @@ function confirmResetAllData(ev: Event) {
 </script>
 
 <template>
+  <SectionHeader>
+    Currency Symbol
+    <Tooltip
+      :class="$style.tooltip"
+      tooltip="Currency symbol used when displaying money values.
+       Only shown in UI added by Refined PrUn." />
+  </SectionHeader>
+  <form>
+    <Active label="Symbol">
+      <SelectInput v-model="currencySettings.preset" :options="currencyPresets" />
+    </Active>
+    <Active v-if="currencySettings.preset === 'CUSTOM'" label="Custom symbol">
+      <TextInput v-model="currencySettings.custom" />
+    </Active>
+    <Active v-if="currencySettings.preset !== 'DEFAULT'" label="Position">
+      <SelectInput v-model="currencySettings.position" :options="currencyPosition" />
+    </Active>
+    <Active
+      v-if="currencySettings.preset !== 'DEFAULT'"
+      label="Spacing"
+      tooltip="The space between symbol and value.">
+      <SelectInput v-model="currencySettings.spacing" :options="currencySpacing" />
+    </Active>
+  </form>
   <SectionHeader>Burn Settings</SectionHeader>
   <form>
     <Active

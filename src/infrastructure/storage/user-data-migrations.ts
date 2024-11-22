@@ -2,6 +2,14 @@
 
 const migrations: Migration[] = [
   userData => {
+    userData.settings.currency = {
+      preset: 'AIC',
+      custom: '$',
+      position: 'BEFORE',
+      spacing: 'NO_SPACE',
+    };
+  },
+  userData => {
     userData.todo = [];
   },
   userData => {

@@ -1,4 +1,8 @@
 declare namespace UserData {
+  type CurrencyPreset = 'DEFAULT' | 'AIC' | 'CIS' | 'ICA' | 'NCC' | 'CUSTOM';
+  type CurrencyPosition = 'BEFORE' | 'AFTER';
+  type CurrencySpacing = 'HAS_SPACE' | 'NO_SPACE';
+
   type PricingMethod = 'ASK' | 'BID' | 'AVG' | 'VWAP7D' | 'VWAP30D' | 'DEFAULT' | string;
 
   interface SortingMode {

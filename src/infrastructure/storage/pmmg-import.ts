@@ -4,7 +4,7 @@ import { createId } from '@src/store/create-id';
 import { isDefined } from 'ts-extras';
 
 interface PmmgSettings {
-  currency: string;
+  currency: UserData.CurrencyPreset;
   burn: {
     red: number;
     yellow: number;
@@ -51,17 +51,17 @@ export function parsePmmgUserData(pmmg: any): PmmgSettings | undefined {
   };
 }
 
-function getCurrency(pricingMethod: string) {
+function getCurrency(pricingMethod: string): UserData.CurrencyPreset {
   if (pricingMethod.startsWith('IC')) {
-    return 'ǂ';
+    return 'ICA';
   }
   if (pricingMethod.startsWith('NC')) {
-    return '₦';
+    return 'NCC';
   }
   if (pricingMethod.startsWith('CI')) {
-    return '₡';
+    return 'CIS';
   }
-  return '₳';
+  return 'AIC';
 }
 
 function parseSortingMode(mode: PmmgSortingMode): UserData.SortingMode {
@@ -89,7 +89,7 @@ export function importPmmgSettings() {
     }
     const pmmg = parsePmmgUserData(json);
     if (pmmg) {
-      userData.settings.currency = pmmg.currency;
+      userData.settings.currency.preset = pmmg.currency;
       userData.settings.burn.red = pmmg.burn.red;
       userData.settings.burn.yellow = pmmg.burn.yellow;
       userData.settings.burn.resupply = pmmg.burn.resupply;
