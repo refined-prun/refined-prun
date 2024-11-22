@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import LineChart from '@src/features/XIT/FINCH/LineChart.vue';
 import { percent0 } from '@src/utils/format';
-import { userData } from '@src/store/user-data';
 import { calcEquity } from '@src/core/balance/balance-sheet-summary';
 import { balanceHistory } from '@src/store/user-data-balance';
 import { useTileState } from '@src/store/user-data-tiles';
