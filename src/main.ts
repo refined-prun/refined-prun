@@ -26,7 +26,7 @@ async function mainRun() {
     return;
   }
   trackReloadInChrome();
-  document.documentElement.setAttribute('refined-prun', 'true');
+  document.documentElement.toggleAttribute('refined-prun');
   void fetchPrices();
   initializePrunApi();
   await injectConnector();
