@@ -1,5 +1,5 @@
 import { downloadJson, uploadJson } from '@src/utils/download-json';
-import { migrateUserData } from '@src/infrastructure/storage/user-data-migrations';
+import { migrateUserData } from '@src/store/user-data-migrations';
 import { applyInitialUserData, applyUserData, userData, watchUserData } from '@src/store/user-data';
 import { deepToRaw } from '@src/utils/deep-to-raw';
 
