@@ -1,6 +1,5 @@
 import { sleep } from '@src/utils/sleep';
 import { reloadPage } from '@src/infrastructure/prun-ui/page-functions';
-import { loadLocalFile } from '@src/util';
 
 export function reloadedInFirefox() {
   // In Firefox, on extension update/reload, content scripts are re-run, so we
@@ -13,8 +12,9 @@ export function trackReloadInChrome() {
   // but the extension context is closed. To prevent lost data, track
   // the manifest version and reload the page once the version is changed.
   const version = chrome.runtime.getManifest().version;
+  const manifestUrl = chrome.runtime.getURL('manifest.json');
   const id = setInterval(async () => {
-    const manifest = await (await loadLocalFile('manifest.json')).json();
+    const manifest = await (await fetch(manifestUrl)).json();
     if (manifest.version && version !== manifest.version) {
       void reloadExtension();
       clearInterval(id);
