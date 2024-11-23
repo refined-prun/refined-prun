@@ -93,10 +93,7 @@ export function applyRawCssRule(rule: string) {
   } else {
     styleElement.textContent += '\n\n';
   }
-  const attribute = 'rp-css-override';
-  const prefix = `html[${attribute}]`;
-  document.documentElement.setAttribute(attribute, '');
-  let fullRule = `${prefix} ${rule}`;
+  let fullRule = `html[refined-prun] ${rule}`;
   if (at) {
     fullRule = `${at} { ${fullRule} }`;
   }
