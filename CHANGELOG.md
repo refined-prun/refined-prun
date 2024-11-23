@@ -55,11 +55,11 @@
 - `XIT FIN` Key Figures were changed:
   - Liquid Assets are replaced with Quick Assets. Quick Assets are: Cash and Cash Equivalents,
     Current Accounts Receivable, and Current Loans Receivable. These assets are either
-    liquid or close-to-liquid and are used in Acid-Test Ratio calculation.
+    liquid or close-to-liquid and are used in Quick Ratio calculation.
   - Fixed Assets were removed.
   - Current and Quick Liabilities are added. Quick Liabilities are: Current Accounts Payable
     and Current Loans Payable. These liabilities represent immediate financial obligations
-    and are used in Acid-Test Ratio calculation.
+    and are used in Quick Ratio calculation.
   - Company Value is added.
   - 4 new financial ratios are added. Look them up if you don't know them!
 - `XIT SHEETS` now display in minimalist mode.

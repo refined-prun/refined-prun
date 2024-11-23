@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import Tooltip from '@src/components/Tooltip.vue';
+
 interface KeyFigure {
   name: string;
   value: string;
+  tooltip?: string;
 }
 
 defineProps({
@@ -25,7 +28,20 @@ const labelClasses = [
   <div :class="containerClasses">
     <div v-for="figure in figures" :key="figure.name" :class="figureClasses">
       <span>{{ figure.value }}</span>
-      <div :class="labelClasses">{{ figure.name }}</div>
+      <div :class="labelClasses">
+        {{ figure.name }}
+        <Tooltip
+          v-if="figure.tooltip"
+          :tooltip="figure.tooltip"
+          position="bottom"
+          :class="$style.tooltip" />
+      </div>
     </div>
   </div>
 </template>
+
+<style module>
+.tooltip {
+  padding: 0;
+}
+</style>

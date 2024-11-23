@@ -57,19 +57,62 @@ function formatPercentage(ratio: number | undefined) {
 
 const figures = computed(() => {
   return [
-    { name: 'Quick Assets', value: formatCurrency(liveBalanceSummary.quickAssets) },
-    { name: 'Current Assets', value: formatCurrency(liveBalanceSummary.currentAssets) },
+    {
+      name: 'Quick Assets',
+      value: formatCurrency(liveBalanceSummary.quickAssets),
+      tooltip:
+        'Quick Assets are: Cash and Cash Equivalents, Current Accounts Receivable, and' +
+        ' Current Loans Receivable. These assets are either liquid or close-to-liquid and' +
+        ' are used in Quick Ratio calculation.',
+    },
+    {
+      name: 'Current Assets',
+      value: formatCurrency(liveBalanceSummary.currentAssets),
+    },
     { name: 'Total Assets', value: formatCurrency(liveBalanceSummary.assets) },
     { name: 'Equity', value: formatCurrency(liveBalanceSummary.equity) },
-    { name: 'Quick Liabilities', value: formatCurrency(liveBalanceSummary.quickLiabilities) },
+    {
+      name: 'Quick Liabilities',
+      value: formatCurrency(liveBalanceSummary.quickLiabilities),
+      tooltip:
+        'Quick Liabilities are: Current Accounts Payable and Current Loans Payable. These' +
+        ' liabilities represent immediate financial obligations and are used in Quick Ratio' +
+        ' calculation.',
+    },
     {
       name: 'Current Liabilities',
       value: formatCurrency(liveBalanceSummary.currentLiabilities),
     },
-    { name: 'Total Liabilities', value: formatCurrency(liveBalanceSummary.liabilities) },
-    { name: 'Liquidation Value', value: formatCurrency(liveBalanceSummary.liquidationValue) },
-    { name: 'Acid-Test Ratio', value: formatRatio(liveBalanceSummary.acidTestRatio) },
-    { name: 'Debt Ratio', value: formatPercentage(liveBalanceSummary.debtRatio) },
+    {
+      name: 'Total Liabilities',
+      value: formatCurrency(liveBalanceSummary.liabilities),
+    },
+    {
+      name: 'Liquidation Value',
+      value: formatCurrency(liveBalanceSummary.liquidationValue),
+      tooltip:
+        'The market value of all company’s assets that can be converted to cash directly. ' +
+        'The Liquidation Value excludes such assets as ships, HQ upgrades, and ARC, since ' +
+        'they cannot be sold on the market.',
+    },
+    {
+      name: 'Quick Ratio',
+      value: formatRatio(liveBalanceSummary.acidTestRatio),
+      tooltip:
+        "The quick, or acid-test ratio, compares a company's quick assets to its quick" +
+        ' liabilities to see if it has enough cash to pay its immediate liabilities,' +
+        ' such as short-term debt. Generally, a ratio of 1.0 or more indicates a company can pay' +
+        ' its short-term obligations, while a ratio of less than 1.0 indicates it might struggle' +
+        ' to pay them.',
+    },
+    {
+      name: 'Debt Ratio',
+      value: formatPercentage(liveBalanceSummary.debtRatio),
+      tooltip:
+        'The debt ratio is defined as the ratio of total debt to total assets. A debt ratio' +
+        ' of greater than 100% means a company has more debt than assets while a debt ratio' +
+        ' of less than 100% indicates that a company has more assets than debt.',
+    },
   ];
 });
 </script>
