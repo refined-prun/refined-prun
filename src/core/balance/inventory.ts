@@ -6,7 +6,11 @@ import {
   getEntityNameFromAddress,
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
-import { calcMaterialAmountPrice, sumMaterialAmountPrice } from '@src/infrastructure/fio/cx';
+import {
+  calcMaterialAmountPrice,
+  getMMPrice,
+  sumMaterialAmountPrice,
+} from '@src/infrastructure/fio/cx';
 import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { sumBy } from '@src/utils/sum-by';
@@ -22,11 +26,14 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getPlanetBurn } from '@src/core/burn';
 import { mergeMaterialAmounts } from '@src/core/sort-materials';
 import { workInProgress } from '@src/core/balance/orders';
+import { isDefined } from 'ts-extras';
+import { userData } from '@src/store/user-data';
 
 type LocationName = string;
 
 interface MaterialValue {
   material: PrunApi.Material;
+  amount: number;
   value: number;
 }
 
@@ -60,6 +67,7 @@ const inventoryMarketValue = computed(() => {
       }
       materials.push({
         material: item.quantity.material,
+        amount: item.quantity.amount,
         value,
       });
     }
@@ -151,7 +159,54 @@ function isCXStore(store: PrunApi.Store) {
   return isStationAddress(warehouse?.address);
 }
 
-const cxInventory = computed(() => sumStoresValue(cxStores.value));
+const mmMaterials = computed(() => new Set(userData.settings.financial.mmMaterials.split(',')));
+
+const cxInventory = computed(() => {
+  if (!cxStores.value) {
+    return undefined;
+  }
+
+  const mmMaterialsTotal = new Map<LocationName, number>();
+  let otherMaterialsTotal = 0;
+  for (const store of cxStores.value) {
+    const marketValue = inventoryMarketValue.value?.get(store.id);
+    if (!marketValue) {
+      return undefined;
+    }
+    let mmTotal = 0;
+    for (const materialValue of marketValue) {
+      if (mmMaterials.value.has(materialValue.material.ticker)) {
+        const price = getMMPrice(materialValue.material.ticker);
+        if (!isDefined(price)) {
+          return undefined;
+        }
+        mmTotal += price * materialValue.amount;
+      } else {
+        otherMaterialsTotal += materialValue.value;
+      }
+    }
+    const warehouse = warehousesStore.getById(store.addressableId);
+    const naturalId = getEntityNaturalIdFromAddress(warehouse?.address)!;
+    const currencies = {
+      ANT: 'AIC',
+      BEN: 'CIS',
+      MOR: 'NCC',
+      HRT: 'ICA',
+      HUB: 'NCC',
+      ARC: 'CIS',
+    };
+    const currency = currencies[naturalId];
+    mmMaterialsTotal.set(currency, (mmMaterialsTotal.get(currency) ?? 0) + mmTotal);
+  }
+  return {
+    mmMaterialsTotal,
+    otherMaterialsTotal,
+  };
+});
+
+const mmMaterialsTotal = computed(() => sumMapValues(cxInventory.value?.mmMaterialsTotal));
+
+const cxInventoryTotal = computed(() => cxInventory.value?.otherMaterialsTotal);
 
 const baseInventory = computed(() => {
   const marketValue = inventoryMarketValue.value;
@@ -164,6 +219,8 @@ const baseInventory = computed(() => {
   let rawMaterials = 0;
   let workforceConsumables = 0;
   let otherItems = 0;
+  // Pre-warm all planet burns.
+  sites.map(getPlanetBurn);
   for (const site of sites) {
     let stores = storagesStore.getByAddressableId(site.siteId);
     const burn = getPlanetBurn(site);
@@ -296,6 +353,8 @@ export const inventory = {
   byLocation,
   cxListedMaterials,
   cxInventory,
+  mmMaterialsTotal,
+  cxInventoryTotal,
   materialsInTransit,
   finishedGoods,
   workInProgress,

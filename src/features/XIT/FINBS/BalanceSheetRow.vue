@@ -3,6 +3,7 @@ import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
 import { RowData } from '@src/features/XIT/FINBS/balance-section';
 import { formatAmount, formatChange } from '@src/features/XIT/FINBS/utils';
 import RowExpandButton from '@src/features/XIT/FINBS/RowExpandButton.vue';
+import Tooltip from '@src/components/Tooltip.vue';
 
 const props = defineProps({
   current: {
@@ -64,6 +65,7 @@ function calculateChange(selector: (x: PartialBalanceSheet) => number | undefine
       <RowExpandButton v-model="expanded" :class="!row.children ? $style.hidden : null" />
       <template v-if="row.less"> Less:</template>
       {{ row.name }}
+      <Tooltip v-if="row.tooltip" :tooltip="row.tooltip" :class="$style.tooltip" />
     </td>
     <td>{{ formatRowAmount(current, row) }}</td>
     <td>{{ formatRowAmount(last, row) }}</td>
@@ -85,6 +87,10 @@ function calculateChange(selector: (x: PartialBalanceSheet) => number | undefine
 <style module>
 .hidden {
   visibility: hidden;
+}
+
+.tooltip {
+  padding: 0;
 }
 </style>
 

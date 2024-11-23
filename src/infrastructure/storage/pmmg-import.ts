@@ -113,9 +113,8 @@ export function importPmmgFinancialHistory() {
     }
 
     userData.balanceHistory = {
-      v1: shallowReactive(json.History.map((item: number[]) => item.map(Math.round))),
+      v1: shallowReactive(json.History.map(item => mapBalanceEntry(item).map(Math.round))),
       v2: shallowReactive([]),
-      v3: shallowReactive([]),
     };
   });
 }
@@ -169,6 +168,18 @@ interface PmmgAction {
 
   origin?: string;
   dest?: string;
+}
+
+function mapBalanceEntry(
+  entry: [
+    timestamp: number,
+    nonCurrent: number,
+    current: number,
+    liquid: number,
+    liabilities: number,
+  ],
+) {
+  return [entry[0], entry[2] + entry[3], entry[1], entry[4]];
 }
 
 export function importPmmgActions() {

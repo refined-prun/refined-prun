@@ -10,6 +10,7 @@ export interface BalanceSheet {
           fx: number;
           total: number;
         };
+        mmMaterials: number;
         total: number;
       };
       accountsReceivable: number;

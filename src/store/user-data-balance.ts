@@ -8,9 +8,8 @@ import { timestampEachMinute } from '@src/utils/dayjs';
 
 const v1 = computed(() => userData.balanceHistory.v1.map(deserializeBalanceSheetV1Data));
 const v2 = computed(() => userData.balanceHistory.v2.map(deserializeBalanceSheetV2Data));
-const v3 = computed(() => userData.balanceHistory.v3.map(deserializeBalanceSheetV3Data));
 
-export const balanceHistory = computed(() => v1.value.concat(v2.value).concat(v3.value));
+export const balanceHistory = computed(() => v1.value.concat(v2.value));
 
 export const lastBalance = computed(() => {
   // Touch timestampEachMinute to trigger reactivity,
@@ -68,7 +67,7 @@ export function canCollectFinDataPoint() {
 export function collectFinDataPoint(): boolean {
   const sheet = serializeBalanceSheet(liveBalanceSheet);
   if (sheet) {
-    userData.balanceHistory.v3.push(sheet);
+    userData.balanceHistory.v2.push(sheet);
     return true;
   }
 
@@ -104,28 +103,22 @@ function hasRecentBalanceRecording() {
 export function deserializeBalanceSheetV1Data(
   data: UserData.BalanceSheetDataV1,
 ): PartialBalanceSheet {
-  const [timestamp, totalFixed, current, liquid, totalLiabilities] = data;
-  const totalCurrent = current + liquid;
-  const totalAssets = totalCurrent + totalFixed;
-  const equity = totalAssets - totalLiabilities;
+  const [timestamp, currentAssets, nonCurrentAssets, liabilities] = data;
   return {
     timestamp,
 
     assets: {
       current: {
-        total: totalCurrent,
+        total: currentAssets,
       },
       nonCurrent: {
-        total: totalFixed,
+        total: nonCurrentAssets,
       },
-
-      total: totalAssets,
     },
 
     liabilities: {
-      total: totalLiabilities,
+      total: liabilities,
     },
-    equity,
   };
 }
 
@@ -135,101 +128,9 @@ export function deserializeBalanceSheetV2Data(
   const [
     timestamp,
     cash,
-    deposits,
-    interestReceivable,
-    accountsReceivableCurrent,
-    shortTermLoans,
-    marketListedMaterials,
-    inventory,
-    ordersInProgress,
-    materialsToReceiveCurrent,
-    buildings,
-    accountsReceivableNonCurrent,
-    longTermLoans,
-    materialsToReceiveNonCurrent,
-    accountsPayableCurrent,
-    materialsToDeliverCurrent,
-    shortTermDebt,
-    interestPayable,
-    accountsPayableNonCurrent,
-    materialsToDeliverNonCurrent,
-    longTermDebt,
-    ships,
-    hqUpgrades,
-    arc,
-  ] = data;
-
-  return {
-    timestamp,
-    assets: {
-      current: {
-        cashAndCashEquivalents: {
-          cash,
-          deposits: {
-            total: deposits,
-          },
-        },
-        accountsReceivable: accountsReceivableCurrent,
-        loansReceivable: {
-          principal: shortTermLoans,
-          interest: interestReceivable,
-        },
-        inventory: {
-          cxListedMaterials: marketListedMaterials,
-          baseInventory: {
-            workInProgress: ordersInProgress,
-          },
-          materialsReceivable: materialsToReceiveCurrent,
-          total: marketListedMaterials + inventory + ordersInProgress + materialsToReceiveCurrent,
-        },
-      },
-      nonCurrent: {
-        buildings: {
-          total: buildings,
-        },
-        ships: {
-          total: ships,
-        },
-        longTermReceivables: {
-          accountsReceivable: accountsReceivableNonCurrent,
-          materialsReceivable: materialsToReceiveNonCurrent,
-          materialsInTransit: 0,
-          loansPrincipal: longTermLoans,
-        },
-        intangibleAssets: {
-          hqUpgrades,
-          arc,
-        },
-      },
-    },
-    liabilities: {
-      current: {
-        accountsPayable: accountsPayableCurrent,
-        materialsPayable: materialsToDeliverCurrent,
-        loansPayable: {
-          principal: shortTermDebt,
-          interest: interestPayable,
-        },
-      },
-      nonCurrent: {
-        longTermPayables: {
-          accountsPayable: accountsPayableNonCurrent,
-          materialsPayable: materialsToDeliverNonCurrent,
-          loansPrincipal: longTermDebt,
-        },
-      },
-    },
-  };
-}
-
-export function deserializeBalanceSheetV3Data(
-  data: UserData.BalanceSheetDataV3,
-): PartialBalanceSheet {
-  const [
-    timestamp,
-    cash,
     cx,
     fx,
+    mmMaterials,
     accountsReceivableCurrent,
     loansPrincipalCurrent,
     loansInterestCurrent,
@@ -247,10 +148,14 @@ export function deserializeBalanceSheetV3Data(
     resourceExtraction,
     production,
     accumulatedDepreciation,
+    shipsMarketValue,
+    shipsDepreciation,
     accountsReceivableNonCurrent,
     materialsInTransitNonCurrent,
     materialsReceivableNonCurrent,
     loansPrincipalNonCurrent,
+    hqUpgrades,
+    arc,
     accountsPayableCurrent,
     materialsPayableCurrent,
     debtsPrincipalCurrent,
@@ -258,10 +163,6 @@ export function deserializeBalanceSheetV3Data(
     accountsPayableNonCurrent,
     materialsPayableNonCurrent,
     debtsPrincipalNonCurrent,
-    shipsMarketValue,
-    shipsDepreciation,
-    hqUpgrades,
-    arc,
   ] = data;
 
   return {
@@ -274,6 +175,7 @@ export function deserializeBalanceSheetV3Data(
             cx,
             fx,
           },
+          mmMaterials,
         },
         accountsReceivable: accountsReceivableCurrent,
         loansReceivable: {
@@ -342,12 +244,13 @@ export function deserializeBalanceSheetV3Data(
 
 export function serializeBalanceSheet(
   data: PartialBalanceSheet,
-): UserData.BalanceSheetDataV3 | undefined {
+): UserData.BalanceSheetDataV2 | undefined {
   const sheet: (number | undefined)[] = [
     data.timestamp,
     data.assets?.current?.cashAndCashEquivalents?.cash,
     data.assets?.current?.cashAndCashEquivalents?.deposits?.cx,
     data.assets?.current?.cashAndCashEquivalents?.deposits?.fx,
+    data.assets?.current?.cashAndCashEquivalents?.mmMaterials,
     data.assets?.current?.accountsReceivable,
     data.assets?.current?.loansReceivable?.principal,
     data.assets?.current?.loansReceivable?.interest,
@@ -365,10 +268,14 @@ export function serializeBalanceSheet(
     data.assets?.nonCurrent?.buildings?.marketValue?.resourceExtraction,
     data.assets?.nonCurrent?.buildings?.marketValue?.production,
     data.assets?.nonCurrent?.buildings?.accumulatedDepreciation,
+    data.assets?.nonCurrent?.ships?.marketValue,
+    data.assets?.nonCurrent?.ships?.accumulatedDepreciation,
     data.assets?.nonCurrent?.longTermReceivables?.accountsReceivable,
     data.assets?.nonCurrent?.longTermReceivables?.materialsInTransit,
     data.assets?.nonCurrent?.longTermReceivables?.materialsReceivable,
     data.assets?.nonCurrent?.longTermReceivables?.loansPrincipal,
+    data.assets?.nonCurrent?.intangibleAssets?.hqUpgrades,
+    data.assets?.nonCurrent?.intangibleAssets?.arc,
     data.liabilities?.current?.accountsPayable,
     data.liabilities?.current?.materialsPayable,
     data.liabilities?.current?.loansPayable?.principal,
@@ -376,13 +283,9 @@ export function serializeBalanceSheet(
     data.liabilities?.nonCurrent?.longTermPayables?.accountsPayable,
     data.liabilities?.nonCurrent?.longTermPayables?.materialsPayable,
     data.liabilities?.nonCurrent?.longTermPayables?.loansPrincipal,
-    data.assets?.nonCurrent?.ships?.marketValue,
-    data.assets?.nonCurrent?.ships?.accumulatedDepreciation,
-    data.assets?.nonCurrent?.intangibleAssets?.hqUpgrades,
-    data.assets?.nonCurrent?.intangibleAssets?.arc,
   ];
   if (sheet.some(x => x === undefined)) {
     return undefined;
   }
-  return sheet.map(x => Math.round(x!)) as UserData.BalanceSheetDataV3;
+  return sheet.map(x => Math.round(x!)) as UserData.BalanceSheetDataV2;
 }

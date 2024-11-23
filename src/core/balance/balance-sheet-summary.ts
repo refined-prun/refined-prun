@@ -4,6 +4,7 @@ import { sum } from '@src/utils/sum';
 
 interface BalanceSheetSection {
   [key: string]: BalanceSheetSection | number | undefined;
+
   total?: number;
 }
 
@@ -39,6 +40,7 @@ export function calcTotalCashAndCashEquivalents(sheet: PartialBalanceSheet) {
     sheet.assets?.current?.cashAndCashEquivalents,
     x => x.cash,
     () => calcTotalDeposits(sheet),
+    x => x.mmMaterials,
   );
 }
 

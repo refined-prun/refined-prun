@@ -1,5 +1,3 @@
-/* Disable CssRedundantUnit because it is necessary for .otherColumns to work */
-/*noinspection CssRedundantUnit*/
 .firstColumn {
   width: 1%;
 }

@@ -23,6 +23,15 @@ function onTableHeadReady(thead: HTMLTableSectionElement) {
         FX Deposits
       </th>
     )).appendTo(row);
+    createFragmentApp(() => (
+      <th
+        class={[
+          C.LiquidAssetsPanel.number,
+          hiddenIfZero(currentAssets.inventory.mmMaterialsTotal),
+        ]}>
+        MM Materials
+      </th>
+    )).appendTo(row);
   });
 }
 
@@ -43,6 +52,20 @@ function onTableBodyReady(tbody: HTMLTableSectionElement) {
         {fixed0(currency.value ? (currentAssets.fxDeposits.value?.get(currency.value) ?? 0) : 0)}
       </td>
     )).appendTo(row);
+    const mmMaterials = computed(() => {
+      return currency.value
+        ? (currentAssets.inventory.cxInventory.value?.mmMaterialsTotal.get(currency.value) ?? 0)
+        : 0;
+    });
+    createFragmentApp(() => (
+      <td
+        class={[
+          C.LiquidAssetsPanel.number,
+          hiddenIfZero(currentAssets.inventory.mmMaterialsTotal),
+        ]}>
+        {fixed0(mmMaterials.value)}
+      </td>
+    )).appendTo(row);
   });
 }
 
@@ -56,4 +79,4 @@ function init() {
   tiles.observe('FINLA', onTileReady);
 }
 
-features.add(import.meta.url, init, 'FINLA: Adds a "CX Deposits" and "FX Deposits" columns.');
+features.add(import.meta.url, init, 'FINLA: Adds columns for additional liquid asset types.');

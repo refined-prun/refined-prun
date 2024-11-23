@@ -36,6 +36,7 @@ function createLiveBalanceSheet(): PartialBalanceSheet {
             cx: currentAssets.cxDepositsTotal,
             fx: currentAssets.fxDepositsTotal,
           }),
+          mmMaterials: currentAssets.inventory.mmMaterialsTotal,
         }),
         accountsReceivable: currentAssets.accountsReceivable,
         loansReceivable: unwrapRefProperties({
@@ -44,7 +45,7 @@ function createLiveBalanceSheet(): PartialBalanceSheet {
         }),
         inventory: unwrapRefProperties({
           cxListedMaterials: currentAssets.inventory.cxListedMaterials,
-          cxInventory: currentAssets.inventory.cxInventory,
+          cxInventory: currentAssets.inventory.cxInventoryTotal,
           materialsInTransit: currentAssets.inventory.materialsInTransit,
           baseInventory: unwrapRefProperties({
             finishedGoods: currentAssets.inventory.finishedGoods,

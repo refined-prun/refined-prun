@@ -2,14 +2,12 @@ declare namespace UserData {
   interface BalanceHistory {
     v1: UserData.BalanceSheetDataV1[];
     v2: UserData.BalanceSheetDataV2[];
-    v3: UserData.BalanceSheetDataV3[];
   }
 
   type BalanceSheetDataV1 = [
     timestamp: number,
-    fixed: number,
-    current: number,
-    liquid: number,
+    currentAssets: number,
+    nonCurrentAssets: number,
     liabilities: number,
   ];
 
@@ -18,45 +16,9 @@ declare namespace UserData {
 
     // Current Assets
     cash: number,
-    deposits: number,
-    interestReceivable: number,
-    accountsReceivable: number,
-    shortTermLoans: number,
-    marketListedMaterials: number,
-    inventory: number,
-    ordersInProgress: number,
-    materialsToReceive: number,
-
-    // Non-Current Assets
-    buildings: number,
-    accountsReceivable: number,
-    longTermLoans: number,
-    materialsToReceive: number,
-
-    // Current Liabilities
-    accountsPayable: number,
-    materialsToDeliver: number,
-    shortTermDebt: number,
-    interestPayable: number,
-
-    // Non-Current Liabilities
-    accountsPayable: number,
-    materialsToDeliver: number,
-    longTermDebt: number,
-
-    // Locked Assets
-    ships: number,
-    hqUpgrades: number,
-    arc: number,
-  ];
-
-  type BalanceSheetDataV3 = [
-    timestamp: number,
-
-    // Current Assets
-    cash: number,
     cx: number,
     fx: number,
+    mmMaterials: number,
     accountsReceivable: number,
     loansPrincipal: number,
     loansInterest: number,
@@ -76,10 +38,14 @@ declare namespace UserData {
     resourceExtraction: number,
     production: number,
     accumulatedDepreciation: number,
+    shipsMarketValue: number,
+    shipsDepreciation: number,
     accountsReceivable: number,
     materialsInTransit: number,
     materialsReceivable: number,
     loansPrincipal: number,
+    hqUpgrades: number,
+    arc: number,
 
     // Current Liabilities
     accountsPayable: number,
@@ -91,11 +57,5 @@ declare namespace UserData {
     accountsPayable: number,
     materialsPayable: number,
     debtsPrincipal: number,
-
-    // Locked Assets
-    shipsMarketValue: number,
-    shipsDepreciation: number,
-    hqUpgrades: number,
-    arc: number,
   ];
 }

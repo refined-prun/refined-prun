@@ -32,6 +32,14 @@ const currentAssets = computed<SectionData>(() => ({
             },
           ],
         },
+        {
+          name: 'MM Materials',
+          tooltip:
+            'Market Maker materials currently stored in CX warehouses. You can customize the list of' +
+            ' these materials using XIT SET FIN. Since these materials can be converted into cash' +
+            ' immediately, they are considered Cash Equivalents.',
+          value: x => x.assets?.current?.cashAndCashEquivalents?.mmMaterials,
+        },
       ],
     },
     {

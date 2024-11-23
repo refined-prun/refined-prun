@@ -29,6 +29,8 @@ export async function fetchPrices() {
     const tickerInfo: TickerPriceInfo = {
       MaterialTicker: ticker,
       ExchangeCode: 'UNIVERSE',
+      MMBuy: weightedAverage(tickerInfos, x => x.MMBuy),
+      MMSell: weightedAverage(tickerInfos, x => x.MMSell),
       PriceAverage: weightedAverage(tickerInfos, x => x.PriceAverage),
       Ask: weightedAverage(tickerInfos, x => x.Ask),
       Bid: weightedAverage(tickerInfos, x => x.Bid),
@@ -103,12 +105,18 @@ function weightedAverage<T>(
   return sum / weights;
 }
 
+const ignored = computed(() => new Set(userData.settings.financial.ignoredMaterials.split(',')));
+
 export function getPrice(ticker?: string | null) {
-  if (!cxStore.fetched) {
+  if (!ticker) {
     return undefined;
   }
 
-  if (!ticker) {
+  if (ignored.value.has(ticker.toUpperCase())) {
+    return 0;
+  }
+
+  if (!cxStore.fetched) {
     return undefined;
   }
 
@@ -170,6 +178,27 @@ export function sumMaterialAmountPrice(amounts?: PrunApi.MaterialAmount[]) {
     result += price;
   }
   return result;
+}
+
+export function getMMPrice(ticker?: string | null) {
+  if (!ticker) {
+    return undefined;
+  }
+
+  if (ignored.value.has(ticker.toUpperCase())) {
+    return 0;
+  }
+
+  if (!cxStore.fetched) {
+    return undefined;
+  }
+
+  const exchange = cxStore.prices.get(userData.settings.pricing.exchange);
+  if (!exchange) {
+    return undefined;
+  }
+
+  return exchange.get(ticker)?.MMBuy ?? 0;
 }
 
 export const cxStore = shallowReactive({

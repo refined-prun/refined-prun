@@ -12,6 +12,8 @@ import {
   canCollectFinDataPoint,
   collectFinDataPoint,
 } from '@src/store/user-data-balance';
+import Active from '@src/components/forms/Active.vue';
+import TextInput from '@src/components/forms/TextInput.vue';
 
 const sortedData = computed(() => balanceHistory.value.slice().reverse());
 
@@ -26,10 +28,8 @@ function deleteBalanceHistoryDataPoint(index: number) {
   const history = userData.balanceHistory;
   if (index < history.v1.length) {
     history.v1.splice(index, 1);
-  } else if (index - history.v1.length < history.v2.length) {
-    history.v2.splice(index - history.v1.length, 1);
   } else {
-    history.v3.splice(index - history.v1.length - history.v2.length, 1);
+    history.v2.splice(index - history.v1.length, 1);
   }
 }
 
@@ -42,9 +42,44 @@ function confirmAllDataDelete(ev: Event) {
 function formatValue(number?: number) {
   return number ? fixed0(number) : '--';
 }
+
+const mmMaterials = ref(userData.settings.financial.mmMaterials);
+
+function onMMMaterialsSubmit() {
+  const formatted = (mmMaterials.value ?? '').replaceAll(' ', '').toUpperCase();
+  userData.settings.financial.mmMaterials = formatted;
+  mmMaterials.value = formatted;
+}
+
+const ignoredMaterials = ref(userData.settings.financial.ignoredMaterials);
+
+function onIgnoredMaterialsSubmit() {
+  const formatted = (ignoredMaterials.value ?? '').replaceAll(' ', '').toUpperCase();
+  userData.settings.financial.ignoredMaterials = formatted;
+  ignoredMaterials.value = formatted;
+}
 </script>
 
 <template>
+  <SectionHeader>Price Settings</SectionHeader>
+  <Active
+    label="MM Materials"
+    tooltip="Comma-separated list of Market Maker materials.
+     These materials are priced by the MM Bid when displayed in FINLA or XIT FINBS.">
+    <TextInput
+      v-model="mmMaterials"
+      @keyup.enter="onMMMaterialsSubmit"
+      @focusout="onMMMaterialsSubmit" />
+  </Active>
+  <Active
+    label="Ignored Materials"
+    tooltip="Comma-separated list of ignored materials.
+     The price of these materials is considered to be zero.">
+    <TextInput
+      v-model="ignoredMaterials"
+      @keyup.enter="onIgnoredMaterialsSubmit"
+      @focusout="onIgnoredMaterialsSubmit" />
+  </Active>
   <SectionHeader>
     Collected Data
     <Tooltip :class="$style.tooltip" tooltip="All collected data points" />

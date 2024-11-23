@@ -13,6 +13,10 @@ export const initialUserData = deepFreeze({
       position: 'BEFORE' as UserData.CurrencyPosition,
       spacing: 'NO_SPACE' as UserData.CurrencySpacing,
     },
+    financial: {
+      mmMaterials: 'IDC,EDC',
+      ignoredMaterials: 'HEX,JUI',
+    },
     pricing: {
       exchange: 'UNIVERSE',
       method: 'DEFAULT' as UserData.PricingMethod,
@@ -47,7 +51,6 @@ export const initialUserData = deepFreeze({
   balanceHistory: {
     v1: [],
     v2: [],
-    v3: [],
   } as UserData.BalanceHistory,
   notes: [] as UserData.Note[],
   actionPackages: [] as UserData.ActionPackageData[],
@@ -61,7 +64,6 @@ export const userData = reactive({} as typeof initialUserData);
 export function applyUserData(newData: any) {
   newData.balanceHistory.v1 = shallowReactive(newData.balanceHistory.v1);
   newData.balanceHistory.v2 = shallowReactive(newData.balanceHistory.v2);
-  newData.balanceHistory.v3 = shallowReactive(newData.balanceHistory.v3);
   Object.assign(userData, newData);
 }
 
@@ -74,7 +76,6 @@ applyInitialUserData();
 export function clearBalanceHistory() {
   userData.balanceHistory.v1.length = 0;
   userData.balanceHistory.v2.length = 0;
-  userData.balanceHistory.v3.length = 0;
 }
 
 export function watchUserData(save: () => void) {

@@ -11,6 +11,7 @@ export interface SectionData {
 
 export interface RowData {
   name: string;
+  tooltip?: string;
   less?: boolean;
   value: ValueGetter;
   children?: RowData[];
