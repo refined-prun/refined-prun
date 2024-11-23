@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { deepToRaw } from '@src/utils/deep-to-raw';
+
 const migrations: Migration[] = [
   userData => {
+    void chrome.storage.local.set({
+      ['rp-backup']: structuredClone(deepToRaw(userData)),
+    });
     userData.settings.financial = {
       mmMaterials: 'IDC,EDC',
       ignoredMaterials: 'HEX,JUI',
