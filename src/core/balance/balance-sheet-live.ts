@@ -8,7 +8,6 @@ import {
   calcAcidTestRatio,
   calcLiquidationValue,
   calcDebtRatio,
-  calcDebtToEquityRatio,
   calcEquity,
   calcQuickAssets,
   calcQuickLiabilities,
@@ -18,7 +17,6 @@ import {
   calcTotalLiabilities,
   calcTotalNonCurrentAssets,
   calcTotalNonCurrentLiabilities,
-  calcWorkingCapitalRatio,
   calcTotalIntangibleAssets,
 } from '@src/core/balance/balance-sheet-summary';
 
@@ -140,9 +138,7 @@ export const liveBalanceSummary = unwrapBalanceSheetExtras({
   quickAssets: calcQuickAssets,
   quickLiabilities: calcQuickLiabilities,
   acidTestRatio: calcAcidTestRatio,
-  workingCapitalRatio: calcWorkingCapitalRatio,
   debtRatio: calcDebtRatio,
-  debtToEquityRatio: calcDebtToEquityRatio,
 });
 
 type BalanceSheetExtras<T> = { [P in keyof T]: (sheet: PartialBalanceSheet) => T[P] };

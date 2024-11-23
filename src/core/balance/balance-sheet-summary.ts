@@ -212,16 +212,8 @@ export function calcAcidTestRatio(sheet: PartialBalanceSheet) {
   return map([calcQuickAssets(sheet), calcQuickLiabilities(sheet)], (x, y) => x / y);
 }
 
-export function calcWorkingCapitalRatio(sheet: PartialBalanceSheet) {
-  return map([calcTotalCurrentAssets(sheet), calcTotalCurrentLiabilities(sheet)], (x, y) => x / y);
-}
-
 export function calcDebtRatio(sheet: PartialBalanceSheet) {
   return map([calcTotalLiabilities(sheet), calcTotalAssets(sheet)], (x, y) => x / y);
-}
-
-export function calcDebtToEquityRatio(sheet: PartialBalanceSheet) {
-  return map([calcTotalLiabilities(sheet), calcEquity(sheet)], (x, y) => x / y);
 }
 
 function mapSum(...args: (number | undefined)[]) {
