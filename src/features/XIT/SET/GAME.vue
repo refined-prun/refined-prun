@@ -114,15 +114,17 @@ function confirmResetAllData(ev: Event) {
   <form>
     <Active
       label="Red"
-      tooltip="Thresholds for red consumable level in burn calculations (in days)">
+      tooltip="Threshold for red consumable level in burn calculations (in days).">
       <NumberInput v-model="userData.settings.burn.red" />
     </Active>
     <Active
       label="Yellow"
-      tooltip="Thresholds for yellow consumable level in burn calculations (in days)">
+      tooltip="Threshold for yellow consumable level in burn calculations (in days).">
       <NumberInput v-model="userData.settings.burn.yellow" />
     </Active>
-    <Active label="Resupply" tooltip="TODO: Add a proper tooltip">
+    <Active
+      label="Resupply"
+      tooltip="Target amount of supplied days for the 'Need' column in XIT BURN.">
       <NumberInput v-model="userData.settings.burn.resupply" />
     </Active>
   </form>
@@ -131,8 +133,7 @@ function confirmResetAllData(ev: Event) {
     <Tooltip
       :class="$style.tooltip"
       tooltip="Create hotkeys on the left sidebar.
-         The first value is what will be displayed,
-          the second is the command." />
+         The first value is what will be displayed, the second is the command." />
   </SectionHeader>
   <form>
     <Active v-for="(button, i) in userData.settings.sidebar" :key="i" :label="`Button ${i + 1}`">

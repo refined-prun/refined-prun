@@ -156,7 +156,7 @@ function onDeleteClick() {
       </Active>
       <Active
         label="Recurring period"
-        tooltip="How often the checklist item will be added back. Will not function without a due date.">
+        tooltip="An amount of days the due date will advance on task completion.">
         <NumberInput v-model="recurring" />
       </Active>
       <template v-if="type === 'Text'">

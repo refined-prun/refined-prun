@@ -80,10 +80,7 @@ function onIgnoredMaterialsSubmit() {
       @keyup.enter="onIgnoredMaterialsSubmit"
       @focusout="onIgnoredMaterialsSubmit" />
   </Active>
-  <SectionHeader>
-    Collected Data
-    <Tooltip :class="$style.tooltip" tooltip="All collected data points" />
-  </SectionHeader>
+  <SectionHeader>Collected Data Points</SectionHeader>
   <form>
     <Commands>
       <PrunButton primary :disabled="!canCollectFinDataPoint()" @click="collectFinDataPoint">
@@ -111,7 +108,7 @@ function onIgnoredMaterialsSubmit() {
   </table>
   <SectionHeader>
     Danger Zone
-    <Tooltip :class="$style.tooltip" tooltip="Clear all current and historical financial data." />
+    <Tooltip :class="$style.tooltip" tooltip="Clear all historical financial data" />
   </SectionHeader>
   <form>
     <Commands>

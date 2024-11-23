@@ -29,9 +29,7 @@ function onCreateClick() {
   <div :class="C.DraftConditionEditor.form">
     <SectionHeader>New Note</SectionHeader>
     <form>
-      <Active
-        label="Note Name"
-        tooltip="The name of the note. The command to access will be XIT NOTE_{name}">
+      <Active label="Note Name">
         <TextInput v-model="name" />
       </Active>
       <Commands>

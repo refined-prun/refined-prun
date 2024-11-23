@@ -76,15 +76,15 @@ function onSaveClick() {
     <form>
       <Active
         label="Label"
-        tooltip="The label showing at the top of the inventory (ABC, CAT, etc.)">
+        tooltip="The label showing at the top of the inventory (ABC, CAT, etc.).">
         <TextInput v-model="label" style="width: 80%" />
       </Active>
-      <Active label="Category 1 Name" tooltip="The name of the first category for materials">
+      <Active label="Category 1 Name" tooltip="The name of the first category for materials.">
         <TextInput v-model="categories[0].name" style="width: 80%" />
       </Active>
       <Active
         label="Category 1 MATs"
-        tooltip="A list of materials in the first category. Separate tickers by a comma. (RAT, DW, etc.)">
+        tooltip="A list of materials in the first category. Separate tickers by a comma. (RAT, DW, etc.).">
         <TextInput v-model="categories[0].materials" style="width: 80%" />
       </Active>
       <template v-for="(category, i) in categories.slice(1)" :key="i">
@@ -101,7 +101,7 @@ function onSaveClick() {
         tooltip="Add burn sorting as a secondary sorting method. Burn categories will show under the categories defined above.">
         <RadioItem v-model="burn">add burn</RadioItem>
       </Active>
-      <Active label="Show Zeros" tooltip="Show item icons that have zero quantity">
+      <Active label="Show Zeros" tooltip="Show item icons that have zero quantity.">
         <RadioItem v-model="zero">show zero</RadioItem>
       </Active>
       <Commands>

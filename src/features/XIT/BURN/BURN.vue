@@ -100,7 +100,7 @@ const rat = materialsStore.getByTicker('RAT');
           <th>
             <div :class="$style.header">
               Burn
-              <Tooltip position="right" tooltip="How much of a material is consumed per day" />
+              <Tooltip position="bottom" tooltip="How much of a material is consumed per day." />
             </div>
           </th>
           <th>
@@ -108,7 +108,7 @@ const rat = materialsStore.getByTicker('RAT');
               Need
               <Tooltip
                 position="bottom"
-                tooltip="How much of a material needs to be delivered to be fully resupplied" />
+                tooltip="How much of a material needs to be delivered to be fully supplied." />
             </div>
           </th>
           <th>Days</th>
