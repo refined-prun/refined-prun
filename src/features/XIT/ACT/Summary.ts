@@ -116,8 +116,12 @@ export async function createSummaryScreen(tile) {
               return;
             }
 
-            const mappedAction = mapPmmgActionPackage(parsedData);
-            userData.actionPackages.push(mappedAction);
+            if (parsedData.id) {
+              userData.actionPackages.push(parsedData);
+            } else {
+              const mappedAction = mapPmmgActionPackage(parsedData);
+              userData.actionPackages.push(mappedAction);
+            }
             popup.destroy();
           } catch {
             importRow.row.classList.add(...Style.FormError);
@@ -139,8 +143,12 @@ export async function createSummaryScreen(tile) {
                 }
                 try {
                   const parsedData = JSON.parse(e.target.result as string);
-                  const mappedAction = mapPmmgActionPackage(parsedData);
-                  userData.actionPackages.push(mappedAction);
+                  if (parsedData.id) {
+                    userData.actionPackages.push(parsedData);
+                  } else {
+                    const mappedAction = mapPmmgActionPackage(parsedData);
+                    userData.actionPackages.push(mappedAction);
+                  }
                   popup.destroy();
                 } catch {
                   importRow.row.classList.add(...Style.FormError);
