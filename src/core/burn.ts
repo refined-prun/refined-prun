@@ -122,6 +122,10 @@ export function calculatePlanetBurn(
         // Don't count the bugged workforce with one population.
         continue;
       }
+      if (tier.capacity === 0) {
+        // After demolishing housing, you can get homeless pops that don't consume goods.
+        continue;
+      }
       for (const need of tier.needs) {
         const materialBurn = getBurnValue(need.material.ticker);
         materialBurn.workforce += need.unitsPerInterval;
