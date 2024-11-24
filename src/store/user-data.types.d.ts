@@ -1,4 +1,6 @@
 declare namespace UserData {
+  type TimeFormat = 'DEFAULT' | '24H' | '12H';
+
   type CurrencyPreset = 'DEFAULT' | 'AIC' | 'CIS' | 'ICA' | 'NCC' | 'CUSTOM';
   type CurrencyPosition = 'BEFORE' | 'AFTER';
   type CurrencySpacing = 'HAS_SPACE' | 'NO_SPACE';

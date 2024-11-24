@@ -15,6 +15,21 @@ import {
 } from '@src/infrastructure/storage/user-data-serializer';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 
+const timeFormats: { label: string; value: UserData.TimeFormat }[] = [
+  {
+    label: 'Browser Default',
+    value: 'DEFAULT',
+  },
+  {
+    label: '24h',
+    value: '24H',
+  },
+  {
+    label: '12h',
+    value: '12H',
+  },
+];
+
 const currencySettings = computed(() => userData.settings.currency);
 
 const currencyPresets: { label: string; value: UserData.CurrencyPreset }[] = [
@@ -86,6 +101,12 @@ function confirmResetAllData(ev: Event) {
 </script>
 
 <template>
+  <SectionHeader>Appearance</SectionHeader>
+  <form>
+    <Active label="Time">
+      <SelectInput v-model="userData.settings.time" :options="timeFormats" />
+    </Active>
+  </form>
   <SectionHeader>
     Currency Symbol
     <Tooltip

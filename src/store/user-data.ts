@@ -7,6 +7,7 @@ export const initialUserData = deepFreeze({
   settings: {
     mode: undefined as 'BASIC' | 'FULL' | undefined,
     disabled: [] as string[],
+    time: 'DEFAULT' as UserData.TimeFormat,
     currency: {
       preset: 'DEFAULT' as UserData.CurrencyPreset,
       custom: '$',

@@ -3,6 +3,9 @@ import { deepToRaw } from '@src/utils/deep-to-raw';
 
 const migrations: Migration[] = [
   userData => {
+    userData.settings.time = 'DEFAULT';
+  },
+  userData => {
     void chrome.storage.local.set({
       ['rp-backup']: structuredClone(deepToRaw(userData)),
     });

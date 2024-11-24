@@ -3,16 +3,37 @@ import { userData } from '@src/store/user-data';
 import { isPresent } from 'ts-extras';
 import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
 
-export const hhmm = new Intl.DateTimeFormat(undefined, {
-  hour: '2-digit',
-  minute: '2-digit',
-}).format;
+const hour12 = computed(() => {
+  switch (userData.settings.time) {
+    case '24H':
+      return false;
+    case '12H':
+      return true;
+    case 'DEFAULT':
+      return undefined;
+  }
+});
 
-export const hhmmss = new Intl.DateTimeFormat(undefined, {
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-}).format;
+const hhmmRef = computed(() => {
+  return new Intl.DateTimeFormat(undefined, {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: hour12.value,
+  }).format;
+});
+
+export const hhmm = (date?: number | Date | undefined) => hhmmRef.value(date);
+
+const hhmmssRef = computed(() => {
+  return new Intl.DateTimeFormat(undefined, {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: hour12.value,
+  }).format;
+});
+
+export const hhmmss = (date?: number | Date | undefined) => hhmmssRef.value(date);
 
 export const ddmm = new Intl.DateTimeFormat(undefined, {
   month: '2-digit',
