@@ -43,7 +43,7 @@ jobs:
           FILENAME="$PROJECT_NAME-$DAILY_VERSION-for-local-testing-only.zip"
           zip -r "$FILENAME" ./*
           # Create as draft to curate it before sending it out
-          gh release create "$DAILY_VERSION" "$FILENAME" --draft --generate-notes
+          gh release create "$DAILY_VERSION" "$FILENAME" --notes "For the changelog, please refer to https://github.com/refined-prun/refined-prun/blob/main/CHANGELOG.md for details."
 
   chrome:
     if: needs.build.outputs.created
