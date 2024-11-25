@@ -1,7 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { deepToRaw } from '@src/utils/deep-to-raw';
+import { isEmpty } from 'ts-extras';
 
 const migrations: Migration[] = [
+  userData => {
+    for (const key of Object.keys(userData.tileState)) {
+      const state = userData.tileState[key];
+      if (state['activeSort'] === '__CAT__') {
+        delete state['activeSort'];
+      }
+      if (isEmpty(Object.keys(state))) {
+        delete userData.tileState[key];
+      }
+    }
+  },
   userData => {
     userData.settings.time = 'DEFAULT';
   },

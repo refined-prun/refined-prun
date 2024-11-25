@@ -31,6 +31,7 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
   }
 
   const activeSortId = computedTileState(getTileState(tile), 'activeSort', undefined);
+  const catSort = computedTileState(getTileState(tile), 'catSort', true);
   const reverseSort = computedTileState(getTileState(tile), 'reverseSort', false);
   const sortOptions = await $(container, C.InventorySortControls.controls);
   const inventory = await $(container, C.InventoryView.grid);
@@ -38,14 +39,12 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
   // Enumerate children in advance because we will modify the collection in the loop.
   const criterion = Array.from(sortOptions.children);
 
-  // Synthetic id for CAT.
-  const CAT = '__CAT__';
-
   // Skip the first sorting option because it is the grid/list view switch.
   for (let i = 1; i < criterion.length; i++) {
     const option = criterion[i] as HTMLElement;
     option.addEventListener('click', () => {
       activeSortId.value = undefined;
+      catSort.value = false;
     });
     const isCategorySort = i === 2;
     if (!isCategorySort) {
@@ -53,21 +52,21 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
     }
     const orderMarker = _$(option, C.InventorySortControls.order);
     const isSelected = (orderMarker?.children.length ?? 0) > 0;
-    if (isSelected && !activeSortId.value) {
-      activeSortId.value = CAT;
+    if (!isSelected || activeSortId.value) {
+      catSort.value = false;
     }
-    const catActive = computed(() => activeSortId.value === CAT);
     createFragmentApp(
       SortCriteria,
       reactive({
         label: option.textContent ?? 'CAT',
-        active: catActive,
+        active: catSort,
         reverse: reverseSort,
         onClick: () => {
-          if (catActive.value) {
+          if (catSort.value) {
             reverseSort.value = !reverseSort.value;
           } else {
-            activeSortId.value = CAT;
+            activeSortId.value = undefined;
+            catSort.value = true;
             reverseSort.value = false;
           }
         },
@@ -86,7 +85,7 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
   });
 
   watchEffectWhileNodeAlive(sortOptions, () => {
-    if (activeSortId.value) {
+    if (activeSortId.value || catSort.value) {
       sortOptions.classList.add(classes.custom);
     } else {
       sortOptions.classList.remove(classes.custom);
@@ -104,6 +103,7 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
           reverseSort.value = !reverseSort.value;
         } else {
           activeSortId.value = mode;
+          catSort.value = false;
           reverseSort.value = false;
         }
       },
@@ -119,7 +119,7 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
     scope.begin();
     sortInventory(
       inventory,
-      activeSortId.value === CAT ? createCategorySortingMode(storeId) : activeMode.value,
+      catSort.value ? createCategorySortingMode(storeId) : activeMode.value,
       burn.value?.burn,
       reverseSort.value,
     );
@@ -130,7 +130,7 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
   watchEffectWhileNodeAlive(inventory, () => {
     // Touch reactive values.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const _ = activeSortId.value && burn.value;
+    const _ = activeSortId.value && catSort.value && burn.value;
     runSort();
   });
 }
