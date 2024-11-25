@@ -3,6 +3,7 @@ import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { prunAtob } from '@src/infrastructure/prun-ui/base64';
 import { isValidUrl } from '@src/utils/is-valid-url';
 import { shortcuts } from '@src/features/XIT/WEB/shortcuts';
+import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 
 const command = inject(xit.command)!;
 const parameters = useXitParameters();
@@ -23,10 +24,15 @@ function getUrl() {
     return undefined;
   }
 }
+
+const loading = ref(true);
 </script>
 
 <template>
   <div v-if="!url">Invalid parameters!</div>
   <div v-else-if="!isValidUrl(url)">Url {{ url }} is invalid!</div>
-  <iframe v-else :src="url" width="100%" height="100%" style="border-width: 0" />
+  <template v-else>
+    <LoadingSpinner v-if="loading" />
+    <iframe :src="url" width="100%" height="100%" style="border-width: 0" @load="loading = false" />
+  </template>
 </template>
