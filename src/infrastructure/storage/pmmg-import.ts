@@ -135,41 +135,6 @@ export function importPmmgNotes() {
   });
 }
 
-interface PmmgActionPackage {
-  global: {
-    name: string;
-  };
-  groups: PmmgActionGroup[];
-  actions: PmmgAction[];
-}
-
-interface PmmgActionGroup {
-  type: 'Manual' | 'Resupply' | 'Repair';
-  name?: string;
-  days?: number | string;
-  advanceDays?: number | string;
-  planet?: string;
-  useBaseInv?: boolean;
-  materials?: Record<string, number>;
-  exclusions?: string[];
-  consumablesOnly?: boolean;
-}
-
-interface PmmgAction {
-  type: 'CX Buy' | 'MTRA';
-
-  name?: string;
-  group?: string;
-
-  buyPartial?: boolean;
-  exchange?: string;
-  useCXInv?: boolean;
-  priceLimits?: Record<string, number>;
-
-  origin?: string;
-  dest?: string;
-}
-
 function mapBalanceEntry(
   entry: [
     timestamp: number,
@@ -187,56 +152,11 @@ export function importPmmgActions() {
     if (!json) {
       return;
     }
-    const pmmg = json['PMMG-Action'] as Record<string, PmmgActionPackage>;
+    const pmmg = json['PMMG-Action'] as Record<string, UserData.ActionPackageData>;
     if (pmmg) {
-      userData.actionPackages = Object.values(pmmg).map(mapPmmgActionPackage);
+      userData.actionPackages = Object.values(pmmg);
     }
   });
-}
-
-export function mapPmmgActionPackage(pkg?: PmmgActionPackage): UserData.ActionPackageData {
-  return {
-    id: createId(),
-    name: pkg?.global?.name ?? 'ACTION_PACKAGE',
-    groups: pkg?.groups?.map(mapPmmgActionGroup) ?? [],
-    actions: pkg?.actions?.map(mapPmmgAction) ?? [],
-  };
-}
-
-function mapPmmgActionGroup(group: PmmgActionGroup): UserData.ActionGroupData {
-  return {
-    ...group,
-    id: createId(),
-    type: mapPmmgActionGroupType(group.type),
-  };
-}
-
-function mapPmmgActionGroupType(pmmgType: string) {
-  switch (pmmgType) {
-    case 'Resupply':
-      return 'RESUPPLY';
-    case 'Repair':
-      return 'REPAIR';
-    default:
-      return 'MANUAL';
-  }
-}
-
-function mapPmmgAction(action: PmmgAction): UserData.ActionData {
-  return {
-    ...action,
-    id: createId(),
-    type: mapPmmgActionType(action.type),
-  };
-}
-
-function mapPmmgActionType(pmmgType: string) {
-  switch (pmmgType) {
-    case 'CX Buy':
-      return 'CX_BUY';
-    default:
-      return 'MTRA';
-  }
 }
 
 function mapPmmgFeature(feature: string) {

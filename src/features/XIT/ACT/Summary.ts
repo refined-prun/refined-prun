@@ -2,9 +2,7 @@ import { showWarningDialog, createLink, createEmptyTableRow, createTable, Popup 
 import { Style } from '@src/legacy';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
-import { mapPmmgActionPackage } from '@src/infrastructure/storage/pmmg-import';
 import removeArrayElement from '@src/utils/remove-array-element';
-import { createId } from '@src/store/create-id';
 
 // All functions associated with the summary screen
 export async function createSummaryScreen(tile) {
@@ -111,17 +109,12 @@ export async function createSummaryScreen(tile) {
           const rawData = importRow.rowInput.value;
           try {
             const parsedData = JSON.parse(rawData);
-
-            if (parsedData.id) {
-              parsedData.id = createId();
-              userData.actionPackages.push(parsedData);
-            } else if (parsedData.global) {
-              const mappedAction = mapPmmgActionPackage(parsedData);
-              userData.actionPackages.push(mappedAction);
-            } else {
+            if (!parsedData.global?.name) {
               importRow.row.classList.add(...Style.FormError);
               return;
             }
+
+            userData.actionPackages.push(parsedData);
             popup.destroy();
           } catch {
             importRow.row.classList.add(...Style.FormError);
@@ -143,16 +136,12 @@ export async function createSummaryScreen(tile) {
                 }
                 try {
                   const parsedData = JSON.parse(e.target.result as string);
-                  if (parsedData.id) {
-                    parsedData.id = createId();
-                    userData.actionPackages.push(parsedData);
-                  } else if (parsedData.global) {
-                    const mappedAction = mapPmmgActionPackage(parsedData);
-                    userData.actionPackages.push(mappedAction);
-                  } else {
+                  if (!parsedData.global?.name) {
                     importRow.row.classList.add(...Style.FormError);
                     return;
                   }
+
+                  userData.actionPackages.push(parsedData);
                   popup.destroy();
                 } catch {
                   importRow.row.classList.add(...Style.FormError);
@@ -184,8 +173,8 @@ export async function createSummaryScreen(tile) {
   }
 
   for (const pkg of userData.actionPackages) {
-    const friendlyName = pkg.name.split('_').join(' ');
-    const paramName = pkg.name.split(' ').join('_');
+    const friendlyName = pkg.global.name.split('_').join(' ');
+    const paramName = pkg.global.name.split(' ').join('_');
 
     const row = document.createElement('tr');
 

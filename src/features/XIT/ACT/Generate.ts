@@ -13,23 +13,23 @@ import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addr
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import { createId } from '@src/store/create-id';
 import { userData } from '@src/store/user-data';
 import { parseStorageName } from '@src/features/XIT/ACT/utils';
 
 // All functions associated with generating/editing action packages
-export async function createGenerateScreen(tile, packageName) {
+export async function createGenerateScreen(tile, packageName: string) {
   if (!packageName || packageName == '') {
     tile.textContent = 'Error: Please name the action package by including an extra parameter';
     return;
   }
 
-  let actionPackage = userData.actionPackages.find(x => x.name === packageName);
+  let actionPackage = userData.actionPackages.find(x => x.global.name === packageName);
 
   if (!actionPackage) {
     actionPackage = {
-      id: createId(),
-      name: packageName,
+      global: {
+        name: packageName,
+      },
       groups: [],
       actions: [],
     };
@@ -77,7 +77,7 @@ class GenerateScreen {
     }
 
     const title = document.createElement('h2');
-    title.textContent = this.actionPackage.name || 'unnamed';
+    title.textContent = this.actionPackage.global.name || 'unnamed';
     title.classList.add(...Style.DraftName);
     title.style.marginLeft = '4px';
     this.globalSection.appendChild(title);
@@ -127,7 +127,7 @@ class GenerateScreen {
       switch (
         group.type // Populate content column based on material group type
       ) {
-        case 'MANUAL':
+        case 'Manual':
           if (group.materials) {
             contentText = '';
             for (const mat of Object.keys(group.materials)) {
@@ -143,7 +143,7 @@ class GenerateScreen {
             contentColumn.appendChild(createTextSpan('--'));
           }
           break;
-        case 'RESUPPLY':
+        case 'Resupply':
           if (group.planet && group.days) {
             contentText = `Resupply ${group.planet} with ${group.days} day${group.days == 1 ? '' : 's'} of supplies`;
             contentColumn.appendChild(createTextSpan(contentText));
@@ -151,7 +151,7 @@ class GenerateScreen {
             contentColumn.appendChild(createTextSpan('--'));
           }
           break;
-        case 'REPAIR':
+        case 'Repair':
           if (group.planet) {
             contentText = `Repair buildings on ${group.planet}${
               group.days && group.days != 0 && group.days != ''
@@ -207,7 +207,7 @@ class GenerateScreen {
       'Group Type',
       'groupType',
       undefined,
-      ['RESUPPLY', 'REPAIR', 'MANUAL'],
+      ['Resupply', 'Repair', 'Manual'],
     );
     const newGroupAdd = this.createFormRow(
       this.groupSection,
@@ -220,7 +220,7 @@ class GenerateScreen {
 
     // Add method for adding a new group with default values
     newGroupAdd.addEventListener('click', () => {
-      this.actionPackage.groups.push({ id: createId(), type: newGroupDropdown.value });
+      this.actionPackage.groups.push({ type: newGroupDropdown.value });
       this.generateGroupForm();
     });
   }
@@ -237,7 +237,7 @@ class GenerateScreen {
 
     // Add other rows depending on the group type
     switch (group.type) {
-      case 'RESUPPLY': {
+      case 'Resupply': {
         // Get list of planets
         const possiblePlanets = [] as string[];
         for (const workforce of workforcesStore.all.value ?? []) {
@@ -284,7 +284,7 @@ class GenerateScreen {
         );
         break;
       }
-      case 'REPAIR': {
+      case 'Repair': {
         // Get list of planets
         const possiblePlanets = [] as string[];
         for (const site of sitesStore.all.value ?? []) {
@@ -316,7 +316,7 @@ class GenerateScreen {
         );
         break;
       }
-      case 'MANUAL': {
+      case 'Manual': {
         // Create rows corresponding to current materials stored in group
         let numMaterials = 0; // Stores how many materials there are listed
         if (group.materials) {
@@ -386,7 +386,7 @@ class GenerateScreen {
         group.name = name;
 
         switch (group.type) {
-          case 'RESUPPLY': {
+          case 'Resupply': {
             group.planet = popup.getRowByName('Planet').rowInput.value;
             group.days = parseFloat(popup.getRowByName('Days').rowInput.value || 0);
             group.useBaseInv = popup.getRowByName('Use Base Inv').rowInput.checked;
@@ -399,13 +399,13 @@ class GenerateScreen {
             }
             break;
           }
-          case 'REPAIR': {
+          case 'Repair': {
             group.planet = popup.getRowByName('Planet').rowInput.value;
             group.days = popup.getRowByName('Day Threshold').rowInput.value;
             group.advanceDays = popup.getRowByName('Time Offset').rowInput.value;
             break;
           }
-          case 'MANUAL': {
+          case 'Manual': {
             group.materials = {};
 
             const numMaterials = (popup.rows.length - 3) / 2;
@@ -482,7 +482,7 @@ class GenerateScreen {
       // Column summarizing parameters of action
       const contentColumn = document.createElement('td');
       switch (action.type) {
-        case 'CX_BUY':
+        case 'CX Buy':
           if (action.group && action.exchange) {
             contentColumn.appendChild(
               createTextSpan('Buying group ' + action.group + ' from ' + action.exchange),
@@ -550,7 +550,7 @@ class GenerateScreen {
       'Action Type',
       'actionType',
       undefined,
-      ['CX_BUY', 'MTRA'],
+      ['CX Buy', 'MTRA'],
     );
     const newActionAdd = this.createFormRow(
       this.actionSection,
@@ -563,7 +563,7 @@ class GenerateScreen {
 
     // Add method for adding a new group with default values
     newActionAdd.addEventListener('click', () => {
-      this.actionPackage.actions.push({ id: createId(), type: newActionDropdown.value });
+      this.actionPackage.actions.push({ type: newActionDropdown.value });
       this.generateActionForm();
     });
   }
@@ -580,7 +580,7 @@ class GenerateScreen {
 
     // Add more rows depending on the type of the action
     switch (action.type) {
-      case 'CX_BUY': {
+      case 'CX Buy': {
         // Add group dropdown
         const groupNames = this.actionPackage.groups
           .filter(obj => obj.name && obj.name !== '')
@@ -764,7 +764,7 @@ class GenerateScreen {
         action.name = name;
 
         switch (action.type) {
-          case 'CX_BUY':
+          case 'CX Buy':
             action.group = popup.getRowByName('Material Group').rowInput.value;
             action.exchange = popup.getRowByName('Exchange').rowInput.value;
             action.buyPartial = popup.getRowByName('Buy Partial').rowInput.checked;
@@ -809,7 +809,7 @@ class GenerateScreen {
       'EXECUTE',
     );
     openButton.addEventListener('click', () => {
-      showBuffer('XIT ACTION_' + this.actionPackage.name.split(' ').join('_'));
+      showBuffer('XIT ACTION_' + this.actionPackage.global.name.split(' ').join('_'));
     });
 
     // Add help button

@@ -22,7 +22,7 @@ export function parseActionPackage(
   actionPackage.valid = false;
 
   // If invalid return an empty action package and throw error
-  if (!rawActionPackage.name || !rawActionPackage.actions || !rawActionPackage.groups) {
+  if (!rawActionPackage.global.name || !rawActionPackage.actions || !rawActionPackage.groups) {
     addMessage(messageBox, 'Corrupted action package structure', 'ERROR');
     return actionPackage;
   }
@@ -45,7 +45,7 @@ export function parseActionPackage(
   for (let i = 0; i < rawActionPackage.actions.length; i++) {
     const action = rawActionPackage.actions[i];
     const actionIndex = i;
-    if (action.type == 'CX_BUY') {
+    if (action.type == 'CX Buy') {
       if (!action.group) {
         addMessage(messageBox, 'Missing material group on CX buy', 'ERROR');
         return actionPackage;
@@ -285,7 +285,7 @@ export function parseActionPackage(
 // Parse a material group into a list of materials
 export function parseGroup(group: UserData.ActionGroupData, messageBox, errorFlag) {
   let parsedGroup = {};
-  if (group.type == 'RESUPPLY') {
+  if (group.type == 'Resupply') {
     // Interpret burn to get number of materials
     if (!group.planet) {
       addMessage(messageBox, 'Missing resupply planet', 'ERROR');
@@ -334,7 +334,7 @@ export function parseGroup(group: UserData.ActionGroupData, messageBox, errorFla
       errorFlag[0] = true;
       return parsedGroup;
     }
-  } else if (group.type == 'REPAIR') {
+  } else if (group.type == 'Repair') {
     if (!group.planet) {
       addMessage(messageBox, 'Missing resupply planet', 'ERROR');
       errorFlag[0] = true;
@@ -400,7 +400,7 @@ export function parseGroup(group: UserData.ActionGroupData, messageBox, errorFla
       addMessage(messageBox, 'Missing data on repair planet', 'ERROR');
       errorFlag[0] = true;
     }
-  } else if (group.type == 'MANUAL') {
+  } else if (group.type == 'Manual') {
     // Just return the list of materials
     if (group.materials) {
       parsedGroup = group.materials;

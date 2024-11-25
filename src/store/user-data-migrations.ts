@@ -3,6 +3,28 @@ import { deepToRaw } from '@src/utils/deep-to-raw';
 import { isEmpty } from 'ts-extras';
 
 const migrations: Migration[] = [
+  // End of beta
+  userData => {
+    void chrome.storage.local.remove('rp-backup');
+    for (const pkg of userData.actionPackages) {
+      for (const group of pkg.groups) {
+        group.type = group.type === 'RESUPPLY' ? 'Resupply' : group.type;
+        group.type = group.type === 'REPAIR' ? 'Repair' : group.type;
+        group.type = group.type === 'MANUAL' ? 'Manual' : group.type;
+        delete group.id;
+      }
+      for (const action of pkg.actions) {
+        action.type = action.type === 'CX_BUY' ? 'CX Buy' : action.type;
+        action.type = action.type === 'MTRA' ? 'MTRA' : action.type;
+        delete action.id;
+      }
+      pkg.global = {
+        name: pkg.name,
+      };
+      delete pkg.name;
+      delete pkg.id;
+    }
+  },
   userData => {
     for (const key of Object.keys(userData.tileState)) {
       const state = userData.tileState[key];

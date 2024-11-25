@@ -28,22 +28,22 @@ declare namespace UserData {
     text: string;
   }
 
-  interface ActionPackageData {
-    id: string;
-    name: string;
-    groups: ActionGroupData[];
-    actions: ActionData[];
-  }
-
   interface SystemMessages {
     chat: string;
     hideJoined: boolean;
     hideDeleted: boolean;
   }
 
+  interface ActionPackageData {
+    groups: ActionGroupData[];
+    actions: ActionData[];
+    global: {
+      name: string;
+    };
+  }
+
   interface ActionGroupData {
-    id: string;
-    type: 'MANUAL' | 'RESUPPLY' | 'REPAIR';
+    type: 'Manual' | 'Resupply' | 'Repair';
     name?: string;
     days?: number | string;
     advanceDays?: number | string;
@@ -55,8 +55,7 @@ declare namespace UserData {
   }
 
   interface ActionData {
-    id: string;
-    type: 'CX_BUY' | 'MTRA';
+    type: 'CX Buy' | 'MTRA';
 
     name?: string;
     group?: string;
