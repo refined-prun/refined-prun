@@ -34,6 +34,7 @@ async function processNotification(container: HTMLElement) {
 
 interface AlertPatch {
   types: PrunApi.AlertType[];
+
   replace(alert: PrunApi.Alert, text: string): string;
 }
 
@@ -53,60 +54,57 @@ const patches: AlertPatch[] = [
       'CONTRACT_CONTRACT_REJECTED',
     ],
     replace(alert: PrunApi.Alert, text: string) {
-      return text.replace(/Your partner /, '');
+      return text.replace('Your partner ', '');
     },
   },
   {
     types: ['COMEX_ORDER_FILLED', 'FOREX_ORDER_FILLED'],
     replace(alert: PrunApi.Alert, text: string) {
-      return text.replace(/ Commodity Exchange/, '').replace(/ order/, '');
+      return text.replace(' Commodity Exchange', '').replace(' order', '');
     },
   },
   {
     types: ['COMEX_TRADE', 'FOREX_TRADE'],
     replace(alert: PrunApi.Alert, text: string) {
-      return text
-        .replace(/ Commodity Exchange/, '')
-        .replace('your ', '')
-        .replace(' order', '');
+      return text.replace(' Commodity Exchange', '').replace(' your', '').replace(' order', '');
     },
   },
   {
     types: ['PRODUCTION_ORDER_FINISHED'],
     replace(alert: PrunApi.Alert, text: string) {
       return text
-        .replace(/at your base /, '')
-        .replace(/One /, '1 ')
-        .replace(/ have been/, '')
-        .replace(/ units? of /, '')
-        .replace(/ produced/, '');
+        .replace(' at your base', '')
+        .replace('One', '1')
+        .replace(' have been', '')
+        .replace(/ units? of/, '')
+        .replace(' produced', '');
     },
   },
   {
     types: ['COGC_PROGRAM_CHANGED', 'COGC_UPKEEP_STARTED', 'COGC_STATUS_CHANGED'],
     replace(alert: PrunApi.Alert, text: string) {
       return text
-        .replace(/Chamber of Global Commerce/, 'COGC')
-        .replace(/ a new economic program/, '')
-        .replace(/ Advertising Campaign:/, '');
+        .replace('Chamber of Global Commerce', 'COGC')
+        .replace(' a new economic program', '')
+        .replace(' Advertising Campaign:', '');
     },
   },
   {
     types: ['SHIP_FLIGHT_ENDED'],
     replace(alert: PrunApi.Alert, text: string) {
-      return text.replace(/its destination /, '');
+      return text.replace(' its destination', '');
     },
   },
   {
     types: ['LOCAL_MARKET_AD_ACCEPTED', 'LOCAL_MARKET_AD_EXPIRED'],
     replace(alert: PrunApi.Alert, text: string) {
-      return text.replace(/ the/, '').replace(/ local market/, '');
+      return text.replace(' the', '').replace(' local market', '');
     },
   },
   {
     types: ['POPULATION_PROJECT_UPGRADED'],
     replace(alert: PrunApi.Alert, text: string) {
-      return text.replace(/population infrastructure/, 'POPI');
+      return text.replace('population infrastructure', 'POPI');
     },
   },
 ];
