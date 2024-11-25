@@ -4,6 +4,7 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 import { mapPmmgActionPackage } from '@src/infrastructure/storage/pmmg-import';
 import removeArrayElement from '@src/utils/remove-array-element';
+import { createId } from '@src/store/create-id';
 
 // All functions associated with the summary screen
 export async function createSummaryScreen(tile) {
@@ -111,16 +112,15 @@ export async function createSummaryScreen(tile) {
           try {
             const parsedData = JSON.parse(rawData);
 
-            if (!parsedData.name) {
-              importRow.row.classList.add(...Style.FormError);
-              return;
-            }
-
             if (parsedData.id) {
+              parsedData.id = createId();
               userData.actionPackages.push(parsedData);
-            } else {
+            } else if (parsedData.global) {
               const mappedAction = mapPmmgActionPackage(parsedData);
               userData.actionPackages.push(mappedAction);
+            } else {
+              importRow.row.classList.add(...Style.FormError);
+              return;
             }
             popup.destroy();
           } catch {
@@ -144,10 +144,14 @@ export async function createSummaryScreen(tile) {
                 try {
                   const parsedData = JSON.parse(e.target.result as string);
                   if (parsedData.id) {
+                    parsedData.id = createId();
                     userData.actionPackages.push(parsedData);
-                  } else {
+                  } else if (parsedData.global) {
                     const mappedAction = mapPmmgActionPackage(parsedData);
                     userData.actionPackages.push(mappedAction);
+                  } else {
+                    importRow.row.classList.add(...Style.FormError);
+                    return;
                   }
                   popup.destroy();
                 } catch {
