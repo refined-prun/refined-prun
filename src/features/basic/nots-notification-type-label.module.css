@@ -1,5 +1,5 @@
 .label {
-  display: inline-block;
+  position: absolute;
   text-transform: uppercase;
   min-width: 65px;
   max-width: 65px;

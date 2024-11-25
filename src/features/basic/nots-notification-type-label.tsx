@@ -27,6 +27,8 @@ async function processNotification(container: HTMLElement) {
     return;
   }
 
+  textSpan.style.display = 'block';
+  textSpan.style.marginLeft = '65px';
   createFragmentApp(() => (
     <div class={classes.label} style={{ color: label.color }}>
       {label.label}
