@@ -30,9 +30,10 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
     return;
   }
 
-  const activeSortId = computedTileState(getTileState(tile), 'activeSort', undefined);
-  const catSort = computedTileState(getTileState(tile), 'catSort', true);
-  const reverseSort = computedTileState(getTileState(tile), 'reverseSort', false);
+  const tileState = getTileState(tile);
+  const activeSortId = computedTileState(tileState, 'activeSort', undefined);
+  const catSort = computedTileState(tileState, 'catSort', true);
+  const reverseSort = computedTileState(tileState, 'reverseSort', false);
   const sortOptions = await $(container, C.InventorySortControls.controls);
   const inventory = await $(container, C.InventoryView.grid);
 
@@ -49,11 +50,6 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
     const isCategorySort = i === 2;
     if (!isCategorySort) {
       continue;
-    }
-    const orderMarker = _$(option, C.InventorySortControls.order);
-    const isSelected = (orderMarker?.children.length ?? 0) > 0;
-    if (!isSelected || activeSortId.value) {
-      catSort.value = false;
     }
     createFragmentApp(
       SortCriteria,
@@ -72,6 +68,7 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
         },
       }),
     ).after(option);
+    option.style.display = 'none';
   }
 
   const burn = computed(() => getPlanetBurn(storagesStore.getById(storeId)?.addressableId));
@@ -252,10 +249,6 @@ function createBurnSortingMode(storeId: string): UserData.SortingMode {
 
 function init() {
   applyCssRule(`.${classes.custom} .${C.InventorySortControls.order} > div`, css.hidden);
-  applyCssRule(
-    `.${C.InventorySortControls.controls} .${C.InventorySortControls.criteria}:nth-child(3)`,
-    css.hidden,
-  );
   tiles.observe(['INV', 'SHPI'], onTileReady);
   xit.add({
     command: 'SORT',
