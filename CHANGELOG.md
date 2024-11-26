@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+
+- `XIT HQUC`: Level 51
+
 ## 24.11.25
 
 ### New commands
