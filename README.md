@@ -28,7 +28,7 @@ Browser extension that simplifies the Prosperous Universe interface and adds use
 			<p><img src="https://github.com/user-attachments/assets/3a514d76-85b5-4b58-ba5c-2a1a52a8deff">
 	<tr>
 		<th width="50%">
-			<p>`CONTD` partner search results are shown above the search bar
+			<p>CONTD partner search results are shown above the search bar
 			<p><img src="https://github.com/user-attachments/assets/2e9864e4-e13f-4f06-893b-701d9687dbf9">
 		<th width="50%">
 			<p>SHPT and BLCK destination labels
