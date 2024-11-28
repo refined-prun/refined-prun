@@ -4,6 +4,10 @@
 
 - `XIT HQUC`: Level 51
 
+### Fixed
+
+- Fixed XIT ACT manual material group overwriting on execute
+
 ## 24.11.25
 
 ### New commands

@@ -8,6 +8,7 @@ import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { addMessage } from './Execute';
 import { isRepairableBuilding } from '@src/core/buildings';
+import { deepToRaw } from '@src/utils/deep-to-raw';
 
 // Turn stored action package (resupply base for 30 days) to series of actionable actions (buy 1000 RAT, then 1000 DW, etc)
 // Preview flag set to true will allow non-configured actions to be displayed
@@ -403,7 +404,7 @@ export function parseGroup(group: UserData.ActionGroupData, messageBox, errorFla
   } else if (group.type == 'Manual') {
     // Just return the list of materials
     if (group.materials) {
-      parsedGroup = group.materials;
+      parsedGroup = structuredClone(deepToRaw(group.materials));
     } else {
       addMessage(messageBox, 'Missing materials in manual group', 'ERROR');
       errorFlag[0] = true;
