@@ -18,6 +18,7 @@
 
 - `XIT ACT`: Fixed manual material group overwriting on execute
 - `XIT CHAT`: Fixed username overflow
+- `inv-search`: Fixed the search bar styling
 - Fixed context controls duplication in `XIT` commands on tile move
 
 ## 24.11.25

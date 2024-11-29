@@ -26,12 +26,7 @@ function onTileReady(tile: PrunTile) {
 
     createFragmentApp(() => (
       <div>
-        <input
-          class="input-text"
-          style={classes.inputText}
-          placeholder="Enter location"
-          onInput={onInput}
-        />
+        <input class={classes.inputText} placeholder="Enter location" onInput={onInput} />
       </div>
     )).after(inventoryFilters);
   });
