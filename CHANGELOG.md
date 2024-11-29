@@ -3,6 +3,7 @@
 ### Added
 
 - `XIT CONTS`: An icon for contracts that the partner can accept
+- `XIT HELP`: PMMG settings import entry
 - `XIT HQUC`: Level 51
 
 ### Changed

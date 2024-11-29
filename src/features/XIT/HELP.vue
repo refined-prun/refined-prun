@@ -57,23 +57,39 @@ const isAction = ['ACT', 'ACTION', 'ACTIONS'].includes(parameters[0]?.toUpperCas
       <tbody>
         <tr>
           <td>Change Refined PrUn settings.</td>
-          <td><PrunLink command="XIT SET" /></td>
+          <td>
+            <PrunLink command="XIT SET" />
+          </td>
         </tr>
         <tr>
           <td>Change the feature set to Basic/Full.</td>
-          <td><PrunLink command="XIT SET FEAT" /></td>
+          <td>
+            <PrunLink command="XIT SET FEAT" />
+          </td>
         </tr>
         <tr>
           <td>Disable some Refined PrUn feature.</td>
-          <td><PrunLink command="XIT SET FEAT" /></td>
+          <td>
+            <PrunLink command="XIT SET FEAT" />
+          </td>
         </tr>
         <tr>
           <td>Find out which XIT commands are available.</td>
-          <td><PrunLink command="XIT CMDS" /></td>
+          <td>
+            <PrunLink command="XIT CMDS" />
+          </td>
+        </tr>
+        <tr>
+          <td>Import PMMG settings.</td>
+          <td>
+            <PrunLink command="XIT SET PMMG" />
+          </td>
         </tr>
         <tr>
           <td>Get a random corgi gif.</td>
-          <td><PrunLink command="XIT GIF CORGI" /></td>
+          <td>
+            <PrunLink command="XIT GIF CORGI" />
+          </td>
         </tr>
       </tbody>
     </table>
