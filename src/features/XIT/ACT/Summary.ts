@@ -119,7 +119,7 @@ export async function createSummaryScreen(tile) {
             );
             if (existing) {
               const index = userData.actionPackages.indexOf(existing);
-              userData.actionPackages[index] = existing;
+              userData.actionPackages[index] = parsedData;
             } else {
               userData.actionPackages.push(parsedData);
             }
@@ -154,7 +154,7 @@ export async function createSummaryScreen(tile) {
                   );
                   if (existing) {
                     const index = userData.actionPackages.indexOf(existing);
-                    userData.actionPackages[index] = existing;
+                    userData.actionPackages[index] = parsedData;
                   } else {
                     userData.actionPackages.push(parsedData);
                   }

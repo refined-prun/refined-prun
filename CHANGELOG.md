@@ -8,6 +8,10 @@
 
 - `XIT CXTS`: Change time display to hh:mm
 
+### Fixed
+
+- `XIT ACT`: Replace an existing package if an imported package has the same name (for real this time)
+
 ## 24.11.29
 
 ### Added
