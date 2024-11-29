@@ -114,7 +114,15 @@ export async function createSummaryScreen(tile) {
               return;
             }
 
-            userData.actionPackages.push(parsedData);
+            const existing = userData.actionPackages.find(
+              x => x.global.name === parsedData.global.name,
+            );
+            if (existing) {
+              const index = userData.actionPackages.indexOf(existing);
+              userData.actionPackages[index] = existing;
+            } else {
+              userData.actionPackages.push(parsedData);
+            }
             popup.destroy();
           } catch {
             importRow.row.classList.add(...Style.FormError);
@@ -141,7 +149,15 @@ export async function createSummaryScreen(tile) {
                     return;
                   }
 
-                  userData.actionPackages.push(parsedData);
+                  const existing = userData.actionPackages.find(
+                    x => x.global.name === parsedData.global.name,
+                  );
+                  if (existing) {
+                    const index = userData.actionPackages.indexOf(existing);
+                    userData.actionPackages[index] = existing;
+                  } else {
+                    userData.actionPackages.push(parsedData);
+                  }
                   popup.destroy();
                 } catch {
                   importRow.row.classList.add(...Style.FormError);

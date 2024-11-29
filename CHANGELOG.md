@@ -11,6 +11,7 @@
 
 ### Changed
 
+- `XIT ACT`: Replace an existing package if an imported package has the same name
 - `XIT CXTS`: Round number to whole in the Total column
 - `XIT REP`: Hide the Target column in single-target `XIT REP`
 - Add 1px to top margin of calculator header button
