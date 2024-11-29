@@ -14,7 +14,8 @@
 - `XIT ACT`: Replace an existing package if an imported package has the same name
 - `XIT CXTS`: Round number to whole in the Total column
 - `XIT REP`: Hide the Target column in single-target `XIT REP`
-- Add 1px to top margin of calculator header button
+- `screen-tab-bar`: Make tabs reorderable and add hide/show button to the screen list
+- `header-calculator-button`: Add 1px to top margin
 - Apply `FLT`-related features to `FLTP` and `FLTS` as well
 
 ### Fixed

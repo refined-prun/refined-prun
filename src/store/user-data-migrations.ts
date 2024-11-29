@@ -3,6 +3,12 @@ import { deepToRaw } from '@src/utils/deep-to-raw';
 import { isEmpty } from 'ts-extras';
 
 const migrations: Migration[] = [
+  userData => {
+    userData.tabs = {
+      order: [],
+      hidden: [],
+    };
+  },
   // End of beta
   userData => {
     void chrome.storage.local.remove('rp-backup');
