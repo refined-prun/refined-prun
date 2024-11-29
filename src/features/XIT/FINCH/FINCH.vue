@@ -5,14 +5,21 @@ import AssetPieChart from '@src/features/XIT/FINCH/AssetPieChart.vue';
 import LocationsPieChart from '@src/features/XIT/FINCH/LocationsPieChart.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
+import SectionHeader from '@src/components/SectionHeader.vue';
 
 const parameters = useXitParameters();
 const parameter = parameters[0]?.toUpperCase();
+
+const finch = Math.random() < 0.01;
 </script>
 
 <template>
   <div :class="$style.root">
-    <template v-if="!parameter">
+    <template v-if="finch">
+      <SectionHeader>Finch</SectionHeader>
+      <img src="https://images.unsplash.com/photo-1624123793338-9ea5d0050b41" alt="Finch" />
+    </template>
+    <template v-else-if="!parameter">
       <FinHeader>Equity History</FinHeader>
       <div :style="{ marginTop: '5px' }" :class="$style.clickable">
         <EquityHistoryChart
