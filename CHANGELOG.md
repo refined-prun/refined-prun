@@ -3,6 +3,7 @@
 ### Added
 
 - `XIT HQUC`: Level 51
+- `XIT CONTS`: An icon for contracts that the partner can accept
 
 ### Fixed
 
