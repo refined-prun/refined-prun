@@ -41,6 +41,7 @@ import './prodq-queue-load';
 import './prun-bugs';
 import './rprun-version-label';
 import './screen-tab-bar/screen-tab-bar';
+import './search-auto-focus';
 import './sfc-flight-eta';
 import './shipment-item-detail';
 import './shipping-per-unit-price/shipping-per-unit-price';

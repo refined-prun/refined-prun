@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Added
+
+- `search-auto-focus`: Auto-focuses the search bar in PLI and SYSI
+
 ### Changed
 
 - `XIT CXTS`: Change time display to hh:mm
