@@ -11,18 +11,19 @@
 
 ### Changed
 
-- `XIT CXTS`: Round number to whole in Total column
-- `XIT REP`: Hide Target column in single-target `XIT REP`
-- Added 1px to top margin of calculator header button
-- All `FLT`-related features are now applied to `FLTP` and `FLTS` as well
+- `XIT CXTS`: Round number to whole in the Total column
+- `XIT REP`: Hide the Target column in single-target `XIT REP`
+- Add 1px to top margin of calculator header button
+- Apply `FLT`-related features to `FLTP` and `FLTS` as well
 
 ### Fixed
 
-- `XIT ACT`: Fixed manual material group overwriting on execute
-- `XIT CHAT`: Fixed username overflow
-- `XIT NOTE`: Fixed notes with material tickers not being able to render
-- `inv-search`: Fixed the search bar styling
-- Fixed context controls duplication in `XIT` commands on tile move
+- `XIT ACT`: Fix manual material group overwriting on execute
+- `XIT ACT`: Fix "Source inventory not found" error for planets
+- `XIT CHAT`: Fix username overflow
+- `XIT NOTE`: Fix notes with material tickers not being able to render
+- `inv-search`: Fix the search bar styling
+- Fix context controls duplication in `XIT` commands on tile move
 
 ## 24.11.25
 

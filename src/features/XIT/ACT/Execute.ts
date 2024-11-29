@@ -7,12 +7,12 @@ import {
   showSuccessDialog,
 } from '@src/util';
 import { sleep } from '@src/utils/sleep';
-import { Stations, Selector, Style } from '@src/legacy';
+import { Selector, Stations, Style } from '@src/legacy';
 import { validateAction } from './Validate';
 import { parseActionPackage } from './Parse';
 import { createConfigureUI, needsConfiguration } from './Configure';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
-import { starsStore } from '@src/infrastructure/prun-api/data/stars';
+import { getStarName, getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/stars';
 import { userData } from '@src/store/user-data';
 import { createSummaryScreen } from '@src/features/XIT/ACT/Summary';
 import { createGenerateScreen } from '@src/features/XIT/ACT/Generate';
@@ -809,17 +809,23 @@ function mtraConvert(nameOrNaturalId: string) {
     return '-';
   }
 
-  // Determine the planets' natural IDs (XX-###x)
   const planet = planetsStore.find(nameOrNaturalId);
-  if (!planet) {
+  const system = starsStore.getByPlanetNaturalId(planet?.naturalId);
+  if (!planet || !system) {
     return nameOrNaturalId.toLowerCase();
   }
 
-  const natural = planet?.naturalId ?? nameOrNaturalId;
-
-  // Get system name or ID
-  const system = starsStore.getByPlanetNaturalId(natural);
-  return (system?.name + ' - ' + nameOrNaturalId).toLowerCase();
+  const isNamedPlanet = planet.naturalId !== planet.name;
+  const systemNaturalId = getStarNaturalId(system);
+  const systemName = getStarName(system);
+  const isNamedSystem = systemNaturalId !== systemName;
+  if (isNamedPlanet) {
+    return `${systemName} - ${planet.name}`;
+  }
+  if (isNamedSystem) {
+    return `${systemName} - ${planet.naturalId.slice(-1)}`;
+  }
+  return `${planet.naturalId.slice(0, -1)} ${planet.naturalId.slice(-1)}`;
 }
 
 export function addMessage(messageBox, message, header, clear?) {
