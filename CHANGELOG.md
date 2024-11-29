@@ -5,6 +5,10 @@
 - `XIT CONTS`: An icon for contracts that the partner can accept
 - `XIT HQUC`: Level 51
 
+### Changed
+
+- `XIT REP`: Hide Target column in single-target `XIT REP`
+
 ### Fixed
 
 - `XIT ACT`: Fixed manual material group overwriting on execute

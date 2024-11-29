@@ -13,7 +13,7 @@ export interface RepairEntry {
   fullMaterials: PrunApi.MaterialAmount[];
 }
 
-export function calculateBuildingEntries(parameters: string[]) {
+export function getParameterSites(parameters: string[]) {
   let sites: PrunApi.Site[] = [];
   if (isEmpty(parameters)) {
     if (sitesStore.all.value === undefined) {
@@ -26,6 +26,13 @@ export function calculateBuildingEntries(parameters: string[]) {
     if (site) {
       sites.push(site);
     }
+  }
+  return sites;
+}
+
+export function calculateBuildingEntries(sites?: PrunApi.Site[]) {
+  if (!sites) {
+    return undefined;
   }
   const entries: RepairEntry[] = [];
   for (const site of sites) {
@@ -45,13 +52,20 @@ export function calculateBuildingEntries(parameters: string[]) {
   return entries;
 }
 
-export function calculateShipEntries(parameters: string[]) {
+export function getParameterShips(parameters: string[]) {
   let ships: PrunApi.Ship[] = [];
   if (parameters.length === 0 || parameters.some(isShipParameter)) {
     if (shipsStore.all.value === undefined) {
       return undefined;
     }
     ships = shipsStore.all.value;
+  }
+  return ships;
+}
+
+export function calculateShipEntries(ships?: PrunApi.Ship[]) {
+  if (!ships) {
+    return undefined;
   }
   const entries: RepairEntry[] = [];
   for (const ship of ships) {

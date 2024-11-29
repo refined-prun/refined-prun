@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import NumberInput from '@src/components/forms/NumberInput.vue';
-import { calculateBuildingEntries, calculateShipEntries } from '@src/features/XIT/REP/entries';
+import {
+  calculateBuildingEntries,
+  calculateShipEntries,
+  getParameterShips,
+  getParameterSites,
+} from '@src/features/XIT/REP/entries';
 import { timestampEachSecond } from '@src/utils/dayjs';
 import { binarySearch } from '@src/utils/binary-search';
 import dayjs from 'dayjs';
@@ -15,31 +20,36 @@ import Active from '@src/components/forms/Active.vue';
 import SectionHeader from '@src/components/SectionHeader.vue';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import PrunLink from '@src/components/PrunLink.vue';
-import { isEmpty } from 'ts-extras';
 
 const parameters = useXitParameters();
-const isRepAll = isEmpty(parameters);
 
-const buildings = computed(() => calculateBuildingEntries(parameters));
-const ships = computed(() => calculateShipEntries(parameters));
+const sites = computed(() => getParameterSites(parameters));
+const ships = computed(() => getParameterShips(parameters));
+
+const isMultiTarget = computed(
+  () => (sites.value?.length ?? 0) > 1 || (ships.value?.length ?? 0) > 0,
+);
+
+const buildingEntries = computed(() => calculateBuildingEntries(sites.value));
+const shipEntries = computed(() => calculateShipEntries(ships.value));
 
 const msInADay = dayjs.duration(1, 'day').asMilliseconds();
 
 const currentSplitIndex = computed(() => {
-  if (buildings.value === undefined) {
+  if (buildingEntries.value === undefined) {
     return undefined;
   }
   const settings = userData.settings.repair;
   const currentSplitDate =
     timestampEachSecond.value - settings.threshold * msInADay + settings.offset * msInADay;
-  return binarySearch(currentSplitDate, buildings.value, x => x.lastRepair);
+  return binarySearch(currentSplitDate, buildingEntries.value, x => x.lastRepair);
 });
 
 const visibleBuildings = computed(() => {
-  return buildings.value?.slice(0, currentSplitIndex.value);
+  return buildingEntries.value?.slice(0, currentSplitIndex.value);
 });
 
-const visibleShips = computed(() => ships.value?.filter(x => x.condition <= 0.85));
+const visibleShips = computed(() => shipEntries.value?.filter(x => x.condition <= 0.85));
 
 const materials = computed(() => {
   if (visibleBuildings.value === undefined || visibleShips.value === undefined) {
@@ -79,7 +89,7 @@ function calculateAge(lastRepair: number) {
     </form>
     <SectionHeader>Shopping Cart</SectionHeader>
     <MaterialPurchaseTable
-      :collapsible="isRepAll"
+      :collapsible="isMultiTarget"
       :collapsed-by-default="true"
       :materials="materials" />
     <SectionHeader>Buildings</SectionHeader>
@@ -87,7 +97,7 @@ function calculateAge(lastRepair: number) {
       <thead>
         <tr>
           <th>Ticker</th>
-          <th>Target</th>
+          <th v-if="isMultiTarget">Target</th>
           <th>Age (days)</th>
           <th>Condition</th>
         </tr>
@@ -95,7 +105,7 @@ function calculateAge(lastRepair: number) {
       <tbody>
         <tr v-for="(entry, i) in visibleBuildings" :key="i">
           <td>{{ entry.ticker }}</td>
-          <td>
+          <td v-if="isMultiTarget">
             <PrunLink :command="`XIT REP ${entry.target}`">{{ entry.target }}</PrunLink>
           </td>
           <td>{{ fixed1(calculateAge(entry.lastRepair)) }}</td>
