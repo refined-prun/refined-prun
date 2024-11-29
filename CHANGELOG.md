@@ -2,12 +2,13 @@
 
 ### Added
 
-- `XIT HQUC`: Level 51
 - `XIT CONTS`: An icon for contracts that the partner can accept
+- `XIT HQUC`: Level 51
 
 ### Fixed
 
 - `XIT ACT`: Fixed manual material group overwriting on execute
+- `XIT CHAT`: Fixed username overflow
 - Fixed context controls duplication in `XIT` commands on tile move
 
 ## 24.11.25
