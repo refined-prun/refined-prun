@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 24.11.29
+
 ### Added
 
 - `XIT CONTS`: An icon for contracts that the partner can accept
@@ -12,16 +14,16 @@
 ### Changed
 
 - `XIT ACT`: Replace an existing package if an imported package has the same name
-- `XIT CXTS`: Round number to whole in the Total column
+- `XIT CXTS`: Round number to a whole in the Total column
 - `XIT REP`: Hide the Target column in single-target `XIT REP`
-- `screen-tab-bar`: Make tabs reorderable and add hide/show button to the screen list
+- `screen-tab-bar`: Make tabs reorderable and add a hide/show button to the screen list
 - `header-calculator-button`: Add 1px to top margin
 - Apply `FLT`-related features to `FLTP` and `FLTS` as well
 
 ### Fixed
 
 - `XIT ACT`: Fix manual material group overwriting on execute
-- `XIT ACT`: Fix "Source inventory not found" error for planets
+- `XIT ACT`: Fix the "Source inventory not found" error for planets
 - `XIT CHAT`: Fix username overflow
 - `XIT NOTE`: Fix notes with material tickers not being able to render
 - `inv-search`: Fix the search bar styling
