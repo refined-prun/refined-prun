@@ -10,14 +10,18 @@ import SectionHeader from '@src/components/SectionHeader.vue';
 const parameters = useXitParameters();
 const parameter = parameters[0]?.toUpperCase();
 
-const finch = Math.random() < 0.01;
+const finch = ref(Math.random() < 0.01);
 </script>
 
 <template>
   <div :class="$style.root">
     <template v-if="finch">
       <SectionHeader>Finch</SectionHeader>
-      <img src="https://images.unsplash.com/photo-1624123793338-9ea5d0050b41" alt="Finch" />
+      <img
+        src="https://images.unsplash.com/photo-1624123793338-9ea5d0050b41"
+        alt="Finch"
+        :class="$style.clickable"
+        @click="finch = false" />
     </template>
     <template v-else-if="!parameter">
       <FinHeader>Equity History</FinHeader>
