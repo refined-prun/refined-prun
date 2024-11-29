@@ -18,6 +18,7 @@
 
 - `XIT ACT`: Fixed manual material group overwriting on execute
 - `XIT CHAT`: Fixed username overflow
+- `XIT NOTE`: Fixed notes with material tickers not being able to render
 - `inv-search`: Fixed the search bar styling
 - Fixed context controls duplication in `XIT` commands on tile move
 

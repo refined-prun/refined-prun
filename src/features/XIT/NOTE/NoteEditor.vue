@@ -25,7 +25,7 @@ function processText(text?: string) {
   // Allow for HTML tags
   text = text.replaceAll('&', '&amp;').replaceAll('<', '&lt;');
 
-  const regexp = /\b(?:[a-zA-Z0-9]{1,3}\.(?:CI1|IC1|AI1|NC1|CI2|NC2))(?!<)/;
+  const regexp = /\b(?:[a-zA-Z0-9]{1,3}\.(?:CI1|IC1|AI1|NC1|CI2|NC2))(?!<)/g;
   let counter = 0;
   while (true) {
     const matches = text.match(regexp);
