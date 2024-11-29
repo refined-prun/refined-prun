@@ -7,6 +7,7 @@
 - `XIT HQUC`: Level 51
 - `XIT NOTE`: "Create" button if a note is not found
 - `XIT TODO`: "Create" button if a task list is not found
+- `XIT REP`: `BRA` context button
 
 ### Changed
 

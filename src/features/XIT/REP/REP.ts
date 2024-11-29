@@ -5,5 +5,6 @@ xit.add({
   name: 'REPAIRS',
   description: 'Shows the materials to repair buildings.',
   optionalParameters: 'Planet Identifier(s)',
+  contextItems: () => [{ cmd: 'BRA' }],
   component: () => REP,
 });
