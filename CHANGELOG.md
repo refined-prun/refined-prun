@@ -5,6 +5,8 @@
 - `XIT CONTS`: An icon for contracts that the partner can accept
 - `XIT HELP`: PMMG settings import entry
 - `XIT HQUC`: Level 51
+- `XIT NOTE`: "Create" button if a note is not found
+- `XIT TODO`: "Create" button if a task list is not found
 
 ### Changed
 
