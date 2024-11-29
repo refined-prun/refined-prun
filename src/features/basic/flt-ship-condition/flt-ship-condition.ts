@@ -14,7 +14,7 @@ function onTileReady(tile: PrunTile) {
 }
 
 function init() {
-  tiles.observe('FLT', onTileReady);
+  tiles.observe(['FLT', 'FLTS', 'FLTP'], onTileReady);
 }
 
 features.add(import.meta.url, init, 'FLT: Adds a ship condition label to the "Name" column.');

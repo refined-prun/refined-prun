@@ -25,7 +25,7 @@ function onRowReady(row: HTMLTableRowElement) {
 }
 
 function init() {
-  tiles.observe('FLT', onTileReady);
+  tiles.observe(['FLT', 'FLTS', 'FLTP'], onTileReady);
 }
 
 features.add(import.meta.url, init, 'FLT: Adds an arrival date to the "ETA" column.');

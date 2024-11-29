@@ -64,6 +64,7 @@ function onTileReady(tile: PrunTile) {
         }
       }
     }
+
     replaceStatus();
     const observer = new MutationObserver(replaceStatus);
     observer.observe(row, { childList: true, subtree: true, characterData: true });
@@ -71,7 +72,7 @@ function onTileReady(tile: PrunTile) {
 }
 
 function init() {
-  tiles.observe('FLT', onTileReady);
+  tiles.observe(['FLT', 'FLTS', 'FLTP'], onTileReady);
 }
 
 features.add(import.meta.url, init, 'FLT: Replaces the flight status text with arrow icons.');

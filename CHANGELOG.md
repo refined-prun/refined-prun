@@ -14,6 +14,7 @@
 - `XIT CXTS`: Round number to whole in Total column
 - `XIT REP`: Hide Target column in single-target `XIT REP`
 - Added 1px to top margin of calculator header button
+- All `FLT`-related features are now applied to `FLTP` and `FLTS` as well
 
 ### Fixed
 

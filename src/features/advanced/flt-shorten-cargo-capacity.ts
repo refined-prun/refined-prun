@@ -13,7 +13,7 @@ function onTileReady(tile: PrunTile) {
 }
 
 function init() {
-  tiles.observe('FLT', onTileReady);
+  tiles.observe(['FLT', 'FLTS', 'FLTP'], onTileReady);
 }
 
 features.add(
