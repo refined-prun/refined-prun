@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { fixed2, ddmmyyyy } from '@src/utils/format';
+import { fixed0, ddmmyyyy } from '@src/utils/format';
 
 const props = defineProps({
   date: {
@@ -21,7 +21,7 @@ const style = {
 const totals = computed(() => {
   return Object.keys(props.totals)
     .sort()
-    .map(key => `${fixed2(props.totals[key])} ${key}`);
+    .map(key => `${fixed0(props.totals[key])} ${key}`);
 });
 </script>
 

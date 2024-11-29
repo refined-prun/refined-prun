@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PrunLink from '@src/components/PrunLink.vue';
-import { fixed2, hhmmss } from '@src/utils/format';
+import { fixed0, fixed2, hhmmss } from '@src/utils/format';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 const props = defineProps({
@@ -21,7 +21,7 @@ const props = defineProps({
 const total = computed(() => {
   const total =
     props.trade.price.amount * props.trade.amount * (props.order.type === 'SELLING' ? 1 : -1);
-  return fixed2(total);
+  return fixed0(total);
 });
 
 const price = computed(() => fixed2(props.trade.price.amount));
