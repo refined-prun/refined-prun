@@ -45,7 +45,7 @@ const isVisible = computed(() => {
 const changeText = computed(() => {
   const abs = Math.abs(production.value);
   const fixed = abs >= 1000 ? fixed0(abs) : abs >= 100 ? fixed1(abs) : fixed2(abs);
-  return production.value > 0 ? '+' + fixed : fixed;
+  return production.value > 0 ? '+' + fixed : production.value < 0 ? '-' + fixed : 0;
 });
 
 const changeClass = computed(() => ({

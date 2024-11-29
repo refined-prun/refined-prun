@@ -6,6 +6,7 @@
 
 ### Changed
 
+- `XIT BURN`: Show a minus sign for negative values in the Burn column
 - `XIT CXTS`: Change time display to hh:mm
 
 ### Fixed
