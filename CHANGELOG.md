@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Changed
+
+- `XIT CXTS`: Change time display to hh:mm
+
 ## 24.11.29
 
 ### Added

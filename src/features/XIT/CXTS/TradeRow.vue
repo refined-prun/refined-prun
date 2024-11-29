@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PrunLink from '@src/components/PrunLink.vue';
-import { fixed0, fixed2, hhmmss } from '@src/utils/format';
+import { fixed0, fixed2, hhmm } from '@src/utils/format';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 const props = defineProps({
@@ -40,7 +40,7 @@ const onTickerClick = () => showBuffer(`CXOB ${fullTicker.value}`);
   <tr>
     <td>
       <span :class="C.Link.link" @click="onTimeClick">
-        {{ hhmmss(date) }}
+        {{ hhmm(date) }}
       </span>
     </td>
     <td>
