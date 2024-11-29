@@ -6,7 +6,8 @@
 
 ### Fixed
 
-- Fixed XIT ACT manual material group overwriting on execute
+- `XIT ACT`: Fixed manual material group overwriting on execute
+- Fixed context controls duplication in `XIT` commands on tile move
 
 ## 24.11.25
 

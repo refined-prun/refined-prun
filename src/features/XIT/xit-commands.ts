@@ -6,17 +6,6 @@ import { startMeasure, stopMeasure } from '@src/utils/performance-measure';
 import { isEmpty } from 'ts-extras';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, C.ScrollView.view), scrollView => onScrollViewReady(tile, scrollView));
-}
-
-function onScrollViewReady(tile: PrunTile, scrollView: HTMLElement) {
-  // XIT command produces a tile with full-size green screen as its content.
-  // Custom XIT tiles are just mounted inside this green screen.
-  const container = scrollView.children[0] as HTMLDivElement;
-  if (!container) {
-    return;
-  }
-
   const rawParameter = tile.parameter;
   if (!rawParameter) {
     return;
@@ -38,36 +27,46 @@ function onScrollViewReady(tile: PrunTile, scrollView: HTMLElement) {
     // Exception for FIO and PrUn-Collector to use XIT
     return;
   }
-
-  // Remove green screen styling
-  container.removeAttribute('style');
-  container.style.width = '100%';
-  container.style.height = '100%';
-
   const xitCommand = xit.get(command);
-  if (!xitCommand) {
-    container.textContent = 'Error! No Matching Function!';
-    return;
-  }
 
-  _$(tile.frame, C.TileFrame.title)!.textContent =
-    typeof xitCommand.name === 'string' ? xitCommand.name : xitCommand.name(parameters);
+  if (xitCommand) {
+    _$(tile.frame, C.TileFrame.title)!.textContent =
+      typeof xitCommand.name === 'string' ? xitCommand.name : xitCommand.name(parameters);
 
-  if (xitCommand.contextItems) {
-    const items = xitCommand.contextItems(parameters);
-    if (!isEmpty(items)) {
-      const header = _$(tile.frame, C.TileFrame.header)!;
-      createFragmentApp(ContextControls, { items }).after(header);
+    if (xitCommand.contextItems) {
+      const items = xitCommand.contextItems(parameters);
+      if (!isEmpty(items)) {
+        const header = _$(tile.frame, C.TileFrame.header)!;
+        createFragmentApp(ContextControls, { items }).after(header);
+      }
     }
   }
 
-  startMeasure(tile.fullCommand);
-  createFragmentApp(xitCommand.component(parameters))
-    .use(tileStatePlugin, { tile })
-    .provide(xit.command, command)
-    .provide(xit.parameters, parameters.slice(1))
-    .appendTo(container);
-  stopMeasure();
+  subscribe($$(tile.anchor, C.ScrollView.view), scrollView => {
+    // XIT command produces a tile with full-size green screen as its content.
+    // Custom XIT tiles are just mounted inside this green screen.
+    const container = scrollView.children[0] as HTMLDivElement;
+    if (!container) {
+      return;
+    }
+
+    container.removeAttribute('style');
+    container.style.width = '100%';
+    container.style.height = '100%';
+
+    if (!xitCommand) {
+      container.textContent = 'Error! No Matching Function!';
+      return;
+    }
+
+    startMeasure(tile.fullCommand);
+    createFragmentApp(xitCommand.component(parameters))
+      .use(tileStatePlugin, { tile })
+      .provide(xit.command, command)
+      .provide(xit.parameters, parameters.slice(1))
+      .appendTo(container);
+    stopMeasure();
+  });
 }
 
 export function initializeXitCommands() {
