@@ -10,11 +10,18 @@ defineProps({
     type: Function as PropType<() => void>,
     default: () => {},
   },
+  marginTop: {
+    type: Number,
+    default: 3,
+  },
 });
 </script>
 
 <template>
-  <button :class="[C.TileControls.control, fa.solid, $style.button]" @click="onClick">
+  <button
+    :class="[C.TileControls.control, fa.solid, $style.button]"
+    :style="{ marginTop: marginTop + 'px' }"
+    @click="onClick">
     {{ icon }}
   </button>
 </template>

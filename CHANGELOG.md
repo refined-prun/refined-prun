@@ -12,6 +12,7 @@
 ### Changed
 
 - `XIT REP`: Hide Target column in single-target `XIT REP`
+- Added 1px to top margin of calculator header button
 
 ### Fixed
 
