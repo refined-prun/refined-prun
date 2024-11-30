@@ -4,6 +4,10 @@
 
 - REPAIR_SHIP condition support in `XIT CONTS` and `XIT CONTC`
 
+### Changed
+
+- `search-auto-focus`: Disable in docked tiles
+
 ## 24.11.29.2317
 
 ### Added

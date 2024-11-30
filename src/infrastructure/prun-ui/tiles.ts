@@ -59,7 +59,10 @@ function reconciliate() {
 }
 
 function activateFrame(frame: HTMLDivElement, anchor: HTMLDivElement) {
-  const id = getPrunId(frame.parentElement!)!;
+  const tileElement = frame.parentElement!;
+  const container = tileElement.parentElement!;
+  const docked = !container.classList.contains(C.Window.body);
+  const id = getPrunId(tileElement)!;
   const commandElement = _$(frame, C.TileFrame.cmd);
   const fullCommand = commandElement!.textContent!;
   const indexOfSpace = fullCommand.indexOf(' ');
@@ -67,6 +70,7 @@ function activateFrame(frame: HTMLDivElement, anchor: HTMLDivElement) {
     id,
     frame,
     anchor,
+    docked,
     fullCommand,
     command: (indexOfSpace > 0 ? fullCommand.slice(0, indexOfSpace) : fullCommand).toUpperCase(),
     parameter: indexOfSpace > 0 ? fullCommand.slice(indexOfSpace + 1) : undefined,

@@ -3,6 +3,9 @@ async function focusSearchBar(tile: PrunTile) {
   if (tile.parameter) {
     return;
   }
+  if (tile.docked) {
+    return;
+  }
   const input = await $(tile.anchor, 'input');
   input.focus();
 }
