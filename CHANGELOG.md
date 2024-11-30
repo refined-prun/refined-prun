@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+
+- REPAIR_SHIP condition support in `XIT CONTS` and `XIT CONTC`
+
 ## 24.11.29.2317
 
 ### Added

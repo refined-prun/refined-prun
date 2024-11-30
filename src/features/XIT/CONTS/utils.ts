@@ -65,6 +65,8 @@ export function friendlyConditionText(type: PrunApi.ContractConditionType) {
       return 'Become Governor';
     case 'HEADQUARTERS_UPGRADE':
       return 'Upgrade HQ';
+    case 'REPAIR_SHIP':
+      return 'Repair Ship';
     default:
       return type;
   }
