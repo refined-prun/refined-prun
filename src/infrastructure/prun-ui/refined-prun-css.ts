@@ -6,7 +6,7 @@ const rules: { [id: string]: string } = {};
 
 export async function loadRefinedPrunCss() {
   const css = document.createElement('link');
-  css.href = chrome.runtime.getURL(`refined-prun.css`);
+  css.href = chrome.runtime.getURL(`refined-prun.css`) + '?' + Date.now();
   css.id = 'refined-prun-css';
   css.rel = 'stylesheet';
   await new Promise(resolve => {
