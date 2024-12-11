@@ -2,6 +2,7 @@
 
 ### Added
 
+- `co-base-count`: Displays a base count in the "Bases" label.
 - REPAIR_SHIP condition support in `XIT CONTS` and `XIT CONTC`
 
 ### Changed
