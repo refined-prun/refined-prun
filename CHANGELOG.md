@@ -2,14 +2,14 @@
 
 ### Added
 
-- `co-base-count`: Displays a base count in the "Bases" label.
-- `prevent-delete-button-misclicks`: Makes the "delete" button in chats work only when shift is held down.
+- `co-base-count`: Displays a base count in the "Bases" label
+- `prevent-delete-button-misclicks`: Makes the "delete" button in chats work only when shift is held down
 - REPAIR_SHIP condition support in `XIT CONTS` and `XIT CONTC`
 
 ### Changed
 
 - `search-auto-focus`: Disable in docked tiles
-- `XIT REP`: Use a natural id instead of a name in planet links.
+- `XIT REP`: Use a natural id instead of a name in planet links
 
 ### Fixed
 
