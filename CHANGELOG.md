@@ -5,6 +5,10 @@
 - `MTRA`: `mtra-sync-amount-slider` - Syncs the amount slider value with the amount input field
 - `NOTS`: `nots-ship-arrival-inventory` - Opens ship inventory on "ship arrived" notification click
 
+### Changed:
+
+- `screen-tab-bar`: Change the styling of the "hide"/"show" button to look like the "copy" button
+
 ## 24.12.12
 
 ### Added
