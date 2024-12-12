@@ -64,7 +64,7 @@ function activateFrame(frame: HTMLDivElement, anchor: HTMLDivElement) {
   const docked = !container.classList.contains(C.Window.body);
   const id = getPrunId(tileElement)!;
   const commandElement = _$(frame, C.TileFrame.cmd);
-  const fullCommand = commandElement!.textContent!;
+  const fullCommand = commandElement!.textContent!.trim();
   const indexOfSpace = fullCommand.indexOf(' ');
   const tile: PrunTile = {
     id,

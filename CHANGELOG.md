@@ -13,6 +13,7 @@
 ### Fixed
 
 - `table-rows-alternating-colors`: Optimize rendering performance
+- Trim spaces when parsing tile commands
 
 ## 24.11.29.2317
 
