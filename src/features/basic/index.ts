@@ -33,6 +33,7 @@ import './lm-colored-buy-sell';
 import './lm-highlight-own-ads';
 import './lm-item-icons/lm-item-icons';
 import './mat-linkify-category';
+import './mtra-sync-amount-slider';
 import './nots-material-ticker';
 import './nots-notification-type-label';
 import './nots-ship-arrival-inventory';
