@@ -9,6 +9,8 @@ import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { addMessage } from './Execute';
 import { isRepairableBuilding } from '@src/core/buildings';
 import { deepToRaw } from '@src/utils/deep-to-raw';
+import { clamp } from '@src/utils/clamp';
+import { fixed0 } from '@src/utils/format';
 
 // Turn stored action package (resupply base for 30 days) to series of actionable actions (buy 1000 RAT, then 1000 DW, etc)
 // Preview flag set to true will allow non-configured actions to be displayed
@@ -96,83 +98,52 @@ export function parseActionPackage(
       error = error || errorFlag[0];
       for (const mat of Object.keys(parsedGroup)) {
         const cxTicker = mat + '.' + action.exchange;
-        const cxob = cxobStore.getByTicker(cxTicker);
-        let amount = parsedGroup[mat];
+        const priceLimit = action.priceLimits?.[mat] ?? Infinity;
+        if (isNaN(priceLimit)) {
+          addMessage(messageBox, 'Non-numerical price limit on ' + cxTicker, 'ERROR');
+          error = true;
+          continue;
+        }
 
-        if (cxob && Date.now() - cxob.timestamp < 900000) {
-          // Check for existance and timestamp of data
-          if (cxob.sellingOrders.length == 0) {
-            // No orders
-            if (action.buyPartial) {
-              continue; // Just ignore this one if we're fine with buying partial
-            } else {
-              addMessage(messageBox, 'No orders on ' + cxTicker, 'ERROR');
+        const orderBook = cxobStore.getByTicker(cxTicker);
+        const requiredAmount = parsedGroup[mat];
+
+        if (orderBook && Date.now() - orderBook.timestamp < 900000) {
+          let filled = 0;
+          let price = 0;
+          for (const order of orderBook.sellingOrders) {
+            const orderPrice = order.limit.amount;
+            if (priceLimit < orderPrice) {
+              break;
+            }
+            price = orderPrice;
+            // MMs orders don't have the amount
+            if (!order.amount) {
+              filled = requiredAmount;
+              break;
+            }
+            filled = clamp(filled + order.amount, 0, requiredAmount);
+            if (filled === requiredAmount) {
+              break;
+            }
+          }
+
+          if (filled === 0 && action.buyPartial) {
+            // No matching orders
+            // Just ignore this one if we're fine with buying partial
+            continue;
+          }
+
+          if (filled < requiredAmount) {
+            // Not enough to buy it all
+            if (!action.buyPartial) {
+              const message = isFinite(priceLimit)
+                ? `Not enough materials on ${cxTicker} to buy ${fixed0(requiredAmount)} ${mat} with the provided price limit ${fixed0(priceLimit)}/u`
+                : `Not enough materials on ${cxTicker} to buy ${fixed0(requiredAmount)} ${mat}`;
+              addMessage(messageBox, message, 'ERROR');
               error = true;
               continue;
             }
-          }
-
-          let remaining = parsedGroup[mat];
-          let price;
-          // Iterate through the orders to find the price to set to to buy it all
-          for (const order of cxob.sellingOrders) {
-            if (
-              (!action.priceLimits ||
-                !action.priceLimits[mat] ||
-                action.priceLimits[mat] > order.limit.amount) &&
-              order.amount > remaining
-            ) {
-              // This order will be the filling one
-              price = order.limit.amount;
-              break;
-            } else {
-              if (
-                (!action.priceLimits ||
-                  !action.priceLimits[mat] ||
-                  action.priceLimits[mat] > order.limit.amount) &&
-                order.amount
-              ) {
-                // Only MMs will not have an amount attached
-                price = order.limit.amount;
-                break;
-              }
-              remaining -= order.amount; // Otherwise subtract the amount of that order from the amount remaining and continue
-            }
-          }
-
-          // Check against price limit
-          if (
-            action.priceLimits &&
-            action.priceLimits[mat] &&
-            price > action.priceLimits[mat] &&
-            !action.buyPartial
-          ) {
-            addMessage(messageBox, 'Price above limit on ' + cxTicker, 'ERROR');
-            error = true;
-            continue;
-          }
-          if (action.priceLimits && action.priceLimits[mat] && isNaN(action.priceLimits[mat])) {
-            addMessage(messageBox, 'Non-numerical price limit on ' + cxTicker, 'ERROR');
-            error = true;
-            continue;
-          }
-
-          if (!price && !action.buyPartial) {
-            // Not enough to buy it all
-            addMessage(messageBox, 'Not enough materials on ' + cxTicker, 'ERROR');
-            error = true;
-            continue;
-          } else if (
-            !price &&
-            (!action.priceLimits || !action.priceLimits[mat]) &&
-            cxob &&
-            cxob.supply > 0
-          ) {
-            // If fine with buying partial, buy the entire stock
-            price = cxob.sellingOrders[cxob.sellingOrders.length - 1].limit.amount;
-            amount = cxob.supply;
-          } else if (!price && action.priceLimits && action.priceLimits[mat]) {
-            continue; // If there is no price, but buying partial, don't care and exit
           }
 
           // Now create action item
@@ -180,7 +151,7 @@ export function parseActionPackage(
             type: 'CXBuy',
             buffer: 'CXPO ' + cxTicker,
             parameters: {
-              amount: amount,
+              amount: filled,
               priceLimit: price,
             },
           };

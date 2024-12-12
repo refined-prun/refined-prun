@@ -8,11 +8,12 @@
 
 ### Changed
 
-- `search-auto-focus`: Disable in docked tiles
 - `XIT REP`: Use a natural id instead of a name in planet links
+- `search-auto-focus`: Disable in docked tiles
 
 ### Fixed
 
+- `XIT ACT`: Fix actions not being able to buy the full required amount of materials
 - `table-rows-alternating-colors`: Optimize rendering performance
 - Trim spaces when parsing tile commands
 
