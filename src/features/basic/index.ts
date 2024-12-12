@@ -36,6 +36,7 @@ import './mat-linkify-category';
 import './nots-material-ticker';
 import './nots-notification-type-label';
 import './nots-ship-name';
+import './prevent-delete-button-misclicks';
 import './prod-burn-link';
 import './prod-order-eta';
 import './prodq-queue-load';

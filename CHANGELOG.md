@@ -3,6 +3,7 @@
 ### Added
 
 - `co-base-count`: Displays a base count in the "Bases" label.
+- `prevent-delete-button-misclicks`: Makes the "delete" button in chats work only when shift is held down.
 - REPAIR_SHIP condition support in `XIT CONTS` and `XIT CONTC`
 
 ### Changed
