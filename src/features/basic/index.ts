@@ -35,6 +35,7 @@ import './lm-item-icons/lm-item-icons';
 import './mat-linkify-category';
 import './nots-material-ticker';
 import './nots-notification-type-label';
+import './nots-ship-arrival-inventory';
 import './nots-ship-name';
 import './prevent-delete-button-misclicks';
 import './prod-burn-link';

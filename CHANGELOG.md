@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+
+- `nots-ship-arrival-inventory`: NOTS: Opens ship inventory on "ship arrived" notification click
+
 ## 24.12.12
 
 ### Added
