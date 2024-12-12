@@ -1,12 +1,16 @@
 import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getShipLastRepair, shipsStore } from '@src/infrastructure/prun-api/data/ships';
-import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import {
+  getEntityNameFromAddress,
+  getEntityNaturalIdFromAddress,
+} from '@src/infrastructure/prun-api/data/addresses';
 import { getBuildingBuildMaterials, isRepairableBuilding } from '@src/core/buildings';
 import { isEmpty } from 'ts-extras';
 
 export interface RepairEntry {
   ticker: string;
   target: string;
+  naturalId: string;
   lastRepair: number;
   condition: number;
   materials: PrunApi.MaterialAmount[];
@@ -37,10 +41,12 @@ export function calculateBuildingEntries(sites?: PrunApi.Site[]) {
   const entries: RepairEntry[] = [];
   for (const site of sites) {
     const target = getEntityNameFromAddress(site.address)!;
+    const naturalId = getEntityNaturalIdFromAddress(site.address)!;
     for (const building of site.platforms.filter(isRepairableBuilding)) {
       entries.push({
         ticker: building.module.reactorTicker,
         target,
+        naturalId,
         lastRepair: getBuildingLastRepair(building),
         condition: building.condition,
         materials: building.repairMaterials,
@@ -72,6 +78,7 @@ export function calculateShipEntries(ships?: PrunApi.Ship[]) {
     entries.push({
       ticker: ship.name,
       target: ship.name,
+      naturalId: 'SHIP',
       lastRepair: getShipLastRepair(ship),
       condition: ship.condition,
       materials: ship.repairMaterials,

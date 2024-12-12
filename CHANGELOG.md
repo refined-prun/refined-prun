@@ -9,6 +9,7 @@
 ### Changed
 
 - `search-auto-focus`: Disable in docked tiles
+- `XIT REP`: Use a natural id instead of a name in planet links.
 
 ### Fixed
 

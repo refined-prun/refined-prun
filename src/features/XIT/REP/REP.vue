@@ -106,7 +106,7 @@ function calculateAge(lastRepair: number) {
         <tr v-for="(entry, i) in visibleBuildings" :key="i">
           <td>{{ entry.ticker }}</td>
           <td v-if="isMultiTarget">
-            <PrunLink :command="`XIT REP ${entry.target}`">{{ entry.target }}</PrunLink>
+            <PrunLink :command="`XIT REP ${entry.naturalId}`">{{ entry.target }}</PrunLink>
           </td>
           <td>{{ fixed1(calculateAge(entry.lastRepair)) }}</td>
           <td>{{ percent1(entry.condition) }}</td>
