@@ -8,6 +8,7 @@
 
 ### Changed
 
+- `XIT ACT`: Remove the "Stale data" error
 - `XIT REP`: Use a natural id instead of a name in planet links
 - `search-auto-focus`: Disable in docked tiles
 

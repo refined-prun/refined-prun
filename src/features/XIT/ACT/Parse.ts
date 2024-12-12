@@ -106,60 +106,61 @@ export function parseActionPackage(
         }
 
         const orderBook = cxobStore.getByTicker(cxTicker);
+
+        if (!orderBook) {
+          addMessage(messageBox, 'Missing data on ' + cxTicker, 'ERROR');
+          error = true;
+          continue;
+        }
+
         const requiredAmount = parsedGroup[mat];
-
-        if (orderBook && Date.now() - orderBook.timestamp < 900000) {
-          let filled = 0;
-          let price = 0;
-          for (const order of orderBook.sellingOrders) {
-            const orderPrice = order.limit.amount;
-            if (priceLimit < orderPrice) {
-              break;
-            }
-            price = orderPrice;
-            // MMs orders don't have the amount
-            if (!order.amount) {
-              filled = requiredAmount;
-              break;
-            }
-            filled = clamp(filled + order.amount, 0, requiredAmount);
-            if (filled === requiredAmount) {
-              break;
-            }
+        let filled = 0;
+        let price = 0;
+        for (const order of orderBook.sellingOrders) {
+          const orderPrice = order.limit.amount;
+          if (priceLimit < orderPrice) {
+            break;
           }
+          price = orderPrice;
+          // MMs orders don't have the amount
+          if (!order.amount) {
+            filled = requiredAmount;
+            break;
+          }
+          filled = clamp(filled + order.amount, 0, requiredAmount);
+          if (filled === requiredAmount) {
+            break;
+          }
+        }
 
-          if (filled === 0 && action.buyPartial) {
-            // No matching orders
-            // Just ignore this one if we're fine with buying partial
+        if (filled === 0 && action.buyPartial) {
+          // No matching orders
+          // Just ignore this one if we're fine with buying partial
+          continue;
+        }
+
+        if (filled < requiredAmount) {
+          // Not enough to buy it all
+          if (!action.buyPartial) {
+            const message = isFinite(priceLimit)
+              ? `Not enough materials on ${cxTicker} to buy ${fixed0(requiredAmount)} ${mat} with the provided price limit ${fixed0(priceLimit)}/u`
+              : `Not enough materials on ${cxTicker} to buy ${fixed0(requiredAmount)} ${mat}`;
+            addMessage(messageBox, message, 'ERROR');
+            error = true;
             continue;
           }
-
-          if (filled < requiredAmount) {
-            // Not enough to buy it all
-            if (!action.buyPartial) {
-              const message = isFinite(priceLimit)
-                ? `Not enough materials on ${cxTicker} to buy ${fixed0(requiredAmount)} ${mat} with the provided price limit ${fixed0(priceLimit)}/u`
-                : `Not enough materials on ${cxTicker} to buy ${fixed0(requiredAmount)} ${mat}`;
-              addMessage(messageBox, message, 'ERROR');
-              error = true;
-              continue;
-            }
-          }
-
-          // Now create action item
-          const actionItem = {
-            type: 'CXBuy',
-            buffer: 'CXPO ' + cxTicker,
-            parameters: {
-              amount: filled,
-              priceLimit: price,
-            },
-          };
-          actionPackage.push(actionItem);
-        } else {
-          addMessage(messageBox, 'Stale/missing data on ' + cxTicker, 'ERROR');
-          error = true;
         }
+
+        // Now create action item
+        const actionItem = {
+          type: 'CXBuy',
+          buffer: 'CXPO ' + cxTicker,
+          parameters: {
+            amount: filled,
+            priceLimit: price,
+          },
+        };
+        actionPackage.push(actionItem);
       }
     } else if (action.type == 'MTRA') {
       if (!action.group) {
