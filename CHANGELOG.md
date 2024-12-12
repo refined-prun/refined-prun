@@ -10,6 +10,10 @@
 
 - `search-auto-focus`: Disable in docked tiles
 
+### Fixed
+
+- `table-rows-alternating-colors`: Optimize rendering performance
+
 ## 24.11.29.2317
 
 ### Added
