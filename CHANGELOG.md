@@ -2,7 +2,7 @@
 
 ### Added
 
-- `MTRA`: `mtra-sync-amount-slider` - Syncs the amount slider value with the amount input field
+- `MTRA`: `mtra-sync-amount-slider` - Syncs the "Amount" slider with the input field
 - `NOTS`: `nots-ship-arrival-inventory` - Opens ship inventory on "ship arrived" notification click
 
 ### Changed:

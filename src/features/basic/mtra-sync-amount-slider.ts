@@ -16,8 +16,4 @@ function init() {
   tiles.observe('MTRA', onTileReady);
 }
 
-features.add(
-  import.meta.url,
-  init,
-  'MTRA: Syncs the amount slider value with the amount input field.',
-);
+features.add(import.meta.url, init, 'MTRA: Syncs the "Amount" slider with the input field.');
