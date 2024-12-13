@@ -34,8 +34,8 @@ const green = useTileState('green');
 const inf = useTileState('inf');
 
 const isVisible = computed(() => {
-  if (isInf.value && !inf.value) {
-    return false;
+  if (isInf.value) {
+    return inf.value;
   }
   return (
     (isRed.value && red.value) || (isYellow.value && yellow.value) || (isGreen.value && green.value)

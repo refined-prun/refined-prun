@@ -9,6 +9,10 @@
 
 - `screen-tab-bar`: Change the styling of the "hide"/"show" button to look like the "copy" button
 
+### Fixed:
+
+- `XIT BURN`: Fix inf values being filtered out when "green" filter is off
+
 ## 24.12.12
 
 ### Added
