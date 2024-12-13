@@ -13,6 +13,7 @@
 
 - `NOTS`, `nots-clean-notifications`: Fix "Component fail to render" error
 - `XIT BURN`: Fix inf values being filtered out when "green" filter is off
+- Fix new buffers not opening when trying to open an invalid command (like `CO undefined`)
 
 ## 24.12.12
 
