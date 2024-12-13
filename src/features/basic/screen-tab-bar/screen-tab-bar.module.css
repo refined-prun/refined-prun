@@ -1,3 +1,11 @@
+.screenControls {
+  display: inline-flex;
+}
+
+.screenControlsItems {
+  flex-shrink: 0;
+}
+
 .hideButton {
   width: 26px;
   text-align: center;

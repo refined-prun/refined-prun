@@ -32,6 +32,12 @@ function getScreen(id: string) {
 }
 
 .container {
-  display: inline;
+  display: inline-flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+.container > * {
+  flex-shrink: 0;
 }
 </style>
