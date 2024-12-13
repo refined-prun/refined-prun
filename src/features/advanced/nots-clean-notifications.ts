@@ -21,21 +21,31 @@ async function processNotification(container: HTMLElement) {
   }
 
   const textSpan = _$$(content, 'span')[0];
-  const alertText = textSpan?.textContent;
-  if (!alertText) {
+  if (!textSpan?.textContent) {
     return;
   }
 
-  const newText = patch.replace(alert, alertText);
-  if (newText !== undefined && alertText !== newText) {
-    textSpan.textContent = newText;
+  // We need to replace the text content VERY carefully,
+  // since it's all text nodes which can be updated by React at any time.
+  for (const node of Array.from(textSpan.childNodes)) {
+    if (node.nodeType !== Node.TEXT_NODE) {
+      continue;
+    }
+    const nodeText = node.textContent;
+    if (!nodeText) {
+      continue;
+    }
+    const newText = patch.replace(nodeText);
+    if (nodeText !== newText) {
+      node.textContent = newText;
+    }
   }
 }
 
 interface AlertPatch {
   types: PrunApi.AlertType[];
 
-  replace(alert: PrunApi.Alert, text: string): string;
+  replace(text: string): string;
 }
 
 const patches: AlertPatch[] = [
@@ -53,25 +63,25 @@ const patches: AlertPatch[] = [
       'CONTRACT_DEADLINE_EXCEEDED_WITH_CONTROL',
       'CONTRACT_CONTRACT_REJECTED',
     ],
-    replace(alert: PrunApi.Alert, text: string) {
+    replace(text: string) {
       return text.replace('Your partner ', '');
     },
   },
   {
     types: ['COMEX_ORDER_FILLED', 'FOREX_ORDER_FILLED'],
-    replace(alert: PrunApi.Alert, text: string) {
+    replace(text: string) {
       return text.replace(' Commodity Exchange', '').replace(' order', '');
     },
   },
   {
     types: ['COMEX_TRADE', 'FOREX_TRADE'],
-    replace(alert: PrunApi.Alert, text: string) {
+    replace(text: string) {
       return text.replace(' Commodity Exchange', '').replace(' your', '').replace(' order', '');
     },
   },
   {
     types: ['PRODUCTION_ORDER_FINISHED'],
-    replace(alert: PrunApi.Alert, text: string) {
+    replace(text: string) {
       return text
         .replace(' at your base', '')
         .replace('One', '1')
@@ -82,7 +92,7 @@ const patches: AlertPatch[] = [
   },
   {
     types: ['COGC_PROGRAM_CHANGED', 'COGC_UPKEEP_STARTED', 'COGC_STATUS_CHANGED'],
-    replace(alert: PrunApi.Alert, text: string) {
+    replace(text: string) {
       return text
         .replace('Chamber of Global Commerce', 'COGC')
         .replace(' a new economic program', '')
@@ -91,19 +101,19 @@ const patches: AlertPatch[] = [
   },
   {
     types: ['SHIP_FLIGHT_ENDED'],
-    replace(alert: PrunApi.Alert, text: string) {
+    replace(text: string) {
       return text.replace(' its destination', '');
     },
   },
   {
     types: ['LOCAL_MARKET_AD_ACCEPTED', 'LOCAL_MARKET_AD_EXPIRED'],
-    replace(alert: PrunApi.Alert, text: string) {
+    replace(text: string) {
       return text.replace(' the', '').replace(' local market', '');
     },
   },
   {
     types: ['POPULATION_PROJECT_UPGRADED'],
-    replace(alert: PrunApi.Alert, text: string) {
+    replace(text: string) {
       return text.replace('population infrastructure', 'POPI');
     },
   },

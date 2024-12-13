@@ -2,8 +2,8 @@
 
 ### Added
 
-- `MTRA`: `mtra-sync-amount-slider` - Syncs the "Amount" slider with the input field
-- `NOTS`: `nots-ship-arrival-inventory` - Opens ship inventory on "ship arrived" notification click
+- `MTRA`, `mtra-sync-amount-slider`: Syncs the "Amount" slider with the input field
+- `NOTS`, `nots-ship-arrival-inventory`: Opens ship inventory on "ship arrived" notification click
 
 ### Changed:
 
@@ -11,6 +11,7 @@
 
 ### Fixed:
 
+- `NOTS`, `nots-clean-notifications`: Fix "Component fail to render" error
 - `XIT BURN`: Fix inf values being filtered out when "green" filter is off
 
 ## 24.12.12
