@@ -116,7 +116,7 @@ const rat = materialsStore.getByTicker('RAT');
         </tr>
       </thead>
       <tbody :class="$style.fakeRow">
-        <MaterialRow :burn="fakeBurn" :material="rat" />
+        <MaterialRow always-visible :burn="fakeBurn" :material="rat" />
       </tbody>
       <BurnSection
         v-for="burn in planetBurn"

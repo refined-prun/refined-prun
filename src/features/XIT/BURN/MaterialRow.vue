@@ -17,6 +17,7 @@ const props = defineProps({
     type: Object as PropType<MaterialBurn>,
     required: true,
   },
+  alwaysVisible: Boolean,
 });
 
 const production = computed(() => props.burn.DailyAmount);
@@ -34,6 +35,9 @@ const green = useTileState('green');
 const inf = useTileState('inf');
 
 const isVisible = computed(() => {
+  if (props.alwaysVisible) {
+    return true;
+  }
   if (isInf.value) {
     return inf.value;
   }
