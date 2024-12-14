@@ -2,8 +2,8 @@
 
 ### Added
 
-- `MTRA`, `mtra-sync-amount-slider`: Syncs the "Amount" slider with the input field
-- `NOTS`, `nots-ship-arrival-inventory`: Opens ship inventory on "ship arrived" notification click
+- `mtra-sync-amount-slider`: `MTRA`: Syncs the "Amount" slider with the input field
+- `nots-ship-arrival-inventory`: `NOTS`: Opens ship inventory on "ship arrived" notification click
 
 ### Changed:
 
@@ -11,8 +11,8 @@
 
 ### Fixed:
 
-- `NOTS`, `nots-clean-notifications`: Fix "Component fail to render" error
 - `XIT BURN`: Fix inf values being filtered out when "green" filter is off
+- `nots-clean-notifications`: Fix "Component fail to render" error
 - `screen-tab-bar`: Fix tab reorder animation
 - Fix new buffers not opening when trying to open an invalid command (like `CO undefined`)
 
@@ -20,7 +20,7 @@
 
 ### Added
 
-- `co-base-count`: Displays a base count in the "Bases" label
+- `co-base-count`: `CO`: Displays a base count in the "Bases" label
 - `prevent-delete-button-misclicks`: Makes the "delete" button in chats work only when shift is held down
 - REPAIR_SHIP condition support in `XIT CONTS` and `XIT CONTC`
 
