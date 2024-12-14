@@ -16,6 +16,7 @@
 - `nots-clean-notifications`: Fix "Component fail to render" error
 - `screen-tab-bar`: Fix tab reorder animation
 - Fix new buffers not opening when trying to open an invalid command (like `CO undefined`)
+- Optimize CPU usage of `bs-satisfaction-percentage`, `bs-merge-area-stats` and `shipping-per-unit-price`
 
 ## 24.12.12
 

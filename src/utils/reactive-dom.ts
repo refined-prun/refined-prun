@@ -23,15 +23,34 @@ export function refAttributeValue(element: Element, name: string) {
   return value;
 }
 
+let animationFrameUpdates: (() => boolean)[] = [];
+
 export function refAnimationFrame<T extends Node, K>(element: T, getter: (x: T) => K) {
   const value = ref(getter(element));
-  const update = () => {
+  animationFrameUpdates.push(() => {
     if (element.isConnected) {
-      requestAnimationFrame(update);
+      (value as Ref<K>).value = getter(element);
+      return true;
     }
-    (value as Ref<K>).value = getter(element);
-  };
-
-  requestAnimationFrame(update);
+    return false;
+  });
+  if (animationFrameUpdates.length === 1) {
+    runAnimationFrameUpdates();
+  }
   return value;
 }
+
+function runAnimationFrameUpdates() {
+  const next: typeof animationFrameUpdates = [];
+  for (const update of animationFrameUpdates) {
+    if (update()) {
+      next.push(update);
+    }
+  }
+  animationFrameUpdates = next;
+  if (animationFrameUpdates.length > 0) {
+    requestAnimationFrame(runAnimationFrameUpdates);
+  }
+}
+
+runAnimationFrameUpdates();
