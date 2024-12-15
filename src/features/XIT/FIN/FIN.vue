@@ -62,8 +62,8 @@ const figures = computed(() => {
       value: formatCurrency(liveBalanceSummary.quickAssets),
       tooltip:
         'Quick Assets are: Cash and Cash Equivalents, Current Accounts Receivable, and' +
-        ' Current Loans Receivable. These assets are either liquid or close-to-liquid and' +
-        ' are used in Quick Ratio calculation.',
+        ' Current Loans Receivable (see XIT FINBS for more details). These assets are' +
+        ' either liquid or close-to-liquid and are used in Quick Ratio calculation.',
     },
     {
       name: 'Current Assets',
@@ -75,9 +75,9 @@ const figures = computed(() => {
       name: 'Quick Liabilities',
       value: formatCurrency(liveBalanceSummary.quickLiabilities),
       tooltip:
-        'Quick Liabilities are: Current Accounts Payable and Current Loans Payable. These' +
-        ' liabilities represent immediate financial obligations and are used in Quick Ratio' +
-        ' calculation.',
+        'Quick Liabilities are: Current Accounts Payable and Current Loans Payable (see XIT FINBS' +
+        ' for more details). These liabilities represent immediate financial obligations and are' +
+        ' used in Quick Ratio calculation.',
     },
     {
       name: 'Current Liabilities',

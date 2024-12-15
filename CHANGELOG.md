@@ -7,6 +7,7 @@
 
 ### Changed:
 
+- `XIT FIN`: Clarify Quick Assets/Liabilities tooltips
 - `screen-tab-bar`: Change the styling of the "hide"/"show" button to look like the "copy" button
 
 ### Fixed:
