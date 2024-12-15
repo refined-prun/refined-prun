@@ -106,13 +106,15 @@ function weightedAverage<T>(
 }
 
 const ignored = computed(() => new Set(userData.settings.financial.ignoredMaterials.split(',')));
+const mmMaterials = computed(() => new Set(userData.settings.financial.mmMaterials.split(',')));
 
 export function getPrice(ticker?: string | null) {
   if (!ticker) {
     return undefined;
   }
 
-  if (ignored.value.has(ticker.toUpperCase())) {
+  const upper = ticker.toUpperCase();
+  if (ignored.value.has(upper)) {
     return 0;
   }
 
@@ -124,6 +126,10 @@ export function getPrice(ticker?: string | null) {
   const exchange = cxStore.prices.get(pricing.exchange);
   if (!exchange) {
     return undefined;
+  }
+
+  if (mmMaterials.value.has(upper)) {
+    return exchange.get(ticker)?.MMBuy ?? 0;
   }
 
   const tickerInfo = exchange.get(ticker);
@@ -178,27 +184,6 @@ export function sumMaterialAmountPrice(amounts?: PrunApi.MaterialAmount[]) {
     result += price;
   }
   return result;
-}
-
-export function getMMPrice(ticker?: string | null) {
-  if (!ticker) {
-    return undefined;
-  }
-
-  if (ignored.value.has(ticker.toUpperCase())) {
-    return 0;
-  }
-
-  if (!cxStore.fetched) {
-    return undefined;
-  }
-
-  const exchange = cxStore.prices.get(userData.settings.pricing.exchange);
-  if (!exchange) {
-    return undefined;
-  }
-
-  return exchange.get(ticker)?.MMBuy ?? 0;
 }
 
 export const cxStore = shallowReactive({

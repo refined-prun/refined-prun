@@ -65,7 +65,7 @@ function onIgnoredMaterialsSubmit() {
   <Active
     label="MM Materials"
     tooltip="Comma-separated list of Market Maker materials.
-     These materials are priced by the MM Bid when displayed in FINLA or XIT FINBS.">
+     The price of these materials will be equal to MM Bid price.">
     <TextInput
       v-model="mmMaterials"
       @keyup.enter="onMMMaterialsSubmit"

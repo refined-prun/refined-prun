@@ -6,11 +6,7 @@ import {
   getEntityNameFromAddress,
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
-import {
-  calcMaterialAmountPrice,
-  getMMPrice,
-  sumMaterialAmountPrice,
-} from '@src/infrastructure/fio/cx';
+import { calcMaterialAmountPrice, sumMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { sumBy } from '@src/utils/sum-by';
@@ -26,7 +22,6 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getPlanetBurn } from '@src/core/burn';
 import { mergeMaterialAmounts } from '@src/core/sort-materials';
 import { workInProgress } from '@src/core/balance/orders';
-import { isDefined } from 'ts-extras';
 import { userData } from '@src/store/user-data';
 
 type LocationName = string;
@@ -176,11 +171,7 @@ const cxInventory = computed(() => {
     let mmTotal = 0;
     for (const materialValue of marketValue) {
       if (mmMaterials.value.has(materialValue.material.ticker)) {
-        const price = getMMPrice(materialValue.material.ticker);
-        if (!isDefined(price)) {
-          return undefined;
-        }
-        mmTotal += price * materialValue.amount;
+        mmTotal += materialValue.value;
       } else {
         otherMaterialsTotal += materialValue.value;
       }

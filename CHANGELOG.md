@@ -16,6 +16,7 @@
 - `XIT BURN`: Fix disappearing table borders on Firefox
 - `nots-clean-notifications`: Fix "Component fail to render" error
 - `screen-tab-bar`: Fix tab reorder animation
+- Fix MM Materials price not being equal to MM Bid price in some places
 - Fix new buffers not opening when trying to open an invalid command (like `CO undefined`)
 - Optimize CPU usage of `bs-satisfaction-percentage`, `bs-merge-area-stats` and `shipping-per-unit-price`
 
