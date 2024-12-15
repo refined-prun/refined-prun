@@ -81,6 +81,18 @@ const fakeBurn: MaterialBurn = {
 };
 
 const rat = materialsStore.getByTicker('RAT');
+
+const expand = useTileState('expand');
+
+const anyExpanded = computed(() => expand.value.length > 0);
+
+function onExpandAllClick() {
+  if (expand.value.length > 0) {
+    expand.value = [];
+  } else {
+    expand.value = planetBurn.value.map(x => x.naturalId);
+  }
+}
 </script>
 
 <template>
@@ -95,7 +107,10 @@ const rat = materialsStore.getByTicker('RAT');
     <table>
       <thead>
         <tr>
-          <th />
+          <th v-if="sites.length > 0" :class="$style.expand" @click="onExpandAllClick">
+            {{ anyExpanded ? '-' : '+' }}
+          </th>
+          <th v-else />
           <th>Inv</th>
           <th>
             <div :class="$style.header">
@@ -136,5 +151,14 @@ const rat = materialsStore.getByTicker('RAT');
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.expand {
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  font-size: 12px;
+  padding-left: 18px;
+  font-weight: bold;
 }
 </style>

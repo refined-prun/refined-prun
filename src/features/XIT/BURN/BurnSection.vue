@@ -18,6 +18,9 @@ const naturalId = computed(() => props.burn.naturalId);
 const isMinimized = computed(() => props.canMinimize && !expand.value.includes(naturalId.value));
 
 const onHeaderClick = () => {
+  if (!props.canMinimize) {
+    return;
+  }
   if (isMinimized.value) {
     expand.value = [...expand.value, naturalId.value];
   } else {
@@ -38,9 +41,3 @@ const onHeaderClick = () => {
     <MaterialList :burn="burn" />
   </tbody>
 </template>
-
-<style module>
-.collapse {
-  visibility: collapse;
-}
-</style>
