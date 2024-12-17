@@ -83,13 +83,11 @@ async function captureLastWindow(command: string, options?: ShowBufferOptions) {
   }
   await sleep(0);
   form.requestSubmit();
-  await sleep(0);
-  if (input.isConnected) {
-    // The command produced an error. Show the buffer to the user.
-    window.classList.remove(css.hidden);
-    return;
-  }
-  await new Promise<void>(resolve => onNodeDisconnected(input, resolve));
+  const selector = await $(window, C.Tile.selector);
+  await Promise.any([
+    new Promise<void>(resolve => onNodeDisconnected(input, resolve)),
+    $(selector, C.Tile.warning),
+  ]);
   if (!options?.autoClose) {
     window.classList.remove(css.hidden);
     return;
