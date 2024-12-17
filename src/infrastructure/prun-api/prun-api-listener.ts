@@ -2,6 +2,7 @@ import socketIOMiddleware from './socket-io-middleware';
 import { dispatch } from '@src/infrastructure/prun-api/data/api-messages';
 import { companyContextId } from '@src/infrastructure/prun-api/data/user-data';
 import { startMeasure, stopMeasure } from '@src/utils/performance-measure';
+import { context } from '@src/infrastructure/prun-api/data/screens';
 
 export interface Packet {
   messageType?: string;
@@ -11,8 +12,8 @@ export interface Packet {
 }
 
 export function listenPrunApi() {
-  socketIOMiddleware<Packet>(onOpen, (context, payload) => {
-    if (context === companyContextId.value || !companyContextId.value || !context) {
+  socketIOMiddleware<Packet>(onOpen, payload => {
+    if (context.value === companyContextId.value || !companyContextId.value || !context.value) {
       processEvent(payload);
     }
     return false;

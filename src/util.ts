@@ -70,11 +70,23 @@ export function createLink(text, command, autoSubmit = true) {
   return linkDiv;
 }
 
-// Change the value of a new buffer box
-export function changeValue(input: HTMLInputElement, value: string) {
-  input.value = value;
+export function changeInputValue(input: HTMLInputElement, value: string) {
+  // React overrides the native property, so we can't use it directly.
+  const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value');
+  setter!.set!.call(input, value);
   const event = new Event('input', { bubbles: true, cancelable: true });
   input.dispatchEvent(event);
+  const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+  input.dispatchEvent(changeEvent);
+}
+
+export function changeSelectIndex(input, selectIndex) {
+  // React overrides the native property, so we can't use it directly.
+  const setter = Object.getOwnPropertyDescriptor(
+    window.HTMLSelectElement.prototype,
+    'selectedIndex',
+  );
+  setter!.set!.call(input, selectIndex);
   const changeEvent = new Event('change', { bubbles: true, cancelable: true });
   input.dispatchEvent(changeEvent);
 }
@@ -458,15 +470,6 @@ class PopupRow {
   }
 }
 
-export async function loadLocalFile(path: string) {
-  return await fetch(chrome.runtime.getURL(path));
-}
-
-export async function loadLocalJson(path: string) {
-  const file = await loadLocalFile(`json/${path}`);
-  return await file.json();
-}
-
 // A function to compare two planets (to be used in .sort() functions)
 export function comparePlanets(idOrNameA: string, idOrNameB: string) {
   const planetA = planetsStore.find(idOrNameA);
@@ -539,12 +542,6 @@ export function extractPlanetName(text: string | null) {
     // Clear system name in named systems
     .replace(/.*\s-\s/, '');
   return (Stations[text] ?? text) as string;
-}
-
-export function changeSelectValue(input, selectIndex) {
-  input.selectedIndex = selectIndex;
-  const changeEvent = new Event('change', { bubbles: true, cancelable: true });
-  input.dispatchEvent(changeEvent);
 }
 
 export function getMaterialNameByTicker(ticker?: string | null) {

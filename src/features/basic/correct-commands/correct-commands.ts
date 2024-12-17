@@ -1,4 +1,4 @@
-import { changeValue } from '@src/util';
+import { changeInputValue } from '@src/util';
 import { correctMaterialCommand } from './material-commands';
 import { correctPlanetCommand } from './planet-commands';
 import { correctShipCommand } from './ship-commands';
@@ -31,7 +31,7 @@ async function onSelectorReady(selector: HTMLElement) {
 
     ev.stopPropagation();
     ev.preventDefault();
-    changeValue(input, command);
+    changeInputValue(input, command);
     setTimeout(() => form.requestSubmit(), 0);
   });
 }

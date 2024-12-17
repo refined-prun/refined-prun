@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { deepToRaw } from '@src/utils/deep-to-raw';
 import { isEmpty } from 'ts-extras';
 
 const migrations: Migration[] = [
@@ -11,7 +10,6 @@ const migrations: Migration[] = [
   },
   // End of beta
   userData => {
-    void chrome.storage.local.remove('rp-backup');
     for (const pkg of userData.actionPackages) {
       for (const group of pkg.groups) {
         group.type = group.type === 'RESUPPLY' ? 'Resupply' : group.type;
@@ -46,9 +44,6 @@ const migrations: Migration[] = [
     userData.settings.time = 'DEFAULT';
   },
   userData => {
-    void chrome.storage.local.set({
-      ['rp-backup']: structuredClone(deepToRaw(userData)),
-    });
     userData.settings.financial = {
       mmMaterials: 'IDC,EDC',
       ignoredMaterials: 'HEX,JUI',

@@ -1,6 +1,6 @@
 import fa from '@src/utils/font-awesome.module.css';
 import classes from './input-math.module.css';
-import { changeValue } from '@src/util';
+import { changeInputValue } from '@src/util';
 import Mexp from 'math-expression-evaluator';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
@@ -19,7 +19,7 @@ function onKeyDown(input: HTMLInputElement, e: KeyboardEvent) {
   let expression = input.value.charAt(0) === '=' ? input.value.substring(1) : input.value;
   expression = replaceMaterialProperties(expression);
   const result = parseFloat(mexp.eval(expression).toFixed(6));
-  changeValue(input, result.toString());
+  changeInputValue(input, result.toString());
 }
 
 function replaceMaterialProperties(expression: string) {

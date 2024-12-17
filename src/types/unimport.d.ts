@@ -7,6 +7,7 @@ declare global {
   const _$$: typeof import('@src/utils/select-dom')['_$$']
   const _$: typeof import('@src/utils/select-dom')['_$']
   const computed: typeof import('vue')['computed']
+  const config: typeof import('@src/config')['default']
   const createApp: typeof import('vue')['createApp']
   const customRef: typeof import('vue')['customRef']
   const defineAsyncComponent: typeof import('vue')['defineAsyncComponent']
@@ -83,6 +84,7 @@ declare module 'vue' {
     readonly _$$: UnwrapRef<typeof import('@src/utils/select-dom')['_$$']>
     readonly _$: UnwrapRef<typeof import('@src/utils/select-dom')['_$']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
+    readonly config: UnwrapRef<typeof import('@src/config')['default']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>

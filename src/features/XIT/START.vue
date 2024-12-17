@@ -2,7 +2,6 @@
 import PrunLink from '@src/components/PrunLink.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import { userData } from '@src/store/user-data';
-import { reloadPage } from '@src/infrastructure/prun-ui/page-functions';
 import { saveUserData } from '@src/infrastructure/storage/user-data-serializer';
 
 const needsToChoose = ref(userData.settings.mode === undefined);
@@ -16,7 +15,7 @@ async function onFullClick() {
   needsToChoose.value = false;
   userData.settings.mode = 'FULL';
   await saveUserData();
-  reloadPage();
+  window.location.reload();
 }
 </script>
 

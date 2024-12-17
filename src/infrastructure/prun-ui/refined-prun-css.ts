@@ -1,29 +1,15 @@
 import { castArray } from '@src/utils/cast-array';
+import { keepLast } from '@src/utils/keep-last';
 
 let styleElement: HTMLStyleElement | undefined = undefined;
 
 const rules: { [id: string]: string } = {};
 
-export async function loadRefinedPrunCss() {
-  const css = document.createElement('link');
-  css.href = chrome.runtime.getURL(`refined-prun.css`) + '?' + Date.now();
-  css.id = 'refined-prun-css';
-  css.rel = 'stylesheet';
-  await new Promise(resolve => {
-    css.onload = resolve;
-    document.documentElement.appendChild(css);
-  });
-  readRules(css.sheet!);
-}
-
-function readRules(sheet: CSSStyleSheet) {
-  for (let i = 0; i < sheet.cssRules.length; i++) {
-    const rule = sheet.cssRules.item(i) as CSSStyleRule;
-    if (!rule) {
-      continue;
-    }
-    rules[rule.selectorText] = rule.cssText;
-  }
+export function loadRefinedPrunCss() {
+  const css = document.getElementById('refined-prun-css')!;
+  Object.assign(rules, JSON.parse(css.textContent!));
+  css.textContent = null;
+  keepLast(document.head, () => document.head, css);
 }
 
 export function applyClassCssRule(classNames: Arrayable<string>, sourceClass: string) {

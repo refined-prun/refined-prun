@@ -6,6 +6,7 @@ import { trackItemTickers } from '@src/infrastructure/prun-ui/item-tracker';
 export async function initializeUI() {
   await loadPrunCss();
   await $(document.documentElement, C.App.container);
+  loadRefinedPrunCss();
   trackItemTickers();
-  await Promise.all([loadRefinedPrunCss(), readPrunI18N()]);
+  await readPrunI18N();
 }

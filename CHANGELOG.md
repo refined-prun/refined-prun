@@ -10,6 +10,7 @@
 - `XIT BURN`: Add an expand/collapse all button
 - `XIT FIN`: Clarify Quick Assets/Liabilities tooltips
 - `screen-tab-bar`: Change the styling of the "hide"/"show" button to look like the "copy" button
+- Change the way Refined PrUn integrates into APEX, leading to less CPU usage
 
 ### Fixed:
 

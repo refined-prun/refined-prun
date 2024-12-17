@@ -1,12 +1,11 @@
-import '@src/infrastructure/prun-api/socket-io-proxy';
-import '@src/infrastructure/prun-ui/i18n-reader';
-import '@src/infrastructure/prun-ui/page-functions-bridge';
+import { isValidUrl } from '@src/utils/is-valid-url';
 
-// Deserialize app scripts.
+// App script deserialization is extracted to a separate file in a top-level code block
+// to ensure that APEX can launch even if some script in rprun fails to load.
 const scripts = document.head.getElementsByTagName('script');
 for (let i = 0; i < scripts.length; i++) {
   const script = scripts[i];
-  if (script.textContent) {
+  if (script.textContent && isValidUrl(script.textContent)) {
     const clone = document.createElement('script');
     clone.src = script.textContent;
     clone.defer = script.defer;
@@ -16,5 +15,3 @@ for (let i = 0; i < scripts.length; i++) {
     script.remove();
   }
 }
-
-window.postMessage('prun-connector-ready', '*');

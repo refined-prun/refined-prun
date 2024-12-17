@@ -12,21 +12,20 @@ const materialsByName = new Map<string, PrunApi.Material>();
 
 export async function readPrunI18N() {
   await new Promise<void>(resolve => {
-    window.addEventListener('message', (event: MessageEvent) => {
-      if (event.source !== window) {
-        return;
-      }
-      if (event.data.type === 'rp-i18n') {
-        if (event.data.data) {
-          Object.assign(PrunI18N, event.data.data);
-        }
+    if (window['PrUn_i18n']) {
+      resolve();
+      return;
+    }
+
+    const interval = setInterval(() => {
+      if (window['PrUn_i18n']) {
+        clearInterval(interval);
         resolve();
       }
-    });
-
-    window.postMessage({ type: 'rp-get-i18n' }, '*');
+    }, 10);
   });
 
+  Object.assign(PrunI18N, window['PrUn_i18n']);
   await watchUntil(() => materialsStore.all.value !== undefined);
   buildMaterialNameMap(materialsStore.all.value!);
 }

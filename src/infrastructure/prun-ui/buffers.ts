@@ -1,4 +1,4 @@
-import { changeValue, clickElement } from '@src/util';
+import { changeInputValue, clickElement } from '@src/util';
 import { sleep } from '@src/utils/sleep';
 import css from '@src/utils/css-utils.module.css';
 import onNodeDisconnected from '@src/utils/on-node-disconnected';
@@ -67,7 +67,7 @@ async function captureLastWindow(command: string, options?: ShowBufferOptions) {
   }
   const window = windows[windows.length - 1] as HTMLDivElement;
   const input = _$(window, C.PanelSelector.input) as HTMLInputElement;
-  changeValue(input, command);
+  changeInputValue(input, command);
   const form = input.form;
   if (!form?.isConnected || !(options?.autoSubmit ?? true)) {
     return;

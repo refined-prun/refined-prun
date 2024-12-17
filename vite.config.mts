@@ -53,6 +53,7 @@ export default defineConfig({
         { name: 'default', as: 'tiles', from: '@src/infrastructure/prun-ui/tiles' },
         { name: 'default', as: 'features', from: '@src/feature-registry' },
         { name: 'default', as: 'xit', from: '@src/features/XIT/xit-registry' },
+        { name: 'default', as: 'config', from: '@src/config' },
       ],
       //dts: 'src/types/unimport.d.ts',
       addons: {
@@ -73,10 +74,9 @@ export default defineConfig({
     reportCompressedSize: false,
     lib: {
       entry: {
-        'content-script': resolve(srcDir, 'content-script.ts'),
-        'refined-prun': resolve(srcDir, 'refined-prun.ts'),
         'refined-prun-prepare': resolve(srcDir, 'refined-prun-prepare.ts'),
-        'prun-connector': resolve(srcDir, 'prun-connector.ts'),
+        'refined-prun-startup': resolve(srcDir, 'refined-prun-startup.ts'),
+        'refined-prun': resolve(srcDir, 'refined-prun.ts'),
       },
       formats: ['es'],
     },

@@ -2,8 +2,6 @@ import classes from './rprun-version-label.module.css';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 
-const version = chrome.runtime.getManifest().version;
-
 async function onFooterReady(footer: HTMLElement) {
   const userCount = await $(footer, C.UsersOnlineCount.container);
 
@@ -20,7 +18,7 @@ async function onFooterReady(footer: HTMLElement) {
         class={[classes.label, C.HeadItem.label]}
         data-tooltip="Refined PrUn version."
         data-tooltip-position="top">
-        v. {version}
+        v. {config.version}
       </div>
     </div>
   )).before(userCount);

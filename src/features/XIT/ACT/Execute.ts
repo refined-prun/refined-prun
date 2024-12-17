@@ -1,6 +1,6 @@
 import {
-  changeSelectValue,
-  changeValue,
+  changeSelectIndex,
+  changeInputValue,
   clearChildren,
   createTextSpan,
   getBuffers,
@@ -333,8 +333,8 @@ async function executeAction(
         tile.removeChild(executionInfo);
         return;
       }
-      changeValue(quantityInput, action.parameters.amount.toString());
-      changeValue(priceInput, action.parameters.priceLimit.toString());
+      changeInputValue(quantityInput, action.parameters.amount.toString());
+      changeInputValue(priceInput, action.parameters.priceLimit.toString());
       break;
     }
     case 'mtraMatSelect': {
@@ -375,12 +375,12 @@ async function executeAction(
       // Need to flicker MTRA source in order to update inventory
       // Move to 1st then 2nd item in MTRA list to guarantee change.
       button.disabled = true;
-      changeSelectValue(originSelect, 0);
+      changeSelectIndex(originSelect, 0);
       await sleep(1);
-      changeSelectValue(originSelect, 1);
+      changeSelectIndex(originSelect, 1);
       await sleep(1);
 
-      changeSelectValue(originSelect, sourceIndex); // Change source select
+      changeSelectIndex(originSelect, sourceIndex); // Change source select
 
       // Start changing destination select
       const allSelects = buffer.querySelectorAll(Selector.StoreSelect);
@@ -413,20 +413,14 @@ async function executeAction(
         return;
       }
 
-      changeSelectValue(destSelect, destIndex); // Change source select
+      changeSelectIndex(destSelect, destIndex); // Change source select
 
       await sleep(50);
 
       // Clear previous material in MTRA
       button.disabled = false;
       button.focus();
-      button.value = '';
-
-      const changeEvent = document.createEvent('Event');
-      changeEvent.initEvent('change', true, true);
-
-      button.dispatchEvent(changeEvent);
-
+      changeInputValue(button, '');
       break;
     }
     case 'MTRA': {
@@ -467,7 +461,7 @@ async function executeAction(
         );
       }
 
-      changeValue(amountInput, Math.min(action.parameters.amount, maxAmount).toString()); // Transfer the max amount possible (could add a setting here to error out instead)
+      changeInputValue(amountInput, Math.min(action.parameters.amount, maxAmount).toString()); // Transfer the max amount possible (could add a setting here to error out instead)
 
       amountInput.focus(); // Need to focus for some reason
       changeButton.focus();

@@ -1,9 +1,8 @@
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { dispatch } from '@src/infrastructure/prun-api/data/api-messages';
-import { loadLocalJson } from '@src/util';
 
 export function preloadFioResponses() {
-  loadAllPlanets();
+  void loadAllPlanets();
 }
 
 async function loadAllPlanets() {
@@ -13,16 +12,13 @@ async function loadAllPlanets() {
 }
 
 export async function loadFallbackPlanetData() {
-  const fallbackResponse = await loadFallbackResponse<FioApi.AllPlanetsShort>('allplanets');
+  const fallbackFile = await fetch(config.url.allplanets);
+  const fallbackResponse = (await fallbackFile.json()) as FioApi.AllPlanetsShort;
   if (planetsStore.fetched.value) {
     return;
   }
 
   dispatchFioResponse(fallbackResponse);
-}
-
-async function loadFallbackResponse<T>(name: string) {
-  return (await loadLocalJson(`fallback-fio-responses/${name}.json`)) as T;
 }
 
 function dispatchFioResponse(response: FioApi.AllPlanetsShort) {

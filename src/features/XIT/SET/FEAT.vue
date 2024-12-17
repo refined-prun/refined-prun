@@ -9,7 +9,6 @@ import TextInput from '@src/components/forms/TextInput.vue';
 import { computed, ref } from 'vue';
 import { isEmpty } from 'ts-extras';
 import PrunButton from '@src/components/PrunButton.vue';
-import { reloadPage } from '@src/infrastructure/prun-ui/page-functions';
 import { userData } from '@src/store/user-data';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { saveUserData } from '@src/infrastructure/storage/user-data-serializer';
@@ -79,7 +78,7 @@ function toggleClass(id: string) {
 
 async function onReloadClick() {
   await saveUserData();
-  reloadPage();
+  window.location.reload();
 }
 
 async function onChangeModeClick() {
@@ -89,7 +88,7 @@ async function onChangeModeClick() {
     userData.settings.mode = 'FULL';
   }
   await saveUserData();
-  reloadPage();
+  window.location.reload();
 }
 </script>
 

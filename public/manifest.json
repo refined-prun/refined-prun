@@ -33,7 +33,7 @@
       ],
       "js": [
         "refined-prun-prepare.js",
-        "content-script.js"
+        "refined-prun-startup.js"
       ],
       "run_at": "document_start"
     }

@@ -43,10 +43,13 @@ messages({
 });
 
 export const screenHash = ref(undefined as string | undefined);
+export const context = ref(undefined as string | undefined);
 
 function updateCurrent() {
   screenHash.value = location.hash.match(/screen=([^&]*)/)?.[1];
+  context.value = location.hash.match(/context=([^&]*)/)?.[1];
 }
+
 updateCurrent();
 
 window.addEventListener('locationchange', updateCurrent);

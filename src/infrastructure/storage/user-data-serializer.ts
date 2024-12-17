@@ -5,11 +5,14 @@ import { deepToRaw } from '@src/utils/deep-to-raw';
 
 const fileType = 'rp-user-data';
 
-export async function loadUserData() {
-  const saved = await chrome.storage.local.get(fileType);
-  if (saved[fileType]) {
-    const userData = migrateUserData(saved[fileType]);
-    applyUserData(userData);
+export function loadUserData() {
+  if (config.userData) {
+    try {
+      const userData = migrateUserData(config.userData);
+      applyUserData(userData);
+    } catch {
+      migrateUserData(userData);
+    }
   } else {
     migrateUserData(userData);
   }
@@ -17,8 +20,18 @@ export async function loadUserData() {
 }
 
 export async function saveUserData() {
-  await chrome.storage.local.set({
-    [fileType]: deepToRaw(userData),
+  await new Promise<void>(resolve => {
+    const listener = (e: MessageEvent) => {
+      if (e.source !== window) {
+        return;
+      }
+      if (e.data.type === 'rp-user-data-saved') {
+        window.removeEventListener('message', listener);
+        resolve();
+      }
+    };
+    window.addEventListener('message', listener);
+    window.postMessage({ type: 'rp-save-user-data', userData: deepToRaw(userData) }, '*');
   });
 }
 

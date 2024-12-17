@@ -8,7 +8,7 @@ export const companyContextId = computed(
 );
 
 messages({
-  COMPANY_DATA(data: PrunApi.UserData) {
+  USER_DATA(data: PrunApi.UserData) {
     Object.assign(userDataStore, data);
   },
 });
