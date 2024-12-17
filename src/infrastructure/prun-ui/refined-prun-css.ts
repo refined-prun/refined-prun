@@ -1,8 +1,6 @@
 import { castArray } from '@src/utils/cast-array';
 import { keepLast } from '@src/utils/keep-last';
 
-let styleElement: HTMLStyleElement | undefined = undefined;
-
 const rules: { [id: string]: string } = {};
 
 export function loadRefinedPrunCss() {
@@ -69,21 +67,42 @@ export function endCssAtScope() {
   at = undefined;
 }
 
+let currentSheet = {
+  id: '',
+  textContent: '',
+};
+const sheets: (typeof currentSheet)[] = [];
+
 export function applyRawCssRule(rule: string) {
-  const styleId = `rp-${features.current}`;
-  if (!styleElement || styleElement.id !== styleId) {
-    styleElement = document.createElement('style');
-    styleElement.id = styleId;
-    styleElement.textContent = '';
-    document.head.appendChild(styleElement);
+  if (currentSheet.id !== features.current) {
+    queueSheetAppend();
+    currentSheet = {
+      id: features.current!,
+      textContent: '',
+    };
+    sheets.push(currentSheet);
   } else {
-    styleElement.textContent += '\n\n';
+    currentSheet.textContent += '\n\n';
   }
   let fullRule = `html[refined-prun] ${rule}`;
   if (at) {
     fullRule = `${at} { ${fullRule} }`;
   }
-  styleElement.textContent += fullRule;
+  currentSheet.textContent += fullRule;
+}
+
+function queueSheetAppend() {
+  if (sheets.length > 0) {
+    return;
+  }
+  queueMicrotask(() => {
+    for (const sheet of sheets) {
+      const style = document.createElement('style');
+      style.id = `rp-${sheet.id}`;
+      style.textContent = sheet.textContent;
+      document.head.appendChild(style);
+    }
+  });
 }
 
 function selectCommand(command: string) {
