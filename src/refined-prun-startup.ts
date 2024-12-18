@@ -1,5 +1,7 @@
 async function startup() {
   if (document.documentElement.hasAttribute('refined-prun')) {
+    // This message will trigger a reload for pre-24.12.18 builds.
+    window.postMessage({ type: 'rp-reload-page' }, '*');
     return;
   }
   const config: RefinedPrunConfig = {
