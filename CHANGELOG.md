@@ -1,3 +1,9 @@
+## 24.12.18.2202
+
+### Fixed
+
+- Fix page reload in Firefox when updating from older versions
+
 ## 24.12.18
 
 ### Added
