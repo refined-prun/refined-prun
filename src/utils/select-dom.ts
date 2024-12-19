@@ -31,15 +31,9 @@ export function getElementsByClassNameOrTag<
 export function streamElementsByClassNameOrTag<
   Selector extends string,
   Selected extends Element = ParseSelector<Selector, HTMLElement>,
->(
-  baseElement: Element | Document,
-  selector: Selector,
-): Iterable<Selected> & AsyncIterable<Selected> {
+>(baseElement: Element | Document, selector: Selector): AsyncIterable<Selected> {
   const collection = getHtmlCollection<Selector, Selected>(baseElement, selector);
   return {
-    [Symbol.iterator]() {
-      return Array.from(collection)[Symbol.iterator]();
-    },
     [Symbol.asyncIterator]() {
       return streamHtmlCollection(baseElement, collection);
     },

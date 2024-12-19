@@ -44,7 +44,7 @@ function onTileReady(tile: PrunTile) {
 function cleanShipmentAd(tile: PrunTile, ad: HTMLElement) {
   // Shorten planet names
   const parameter = tile.parameter?.toUpperCase();
-  for (const link of $$(ad, C.Link.link)) {
+  for (const link of _$$(ad, C.Link.link)) {
     const planetName = extractPlanetName(link.textContent);
     const planet = planetsStore.find(planetName);
     if (parameter === planetName?.toUpperCase() || parameter === planet?.naturalId.toUpperCase()) {

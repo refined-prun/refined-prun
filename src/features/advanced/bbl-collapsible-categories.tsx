@@ -8,7 +8,7 @@ import { createFragmentApp } from '@src/utils/vue-fragment-app';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.SectionList.container), container => {
-    for (const divider of $$(container, C.SectionList.divider)) {
+    for (const divider of _$$(container, C.SectionList.divider)) {
       // Hide Infrastructure (which is the first category) by default
       const enabled = ref(container.firstChild !== divider);
       divider.addEventListener('click', () => (enabled.value = !enabled.value));

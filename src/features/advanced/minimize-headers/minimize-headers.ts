@@ -25,7 +25,7 @@ function onTileReady(tile: PrunTile) {
 }
 
 function setHeaders(tile: PrunTile, isMinimized: boolean) {
-  for (const header of $$(tile.anchor, C.FormComponent.containerPassive)) {
+  for (const header of _$$(tile.anchor, C.FormComponent.containerPassive)) {
     const label = _$(header, C.FormComponent.label);
     if (label?.textContent === 'Minimize') {
       continue;
