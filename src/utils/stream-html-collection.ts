@@ -13,26 +13,28 @@ export async function* streamHtmlCollection<T extends Element>(
     yield element;
   }
 
-  while (true) {
-    const newElements = new Set<T>();
-    await oneMutation(root, {
-      childList: true,
-      subtree: true,
-      filter: () => {
-        for (let i = 0; i < elements.length; i++) {
-          const element = elements[i];
-          if (!seenElements.has(element)) {
-            newElements.add(element);
-          }
-        }
-        return newElements.size > 0;
-      },
-    });
+  const newElements = new Set<T>();
+  let resolve = () => {};
+  const observer = new MutationObserver(() => {
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i];
+      if (!seenElements.has(element)) {
+        newElements.add(element);
+      }
+    }
 
+    if (newElements.size > 0) {
+      resolve();
+    }
+  });
+  observer.observe(root, { childList: true, subtree: true });
+  while (true) {
+    await new Promise<void>(x => (resolve = x));
     for (const element of newElements) {
       seenElements.add(element);
       yield element;
     }
+    newElements.clear();
   }
 }
 
