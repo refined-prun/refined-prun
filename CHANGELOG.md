@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+
+- `hide-ctx-name`: Hides the current context name label (CTX)
+
 ## 24.12.18.2202
 
 ### Fixed

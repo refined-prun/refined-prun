@@ -11,6 +11,7 @@ import './flt-flight-status-icons';
 import './flt-hide-transponder';
 import './flt-shorten-addresses';
 import './flt-shorten-cargo-capacity';
+import './hide-ctx-name';
 import './hide-form-errors';
 import './hide-item-names';
 import './hide-system-chat-messages/hide-system-chat-messages';
