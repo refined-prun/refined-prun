@@ -1,4 +1,4 @@
-import { uploadJson } from '@src/utils/download-json';
+import { uploadJson } from '@src/utils/json-file';
 import { userData } from '@src/store/user-data';
 import { createId } from '@src/store/create-id';
 import { isDefined } from 'ts-extras';
