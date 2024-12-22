@@ -1,4 +1,4 @@
-import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
+import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { refValue } from '@src/utils/reactive-dom';
 
 function onTileReady(tile: PrunTile) {

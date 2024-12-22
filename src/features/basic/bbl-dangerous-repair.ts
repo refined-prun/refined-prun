@@ -1,6 +1,6 @@
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
+import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { isRepairableBuilding } from '@src/core/buildings';
 
 function onTileReady(tile: PrunTile) {

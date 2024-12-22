@@ -4,7 +4,7 @@ import TabBar from './TabBar.vue';
 import { userData } from '@src/store/user-data';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { isDefined } from 'ts-extras';
-import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
+import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { syncState } from '@src/features/basic/screen-tab-bar/sync';
 import { applyClassCssRule, applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 

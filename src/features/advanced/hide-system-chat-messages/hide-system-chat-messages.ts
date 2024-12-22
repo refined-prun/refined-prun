@@ -1,7 +1,7 @@
 import classes from './hide-system-chat-messages.module.css';
 import css from '@src/utils/css-utils.module.css';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
-import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
+import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import SelectButton from '@src/features/advanced/hide-system-chat-messages/SelectButton.vue';

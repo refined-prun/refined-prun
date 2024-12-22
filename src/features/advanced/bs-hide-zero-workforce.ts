@@ -1,4 +1,4 @@
-import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
+import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';

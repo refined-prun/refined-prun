@@ -14,7 +14,7 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 import { sortByMaterial, sortMaterials } from '@src/core/sort-materials';
 import { computedTileState } from '@src/store/user-data-tiles';
-import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
+import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { isDefined, isEmpty } from 'ts-extras';
 import SortCriteria from '@src/features/basic/custom-item-sorting/SortCriteria.vue';
 

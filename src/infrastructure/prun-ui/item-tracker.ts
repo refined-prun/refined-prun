@@ -1,6 +1,6 @@
 import tinycolor from 'tinycolor2';
 import { refTextContent } from '@src/utils/reactive-dom';
-import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
+import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { objectKeys } from 'ts-extras';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';

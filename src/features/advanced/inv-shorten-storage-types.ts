@@ -1,6 +1,6 @@
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { watchEffectWhileNodeAlive } from '@src/utils/watch-effect-while-node-alive';
+import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 
 function onTileReady(tile: PrunTile) {
   // Only shorten names in the main INV tile
