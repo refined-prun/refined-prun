@@ -54,7 +54,7 @@ function replaceMaterialProperties(expression: string) {
 
 function init() {
   applyCssRules();
-  subscribe($$(document.documentElement, 'input'), input => {
+  subscribe($$(document, 'input'), input => {
     if (input.inputMode !== 'numeric' && input.inputMode !== 'decimal') {
       return;
     }
