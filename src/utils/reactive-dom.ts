@@ -5,13 +5,6 @@ export function refTextContent(element: Node) {
   return textContent;
 }
 
-export function refInnerText(element: HTMLElement) {
-  const innerText = ref(element.innerText);
-  const observer = new MutationObserver(() => (innerText.value = element.innerText));
-  observer.observe(element, { childList: true, subtree: true, characterData: true });
-  return innerText;
-}
-
 export function refValue<T extends string | number>(element: Node & { value: T }) {
   return refAnimationFrame(element, x => x.value);
 }
