@@ -34,7 +34,7 @@
     "type-fest": "^4.21.0",
     "typed-query-selector": "^2.11.2",
     "uuid": "^10.0.0",
-    "vue": "^3.4.37",
+    "vue": "^3.5.13",
     "vue-chartjs": "^5.3.1",
     "vue-draggable-plus": "^0.5.3"
   },
