@@ -65,7 +65,6 @@
     "unimport": "^3.13.1",
     "vite": "^5.2.14",
     "vite-bundle-visualizer": "^1.2.1",
-    "vite-plugin-vue-devtools": "^7.3.7",
     "vue-tsc": "^2.0.29"
   },
   "lint-staged": {

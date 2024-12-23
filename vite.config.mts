@@ -3,7 +3,6 @@ import { resolve } from 'path';
 import libAssetsPlugin from '@laynezh/vite-plugin-lib-assets';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
-import vueDevTools from 'vite-plugin-vue-devtools';
 import unimport from 'unimport/unplugin';
 import { createHash } from 'crypto';
 
@@ -38,7 +37,6 @@ export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
-    vueDevTools(),
     unimport.vite({
       presets: [
         'vue',
