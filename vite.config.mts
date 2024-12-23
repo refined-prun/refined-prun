@@ -8,7 +8,7 @@ import { createHash } from 'crypto';
 
 const srcDir = resolve(__dirname, 'src');
 
-const isDev = process.env.__DEV__ === 'true';
+const isProduction = process.env.NODE_ENV === 'production';
 
 const noise = new Set([
   'index',
@@ -109,8 +109,8 @@ export default defineConfig({
     },
   },
   define: {
-    __DEV__: isDev,
-    'process.env.NODE_ENV': isDev ? `"development"` : `"production"`,
+    __DEV__: !isProduction,
+    'process.env.NODE_ENV': isProduction ? `"production"` : `"development"`,
   },
 });
 

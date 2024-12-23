@@ -12,7 +12,7 @@
     "analyze": "vite-bundle-visualizer --sourcemap",
     "build": "pnpm run clean && tsc --noEmit && vite build",
     "clean": "rimraf dist",
-    "dev": "cross-env __DEV__=true vite build -w --mode development",
+    "dev": "cross-env NODE_ENV=development vite build -w --mode development",
     "fix": "pnpx eslint ./ --fix",
     "lint": "pnpx eslint",
     "prepare": "husky",
