@@ -4,6 +4,10 @@
 
 - `hide-ctx-name`: Hides the current context name label (CTX)
 
+### Fixed
+
+- Optimize CPU and memory usage
+
 ## 24.12.18.2202
 
 ### Fixed

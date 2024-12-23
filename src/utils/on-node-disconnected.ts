@@ -1,5 +1,5 @@
 import onetime from 'onetime';
-import observeDocumentMutations from '@src/utils/document-mutation-observer';
+import { onNodeTreeMutation } from '@src/utils/on-node-tree-mutation';
 
 let elements: [Node, () => void][] = [];
 
@@ -13,9 +13,7 @@ export default function onNodeDisconnected(node: Node, callback: () => void) {
   elements.push([node, callback]);
 }
 
-const setupObserver = onetime(() => {
-  observeDocumentMutations(checkConnected);
-});
+const setupObserver = onetime(() => onNodeTreeMutation(document, checkConnected));
 
 function checkConnected(mutations: MutationRecord[]) {
   if (mutations.every(x => x.removedNodes.length === 0)) {

@@ -1,7 +1,7 @@
 import getMapArray from '@src/utils/get-map-array';
 import { castArray } from '@src/utils/cast-array';
 import onetime from 'onetime';
-import observeDocumentMutations from '@src/utils/document-mutation-observer';
+import { onNodeTreeMutation } from '@src/utils/on-node-tree-mutation';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import onNodeDisconnected from '@src/utils/on-node-disconnected';
@@ -14,9 +14,7 @@ const activeTiles: PrunTile[] = [];
 const commandObservers: Map<string, PrunTileObserver[]> = new Map();
 const anyCommandObservers: PrunTileObserver[] = [];
 
-const setupObserver = onetime(() => {
-  observeDocumentMutations(reconciliate);
-});
+const setupObserver = onetime(() => onNodeTreeMutation(document, reconciliate));
 
 function reconciliate() {
   for (const tile of activeTiles) {

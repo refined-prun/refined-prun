@@ -1,7 +1,8 @@
-import oneMutation from 'one-mutation';
+import { isEmpty } from 'ts-extras';
+import { onNodeTreeMutation } from '@src/utils/on-node-tree-mutation';
 
 export async function* streamHtmlCollection<T extends Element>(
-  root: Element | Document,
+  root: Node,
   elements: HTMLCollectionOf<T>,
 ) {
   const seenElements = new WeakSet<T>();
@@ -13,28 +14,26 @@ export async function* streamHtmlCollection<T extends Element>(
     yield element;
   }
 
-  const newElements = new Set<T>();
+  const newElements: T[] = [];
   let resolve = () => {};
-  const observer = new MutationObserver(() => {
+  onNodeTreeMutation(root, () => {
     for (let i = 0; i < elements.length; i++) {
       const element = elements[i];
       if (!seenElements.has(element)) {
-        newElements.add(element);
+        seenElements.add(element);
+        newElements.push(element);
       }
     }
 
-    if (newElements.size > 0) {
+    if (!isEmpty(newElements)) {
       resolve();
     }
   });
-  observer.observe(root, { childList: true, subtree: true });
   while (true) {
     await new Promise<void>(x => (resolve = x));
-    for (const element of newElements) {
-      seenElements.add(element);
-      yield element;
+    while (!isEmpty(newElements)) {
+      yield newElements.shift()!;
     }
-    newElements.clear();
   }
 }
 
@@ -46,10 +45,14 @@ export async function streamElementOfHtmlCollection<T extends Element>(
     return elements[0] as T;
   }
 
-  await oneMutation(root, {
-    childList: true,
-    subtree: true,
-    filter: () => elements.length > 0,
+  await new Promise<void>(resolve => {
+    onNodeTreeMutation(root, () => {
+      if (elements.length > 0) {
+        resolve();
+        return true;
+      }
+      return false;
+    });
   });
 
   return elements[0] as T;
