@@ -8,8 +8,6 @@ import { createHash } from 'crypto';
 
 const srcDir = resolve(__dirname, 'src');
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 const noise = new Set([
   'index',
   'dist',
@@ -109,8 +107,8 @@ export default defineConfig({
     },
   },
   define: {
-    __DEV__: !isProduction,
-    'process.env.NODE_ENV': isProduction ? `"production"` : `"development"`,
+    // This define is needed for vue npm packages
+    'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`,
   },
 });
 

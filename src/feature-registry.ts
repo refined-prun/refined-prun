@@ -47,7 +47,7 @@ function add(path: string, init: () => void, description: string) {
   if (mode === id) {
     mode = parts.pop()!;
   }
-  if (__DEV__ && registry.some(x => x.id === id)) {
+  if (import.meta.env.DEV && registry.some(x => x.id === id)) {
     throw Error(`Duplicate feature id: ${id}`);
   }
   registry.push({

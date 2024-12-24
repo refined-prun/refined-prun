@@ -22,7 +22,7 @@ function add(descriptor: CommandDescriptor) {
   registry.push(descriptor);
   for (let command of castArray(descriptor.command)) {
     command = command.toUpperCase();
-    if (__DEV__ && lookup.has(command)) {
+    if (import.meta.env.DEV && lookup.has(command)) {
       throw Error(`Duplicate command: ${command}`);
     }
     lookup.set(command, descriptor);

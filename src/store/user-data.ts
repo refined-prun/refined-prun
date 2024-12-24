@@ -89,7 +89,7 @@ export function watchUserData(save: () => void) {
   watch(
     userData,
     () => {
-      if (__DEV__) {
+      if (import.meta.env.DEV) {
         console.log(userData);
       }
       if (!saveQueued) {
