@@ -1,3 +1,5 @@
 export function useXitParameters() {
-  return inject(xit.parameters) ?? [];
+  return inject(xitParametersKey) ?? [];
 }
+
+export const xitParametersKey = Symbol() as InjectionKey<string[]>;

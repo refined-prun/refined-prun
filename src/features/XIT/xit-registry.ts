@@ -33,14 +33,9 @@ function get(command: string) {
   return lookup.get(command.toUpperCase());
 }
 
-const command = Symbol() as InjectionKey<string>;
-const parameters = Symbol() as InjectionKey<string[]>;
-
 const xit = {
   add,
   get,
-  command,
-  parameters,
   registry,
 };
 

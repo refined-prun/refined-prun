@@ -4,8 +4,9 @@ import { prunAtob } from '@src/infrastructure/prun-ui/base64';
 import { isValidUrl } from '@src/utils/is-valid-url';
 import { shortcuts } from '@src/features/XIT/WEB/shortcuts';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
+import { useXitCommand } from '@src/hooks/use-xit-command';
 
-const command = inject(xit.command)!;
+const command = useXitCommand();
 const parameters = useXitParameters();
 const url = getUrl();
 

@@ -4,6 +4,8 @@ import ContextControls from '@src/components/ContextControls.vue';
 import { tileStatePlugin } from '@src/store/user-data-tiles';
 import { startMeasure, stopMeasure } from '@src/utils/performance-measure';
 import { isEmpty } from 'ts-extras';
+import { xitParametersKey } from '@src/hooks/use-xit-parameters';
+import { xitCommandKey } from '@src/hooks/use-xit-command';
 
 function onTileReady(tile: PrunTile) {
   const rawParameter = tile.parameter;
@@ -62,8 +64,8 @@ function onTileReady(tile: PrunTile) {
     startMeasure(tile.fullCommand);
     createFragmentApp(xitCommand.component(parameters))
       .use(tileStatePlugin, { tile })
-      .provide(xit.command, command)
-      .provide(xit.parameters, parameters.slice(1))
+      .provide(xitCommandKey, command)
+      .provide(xitParametersKey, parameters.slice(1))
       .appendTo(container);
     stopMeasure();
   });
