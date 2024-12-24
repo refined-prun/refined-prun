@@ -2,7 +2,7 @@
 import { Execute } from '@src/features/XIT/ACT/Execute';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 
-const container = ref(undefined);
+const container = useTemplateRef<HTMLDivElement>('container');
 
 const parameters = useXitParameters();
 parameters.unshift('ACT');

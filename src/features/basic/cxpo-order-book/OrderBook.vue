@@ -16,22 +16,19 @@ const spread = computed(() => {
   return ask && bid ? fixed2(ask - bid) : '--';
 });
 
-const orderBook = ref(undefined);
-const offerBody = ref(undefined);
+const orderBook = useTemplateRef<HTMLDivElement>('order-book');
+const offerBody = useTemplateRef<HTMLTableSectionElement>('offer-body');
 watchEffect(() => {
   if (!orderBook.value || !offerBody.value) {
     return;
   }
 
-  (orderBook.value! as HTMLDivElement).scrollTop = Math.max(
-    (offerBody.value! as HTMLDivElement).offsetHeight - 90,
-    0,
-  );
+  orderBook.value.scrollTop = Math.max(offerBody.value.offsetHeight - 90, 0);
 });
 </script>
 
 <template>
-  <div ref="orderBook" :class="$style.container">
+  <div ref="order-book" :class="$style.container">
     <table>
       <thead>
         <tr>
@@ -39,7 +36,7 @@ watchEffect(() => {
           <th>Price</th>
         </tr>
       </thead>
-      <tbody ref="offerBody">
+      <tbody ref="offer-body">
         <tr>
           <th colSpan="2">Offers</th>
         </tr>

@@ -38,14 +38,11 @@ function processText(text?: string) {
   return text;
 }
 
-const textbox = ref<HTMLTextAreaElement | null>(null);
-const overlay = ref<HTMLPreElement | null>(null);
+const textbox = useTemplateRef<HTMLTextAreaElement>('textbox');
+const overlay = useTemplateRef<HTMLPreElement>('overlay');
 
 onMounted(() => {
-  if (!textbox.value || !overlay.value) {
-    return;
-  }
-  textbox.value.addEventListener('scroll', () => {
+  textbox.value!.addEventListener('scroll', () => {
     overlay.value!.scrollTop = textbox.value!.scrollTop;
     overlay.value!.scrollLeft = textbox.value!.scrollLeft;
   });

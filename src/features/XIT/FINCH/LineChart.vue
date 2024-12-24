@@ -217,8 +217,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
   },
 }));
 
-const outerContainer = ref<HTMLDivElement | undefined>(undefined);
-const chartContainer = ref<HTMLDivElement | undefined>(undefined);
+const outerContainer = useTemplateRef<HTMLDivElement>('outer-container');
 const chartWidth = ref(400);
 const chartHeight = ref(200);
 
@@ -234,10 +233,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="outerContainer" :class="$style.outer">
-    <div
-      ref="chartContainer"
-      :style="{ position: 'relative', width: `${chartWidth}px`, height: `${chartHeight}px` }">
+  <div ref="outer-container" :class="$style.outer">
+    <div :style="{ position: 'relative', width: `${chartWidth}px`, height: `${chartHeight}px` }">
       <Line :options="chartOptions" :data="chartData" :plugins="[zoomPlugin]" />
     </div>
   </div>
