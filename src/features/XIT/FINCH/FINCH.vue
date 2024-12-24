@@ -28,7 +28,7 @@ const finch = ref(Math.random() < 0.01);
       <div :style="{ marginTop: '5px' }" :class="$style.clickable">
         <EquityHistoryChart
           maintain-aspect-ratio
-          @chart-click="() => showBuffer('XIT FINCH EQUITY')" />
+          :on-chart-click="() => showBuffer('XIT FINCH EQUITY')" />
       </div>
       <FinHeader>Asset Breakdown</FinHeader>
       <div :style="{ marginTop: '5px' }">

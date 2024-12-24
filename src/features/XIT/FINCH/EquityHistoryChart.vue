@@ -9,11 +9,10 @@ import RangeInput from '@src/components/forms/RangeInput.vue';
 
 defineProps<{
   maintainAspectRatio?: boolean;
+  onChartClick?: () => void;
   pan?: boolean;
   zoom?: boolean;
 }>();
-
-const emit = defineEmits<{ (e: 'chart-click'): void }>();
 
 const averageFactor = useTileState('averageFactor', 0.1);
 const averageFactorText = ref(averageFactor.value);
@@ -64,7 +63,7 @@ const lineChartData = computed(() => {
     :xdata="lineChartData.date"
     :pan="pan"
     :zoom="zoom"
-    @click="emit('chart-click')" />
+    @click="onChartClick" />
 </template>
 
 <style module>
