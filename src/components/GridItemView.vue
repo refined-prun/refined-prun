@@ -1,11 +1,5 @@
 <script setup lang="ts">
-defineProps({
-  name: {
-    type: String,
-    required: false,
-    default: undefined,
-  },
-});
+defineProps<{ name?: string }>();
 
 const textElementClass = [C.GridItemView.name, C.fonts.fontRegular, C.type.typeRegular];
 </script>

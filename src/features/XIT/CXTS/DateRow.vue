@@ -1,16 +1,7 @@
 <script setup lang="ts">
 import { fixed0, ddmmyyyy } from '@src/utils/format';
 
-const props = defineProps({
-  date: {
-    type: Number,
-    required: true,
-  },
-  totals: {
-    type: Object as PropType<{ [currency: string]: number }>,
-    required: true,
-  },
-});
+const { totals } = defineProps<{ date: number; totals: { [currency: string]: number } }>();
 
 const style = {
   borderLeft: 'none',
@@ -18,10 +9,10 @@ const style = {
   borderTop: '1px solid #2b485a',
 };
 
-const totals = computed(() => {
-  return Object.keys(props.totals)
+const totalsLabels = computed(() => {
+  return Object.keys(totals)
     .sort()
-    .map(key => `${fixed0(props.totals[key])} ${key}`);
+    .map(key => `${fixed0(totals[key])} ${key}`);
 });
 </script>
 
@@ -33,9 +24,9 @@ const totals = computed(() => {
     <!-- This <tr> is needed so both other <tr>s are the same color -->
     <td :style="{ display: 'none' }" />
     <td colspan="5" :style="style" :class="C.ComExOrdersTable.number">
-      <template v-for="(total, i) in totals" :key="total">
+      <template v-for="(total, i) in totalsLabels" :key="total">
         <span>{{ total }}</span>
-        <br v-if="i !== totals.length - 1" />
+        <br v-if="i !== totalsLabels.length - 1" />
       </template>
     </td>
   </tr>

@@ -7,24 +7,14 @@ import PrunButton from '@src/components/PrunButton.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 
-const props = defineProps({
-  storeId: {
-    type: String,
-    required: true,
-  },
-  onSave: {
-    type: Function as PropType<(sorting: UserData.SortingMode) => void>,
-    required: true,
-  },
-  sorting: {
-    type: Object as PropType<UserData.SortingMode | undefined>,
-    default: undefined,
-  },
-});
+const { onSave, sorting, storeId } = defineProps<{
+  onSave: (sorting: UserData.SortingMode) => void;
+  sorting?: UserData.SortingMode;
+  storeId: string;
+}>();
 
-const storage = computed(() => storagesStore.getById(props.storeId));
+const storage = computed(() => storagesStore.getById(storeId));
 
-const sorting = props.sorting;
 const label = ref(sorting?.label ?? '');
 const categories = ref(
   sorting?.categories.map(x => ({ name: x.name, materials: x.materials.join(', ') })) ?? [
@@ -56,9 +46,9 @@ function onSaveClick() {
   if (!label.value) {
     return;
   }
-  props.onSave({
+  onSave({
     label: label.value,
-    storeId: props.storeId,
+    storeId: storeId,
     categories: categories.value.map(x => ({
       name: x.name,
       materials: x.materials.replaceAll(' ', '').split(','),

@@ -1,16 +1,10 @@
 <script setup lang="ts">
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
-const props = defineProps({
-  ticker: {
-    type: String,
-    required: true,
-  },
-  amount: {
-    type: Number,
-    default: undefined,
-  },
-});
+const { ticker } = defineProps<{
+  amount?: number;
+  ticker: string;
+}>();
 
 const amountClasses = [
   C.MaterialIcon.indicator,
@@ -19,7 +13,7 @@ const amountClasses = [
 ];
 
 function onClick(): void {
-  showBuffer(`BUI ${props.ticker}`);
+  showBuffer(`BUI ${ticker}`);
 }
 </script>
 

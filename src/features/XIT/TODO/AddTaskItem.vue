@@ -4,12 +4,7 @@ import { showTileOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import TaskEditor from '@src/features/XIT/TODO/EditTask.vue';
 import { createId } from '@src/store/create-id';
 
-const props = defineProps({
-  list: {
-    type: Object as PropType<UserData.TaskList>,
-    required: true,
-  },
-});
+const { list } = defineProps<{ list: UserData.TaskList }>();
 
 function onAddClick(ev: Event) {
   const task: UserData.Task = {
@@ -18,7 +13,7 @@ function onAddClick(ev: Event) {
   };
   showTileOverlay(ev, TaskEditor, {
     task,
-    onSave: () => props.list.tasks.push(task),
+    onSave: () => list.tasks.push(task),
   });
 }
 </script>

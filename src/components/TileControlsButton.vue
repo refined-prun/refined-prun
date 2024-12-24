@@ -1,20 +1,11 @@
 <script setup lang="ts">
 import fa from '@src/utils/font-awesome.module.css';
 
-defineProps({
-  icon: {
-    type: String,
-    required: true,
-  },
-  onClick: {
-    type: Function as PropType<() => void>,
-    default: () => {},
-  },
-  marginTop: {
-    type: Number,
-    default: 3,
-  },
-});
+const { onClick = () => {}, marginTop = 3 } = defineProps<{
+  icon: string;
+  marginTop?: number;
+  onClick?: () => void;
+}>();
 </script>
 
 <template>

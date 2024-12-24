@@ -1,18 +1,13 @@
 <script setup lang="ts">
 import { userData } from '@src/store/user-data';
 
-const props = defineProps({
-  days: {
-    type: Number,
-    required: true,
-  },
-});
+const { days } = defineProps<{ days: number }>();
 
-const days = computed(() => Math.floor(props.days));
+const flooredDays = computed(() => Math.floor(days));
 const burnClass = computed(() => ({
-  [C.Workforces.daysMissing]: days.value <= userData.settings.burn.red,
-  [C.Workforces.daysWarning]: days.value <= userData.settings.burn.yellow,
-  [C.Workforces.daysSupplied]: days.value > userData.settings.burn.yellow,
+  [C.Workforces.daysMissing]: flooredDays.value <= userData.settings.burn.red,
+  [C.Workforces.daysWarning]: flooredDays.value <= userData.settings.burn.yellow,
+  [C.Workforces.daysSupplied]: flooredDays.value > userData.settings.burn.yellow,
 }));
 </script>
 
@@ -21,6 +16,6 @@ const burnClass = computed(() => ({
     <div
       :style="{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%' }"
       :class="burnClass" />
-    <span>{{ days < 500 ? days : '∞' }}</span>
+    <span>{{ flooredDays < 500 ? flooredDays : '∞' }}</span>
   </td>
 </template>

@@ -2,12 +2,7 @@
 import { fixed0 } from '@src/utils/format';
 import AddressLink from '@src/features/XIT/CONTC/AddressLink.vue';
 
-defineProps({
-  condition: {
-    type: Object as PropType<PrunApi.ContractCondition>,
-    required: true,
-  },
-});
+defineProps<{ condition: PrunApi.ContractCondition }>();
 </script>
 
 <template>

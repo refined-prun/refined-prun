@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import SectionHeader from '@src/components/SectionHeader.vue';
 
-defineProps({
-  label: {
-    type: String,
-    required: true,
-  },
-});
+defineProps<{ label: string }>();
 </script>
 
 <template>

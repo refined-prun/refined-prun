@@ -16,16 +16,10 @@ import { percent2 } from '@src/utils/format';
 
 Chart.register(PieController, ArcElement, Tooltip, Legend, CategoryScale);
 
-const props = defineProps({
-  labelData: {
-    type: Array<string>,
-    required: true,
-  },
-  numericalData: {
-    type: Array<number>,
-    required: true,
-  },
-});
+const { labelData, numericalData } = defineProps<{
+  labelData: string[];
+  numericalData: number[];
+}>();
 
 const DefaultColors = [
   '#004564',
@@ -41,28 +35,28 @@ const DefaultColors = [
 const colorScheme = computed(() => {
   let colorScheme = [...DefaultColors];
 
-  for (let i = 0; i < props.labelData.length / 8; i++) {
+  for (let i = 0; i < labelData.length / 8; i++) {
     colorScheme = colorScheme.concat(DefaultColors);
   }
 
   return colorScheme;
 });
 
-const labelData = computed(() => {
-  let labelData = [...props.labelData];
+const truncatedLabelData = computed(() => {
+  let truncatedLabelData = [...labelData];
 
-  for (let i = 20; i < labelData.length; i++) {
-    labelData[i] = 'Other';
+  for (let i = 20; i < truncatedLabelData.length; i++) {
+    truncatedLabelData[i] = 'Other';
   }
 
-  return labelData;
+  return truncatedLabelData;
 });
 
 const chartData = computed<ChartData<'pie', number[], string>>(() => ({
-  labels: labelData.value,
+  labels: truncatedLabelData.value,
   datasets: [
     {
-      data: props.numericalData,
+      data: numericalData,
       backgroundColor: colorScheme.value,
       hoverOffset: 4,
       borderWidth: 0,
@@ -82,7 +76,7 @@ const chartOptions = computed<ChartOptions<'pie'>>(() => ({
         label(context) {
           const label = context.label || '';
           const value = context.raw as number;
-          const total = sumBy(props.numericalData, x => x);
+          const total = sumBy(numericalData, x => x);
           const percentage = percent2(value / total);
           return `${label}: ${percentage}`;
         },

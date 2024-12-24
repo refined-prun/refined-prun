@@ -5,24 +5,12 @@ import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
 import BalanceSheetRow from '@src/features/XIT/FINBS/BalanceSheetRow.vue';
 import { formatCurrency } from '@src/utils/format';
 
-const props = defineProps({
-  current: {
-    type: Object as PropType<PartialBalanceSheet>,
-    required: true,
-  },
-  last: {
-    type: Object as PropType<PartialBalanceSheet | undefined>,
-    default: undefined,
-  },
-  previous: {
-    type: Object as PropType<PartialBalanceSheet | undefined>,
-    default: undefined,
-  },
-  section: {
-    type: Object as PropType<SectionData>,
-    required: true,
-  },
-});
+const { current, last, previous, section } = defineProps<{
+  current: PartialBalanceSheet;
+  last?: PartialBalanceSheet;
+  previous?: PartialBalanceSheet;
+  section: SectionData;
+}>();
 
 function calculate(
   sheet: PartialBalanceSheet | undefined,
@@ -32,8 +20,8 @@ function calculate(
 }
 
 function calculateChange(selector: (x: PartialBalanceSheet) => number | undefined) {
-  const fromLast = calculate(props.last, selector);
-  const fromPrevious = calculate(props.previous, selector);
+  const fromLast = calculate(last, selector);
+  const fromPrevious = calculate(previous, selector);
   if (fromLast === undefined || fromPrevious === undefined || fromPrevious === 0) {
     return undefined;
   }
@@ -41,10 +29,10 @@ function calculateChange(selector: (x: PartialBalanceSheet) => number | undefine
 }
 
 const totalClass = computed(() => {
-  if (!props.section.coloredTotal) {
+  if (!section.coloredTotal) {
     return undefined;
   }
-  const change = calculateChange(props.section.total);
+  const change = calculateChange(section.total);
   if (change === undefined) {
     return undefined;
   }

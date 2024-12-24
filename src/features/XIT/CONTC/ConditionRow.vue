@@ -4,29 +4,20 @@ import { timestampEachSecond } from '@src/utils/dayjs';
 import dayjs from 'dayjs';
 import ConditionText from '@src/features/XIT/CONTC/ConditionText.vue';
 
-const props = defineProps({
-  contract: {
-    type: Object as PropType<PrunApi.Contract>,
-    required: true,
-  },
-  condition: {
-    type: Object as PropType<PrunApi.ContractCondition>,
-    required: true,
-  },
-  deadline: {
-    type: Number,
-    required: true,
-  },
-});
+const { deadline } = defineProps<{
+  condition: PrunApi.ContractCondition;
+  contract: PrunApi.Contract;
+  deadline: number;
+}>();
 
 const eta = computed(() => {
-  if (!isFinite(props.deadline)) {
+  if (!isFinite(deadline)) {
     return '∞';
   }
-  if (props.deadline <= timestampEachSecond.value) {
+  if (deadline <= timestampEachSecond.value) {
     return '-';
   }
-  let duration = dayjs.duration({ milliseconds: props.deadline - timestampEachSecond.value });
+  let duration = dayjs.duration({ milliseconds: deadline - timestampEachSecond.value });
   const days = Math.floor(duration.asDays());
   duration = duration.subtract(days, 'days');
   const hours = Math.floor(duration.asHours());

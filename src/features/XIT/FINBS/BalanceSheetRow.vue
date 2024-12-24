@@ -5,28 +5,13 @@ import { formatAmount, formatChange } from '@src/features/XIT/FINBS/utils';
 import RowExpandButton from '@src/features/XIT/FINBS/RowExpandButton.vue';
 import Tooltip from '@src/components/Tooltip.vue';
 
-const props = defineProps({
-  current: {
-    type: Object as PropType<PartialBalanceSheet>,
-    required: true,
-  },
-  last: {
-    type: Object as PropType<PartialBalanceSheet | undefined>,
-    default: undefined,
-  },
-  previous: {
-    type: Object as PropType<PartialBalanceSheet | undefined>,
-    default: undefined,
-  },
-  row: {
-    type: Object as PropType<RowData>,
-    required: true,
-  },
-  indent: {
-    type: Number,
-    required: true,
-  },
-});
+const { last, previous } = defineProps<{
+  current: PartialBalanceSheet;
+  indent: number;
+  last?: PartialBalanceSheet;
+  previous?: PartialBalanceSheet;
+  row: RowData;
+}>();
 
 const expanded = ref(false);
 
@@ -47,8 +32,8 @@ function calculate(
 }
 
 function calculateChange(selector: (x: PartialBalanceSheet) => number | undefined) {
-  const fromLast = calculate(props.last, selector);
-  const fromPrevious = calculate(props.previous, selector);
+  const fromLast = calculate(last, selector);
+  const fromPrevious = calculate(previous, selector);
   if (fromLast === undefined || fromPrevious === undefined || fromPrevious === 0) {
     return undefined;
   }

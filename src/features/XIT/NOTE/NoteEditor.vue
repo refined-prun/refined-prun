@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
-const props = defineProps({
-  note: {
-    type: Object as PropType<UserData.Note>,
-    required: true,
-  },
-});
+const { note } = defineProps<{ note: UserData.Note }>();
 
 const $style = useCssModule();
 
-const renderedText = computed(() => processText(props.note.text));
+const renderedText = computed(() => processText(note.text));
 
 function processText(text?: string) {
   if (text === undefined) {

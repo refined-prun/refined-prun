@@ -7,18 +7,15 @@ import { sumBy } from '@src/utils/sum-by';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import PrunButton from '@src/components/PrunButton.vue';
 
-const props = defineProps({
-  materials: {
-    type: Array as PropType<PrunApi.MaterialAmount[]>,
-    required: true,
-  },
-  collapsible: Boolean,
-  collapsedByDefault: Boolean,
-});
+const { collapsedByDefault, collapsible, materials } = defineProps<{
+  collapsedByDefault?: boolean;
+  collapsible?: boolean;
+  materials: PrunApi.MaterialAmount[];
+}>();
 
-const collapsed = ref(props.collapsible && props.collapsedByDefault);
+const collapsed = ref(collapsible && collapsedByDefault);
 
-const sorted = computed(() => sortMaterialAmounts(props.materials));
+const sorted = computed(() => sortMaterialAmounts(materials));
 
 function calculateWeight(amount: PrunApi.MaterialAmount) {
   return (amount.material?.weight ?? 0) * amount.amount;

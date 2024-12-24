@@ -6,40 +6,35 @@ import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
 import { fixed0 } from '@src/utils/format';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
 
-const props = defineProps({
-  ticker: {
-    type: String,
-    required: true,
-  },
-  size: {
-    type: String as PropType<ColoredIconSize>,
-    default: 'large',
-  },
-  warning: Boolean,
-  amount: {
-    type: Number,
-    required: false,
-    default: undefined,
-  },
-});
+const {
+  amount,
+  size = 'large',
+  ticker,
+  warning,
+} = defineProps<{
+  amount?: number;
+  size?: ColoredIconSize;
+  ticker: string;
+  warning?: boolean;
+}>();
 
 const $style = useCssModule();
 
-const material = computed(() => materialsStore.getByTicker(props.ticker));
+const material = computed(() => materialsStore.getByTicker(ticker));
 const category = computed(() => materialCategoriesStore.getById(material.value?.category));
 
 const name = computed(() => getMaterialName(material.value) ?? 'Unknown');
 
 const amountText = computed(() => {
-  if (props.amount === undefined) {
+  if (amount === undefined) {
     return undefined;
   }
 
-  if (props.size === 'medium' && props.amount >= 100000) {
-    return fixed0(Math.round(props.amount / 1000)) + 'k';
+  if (size === 'medium' && amount >= 100000) {
+    return fixed0(Math.round(amount / 1000)) + 'k';
   }
 
-  return fixed0(props.amount);
+  return fixed0(amount);
 });
 
 const indicatorClasses = [
@@ -47,12 +42,12 @@ const indicatorClasses = [
   C.MaterialIcon.neutral,
   C.MaterialIcon.typeVerySmall,
   {
-    [C.ColoredValue.negative]: props.warning,
-    [$style.indicatorSmall]: props.size === 'medium',
+    [C.ColoredValue.negative]: warning,
+    [$style.indicatorSmall]: size === 'medium',
   },
 ];
 
-const onClick = () => showBuffer(`MAT ${props.ticker.toUpperCase()}`);
+const onClick = () => showBuffer(`MAT ${ticker.toUpperCase()}`);
 </script>
 
 <template>

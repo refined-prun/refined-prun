@@ -1,11 +1,5 @@
 <script setup lang="ts">
-defineProps({
-  detail: {
-    type: String,
-    required: false,
-    default: undefined,
-  },
-});
+defineProps<{ detail?: string }>();
 </script>
 
 <template>

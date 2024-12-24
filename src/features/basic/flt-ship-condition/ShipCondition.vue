@@ -3,14 +3,9 @@ import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { percent0 } from '@src/utils/format';
 import coloredValue from '@src/infrastructure/prun-ui/colored-value.module.css';
 
-const props = defineProps({
-  id: {
-    type: String,
-    default: null,
-  },
-});
+const { id } = defineProps<{ id?: string }>();
 
-const ship = computed(() => shipsStore.getById(props.id));
+const ship = computed(() => shipsStore.getById(id));
 
 const condition = computed(() => Math.floor((ship.value?.condition ?? 1) * 100) / 100);
 

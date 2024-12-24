@@ -1,18 +1,9 @@
 <script setup lang="ts">
-defineProps({
-  child: {
-    type: Object as PropType<Component>,
-    required: true,
-  },
-  props: {
-    type: Object,
-    default: () => {},
-  },
-  onClose: {
-    type: Function as PropType<() => void>,
-    required: true,
-  },
-});
+const { props = {} } = defineProps<{
+  child: Component;
+  onClose: () => void;
+  props?: object;
+}>();
 </script>
 
 <template>

@@ -2,15 +2,10 @@
 import PrunLink from '@src/components/PrunLink.vue';
 import { isFactionContract } from '@src/features/XIT/CONTS/utils';
 
-const props = defineProps({
-  contract: {
-    type: Object as PropType<PrunApi.Contract>,
-    required: true,
-  },
-});
+const { contract } = defineProps<{ contract: PrunApi.Contract }>();
 
 const linkStyle = computed(() => ({
-  display: isFactionContract(props.contract) ? 'inline' : 'block',
+  display: isFactionContract(contract) ? 'inline' : 'block',
 }));
 </script>
 

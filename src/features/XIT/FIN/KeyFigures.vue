@@ -7,12 +7,7 @@ interface KeyFigure {
   tooltip?: string;
 }
 
-defineProps({
-  figures: {
-    type: Array<KeyFigure>,
-    required: true,
-  },
-});
+defineProps<{ figures: KeyFigure[] }>();
 
 const containerClasses = [C.FinanceOverviewPanel.data, C.figures.container];
 const figureClasses = [C.FinanceOverviewPanel.info, C.figures.figure, C.type.typeLarge];

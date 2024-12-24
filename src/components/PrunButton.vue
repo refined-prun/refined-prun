@@ -1,29 +1,29 @@
 <script setup lang="ts">
-const props = defineProps({
-  inline: Boolean,
-  primary: Boolean,
-  disabled: Boolean,
-  neutral: Boolean,
-  success: Boolean,
-  danger: Boolean,
-  dark: Boolean,
-});
+const { danger, dark, disabled, inline, neutral, primary, success } = defineProps<{
+  danger?: boolean;
+  dark?: boolean;
+  disabled?: boolean;
+  inline?: boolean;
+  neutral?: boolean;
+  primary?: boolean;
+  success?: boolean;
+}>();
 
 const classes = computed(() => ({
   [C.Button.btn]: true,
-  [C.Button.inline]: props.inline,
-  [C.Button.primary]: props.primary,
-  [C.Button.primaryInline]: props.primary && props.inline,
-  [C.Button.disabled]: props.disabled,
-  [C.Button.disabledInline]: props.disabled && props.inline,
-  [C.Button.neutral]: props.neutral,
-  [C.Button.neutralInline]: props.neutral && props.inline,
-  [C.Button.success]: props.success,
-  [C.Button.successInline]: props.success && props.inline,
-  [C.Button.danger]: props.danger,
-  [C.Button.dangerInline]: props.danger && props.inline,
-  [C.Button.dark]: props.dark,
-  [C.Button.darkInline]: props.dark && props.inline,
+  [C.Button.inline]: inline,
+  [C.Button.primary]: primary,
+  [C.Button.primaryInline]: primary && inline,
+  [C.Button.disabled]: disabled,
+  [C.Button.disabledInline]: disabled && inline,
+  [C.Button.neutral]: neutral,
+  [C.Button.neutralInline]: neutral && inline,
+  [C.Button.success]: success,
+  [C.Button.successInline]: success && inline,
+  [C.Button.danger]: danger,
+  [C.Button.dangerInline]: danger && inline,
+  [C.Button.dark]: dark,
+  [C.Button.darkInline]: dark && inline,
 }));
 </script>
 

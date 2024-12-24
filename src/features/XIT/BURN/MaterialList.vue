@@ -5,14 +5,9 @@ import MaterialRow from '@src/features/XIT/BURN/MaterialRow.vue';
 import { sortMaterials } from '@src/core/sort-materials';
 import { isDefined } from 'ts-extras';
 
-const props = defineProps({
-  burn: {
-    type: Object as PropType<PlanetBurn>,
-    required: true,
-  },
-});
+const { burn } = defineProps<{ burn: PlanetBurn }>();
 
-const materials = computed(() => Object.keys(props.burn.burn).map(materialsStore.getByTicker));
+const materials = computed(() => Object.keys(burn.burn).map(materialsStore.getByTicker));
 const sorted = computed(() => sortMaterials(materials.value.filter(isDefined)));
 </script>
 

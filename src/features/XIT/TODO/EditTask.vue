@@ -19,31 +19,22 @@ import { fixed0 } from '@src/utils/format';
 import { isRepairableBuilding } from '@src/core/buildings';
 import { mergeMaterialAmounts, sortMaterialAmounts } from '@src/core/sort-materials';
 
-const props = defineProps({
-  task: {
-    type: Object as PropType<UserData.Task>,
-    required: true,
-  },
-  onSave: {
-    type: Function as PropType<() => void>,
-    default: undefined,
-  },
-  onDelete: {
-    type: Function as PropType<() => void>,
-    default: undefined,
-  },
-});
+const { onDelete, onSave, task } = defineProps<{
+  onDelete?: () => void;
+  onSave?: () => void;
+  task: UserData.Task;
+}>();
 
 const emit = defineEmits<{ (e: 'close'): void }>();
 
 const types: UserData.TaskType[] = ['Text', 'Resupply', 'Repair'];
-const type = ref(props.task.type);
+const type = ref(task.type);
 
-const text = ref(props.task.text);
-const dueDate = ref(props.task.dueDate);
-const recurring = ref(props.task.recurring);
-const days = ref(props.task.days);
-const buildingAge = ref(props.task.buildingAge);
+const text = ref(task.text);
+const dueDate = ref(task.dueDate);
+const recurring = ref(task.recurring);
+const days = ref(task.days);
+const buildingAge = ref(task.buildingAge);
 
 const planets = computed(() => {
   if (!sitesStore.all) {
@@ -57,7 +48,7 @@ const planets = computed(() => {
 });
 
 const planet = ref(
-  planets.value.find(x => x.value === props.task.planet)?.value ?? planets.value[0]?.value,
+  planets.value.find(x => x.value === task.planet)?.value ?? planets.value[0]?.value,
 );
 
 watchEffect(() => {
@@ -67,7 +58,6 @@ watchEffect(() => {
 });
 
 function onSaveClick() {
-  const task = props.task;
   task.type = type.value;
   task.dueDate = toDueDate(dueDate.value);
   task.recurring = recurring.value;
@@ -134,12 +124,12 @@ function onSaveClick() {
       });
     }
   }
-  props.onSave?.();
+  onSave?.();
   emit('close');
 }
 
 function onDeleteClick() {
-  props.onDelete?.();
+  onDelete?.();
   emit('close');
 }
 </script>

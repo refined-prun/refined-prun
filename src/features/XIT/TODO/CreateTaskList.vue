@@ -5,12 +5,7 @@ import Active from '@src/components/forms/Active.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
 import Commands from '@src/components/forms/Commands.vue';
 
-const props = defineProps({
-  onCreate: {
-    type: Function as PropType<(name: string) => void>,
-    required: true,
-  },
-});
+const { onCreate } = defineProps<{ onCreate: (name: string) => void }>();
 
 const emit = defineEmits<{ (e: 'close'): void }>();
 
@@ -20,7 +15,7 @@ function onCreateClick() {
   if (name.value.length === 0) {
     return;
   }
-  props.onCreate(name.value);
+  onCreate(name.value);
   emit('close');
 }
 </script>

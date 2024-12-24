@@ -4,58 +4,38 @@ import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
 
 export type ColoredIconSize = 'large' | 'medium' | 'small' | 'inline' | 'inline-table';
 
-const props = defineProps({
-  label: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: String,
-    default: undefined,
-  },
-  detail: {
-    type: String,
-    default: undefined,
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-  background: {
-    type: String,
-    default: undefined,
-  },
-  color: {
-    type: String,
-    default: undefined,
-  },
-  size: {
-    type: String as PropType<ColoredIconSize>,
-    default: 'large',
-  },
-});
+const {
+  background,
+  category,
+  color,
+  label,
+  size = 'large',
+} = defineProps<{
+  background?: string;
+  category?: string;
+  color?: string;
+  detail?: string;
+  label: string;
+  size?: ColoredIconSize;
+  title: string;
+}>();
 
 const $style = useCssModule();
 
 const classes = computed(() => ({
   [C.ColoredIcon.container]: true,
-  [$style.large]: props.size === 'large',
-  [$style.medium]: props.size === 'medium',
-  [$style.small]: props.size === 'small',
-  [$style.inline]: props.size === 'inline',
-  [$style.inlineTable]: props.size === 'inline-table',
-  [`rp-ticker-${props.label}`]: true,
-  [`rp-category-${sanitizeCategoryName(props.category ?? '')}`]: props.category !== undefined,
-}));
-
-const style = computed(() => ({
-  background: props.background,
-  color: props.color,
+  [$style.large]: size === 'large',
+  [$style.medium]: size === 'medium',
+  [$style.small]: size === 'small',
+  [$style.inline]: size === 'inline',
+  [$style.inlineTable]: size === 'inline-table',
+  [`rp-ticker-${label}`]: true,
+  [`rp-category-${sanitizeCategoryName(category ?? '')}`]: category !== undefined,
 }));
 </script>
 
 <template>
-  <div :class="classes" :style="style" :title="title">
+  <div :class="classes" :style="{ background, color }" :title="title">
     <div :class="C.ColoredIcon.labelContainer">
       <span :class="C.ColoredIcon.label">{{ label }}</span>
       <ColoredIconDetail :detail="detail" />

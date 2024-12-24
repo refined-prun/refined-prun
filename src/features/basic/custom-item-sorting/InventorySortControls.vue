@@ -1,25 +1,13 @@
 <script setup lang="ts">
 import SortCriteria from '@src/features/basic/custom-item-sorting/SortCriteria.vue';
 
-defineProps({
-  sorting: {
-    type: Array as PropType<UserData.SortingMode[]>,
-    required: true,
-  },
-  activeSort: {
-    type: String,
-    default: undefined,
-  },
-  reverse: Boolean,
-  onModeClick: {
-    type: Function as PropType<(sorting: string) => void>,
-    required: true,
-  },
-  onAddClick: {
-    type: Function as PropType<() => void>,
-    required: true,
-  },
-});
+defineProps<{
+  activeSort?: string;
+  onAddClick: () => void;
+  onModeClick: (sorting: string) => void;
+  reverse?: boolean;
+  sorting: UserData.SortingMode[];
+}>();
 </script>
 
 <template>

@@ -3,26 +3,14 @@ import { CurrencySymbols } from '@src/legacy';
 import { fixed0 } from '@src/utils/format';
 import { getMaterialByName } from '@src/infrastructure/prun-ui/i18n';
 
-const props = defineProps({
-  materialName: {
-    type: String,
-    required: true,
-  },
-  amountInput: {
-    type: String,
-    required: true,
-  },
-  totalPriceInput: {
-    type: String,
-    required: true,
-  },
-  currencyInput: {
-    type: String,
-    required: true,
-  },
-});
+const { amountInput, currencyInput, materialName, totalPriceInput } = defineProps<{
+  amountInput: string;
+  currencyInput: string;
+  materialName: string;
+  totalPriceInput: string;
+}>();
 
-const material = computed(() => getMaterialByName(props.materialName));
+const material = computed(() => getMaterialByName(materialName));
 
 const unit = computed(() => {
   if (!material.value) {
@@ -34,7 +22,7 @@ const unit = computed(() => {
 });
 
 const amount = computed(() => {
-  const amount = parseInt(props.amountInput, 10);
+  const amount = parseInt(amountInput, 10);
   return isFinite(amount) ? amount : undefined;
 });
 
@@ -47,7 +35,7 @@ const totalSize = computed(() => {
 });
 
 const totalPrice = computed(() => {
-  const totalPrice = parseInt(props.totalPriceInput, 10);
+  const totalPrice = parseInt(totalPriceInput, 10);
   return isFinite(totalPrice) ? totalPrice : undefined;
 });
 
@@ -60,7 +48,7 @@ const perUnit = computed(() => {
 });
 
 const currency = computed(() => {
-  return CurrencySymbols[props.currencyInput] ?? '';
+  return CurrencySymbols[currencyInput] ?? '';
 });
 </script>
 

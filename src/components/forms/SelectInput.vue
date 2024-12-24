@@ -8,12 +8,7 @@ type Option =
       value: string;
     };
 
-defineProps({
-  options: {
-    type: Array as PropType<Option[]>,
-    required: true,
-  },
-});
+defineProps<{ options: Option[] }>();
 
 const value = (option: Option) => (typeof option === 'string' ? option : option.value);
 const label = (option: Option) => (typeof option === 'string' ? option : option.label);

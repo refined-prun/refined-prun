@@ -1,16 +1,7 @@
 <script setup lang="ts">
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
-defineProps({
-  cmd: {
-    type: String,
-    required: true,
-  },
-  label: {
-    type: String,
-    default: undefined,
-  },
-});
+defineProps<{ cmd: string; label?: string }>();
 
 const itemClasses = [C.ContextControls.item, C.fonts.fontRegular, C.type.typeSmall];
 </script>

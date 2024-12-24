@@ -3,21 +3,15 @@ import highlight from '@src/infrastructure/prun-ui/table-row-highlight.module.cs
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { fixed0, fixed2 } from '@src/utils/format';
 
-const props = defineProps({
-  order: {
-    type: Object as PropType<PrunApi.CXBrokerOrder>,
-    required: true,
-  },
-  request: Boolean,
-});
+const { order, request } = defineProps<{ order: PrunApi.CXBrokerOrder; request?: boolean }>();
 
 const ownOrderClass = computed(() => ({
-  [highlight.highlight]: props.order.amount && props.order.trader.id === companyStore.value?.id,
+  [highlight.highlight]: order.amount && order.trader.id === companyStore.value?.id,
 }));
-const amount = computed(() => (props.order.amount ? fixed0(props.order.amount) : '∞'));
-const price = computed(() => fixed2(props.order.limit.amount));
+const amount = computed(() => (order.amount ? fixed0(order.amount) : '∞'));
+const price = computed(() => fixed2(order.limit.amount));
 const priceClass = computed(() =>
-  props.request ? C.ComExOrderBookPanel.requestPrice : C.ComExOrderBookPanel.offerPrice,
+  request ? C.ComExOrderBookPanel.requestPrice : C.ComExOrderBookPanel.offerPrice,
 );
 </script>
 

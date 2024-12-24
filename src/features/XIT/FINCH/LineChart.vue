@@ -27,25 +27,23 @@ Chart.register(
   TimeScale,
 );
 
-const props = defineProps({
-  xdata: {
-    type: Array<number>,
-    required: true,
-  },
-  ydata: {
-    type: Array<number>,
-    required: true,
-  },
-  averageFactor: {
-    type: Number,
-    default: 0.2,
-  },
-  pan: Boolean,
-  zoom: Boolean,
-  maintainAspectRatio: Boolean,
-});
+const {
+  averageFactor = 0.2,
+  maintainAspectRatio,
+  pan,
+  xdata,
+  ydata,
+  zoom,
+} = defineProps<{
+  averageFactor?: number;
+  maintainAspectRatio?: boolean;
+  pan?: boolean;
+  xdata: number[];
+  ydata: number[];
+  zoom?: boolean;
+}>();
 
-const sortedYData = computed(() => props.ydata.slice().sort((a, b) => a - b));
+const sortedYData = computed(() => ydata.slice().sort((a, b) => a - b));
 
 function calculateMovingAverage(data: number[], factor: number) {
   factor = Math.min(Math.max(factor, 0), 1);
@@ -93,11 +91,11 @@ function calculateMovingAverage(data: number[], factor: number) {
 }
 
 const chartData = computed<ChartData<'line', number[], number | string | Date>>(() => ({
-  labels: props.xdata,
+  labels: xdata,
   datasets: [
     {
       label: 'Equity',
-      data: props.ydata,
+      data: ydata,
       borderColor: '#f7a600',
       fill: false,
       pointRadius: 0.25,
@@ -106,7 +104,7 @@ const chartData = computed<ChartData<'line', number[], number | string | Date>>(
     },
     {
       label: undefined,
-      data: calculateMovingAverage(props.ydata, props.averageFactor),
+      data: calculateMovingAverage(ydata, averageFactor),
       borderColor: '#f7a600',
       fill: false,
       pointRadius: 0,
@@ -116,7 +114,7 @@ const chartData = computed<ChartData<'line', number[], number | string | Date>>(
 }));
 
 const chartOptions = computed<ChartOptions<'line'>>(() => ({
-  maintainAspectRatio: props.maintainAspectRatio,
+  maintainAspectRatio: maintainAspectRatio,
   scales: {
     x: {
       type: 'time',
@@ -193,20 +191,20 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
     },
     zoom: {
       limits: {
-        x: { min: props.xdata[0], max: props.xdata[props.xdata.length - 1] },
+        x: { min: xdata[0], max: xdata[xdata.length - 1] },
         y: { min: 0, max: sortedYData.value[sortedYData.value.length - 1] + sortedYData.value[0] },
       },
       pan: {
-        enabled: props.pan,
+        enabled: pan,
         mode: 'xy',
         threshold: 5,
       },
       zoom: {
         wheel: {
-          enabled: props.zoom,
+          enabled: zoom,
         },
         pinch: {
-          enabled: props.zoom,
+          enabled: zoom,
         },
         mode: 'xy',
       },
@@ -228,9 +226,7 @@ onMounted(() => {
   const container = outerContainer.value!;
   const resizeObserver = new ResizeObserver(() => {
     chartWidth.value = container.clientWidth;
-    chartHeight.value = props.maintainAspectRatio
-      ? container.clientWidth / 2
-      : container.clientHeight;
+    chartHeight.value = maintainAspectRatio ? container.clientWidth / 2 : container.clientHeight;
   });
 
   resizeObserver.observe(container);

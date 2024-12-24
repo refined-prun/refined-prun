@@ -2,16 +2,11 @@
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import BuildingIcon from '@src/components/BuildingIcon.vue';
 
-const props = defineProps({
-  naturalId: {
-    type: String,
-    required: true,
-  },
-});
+const { naturalId } = defineProps<{ naturalId: string }>();
 
 const buildings = computed(() => {
   const totals = new Map<string, number>();
-  const buildings = sitesStore.getByPlanetNaturalId(props.naturalId)?.platforms ?? [];
+  const buildings = sitesStore.getByPlanetNaturalId(naturalId)?.platforms ?? [];
   for (const building of buildings) {
     const ticker = building.module.reactorTicker;
     totals.set(ticker, (totals.get(ticker) ?? 0) + 1);

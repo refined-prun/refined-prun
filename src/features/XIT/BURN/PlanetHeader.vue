@@ -5,20 +5,14 @@ import PrunButton from '@src/components/PrunButton.vue';
 import { PlanetBurn } from '@src/core/burn';
 import { countDays } from '@src/features/XIT/BURN/utils';
 
-const props = defineProps({
-  burn: {
-    type: Object as PropType<PlanetBurn>,
-    required: true,
-  },
-  hasMinimize: Boolean,
-  minimized: Boolean,
-  onClick: {
-    type: Function as PropType<() => void>,
-    required: true,
-  },
-});
+const { burn } = defineProps<{
+  burn: PlanetBurn;
+  hasMinimize?: boolean;
+  minimized?: boolean;
+  onClick: () => void;
+}>();
 
-const days = computed(() => countDays(props.burn.burn));
+const days = computed(() => countDays(burn.burn));
 </script>
 
 <template>

@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import fa from '@src/utils/font-awesome.module.css';
 
-const props = defineProps({
-  task: {
-    type: Object as PropType<UserData.Task>,
-    required: true,
-  },
-});
+defineProps<{ task: UserData.Task }>();
 </script>
 
 <template>
@@ -14,8 +9,7 @@ const props = defineProps({
     <div :class="fa.regular">
       {{ '\uf111' }}
     </div>
-    <div
-      :class="[$style.mark, props.task.completed ? [fa.solid, $style.markCompleted] : fa.regular]">
+    <div :class="[$style.mark, task.completed ? [fa.solid, $style.markCompleted] : fa.regular]">
       {{ task.completed ? '\uf058' : task.recurring ? '\uf192' : '\uf058' }}
     </div>
   </div>

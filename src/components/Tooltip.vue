@@ -1,16 +1,7 @@
 <script setup lang="ts">
 export type TooltipPosition = 'left' | 'right' | 'top' | 'bottom';
 
-defineProps({
-  tooltip: {
-    type: String,
-    required: true,
-  },
-  position: {
-    type: String as PropType<TooltipPosition>,
-    default: 'right',
-  },
-});
+const { position = 'right' } = defineProps<{ position?: TooltipPosition; tooltip: string }>();
 </script>
 
 <template>

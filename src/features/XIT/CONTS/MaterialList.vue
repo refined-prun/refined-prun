@@ -3,12 +3,7 @@ import { isSelfCondition } from '@src/features/XIT/CONTS/utils';
 import ShipmentIcon from '@src/components/ShipmentIcon.vue';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 
-const props = defineProps({
-  contract: {
-    type: Object as PropType<PrunApi.Contract>,
-    required: true,
-  },
-});
+const { contract } = defineProps<{ contract: PrunApi.Contract }>();
 
 interface ShipmentIconProps {
   type: 'SHIPMENT';
@@ -23,10 +18,10 @@ interface MaterialIconProps {
 
 const icons = computed(() => {
   const result: (ShipmentIconProps | MaterialIconProps)[] = [];
-  for (const condition of props.contract.conditions) {
+  for (const condition of contract.conditions) {
     switch (condition.type) {
       case 'DELIVERY_SHIPMENT': {
-        if (isSelfCondition(props.contract, condition)) {
+        if (isSelfCondition(contract, condition)) {
           result.push({ type: 'SHIPMENT', shipmentId: condition.shipmentItemId! });
           continue;
         }

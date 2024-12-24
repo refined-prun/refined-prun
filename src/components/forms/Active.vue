@@ -1,20 +1,11 @@
 <script setup lang="ts">
 import Tooltip, { TooltipPosition } from '@src/components/Tooltip.vue';
 
-defineProps({
-  label: {
-    type: String,
-    default: undefined,
-  },
-  tooltip: {
-    type: String,
-    default: undefined,
-  },
-  tooltipPosition: {
-    type: String as PropType<TooltipPosition>,
-    default: undefined,
-  },
-});
+defineProps<{
+  label?: string;
+  tooltip?: string;
+  tooltipPosition?: TooltipPosition;
+}>();
 </script>
 
 <template>

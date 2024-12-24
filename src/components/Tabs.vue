@@ -5,12 +5,7 @@ export interface Tab {
   component: Component;
 }
 
-defineProps({
-  tabs: {
-    type: Array as PropType<Tab[]>,
-    required: true,
-  },
-});
+defineProps<{ tabs: Tab[] }>();
 
 const model = defineModel<Tab>({
   required: true,

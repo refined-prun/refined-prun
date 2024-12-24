@@ -4,12 +4,7 @@ import TaskItem from '@src/features/XIT/TODO/TaskItem.vue';
 import AddTaskItem from '@src/features/XIT/TODO/AddTaskItem.vue';
 import { vDraggable } from 'vue-draggable-plus';
 
-defineProps({
-  list: {
-    type: Object as PropType<UserData.TaskList>,
-    required: true,
-  },
-});
+defineProps<{ list: UserData.TaskList }>();
 
 const dragging = ref(false);
 

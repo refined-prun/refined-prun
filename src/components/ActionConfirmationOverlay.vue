@@ -1,24 +1,12 @@
 <script setup lang="ts">
 import PrunButton from '@src/components/PrunButton.vue';
 
-defineProps({
-  message: {
-    type: String,
-    required: true,
-  },
-  confirmLabel: {
-    type: String,
-    default: 'Confirm',
-  },
-  onConfirm: {
-    type: Function as PropType<() => void>,
-    required: true,
-  },
-  onClose: {
-    type: Function as PropType<() => void>,
-    required: true,
-  },
-});
+const { confirmLabel = 'Confirm' } = defineProps<{
+  confirmLabel?: string;
+  message: string;
+  onClose: () => void;
+  onConfirm: () => void;
+}>();
 </script>
 
 <template>

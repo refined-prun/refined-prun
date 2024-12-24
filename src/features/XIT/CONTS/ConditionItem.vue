@@ -2,14 +2,9 @@
 import fa from '@src/utils/font-awesome.module.css';
 import { friendlyConditionText, isConditionFulfilled } from '@src/features/XIT/CONTS/utils';
 
-const props = defineProps({
-  condition: {
-    type: Object as PropType<PrunApi.ContractCondition>,
-    required: true,
-  },
-});
+const { condition } = defineProps<{ condition: PrunApi.ContractCondition }>();
 
-const isFulfilled = computed(() => isConditionFulfilled(props.condition));
+const isFulfilled = computed(() => isConditionFulfilled(condition));
 const iconClass = computed(() => ({
   [C.ColoredValue.positive]: isFulfilled.value,
   [C.ColoredValue.negative]: !isFulfilled.value,

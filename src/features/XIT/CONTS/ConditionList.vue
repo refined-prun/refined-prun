@@ -2,22 +2,15 @@
 import ConditionItem from '@src/features/XIT/CONTS/ConditionItem.vue';
 import { isConditionFulfilled } from '@src/features/XIT/CONTS/utils';
 
-const props = defineProps({
-  conditions: {
-    type: Array<PrunApi.ContractCondition>,
-    required: true,
-  },
-});
+const { conditions } = defineProps<{ conditions: PrunApi.ContractCondition[] }>();
 
 const filtered = computed(() => {
-  return props.conditions
+  return conditions
     .slice()
     .sort((a, b) => a.index - b.index)
     .filter(x => x.type !== 'LOAN_INSTALLMENT');
 });
-const loanInstallments = computed(() =>
-  props.conditions.filter(x => x.type === 'LOAN_INSTALLMENT'),
-);
+const loanInstallments = computed(() => conditions.filter(x => x.type === 'LOAN_INSTALLMENT'));
 const loanTotal = computed(() => loanInstallments.value.length);
 const loanFilled = computed(() => loanInstallments.value.filter(isConditionFulfilled).length);
 </script>

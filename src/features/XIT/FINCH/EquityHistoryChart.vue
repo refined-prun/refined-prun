@@ -7,11 +7,11 @@ import { useTileState } from '@src/store/user-data-tiles';
 import dayjs from 'dayjs';
 import RangeInput from '@src/components/forms/RangeInput.vue';
 
-defineProps({
-  pan: Boolean,
-  zoom: Boolean,
-  maintainAspectRatio: Boolean,
-});
+defineProps<{
+  maintainAspectRatio?: boolean;
+  pan?: boolean;
+  zoom?: boolean;
+}>();
 
 const emit = defineEmits<{ (e: 'chart-click'): void }>();
 

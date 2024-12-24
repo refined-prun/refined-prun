@@ -5,9 +5,7 @@ import { canAcceptContract } from '@src/features/XIT/CONTS/utils';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import { vDraggable } from 'vue-draggable-plus';
 
-const props = defineProps({
-  comPulse: Boolean,
-});
+const { comPulse } = defineProps<{ comPulse?: boolean }>();
 
 const pendingContracts = computed(
   () => contractsStore.all.value?.filter(canAcceptContract).length ?? 0,
@@ -22,7 +20,7 @@ const activeIndicator = [
 const inactiveIndicator = [C.Frame.toggleIndicator, C.Frame.toggleIndicatorSecondary];
 
 function indicatorClass(command: string) {
-  if (command === 'COM' && props.comPulse) {
+  if (command === 'COM' && comPulse) {
     return activeIndicator;
   }
   if (['CONTS', 'XIT CONTS'].includes(command) && hasPendingContracts.value) {

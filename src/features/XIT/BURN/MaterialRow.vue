@@ -8,22 +8,16 @@ import PrunButton from '@src/components/PrunButton.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 
-const props = defineProps({
-  material: {
-    type: Object as PropType<PrunApi.Material>,
-    required: true,
-  },
-  burn: {
-    type: Object as PropType<MaterialBurn>,
-    required: true,
-  },
-  alwaysVisible: Boolean,
-});
+const { alwaysVisible, burn, material } = defineProps<{
+  alwaysVisible?: boolean;
+  burn: MaterialBurn;
+  material: PrunApi.Material;
+}>();
 
-const production = computed(() => props.burn.DailyAmount);
-const invAmount = computed(() => props.burn.Inventory ?? 0);
+const production = computed(() => burn.DailyAmount);
+const invAmount = computed(() => burn.Inventory ?? 0);
 const isInf = computed(() => production.value >= 0);
-const days = computed(() => (isInf.value ? 1000 : props.burn.DaysLeft));
+const days = computed(() => (isInf.value ? 1000 : burn.DaysLeft));
 
 const isRed = computed(() => days.value <= userData.settings.burn.red);
 const isYellow = computed(() => days.value <= userData.settings.burn.yellow);
@@ -35,7 +29,7 @@ const green = useTileState('green');
 const inf = useTileState('inf');
 
 const isVisible = computed(() => {
-  if (props.alwaysVisible) {
+  if (alwaysVisible) {
     return true;
   }
   if (isInf.value) {

@@ -1,29 +1,23 @@
 <script setup lang="ts">
-const props = defineProps({
-  value: {
-    type: Number,
-    required: true,
-  },
-  max: {
-    type: Number,
-    required: true,
-  },
-  good: Boolean,
-  warning: Boolean,
-  danger: Boolean,
-});
+const { danger, good, warning } = defineProps<{
+  danger?: boolean;
+  good?: boolean;
+  max: number;
+  value: number;
+  warning?: boolean;
+}>();
 
 const $style = useCssModule();
 
-const primary = computed(() => !props.good && !props.warning && !props.danger);
+const primary = computed(() => !good && !warning && !danger);
 
 const classes = computed(() => {
   return {
     [C.ProgressBar.progress]: true,
     [C.ProgressBar.primary]: primary.value,
-    [$style.good]: props.good,
-    [$style.warning]: props.warning,
-    [$style.danger]: props.danger,
+    [$style.good]: good,
+    [$style.warning]: warning,
+    [$style.danger]: danger,
   };
 });
 </script>
@@ -40,6 +34,7 @@ const classes = computed(() => {
 .warning::-webkit-progress-value {
   background: #ffc856;
 }
+
 .danger::-webkit-progress-value {
   background: #d9534f;
 }

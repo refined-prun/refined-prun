@@ -6,12 +6,7 @@ interface Item {
   label?: string;
 }
 
-defineProps({
-  items: {
-    type: Array<Item>,
-    required: true,
-  },
-});
+defineProps<{ items: Item[] }>();
 </script>
 
 <template>

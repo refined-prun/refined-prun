@@ -3,24 +3,19 @@ import ColoredIcon, { ColoredIconSize } from '@src/components/ColoredIcon.vue';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
-const props = defineProps({
-  shipmentId: {
-    type: String,
-    default: undefined,
-  },
-  destination: {
-    type: String,
-    default: undefined,
-  },
-  size: {
-    type: String as PropType<ColoredIconSize>,
-    default: 'large',
-  },
-});
+const {
+  destination,
+  shipmentId,
+  size = 'large',
+} = defineProps<{
+  destination?: string;
+  shipmentId?: string;
+  size?: ColoredIconSize;
+}>();
 
-const contract = computed(() => contractsStore.getByShipmentId(props.shipmentId));
-const destination = computed(
-  () => props.destination ?? contractsStore.getDestinationByShipmentId(props.shipmentId),
+const contract = computed(() => contractsStore.getByShipmentId(shipmentId));
+const resolvedDestination = computed(
+  () => destination ?? contractsStore.getDestinationByShipmentId(shipmentId),
 );
 
 const background = 'linear-gradient(135deg, #030303, #181818)';
@@ -39,7 +34,7 @@ const onClick = () => {
     <ColoredIcon
       label="SHPT"
       title="Shipment"
-      :detail="destination"
+      :detail="resolvedDestination"
       :background="background"
       :color="color"
       :size="size"

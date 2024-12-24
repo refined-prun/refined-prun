@@ -8,19 +8,14 @@ import {
 import fa from '@src/utils/font-awesome.module.css';
 import coloredValue from '@src/infrastructure/prun-ui/colored-value.module.css';
 
-const props = defineProps({
-  contract: {
-    type: Object as PropType<PrunApi.Contract>,
-    required: true,
-  },
-});
+const { contract } = defineProps<{ contract: PrunApi.Contract }>();
 
-const canAccept = computed(() => canAcceptContract(props.contract));
+const canAccept = computed(() => canAcceptContract(contract));
 
-const canPartnerAccept = computed(() => canPartnerAcceptContract(props.contract));
+const canPartnerAccept = computed(() => canPartnerAcceptContract(contract));
 
 const linkStyle = computed(() => ({
-  display: isFactionContract(props.contract) ? 'inline' : 'block',
+  display: isFactionContract(contract) ? 'inline' : 'block',
 }));
 </script>
 

@@ -1,13 +1,10 @@
 <script setup lang="ts">
-const props = defineProps({
-  isMinimized: Boolean,
-  onClick: {
-    type: Function as PropType<() => void>,
-    required: true,
-  },
-});
+const { isMinimized } = defineProps<{
+  isMinimized?: boolean;
+  onClick: () => void;
+}>();
 
-const symbol = computed(() => (props.isMinimized ? '+' : '-'));
+const symbol = computed(() => (isMinimized ? '+' : '-'));
 </script>
 
 <template>

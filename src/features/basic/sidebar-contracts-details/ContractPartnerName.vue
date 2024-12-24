@@ -2,14 +2,9 @@
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import PrunLink from '@src/components/PrunLink.vue';
 
-const props = defineProps({
-  contractLocalId: {
-    type: String,
-    required: true,
-  },
-});
+const { contractLocalId } = defineProps<{ contractLocalId: string }>();
 
-const contract = computed(() => contractsStore.getByLocalId(props.contractLocalId));
+const contract = computed(() => contractsStore.getByLocalId(contractLocalId));
 const partner = computed(() => contract.value?.partner);
 const code = computed(() => partner.value?.code);
 const countryCode = computed(() => partner.value?.countryCode);

@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import PrunLink from '@src/components/PrunLink.vue';
 
-const props = defineProps({
-  text: {
-    type: String,
-    default: undefined,
-  },
-});
+const { text } = defineProps<{ text?: string }>();
 
 interface Part {
   text?: string;
@@ -15,14 +10,14 @@ interface Part {
 
 const parts = computed(() => {
   const parts: Part[] = [];
-  let text = props.text;
-  if (!text) {
+  let processed = text;
+  if (!processed) {
     return parts;
   }
-  const matches = [...text.matchAll(/\[\[([a-zA-Z]):([^:\]]+)]]/g)];
+  const matches = [...processed.matchAll(/\[\[([a-zA-Z]):([^:\]]+)]]/g)];
   let cut = 0;
   for (const match of matches) {
-    const before = text.substring(0, match.index - cut);
+    const before = processed.substring(0, match.index - cut);
     if (before.length > 0) {
       parts.push({ text: before });
     }
@@ -37,12 +32,12 @@ const parts = computed(() => {
         parts.push({ text: match[0] });
         break;
     }
-    text = text.slice(match.index + match[0].length - cut);
+    processed = processed.slice(match.index + match[0].length - cut);
     cut = match.index + match[0].length;
   }
 
-  if (text.length > 0) {
-    parts.push({ text });
+  if (processed.length > 0) {
+    parts.push({ text: processed });
   }
   return parts;
 });

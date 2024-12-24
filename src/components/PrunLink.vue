@@ -1,28 +1,17 @@
 <script setup lang="ts">
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
-const props = defineProps({
-  inline: Boolean,
-  href: {
-    type: String,
-    required: false,
-    default: undefined,
-  },
-  command: {
-    type: String,
-    required: false,
-    default: undefined,
-  },
-  autoSubmit: {
-    type: Boolean,
-    default: true,
-  },
-});
+const { inline, autoSubmit = true } = defineProps<{
+  autoSubmit?: boolean;
+  command?: string;
+  href?: string;
+  inline?: boolean;
+}>();
 
 const $style = useCssModule();
 const classes = computed(() => ({
   [$style.link]: true,
-  [$style.inline]: props.inline,
+  [$style.inline]: inline,
 }));
 </script>
 

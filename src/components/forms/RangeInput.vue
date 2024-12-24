@@ -1,18 +1,9 @@
 <script setup lang="ts">
-defineProps({
-  min: {
-    type: Number,
-    default: 0,
-  },
-  max: {
-    type: Number,
-    default: 100,
-  },
-  step: {
-    type: Number,
-    default: 1,
-  },
-});
+const {
+  max = 100,
+  min = 0,
+  step = 1,
+} = defineProps<{ max?: number; min?: number; step?: number }>();
 
 const model = defineModel<number>();
 </script>

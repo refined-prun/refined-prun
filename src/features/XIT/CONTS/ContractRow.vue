@@ -5,19 +5,10 @@ import PartnerLink from '@src/features/XIT/CONTS/PartnerLink.vue';
 import ConditionList from '@src/features/XIT/CONTS/ConditionList.vue';
 import { isPartnerCondition, isSelfCondition } from '@src/features/XIT/CONTS/utils';
 
-const props = defineProps({
-  contract: {
-    type: Object as PropType<PrunApi.Contract>,
-    required: true,
-  },
-});
+const { contract } = defineProps<{ contract: PrunApi.Contract }>();
 
-const self = computed(() =>
-  props.contract.conditions.filter(x => isSelfCondition(props.contract, x)),
-);
-const partner = computed(() =>
-  props.contract.conditions.filter(x => isPartnerCondition(props.contract, x)),
-);
+const self = computed(() => contract.conditions.filter(x => isSelfCondition(contract, x)));
+const partner = computed(() => contract.conditions.filter(x => isPartnerCondition(contract, x)));
 </script>
 
 <template>

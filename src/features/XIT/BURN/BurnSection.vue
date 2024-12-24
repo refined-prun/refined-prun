@@ -4,21 +4,15 @@ import PlanetHeader from '@src/features/XIT/BURN/PlanetHeader.vue';
 import MaterialList from '@src/features/XIT/BURN/MaterialList.vue';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
 
-const props = defineProps({
-  canMinimize: Boolean,
-  burn: {
-    type: Object as PropType<PlanetBurn>,
-    required: true,
-  },
-});
+const { burn, canMinimize } = defineProps<{ burn: PlanetBurn; canMinimize?: boolean }>();
 
 const expand = useTileState('expand');
 
-const naturalId = computed(() => props.burn.naturalId);
-const isMinimized = computed(() => props.canMinimize && !expand.value.includes(naturalId.value));
+const naturalId = computed(() => burn.naturalId);
+const isMinimized = computed(() => canMinimize && !expand.value.includes(naturalId.value));
 
 const onHeaderClick = () => {
-  if (!props.canMinimize) {
+  if (!canMinimize) {
     return;
   }
   if (isMinimized.value) {

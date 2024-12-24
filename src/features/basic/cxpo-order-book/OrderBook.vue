@@ -4,14 +4,9 @@ import OrderRow from './OrderRow.vue';
 import { fixed2 } from '@src/utils/format';
 import { isEmpty } from 'ts-extras';
 
-const props = defineProps({
-  ticker: {
-    type: String,
-    required: true,
-  },
-});
+const { ticker } = defineProps<{ ticker: string }>();
 
-const orderInfo = computed(() => cxobStore.getByTicker(props.ticker));
+const orderInfo = computed(() => cxobStore.getByTicker(ticker));
 
 const offers = computed(() => (orderInfo.value?.sellingOrders ?? []).slice().reverse());
 const requests = computed(() => orderInfo.value?.buyingOrders ?? []);

@@ -10,41 +10,34 @@ import removeArrayElement from '@src/utils/remove-array-element';
 import { toDueDate } from '@src/features/XIT/TODO/utils';
 import TaskText from '@src/features/XIT/TODO/TaskText.vue';
 
-const props = defineProps({
-  list: {
-    type: Object as PropType<UserData.TaskList>,
-    required: true,
-  },
-  task: {
-    type: Object as PropType<UserData.Task>,
-    required: true,
-  },
-  subtask: Boolean,
-  dragging: Boolean,
-});
+const { list, subtask, task } = defineProps<{
+  dragging?: boolean;
+  list: UserData.TaskList;
+  subtask?: boolean;
+  task: UserData.Task;
+}>();
 
 const $style = useCssModule();
 
 const taskClass = computed(() => [
   $style.task,
   {
-    [$style.taskCompleted]: props.task.completed,
-    [$style.subtask]: props.subtask,
+    [$style.taskCompleted]: task.completed,
+    [$style.subtask]: subtask,
   },
 ]);
 
 function onContentClick(ev: Event) {
-  if (props.subtask) {
+  if (subtask) {
     return;
   }
   showTileOverlay(ev, TaskEditor, {
-    task: props.task,
-    onDelete: () => removeArrayElement(props.list.tasks, props.task),
+    task: task,
+    onDelete: () => removeArrayElement(list.tasks, task),
   });
 }
 
 function onCheckmarkClick() {
-  const task = props.task;
   if (task.recurring && task.dueDate) {
     task.dueDate = toDueDate(
       new Date(task.dueDate).getTime() + dayjs.duration(task.recurring, 'days').asMilliseconds(),

@@ -1,7 +1,5 @@
 <script setup lang="ts">
-defineProps({
-  reverse: Boolean,
-});
+defineProps<{ reverse?: boolean }>();
 </script>
 
 <template>

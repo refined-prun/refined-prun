@@ -1,27 +1,15 @@
 <script setup lang="ts">
 import fa from '@src/utils/font-awesome.module.css';
 
-const props = defineProps({
-  marker: {
-    type: String,
-    default: undefined,
-  },
-  color: {
-    type: String,
-    default: undefined,
-  },
-  onNext: {
-    type: Function as PropType<() => void>,
-    required: true,
-  },
-  onPrevious: {
-    type: Function as PropType<() => void>,
-    required: true,
-  },
-});
+const { marker } = defineProps<{
+  color?: string;
+  marker?: string;
+  onNext: () => void;
+  onPrevious: () => void;
+}>();
 
 const boxStyle = computed(() => ({
-  display: props.marker !== undefined ? 'block' : undefined,
+  display: marker !== undefined ? 'block' : undefined,
 }));
 </script>
 

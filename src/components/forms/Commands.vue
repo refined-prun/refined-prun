@@ -1,10 +1,5 @@
 <script setup lang="ts">
-defineProps({
-  label: {
-    type: String,
-    default: 'CMD',
-  },
-});
+const { label = 'CMD' } = defineProps<{ label?: string }>();
 </script>
 
 <template>

@@ -1,17 +1,11 @@
 <script setup lang="ts">
-const props = defineProps({
-  label: {
-    type: String,
-    required: true,
-  },
-  active: Boolean,
-});
+const { active } = defineProps<{ active?: boolean; label: string }>();
 
 const classes = computed(() => ({
   [C.HeadItem.indicator]: true,
   [C.HeadItem.indicatorPrimary]: true,
-  [C.HeadItem.indicatorPrimaryActive]: props.active,
-  [C.effects.shadowPrimary]: props.active,
+  [C.HeadItem.indicatorPrimaryActive]: active,
+  [C.effects.shadowPrimary]: active,
 }));
 </script>
 
