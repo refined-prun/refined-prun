@@ -1,11 +1,11 @@
-import { createFragmentApp, FragmentAppData } from '@src/utils/vue-fragment-app';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import Overlay from '@src/components/Overlay.vue';
 import ActionConfirmationOverlay from '@src/components/ActionConfirmationOverlay.vue';
 
-export function showTileOverlay(
+export function showTileOverlay<T extends Component>(
   baseElementOrEvent: Element | Event,
-  component: Component,
-  rootProps?: FragmentAppData | null,
+  component: T,
+  rootProps?: ExtractComponentProps<T>,
 ) {
   const container = findMountContainer(baseElementOrEvent);
   if (!container) {
