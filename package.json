@@ -9,7 +9,6 @@
     "url": "https://github.com/refined-prun/refined-prun.git"
   },
   "scripts": {
-    "analyze": "vite-bundle-visualizer --sourcemap",
     "build": "pnpm run clean && tsc --noEmit && vite build",
     "clean": "rimraf dist",
     "dev": "cross-env NODE_ENV=development vite build -w --mode development",
@@ -64,7 +63,6 @@
     "typescript-eslint": "^8.0.0",
     "unimport": "^3.13.1",
     "vite": "^5.2.14",
-    "vite-bundle-visualizer": "^1.2.1",
     "vue-tsc": "^2.2.0"
   },
   "lint-staged": {
