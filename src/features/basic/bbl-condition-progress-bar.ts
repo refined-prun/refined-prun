@@ -14,10 +14,10 @@ function onTileReady(tile: PrunTile) {
       return;
     }
     const rows = _$$(section, 'tr');
-    const condition = computed(() => building.value?.condition);
-    const good = computed(() => condition.value && condition.value > 0.9);
-    const warning = computed(() => !good.value && condition.value && condition.value > 0.8);
-    const danger = computed(() => condition.value && condition.value <= 0.8);
+    const condition = computed(() => building.value?.condition ?? 0);
+    const good = computed(() => condition.value > 0.9);
+    const warning = computed(() => !good.value && condition.value > 0.8);
+    const danger = computed(() => condition.value <= 0.8);
     createFragmentApp(
       ProgressBar,
       reactive({

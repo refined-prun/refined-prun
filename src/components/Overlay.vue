@@ -2,7 +2,7 @@
 const { props = {} } = defineProps<{
   child: Component;
   onClose: () => void;
-  props?: object;
+  props?: object | null;
 }>();
 </script>
 

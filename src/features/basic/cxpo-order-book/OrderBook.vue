@@ -4,7 +4,7 @@ import OrderRow from './OrderRow.vue';
 import { fixed2 } from '@src/utils/format';
 import { isEmpty } from 'ts-extras';
 
-const { ticker } = defineProps<{ ticker: string }>();
+const { ticker } = defineProps<{ ticker?: string }>();
 
 const orderInfo = computed(() => cxobStore.getByTicker(ticker));
 

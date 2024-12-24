@@ -1,4 +1,4 @@
-import { App, Plugin } from 'vue';
+import { AllowedComponentProps, App, ComponentCustomProps, Plugin, VNodeProps } from 'vue';
 import onNodeDisconnected from '@src/utils/on-node-disconnected';
 
 export type FragmentAppData = Record<string, unknown>;
@@ -88,6 +88,18 @@ export class FragmentAppScope {
   }
 }
 
-export function createFragmentApp(rootComponent: Component, rootProps?: FragmentAppData | null) {
-  return new FragmentApp(rootComponent, rootProps);
+export function createFragmentApp<T extends Component>(
+  rootComponent: T,
+  rootProps?: ExtractProps<T>,
+) {
+  return new FragmentApp(rootComponent, rootProps as FragmentAppData);
 }
+
+type ExtractProps<T> = T extends { new (): { $props: infer Props } }
+  ? {
+      -readonly [K in keyof Omit<
+        Props,
+        keyof VNodeProps | keyof AllowedComponentProps | keyof ComponentCustomProps
+      >]: Props[K];
+    }
+  : never;

@@ -3,7 +3,7 @@ import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { percent0 } from '@src/utils/format';
 import coloredValue from '@src/infrastructure/prun-ui/colored-value.module.css';
 
-const { id } = defineProps<{ id?: string }>();
+const { id } = defineProps<{ id?: string | null }>();
 
 const ship = computed(() => shipsStore.getById(id));
 
