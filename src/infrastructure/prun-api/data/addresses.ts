@@ -1,8 +1,8 @@
 import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 
-type SliceState = Record<string, PrunApi.Address | null | undefined>;
+type State = Record<string, PrunApi.Address | null | undefined>;
 
-const state = shallowReactive({} as SliceState);
+const state = shallowReactive<State>({});
 
 messages({
   SHIP_SHIPS(data: { ships: PrunApi.Ship[] }) {
