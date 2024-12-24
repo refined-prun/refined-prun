@@ -18,7 +18,7 @@ const emit = defineEmits<{ (e: 'chart-click'): void }>();
 const averageFactor = useTileState('averageFactor', 0.1);
 const averageFactorText = ref(averageFactor.value);
 watch(averageFactorText, x => {
-  const parsed = parseFloat(x);
+  const parsed = typeof x === 'number' ? x : parseFloat(x);
   if (isFinite(parsed)) {
     averageFactor.value = parsed;
   }
