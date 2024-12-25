@@ -4,6 +4,10 @@
 
 - `hide-ctx-name`: Hides the current context name label (CTX)
 
+### Changed
+
+- `lm-clean-ads`: Show the current location in shipping ads
+
 ### Fixed
 
 - Optimize CPU and memory usage

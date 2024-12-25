@@ -1,7 +1,6 @@
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { localAdsStore } from '@src/infrastructure/prun-api/data/local-ads';
 import { extractPlanetName } from '@src/util';
-import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.CommodityAd.container), async container => {
@@ -16,7 +15,10 @@ function onTileReady(tile: PrunTile) {
     const quantity = ad.quantity;
 
     if (type === 'COMMODITY_SHIPPING') {
-      cleanShipmentAd(tile, text);
+      // Shorten planet names
+      for (const link of _$$(text, C.Link.link)) {
+        link.textContent = extractPlanetName(link.textContent);
+      }
     }
     if ((type === 'COMMODITY_BUYING' || type === 'COMMODITY_SELLING') && quantity) {
       const amount = quantity.amount;
@@ -39,22 +41,6 @@ function onTileReady(tile: PrunTile) {
     }
     cleanContractType(text, ad);
   });
-}
-
-function cleanShipmentAd(tile: PrunTile, ad: HTMLElement) {
-  // Shorten planet names
-  const parameter = tile.parameter?.toUpperCase();
-  for (const link of _$$(ad, C.Link.link)) {
-    const planetName = extractPlanetName(link.textContent);
-    const planet = planetsStore.find(planetName);
-    if (parameter === planetName?.toUpperCase() || parameter === planet?.naturalId.toUpperCase()) {
-      // Hide 'from' and 'to' links from shipment ads on the same planet/station.
-      link.previousSibling!.textContent = '';
-      link.style.display = 'none';
-      continue;
-    }
-    link.textContent = planetName;
-  }
 }
 
 function cleanContractType(text: HTMLElement, ad: PrunApi.LocalAd) {
