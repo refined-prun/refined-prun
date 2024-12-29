@@ -15,7 +15,7 @@ import PmmgMigrationGuide from '@src/components/PmmgMigrationGuide.vue';
 import { trackExtensionUpdate } from '@src/infrastructure/shell/extension-update';
 
 async function main() {
-  document.documentElement.toggleAttribute('refined-prun');
+  document.documentElement.classList.add('refined-prun');
   trackExtensionUpdate();
   void fetchPrices();
   initializePrunApi();

@@ -37,7 +37,7 @@ export function trackItemTickers() {
 
 function appendStylesheet() {
   const style = document.createElement('style');
-  style.id = 'rp-icon-colors';
+  style.id = 'rp-css-icon-colors';
   const defaultColor = tinycolor('black');
   const gradientStart = defaultColor.darken(20).toHexString();
   const gradientEnd = defaultColor.brighten(10).toHexString();

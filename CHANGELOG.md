@@ -11,7 +11,7 @@
 
 ### Fixed
 
-- Optimize CPU and memory usage
+- Optimize overall CPU and memory usage
 
 ## 24.12.18.2202
 

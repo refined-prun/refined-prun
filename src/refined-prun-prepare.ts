@@ -1,7 +1,7 @@
 // This separate content script is required because it must be processed
 // superfast, before the PrUn script gets the chance to load.
 function prepare() {
-  if (document.documentElement.hasAttribute('refined-prun')) {
+  if (document.documentElement.classList.contains('refined-prun')) {
     return;
   }
   const observer = new MutationObserver(() => serializeScripts());

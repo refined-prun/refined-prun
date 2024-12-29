@@ -1,5 +1,5 @@
 async function startup() {
-  if (document.documentElement.hasAttribute('refined-prun')) {
+  if (document.documentElement.classList.contains('refined-prun')) {
     // This message will trigger a reload for pre-24.12.18 builds.
     window.postMessage({ type: 'rp-reload-page' }, '*');
     return;
@@ -31,7 +31,10 @@ async function startup() {
       if (!rule) {
         continue;
       }
-      rules[rule.selectorText] = rule.cssText;
+      rules[rule.selectorText] = rule.cssText
+        .replaceAll('{ ', '{\n  ')
+        .replaceAll('; ', ';\n  ')
+        .replaceAll('  }', '}');
     }
     css.textContent = JSON.stringify(rules);
   };

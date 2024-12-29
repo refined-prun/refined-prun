@@ -84,11 +84,7 @@ export function applyRawCssRule(rule: string) {
   } else {
     currentSheet.textContent += '\n\n';
   }
-  let fullRule = `html[refined-prun] ${rule}`;
-  if (at) {
-    fullRule = `${at} { ${fullRule} }`;
-  }
-  currentSheet.textContent += fullRule;
+  currentSheet.textContent += at ? `${at} ${wrapInBrackets(rule)}` : rule;
 }
 
 function queueSheetAppend() {
@@ -98,11 +94,19 @@ function queueSheetAppend() {
   queueMicrotask(() => {
     for (const sheet of sheets) {
       const style = document.createElement('style');
-      style.id = `rp-${sheet.id}`;
-      style.textContent = sheet.textContent;
+      style.id = `rp-css-${sheet.id}`;
+      style.textContent = `.refined-prun ${wrapInBrackets(sheet.textContent)}`;
       document.head.appendChild(style);
     }
   });
+}
+
+function wrapInBrackets(text: string) {
+  return `{\n  ${indent(text)}\n}`;
+}
+
+function indent(text: string) {
+  return text.replaceAll('\n', '\n  ');
 }
 
 function selectCommand(command: string) {
