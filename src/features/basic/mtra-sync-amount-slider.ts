@@ -9,7 +9,15 @@ async function onTileReady(tile: PrunTile) {
   input.addEventListener('blur', () => clickElement(button));
   const slider = await $(tile.anchor, 'rc-slider-handle');
   const sliderValue = refAttributeValue(slider, 'aria-valuenow');
-  watchEffectWhileNodeAlive(slider, () => changeInputValue(input, sliderValue.value!));
+  let initialRun = true;
+  watchEffectWhileNodeAlive(slider, () => {
+    const value = sliderValue.value!;
+    if (initialRun) {
+      initialRun = false;
+      return;
+    }
+    changeInputValue(input, value);
+  });
 }
 
 function init() {

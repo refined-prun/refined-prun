@@ -8,6 +8,7 @@
 
 - `XIT CONTS`: Add more condition status colors
 - `lm-clean-ads`: Show the current location in shipping ads
+- `mtra-sync-amount-slider`: Prevent setting the amount value on tile load
 
 ### Fixed
 
