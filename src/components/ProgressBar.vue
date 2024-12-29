@@ -28,14 +28,14 @@ const classes = computed(() => {
 
 <style module>
 .good::-webkit-progress-value {
-  background: #5cb85c;
+  background: var(--rp-color-green);
 }
 
 .warning::-webkit-progress-value {
-  background: #ffc856;
+  background: var(--rp-color-accent-primary);
 }
 
 .danger::-webkit-progress-value {
-  background: #d9534f;
+  background: var(--rp-color-red);
 }
 </style>

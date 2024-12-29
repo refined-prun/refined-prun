@@ -1,3 +1,13 @@
+html {
+  --rp-color-text-component: #bbb;
+  --rp-color-text: #999;
+  --rp-color-disabled: #444;
+  --rp-color-green: #5cb85c;
+  --rp-color-red: #d9534f;
+  --rp-color-orange: #f0ad4e;
+  --rp-color-accent-primary: #ffc856;
+}
+
 @font-face {
   font-family: 'Font Awesome 6 Free';
   font-style: normal;

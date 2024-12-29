@@ -4,11 +4,23 @@ import { friendlyConditionText, isConditionFulfilled } from '@src/features/XIT/C
 
 const { condition } = defineProps<{ condition: PrunApi.ContractCondition }>();
 
+const $style = useCssModule();
+
 const isFulfilled = computed(() => isConditionFulfilled(condition));
-const iconClass = computed(() => ({
-  [C.ColoredValue.positive]: isFulfilled.value,
-  [C.ColoredValue.negative]: !isFulfilled.value,
-}));
+const iconClass = computed(() => {
+  switch (condition.status) {
+    case 'PENDING':
+      return condition.deadline ? $style.pending : $style.unavailable;
+    case 'IN_PROGRESS':
+    case 'PARTLY_FULFILLED':
+      return $style.pending;
+    case 'FULFILLMENT_ATTEMPTED':
+    case 'VIOLATED':
+      return $style.failed;
+    case 'FULFILLED':
+      return $style.fulfilled;
+  }
+});
 const icon = computed(() => (isFulfilled.value ? '\uf00c' : '\uf00d'));
 </script>
 
@@ -20,3 +32,21 @@ const icon = computed(() => (isFulfilled.value ? '\uf00c' : '\uf00d'));
     </span>
   </div>
 </template>
+
+<style module>
+.pending {
+  color: var(--rp-color-orange);
+}
+
+.fulfilled {
+  color: var(--rp-color-green);
+}
+
+.failed {
+  color: var(--rp-color-red);
+}
+
+.unavailable {
+  color: var(--rp-color-text);
+}
+</style>

@@ -6,6 +6,7 @@
 
 ### Changed
 
+- `XIT CONTS`: Add more condition status colors
 - `lm-clean-ads`: Show the current location in shipping ads
 
 ### Fixed

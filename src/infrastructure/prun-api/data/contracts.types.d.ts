@@ -53,6 +53,7 @@ declare namespace PrunApi {
     | 'IN_PROGRESS'
     | 'FULFILLED'
     | 'PARTLY_FULFILLED'
+    | 'FULFILLMENT_ATTEMPTED'
     | 'VIOLATED';
 
   export type ContractConditionType =
