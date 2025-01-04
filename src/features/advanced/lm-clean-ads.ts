@@ -30,7 +30,13 @@ function onTileReady(tile: PrunTile) {
         continue;
       }
 
-      node.textContent = node.textContent.replace('.00', '');
+      if (node.textContent.endsWith('.00')) {
+        node.textContent = node.textContent.replace('.00', '');
+      }
+
+      if (node.textContent.endsWith(',00')) {
+        node.textContent = node.textContent.replace(',00', '');
+      }
       node.textContent = node.textContent
         .replace(' for ', '')
         .replace('delivery', '')

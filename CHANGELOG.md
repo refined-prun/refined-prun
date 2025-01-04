@@ -13,6 +13,7 @@
 ### Fixed
 
 - `XIT SORT`: Fix numbering of material categories
+- `lm-clean-ads`: Fix fraction truncation in non-English localizations
 - Optimize overall CPU and memory usage
 
 ## 24.12.18.2202
