@@ -6,6 +6,7 @@
 
 ### Changed
 
+- `XIT BURN`: Open `INV` with a short inventory id
 - `XIT CONTS`: Add more condition status colors
 - `lm-clean-ads`: Replace from/to with an arrow in shipping ads
 - `lm-clean-ads`: Show the current location in shipping ads

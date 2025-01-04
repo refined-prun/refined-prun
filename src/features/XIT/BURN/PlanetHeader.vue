@@ -27,7 +27,9 @@ const days = computed(() => countDays(burn.burn));
     <td>
       <div :class="$style.buttons">
         <PrunButton dark inline @click="showBuffer(`BS ${burn.naturalId}`)">BS</PrunButton>
-        <PrunButton dark inline @click="showBuffer(`INV ${burn.storeId}`)">INV</PrunButton>
+        <PrunButton dark inline @click="showBuffer(`INV ${burn.storeId.substring(0, 8)}`)">
+          INV
+        </PrunButton>
       </div>
     </td>
   </tr>
