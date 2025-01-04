@@ -14,6 +14,7 @@
 ### Fixed
 
 - `XIT SORT`: Fix numbering of material categories
+- `custom-item-sorting`: Fix sorting order shifts
 - `lm-clean-ads`: Fix fraction truncation in non-English localizations
 - Optimize overall CPU and memory usage
 

@@ -127,8 +127,8 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
   watchEffectWhileNodeAlive(inventory, () => {
     // Touch reactive values.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const _ = activeSortId.value && catSort.value && burn.value;
-    runSort();
+    const _ = [reverseSort.value, activeSortId.value, catSort.value, burn.value];
+    setTimeout(runSort, 50);
   });
 }
 
