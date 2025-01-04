@@ -16,8 +16,12 @@ function onTileReady(tile: PrunTile) {
 
     if (type === 'COMMODITY_SHIPPING') {
       // Shorten planet names
-      for (const link of _$$(text, C.Link.link)) {
-        link.textContent = extractPlanetName(link.textContent);
+      const links = _$$(text, C.Link.link);
+      if (links.length === 2) {
+        links[0].textContent = extractPlanetName(links[0].textContent);
+        links[0].previousSibling!.textContent = ' ';
+        links[0].nextSibling!.textContent = ' → ';
+        links[1].textContent = extractPlanetName(links[1].textContent);
       }
     }
     if ((type === 'COMMODITY_BUYING' || type === 'COMMODITY_SELLING') && quantity) {
