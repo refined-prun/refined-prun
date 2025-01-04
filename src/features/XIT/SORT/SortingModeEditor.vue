@@ -78,10 +78,10 @@ function onSaveClick() {
         <TextInput v-model="categories[0].materials" style="width: 80%" />
       </Active>
       <template v-for="(category, i) in categories.slice(1)" :key="i">
-        <Active :label="`Category ${i + 1} Name`">
+        <Active :label="`Category ${i + 2} Name`">
           <TextInput v-model="category.name" style="width: 80%" />
         </Active>
-        <Active :label="`Category ${i + 1} MATs`">
+        <Active :label="`Category ${i + 2} MATs`">
           <TextInput v-model="category.materials" style="width: 80%" />
         </Active>
       </template>

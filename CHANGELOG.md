@@ -12,6 +12,7 @@
 
 ### Fixed
 
+- `XIT SORT`: Fix numbering of material categories
 - Optimize overall CPU and memory usage
 
 ## 24.12.18.2202
