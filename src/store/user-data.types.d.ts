@@ -80,7 +80,7 @@ declare namespace UserData {
     type: TaskType;
     completed?: boolean;
     text?: string;
-    dueDate?: string;
+    dueDate?: number;
     recurring?: number;
     planet?: string;
     days?: number;

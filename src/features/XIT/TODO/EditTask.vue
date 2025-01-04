@@ -7,7 +7,6 @@ import NumberInput from '@src/components/forms/NumberInput.vue';
 import Commands from '@src/components/forms/Commands.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import DateInput from '@src/components/forms/DateInput.vue';
-import { toDueDate } from '@src/features/XIT/TODO/utils';
 import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import {
   getEntityNameFromAddress,
@@ -31,10 +30,23 @@ const types: UserData.TaskType[] = ['Text', 'Resupply', 'Repair'];
 const type = ref(task.type);
 
 const text = ref(task.text);
-const dueDate = ref(task.dueDate);
+const dueDate = ref(formatDateForInput(task.dueDate));
 const recurring = ref(task.recurring);
 const days = ref(task.days);
 const buildingAge = ref(task.buildingAge);
+
+function formatDateForInput(date: number | undefined) {
+  if (!date) {
+    return undefined;
+  }
+  const localDate = new Date(date);
+  const year = localDate.getFullYear();
+  // Month is 0-based
+  const month = String(localDate.getMonth() + 1).padStart(2, '0');
+  const day = String(localDate.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
 
 const planets = computed(() => {
   if (!sitesStore.all) {
@@ -59,7 +71,14 @@ watchEffect(() => {
 
 function onSaveClick() {
   task.type = type.value;
-  task.dueDate = toDueDate(dueDate.value);
+  if (dueDate.value) {
+    const [year, month, day] = dueDate.value.split('-').map(x => parseInt(x, 10));
+    // Month is 0-based
+    const date = new Date(year, month - 1, day);
+    task.dueDate = date.getTime();
+  } else {
+    delete task.dueDate;
+  }
   task.recurring = recurring.value;
   delete task.text;
   delete task.planet;

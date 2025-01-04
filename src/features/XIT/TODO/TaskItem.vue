@@ -7,7 +7,6 @@ import { ddmmyyyy } from '@src/utils/format';
 import fa from '@src/utils/font-awesome.module.css';
 import TaskEditor from '@src/features/XIT/TODO/EditTask.vue';
 import removeArrayElement from '@src/utils/remove-array-element';
-import { toDueDate } from '@src/features/XIT/TODO/utils';
 import TaskText from '@src/features/XIT/TODO/TaskText.vue';
 
 const { list, subtask, task } = defineProps<{
@@ -39,9 +38,7 @@ function onContentClick(ev: Event) {
 
 function onCheckmarkClick() {
   if (task.recurring && task.dueDate) {
-    task.dueDate = toDueDate(
-      new Date(task.dueDate).getTime() + dayjs.duration(task.recurring, 'days').asMilliseconds(),
-    );
+    task.dueDate = task.dueDate + dayjs.duration(task.recurring, 'days').asMilliseconds();
     for (const subtask of task.subtasks ?? []) {
       subtask.completed = false;
     }
@@ -66,7 +63,7 @@ function onCheckmarkClick() {
         @click="onContentClick">
         <TaskText :text="task.text" />
         <div v-if="task.dueDate" :class="$style.dueDate">
-          {{ ddmmyyyy(new Date(task.dueDate)) }}
+          {{ ddmmyyyy(task.dueDate) }}
           <span v-if="task.recurring">(every {{ task.recurring }}d)</span>
         </div>
       </div>

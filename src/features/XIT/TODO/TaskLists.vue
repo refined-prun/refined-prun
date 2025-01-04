@@ -35,7 +35,7 @@ function countCompletedTasks(list: UserData.TaskList) {
 }
 
 function getDueDate(list: UserData.TaskList) {
-  const dates: string[] = [];
+  const dates: number[] = [];
   const add = (task: UserData.Task) => {
     if (task.dueDate) {
       dates.push(task.dueDate);
@@ -51,7 +51,7 @@ function getDueDate(list: UserData.TaskList) {
     return undefined;
   }
   dates.sort();
-  return ddmmyyyy(new Date(dates[0]));
+  return ddmmyyyy(dates[0]);
 }
 
 const dragging = ref(false);

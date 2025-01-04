@@ -3,6 +3,27 @@ import { isEmpty } from 'ts-extras';
 
 const migrations: Migration[] = [
   userData => {
+    function convertDueDate(task: any) {
+      if (task.dueDate) {
+        const [year, month, day] = task.dueDate.split('-').map(x => parseInt(x, 10));
+        // Month is 0-based
+        const date = new Date(year, month - 1, day);
+        task.dueDate = date.getTime();
+      }
+      if (task.subtasks) {
+        for (const subtask of task.subtasks) {
+          convertDueDate(subtask);
+        }
+      }
+    }
+
+    for (const list of userData.todo) {
+      for (const task of list.tasks) {
+        convertDueDate(task);
+      }
+    }
+  },
+  userData => {
     userData.tabs = {
       order: [],
       hidden: [],
