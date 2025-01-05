@@ -2,12 +2,14 @@
 
 ### Added
 
+- `XIT CMDL`: Command Lists (port of `XIT LIST` from PMMG)
 - `hide-ctx-name`: Hides the current context name label (CTX)
 
 ### Changed
 
 - `XIT BURN`: Open `INV` with a short inventory id
 - `XIT CONTS`: Add more condition status colors
+- `XIT SET PMMG`: Add pmmg-lists.json import support
 - `lm-clean-ads`: Replace from/to with an arrow in shipping ads
 - `lm-clean-ads`: Show the current location in shipping ads
 - `mtra-sync-amount-slider`: Prevent setting the amount value on tile load

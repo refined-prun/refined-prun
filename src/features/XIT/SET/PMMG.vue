@@ -7,6 +7,7 @@ import {
   importPmmgFinancialHistory,
   importPmmgNotes,
   importPmmgSettings,
+  importPmmgCommandLists,
 } from '@src/infrastructure/storage/pmmg-import';
 </script>
 
@@ -26,7 +27,7 @@ import {
       <PrunButton primary @click="importPmmgActions">Import Actions</PrunButton>
     </Commands>
     <Commands label="pmmg-lists.json">
-      <PrunButton primary disabled>Not supported</PrunButton>
+      <PrunButton primary @click="importPmmgCommandLists">Import Command Lists</PrunButton>
     </Commands>
   </form>
 </template>

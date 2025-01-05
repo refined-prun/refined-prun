@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import grip from './grip.module.css';
+import grip from '@src/utils/grip.module.css';
 import fa from '@src/utils/font-awesome.module.css';
 import { showTileOverlay, showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import PrunButton from '@src/components/PrunButton.vue';

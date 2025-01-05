@@ -3,6 +3,9 @@ import { isEmpty } from 'ts-extras';
 
 const migrations: Migration[] = [
   userData => {
+    userData.commandLists = [];
+  },
+  userData => {
     function convertDueDate(task: any) {
       if (task.dueDate) {
         const [year, month, day] = task.dueDate.split('-').map(x => parseInt(x, 10));

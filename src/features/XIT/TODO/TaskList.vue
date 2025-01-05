@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import grip from './grip.module.css';
+import grip from '@src/utils/grip.module.css';
 import TaskItem from '@src/features/XIT/TODO/TaskItem.vue';
 import AddTaskItem from '@src/features/XIT/TODO/AddTaskItem.vue';
 import { vDraggable } from 'vue-draggable-plus';

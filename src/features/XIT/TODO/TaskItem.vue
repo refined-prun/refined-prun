@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import grip from './grip.module.css';
+import grip from '@src/utils/grip.module.css';
 import Checkmark from '@src/features/XIT/TODO/Checkmark.vue';
 import dayjs from 'dayjs';
 import { showTileOverlay } from '@src/infrastructure/prun-ui/tile-overlay';

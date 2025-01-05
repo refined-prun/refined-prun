@@ -61,6 +61,7 @@ export const initialUserData = deepFreeze({
     order: [] as string[],
     hidden: [] as string[],
   },
+  commandLists: [] as UserData.CommandList[],
 });
 
 export const userData = reactive({} as typeof initialUserData);

@@ -89,4 +89,16 @@ declare namespace UserData {
   }
 
   export type TaskType = 'Text' | 'Resupply' | 'Repair';
+
+  export interface CommandList {
+    id: string;
+    name: string;
+    commands: Command[];
+  }
+
+  interface Command {
+    id: string;
+    label: string;
+    command: string;
+  }
 }

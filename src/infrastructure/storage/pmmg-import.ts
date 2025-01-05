@@ -222,3 +222,26 @@ function mapPmmgFeature(feature: string) {
       return undefined;
   }
 }
+
+export function importPmmgCommandLists() {
+  uploadJson(json => {
+    if (!json) {
+      return;
+    }
+    const pmmg = json['PMMG-Lists'] as Record<string, [string, string][]>;
+    if (pmmg) {
+      for (const key of Object.keys(pmmg)) {
+        const list: UserData.CommandList = {
+          id: createId(),
+          name: key,
+          commands: pmmg[key].map(x => ({
+            id: createId(),
+            label: x[0],
+            command: x[1],
+          })),
+        };
+        userData.commandLists.push(list);
+      }
+    }
+  });
+}
