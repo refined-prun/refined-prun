@@ -40,9 +40,9 @@ function compareContracts(a: PrunApi.Contract, b: PrunApi.Contract) {
     <thead>
       <tr>
         <th>Contract</th>
-        <th>Material</th>
-        <th>Partner&apos;s Conditions</th>
-        <th>My Conditions</th>
+        <th>Item</th>
+        <th>Partner</th>
+        <th>Self</th>
       </tr>
     </thead>
     <tbody>
@@ -55,5 +55,3 @@ function compareContracts(a: PrunApi.Contract, b: PrunApi.Contract) {
     </tbody>
   </table>
 </template>
-
-<style scoped></style>

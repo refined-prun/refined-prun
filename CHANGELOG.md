@@ -1,3 +1,9 @@
+## Unreleased
+
+### Changed
+
+- `XIT CONTS`: Shorten column names
+
 ## 25.1.5
 
 ### Added
