@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Added
+
+- `XIT DEV`: Add pu-debug switch
+
 ### Changed
 
 - `XIT CONTS`: Shorten column names

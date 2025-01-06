@@ -19,11 +19,13 @@
   },
   "type": "module",
   "dependencies": {
+    "@types/js-cookie": "^3.0.6",
     "chart.js": "^4.4.3",
     "chartjs-plugin-datalabels": "^2.2.0",
     "chartjs-plugin-zoom": "^2.0.1",
     "dayjs": "^1.11.13",
     "engine.io-parser": "^5.2.3",
+    "js-cookie": "^3.0.5",
     "math-expression-evaluator": "^2.0.5",
     "one-mutation": "^3.0.1",
     "onetime": "^7.0.0",

@@ -2,9 +2,17 @@
 import { downloadFile } from '@src/util';
 import DebugButton from '@src/features/XIT/DEV/DevButton.vue';
 import { userData } from '@src/store/user-data';
+import Cookies from 'js-cookie';
 
 function logUserData() {
   console.log(userData);
+}
+
+const prunDebug = ref(Cookies.get('pu-debug') === 'true');
+
+function switchPrunDebug() {
+  Cookies.set('pu-debug', (!prunDebug.value).toString());
+  prunDebug.value = !prunDebug.value;
 }
 
 function downloadCssDefinition() {
@@ -30,6 +38,9 @@ function downloadCssDefinition() {
 
 <template>
   <div :style="{ paddingTop: '4px' }">
+    <DebugButton @click="switchPrunDebug">
+      {{ prunDebug ? 'Disable' : 'Enable' }} pu-debug
+    </DebugButton>
     <DebugButton @click="logUserData">Log User Data</DebugButton>
     <DebugButton @click="downloadCssDefinition">Export prun-css-types.ts</DebugButton>
   </div>
