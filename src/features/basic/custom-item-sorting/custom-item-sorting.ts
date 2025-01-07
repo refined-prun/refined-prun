@@ -124,10 +124,16 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
     setTimeout(() => observer.observe(inventory, { childList: true, subtree: true }), 0);
   };
   const observer = new MutationObserver(runSort);
+  let first = true;
   watchEffectWhileNodeAlive(inventory, () => {
     // Touch reactive values.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const _ = [reverseSort.value, activeSortId.value, catSort.value, burn.value];
+    if (first) {
+      first = false;
+      runSort();
+      return;
+    }
     setTimeout(runSort, 50);
   });
 }

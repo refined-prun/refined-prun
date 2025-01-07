@@ -13,6 +13,7 @@
 ### Fixed
 
 - `XIT CONTS`: Fix pending condition status detection
+- `custom-item-sorting`: Fix sorting shift on initial inventory open
 - `sfc-flight-eta`: Fix ETA conflicts if more than one `SFC` tile is open
 - Fix sizes of buffer windows to match the vanilla ones
 
