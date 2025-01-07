@@ -12,6 +12,10 @@
 
 - Fixed sizes of buffer windows to match the vanilla ones
 
+### Removed
+
+- `hide-bfrs-button`: It is safe to disable the bottom bar now after molp released a change related to BFRS
+
 ## 25.1.5
 
 ### Added

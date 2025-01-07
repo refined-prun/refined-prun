@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { isEmpty } from 'ts-extras';
+import removeArrayElement from '@src/utils/remove-array-element';
 
 const migrations: Migration[] = [
+  userData => {
+    removeArrayElement(userData.settings.disabled, 'hide-bfrs-button');
+  },
   userData => {
     userData.commandLists = [];
   },
