@@ -6,6 +6,7 @@
 
 ### Changed
 
+- `XIT CONTC`: Display up to 2 decimal places in payment conditions
 - `XIT CONTS`: Shorten column names
 
 ### Fixed

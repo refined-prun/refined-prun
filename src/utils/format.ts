@@ -50,6 +50,11 @@ export const fixed0 = new Intl.NumberFormat(undefined, {
   maximumFractionDigits: 0,
 }).format;
 
+export const fixed02 = new Intl.NumberFormat(undefined, {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+}).format;
+
 export const fixed1 = new Intl.NumberFormat(undefined, {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { fixed0 } from '@src/utils/format';
+import { fixed02 } from '@src/utils/format';
 import AddressLink from '@src/features/XIT/CONTC/AddressLink.vue';
 
 defineProps<{ condition: PrunApi.ContractCondition }>();
@@ -7,13 +7,13 @@ defineProps<{ condition: PrunApi.ContractCondition }>();
 
 <template>
   <template v-if="condition.type === 'PAYMENT'">
-    Pay {{ fixed0(condition.amount!.amount) }} {{ condition.amount!.currency }}
+    Pay {{ fixed02(condition.amount!.amount) }} {{ condition.amount!.currency }}
   </template>
   <template v-else-if="condition.type === 'LOAN_PAYOUT'">
-    Pay {{ fixed0(condition.amount!.amount) }} {{ condition.amount!.currency }}
+    Pay {{ fixed02(condition.amount!.amount) }} {{ condition.amount!.currency }}
   </template>
   <template v-else-if="condition.type === 'LOAN_INSTALLMENT'">
-    Pay {{ fixed0(condition.repayment!.amount + condition.interest!.amount) }}
+    Pay {{ fixed02(condition.repayment!.amount + condition.interest!.amount) }}
     {{ condition.repayment!.currency }} (auto)
   </template>
   <template v-else-if="condition.type === 'DELIVERY_SHIPMENT'">
