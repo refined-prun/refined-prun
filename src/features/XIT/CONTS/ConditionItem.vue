@@ -1,16 +1,25 @@
 <script setup lang="ts">
 import fa from '@src/utils/font-awesome.module.css';
-import { friendlyConditionText, isConditionFulfilled } from '@src/features/XIT/CONTS/utils';
+import { friendlyConditionText } from '@src/features/XIT/CONTS/utils';
 
-const { condition } = defineProps<{ condition: PrunApi.ContractCondition }>();
+const { condition, contract } = defineProps<{
+  condition: PrunApi.ContractCondition;
+  contract: PrunApi.Contract;
+}>();
 
 const $style = useCssModule();
 
-const isFulfilled = computed(() => isConditionFulfilled(condition));
 const iconClass = computed(() => {
   switch (condition.status) {
-    case 'PENDING':
-      return condition.deadline ? $style.pending : $style.unavailable;
+    case 'PENDING': {
+      for (const dependency of condition.dependencies) {
+        const match = contract.conditions.find(x => x.id === dependency);
+        if (!match || match.status !== 'FULFILLED') {
+          return $style.unavailable;
+        }
+      }
+      return $style.pending;
+    }
     case 'IN_PROGRESS':
     case 'PARTLY_FULFILLED':
       return $style.pending;
@@ -21,7 +30,7 @@ const iconClass = computed(() => {
       return $style.fulfilled;
   }
 });
-const icon = computed(() => (isFulfilled.value ? '\uf00c' : '\uf00d'));
+const icon = computed(() => (condition.status === 'FULFILLED' ? '\uf00c' : '\uf00d'));
 </script>
 
 <template>

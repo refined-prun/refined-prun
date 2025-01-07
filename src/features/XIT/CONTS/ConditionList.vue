@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import ConditionItem from '@src/features/XIT/CONTS/ConditionItem.vue';
-import { isConditionFulfilled } from '@src/features/XIT/CONTS/utils';
 
-const { conditions } = defineProps<{ conditions: PrunApi.ContractCondition[] }>();
+const { conditions, contract } = defineProps<{
+  conditions: PrunApi.ContractCondition[];
+  contract: PrunApi.Contract;
+}>();
 
 const filtered = computed(() => {
   return conditions
@@ -12,10 +14,16 @@ const filtered = computed(() => {
 });
 const loanInstallments = computed(() => conditions.filter(x => x.type === 'LOAN_INSTALLMENT'));
 const loanTotal = computed(() => loanInstallments.value.length);
-const loanFilled = computed(() => loanInstallments.value.filter(isConditionFulfilled).length);
+const loanFilled = computed(
+  () => loanInstallments.value.filter(x => x.status === 'FULFILLED').length,
+);
 </script>
 
 <template>
-  <ConditionItem v-for="condition in filtered" :key="condition.id" :condition="condition" />
+  <ConditionItem
+    v-for="condition in filtered"
+    :key="condition.id"
+    :condition="condition"
+    :contract="contract" />
   <div v-if="loanTotal !== 0">{{ loanFilled }}/{{ loanTotal }} Loan Installment</div>
 </template>

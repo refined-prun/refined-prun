@@ -21,10 +21,6 @@ export function isPartnerCondition(
   return contract.party !== condition.party;
 }
 
-export function isConditionFulfilled(condition: PrunApi.ContractCondition) {
-  return condition.status === 'FULFILLED';
-}
-
 export function friendlyConditionText(type: PrunApi.ContractConditionType) {
   switch (type) {
     case 'BASE_CONSTRUCTION':

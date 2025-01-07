@@ -21,10 +21,10 @@ const partner = computed(() => contract.conditions.filter(x => isPartnerConditio
     </td>
     <td>
       <PartnerLink :contract="contract" />
-      <ConditionList :conditions="partner" />
+      <ConditionList :conditions="partner" :contract="contract" />
     </td>
     <td>
-      <ConditionList :conditions="self" />
+      <ConditionList :conditions="self" :contract="contract" />
     </td>
   </tr>
 </template>
