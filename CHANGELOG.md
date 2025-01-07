@@ -7,7 +7,9 @@
 
 ### Changed
 
+- `XIT CONTC`: Add context buttons
 - `XIT CONTC`: Display up to 2 decimal places in payment conditions
+- `XIT CONTS`: Add context buttons
 - `XIT CONTS`: Shorten column names
 
 ### Fixed
