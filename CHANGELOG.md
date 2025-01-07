@@ -4,7 +4,7 @@
 
 - `XIT DEV`: Add pu-debug switch
 - `XIT SET`: Add a "Buffers" tab with custom buffer size configuration
-- `auto-resize-buffers`: Automatically resizes the buffer size on command change
+- `auto-resize-buffers`: Automatically resizes a buffer on command change
 - `productivity-through-depression`: Promitor's finest
 
 ### Changed
