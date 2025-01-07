@@ -5,6 +5,8 @@ import { formatEta } from '@src/utils/format';
 import { timestampEachSecond } from '@src/utils/dayjs';
 import { createReactiveSpan } from '@src/utils/reactive-element';
 import { keepLast } from '@src/utils/keep-last';
+import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
+import { flightPlansStore } from '@src/infrastructure/prun-api/data/flight-plans';
 
 function onTileReady(tile: PrunTile) {
   const ship = computed(() => shipsStore.getByRegistration(tile.parameter));
@@ -12,12 +14,19 @@ function onTileReady(tile: PrunTile) {
 }
 
 function onTableReady(table: HTMLElement, ship: Ref<PrunApi.Ship | undefined>) {
-  subscribe($$(table, 'tr'), x => onRowReady(x, ship));
+  const planId = refPrunId(table);
+  subscribe($$(table, 'tr'), x => onRowReady(x, ship, planId));
 }
 
-function onRowReady(row: HTMLElement, ship: Ref<PrunApi.Ship | undefined>) {
+function onRowReady(
+  row: HTMLElement,
+  ship: Ref<PrunApi.Ship | undefined>,
+  planId: Ref<string | null>,
+) {
   const firstColumn = refTextContent(row.children[0]);
-  const arrival = computed(() => getFlightSegmentArrival(ship.value, firstColumn.value));
+  const arrival = computed(() =>
+    getFlightSegmentArrival(ship.value, firstColumn.value, planId.value),
+  );
   const eta = computed(() =>
     arrival.value ? ` (${formatEta(timestampEachSecond.value, arrival.value)})` : undefined,
   );
@@ -25,7 +34,11 @@ function onRowReady(row: HTMLElement, ship: Ref<PrunApi.Ship | undefined>) {
   keepLast(row, () => row.children[3], span);
 }
 
-function getFlightSegmentArrival(ship: PrunApi.Ship | undefined, index: string | null) {
+function getFlightSegmentArrival(
+  ship: PrunApi.Ship | undefined,
+  index: string | null,
+  planId: string | null,
+) {
   if (!ship || index === null) {
     return undefined;
   }
@@ -40,7 +53,7 @@ function getFlightSegmentArrival(ship: PrunApi.Ship | undefined, index: string |
 
     segments = flight.segments;
   } else {
-    const plan = flightsStore.plan.value;
+    const plan = flightPlansStore.getById(planId);
     if (!plan) {
       return undefined;
     }

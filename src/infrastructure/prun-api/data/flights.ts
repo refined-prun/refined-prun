@@ -4,8 +4,6 @@ import { messages } from '@src/infrastructure/prun-api/data/api-messages';
 const store = createEntityStore<PrunApi.Flight>();
 const state = store.state;
 
-const plan = ref<PrunApi.FlightPlan | undefined>(undefined);
-
 messages({
   SHIP_FLIGHT_FLIGHTS(data: { flights: PrunApi.Flight[] }) {
     store.setAll(data.flights);
@@ -17,12 +15,8 @@ messages({
   SHIP_FLIGHT_FLIGHT_ENDED(data: PrunApi.Flight) {
     store.removeOne(data.id);
   },
-  SHIP_FLIGHT_MISSION(data: PrunApi.FlightPlan) {
-    plan.value = data;
-  },
 });
 
 export const flightsStore = {
   ...state,
-  plan,
 };

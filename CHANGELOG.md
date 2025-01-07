@@ -10,7 +10,8 @@
 
 ### Fixed
 
-- Fixed sizes of buffer windows to match the vanilla ones
+- `sfc-flight-eta`: Fix ETA conflicts if more than one `SFC` tile is open
+- Fix sizes of buffer windows to match the vanilla ones
 
 ### Removed
 
