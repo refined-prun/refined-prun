@@ -41,6 +41,7 @@ import './prevent-delete-button-misclicks';
 import './prod-burn-link';
 import './prod-order-eta';
 import './prodq-queue-load';
+import './productivity-through-depression';
 import './prun-bugs';
 import './rprun-version-label';
 import './screen-tab-bar/screen-tab-bar';

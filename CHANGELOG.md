@@ -3,6 +3,7 @@
 ### Added
 
 - `XIT DEV`: Add pu-debug switch
+- `productivity-through-depression`
 
 ### Changed
 
