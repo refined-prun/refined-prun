@@ -16,7 +16,10 @@ export async function* streamHtmlCollection<T extends Element>(
 
   const newElements: T[] = [];
   let resolve = () => {};
-  onNodeTreeMutation(root, () => {
+  onNodeTreeMutation(root, mutations => {
+    if (mutations.every(x => x.addedNodes.length === 0)) {
+      return;
+    }
     for (let i = 0; i < elements.length; i++) {
       const element = elements[i];
       if (!seenElements.has(element)) {

@@ -16,11 +16,17 @@ const anyCommandObservers: PrunTileObserver[] = [];
 
 const setupObserver = onetime(() => onNodeTreeMutation(document, reconciliate));
 
-function reconciliate() {
-  for (const tile of activeTiles) {
-    if (!tile.frame.isConnected) {
-      deactivateTile(tile);
+function reconciliate(mutations: MutationRecord[]) {
+  if (mutations.some(x => x.removedNodes.length > 0)) {
+    for (const tile of activeTiles) {
+      if (!tile.frame.isConnected) {
+        deactivateTile(tile);
+      }
     }
+  }
+
+  if (mutations.every(x => x.addedNodes.length === 0)) {
+    return;
   }
 
   const frameElements = document.getElementsByClassName(C.TileFrame.frame);
