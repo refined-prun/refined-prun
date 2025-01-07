@@ -5,11 +5,14 @@ import { onNodeTreeMutation } from '@src/utils/on-node-tree-mutation';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import onNodeDisconnected from '@src/utils/on-node-disconnected';
+import { matchBufferSize } from '@src/infrastructure/prun-ui/buffer-sizes';
+import { setBufferSize } from '@src/infrastructure/prun-ui/buffers';
 
 interface PrunTileObserver {
   (tile: PrunTile): void;
 }
 
+const pastWindows: WeakSet<Element> = new WeakSet();
 const activeTiles: PrunTile[] = [];
 const commandObservers: Map<string, PrunTileObserver[]> = new Map();
 const anyCommandObservers: PrunTileObserver[] = [];
@@ -72,6 +75,7 @@ function activateFrame(frame: HTMLDivElement, anchor: HTMLDivElement) {
   const indexOfSpace = fullCommand.indexOf(' ');
   const tile: PrunTile = {
     id,
+    container,
     frame,
     anchor,
     docked,
@@ -82,6 +86,13 @@ function activateFrame(frame: HTMLDivElement, anchor: HTMLDivElement) {
   frame.setAttribute('data-rp-command', tile.command);
   activateTile(tile);
   onNodeDisconnected(frame, () => deactivateTile(tile));
+  if (!docked && !pastWindows.has(container)) {
+    pastWindows.add(container);
+    const size = matchBufferSize(fullCommand);
+    if (size) {
+      setBufferSize(id, size[0], size[1]);
+    }
+  }
 }
 
 function activateTile(tile: PrunTile) {

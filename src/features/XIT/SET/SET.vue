@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import Tabs, { Tab } from '@src/components/Tabs.vue';
 import GAME from '@src/features/XIT/SET/GAME.vue';
 import FEAT from '@src/features/XIT/SET/FEAT.vue';
 import FIN from '@src/features/XIT/SET/FIN.vue';
-import { useXitParameters } from '@src/hooks/use-xit-parameters';
+import BFR from '@src/features/XIT/SET/BFR.vue';
 
 const tabs: Tab[] = [
   {
@@ -20,6 +21,11 @@ const tabs: Tab[] = [
     id: 'FIN',
     label: 'Financial',
     component: FIN,
+  },
+  {
+    id: 'BFR',
+    label: 'Buffers',
+    component: BFR,
   },
 ];
 

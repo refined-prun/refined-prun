@@ -1,4 +1,5 @@
 import './align-chat-delete-button';
+import './auto-resize-buffers';
 import './bbl-condition-progress-bar';
 import './bbl-dangerous-demolish';
 import './bbl-dangerous-repair';

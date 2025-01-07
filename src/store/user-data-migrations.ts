@@ -4,6 +4,9 @@ import removeArrayElement from '@src/utils/remove-array-element';
 
 const migrations: Migration[] = [
   userData => {
+    userData.settings.buffers = [];
+  },
+  userData => {
     removeArrayElement(userData.settings.disabled, 'hide-bfrs-button');
   },
   userData => {

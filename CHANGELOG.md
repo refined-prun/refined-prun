@@ -3,7 +3,9 @@
 ### Added
 
 - `XIT DEV`: Add pu-debug switch
-- `productivity-through-depression`
+- `XIT SET`: Add a "Buffers" tab with custom buffer size configuration
+- `auto-resize-buffers`: Automatically resizes the buffer size on command change
+- `productivity-through-depression`: Promitor's finest
 
 ### Changed
 
@@ -17,7 +19,7 @@
 - `XIT CONTS`: Fix pending condition status detection
 - `custom-item-sorting`: Fix sorting shift on initial inventory open
 - `sfc-flight-eta`: Fix ETA conflicts if more than one `SFC` tile is open
-- Fix sizes of buffer windows to match the vanilla ones
+- Fix default sizes of buffers to match the vanilla ones
 
 ### Removed
 

@@ -47,6 +47,7 @@ export const initialUserData = deepFreeze({
       ['SET', 'XIT SET'],
       ['HELP', 'XIT HELP'],
     ] as [string, string][],
+    buffers: [] as [string, number, number][],
   },
   sorting: [] as UserData.SortingMode[],
   balanceHistory: {
