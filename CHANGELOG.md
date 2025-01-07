@@ -8,6 +8,10 @@
 
 - `XIT CONTS`: Shorten column names
 
+### Fixed
+
+- Fixed sizes of buffer windows to match the vanilla ones
+
 ## 25.1.5
 
 ### Added

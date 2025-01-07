@@ -1,9 +1,14 @@
-import { decodePayload, encodePayload } from 'engine.io-parser';
-import { Decoder, Encoder } from 'socket.io-parser';
+import { decodePayload, encodePayload, Packet as EIOPacket } from 'engine.io-parser';
+import { Decoder, Encoder, Packet as SIOPacket, PacketType } from 'socket.io-parser';
+import { castArray } from '@src/utils/cast-array';
 
-type Middleware<T> = (packet: T) => boolean;
+export type Middleware<T> = {
+  onOpen: () => void;
+  onMessage: (payload: T) => boolean;
+  dispatchClientMessage: ((payload: T) => void) | undefined;
+};
 
-export default function socketIOMiddleware<T>(onOpen: () => void, middleware: Middleware<T>) {
+export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
   const addEventListener = WebSocket.prototype.addEventListener;
   window.WebSocket = new Proxy(WebSocket, {
     construct(target: typeof WebSocket, args: [string, (string | string[])?]) {
@@ -12,8 +17,11 @@ export default function socketIOMiddleware<T>(onOpen: () => void, middleware: Mi
       return new Proxy(ws, {
         set(target, prop, value) {
           if (prop === 'onmessage') {
+            middleware.dispatchClientMessage = message => {
+              value(new MessageEvent('message', { data: encodeMessage(message) }));
+            };
             target.onmessage = e => {
-              const data = processMessage(e.data, onOpen, middleware);
+              const data = processMessage(e.data, middleware);
               if (data !== e.data) {
                 e = new Proxy(e, {
                   get(target, prop) {
@@ -70,7 +78,7 @@ export default function socketIOMiddleware<T>(onOpen: () => void, middleware: Mi
           if (prop === 'onreadystatechange') {
             target.onreadystatechange = () => {
               if (target.readyState === 4 && target.status === 200) {
-                data = processMessage(target.responseText, onOpen, middleware);
+                data = processMessage(target.responseText, middleware);
               }
               value();
             };
@@ -83,7 +91,7 @@ export default function socketIOMiddleware<T>(onOpen: () => void, middleware: Mi
   });
 }
 
-function processMessage<T>(data: string, onOpen: () => void, middleware: Middleware<T>) {
+function processMessage<T>(data: string, middleware: Middleware<T>) {
   const engineIOPackets = decodePayload(data);
   let rewriteMessage = false;
   for (const engineIOPacket of engineIOPackets) {
@@ -95,7 +103,7 @@ function processMessage<T>(data: string, onOpen: () => void, middleware: Middlew
       const data = decodedPacket.data;
       if (decodedPacket.type === 0) {
         try {
-          onOpen();
+          middleware.onOpen();
         } catch (error) {
           console.error(error);
         }
@@ -108,23 +116,41 @@ function processMessage<T>(data: string, onOpen: () => void, middleware: Middlew
 
       let rewrite: boolean;
       try {
-        rewrite = middleware(payload);
+        rewrite = middleware.onMessage(payload);
       } catch (error) {
         console.error(error);
         rewrite = false;
       }
       if (rewrite) {
-        const encoder = new Encoder();
-        engineIOPacket.data = encoder.encode(decodedPacket)[0];
+        engineIOPacket.data = encodeSIOPacket(decodedPacket);
         rewriteMessage = true;
       }
     });
     decoder.add(engineIOPacket.data);
   }
-  if (rewriteMessage) {
-    encodePayload(engineIOPackets, newData => {
-      data = newData;
-    });
-  }
-  return data;
+  return rewriteMessage ? encodeEIOPacket(engineIOPackets) : data;
+}
+
+function encodeMessage<T>(message: T) {
+  return encodeEIOPacket({
+    type: 'message',
+    data: encodeSIOPacket({
+      type: PacketType.EVENT,
+      nsp: '/',
+      data: ['event', message],
+    }),
+  });
+}
+
+function encodeSIOPacket(packet: SIOPacket) {
+  const encoder = new Encoder();
+  return encoder.encode(packet)[0];
+}
+
+function encodeEIOPacket(packet: Arrayable<EIOPacket>) {
+  let data: string;
+  encodePayload(castArray(packet), newData => {
+    data = newData;
+  });
+  return data!;
 }
