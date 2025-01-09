@@ -14,25 +14,15 @@ import { createConfigureUI, needsConfiguration } from './Configure';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { getStarName, getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/stars';
 import { userData } from '@src/store/user-data';
-import { createSummaryScreen } from '@src/features/XIT/ACT/Summary';
 import { createGenerateScreen } from '@src/features/XIT/ACT/Generate';
 
 export class Execute {
   private tile: HTMLElement;
   public parameters: string[];
-  public name = 'ACTION PACKAGE';
 
   constructor(tile, parameters) {
     this.tile = tile;
     this.parameters = parameters;
-
-    if (!parameters[1]) {
-      this.name = 'ACTION PACKAGES';
-    } else if (parameters[1].toLowerCase() == 'gen' || parameters[1].toLowerCase() == 'edit') {
-      this.name = 'EDIT ACTION PACKAGE';
-    } else {
-      this.name = 'EXECUTE ACTION PACKAGE';
-    }
   }
 
   async create_buffer() {
@@ -40,8 +30,6 @@ export class Execute {
 
     if (this.parameters.length == 1) {
       // Create table of all action packages with option to create more
-      void createSummaryScreen(this.tile);
-      watch(userData.actionPackages, () => this.create_buffer(), { once: true });
     } else if (
       this.parameters[1] &&
       (this.parameters[1].toLowerCase() == 'gen' || this.parameters[1].toLowerCase() == 'edit')

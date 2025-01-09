@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import Tooltip, { TooltipPosition } from '@src/components/Tooltip.vue';
 
-defineProps<{
+const { error } = defineProps<{
+  error?: boolean;
   label?: string;
   tooltip?: string;
   tooltipPosition?: TooltipPosition;
 }>();
+
+const errorClasses = computed(() => (error ? [C.FormComponent.containerError, C.forms.error] : []));
 </script>
 
 <template>
-  <div :class="[C.FormComponent.containerActive, C.forms.active, C.forms.formComponent]">
+  <div
+    :class="[C.FormComponent.containerActive, C.forms.active, C.forms.formComponent, errorClasses]">
     <label :class="[C.FormComponent.label, C.fonts.fontRegular, C.type.typeRegular]">
       <span>{{ label }}</span>
       <Tooltip v-if="tooltip" :position="tooltipPosition" :tooltip="tooltip" />

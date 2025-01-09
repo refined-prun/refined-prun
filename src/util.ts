@@ -3,7 +3,6 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/stars';
 import { Stations, Selector, Style } from '@src/legacy';
-import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
 import { sleep } from './utils/sleep';
 
@@ -52,22 +51,6 @@ export function clearChildren(elem) {
     elem.removeChild(elem.children[0]);
   }
   return;
-}
-
-// Creates an element that links to a buffer with command "command"
-export function createLink(text, command, autoSubmit = true) {
-  const link = document.createElement('span');
-  link.textContent = text;
-  link.addEventListener('click', () => {
-    showBuffer(command, {
-      autoSubmit,
-    });
-  });
-
-  const linkDiv = document.createElement('div');
-  linkDiv.classList.add('link');
-  linkDiv.appendChild(link);
-  return linkDiv;
 }
 
 export function changeInputValue(input: HTMLInputElement, value: string) {
@@ -316,11 +299,6 @@ export class Popup {
     return newRow;
   }
 
-  removePopupRow(rowIndex) {
-    const toDelete = this.rows.splice(rowIndex, 1)[0];
-    this.form.removeChild(toDelete.row);
-  }
-
   getRowByName(name) {
     let selectedRow;
 
@@ -336,13 +314,6 @@ export class Popup {
 
   destroy() {
     this.tile.removeChild(this.overlapDiv);
-  }
-
-  moveRowToBottom(rowIndex) {
-    const movingRow = this.rows[rowIndex];
-    this.removePopupRow(rowIndex);
-    this.rows.push(movingRow);
-    this.form.appendChild(movingRow.row);
   }
 }
 
