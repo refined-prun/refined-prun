@@ -19,7 +19,7 @@ const sorting = computed(() =>
 function createSortingMode(ev: Event) {
   showTileOverlay(ev, SortingModeEditor, {
     storeId,
-    onSave: (sorting: UserData.SortingMode) => userData.sorting.push(sorting),
+    onSave: sorting => userData.sorting.push(sorting),
   });
 }
 
@@ -27,7 +27,7 @@ function editSortingMode(ev: Event, sorting: UserData.SortingMode) {
   showTileOverlay(ev, SortingModeEditor, {
     storeId,
     sorting,
-    onSave: (saved: UserData.SortingMode) => Object.assign(sorting, saved),
+    onSave: saved => Object.assign(sorting, saved),
   });
 }
 

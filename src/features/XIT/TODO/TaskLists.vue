@@ -16,7 +16,7 @@ import { ddmmyyyy } from '@src/utils/format';
 
 function createNewList(ev: Event) {
   showTileOverlay(ev, CreateTaskList, {
-    onCreate: (name: string) => {
+    onCreate: name => {
       const id = createId();
       userData.todo.push({ id, name, tasks: [] });
       return showBuffer(`XIT TODO ${id.substring(0, 8)}`);

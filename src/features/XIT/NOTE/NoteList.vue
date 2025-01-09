@@ -13,7 +13,7 @@ import PrunLink from '@src/components/PrunLink.vue';
 
 function createNewNote(ev: Event) {
   showTileOverlay(ev, CreateNoteOverlay, {
-    onCreate: (name: string) => {
+    onCreate: name => {
       const id = createNote(name);
       return showBuffer(`XIT NOTE ${id}`);
     },

@@ -13,7 +13,7 @@ import { createId } from '@src/store/create-id';
 
 function createNew(ev: Event) {
   showTileOverlay(ev, CreateCommandListOverlay, {
-    onCreate: (name: string) => {
+    onCreate: name => {
       const id = createId();
       userData.commandLists.push({
         id,
