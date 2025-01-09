@@ -14,5 +14,6 @@ xit.add({
   },
   description: 'Allows to automate certain tasks.',
   optionalParameters: 'GEN and/or Action Name',
+  contextItems: parameters => (parameters.length > 1 ? [{ cmd: 'XIT ACT' }] : []),
   component: () => ACT,
 });
