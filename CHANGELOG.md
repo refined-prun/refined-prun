@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+
+- `XIT YAPT`: Opens the Yet Another PrUn Tool website
+
 ## 25.1.7
 
 ### Added

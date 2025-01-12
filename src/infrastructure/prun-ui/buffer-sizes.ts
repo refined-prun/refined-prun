@@ -26,8 +26,12 @@ export function matchBufferSize(command: string): [number, number] | undefined {
     // PLI and SYSI without parameters have the default buffer size.
     return [450, 300];
   }
-  const start = commandUpper.split(' ')[0];
-  return defaultBufferSizes[start];
+  let keyword = commandUpper.split(' ')[0];
+  if (keyword === 'XIT') {
+    keyword = commandUpper.split(' ')[1];
+    return defaultXitBufferSizes[keyword];
+  }
+  return defaultBufferSizes[keyword];
 }
 
 const defaultBufferSizes = {
@@ -77,4 +81,8 @@ const defaultBufferSizes = {
   SYSI: [600, 600],
   WAR: [400, 580],
   WF: [710, 300],
+};
+
+const defaultXitBufferSizes = {
+  YAPT: [1100, 700],
 };

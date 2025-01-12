@@ -59,3 +59,10 @@ shortcut(['PLANNER', 'PLAN', 'PRUN PLANNER'], 'PRUN PLANNER', 'PrUn Planner.', p
 });
 
 shortcut('MAP', "Taiyi's Map", "Taiyi's map.", () => 'https://universemap.duckdns.org/');
+
+shortcut(
+  'YAPT',
+  'Yet another PrUn tool',
+  'Opens the Yet Another PrUn Tool website.',
+  () => 'https://aeryen23.github.io/yapt/',
+);
