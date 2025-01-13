@@ -6,6 +6,8 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 import unimport from 'unimport/unplugin';
 import { createHash } from 'crypto';
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const srcDir = resolve(__dirname, 'src');
 
 const noise = new Set([
@@ -64,8 +66,8 @@ export default defineConfig({
   publicDir: resolve(__dirname, 'public'),
   build: {
     outDir,
-    emptyOutDir: false,
-    sourcemap: false,
+    emptyOutDir: !isDev,
+    sourcemap: isDev ? 'inline' : false,
     minify: false,
     reportCompressedSize: false,
     lib: {
