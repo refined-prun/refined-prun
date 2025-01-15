@@ -40,7 +40,7 @@ async function startup() {
   };
   await waitDocumentReady();
   document.head.appendChild(script);
-  document.documentElement.appendChild(css);
+  document.head.appendChild(css);
 }
 
 async function loadUserData() {
