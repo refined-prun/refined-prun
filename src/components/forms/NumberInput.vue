@@ -1,9 +1,22 @@
 <script setup lang="ts">
-const model = defineModel<number>();
+const { optional } = defineProps<{ optional?: boolean }>();
+
+const model = defineModel<number | undefined>();
 
 const inputModel = computed({
   get: () => model.value,
-  set: (value: string) => (model.value = parseInt(value || '0', 10)),
+  set: (value: string) => {
+    if (value !== '') {
+      model.value = parseInt(value, 10);
+      return;
+    }
+    if (optional) {
+      model.value = undefined;
+      return;
+    }
+
+    model.value = 0;
+  },
 });
 </script>
 

@@ -12,6 +12,11 @@ import removeArrayElement from '@src/utils/remove-array-element';
 function onCreateClick(ev: Event) {
   showTileOverlay(ev, CreateActionPackage, {
     onCreate: name => {
+      userData.actionPackages.push({
+        global: { name },
+        groups: [],
+        actions: [],
+      });
       showBuffer('XIT ACTION GEN ' + name.split(' ').join('_'));
     },
   });

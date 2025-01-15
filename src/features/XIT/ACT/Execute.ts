@@ -14,35 +14,6 @@ import { createConfigureUI, needsConfiguration } from './Configure';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { getStarName, getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/stars';
 import { userData } from '@src/store/user-data';
-import { createGenerateScreen } from '@src/features/XIT/ACT/Generate';
-
-export class Execute {
-  private tile: HTMLElement;
-  public parameters: string[];
-
-  constructor(tile, parameters) {
-    this.tile = tile;
-    this.parameters = parameters;
-  }
-
-  async create_buffer() {
-    clearChildren(this.tile);
-
-    if (this.parameters.length == 1) {
-      // Create table of all action packages with option to create more
-    } else if (
-      this.parameters[1] &&
-      (this.parameters[1].toLowerCase() == 'gen' || this.parameters[1].toLowerCase() == 'edit')
-    ) {
-      // Generate the creation/edit screen
-      void createGenerateScreen(this.tile, this.parameters.slice(2).join(' '));
-    } else {
-      void createExecuteScreen(this.tile, this.parameters.slice(1).join(' '));
-    }
-
-    return;
-  }
-}
 
 export function createExecuteScreen(tile, packageName) {
   tile.style.display = 'flex';

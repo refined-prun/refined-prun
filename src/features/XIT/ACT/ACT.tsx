@@ -1,4 +1,12 @@
 import './ACT.css';
+
+import './actions/cx-buy';
+import './actions/mtra';
+
+import './material-groups/repair';
+import './material-groups/resupply';
+import './material-groups/manual';
+
 import ACT from '@src/features/XIT/ACT/ACT.vue';
 
 xit.add({

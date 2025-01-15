@@ -256,7 +256,7 @@ export function parseActionPackage(
 }
 
 // Parse a material group into a list of materials
-export function parseGroup(group: UserData.ActionGroupData, messageBox, errorFlag) {
+export function parseGroup(group: UserData.MaterialGroupData, messageBox, errorFlag) {
   let parsedGroup = {};
   if (group.type == 'Resupply') {
     // Interpret burn to get number of materials

@@ -35,15 +35,17 @@ declare namespace UserData {
   }
 
   interface ActionPackageData {
-    groups: ActionGroupData[];
+    groups: MaterialGroupData[];
     actions: ActionData[];
     global: {
       name: string;
     };
   }
 
-  interface ActionGroupData {
-    type: 'Manual' | 'Resupply' | 'Repair';
+  type MaterialGroupType = 'Manual' | 'Resupply' | 'Repair';
+
+  interface MaterialGroupData {
+    type: MaterialGroupType;
     name?: string;
     days?: number | string;
     advanceDays?: number | string;
@@ -54,8 +56,10 @@ declare namespace UserData {
     consumablesOnly?: boolean;
   }
 
+  type ActionType = 'CX Buy' | 'MTRA';
+
   interface ActionData {
-    type: 'CX Buy' | 'MTRA';
+    type: ActionType;
 
     name?: string;
     group?: string;
