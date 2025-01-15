@@ -2,6 +2,7 @@ interface MaterialGroupInfo {
   type: UserData.MaterialGroupType;
   description: (data: UserData.MaterialGroupData) => string;
   editForm: Component;
+  generateMaterialBill: (data: UserData.MaterialGroupData) => Record<string, number> | string;
 }
 
 const materialGroups: MaterialGroupInfo[] = [];

@@ -1,16 +1,11 @@
 import { ExchangeTickersReverse } from '@src/legacy';
-import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
-import { calculatePlanetBurn } from '@src/core/burn';
-import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
-import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { addMessage } from './Execute';
-import { isRepairableBuilding } from '@src/core/buildings';
-import { deepToRaw } from '@src/utils/deep-to-raw';
 import { clamp } from '@src/utils/clamp';
 import { fixed0 } from '@src/utils/format';
+import { act } from '@src/features/XIT/ACT/act-registry';
 
 // Turn stored action package (resupply base for 30 days) to series of actionable actions (buy 1000 RAT, then 1000 DW, etc)
 // Preview flag set to true will allow non-configured actions to be displayed
@@ -257,133 +252,17 @@ export function parseActionPackage(
 
 // Parse a material group into a list of materials
 export function parseGroup(group: UserData.MaterialGroupData, messageBox, errorFlag) {
-  let parsedGroup = {};
-  if (group.type == 'Resupply') {
-    // Interpret burn to get number of materials
-    if (!group.planet) {
-      addMessage(messageBox, 'Missing resupply planet', 'ERROR');
-      errorFlag[0] = true;
-      return parsedGroup;
-    }
-    if (!group.days) {
-      addMessage(messageBox, 'Missing resupply days', 'ERROR');
-      errorFlag[0] = true;
-      return parsedGroup;
-    }
-
-    // Array of tickers to exclude
-    const exclusions = group.exclusions || [];
-    const site = sitesStore.getByPlanetNaturalIdOrName(group.planet);
-    const workforce = workforcesStore.getById(site?.siteId)?.workforces;
-    const production = group.consumablesOnly
-      ? undefined
-      : productionStore.getBySiteId(site?.siteId);
-    const stores = storagesStore.getByAddressableId(site?.siteId);
-
-    if (workforce) {
-      const planetBurn = calculatePlanetBurn(production, workforce, stores); // The planet burn data
-
-      for (const mat of Object.keys(planetBurn)) {
-        if (planetBurn[mat].DailyAmount < 0) {
-          // Consuming not producing
-          const days = typeof group.days === 'number' ? group.days : parseFloat(group.days);
-          let amount = Math.ceil(-planetBurn[mat].DailyAmount * days); // Calculate amount
-          if (group.useBaseInv) {
-            // Take out base inventory if we're doing that
-            amount -= planetBurn[mat].Inventory;
-          }
-
-          if (amount > 0) {
-            // If we still need that material...
-            // Check material Exclusions
-            if (!exclusions.includes(mat)) {
-              parsedGroup[mat] = amount; // Assign it to the parsed material group
-            }
-          }
-        }
-      }
-    } else {
-      addMessage(messageBox, 'Missing burn data', 'ERROR');
-      errorFlag[0] = true;
-      return parsedGroup;
-    }
-  } else if (group.type == 'Repair') {
-    if (!group.planet) {
-      addMessage(messageBox, 'Missing resupply planet', 'ERROR');
-      errorFlag[0] = true;
-      return parsedGroup;
-    }
-    const days = typeof group.days === 'number' ? group.days : parseFloat(group.days!);
-    let advanceDays =
-      typeof group.advanceDays === 'number' ? group.advanceDays : parseFloat(group.advanceDays!);
-    const threshold = isNaN(days) ? 0 : days; // The threshold to start repairing buildings [days]
-    advanceDays = isNaN(advanceDays) ? 0 : advanceDays; // The number of days forward looking
-
-    const planetSite = sitesStore.getByPlanetNaturalIdOrName(group.planet);
-
-    if (planetSite && planetSite.platforms) {
-      for (const building of planetSite.platforms) {
-        if (!isRepairableBuilding(building)) {
-          continue;
-        }
-
-        const lastRepair = getBuildingLastRepair(building);
-        const date = (new Date().getTime() - lastRepair) / 86400000;
-
-        if (date + advanceDays < threshold) {
-          continue;
-        } // Parse out too new of buildings
-
-        // Calculate total building cost
-        const buildingMaterials = {};
-        for (const mat of building.reclaimableMaterials) {
-          const amount = mat.amount;
-          const ticker = mat.material.ticker;
-          if (buildingMaterials[ticker]) {
-            buildingMaterials[ticker] += amount;
-          } else {
-            buildingMaterials[ticker] = amount;
-          }
-        }
-        for (const mat of building.repairMaterials) {
-          const amount = mat.amount;
-          const ticker = mat.material.ticker;
-          if (buildingMaterials[ticker]) {
-            buildingMaterials[ticker] += amount;
-          } else {
-            buildingMaterials[ticker] = amount;
-          }
-        }
-
-        const adjustedDate = date + advanceDays;
-        for (const ticker of Object.keys(buildingMaterials)) {
-          const amount =
-            adjustedDate > 180
-              ? buildingMaterials[ticker]
-              : Math.ceil((buildingMaterials[ticker] * adjustedDate) / 180); // This isn't quite right, but will be off by only 1 MCG at most
-
-          if (parsedGroup[ticker]) {
-            parsedGroup[ticker] += amount;
-          } else {
-            parsedGroup[ticker] = amount;
-          }
-        }
-      }
-    } else {
-      addMessage(messageBox, 'Missing data on repair planet', 'ERROR');
-      errorFlag[0] = true;
-    }
-  } else if (group.type == 'Manual') {
-    // Just return the list of materials
-    if (group.materials) {
-      parsedGroup = structuredClone(deepToRaw(group.materials));
-    } else {
-      addMessage(messageBox, 'Missing materials in manual group', 'ERROR');
-      errorFlag[0] = true;
-    }
-  } else {
-    addMessage(messageBox, 'Unrecognized group type', 'ERROR');
+  const info = act.getMaterialGroupInfo(group.type);
+  if (!info) {
+    addMessage(messageBox, 'Unrecognized material group type', 'ERROR');
+    errorFlag[0] = true;
+    return {};
   }
-
-  return parsedGroup;
+  const result = info.generateMaterialBill(group);
+  if (typeof result === 'string') {
+    addMessage(messageBox, result, 'ERROR');
+    errorFlag[0] = true;
+    return {};
+  }
+  return result;
 }
