@@ -4,6 +4,10 @@
 
 - `XIT YAPT`: Opens the Yet Another PrUn Tool website
 
+### Changed
+
+- `XIT CALC`: Change color scheme to match APEX one
+
 ## 25.1.7
 
 ### Added

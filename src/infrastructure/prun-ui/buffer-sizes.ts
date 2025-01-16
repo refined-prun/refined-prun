@@ -84,5 +84,6 @@ const defaultBufferSizes = {
 };
 
 const defaultXitBufferSizes = {
+  CALC: [480, 310],
   YAPT: [1100, 700],
 };
