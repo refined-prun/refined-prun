@@ -2,6 +2,7 @@
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { ddmm, hhmm } from '@src/utils/format';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
+import { objectId } from '@src/utils/object-id';
 
 interface FioChatMessage {
   MessageTimestamp: number;
@@ -34,8 +35,8 @@ watchEffect(() => {
   <div v-else :style="{ height: '100%', flexGrow: 1, paddingTop: '4px' }">
     <div :class="$style.title">{{ parameter }} Global Site Owners</div>
     <div
-      v-for="(message, i) in messages"
-      :key="i"
+      v-for="message in messages"
+      :key="objectId(message)"
       :class="[C.Message.message, C.type.typeRegular, C.fonts.fontRegular]">
       <div :class="C.Message.timestamp">
         <div :class="C.Message.date">{{ ddmm(message.MessageTimestamp) }}</div>

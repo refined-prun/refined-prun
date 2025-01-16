@@ -8,6 +8,7 @@ import ImportActionPackage from '@src/features/XIT/ACT/ImportActionPackage.vue';
 import { userData } from '@src/store/user-data';
 import PrunLink from '@src/components/PrunLink.vue';
 import removeArrayElement from '@src/utils/remove-array-element';
+import { objectId } from '@src/utils/object-id';
 
 function onCreateClick(ev: Event) {
   showTileOverlay(ev, CreateActionPackage, {
@@ -72,7 +73,7 @@ function paramName(pkg: UserData.ActionPackageData) {
       </tr>
     </tbody>
     <tbody v-else>
-      <tr v-for="pkg in userData.actionPackages" :key="pkg.global.name">
+      <tr v-for="pkg in userData.actionPackages" :key="objectId(pkg)">
         <td>
           <PrunLink :command="`XIT ACTION ${paramName(pkg)}`">
             {{ friendlyName(pkg) }}

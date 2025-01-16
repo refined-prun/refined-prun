@@ -10,6 +10,7 @@ import grip from '@src/utils/grip.module.css';
 import fa from '@src/utils/font-awesome.module.css';
 import Tooltip from '@src/components/Tooltip.vue';
 import NumberInput from '@src/components/forms/NumberInput.vue';
+import { objectId } from '@src/utils/object-id';
 
 const $style = useCssModule();
 
@@ -141,7 +142,7 @@ const draggableOptions = {
       <tbody
         v-draggable="[userData.settings.buffers, draggableOptions]"
         :class="dragging ? $style.dragging : null">
-        <tr v-for="(rule, i) in userData.settings.buffers" :key="i">
+        <tr v-for="rule in userData.settings.buffers" :key="objectId(rule)">
           <td :class="$style.gripCell">
             <span :class="[grip.grip, fa.solid, $style.grip]">
               {{ '\uf58e' }}

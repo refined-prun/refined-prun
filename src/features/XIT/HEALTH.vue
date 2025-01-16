@@ -11,6 +11,7 @@ import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
 import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
 import { cxStore } from '@src/infrastructure/fio/cx';
 import { dayjsEachSecond } from '@src/utils/dayjs';
+import { objectId } from '@src/utils/object-id';
 
 const bases = computed(() => {
   return (
@@ -75,7 +76,7 @@ const negative = C.ColoredValue.negative;
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(other, i) in otherData" :key="i">
+        <tr v-for="other in otherData" :key="objectId(other)">
           <td>{{ other[0] }}</td>
           <td>
             <span v-if="other[1] === true" :class="positive">✓</span>

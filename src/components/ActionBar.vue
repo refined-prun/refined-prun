@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { objectId } from '@src/utils/object-id';
+
 const slots = defineSlots<{
   default(): VNode[];
 }>();
@@ -6,7 +8,7 @@ const slots = defineSlots<{
 
 <template>
   <div :class="C.ActionBar.container">
-    <div v-for="(slot, i) in slots.default()" :key="i" :class="C.ActionBar.element">
+    <div v-for="slot in slots.default()" :key="objectId(slot)" :class="C.ActionBar.element">
       <component :is="slot" />
     </div>
   </div>

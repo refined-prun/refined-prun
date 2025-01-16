@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SortCriteria from '@src/features/basic/custom-item-sorting/SortCriteria.vue';
+import { objectId } from '@src/utils/object-id';
 
 defineProps<{
   activeSort?: string;
@@ -12,11 +13,11 @@ defineProps<{
 
 <template>
   <SortCriteria
-    v-for="mode in sorting.map(x => x.label)"
-    :key="mode"
-    :label="mode"
-    :active="mode === activeSort"
+    v-for="mode in sorting"
+    :key="objectId(mode)"
+    :label="mode.label"
+    :active="mode.label === activeSort"
     :reverse="reverse"
-    @click="onModeClick(mode)" />
+    @click="onModeClick(mode.label)" />
   <SortCriteria label="+" @click="onAddClick" />
 </template>

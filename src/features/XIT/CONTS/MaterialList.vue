@@ -2,6 +2,7 @@
 import { isSelfCondition } from '@src/features/XIT/CONTS/utils';
 import ShipmentIcon from '@src/components/ShipmentIcon.vue';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
+import { objectId } from '@src/utils/object-id';
 
 const { contract } = defineProps<{ contract: PrunApi.Contract }>();
 
@@ -48,7 +49,7 @@ const icons = computed(() => {
 
 <template>
   <div>
-    <template v-for="(icon, i) in icons" :key="i">
+    <template v-for="icon in icons" :key="objectId(icon)">
       <div v-if="icon.type === 'SHIPMENT'" :style="{ marginBottom: '4px' }">
         <ShipmentIcon size="medium" :shipment-id="icon.shipmentId" />
       </div>

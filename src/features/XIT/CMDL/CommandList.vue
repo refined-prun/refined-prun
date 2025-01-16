@@ -79,7 +79,7 @@ const draggableOptions = {
         <tbody
           v-draggable="[list.commands, draggableOptions]"
           :class="dragging ? $style.dragging : null">
-          <tr v-for="(command, i) in list.commands" :key="i">
+          <tr v-for="command in list.commands" :key="command.id">
             <td>
               <span :class="[grip.grip, fa.solid, $style.grip]">
                 {{ '\uf58e' }}

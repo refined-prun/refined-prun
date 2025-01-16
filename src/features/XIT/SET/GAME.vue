@@ -14,6 +14,7 @@ import {
   resetUserData,
 } from '@src/infrastructure/storage/user-data-serializer';
 import SelectInput from '@src/components/forms/SelectInput.vue';
+import { objectId } from '@src/utils/object-id';
 
 const timeFormats: { label: string; value: UserData.TimeFormat }[] = [
   {
@@ -157,7 +158,10 @@ function confirmResetAllData(ev: Event) {
          The first value is what will be displayed, the second is the command." />
   </SectionHeader>
   <form>
-    <Active v-for="(button, i) in userData.settings.sidebar" :key="i" :label="`Button ${i + 1}`">
+    <Active
+      v-for="(button, i) in userData.settings.sidebar"
+      :key="objectId(button)"
+      :label="`Button ${i + 1}`">
       <div :class="$style.sidebarInputPair">
         <TextInput v-model="button[0]" :class="$style.sidebarInput" />
         <TextInput v-model="button[1]" :class="$style.sidebarInput" />

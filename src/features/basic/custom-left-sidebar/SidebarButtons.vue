@@ -4,6 +4,7 @@ import { userData } from '@src/store/user-data';
 import { canAcceptContract } from '@src/features/XIT/CONTS/utils';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import { vDraggable } from 'vue-draggable-plus';
+import { objectId } from '@src/utils/object-id';
 
 const { comPulse } = defineProps<{ comPulse?: boolean }>();
 
@@ -33,8 +34,8 @@ function indicatorClass(command: string) {
 <template>
   <div v-draggable="[userData.settings.sidebar, { animation: 150 }]">
     <div
-      v-for="(button, i) in userData.settings.sidebar"
-      :key="i"
+      v-for="button in userData.settings.sidebar"
+      :key="objectId(button)"
       :class="C.Frame.toggle"
       @click="() => showBuffer(button[1])">
       <span :class="[C.Frame.toggleLabel, C.fonts.fontRegular, C.type.typeRegular]">

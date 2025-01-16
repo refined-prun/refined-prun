@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import PrunLink from '@src/components/PrunLink.vue';
+import { objectId } from '@src/utils/object-id';
 
 const { text } = defineProps<{ text?: string }>();
 
@@ -45,7 +46,7 @@ const parts = computed(() => {
 
 <template>
   <div>
-    <template v-for="part in parts" :key="part.text + part.command">
+    <template v-for="part in parts" :key="objectId(part)">
       <PrunLink v-if="part.command" inline :command="part.command">{{ part.text }}</PrunLink>
       <span v-else>{{ part.text }}</span>
     </template>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { castArray } from '@src/utils/cast-array';
 import PrunLink from '@src/components/PrunLink.vue';
+import { objectId } from '@src/utils/object-id';
 
 const sorted = xit.registry.sort((a, b) => {
   const commandA = castArray(a.command)[0];
@@ -20,7 +21,7 @@ const sorted = xit.registry.sort((a, b) => {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="command in sorted" :key="command.id">
+      <tr v-for="command in sorted" :key="objectId(command)">
         <td>
           <PrunLink
             :command="'XIT ' + castArray(command.command)[0]"

@@ -6,6 +6,7 @@ import Commands from '@src/components/forms/Commands.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
+import { objectId } from '@src/utils/object-id';
 
 const { onSave, sorting, storeId } = defineProps<{
   onSave: (sorting: UserData.SortingMode) => void;
@@ -77,7 +78,7 @@ function onSaveClick() {
         tooltip="A list of materials in the first category. Separate tickers by a comma. (RAT, DW, etc.).">
         <TextInput v-model="categories[0].materials" style="width: 80%" />
       </Active>
-      <template v-for="(category, i) in categories.slice(1)" :key="i">
+      <template v-for="(category, i) in categories.slice(1)" :key="objectId(category)">
         <Active :label="`Category ${i + 2} Name`">
           <TextInput v-model="category.name" style="width: 80%" />
         </Active>

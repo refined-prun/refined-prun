@@ -14,6 +14,7 @@ import {
 } from '@src/store/user-data-balance';
 import Active from '@src/components/forms/Active.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
+import { objectId } from '@src/utils/object-id';
 
 const sortedData = computed(() => balanceHistory.value.slice().reverse());
 
@@ -97,7 +98,7 @@ function onIgnoredMaterialsSubmit() {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(balance, i) in sortedData" :key="i">
+      <tr v-for="balance in sortedData" :key="objectId(balance)">
         <td>{{ hhmm(balance.timestamp) }} {{ ddmmyyyy(balance.timestamp) }}</td>
         <td>{{ formatValue(calcEquity(balance)) }}</td>
         <td>
