@@ -7,6 +7,7 @@
 ### Changed
 
 - `XIT CALC`: Change color scheme to match APEX one
+- `XIT CALC`: Display in minimalist mode
 
 ## 25.1.7
 
