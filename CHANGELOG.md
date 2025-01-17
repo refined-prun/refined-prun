@@ -3,6 +3,7 @@
 ### Added
 
 - `XIT YAPT`: Opens the Yet Another PrUn Tool website
+- `XIT HQUC`: Add HQ level 52
 
 ### Changed
 
