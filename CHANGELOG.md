@@ -11,6 +11,11 @@
 - `XIT CALC`: Change color scheme to match APEX one
 - `XIT CALC`: Display in minimalist mode
 
+### Removed
+
+- `productivity-through-depression`: Gray profit numbers were retired because even Castillo-Ito thought they were too
+  bleak, and that’s saying something.
+
 ## 25.1.7
 
 ### Added

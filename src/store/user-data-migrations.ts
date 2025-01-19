@@ -4,6 +4,9 @@ import removeArrayElement from '@src/utils/remove-array-element';
 
 const migrations: Migration[] = [
   userData => {
+    removeArrayElement(userData.settings.disabled, 'productivity-through-depression');
+  },
+  userData => {
     userData.settings.buffers = [];
   },
   userData => {
