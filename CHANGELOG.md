@@ -7,6 +7,7 @@
 
 ### Changed
 
+- `XIT ACT`: Automatically change material tickers to upper-case
 - `XIT CALC`: Change color scheme to match APEX one
 - `XIT CALC`: Display in minimalist mode
 

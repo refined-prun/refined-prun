@@ -222,7 +222,7 @@ export function parseActionPackage(
           parameters: {
             origin: origin,
             dest: dest,
-            ticker: mat,
+            ticker: mat.toUpperCase(),
             amount: parsedGroup[mat],
           },
         };
@@ -233,7 +233,7 @@ export function parseActionPackage(
           parameters: {
             origin: origin,
             dest: dest,
-            ticker: mat,
+            ticker: mat.toUpperCase(),
             amount: parsedGroup[mat],
           },
         };
