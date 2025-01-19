@@ -7,6 +7,8 @@
 
 ### Changed
 
+- `XIT ACT`: Move group/action type selector inside the edit overlay
+- `XIT ACT`: Add validation to some required fields
 - `XIT ACT`: Automatically change material tickers to upper-case
 - `XIT CALC`: Change color scheme to match APEX one
 - `XIT CALC`: Display in minimalist mode
