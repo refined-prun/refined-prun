@@ -16,7 +16,7 @@ import { trackExtensionUpdate } from '@src/infrastructure/shell/extension-update
 
 async function main() {
   document.documentElement.classList.add('refined-prun');
-  if (!import.meta.env.DEV) {
+  if (import.meta.env.PROD) {
     trackExtensionUpdate();
   }
   void fetchPrices();
