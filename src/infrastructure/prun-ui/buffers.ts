@@ -9,6 +9,7 @@ import { dispatchClientPrunMessage } from '@src/infrastructure/prun-api/prun-api
 import { clamp } from '@src/utils/clamp';
 import {
   UI_TILES_CHANGE_COMMAND,
+  UI_WINDOWS_REQUEST_FOCUS,
   UI_WINDOWS_UPDATE_SIZE,
 } from '@src/infrastructure/prun-api/client-messages';
 
@@ -24,8 +25,11 @@ interface ShowBufferOptions {
 
 export async function showBuffer(command: string, options?: ShowBufferOptions) {
   if (!options?.force) {
-    const activeTiles = tiles.find(command);
-    for (const tile of activeTiles) {
+    for (const tile of tiles.find(command).filter(x => !x.docked)) {
+      const command = UI_WINDOWS_REQUEST_FOCUS(tile.id);
+      if (dispatchClientPrunMessage(command)) {
+        return false;
+      }
       const tileWindow = tile.frame.closest(`.${C.Window.window}`) as HTMLElement;
       if (tileWindow) {
         const header = _$(tileWindow, C.Window.header);

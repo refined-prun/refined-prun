@@ -20,3 +20,12 @@ export function UI_TILES_CHANGE_COMMAND(id: string, command: string) {
     },
   };
 }
+
+export function UI_WINDOWS_REQUEST_FOCUS(id: string) {
+  return {
+    messageType: 'UI_WINDOWS_REQUEST_FOCUS',
+    payload: {
+      id: id,
+    },
+  };
+}
