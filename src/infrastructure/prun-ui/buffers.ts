@@ -7,6 +7,10 @@ import { watchUntil } from '@src/utils/watch';
 import { isEmpty } from 'ts-extras';
 import { dispatchClientPrunMessage } from '@src/infrastructure/prun-api/prun-api-listener';
 import { clamp } from '@src/utils/clamp';
+import {
+  UI_TILES_CHANGE_COMMAND,
+  UI_WINDOWS_UPDATE_SIZE,
+} from '@src/infrastructure/prun-api/client-messages';
 
 let isBusy = false;
 const pendingResolvers: (() => void)[] = [];
@@ -89,13 +93,7 @@ async function captureLastWindow(command: string, options?: ShowBufferOptions) {
       dockTab.classList.add(css.hidden);
     }
   }
-  const message = {
-    messageType: 'UI_TILES_CHANGE_COMMAND',
-    payload: {
-      id: id,
-      newCommand: command,
-    },
-  };
+  const message = UI_TILES_CHANGE_COMMAND(id!, command);
   if (!dispatchClientPrunMessage(message)) {
     changeInputValue(input, command);
     await sleep(0);
@@ -128,14 +126,11 @@ async function closeWhenDone(window: HTMLDivElement, options?: ShowBufferOptions
 }
 
 export function setBufferSize(id: string, width: number, height: number) {
-  dispatchClientPrunMessage({
-    messageType: 'UI_WINDOWS_UPDATE_SIZE',
-    payload: {
-      id: id,
-      size: {
-        width: clamp(width, 100, document.body.clientWidth - 50),
-        height: clamp(height, 50, document.body.clientHeight - 50),
-      },
-    },
-  });
+  dispatchClientPrunMessage(
+    UI_WINDOWS_UPDATE_SIZE(
+      id,
+      clamp(width, 100, document.body.clientWidth - 50),
+      clamp(height, 50, document.body.clientHeight - 50),
+    ),
+  );
 }
