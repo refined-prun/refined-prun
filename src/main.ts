@@ -37,7 +37,7 @@ async function main() {
   features.init();
   initializeXitCommands();
 
-  void trackBalanceHistory();
+  trackBalanceHistory();
   if (userData.settings.mode === undefined) {
     await sleep(1000);
     await showBuffer('XIT START');

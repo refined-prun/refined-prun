@@ -3,7 +3,6 @@ import { userData } from '@src/store/user-data';
 import dayjs from 'dayjs';
 import { diffHours } from '@src/utils/time-diff';
 import { liveBalanceSheet } from '@src/core/balance/balance-sheet-live';
-import { sleep } from '@src/utils/sleep';
 import { timestampEachMinute } from '@src/utils/dayjs';
 
 const v1 = computed(() => userData.balanceHistory.v1.map(deserializeBalanceSheetV1Data));
@@ -64,40 +63,25 @@ export function canCollectFinDataPoint() {
   return serializeBalanceSheet(liveBalanceSheet) !== undefined;
 }
 
-export function collectFinDataPoint(): boolean {
+export function trackBalanceHistory() {
+  setTimeout(trackBalanceHistory, 1000);
+  // Offset 'now' by 10 minutes in the past to prevent recording on 23:59
+  const now = Date.now() - dayjs.duration(10, 'minutes').asMilliseconds();
+  const lastRecording = balanceHistory.value[balanceHistory.value.length - 1];
+  const hasRecentBalanceRecording =
+    lastRecording &&
+    (dayjs(lastRecording.timestamp).isSame(now, 'day') ||
+      diffHours(lastRecording.timestamp, now) < 8);
+  if (!hasRecentBalanceRecording) {
+    collectFinDataPoint();
+  }
+}
+
+export function collectFinDataPoint() {
   const sheet = serializeBalanceSheet(liveBalanceSheet);
   if (sheet) {
     userData.balanceHistory.v2.push(sheet);
-    return true;
   }
-
-  return false;
-}
-
-export async function trackBalanceHistory() {
-  while (true) {
-    if (hasRecentBalanceRecording()) {
-      await sleep(1000);
-      continue;
-    }
-
-    while (!collectFinDataPoint()) {
-      await sleep(1000);
-    }
-
-    await sleep(60000);
-  }
-}
-
-function hasRecentBalanceRecording() {
-  const lastRecording = balanceHistory.value[balanceHistory.value.length - 1];
-  // Offset 'now' by 10 minutes in the past to prevent recording on 23:59
-  const now = Date.now() - dayjs.duration(10, 'minutes').asMilliseconds();
-  return (
-    lastRecording &&
-    (dayjs(lastRecording.timestamp).isSame(now, 'day') ||
-      diffHours(lastRecording.timestamp, now) < 8)
-  );
 }
 
 export function deserializeBalanceSheetV1Data(
