@@ -12,6 +12,7 @@ import {
   UI_WINDOWS_REQUEST_FOCUS,
   UI_WINDOWS_UPDATE_SIZE,
 } from '@src/infrastructure/prun-api/client-messages';
+import { onNodeTreeMutation } from '@src/utils/on-node-tree-mutation';
 
 let isBusy = false;
 const pendingResolvers: (() => void)[] = [];
@@ -42,9 +43,21 @@ export async function showBuffer(command: string, options?: ShowBufferOptions) {
   const create = await $(document.documentElement, C.Dock.create);
 
   try {
-    create.click();
-    await new Promise<void>(resolve => queueMicrotask(resolve));
-    await captureLastWindow(command, options);
+    const windows = document.getElementsByClassName(C.Window.window);
+    const seenWindows = new Set(Array.from(windows));
+    const newWindow = await new Promise<HTMLDivElement>(resolve => {
+      onNodeTreeMutation(document, () => {
+        for (let i = 0; i < windows.length; i++) {
+          if (!seenWindows.has(windows[i])) {
+            resolve(windows[i] as HTMLDivElement);
+            return true;
+          }
+        }
+        return false;
+      });
+      create.click();
+    });
+    await processWindow(newWindow, command, options);
   } finally {
     releaseSlot();
   }
@@ -67,12 +80,7 @@ function releaseSlot() {
   }
 }
 
-async function captureLastWindow(command: string, options?: ShowBufferOptions) {
-  const windows = _$$(document, C.Window.window);
-  if (isEmpty(windows)) {
-    return;
-  }
-  const window = windows[windows.length - 1] as HTMLDivElement;
+async function processWindow(window: HTMLDivElement, command: string, options?: ShowBufferOptions) {
   const input = _$(window, C.PanelSelector.input) as HTMLInputElement;
   const form = input.form;
   if (!form?.isConnected) {
