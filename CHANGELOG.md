@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+
+- `focus-buffers-on-click`: Focuses buffers on click anywhere, not just the header
+
 ## 25.1.19
 
 ### Added
@@ -16,7 +22,7 @@
 ### Removed
 
 - `productivity-through-depression`: Gray profit numbers were retired because even Castillo-Ito thought they were too
-  bleak, and that’s saying something.
+  bleak, and that’s saying something
 
 ## 25.1.7
 

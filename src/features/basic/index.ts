@@ -20,6 +20,7 @@ import './cxpo-order-book/cxpo-order-book';
 import './finla-more-columns';
 import './flt-arrival-eta';
 import './flt-ship-condition/flt-ship-condition';
+import './focus-buffers-on-click';
 import './header-calculator-button';
 import './header-duplicate-button';
 import './hide-inactive-close-button';
