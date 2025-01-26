@@ -19,7 +19,7 @@ function createNewList(ev: Event) {
     onCreate: name => {
       const id = createId();
       userData.todo.push({ id, name, tasks: [] });
-      return showBuffer(`XIT TODO ${id.substring(0, 8)}`);
+      showBuffer(`XIT TODO ${id.substring(0, 8)}`);
     },
   });
 }

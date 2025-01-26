@@ -28,13 +28,13 @@ export async function showBuffer(command: string, options?: ShowBufferOptions) {
     for (const tile of tiles.find(command).filter(x => !x.docked)) {
       const command = UI_WINDOWS_REQUEST_FOCUS(tile.id);
       if (dispatchClientPrunMessage(command)) {
-        return false;
+        return;
       }
       const tileWindow = tile.frame.closest(`.${C.Window.window}`) as HTMLElement;
       if (tileWindow) {
         const header = _$(tileWindow, C.Window.header);
         void clickElement(header);
-        return false;
+        return;
       }
     }
   }
@@ -45,9 +45,6 @@ export async function showBuffer(command: string, options?: ShowBufferOptions) {
     create.click();
     await new Promise<void>(resolve => queueMicrotask(resolve));
     await captureLastWindow(command, options);
-    return true;
-  } catch {
-    return false;
   } finally {
     releaseSlot();
   }

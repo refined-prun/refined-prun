@@ -15,7 +15,7 @@ function createNewNote(ev: Event) {
   showTileOverlay(ev, CreateNoteOverlay, {
     onCreate: name => {
       const id = createNote(name);
-      return showBuffer(`XIT NOTE ${id}`);
+      showBuffer(`XIT NOTE ${id}`);
     },
   });
 }
