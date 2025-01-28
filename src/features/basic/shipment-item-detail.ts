@@ -15,8 +15,14 @@ function onTileReady(tile: PrunTile) {
         return undefined;
       }
 
-      const shipmentId = match[1];
-      return contractsStore.getDestinationByShipmentId(shipmentId);
+      const id = match[1];
+      // The id is the localId of the contract
+      // getDestinationByShipmentId is needed until the APEX bug is fixed
+      // https://discord.com/channels/667551433503014924/1333780301234569228/1333780301234569228
+      return (
+        contractsStore.getDestinationByLocalContractId(id) ??
+        contractsStore.getDestinationByShipmentId(id)
+      );
     });
     createFragmentApp(
       ColoredIconDetail,

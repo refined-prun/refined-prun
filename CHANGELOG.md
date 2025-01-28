@@ -6,11 +6,12 @@
 
 ### Changed
 
-- `nots-notification-type-label`: Add a label for RELEASE_NOTES notification type
+- `nots-notification-type-label`: Add a label for the RELEASE_NOTES notification type
 
 ### Fixed
 
-- `XIT ACT`: Fix compatibility with the updated MTRA buffer
+- `XIT ACT`: Fix compatibility with the latest APEX changes
+- `shipment-item-detail`: Fix compatibility with the latest APEX changes
 
 ### Removed
 

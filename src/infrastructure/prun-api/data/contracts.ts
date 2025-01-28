@@ -91,6 +91,34 @@ function getDestinationByShipmentId(id?: string | undefined) {
   return getEntityNameFromAddress(destination);
 }
 
+function getDeliveryConditionByLocalContractId(id?: string | undefined) {
+  if (!id) {
+    return undefined;
+  }
+
+  const all = state.all.value;
+  if (all === undefined) {
+    return undefined;
+  }
+
+  return all.find(x => x.localId === id)?.conditions.find(x => x.type === 'DELIVERY_SHIPMENT');
+}
+
+function getDestinationByLocalContractId(id?: string | undefined) {
+  const deliveryCondition = getDeliveryConditionByLocalContractId(id);
+  const destination = deliveryCondition?.destination;
+  if (!destination) {
+    return undefined;
+  }
+
+  const location = getLocationLineFromAddress(destination);
+  if (location?.type === 'STATION') {
+    return location.entity.naturalId;
+  }
+
+  return getEntityNameFromAddress(destination);
+}
+
 export const active = computed(() =>
   state.all.value?.filter(
     x =>
@@ -106,6 +134,7 @@ export const contractsStore = {
   getByLocalId,
   getByShipmentId,
   getDestinationByShipmentId,
+  getDestinationByLocalContractId,
 };
 
 export function isFactionContract(contract: PrunApi.Contract) {
