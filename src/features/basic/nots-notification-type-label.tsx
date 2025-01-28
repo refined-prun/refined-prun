@@ -161,6 +161,11 @@ const labels: NotificationTypeLabel[] = [
     label: 'HELLO',
     color: '#8f52cc',
   },
+  {
+    types: ['RELEASE_NOTES'],
+    label: 'APEX',
+    color: '#8f52cc',
+  },
 ];
 
 const labelMap = new Map(labels.flatMap(x => x.types.map(y => [y, x])));

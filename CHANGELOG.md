@@ -4,6 +4,10 @@
 
 - `focus-buffers-on-click`: Focuses buffers on click anywhere, not just the header
 
+### Changed
+
+- `nots-notification-type-label`: Add a label for RELEASE_NOTES notification type
+
 ### Fixed
 
 - `XIT ACT`: Fix compatibility with the updated MTRA buffer
