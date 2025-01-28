@@ -15,6 +15,7 @@
 ### Removed
 
 - `mtra-sync-amount-slider`: This feature is now natively implemented in the APEX
+- `nots-ship-name`: This feature is now natively implemented in the APEX
 
 ## 25.1.19
 
