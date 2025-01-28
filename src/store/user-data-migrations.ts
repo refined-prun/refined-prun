@@ -4,6 +4,9 @@ import removeArrayElement from '@src/utils/remove-array-element';
 
 const migrations: Migration[] = [
   userData => {
+    removeArrayElement(userData.settings.disabled, 'mtra-sync-amount-slider');
+  },
+  userData => {
     removeArrayElement(userData.settings.disabled, 'productivity-through-depression');
   },
   userData => {
