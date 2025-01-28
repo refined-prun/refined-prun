@@ -248,6 +248,7 @@ const materials: Record<string, Icon> = {
   H: ['f185', { regular: true }],
   H2O: 'f043',
   HAB: 'f015',
+  HCB: ['f468', { fontSize: 1.2 }],
   HCC: 'e55b',
   HCP: 'f1bb',
   HD: 'f26c',

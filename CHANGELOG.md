@@ -6,6 +6,7 @@
 
 ### Changed
 
+- `item-icons`: Add a HCB icon
 - `nots-notification-type-label`: Add a label for the RELEASE_NOTES notification type
 
 ### Fixed
