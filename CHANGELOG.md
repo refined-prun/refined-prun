@@ -3,16 +3,13 @@
 ### Added
 
 - `focus-buffers-on-click`: Focuses buffers on click anywhere, not just the header
-
-### Changed
-
 - `item-icons`: Add a HCB icon
 - `nots-notification-type-label`: Add a label for the RELEASE_NOTES notification type
 
 ### Fixed
 
-- `XIT ACT`: Fix compatibility with the latest APEX changes
-- `shipment-item-detail`: Fix compatibility with the latest APEX changes
+- `XIT ACT`: Fix the "Missing UI elements" error during MTRA actions
+- `shipment-item-detail`: Fix missing destination labels
 
 ### Removed
 
