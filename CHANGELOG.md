@@ -4,6 +4,10 @@
 
 - `focus-buffers-on-click`: Focuses buffers on click anywhere, not just the header
 
+### Fixed
+
+- `XIT ACT`: Fix compatibility with the updated MTRA buffer
+
 ## 25.1.19
 
 ### Added

@@ -398,16 +398,15 @@ async function executeAction(
       }
 
       // Make the quantity change
-      const changeButton = _$(buffer, C.Button.darkInline) as HTMLButtonElement; // Change button
       const allInputs = buffer.querySelectorAll('input'); // All the inputs on buffer, next find the "amount" input
-      if (!allInputs[1] || !changeButton) {
+      const amountInput = allInputs[1]; // Amount input
+      if (!amountInput) {
         undoButtonMove(button, resetStyles, executeControls);
         addMessage(messageBox, 'Missing UI elements', 'ERROR');
         tile.removeChild(executionInfo);
         button.disabled = false;
         return;
       }
-      const amountInput = allInputs[1]; // Amount input
 
       if (action.parameters.amount > maxAmount) {
         addMessage(
@@ -423,11 +422,6 @@ async function executeAction(
       changeInputValue(amountInput, Math.min(action.parameters.amount, maxAmount).toString()); // Transfer the max amount possible (could add a setting here to error out instead)
 
       amountInput.focus(); // Need to focus for some reason
-      changeButton.focus();
-
-      await sleep(50);
-
-      changeButton.click();
       button.disabled = false;
       break;
     }
