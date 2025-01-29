@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+
+- `mtra-auto-focus-amount`: `MTRA`: Automatically focuses the amount input on buffer open
+
 ## 25.1.28
 
 ### Added
