@@ -12,15 +12,16 @@ async function startup() {
       allplanets: chrome.runtime.getURL('json/fallback-fio-responses/allplanets.json'),
     },
   };
+  const now = Date.now();
   const script = document.createElement('script');
-  script.src = chrome.runtime.getURL('refined-prun.js');
+  script.src = chrome.runtime.getURL('refined-prun.js') + '?' + now;
   script.type = 'module';
-  script.id = 'refined-prun';
+  script.id = 'refined-prun-js';
   script.textContent = JSON.stringify(config);
   const css = document.createElement('link');
-  css.href = chrome.runtime.getURL('refined-prun.css') + '?' + Date.now();
-  css.id = 'refined-prun-css';
+  css.href = chrome.runtime.getURL('refined-prun.css') + '?' + now;
   css.rel = 'stylesheet';
+  css.id = 'refined-prun-css';
   css.onload = () => {
     // This serialization is needed because accessing css.sheet in Firefox from the page script
     // will throw a CORS error.
