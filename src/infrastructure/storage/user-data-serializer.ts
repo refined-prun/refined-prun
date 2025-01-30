@@ -1,6 +1,6 @@
 import { downloadJson, uploadJson } from '@src/utils/json-file';
 import { migrateUserData } from '@src/store/user-data-migrations';
-import { applyInitialUserData, applyUserData, userData, watchUserData } from '@src/store/user-data';
+import { applyInitialUserData, applyUserData, userData } from '@src/store/user-data';
 import { deepToRaw } from '@src/utils/deep-to-raw';
 
 const fileType = 'rp-user-data';
@@ -16,7 +16,28 @@ export function loadUserData() {
   } else {
     migrateUserData(userData);
   }
-  watchUserData(saveUserData);
+  watchUserData();
+}
+
+function watchUserData() {
+  let saveQueued = false;
+
+  watch(
+    userData,
+    () => {
+      if (import.meta.env.DEV) {
+        console.log(userData);
+      }
+      if (!saveQueued) {
+        setTimeout(() => {
+          void saveUserData();
+          saveQueued = false;
+        }, 1000);
+        saveQueued = true;
+      }
+    },
+    { deep: true },
+  );
 }
 
 export async function saveUserData() {

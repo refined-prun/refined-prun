@@ -84,24 +84,3 @@ export function clearBalanceHistory() {
   userData.balanceHistory.v1.length = 0;
   userData.balanceHistory.v2.length = 0;
 }
-
-export function watchUserData(save: () => void) {
-  let saveQueued = false;
-
-  watch(
-    userData,
-    () => {
-      if (import.meta.env.DEV) {
-        console.log(userData);
-      }
-      if (!saveQueued) {
-        setTimeout(() => {
-          save();
-          saveQueued = false;
-        }, 1000);
-        saveQueued = true;
-      }
-    },
-    { deep: true },
-  );
-}
