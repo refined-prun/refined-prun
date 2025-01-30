@@ -9,6 +9,7 @@ declare global {
   const computed: typeof import('vue')['computed']
   const config: typeof import('@src/config')['default']
   const createApp: typeof import('vue')['createApp']
+  const createFragmentApp: typeof import('@src/utils/vue-fragment-app')['createFragmentApp']
   const customRef: typeof import('vue')['customRef']
   const defineAsyncComponent: typeof import('vue')['defineAsyncComponent']
   const defineComponent: typeof import('vue')['defineComponent']
@@ -86,6 +87,7 @@ declare module 'vue' {
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly config: UnwrapRef<typeof import('@src/config')['default']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
+    readonly createFragmentApp: UnwrapRef<typeof import('@src/utils/vue-fragment-app')['createFragmentApp']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>

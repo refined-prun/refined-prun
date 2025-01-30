@@ -1,5 +1,4 @@
 import classes from './nots-notification-type-label.module.css';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { alertsStore } from '@src/infrastructure/prun-api/data/alerts';
 import { waitNotificationLoaded } from '@src/infrastructure/prun-ui/notifications';

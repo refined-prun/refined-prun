@@ -3,7 +3,6 @@ import css from '@src/utils/css-utils.module.css';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import SelectButton from '@src/features/advanced/hide-system-chat-messages/SelectButton.vue';
 import { userData } from '@src/store/user-data';
 import removeArrayElement from '@src/utils/remove-array-element';

@@ -1,5 +1,4 @@
 import { fetchJson } from '@src/utils/fetch';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 
 export function trackExtensionUpdate() {
   const container = document.getElementById('container')!;

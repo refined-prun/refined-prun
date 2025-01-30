@@ -4,7 +4,6 @@ import { refTextContent } from '@src/utils/reactive-dom';
 import { fixed0 } from '@src/utils/format';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { currentAssets } from '@src/core/balance/current-assets';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'thead'), onTableHeadReady);

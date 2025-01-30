@@ -1,5 +1,4 @@
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ShipCondition from './ShipCondition.vue';
 
 function onTileReady(tile: PrunTile) {

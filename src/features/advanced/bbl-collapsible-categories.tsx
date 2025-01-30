@@ -4,7 +4,6 @@ import {
   applyScopedClassCssRule,
   applyScopedCssRule,
 } from '@src/infrastructure/prun-ui/refined-prun-css';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.SectionList.container), container => {

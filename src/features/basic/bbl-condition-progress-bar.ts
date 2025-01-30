@@ -1,7 +1,6 @@
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { isRepairableBuilding } from '@src/core/buildings';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ProgressBar from '@src/components/ProgressBar.vue';
 
 function onTileReady(tile: PrunTile) {

@@ -1,6 +1,5 @@
 import { refAttributeValue } from '@src/utils/reactive-dom';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ColoredIconDetail from '@src/components/ColoredIconDetail.vue';
 
 function onTileReady(tile: PrunTile) {

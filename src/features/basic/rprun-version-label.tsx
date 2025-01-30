@@ -1,6 +1,5 @@
 import classes from './rprun-version-label.module.css';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 
 async function onFooterReady(footer: HTMLElement) {
   const userCount = await $(footer, C.UsersOnlineCount.container);

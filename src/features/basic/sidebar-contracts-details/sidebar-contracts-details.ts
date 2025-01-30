@@ -1,6 +1,5 @@
 import css from '@src/utils/css-utils.module.css';
 import classes from './sidebar-contracts-details.module.css';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContractPartnerName from './ContractPartnerName.vue';
 import { refTextContent } from '@src/utils/reactive-dom';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';

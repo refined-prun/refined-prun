@@ -123,7 +123,9 @@ messages({
 
 interface ChangeListener {
   tilesInitialized(): void;
+
   tileMoved(fromId: string, toId: string): void;
+
   tileRemoved(id: string): void;
 }
 

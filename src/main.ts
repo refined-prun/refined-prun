@@ -10,7 +10,6 @@ import { watchWhile } from '@src/utils/watch';
 import { initializeUI } from '@src/infrastructure/prun-ui';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { initializeXitCommands } from '@src/features/XIT/xit-commands';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import PmmgMigrationGuide from '@src/components/PmmgMigrationGuide.vue';
 import { trackExtensionUpdate } from '@src/infrastructure/shell/extension-update';
 

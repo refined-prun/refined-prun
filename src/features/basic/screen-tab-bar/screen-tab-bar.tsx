@@ -1,5 +1,4 @@
 import classes from './screen-tab-bar.module.css';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import TabBar from './TabBar.vue';
 import { userData } from '@src/store/user-data';
 import removeArrayElement from '@src/utils/remove-array-element';

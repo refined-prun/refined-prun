@@ -1,6 +1,5 @@
 import { refAnimationFrame } from '@src/utils/reactive-dom';
 import { isEmpty } from 'ts-extras';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 
 function onTileReady(tile: PrunTile) {
   // Only process BS tiles with parameter
