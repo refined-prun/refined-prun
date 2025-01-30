@@ -5,6 +5,10 @@
 - `mtra-auto-focus-amount`: `MTRA`: Automatically focuses the amount input on buffer open
 - `mtra-transfer-on-enter`: `MTRA`: Triggers transfer on Enter and closes the buffer on success
 
+### Changed
+
+- `nots-clean-notifications`: Add shortening of "X fulfilled condition Y" notifications
+
 ## 25.1.28
 
 ### Added

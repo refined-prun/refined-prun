@@ -64,7 +64,7 @@ const patches: AlertPatch[] = [
       'CONTRACT_CONTRACT_REJECTED',
     ],
     replace(text: string) {
-      return text.replace('Your partner ', '');
+      return text.replace('fulfilled a contract condition for contract', 'fulfilled on');
     },
   },
   {
