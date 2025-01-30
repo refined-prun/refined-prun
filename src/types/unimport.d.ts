@@ -14,7 +14,7 @@ declare global {
   const defineAsyncComponent: typeof import('vue')['defineAsyncComponent'];
   const defineComponent: typeof import('vue')['defineComponent'];
   const effectScope: typeof import('vue')['effectScope'];
-  const features: typeof import('@src/feature-registry')['default'];
+  const features: typeof import('@src/features/feature-registry')['default'];
   const getCurrentInstance: typeof import('vue')['getCurrentInstance'];
   const getCurrentScope: typeof import('vue')['getCurrentScope'];
   const h: typeof import('vue')['h'];
@@ -108,7 +108,7 @@ declare module 'vue' {
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>;
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>;
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>;
-    readonly features: UnwrapRef<typeof import('@src/feature-registry')['default']>;
+    readonly features: UnwrapRef<typeof import('@src/features/feature-registry')['default']>;
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>;
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>;
     readonly h: UnwrapRef<typeof import('vue')['h']>;

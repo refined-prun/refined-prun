@@ -1,4 +1,4 @@
-import features from '@src/feature-registry';
+import features from '@src/features/feature-registry';
 
 function onTileReady(tile: PrunTile) {
   // Replace 'view details/vote' with 'vote'

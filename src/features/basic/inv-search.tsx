@@ -1,5 +1,4 @@
 import classes from './inv-search.module.css';
-import features from '@src/feature-registry';
 import css from '@src/utils/css-utils.module.css';
 
 function onTileReady(tile: PrunTile) {
