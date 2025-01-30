@@ -3,8 +3,7 @@ import oneMutation from 'one-mutation';
 import { registerClassName } from '@src/utils/select-dom';
 import { isEmpty } from 'ts-extras';
 
-// @ts-expect-error This object will be loaded via function below
-export const C: CssClasses = {};
+export const C = {} as CssClasses;
 
 export async function loadPrunCss() {
   if (!readStyles()) {
