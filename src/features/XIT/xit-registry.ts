@@ -1,4 +1,5 @@
 import { castArray } from '@src/utils/cast-array';
+import { initializeXitCommands } from '@src/features/XIT/xit-commands';
 
 interface ContextItem {
   cmd: string;
@@ -37,6 +38,7 @@ const xit = {
   add,
   get,
   registry,
+  init: initializeXitCommands,
 };
 
 export default xit;

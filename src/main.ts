@@ -9,7 +9,6 @@ import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { watchWhile } from '@src/utils/watch';
 import { initializeUI } from '@src/infrastructure/prun-ui';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import { initializeXitCommands } from '@src/features/XIT/xit-commands';
 import PmmgMigrationGuide from '@src/components/PmmgMigrationGuide.vue';
 
 async function main() {
@@ -29,7 +28,7 @@ async function main() {
   }
 
   features.init();
-  initializeXitCommands();
+  xit.init();
 
   trackBalanceHistory();
   if (userData.settings.mode === undefined) {
