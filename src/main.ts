@@ -11,13 +11,8 @@ import { initializeUI } from '@src/infrastructure/prun-ui';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { initializeXitCommands } from '@src/features/XIT/xit-commands';
 import PmmgMigrationGuide from '@src/components/PmmgMigrationGuide.vue';
-import { trackExtensionUpdate } from '@src/infrastructure/shell/extension-update';
 
 async function main() {
-  document.documentElement.classList.add('refined-prun');
-  if (import.meta.env.PROD) {
-    trackExtensionUpdate();
-  }
   void fetchPrices();
   initializePrunApi();
   const backgroundTasks = loadGameData();

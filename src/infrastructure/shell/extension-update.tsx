@@ -1,10 +1,16 @@
 import { fetchJson } from '@src/utils/fetch';
 
-export function trackExtensionUpdate() {
+if (import.meta.env.PROD) {
   const container = document.getElementById('container')!;
   const id = setInterval(async () => {
     const manifest = (await fetchJson(config.url.manifest)) as chrome.runtime.ManifestV3;
     if (!manifest.version || config.version === manifest.version) {
+      return;
+    }
+    void setTimeout(() => window.location.reload(), 2000);
+    clearInterval(id);
+    if (!C.Connecting) {
+      // There might be a case where PrUn CSS was not parsed yet.
       return;
     }
     createFragmentApp(() => (
@@ -14,7 +20,5 @@ export function trackExtensionUpdate() {
         </span>
       </div>
     )).appendTo(container);
-    void setTimeout(() => window.location.reload(), 2000);
-    clearInterval(id);
   }, 1000);
 }

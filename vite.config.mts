@@ -51,7 +51,7 @@ export default defineConfig({
         { name: 'default', as: 'tiles', from: '@src/infrastructure/prun-ui/tiles' },
         { name: 'default', as: 'features', from: '@src/feature-registry' },
         { name: 'default', as: 'xit', from: '@src/features/XIT/xit-registry' },
-        { name: 'default', as: 'config', from: '@src/config' },
+        { name: 'default', as: 'config', from: '@src/infrastructure/shell/config' },
         { name: 'createFragmentApp', from: '@src/utils/vue-fragment-app' },
       ],
       //dts: 'src/types/unimport.d.ts',
