@@ -1,5 +1,5 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 import { castArray } from '@src/utils/cast-array';
 import { isEmpty } from 'ts-extras';
@@ -7,7 +7,7 @@ import { isEmpty } from 'ts-extras';
 const store = createEntityStore<PrunApi.Exchange>();
 const state = store.state;
 
-messages({
+onApiMessage({
   DATA_DATA(data: { body: Arrayable<PrunApi.Exchange>; path: string[] }) {
     if (isEmpty(data.path) || data.path[0] !== 'commodityexchanges') {
       return;

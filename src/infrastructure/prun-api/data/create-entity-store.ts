@@ -1,4 +1,4 @@
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 
 type EntityId = number | string;
 type IdSelector<T, Id extends EntityId> = (model: T) => Id;
@@ -15,7 +15,7 @@ export function createEntityStore<T>(
   const fetched = ref(false);
 
   if (!options?.preserveOnOpen) {
-    messages({
+    onApiMessage({
       CLIENT_CONNECTION_OPENED() {
         fetched.value = false;
         entities = shallowReactive({} as Record<string, T>);

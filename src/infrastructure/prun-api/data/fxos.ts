@@ -1,11 +1,11 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { request } from '@src/infrastructure/prun-api/data/request-hooks';
 
 const store = createEntityStore<PrunApi.FXOrder>();
 const state = store.state;
 
-messages({
+onApiMessage({
   FOREX_TRADER_ORDERS(data: { orders: PrunApi.FXOrder[] }) {
     store.setAll(data.orders);
     store.setFetched();

@@ -1,5 +1,5 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import {
   createGroupMapGetter,
   createMapGetter,
@@ -8,7 +8,7 @@ import {
 const store = createEntityStore<PrunApi.Store>();
 const state = store.state;
 
-messages({
+onApiMessage({
   STORAGE_STORAGES(data: { stores: PrunApi.Store[] }) {
     store.setMany(data.stores);
     store.setFetched();

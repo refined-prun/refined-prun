@@ -1,5 +1,5 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 
 interface Planet {
@@ -12,7 +12,7 @@ const store = createEntityStore<Planet>(x => x.naturalId.toLowerCase(), {
 });
 const state = store.state;
 
-messages({
+onApiMessage({
   FIO_PLANET_DATA(data: { planets: Planet[] }) {
     store.setAll(data.planets);
     store.setFetched();

@@ -1,5 +1,5 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 import {
   getEntityNameFromAddress,
@@ -9,7 +9,7 @@ import {
 const store = createEntityStore<PrunApi.Contract>();
 const state = store.state;
 
-messages({
+onApiMessage({
   CONTRACTS_CONTRACTS(data: { contracts: PrunApi.Contract[] }) {
     store.setAll(data.contracts);
     store.setFetched();

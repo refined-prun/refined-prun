@@ -1,11 +1,11 @@
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 
 const store = createEntityStore<PrunApi.Ship>();
 const state = store.state;
 
-messages({
+onApiMessage({
   SHIP_SHIPS(data: { ships: PrunApi.Ship[] }) {
     store.setAll(data.ships);
     store.setFetched();

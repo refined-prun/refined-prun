@@ -1,4 +1,4 @@
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 
 const store = createEntityStore<PrunApi.Screen>();
@@ -6,7 +6,7 @@ const state = store.state;
 
 const removed = shallowReactive([] as PrunApi.Screen[]);
 
-messages({
+onApiMessage({
   UI_DATA(data: PrunApi.UIData) {
     store.setAll(data.screens);
     removed.length = 0;

@@ -1,11 +1,11 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 
 const store = createEntityStore<PrunApi.Material>();
 const state = store.state;
 
-messages({
+onApiMessage({
   WORLD_MATERIAL_CATEGORIES(data: { categories: PrunApi.MaterialCategory[] }) {
     const materials = data.categories.flatMap(x => x.materials);
     store.setAll(materials);

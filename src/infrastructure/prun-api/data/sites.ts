@@ -3,13 +3,13 @@ import {
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 
 const store = createEntityStore<PrunApi.Site>(x => x.siteId);
 const state = store.state;
 
-messages({
+onApiMessage({
   SITE_SITES(data: { sites: PrunApi.Site[] }) {
     store.setAll(data.sites);
     store.setFetched();

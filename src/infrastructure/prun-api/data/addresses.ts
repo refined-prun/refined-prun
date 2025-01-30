@@ -1,10 +1,10 @@
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 
 type State = Record<string, PrunApi.Address | null | undefined>;
 
 const state = shallowReactive<State>({});
 
-messages({
+onApiMessage({
   SHIP_SHIPS(data: { ships: PrunApi.Ship[] }) {
     for (const ship of data.ships) {
       state[ship.id] = ship.address;

@@ -2,7 +2,7 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { implementRequestHooks } from '@src/infrastructure/prun-api/data/request-hooks';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
 import { blueprintsStore } from '@src/infrastructure/prun-api/data/blueprints';
@@ -11,7 +11,7 @@ import { shipyardProjectsStore } from '@src/infrastructure/prun-api/data/shipyar
 
 const bs: Set<string> = new Set();
 
-messages({
+onApiMessage({
   CLIENT_CONNECTION_OPENED() {
     bs.clear();
   },
@@ -33,7 +33,7 @@ function requestBS(siteId?: string | null) {
 function singleBufferRequest(command: string, closeWhen: () => boolean) {
   let requested = false;
 
-  messages({
+  onApiMessage({
     CLIENT_CONNECTION_OPENED() {
       requested = false;
     },

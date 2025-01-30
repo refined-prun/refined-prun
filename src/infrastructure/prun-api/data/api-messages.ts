@@ -10,7 +10,7 @@ type MessageHandlers = { [type: string]: MessageHandler };
 
 const registry = new Map<string, MessageHandler[]>();
 
-export function messages(handlers: MessageHandlers) {
+export function onApiMessage(handlers: MessageHandlers) {
   for (const type in handlers) {
     let list = registry.get(type);
     if (!list) {

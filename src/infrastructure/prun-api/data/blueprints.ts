@@ -1,12 +1,12 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createRequestStore, request } from '@src/infrastructure/prun-api/data/request-hooks';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 
 const store = createEntityStore<PrunApi.Blueprint>();
 const state = store.state;
 
-messages({
+onApiMessage({
   BLUEPRINT_BLUEPRINTS(data: { blueprints: PrunApi.Blueprint[] }) {
     store.setAll(data.blueprints);
     store.setFetched();

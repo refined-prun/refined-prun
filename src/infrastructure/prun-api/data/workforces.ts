@@ -1,5 +1,5 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createRequestGetter, request } from '@src/infrastructure/prun-api/data/request-hooks';
 
 interface Entity {
@@ -11,7 +11,7 @@ interface Entity {
 const store = createEntityStore<Entity>(x => x.siteId);
 const state = store.state;
 
-messages({
+onApiMessage({
   WORKFORCE_WORKFORCES(data: Entity) {
     store.setOne(data);
     store.setFetched();

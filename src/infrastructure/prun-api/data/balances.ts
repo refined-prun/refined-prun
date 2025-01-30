@@ -1,4 +1,4 @@
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 
 interface Payload {
@@ -10,7 +10,7 @@ const store = createEntityStore<PrunApi.CurrencyAmount>(x => x.currency);
 const state = store.state;
 const ownCurrency = ref('');
 
-messages({
+onApiMessage({
   ACCOUNTING_CASH_BALANCES(data: Payload) {
     ownCurrency.value = data.ownCurrency.code;
     store.setAll(data.currencyAccounts.map(x => x.currencyBalance));

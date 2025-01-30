@@ -1,11 +1,11 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 
 const store = createEntityStore<PrunApi.CXBroker>();
 const state = store.state;
 
-messages({
+onApiMessage({
   COMEX_BROKER_DATA(data: PrunApi.CXBroker) {
     store.setOne(data);
     store.setFetched();

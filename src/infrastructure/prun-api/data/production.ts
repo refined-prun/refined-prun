@@ -1,5 +1,5 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import {
   createGroupMapGetter,
   createMapGetter,
@@ -11,7 +11,7 @@ const state = store.state;
 const fetchedSites = reactive(new Set<string>());
 const fetchedAll = ref(false);
 
-messages({
+onApiMessage({
   CLIENT_CONNECTION_OPENED() {
     fetchedSites.clear();
     fetchedAll.value = false;

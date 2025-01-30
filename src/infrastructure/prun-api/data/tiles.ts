@@ -1,10 +1,10 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 
 const store = createEntityStore<PrunApi.Tile>();
 const state = store.state;
 
-messages({
+onApiMessage({
   UI_DATA(data: PrunApi.UIData) {
     store.setAll(data.tiles);
     store.setFetched();

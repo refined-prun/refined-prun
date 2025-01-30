@@ -1,10 +1,10 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
-import { messages } from '@src/infrastructure/prun-api/data/api-messages';
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 
 const store = createEntityStore<PrunApi.Flight>();
 const state = store.state;
 
-messages({
+onApiMessage({
   SHIP_FLIGHT_FLIGHTS(data: { flights: PrunApi.Flight[] }) {
     store.setAll(data.flights);
     store.setFetched();
