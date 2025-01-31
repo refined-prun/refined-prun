@@ -1,24 +1,15 @@
 import { CssClasses } from '@src/infrastructure/prun-ui/prun-css-types';
-import oneMutation from 'one-mutation';
 import { registerClassName } from '@src/utils/select-dom';
 import { isEmpty } from 'ts-extras';
 
 export const C = {} as CssClasses;
 
-export async function loadPrunCss() {
-  if (!readStyles()) {
-    await oneMutation(document.head, {
-      childList: true,
-      filter: readStyles,
-    });
-  }
-}
-
-function readStyles() {
+export function loadPrunCss() {
   const styles = getPrunCssStylesheets();
   if (isEmpty(styles)) {
-    return false;
+    throw new Error('No styles found');
   }
+  let appContainerFound = false;
   const classSet = new Set<string>();
   for (const style of styles) {
     const cssRules = style.sheet!.cssRules;
@@ -30,13 +21,17 @@ function readStyles() {
       }
       const matches = selector.match(/[\w-]+__[\w-]+___[\w-]+/g);
       for (const match of matches ?? []) {
-        classSet.add(match.replace('.', ''));
+        const className = match.replace('.', '');
+        classSet.add(className);
+        if (className.startsWith('App__container')) {
+          appContainerFound = true;
+        }
       }
     }
   }
 
-  if (!classSet.has('App__container___QWpTbzo')) {
-    return false;
+  if (!appContainerFound) {
+    throw new Error('No App.container class found');
   }
 
   const classes = Array.from(classSet);
@@ -63,7 +58,6 @@ function readStyles() {
   }
 
   Object.assign(C, result);
-  return true;
 }
 
 export function getPrunCssStylesheets() {

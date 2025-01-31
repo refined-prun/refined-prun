@@ -1,8 +1,10 @@
 import { userData } from '@src/store/user-data';
 import dayjs from 'dayjs';
 
+const updateInterval = dayjs.duration(15, 'minutes').asMilliseconds();
+
 export async function fetchPrices() {
-  setTimeout(fetchPrices, dayjs.duration(15, 'minutes').asMilliseconds());
+  setTimeout(fetchPrices, updateInterval);
 
   const url = 'https://refined-prun.github.io/refined-prices/all.json';
   const response = await fetch(url);

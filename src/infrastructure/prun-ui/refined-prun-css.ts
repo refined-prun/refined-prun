@@ -1,5 +1,4 @@
 import { castArray } from '@src/utils/cast-array';
-import { observeDescendantListChanged } from '@src/utils/mutation-observer';
 
 const rules: { [id: string]: string } = {};
 
@@ -7,19 +6,6 @@ export function loadRefinedPrunCss() {
   const css = document.getElementById('refined-prun-css')!;
   Object.assign(rules, JSON.parse(css.textContent!));
   css.textContent = null;
-  observeDescendantListChanged(document.head, () => {
-    let appendAfter = null as HTMLElement | null;
-    let next = css.nextSibling;
-    while (next) {
-      if (next.nodeType === Node.ELEMENT_NODE && (next as HTMLElement).tagName === 'STYLE') {
-        appendAfter = next as HTMLElement;
-      }
-      next = next.nextSibling;
-    }
-    if (appendAfter) {
-      appendAfter.after(css);
-    }
-  });
 }
 
 export function applyClassCssRule(classNames: Arrayable<string>, sourceClass: string) {

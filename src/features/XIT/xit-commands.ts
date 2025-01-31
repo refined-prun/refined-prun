@@ -1,11 +1,12 @@
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContextControls from '@src/components/ContextControls.vue';
-
 import { tileStatePlugin } from '@src/store/user-data-tiles';
 import { startMeasure, stopMeasure } from '@src/utils/performance-measure';
 import { isEmpty } from 'ts-extras';
 import { xitParametersKey } from '@src/hooks/use-xit-parameters';
 import { xitCommandKey } from '@src/hooks/use-xit-command';
+import { userData } from '@src/store/user-data';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 function onTileReady(tile: PrunTile) {
   const rawParameter = tile.parameter;
@@ -73,4 +74,7 @@ function onTileReady(tile: PrunTile) {
 
 export function initializeXitCommands() {
   tiles.observe('XIT', onTileReady);
+  if (userData.settings.mode === undefined) {
+    setTimeout(() => showBuffer('XIT START'), 1000);
+  }
 }

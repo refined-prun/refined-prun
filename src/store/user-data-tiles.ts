@@ -7,9 +7,7 @@ import { isEmpty } from 'ts-extras';
 type TileState = UserData.TileState;
 
 export function initializeTileListener() {
-  if (tilesStore.fetched.value) {
-    pruneTileStates();
-  }
+  pruneTileStates();
   tilesStore.listener = {
     tilesInitialized() {
       pruneTileStates();

@@ -12,6 +12,10 @@ async function loadAllPlanets() {
 }
 
 export async function loadFallbackPlanetData() {
+  if (planetsStore.fetched.value) {
+    return;
+  }
+
   const fallbackFile = await fetch(config.url.allplanets);
   const fallbackResponse = (await fallbackFile.json()) as FioApi.AllPlanetsShort;
   if (planetsStore.fetched.value) {
