@@ -56,6 +56,7 @@ defineProps<{ condition: PrunApi.ContractCondition }>();
   <template v-else-if="condition.type === 'START_FLIGHT'">Start Flight</template>
   <template v-else-if="condition.type === 'POWER'">Become Governor</template>
   <template v-else-if="condition.type === 'REPAIR_SHIP'">Repair Ship</template>
+  <template v-else-if="condition.type === 'CONTRIBUTION'">Contribution</template>
   <template v-else>
     {{ condition.type }}
   </template>

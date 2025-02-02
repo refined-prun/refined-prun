@@ -63,6 +63,8 @@ export function friendlyConditionText(type: PrunApi.ContractConditionType) {
       return 'Upgrade HQ';
     case 'REPAIR_SHIP':
       return 'Repair Ship';
+    case 'CONTRIBUTION':
+      return 'Contribution';
     default:
       return type;
   }
