@@ -16,10 +16,12 @@ declare namespace PrunApi {
 
   export interface EfficiencyFactor {
     expertiseCategory?: string;
-    type: string;
+    type: EfficiencyFactorType;
     effectivity: number;
     value: number;
   }
+
+  type EfficiencyFactorType = 'EXPERTS' | 'COGC_PROGRAM' | 'PRODUCTION_LINE_CONDITION';
 
   export interface ProductionOrder {
     id: string;
