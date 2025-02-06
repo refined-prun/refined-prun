@@ -2,25 +2,10 @@ import { uploadJson } from '@src/utils/json-file';
 import { userData } from '@src/store/user-data';
 import { createId } from '@src/store/create-id';
 import { isDefined } from 'ts-extras';
-
-interface PmmgSettings {
-  currency: UserData.CurrencyPreset;
-  burn: {
-    red: number;
-    yellow: number;
-    resupply: number;
-  };
-  repair: {
-    threshold: number;
-    offset: number;
-  };
-  sidebar?: [string, string][];
-  sorting?: UserData.SortingMode[];
-  disabled: string[];
-}
+import { getInvStoreId } from '@src/core/store-id';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function parsePmmgUserData(pmmg: any): PmmgSettings | undefined {
+function parsePmmgUserData(pmmg: any) {
   if (!pmmg.loaded_before) {
     return undefined;
   }
@@ -46,7 +31,7 @@ export function parsePmmgUserData(pmmg: any): PmmgSettings | undefined {
       offset,
     },
     sidebar: pmmg.sidebar,
-    sorting: pmmg.sorting?.map(parseSortingMode),
+    sorting: parseSortingModes(pmmg.sorting),
     disabled: (pmmg.disabled ?? []).flatMap(mapPmmgFeature).filter(isDefined),
   };
 }
@@ -64,14 +49,27 @@ function getCurrency(pricingMethod: string): UserData.CurrencyPreset {
   return 'AIC';
 }
 
-function parseSortingMode(mode: PmmgSortingMode): UserData.SortingMode {
-  return {
-    label: mode[0],
-    storeId: mode[1],
-    categories: mode[2].map(x => ({ name: x[0], materials: x[1] })),
-    burn: mode[3],
-    zero: mode[4],
-  };
+function parseSortingModes(pmmg?: PmmgSortingMode[]) {
+  if (!pmmg) {
+    return undefined;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sorting = {} as Record<string, any>;
+  for (const mode of pmmg) {
+    const store = getInvStoreId(mode[1]);
+    if (!store) {
+      continue;
+    }
+    const storeSorting = (sorting[store.id] ??= { modes: [] });
+    storeSorting.modes.push({
+      label: mode[0],
+      categories: mode[2].map(x => ({ name: x[0], materials: x[1] })),
+      burn: mode[3],
+      zero: mode[4],
+    });
+  }
+  return sorting;
 }
 
 type PmmgSortingMode = [

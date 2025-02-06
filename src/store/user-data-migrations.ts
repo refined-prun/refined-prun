@@ -1,7 +1,40 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import removeArrayElement from '@src/utils/remove-array-element';
+import { tilesStore } from '@src/infrastructure/prun-api/data/tiles';
+import { getInvStoreId } from '@src/core/store-id';
 
 const migrations: Migration[] = [
+  userData => {
+    const sorting = {} as Record<string, any>;
+    for (const mode of userData.sorting) {
+      const store = getInvStoreId(mode.storeId);
+      if (!store) {
+        continue;
+      }
+      const storeSorting = (sorting[store.id] ??= { modes: [] });
+      storeSorting.modes.push(mode);
+      delete mode.storeId;
+    }
+    userData.sorting = sorting;
+    for (const tileId of Object.keys(userData.tileState)) {
+      const tile = tilesStore.getById(tileId);
+      if (!tile?.content?.startsWith('INV')) {
+        continue;
+      }
+      const storeId = tile.content.substring(3);
+      const store = getInvStoreId(storeId);
+      const state = userData.tileState[tileId];
+      if (store) {
+        const storeSorting = (sorting[store.id] ??= { modes: [] });
+        storeSorting.active = state.activeSort !== undefined ? state.activeSort : undefined;
+        storeSorting.cat = state.catSort !== undefined ? state.catSort : undefined;
+        storeSorting.reverse = state.reverseSort !== undefined ? state.reverseSort : undefined;
+      }
+      delete state.activeSort;
+      delete state.catSort;
+      delete state.reverseSort;
+    }
+  },
   userData => {
     removeArrayElement(userData.settings.disabled, 'nots-ship-name');
   },

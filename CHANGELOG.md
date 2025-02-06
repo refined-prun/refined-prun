@@ -8,6 +8,7 @@
 
 ### Changed
 
+- `custom-item-sorting`: Remember last selected sorting mode
 - `nots-clean-notifications`: Add shortening of "X fulfilled condition Y" notifications
 
 ## 25.1.28

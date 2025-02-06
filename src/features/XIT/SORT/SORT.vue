@@ -4,23 +4,22 @@ import PrunButton from '@src/components/PrunButton.vue';
 import ActionBar from '@src/components/ActionBar.vue';
 import { showConfirmationOverlay, showTileOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import SortingModeEditor from './SortingModeEditor.vue';
-import { userData } from '@src/store/user-data';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { isEmpty } from 'ts-extras';
 import { objectId } from '@src/utils/object-id';
+import { getSortingData } from '@src/store/user-data-sorting';
+import removeArrayElement from '@src/utils/remove-array-element';
 
 const parameters = useXitParameters();
 const storeId = parameters[0];
 
 const storage = computed(() => storagesStore.getById(storeId));
-const sorting = computed(() =>
-  userData.sorting.filter(x => x.storeId.toUpperCase() === storeId.toUpperCase()),
-);
+const sortingData = computed(() => getSortingData(storeId));
 
 function createSortingMode(ev: Event) {
   showTileOverlay(ev, SortingModeEditor, {
     storeId,
-    onSave: sorting => userData.sorting.push(sorting),
+    onSave: sorting => sortingData.value.modes.push(sorting),
   });
 }
 
@@ -36,7 +35,7 @@ function deleteSortingMode(ev: Event, sorting: UserData.SortingMode) {
   showConfirmationOverlay(
     ev,
     () => {
-      userData.sorting = userData.sorting.filter(x => x !== sorting);
+      removeArrayElement(sortingData.value.modes, sorting);
     },
     {
       message: `Are you sure you want to delete ${sorting.label}?`,
@@ -59,8 +58,8 @@ function deleteSortingMode(ev: Event, sorting: UserData.SortingMode) {
           <th />
         </tr>
       </thead>
-      <tbody v-if="!isEmpty(sorting)">
-        <tr v-for="mode in sorting" :key="objectId(mode)">
+      <tbody v-if="!isEmpty(sortingData.modes)">
+        <tr v-for="mode in sortingData.modes" :key="objectId(mode)">
           <td>{{ mode.label }}</td>
           <td>{{ mode.categories.map(x => x.name).join(', ') }}</td>
           <td>

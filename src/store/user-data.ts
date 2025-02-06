@@ -49,7 +49,7 @@ export const initialUserData = deepFreeze({
     ] as [string, string][],
     buffers: [] as [string, number, number][],
   },
-  sorting: [] as UserData.SortingMode[],
+  sorting: {} as Record<string, UserData.StoreSortingData>,
   balanceHistory: {
     v1: [],
     v2: [],

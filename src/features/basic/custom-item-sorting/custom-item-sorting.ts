@@ -7,16 +7,15 @@ import InventorySortControls from './InventorySortControls.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
 import SORT from '@src/features/XIT/SORT/SORT.vue';
-import { getTileState } from './tile-state';
 import { createFragmentApp, FragmentAppScope } from '@src/utils/vue-fragment-app';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import { userData } from '@src/store/user-data';
 import { sortByMaterial, sortMaterials } from '@src/core/sort-materials';
-import { computedTileState } from '@src/store/user-data-tiles';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { isDefined, isEmpty } from 'ts-extras';
 import SortCriteria from '@src/features/basic/custom-item-sorting/SortCriteria.vue';
+import { getSortingData } from '@src/store/user-data-sorting';
+import { getInvStoreId } from '@src/core/store-id';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.InventoryView.container), container =>
@@ -25,15 +24,13 @@ function onTileReady(tile: PrunTile) {
 }
 
 async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
-  const storeId = tile.parameter;
-  if (!storeId) {
+  const parameter = tile.parameter;
+  if (!parameter) {
     return;
   }
 
-  const tileState = getTileState(tile);
-  const activeSortId = computedTileState(tileState, 'activeSort', undefined);
-  const catSort = computedTileState(tileState, 'catSort', true);
-  const reverseSort = computedTileState(tileState, 'reverseSort', false);
+  const storeId = getInvStoreId(parameter);
+  const sortingData = getSortingData(parameter);
   const sortOptions = await $(container, C.InventorySortControls.controls);
   const inventory = await $(container, C.InventoryView.grid);
 
@@ -44,8 +41,8 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
   for (let i = 1; i < criterion.length; i++) {
     const option = criterion[i] as HTMLElement;
     option.addEventListener('click', () => {
-      activeSortId.value = undefined;
-      catSort.value = false;
+      sortingData.active = undefined;
+      sortingData.cat = false;
     });
     const isCategorySort = i === 2;
     if (!isCategorySort) {
@@ -55,15 +52,15 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
       SortCriteria,
       reactive({
         label: option.textContent ?? 'CAT',
-        active: catSort,
-        reverse: reverseSort,
+        active: toRef(() => sortingData.cat),
+        reverse: toRef(() => sortingData.reverse),
         onClick: () => {
-          if (catSort.value) {
-            reverseSort.value = !reverseSort.value;
+          if (sortingData.cat) {
+            sortingData.reverse = !sortingData.reverse;
           } else {
-            activeSortId.value = undefined;
-            catSort.value = true;
-            reverseSort.value = false;
+            sortingData.active = undefined;
+            sortingData.cat = true;
+            sortingData.reverse = false;
           }
         },
       }),
@@ -71,18 +68,18 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
     option.style.display = 'none';
   }
 
-  const burn = computed(() => getPlanetBurn(storagesStore.getById(storeId)?.addressableId));
+  const burn = computed(() => getPlanetBurn(storagesStore.getById(parameter)?.addressableId));
 
-  const sorting = computed(() => {
-    const modes = userData.sorting.filter(x => x.storeId === storeId);
+  const modes = computed(() => {
+    const modes = sortingData.modes.slice();
     if (burn.value) {
-      modes.push(createBurnSortingMode(storeId));
+      modes.push(burnSortingMode);
     }
     return modes;
   });
 
   watchEffectWhileNodeAlive(sortOptions, () => {
-    if (activeSortId.value || catSort.value) {
+    if (sortingData.active || sortingData.cat) {
       sortOptions.classList.add(classes.custom);
     } else {
       sortOptions.classList.remove(classes.custom);
@@ -92,23 +89,23 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
   createFragmentApp(
     InventorySortControls,
     reactive({
-      sorting,
-      activeSort: activeSortId,
-      reverse: reverseSort,
+      sorting: modes,
+      activeSort: toRef(() => sortingData.active),
+      reverse: toRef(() => sortingData.reverse),
       onModeClick: (mode: string) => {
-        if (activeSortId.value === mode) {
-          reverseSort.value = !reverseSort.value;
+        if (sortingData.active === mode) {
+          sortingData.reverse = !sortingData.reverse;
         } else {
-          activeSortId.value = mode;
-          catSort.value = false;
-          reverseSort.value = false;
+          sortingData.active = mode;
+          sortingData.cat = false;
+          sortingData.reverse = false;
         }
       },
-      onAddClick: () => showBuffer(`XIT SORT ${storeId}`),
+      onAddClick: () => showBuffer(`XIT SORT ${storeId ?? parameter}`),
     }),
   ).appendTo(sortOptions);
 
-  const activeMode = computed(() => sorting.value.find(x => x.label === activeSortId.value));
+  const activeMode = computed(() => modes.value.find(x => x.label === sortingData.active));
 
   const scope = new FragmentAppScope();
   const runSort = () => {
@@ -116,9 +113,9 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
     scope.begin();
     sortInventory(
       inventory,
-      catSort.value ? createCategorySortingMode(storeId) : activeMode.value,
+      sortingData.cat ? categorySortingMode : activeMode.value,
       burn.value?.burn,
-      reverseSort.value,
+      sortingData.reverse ?? false,
     );
     scope.end();
     setTimeout(() => observer.observe(inventory, { childList: true, subtree: true }), 0);
@@ -128,7 +125,7 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
   watchEffectWhileNodeAlive(inventory, () => {
     // Touch reactive values.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const _ = [reverseSort.value, activeSortId.value, catSort.value, burn.value];
+    const _ = [sortingData.reverse, sortingData.active, sortingData.cat, burn.value];
     if (first) {
       first = false;
       runSort();
@@ -233,25 +230,19 @@ function sortInventory(
   }
 }
 
-function createCategorySortingMode(storeId: string): UserData.SortingMode {
-  return {
-    label: 'CAT',
-    storeId,
-    categories: [],
-    burn: false,
-    zero: false,
-  };
-}
+const categorySortingMode = {
+  label: 'CAT',
+  categories: [],
+  burn: false,
+  zero: false,
+};
 
-function createBurnSortingMode(storeId: string): UserData.SortingMode {
-  return {
-    label: 'BRN',
-    storeId,
-    categories: [],
-    burn: true,
-    zero: true,
-  };
-}
+const burnSortingMode = {
+  label: 'BRN',
+  categories: [],
+  burn: true,
+  zero: true,
+};
 
 function init() {
   applyCssRule(`.${classes.custom} .${C.InventorySortControls.order} > div`, css.hidden);
