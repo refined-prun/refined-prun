@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixed
+
+- `custom-item-sorting`: Fix several bugs introduced by the previous update
+
 ## 25.2.6
 
 ### Added

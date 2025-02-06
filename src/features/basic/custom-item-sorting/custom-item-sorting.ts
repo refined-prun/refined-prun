@@ -31,6 +31,14 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
 
   const storeId = getInvStoreId(parameter);
   const sortingData = getSortingData(parameter);
+  const catSort = computed({
+    get: () => sortingData.cat ?? true,
+    set: value => (sortingData.cat = value ? undefined : false),
+  });
+  const reverseSort = computed({
+    get: () => sortingData.reverse ?? false,
+    set: value => (sortingData.reverse = value ? true : undefined),
+  });
   const sortOptions = await $(container, C.InventorySortControls.controls);
   const inventory = await $(container, C.InventoryView.grid);
 
@@ -42,7 +50,7 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
     const option = criterion[i] as HTMLElement;
     option.addEventListener('click', () => {
       sortingData.active = undefined;
-      sortingData.cat = false;
+      catSort.value = false;
     });
     const isCategorySort = i === 2;
     if (!isCategorySort) {
@@ -52,15 +60,15 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
       SortCriteria,
       reactive({
         label: option.textContent ?? 'CAT',
-        active: toRef(() => sortingData.cat),
-        reverse: toRef(() => sortingData.reverse),
+        active: catSort,
+        reverse: reverseSort,
         onClick: () => {
-          if (sortingData.cat) {
-            sortingData.reverse = !sortingData.reverse;
+          if (catSort.value) {
+            reverseSort.value = !reverseSort.value;
           } else {
             sortingData.active = undefined;
-            sortingData.cat = true;
-            sortingData.reverse = false;
+            catSort.value = true;
+            reverseSort.value = false;
           }
         },
       }),
@@ -79,7 +87,7 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
   });
 
   watchEffectWhileNodeAlive(sortOptions, () => {
-    if (sortingData.active || sortingData.cat) {
+    if (sortingData.active || catSort.value) {
       sortOptions.classList.add(classes.custom);
     } else {
       sortOptions.classList.remove(classes.custom);
@@ -91,14 +99,14 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
     reactive({
       sorting: modes,
       activeSort: toRef(() => sortingData.active),
-      reverse: toRef(() => sortingData.reverse),
+      reverse: reverseSort,
       onModeClick: (mode: string) => {
         if (sortingData.active === mode) {
-          sortingData.reverse = !sortingData.reverse;
+          reverseSort.value = !reverseSort.value;
         } else {
           sortingData.active = mode;
-          sortingData.cat = false;
-          sortingData.reverse = false;
+          catSort.value = false;
+          reverseSort.value = false;
         }
       },
       onAddClick: () => showBuffer(`XIT SORT ${storeId ?? parameter}`),
@@ -113,9 +121,9 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
     scope.begin();
     sortInventory(
       inventory,
-      sortingData.cat ? categorySortingMode : activeMode.value,
+      catSort.value ? categorySortingMode : activeMode.value,
       burn.value?.burn,
-      sortingData.reverse ?? false,
+      reverseSort.value,
     );
     scope.end();
     setTimeout(() => observer.observe(inventory, { childList: true, subtree: true }), 0);
