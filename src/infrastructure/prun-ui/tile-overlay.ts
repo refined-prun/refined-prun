@@ -11,12 +11,26 @@ export function showTileOverlay<T extends Component>(
   if (!container) {
     return;
   }
+  const scrollView = _$(container, C.ScrollView.view);
+  if (!scrollView) {
+    return;
+  }
+  const content = scrollView.children[0] as HTMLElement;
+  if (content) {
+    content.style.display = 'none';
+  }
   const fragmentApp = createFragmentApp(Overlay, {
     child: component,
     props: rootProps,
-    onClose: () => fragmentApp.unmount(),
+    onClose: () => {
+      fragmentApp.unmount();
+      scrollView.appendChild(content);
+      if (content) {
+        content.style.display = '';
+      }
+    },
   });
-  fragmentApp.appendTo(container);
+  fragmentApp.appendTo(scrollView);
 }
 
 export function showConfirmationOverlay(
