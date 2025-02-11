@@ -1,10 +1,10 @@
 import { userData } from '@src/store/user-data';
-import { getInvStoreId } from '@src/core/store-id';
+import { getInvStore } from '@src/core/store-id';
 
 const cache = new Map<string, UserData.StoreSortingData>();
 
 export function getSortingData(storeId: string): UserData.StoreSortingData {
-  const store = getInvStoreId(storeId);
+  const store = getInvStore(storeId);
   if (!store) {
     return {
       modes: [],

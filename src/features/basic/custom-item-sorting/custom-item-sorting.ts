@@ -15,7 +15,7 @@ import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { isDefined, isEmpty } from 'ts-extras';
 import SortCriteria from '@src/features/basic/custom-item-sorting/SortCriteria.vue';
 import { getSortingData } from '@src/store/user-data-sorting';
-import { getInvStoreId } from '@src/core/store-id';
+import { getInvStore } from '@src/core/store-id';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.InventoryView.container), container =>
@@ -29,7 +29,7 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
     return;
   }
 
-  const storeId = getInvStoreId(parameter);
+  const store = getInvStore(parameter);
   const sortingData = getSortingData(parameter);
   const catSort = computed({
     get: () => sortingData.cat ?? true,
@@ -109,7 +109,7 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
           reverseSort.value = false;
         }
       },
-      onAddClick: () => showBuffer(`XIT SORT ${storeId ?? parameter}`),
+      onAddClick: () => showBuffer(`XIT SORT ${store?.id.substring(0, 8) ?? parameter}`),
     }),
   ).appendTo(sortOptions);
 

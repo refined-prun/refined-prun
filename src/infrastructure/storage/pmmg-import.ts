@@ -2,7 +2,7 @@ import { uploadJson } from '@src/utils/json-file';
 import { userData } from '@src/store/user-data';
 import { createId } from '@src/store/create-id';
 import { isDefined } from 'ts-extras';
-import { getInvStoreId } from '@src/core/store-id';
+import { getInvStore } from '@src/core/store-id';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parsePmmgUserData(pmmg: any) {
@@ -57,7 +57,7 @@ function parseSortingModes(pmmg?: PmmgSortingMode[]) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const sorting = {} as Record<string, any>;
   for (const mode of pmmg) {
-    const store = getInvStoreId(mode[1]);
+    const store = getInvStore(mode[1]);
     if (!store) {
       continue;
     }

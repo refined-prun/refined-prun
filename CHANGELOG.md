@@ -2,6 +2,7 @@
 
 ### Fixed
 
+- `custom-item-sorting`: Fix "+" button not opening `XIT SORT`
 - `mtra-transfer-on-enter`: Fix feature not working for docked tiles
 - Fix overlays not showing up
 
