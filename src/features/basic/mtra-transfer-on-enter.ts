@@ -1,6 +1,4 @@
 function onTileReady(tile: PrunTile) {
-  const window = tile.frame.closest(`.${C.Window.window}`) as HTMLElement;
-  const close = _$$(window, C.Window.button).at(-1)!;
   subscribe($$(document, 'input'), async input => {
     if (input.type !== 'text') {
       return;
@@ -20,6 +18,8 @@ function onTileReady(tile: PrunTile) {
       ]);
       const success = await $(tile.frame, C.ActionFeedback.success);
       if (success) {
+        const window = tile.frame.closest(`.${C.Window.window}`) as HTMLElement;
+        const close = _$$(window, C.Window.button).at(-1)!;
         close.click();
       }
     });

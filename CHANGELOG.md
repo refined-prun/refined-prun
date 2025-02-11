@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixed
+
+- `mtra-transfer-on-enter`: Fix feature not working for docked tiles
+
 ## 25.2.6.1805
 
 ### Fixed
