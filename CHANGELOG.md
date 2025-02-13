@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixed
+
+- Fix duplication of Materials in Transit asset value in Long-Term Materials Receivable
+
 ## 25.2.11
 
 ### Fixed

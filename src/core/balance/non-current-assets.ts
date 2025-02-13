@@ -65,11 +65,7 @@ const longTermLoans = computed(() => sumLoanRepayments(partnerNonCurrentConditio
 const materialsInTransit = computed(() => sumShipmentDeliveries(partnerNonCurrentConditions));
 
 const materialsReceivable = computed(() =>
-  sum(
-    sumDeliveries(partnerNonCurrentConditions),
-    sumShipmentDeliveries(partnerNonCurrentConditions),
-    sumMaterialsPickup(selfNonCurrentConditions),
-  ),
+  sum(sumDeliveries(partnerNonCurrentConditions), sumMaterialsPickup(selfNonCurrentConditions)),
 );
 
 export const nonCurrentAssets = {
