@@ -66,6 +66,7 @@ function calcCompletionDate(line: PrunApi.ProductionLine, order: PrunApi.Product
       queue.push(Date.now() + lineOrder.duration.millis);
     } else {
       // Order has not started
+      queue.sort()
       queue.push(queue.shift()! + lineOrder.duration.millis);
     }
     if (lineOrder === order) {
