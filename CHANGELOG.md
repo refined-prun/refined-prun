@@ -3,6 +3,7 @@
 ### Fixed
 
 - Fix duplication of Materials in Transit asset value in Long-Term Materials Receivable
+- `prod-hide-percent`: New feature. Hides percent value from production lines.
 
 ## 25.2.11
 
