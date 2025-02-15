@@ -1,5 +1,5 @@
 import css from '@src/utils/css-utils.module.css';
-import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
+import { applyScopedClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {
   applyScopedClassCssRule('PROD', C.OrderStatus.inProgress, css.hidden);
