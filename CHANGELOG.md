@@ -3,6 +3,7 @@
 ### Fixed
 
 - Fix duplication of Materials in Transit asset value in Long-Term Materials Receivable
+- `prod-order-eta`: Fix completion time being calculated incorrectly
 
 ## 25.2.11
 
