@@ -3,6 +3,7 @@
 ### Added
 
 - `prod-hide-percent`: New feature. Hides percent value from production lines.
+- `prod-clickable-materials`: New feature. Allows the materials in PROD(Q) to be clicked
 
 ### Fixed
 

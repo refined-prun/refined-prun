@@ -41,6 +41,7 @@ import './nots-notification-type-label';
 import './nots-ship-arrival-inventory';
 import './prevent-delete-button-misclicks';
 import './prod-burn-link';
+import './prod-clickable-materials';
 import './prod-order-eta';
 import './prodq-queue-load';
 import './prun-bugs';
