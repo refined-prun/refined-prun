@@ -21,6 +21,6 @@
   width: 100%;
 }
 
-.disablePointerEvents{
+.disablePointerEvents {
   pointer-events: none;
 }
