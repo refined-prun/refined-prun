@@ -1,4 +1,8 @@
-import { applyClassCssRule, applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
+import {
+  applyClassCssRule,
+  applyCssRule,
+  applyScopedClassCssRule,
+} from '@src/infrastructure/prun-ui/refined-prun-css';
 import classes from './prun-bugs.module.css';
 import { getPrunCssStylesheets } from '@src/infrastructure/prun-ui/prun-css';
 
@@ -40,6 +44,9 @@ function init() {
 
   // Adds text centering to GridItemView name.
   applyClassCssRule(C.GridItemView.name, classes.gridItemName);
+
+  // The overlay stops materials from being clickable
+  applyScopedClassCssRule(['PROD', 'PRODQ'], C.OrderTile.overlay, classes.disablePointerEvents);
 }
 
 features.add(import.meta.url, init, 'Fixes CSS bugs.');

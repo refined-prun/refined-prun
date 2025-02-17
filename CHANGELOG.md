@@ -6,8 +6,9 @@
 
 ### Fixed
 
-- Fix duplication of Materials in Transit asset value in Long-Term Materials Receivable
 - `prod-order-eta`: Fix completion time being calculated incorrectly
+- `prun-bugs`: Fix material icons in the PROD and PRODQ buffers not being clickable
+- Fix duplication of Materials in Transit asset value in Long-Term Materials Receivable
 
 ## 25.2.11
 
