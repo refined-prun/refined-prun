@@ -1,11 +1,8 @@
-import classes from './context-controls-no-hover.module.css';
+import css from '@src/utils/css-utils.module.css';
 import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {
-  applyClassCssRule(
-    `${C.ContextControls.item}:hover .${C.ContextControls.label}`,
-    classes.stopDisplay,
-  );
+  applyClassCssRule(`${C.ContextControls.item}:hover .${C.ContextControls.label}`, css.hidden);
 }
 
 features.add(
