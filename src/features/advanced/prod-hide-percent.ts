@@ -5,8 +5,4 @@ function init() {
   applyScopedClassCssRule('PROD', C.OrderStatus.inProgress, css.hidden);
 }
 
-features.add(
-  import.meta.url,
-  init,
-  'PROD: Hides percent value in the order list.',
-);
+features.add(import.meta.url, init, 'PROD: Hides percent value in the order list.');
