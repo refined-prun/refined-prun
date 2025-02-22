@@ -6,6 +6,7 @@ import './bs-hide-zero-workforce';
 import './cogcpex-clean-labels';
 import './context-controls-no-hover';
 import './cxos-hide-exchange';
+import './cxos-leftalign-delete-filled';
 import './cxpo-shorten-fields';
 import './finla-hide-ecd';
 import './flt-flight-status-icons';
