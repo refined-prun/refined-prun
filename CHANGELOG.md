@@ -5,7 +5,7 @@
 - `XIT SHEET`: Add an optional parameter for Sheet ID
 - `context-controls-no-hover`: New feature. Prevents the context controls from displaying description while hovering
   over
-- `cxos-leftalign-delete-filled`: New feature. Moves 'Delete Filled' button to the left in CXOS
+- `cxos-centeralign-delete-filled`: New feature. Moves 'Delete Filled' button to the center in CXOS
 - `prod-hide-percent`: New feature. Hides percent value from production lines.
 
 ### Fixed
