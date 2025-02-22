@@ -48,9 +48,15 @@ shortcut(
     if (isEmpty(parameters)) {
       return undefined;
     }
-    const url = parameters.join('_');
-    return `https://docs.google.com/spreadsheets/d/${url}/edit?usp=sharing&rm=minimal`;
+    const documentId = parameters[0];
+    let url = `https://docs.google.com/spreadsheets/d/${documentId}/edit?usp=sharing&rm=minimal`;
+    const sheetId = parameters[1];
+    if (sheetId) {
+      url += `&gid=${sheetId}`;
+    }
+    return url;
   },
+  'Document ID',
   'Sheet ID',
 );
 

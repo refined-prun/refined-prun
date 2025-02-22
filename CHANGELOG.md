@@ -2,7 +2,9 @@
 
 ### Added
 
-- `context-controls-no-hover`: New feature. Prevents the context controls from displaying description while hovering over
+- `XIT SHEET`: Add an optional parameter for Sheet ID
+- `context-controls-no-hover`: New feature. Prevents the context controls from displaying description while hovering
+  over
 - `prod-hide-percent`: New feature. Hides percent value from production lines.
 
 ### Fixed
