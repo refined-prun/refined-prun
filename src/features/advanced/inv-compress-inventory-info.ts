@@ -1,4 +1,3 @@
-import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import ContextRow from './inv-compress-inventory-info.vue';
 import { extractPlanetName } from '@src/util';
 import css from '@src/utils/css-utils.module.css';
@@ -67,4 +66,4 @@ function init() {
   tiles.observe('INV', onTileReady);
 }
 
-features.add(import.meta.url, init, 'INV: Compresses specific inventory info into a row');
+features.add(import.meta.url, init, 'INV: Compresses specific inventory info into a row.');
