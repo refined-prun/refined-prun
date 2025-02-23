@@ -8,6 +8,10 @@
   over
 - `prod-hide-percent`: New feature. Hides percent value from production lines.
 
+### Changed
+
+- `XIT CXTS`: Hide daily summary for days with only a single trade
+
 ### Fixed
 
 - `prod-order-eta`: Fix completion time being calculated incorrectly

@@ -3,6 +3,7 @@ import { fixed0, ddmmyyyy } from '@src/utils/format';
 
 const { totals } = defineProps<{
   date: number;
+  hideTotals?: boolean;
   totals: { [currency: string]: { purchases: number; sales: number } };
 }>();
 
@@ -26,7 +27,7 @@ const totalsLabels = computed(() => {
     <!-- This <tr> is needed so both other <tr>s are the same color -->
     <td :style="{ display: 'none' }" />
     <td colspan="5" :class="$style.column">
-      <div :class="$style.totals">
+      <div v-if="!hideTotals" :class="$style.totals">
         <div :class="$style.totalsColumn">
           <span v-for="total in totalsLabels" :key="total.currency">{{ fixed0(total.sales) }}</span>
         </div>

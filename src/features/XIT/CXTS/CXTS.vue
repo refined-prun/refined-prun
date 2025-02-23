@@ -116,7 +116,10 @@ stepRender();
         </tr>
         <template v-else>
           <template v-for="group in daysToRender" :key="days[group - 1].date">
-            <DateRow :date="days[group - 1].date" :totals="days[group - 1].totals" />
+            <DateRow
+              :date="days[group - 1].date"
+              :totals="days[group - 1].totals"
+              :hide-totals="days[group - 1].trades.length === 1" />
             <TradeRow
               v-for="trade in days[group - 1].trades"
               :key="trade.trade.id"
