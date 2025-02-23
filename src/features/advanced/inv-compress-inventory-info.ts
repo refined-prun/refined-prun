@@ -1,5 +1,4 @@
 import ContextRow from './inv-compress-inventory-info.vue';
-import { extractPlanetName } from '@src/util';
 import css from '@src/utils/css-utils.module.css';
 
 function onTileReady(tile: PrunTile) {
@@ -17,8 +16,7 @@ function onTileReady(tile: PrunTile) {
   storeViewColumn.children[2].children[1].children[0].setAttribute('volume', '');
 
   const store = reactive({
-    planetCmd:
-      extractPlanetName(storeViewColumn.children[0].children[0].children[0].innerHTML) || '',
+    planetCmd: extractPlanetId(storeViewColumn.children[0].children[0].children[0].innerHTML) || '',
     weight: '',
     weightMax: '',
     volume: '',
@@ -60,6 +58,14 @@ function onTileReady(tile: PrunTile) {
   });
 
   createFragmentApp(ContextRow, store).before(tile.anchor.children[0]);
+}
+
+function extractPlanetId(planet: string) {
+  if (planet) {
+    const split = planet.split(' ');
+    return split[split.length - 1].replace('(', '').replace(')', '');
+  }
+  return '--';
 }
 
 function init() {

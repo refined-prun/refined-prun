@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+
 const { planetCmd, weight, weightMax, volume, volumeMax } = defineProps<{
   planetCmd: string;
   weight: string;
@@ -40,8 +42,10 @@ const { planetCmd, weight, weightMax, volume, volumeMax } = defineProps<{
         </div>
       </div>
     </div>
-    <div :class="$style.marginLeft">
-      <div :class="[C.ContextControls.item, C.fonts.fontRegular, C.type.typeSmall]">
+    <div v-if="!(planetCmd === '--')" :class="$style.marginLeft">
+      <div
+        :class="[C.ContextControls.item, C.fonts.fontRegular, C.type.typeSmall]"
+        @click="showBuffer(`PLI ${planetCmd}`)">
         <span>
           <span :class="C.ContextControls.cmd">PLI</span>
           {{ planetCmd }}
