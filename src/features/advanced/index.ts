@@ -17,6 +17,7 @@ import './hide-form-errors';
 import './hide-item-names';
 import './hide-system-chat-messages/hide-system-chat-messages';
 import './hide-weight-volume-labels';
+import './inv-compress-inventory-info';
 import './inv-shorten-addresses';
 import './inv-shorten-storage-types';
 import './lm-clean-ads';
