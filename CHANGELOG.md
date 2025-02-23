@@ -2,6 +2,7 @@
 
 ### Added
 
+- `XIT CXTS`: Add purchases/sales to the daily summary
 - `XIT SHEET`: Add an optional parameter for Sheet ID
 - `context-controls-no-hover`: New feature. Prevents the context controls from displaying description while hovering
   over
