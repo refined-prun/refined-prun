@@ -15,18 +15,12 @@ import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 
 async function onTileReady(tile: PrunTile) {
-  if (!tile.parameter) {
-    return;
-  }
   await $(tile.anchor, C.StoreView.container);
 
-  const store = getInvStore(tile.parameter);
-  if (!store) {
-    return;
-  }
+  const store = getInvStore(tile.parameter!);
 
-  let cmd = '';
-  switch (store.type) {
+  let cmd: string | undefined;
+  switch (store?.type) {
     case 'STORE': {
       const site = sitesStore.getById(store?.addressableId);
       const naturalId = getEntityNaturalIdFromAddress(site?.address);
