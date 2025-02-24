@@ -15,7 +15,6 @@ async function onTileReady(tile: PrunTile) {
   if (!tile.parameter || tile.command === 'SHPI') {
     return;
   }
-  console.log(tile);
   await $(tile.anchor, C.StoreView.container);
 
   const store = getInvStore(tile.parameter);
