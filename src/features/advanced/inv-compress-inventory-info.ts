@@ -15,7 +15,9 @@ function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {
     return;
   }
-
+  if (!tile.anchor.children[0].classList.contains(C.StoreView.container)) {
+    return;
+  }
   const store = getInvStore(tile.parameter);
   if (!store) {
     return;
