@@ -1,0 +1,14 @@
+.padLeftRight{
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.flexRow{
+  flex-direction: row;
+}
+.reposition{
+  position: absolute;
+  top: -16px;
+  left: -2px;
+}

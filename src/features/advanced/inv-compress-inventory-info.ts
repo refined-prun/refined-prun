@@ -1,74 +1,62 @@
-import ContextRow from './inv-compress-inventory-info.vue';
+import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
+import classes from './inv-compress-inventory-info.module.css';
 import css from '@src/utils/css-utils.module.css';
+import ContextControls from '@src/components/ContextControls.vue';
+import { getInvStore } from '@src/core/store-id';
+import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
+import {
+  getEntityNaturalIdFromAddress,
+  getLocationLineFromAddress,
+} from '@src/infrastructure/prun-api/data/addresses';
+import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
+import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 
 function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {
     return;
   }
 
-  const storeViewRow = tile.anchor.children[0].children[0];
-
-  storeViewRow.classList.add(css.hidden);
-
-  const storeViewColumn = storeViewRow.children[0];
-
-  storeViewColumn.children[1].children[1].children[0].setAttribute('weight', '');
-  storeViewColumn.children[2].children[1].children[0].setAttribute('volume', '');
-
-  const store = reactive({
-    planetCmd: extractPlanetId(storeViewColumn.children[0].children[0].children[0].innerHTML) || '',
-    weight: '',
-    weightMax: '',
-    volume: '',
-    volumeMax: '',
-  });
-
-  //set initial values
-  store.weight = Number(
-    storeViewColumn.children[1].children[1].children[0].getAttribute('value'),
-  ).toFixed(2);
-  store.weightMax = String(storeViewColumn.children[1].children[1].children[0].getAttribute('max'));
-  store.volume = Number(
-    storeViewColumn.children[2].children[1].children[0].getAttribute('value'),
-  ).toFixed(2);
-  store.volumeMax = String(storeViewColumn.children[2].children[1].children[0].getAttribute('max'));
-
-  //monitor for new values and change them accordingly
-  const observer = new MutationObserver(mutations => {
-    mutations.forEach(mutation => {
-      if ((mutation.target as HTMLElement).attributes['weight']) {
-        store.weight = Number((mutation.target as HTMLElement).attributes['value'].value).toFixed(
-          2,
-        );
-        store.weightMax = String((mutation.target as HTMLElement).attributes['max'].value);
-      } else if ((mutation.target as HTMLElement).attributes['volume']) {
-        store.volume = Number((mutation.target as HTMLElement).attributes['value'].value).toFixed(
-          2,
-        );
-        store.volumeMax = String((mutation.target as HTMLElement).attributes['max'].value);
-      }
-    });
-  });
-
-  // Start observing the specific element
-  observer.observe(storeViewColumn, {
-    attributes: true,
-    childList: true,
-    subtree: true,
-  });
-
-  createFragmentApp(ContextRow, store).before(tile.anchor.children[0]);
-}
-
-function extractPlanetId(planet: string) {
-  if (planet) {
-    const split = planet.split(' ');
-    return split[split.length - 1].replace('(', '').replace(')', '');
+  const store = getInvStore(tile.parameter);
+  if (!store) {
+    return;
   }
-  return '--';
+
+  const items = [{ cmd: '', label: undefined }];
+  switch (store.type) {
+    case 'STORE':
+      const siteStore = sitesStore.getById(store?.addressableId);
+      const siteEntityNaturalId = getEntityNaturalIdFromAddress(siteStore?.address);
+      items[0].cmd = `PLI ${siteEntityNaturalId}`;
+      break;
+    case 'WAREHOUSE_STORE':
+      const warehouseStore = warehousesStore.getById(store?.addressableId);
+      const warehouseEntityNaturalId = getEntityNaturalIdFromAddress(warehouseStore?.address);
+      const location = getLocationLineFromAddress(warehouseStore?.address);
+      if (location?.type === 'PLANET') {
+        items[0].cmd = `PLI ${warehouseEntityNaturalId}`;
+      } else if (location?.type === 'STATION') {
+        items[0].cmd = `STNS ${warehouseEntityNaturalId}`;
+      } else {
+        items[0].cmd = `INV ${warehouseEntityNaturalId}`;
+      }
+      break;
+    case 'SHIP_STORE':
+    case 'FTL_FUEL_STORE':
+    case 'STL_FUEL_STORE':
+      const shipStore = shipsStore.getById(store?.addressableId);
+      const shipRegistration = shipStore?.registration;
+      items[0].cmd = `SHP ${shipRegistration}`;
+      break;
+  }
+
+  createFragmentApp(ContextControls, { items }).before(tile.anchor.parentElement as HTMLDivElement);
 }
 
 function init() {
+  applyCssRule(`.${C.StoreView.row}`, classes.reposition);
+  applyCssRule(`.${C.StoreView.column}`, classes.flexRow);
+  applyCssRule(`.${C.StoreView.column} .${C.StoreView.capacity}:nth-child(1)`, css.hidden);
+  applyCssRule(`.${C.InventorySortControls.controls}`, classes.padLeftRight);
   tiles.observe('INV', onTileReady);
 }
 
