@@ -58,7 +58,7 @@ async function onTileReady(tile: PrunTile) {
     }
   }
   createFragmentApp(ContextControls, { items: [{ cmd: cmd ?? 'INV' }] }).before(
-    tile.anchor.parentElement as HTMLDivElement,
+    tile.anchor.parentElement!,
   );
 }
 
