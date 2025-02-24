@@ -1,4 +1,7 @@
-import { applyScopedClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
+import {
+  applyScopedClassCssRule,
+  applyScopedCssRule,
+} from '@src/infrastructure/prun-ui/refined-prun-css';
 import classes from './inv-compress-inventory-info.module.css';
 import css from '@src/utils/css-utils.module.css';
 import ContextControls from '@src/components/ContextControls.vue';
@@ -12,7 +15,7 @@ import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 
 async function onTileReady(tile: PrunTile) {
-  if (!tile.parameter || tile.command === 'SHPI') {
+  if (!tile.parameter) {
     return;
   }
   await $(tile.anchor, C.StoreView.container);
@@ -25,34 +28,34 @@ async function onTileReady(tile: PrunTile) {
   let cmd = '';
   switch (store.type) {
     case 'STORE': {
-      const siteStore = sitesStore.getById(store?.addressableId);
-      const siteEntityNaturalId = getEntityNaturalIdFromAddress(siteStore?.address);
-      if (siteEntityNaturalId) {
-        cmd = `PLI ${siteEntityNaturalId}`;
+      const site = sitesStore.getById(store?.addressableId);
+      const naturalId = getEntityNaturalIdFromAddress(site?.address);
+      if (naturalId) {
+        cmd = `PLI ${naturalId}`;
       }
       break;
     }
     case 'WAREHOUSE_STORE': {
-      const warehouseStore = warehousesStore.getById(store?.addressableId);
-      const warehouseEntityNaturalId = getEntityNaturalIdFromAddress(warehouseStore?.address);
-      if (!warehouseEntityNaturalId) {
+      const warehouse = warehousesStore.getById(store?.addressableId);
+      const naturalId = getEntityNaturalIdFromAddress(warehouse?.address);
+      if (!naturalId) {
         break;
       }
-      const location = getLocationLineFromAddress(warehouseStore?.address);
+      const location = getLocationLineFromAddress(warehouse?.address);
       if (location?.type === 'PLANET') {
-        cmd = `PLI ${warehouseEntityNaturalId}`;
+        cmd = `PLI ${naturalId}`;
       } else if (location?.type === 'STATION') {
-        cmd = `STNS ${warehouseEntityNaturalId}`;
+        cmd = `STNS ${naturalId}`;
       }
       break;
     }
     case 'SHIP_STORE':
     case 'FTL_FUEL_STORE':
     case 'STL_FUEL_STORE': {
-      const shipStore = shipsStore.getById(store?.addressableId);
-      const shipRegistration = shipStore?.registration;
-      if (shipRegistration) {
-        cmd = `SHP ${shipRegistration}`;
+      const ship = shipsStore.getById(store?.addressableId);
+      const registration = ship?.registration;
+      if (registration) {
+        cmd = `SHP ${registration}`;
       }
       break;
     }
@@ -63,14 +66,14 @@ async function onTileReady(tile: PrunTile) {
 }
 
 function init() {
-  applyScopedClassCssRule('INV', `${C.StoreView.row}`, classes.storeInfo);
-  applyScopedClassCssRule('INV', `${C.StoreView.column}`, classes.storeInfoColumn);
-  applyScopedClassCssRule(
+  applyScopedClassCssRule('INV', C.StoreView.row, classes.storeInfo);
+  applyScopedClassCssRule('INV', C.StoreView.column, classes.storeInfoColumn);
+  applyScopedCssRule(
     'INV',
-    `${C.StoreView.column} .${C.StoreView.capacity}:nth-child(1)`,
+    `.${C.StoreView.column} .${C.StoreView.capacity}:nth-child(1)`,
     css.hidden,
   );
-  applyScopedClassCssRule('INV', `${C.InventorySortControls.controls}`, classes.sortControls);
+  applyScopedClassCssRule('INV', C.InventorySortControls.controls, classes.sortControls);
   tiles.observe('INV', onTileReady);
 }
 
