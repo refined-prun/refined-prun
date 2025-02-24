@@ -23,12 +23,13 @@ function onTileReady(tile: PrunTile) {
 
   const items = [{ cmd: '', label: undefined }];
   switch (store.type) {
-    case 'STORE':
+    case 'STORE': {
       const siteStore = sitesStore.getById(store?.addressableId);
       const siteEntityNaturalId = getEntityNaturalIdFromAddress(siteStore?.address);
       items[0].cmd = `PLI ${siteEntityNaturalId}`;
       break;
-    case 'WAREHOUSE_STORE':
+    }
+    case 'WAREHOUSE_STORE': {
       const warehouseStore = warehousesStore.getById(store?.addressableId);
       const warehouseEntityNaturalId = getEntityNaturalIdFromAddress(warehouseStore?.address);
       const location = getLocationLineFromAddress(warehouseStore?.address);
@@ -40,13 +41,15 @@ function onTileReady(tile: PrunTile) {
         items[0].cmd = `INV ${warehouseEntityNaturalId}`;
       }
       break;
+    }
     case 'SHIP_STORE':
     case 'FTL_FUEL_STORE':
-    case 'STL_FUEL_STORE':
+    case 'STL_FUEL_STORE': {
       const shipStore = shipsStore.getById(store?.addressableId);
       const shipRegistration = shipStore?.registration;
       items[0].cmd = `SHP ${shipRegistration}`;
       break;
+    }
   }
 
   createFragmentApp(ContextControls, { items }).before(tile.anchor.parentElement as HTMLDivElement);
