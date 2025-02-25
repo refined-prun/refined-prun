@@ -1,0 +1,14 @@
+.sortControls {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.storeInfoColumn {
+  flex-direction: row;
+}
+
+.storeInfo {
+  position: absolute;
+  top: -16px;
+  left: -2px;
+}
