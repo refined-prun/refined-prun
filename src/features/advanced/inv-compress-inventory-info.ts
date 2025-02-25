@@ -16,16 +16,19 @@ import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 
 async function onTileReady(tile: PrunTile) {
   await $(tile.anchor, C.StoreView.container);
+  createFragmentApp(ContextControls, {
+    items: [{ cmd: getContextCommand(tile.parameter!) }],
+  }).before(tile.anchor.parentElement!);
+}
 
-  const store = getInvStore(tile.parameter!);
-
-  let cmd: string | undefined;
+function getContextCommand(invParameter: string) {
+  const store = getInvStore(invParameter);
   switch (store?.type) {
     case 'STORE': {
       const site = sitesStore.getById(store?.addressableId);
       const naturalId = getEntityNaturalIdFromAddress(site?.address);
       if (naturalId) {
-        cmd = `PLI ${naturalId}`;
+        return `PLI ${naturalId}`;
       }
       break;
     }
@@ -37,26 +40,23 @@ async function onTileReady(tile: PrunTile) {
       }
       const location = getLocationLineFromAddress(warehouse?.address);
       if (location?.type === 'PLANET') {
-        cmd = `PLI ${naturalId}`;
-      } else if (location?.type === 'STATION') {
-        cmd = `STNS ${naturalId}`;
+        return `PLI ${naturalId}`;
+      }
+      if (location?.type === 'STATION') {
+        return `STNS ${naturalId}`;
       }
       break;
     }
-    case 'SHIP_STORE':
-    case 'FTL_FUEL_STORE':
-    case 'STL_FUEL_STORE': {
+    case 'SHIP_STORE': {
       const ship = shipsStore.getById(store?.addressableId);
       const registration = ship?.registration;
       if (registration) {
-        cmd = `SHP ${registration}`;
+        return `SHP ${registration}`;
       }
       break;
     }
   }
-  createFragmentApp(ContextControls, { items: [{ cmd: cmd ?? 'INV' }] }).before(
-    tile.anchor.parentElement!,
-  );
+  return 'INV';
 }
 
 function init() {
