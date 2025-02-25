@@ -4,10 +4,9 @@
 
 - `XIT CXTS`: Add purchases/sales to the daily summary
 - `XIT SHEET`: Add an optional parameter for Sheet ID
-- `context-controls-no-hover`: New feature. Prevents the context controls from displaying description while hovering
-  over
-- `inv-compress-inventory-info`: New feature. Compresses specific inventory info into a row
-- `prod-hide-percent`: New feature. Hides percent value from production lines.
+- `context-controls-no-hover`: (new) Prevents the context controls from displaying description while hovering over
+- `inv-compress-inventory-info`: (new) Compresses specific inventory info into a row
+- `prod-hide-percent`: (new) Hides percent value from production lines
 
 ### Changed
 
