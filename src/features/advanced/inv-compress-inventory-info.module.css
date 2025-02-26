@@ -1,13 +1,6 @@
-.progressBarContainer {
-  display: contents;
-}
-
-.storeViewCapacity {
-  display: flow-root;
-}
-
 .storeViewColumn {
   flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .storeViewContainer {
