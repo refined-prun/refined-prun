@@ -1,14 +1,15 @@
-.sortControls {
-  padding-top: 2px;
-  padding-bottom: 2px;
+.progressBarContainer {
+  display: contents;
 }
 
-.storeInfoColumn {
+.storeViewCapacity {
+  display: flow-root;
+}
+
+.storeViewColumn {
   flex-direction: row;
 }
 
-.storeInfo {
-  position: absolute;
-  top: -16px;
-  left: -2px;
+.storeViewContainer {
+  padding-top: 0;
 }
