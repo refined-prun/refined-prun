@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixed
+
+- `inv-compress-inventory-info`: Fix overlapping text and displays inventory location link
+
 ## 25.2.25
 
 ### Added
