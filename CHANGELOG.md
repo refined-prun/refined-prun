@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+
+- `inv-add-context-controls`: (new) Add context controls to inventory windows
+
 ## 25.2.27
 
 ### Fixed

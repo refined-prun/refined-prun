@@ -35,6 +35,10 @@ export const addressesStore = {
   ...state,
 };
 
+export const getSystemNaturalIdFromAddress = (address?: PrunApi.Address | undefined) => {
+  return getSystemLineFromAddress(address)?.entity.naturalId;
+};
+
 export const getEntityNaturalIdFromAddress = (address?: PrunApi.Address | undefined) => {
   return getLocationLineFromAddress(address)?.entity.naturalId;
 };
