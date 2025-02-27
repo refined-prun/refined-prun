@@ -2,7 +2,7 @@
 
 ### Fixed
 
-- `inv-compress-inventory-info`: Fix overlapping text and displays inventory location link
+- `inv-compress-inventory-info`: Fix usability issues in smaller tiles and bring back address link
 
 ## 25.2.25
 
