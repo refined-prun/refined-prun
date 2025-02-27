@@ -2,6 +2,7 @@
 
 ### Fixed
 
+- `XIT SHEET`: Fix parsing Document IDs with underscores
 - `inv-compress-inventory-info`: Fix usability issues in smaller tiles and bring back address link
 
 ## 25.2.25
@@ -36,7 +37,6 @@
 
 ### Fixed
 
-- `XIT SHEET`: Fix parsing Document IDs with underscores
 - `custom-item-sorting`: Fix several bugs introduced by the previous update
 
 ## 25.2.6
