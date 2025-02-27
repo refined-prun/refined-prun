@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixed
+
+- Fixed incorrect bolding of command arguments in controls
+
 ## 25.2.27
 
 ### Fixed
