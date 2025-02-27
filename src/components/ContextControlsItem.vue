@@ -3,9 +3,9 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 const props = defineProps<{ cmd: string; label?: string }>();
 
-const lastSpaceIndex = props.cmd.lastIndexOf(' ');
-const command = props.cmd.substring(0, lastSpaceIndex);
-const argument = props.cmd.substring(lastSpaceIndex + 1);
+const index = props.cmd.lastIndexOf(' ');
+const [command, argument] =
+  index > -1 ? [props.cmd.substring(0, index), props.cmd.substring(index + 1)] : [props.cmd, ''];
 
 const itemClasses = [C.ContextControls.item, C.fonts.fontRegular, C.type.typeSmall];
 </script>
