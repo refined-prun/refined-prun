@@ -36,6 +36,7 @@
 
 ### Fixed
 
+- `XIT SHEET`: Fix parsing Document IDs with underscores
 - `custom-item-sorting`: Fix several bugs introduced by the previous update
 
 ## 25.2.6
