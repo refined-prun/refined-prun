@@ -1,5 +1,5 @@
 function onTileReady(tile: PrunTile) {
-  subscribe($$(document, 'input'), async input => {
+  subscribe($$(tile.anchor, 'input'), async input => {
     if (input.type !== 'text') {
       return;
     }

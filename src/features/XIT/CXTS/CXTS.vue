@@ -18,7 +18,7 @@ interface OrderTrade {
 interface DayTrades {
   date: number;
   trades: OrderTrade[];
-  totals: { [currency: string]: number };
+  totals: { [currency: string]: { purchases: number; sales: number } };
 }
 
 const msInDay = dayjs.duration(1, 'day').asMilliseconds();
@@ -63,10 +63,14 @@ const days = computed(() => {
     }
 
     day.trades.push(trade);
-    const total =
-      trade.trade.price.amount * trade.trade.amount * (trade.order.type === 'SELLING' ? 1 : -1);
     const currency = trade.trade.price.currency;
-    day.totals[currency] = (day.totals[currency] ?? 0) + total;
+    const total = trade.trade.price.amount * trade.trade.amount;
+    const totals = (day.totals[currency] ??= { purchases: 0, sales: 0 });
+    if (trade.order.type === 'SELLING') {
+      totals.sales += total;
+    } else {
+      totals.purchases += total;
+    }
   }
   return days;
 });
@@ -112,7 +116,10 @@ stepRender();
         </tr>
         <template v-else>
           <template v-for="group in daysToRender" :key="days[group - 1].date">
-            <DateRow :date="days[group - 1].date" :totals="days[group - 1].totals" />
+            <DateRow
+              :date="days[group - 1].date"
+              :totals="days[group - 1].totals"
+              :hide-totals="days[group - 1].trades.length === 1" />
             <TradeRow
               v-for="trade in days[group - 1].trades"
               :key="trade.trade.id"
