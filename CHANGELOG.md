@@ -1,4 +1,4 @@
-## Unreleased
+## 25.2.27
 
 ### Added
 
@@ -6,6 +6,7 @@
 
 ### Fixed
 
+- `XIT SHEET`: Fix parsing Document IDs with underscores
 - `inv-compress-inventory-info`: Fix usability issues in smaller tiles and bring back address link
 
 ## 25.2.25
