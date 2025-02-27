@@ -9,9 +9,9 @@ async function onTileReady(tile: PrunTile) {
   }
   const container = document.createElement('div');
   container.classList.add(classes.capacityContainer);
+  container.after(capacities[0]);
   container.appendChild(capacities[1]);
   container.appendChild(capacities[2]);
-  column.appendChild(container);
 }
 
 function init() {
