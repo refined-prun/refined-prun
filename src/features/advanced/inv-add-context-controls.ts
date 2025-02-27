@@ -1,20 +1,13 @@
-import {
-  applyScopedClassCssRule,
-  applyScopedCssRule,
-} from '@src/infrastructure/prun-ui/refined-prun-css';
-import classes from './inv-compress-inventory-info.module.css';
-import css from '@src/utils/css-utils.module.css';
 import ContextControls from '@src/components/ContextControls.vue';
 import { getInvStore } from '@src/core/store-id';
-import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import {
-  getEntityNameFromAddress,
   getEntityNaturalIdFromAddress,
   getLocationLineFromAddress,
   getSystemNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
-import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
+import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
+import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 
 async function onTileReady(tile: PrunTile) {
   await $(tile.anchor, C.StoreView.container);
@@ -24,79 +17,50 @@ async function onTileReady(tile: PrunTile) {
 }
 
 function getCmds(invParameter: string) {
-  const items: { cmd: string }[] = [];
+  const items: { cmd: string; label: string }[] = [];
   [
-    'INV',
-    getSystemStores(invParameter),
-    getNearbyStores(invParameter),
+    { cmd: 'INV', label: 'All inventories' },
+    getInvArgument(invParameter, getSystemNaturalIdFromAddress, 'System inventories'),
+    getInvArgument(invParameter, getEntityNaturalIdFromAddress, 'Nearby inventories'),
     getStoreLocation(invParameter),
   ].forEach(element => {
     if (element !== undefined) {
-      items.push({ cmd: element });
+      items.push(element);
     }
   });
   return items;
 }
 
-function getNearbyStores(invParameter: string) {
+function getInvArgument(
+  invParameter: string,
+  AddressLineTypeFunc: (arg0: PrunApi.Address | undefined) => string | undefined,
+  AddressLineType,
+) {
   const store = getInvStore(invParameter);
   switch (store?.type) {
     case 'STORE': {
       const site = sitesStore.getById(store?.addressableId);
-      const naturalId = getEntityNaturalIdFromAddress(site?.address);
+      const naturalId = AddressLineTypeFunc(site?.address);
       if (naturalId) {
-        return `INV ${naturalId}`;
+        return { cmd: `INV ${naturalId}`, label: AddressLineType };
       }
+      break;
     }
     case 'WAREHOUSE_STORE': {
       const warehouse = warehousesStore.getById(store?.addressableId);
-      const naturalId = getEntityNaturalIdFromAddress(warehouse?.address);
-      if (!naturalId) {
-        break;
-      }
-      //TODO how do you get all inventories if theres a ship, warehouse, etc at a station?
-      const location = getLocationLineFromAddress(warehouse?.address);
-      if (location?.type === 'PLANET') {
-        return `INV ${naturalId}`;
-      }
-      if (location?.type === 'STATION') {
-        return `TEST4 ${naturalId}`;
-      }
-    }
-    case 'SHIP_STORE': {
-      const ship = shipsStore.getById(store?.addressableId);
-      //ship has adress=null
-      //TODO how do i get the system from the ship when its flying from its inventory?
-      console.log(ship);
-      return 'TEST3';
-    }
-  }
-  return undefined;
-}
-
-function getSystemStores(invParameter: string) {
-  const store = getInvStore(invParameter);
-  switch (store?.type) {
-    case 'STORE': {
-      const site = sitesStore.getById(store?.addressableId);
-      const naturalId = getSystemNaturalIdFromAddress(site?.address);
+      const naturalId = AddressLineTypeFunc(warehouse?.address);
       if (naturalId) {
-        return `INV ${naturalId}`;
+        return { cmd: `INV ${naturalId}`, label: AddressLineType };
       }
-    }
-    case 'WAREHOUSE_STORE': {
-      const warehouse = warehousesStore.getById(store?.addressableId);
-      const naturalId = getSystemNaturalIdFromAddress(warehouse?.address);
-      if (!naturalId) {
-        return `INV ${naturalId}`;
-      }
+      break;
     }
     case 'SHIP_STORE': {
       const ship = shipsStore.getById(store?.addressableId);
-      //ship has adress=null
-      //TODO how do i get the system from the ship when its flying from its inventory?
-      console.log(ship);
-      return 'TEST3';
+      const naturalId = AddressLineTypeFunc(ship?.address ?? undefined);
+      if (naturalId) {
+        return { cmd: `INV ${naturalId}`, label: AddressLineType };
+      }
+      break;
     }
   }
   return undefined;
@@ -109,22 +73,21 @@ function getStoreLocation(invParameter: string) {
       const site = sitesStore.getById(store?.addressableId);
       const naturalId = getEntityNaturalIdFromAddress(site?.address);
       if (naturalId) {
-        return `PLI ${naturalId}`;
+        return { cmd: `PLI ${naturalId}`, label: 'Planet info' };
       }
       break;
     }
     case 'WAREHOUSE_STORE': {
       const warehouse = warehousesStore.getById(store?.addressableId);
       const naturalId = getEntityNaturalIdFromAddress(warehouse?.address);
-      if (!naturalId) {
-        break;
-      }
-      const location = getLocationLineFromAddress(warehouse?.address);
-      if (location?.type === 'PLANET') {
-        return `PLI ${naturalId}`;
-      }
-      if (location?.type === 'STATION') {
-        return `STNS ${naturalId}`;
+      if (naturalId) {
+        const location = getLocationLineFromAddress(warehouse?.address);
+        if (location?.type === 'PLANET') {
+          return { cmd: `PLI ${naturalId}`, label: 'Planet info' };
+        }
+        if (location?.type === 'STATION') {
+          return { cmd: `STNS ${naturalId}`, label: 'Station info' };
+        }
       }
       break;
     }
@@ -132,7 +95,7 @@ function getStoreLocation(invParameter: string) {
       const ship = shipsStore.getById(store?.addressableId);
       const registration = ship?.registration;
       if (registration) {
-        return `SHP ${registration}`;
+        return { cmd: `SHP ${registration}`, label: 'Ship info' };
       }
       break;
     }
@@ -144,4 +107,4 @@ function init() {
   tiles.observe('INV', onTileReady);
 }
 
-features.add(import.meta.url, init, 'INV: Adds various context controls to inventories');
+features.add(import.meta.url, init, 'INV: Adds various context controls inventory commands.');
