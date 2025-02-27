@@ -34,7 +34,7 @@ function getCmds(invParameter: string) {
 function getInvArgument(
   invParameter: string,
   AddressLineTypeFunc: (arg0: PrunApi.Address | undefined) => string | undefined,
-  AddressLineType,
+  cmdLabel: string,
 ) {
   const store = getInvStore(invParameter);
   switch (store?.type) {
@@ -42,7 +42,7 @@ function getInvArgument(
       const site = sitesStore.getById(store?.addressableId);
       const naturalId = AddressLineTypeFunc(site?.address);
       if (naturalId) {
-        return { cmd: `INV ${naturalId}`, label: AddressLineType };
+        return { cmd: `INV ${naturalId}`, label: cmdLabel };
       }
       break;
     }
@@ -50,7 +50,7 @@ function getInvArgument(
       const warehouse = warehousesStore.getById(store?.addressableId);
       const naturalId = AddressLineTypeFunc(warehouse?.address);
       if (naturalId) {
-        return { cmd: `INV ${naturalId}`, label: AddressLineType };
+        return { cmd: `INV ${naturalId}`, label: cmdLabel };
       }
       break;
     }
@@ -58,7 +58,7 @@ function getInvArgument(
       const ship = shipsStore.getById(store?.addressableId);
       const naturalId = AddressLineTypeFunc(ship?.address ?? undefined);
       if (naturalId) {
-        return { cmd: `INV ${naturalId}`, label: AddressLineType };
+        return { cmd: `INV ${naturalId}`, label: cmdLabel };
       }
       break;
     }
