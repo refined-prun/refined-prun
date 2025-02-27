@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Added
+
+- `inv-add-context-controls`: (new) Add context controls to inventory windows
+
 ### Fixed
 
 - `inv-compress-inventory-info`: Fix usability issues in smaller tiles and bring back address link
