@@ -1,4 +1,4 @@
-.inputMissing {
+.inputMissingContainer {
   --prod-missing-input-background-linecolor: rgba(255, 0, 0, 0.3);
   animation: prodMissingInputBackgroundStripes 3s linear infinite;
   background-color: rgba(255, 0, 0, 0.2) !important;

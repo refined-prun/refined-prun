@@ -18,9 +18,9 @@ async function onTileReady(tile: PrunTile) {
         : (errorElement.parentElement?.parentElement ?? null);
     if (errorContainer) {
       watchEffectWhileNodeAlive(errorElement, onCleanup => {
-        errorContainer.classList.add(classes.inputMissing);
+        errorContainer.classList.add(classes.inputMissingContainer);
         onCleanup(() => {
-          errorContainer.classList.remove(classes.inputMissing);
+          errorContainer.classList.remove(classes.inputMissingContainer);
         });
       });
     }
@@ -35,8 +35,12 @@ function init() {
     PRODCO: [3, C.InputsOutputsView.inputMaterials, C.InputsOutputsView.amountMissing],
   };
   applyScopedClassCssRule(['PROD', 'PRODQ'], C.OrderStatus.error, css.hidden);
-  applyScopedCssRule('PRODQ', `.${classes.inputMissing} > td`, classes.queueData);
-  applyScopedCssRule('PRODQ', `.${classes.inputMissing}:hover > td`, classes.queueDataHover);
+  applyScopedCssRule('PRODQ', `.${classes.inputMissingContainer} > td`, classes.queueData);
+  applyScopedCssRule(
+    'PRODQ',
+    `.${classes.inputMissingContainer}:hover > td`,
+    classes.queueDataHover,
+  );
   tiles.observe(['PROD', 'PRODQ', 'PRODCO'], onTileReady);
 }
 
