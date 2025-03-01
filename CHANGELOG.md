@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+
+- `prod-missing-input-background`: (new) Replaces missing input label with red background coloring
+
 ## 25.2.27
 
 ### Fixed

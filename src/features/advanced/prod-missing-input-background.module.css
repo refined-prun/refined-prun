@@ -1,0 +1,25 @@
+.inputMissingContainer {
+  --prod-missing-input-background-linecolor: rgba(255, 0, 0, 0.3);
+  animation: prodMissingInputBackgroundStripes 3s linear infinite;
+  background-color: rgba(255, 0, 0, 0.2) !important;
+  background-image: repeating-linear-gradient(-45deg, transparent, transparent 25%, var(--prod-missing-input-background-linecolor) 25%, var(--prod-missing-input-background-linecolor) 50%);
+  background-size: 37px 37px;
+}
+
+.queueData {
+  background-color: transparent;
+}
+
+.queueDataHover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+@keyframes prodMissingInputBackgroundStripes {
+  from {
+    background-position: 37px 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
