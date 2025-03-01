@@ -18,9 +18,9 @@ async function onTileReady(tile: PrunTile) {
         : (errorElement.parentElement?.parentElement ?? null);
     if (errorContainer) {
       watchEffectWhileNodeAlive(errorElement, onCleanup => {
-        errorContainer.classList.add(options[3]);
+        errorContainer.classList.add(classes.inputMissing);
         onCleanup(() => {
-          errorContainer.classList.remove(options[3]);
+          errorContainer.classList.remove(classes.inputMissing);
         });
       });
     }
@@ -30,22 +30,13 @@ async function onTileReady(tile: PrunTile) {
 function init() {
   //Error '(intermediate value).SiteProductionLines is undefined' if cmdSpecifics is declared outside of init()
   cmdSpecifics = {
-    PROD: [3, C.SiteProductionLines.column, C.OrderStatus.error, classes.orderSlotContainer],
-    PRODQ: [2, C.ProductionQueue.table, C.OrderStatus.error, classes.productionQueue],
-    PRODCO: [
-      3,
-      C.InputsOutputsView.inputMaterials,
-      C.InputsOutputsView.amountMissing,
-      classes.inputsOutputsViewAmountMissing,
-    ],
+    PROD: [3, C.SiteProductionLines.column, C.OrderStatus.error],
+    PRODQ: [2, C.ProductionQueue.table, C.OrderStatus.error],
+    PRODCO: [3, C.InputsOutputsView.inputMaterials, C.InputsOutputsView.amountMissing],
   };
   applyScopedClassCssRule(['PROD', 'PRODQ'], C.OrderStatus.error, css.hidden);
-  applyScopedCssRule('PRODQ', `.${classes.productionQueue} > td`, classes.productionQueueData);
-  applyScopedCssRule(
-    'PRODQ',
-    `.${classes.productionQueue}:hover > td`,
-    classes.productionQueueDataHover,
-  );
+  applyScopedCssRule('PRODQ', `.${classes.inputMissing} > td`, classes.queueData);
+  applyScopedCssRule('PRODQ', `.${classes.inputMissing}:hover > td`, classes.queueDataHover);
   tiles.observe(['PROD', 'PRODQ', 'PRODCO'], onTileReady);
 }
 
