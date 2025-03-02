@@ -2,7 +2,7 @@
 
 ### Fixed
 
-- Fixed incorrect bolding of command arguments in context controls
+- Fix incorrect bolding of command arguments in context controls
 
 ## 25.2.27
 
