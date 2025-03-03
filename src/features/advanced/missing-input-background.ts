@@ -17,4 +17,4 @@ function init() {
   );
 }
 
-features.add(import.meta.url, init, 'Missing input labels get a red background coloring');
+features.add(import.meta.url, init, 'Missing input labels get a red background coloring.');
