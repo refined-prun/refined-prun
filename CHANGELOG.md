@@ -2,7 +2,7 @@
 
 ### Added
 
-- `prod-missing-input-background`: (new) Replaces missing input label with red background coloring
+- `missing-input-background`: (new) Missing input labels get a red background coloring
 
 ## 25.2.27
 
