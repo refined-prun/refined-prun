@@ -68,10 +68,15 @@ const buttons: [string, string][] = [
   .exchangeList {
     display: block;
   }
+
+  > span {
+    color: #ddd;
+  }
 }
 
 .exchangeHover {
-  font-weight: normal;
+  border-bottom: 1px solid rgb(196, 132, 0);
+  margin-bottom: 0;
 }
 
 .exchangeList {
@@ -98,11 +103,9 @@ const buttons: [string, string][] = [
 
 .prunButton {
   display: block;
-  margin-bottom: 0;
   margin-left: 0 !important;
   font-size: 10px;
   line-height: 11px;
-  font-weight: bold;
   text-transform: none;
   padding-top: 1px;
   padding-bottom: 1px;
