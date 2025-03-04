@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixed
+
+- Fix incorrect bolding of command arguments in context controls
+
 ## 25.2.27
 
 ### Fixed
