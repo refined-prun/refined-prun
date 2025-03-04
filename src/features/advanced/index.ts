@@ -23,6 +23,7 @@ import './inv-shorten-storage-types';
 import './lm-clean-ads';
 import './lm-hide-rating';
 import './mat-clean-info';
+import './mat-market-tooltip/market-contextmenu';
 import './minimize-headers/minimize-headers';
 import './nots-clean-notifications';
 import './prod-hide-percent';

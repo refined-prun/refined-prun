@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import removeArrayElement from '@src/utils/remove-array-element';
-import { tilesStore } from '@src/infrastructure/prun-api/data/tiles';
 import { getInvStore } from '@src/core/store-id';
+import { tilesStore } from '@src/infrastructure/prun-api/data/tiles';
+import removeArrayElement from '@src/utils/remove-array-element';
 
 const migrations: Migration[] = [
+  userData => {
+    userData.settings.contextMenuExchange = 'AI1' as UserData.Exchange;
+  },
   userData => {
     const sorting = {} as Record<string, any>;
     for (const mode of userData.sorting) {
