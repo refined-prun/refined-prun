@@ -2,7 +2,7 @@
 
 ### Added
 
-- `missing-input-background`: (new) Missing input labels get a red background coloring
+- `production-order-error-highlight`: (new) Highlights production orders with errors in PROD, PRODQ, and PRODCO
 
 ### Fixed
 

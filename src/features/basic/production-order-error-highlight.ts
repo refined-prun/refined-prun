@@ -1,5 +1,5 @@
 import { applyScopedCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
-import classes from './missing-input-background.module.css';
+import classes from './production-order-error-highlight.module.css';
 
 function init() {
   applyScopedCssRule(
@@ -16,4 +16,8 @@ function init() {
   );
 }
 
-features.add(import.meta.url, init, 'Missing input labels get a red background coloring.');
+features.add(
+  import.meta.url,
+  init,
+  'Highlights production orders with errors in PROD, PRODQ, and PRODCO.',
+);
