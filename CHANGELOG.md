@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Added
+
+- `production-order-error-highlight`: (new) Highlights production orders with errors in PROD, PRODQ, and PRODCO
+
 ### Fixed
 
 - Fix incorrect bolding of command arguments in context controls
