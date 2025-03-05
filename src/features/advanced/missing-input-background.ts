@@ -7,9 +7,8 @@ function init() {
     `.${C.OrderSlot.container}:has(.${C.OrderStatus.error})`,
     classes.inputMissingContainer,
   );
-  applyScopedCssRule('PRODQ', `tr:has(.${C.OrderStatus.error})`, classes.inputMissingContainer);
-  applyScopedCssRule('PRODQ', `tr:has(.${C.OrderStatus.error}) td`, classes.queueData);
-  applyScopedCssRule('PRODQ', `tr:has(.${C.OrderStatus.error}):hover td`, classes.queueDataHover);
+  applyScopedCssRule('PRODQ', `tr:has(.${C.OrderStatus.error})`, classes.orderRow);
+  applyScopedCssRule('PRODQ', `tr:has(.${C.OrderStatus.error}):after`, classes.orderRowOverlay);
   applyScopedCssRule(
     'PRODCO',
     `.${C.InputsOutputsView.input}:has(.${C.InputsOutputsView.amountMissing})`,
