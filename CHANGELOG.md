@@ -2,7 +2,7 @@
 
 ### Added
 
-- `production-order-error-highlight`: (new) Highlights production orders with errors in PROD, PRODQ, and PRODCO
+- `highlight-production-order-error`: (new) Highlights production orders with errors in PROD, PRODQ, and PRODCO
 
 ### Fixed
 

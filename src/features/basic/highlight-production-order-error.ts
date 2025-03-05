@@ -1,5 +1,5 @@
 import { applyScopedCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
-import classes from './production-order-error-highlight.module.css';
+import classes from './highlight-production-order-error.module.css';
 
 function init() {
   applyScopedCssRule(
