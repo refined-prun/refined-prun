@@ -34,6 +34,7 @@ import './lm-colored-buy-sell';
 import './lm-highlight-own-ads';
 import './lm-item-icons/lm-item-icons';
 import './mat-linkify-category';
+import './missing-input-background';
 import './mtra-auto-focus-amount';
 import './mtra-transfer-on-enter';
 import './nots-material-ticker';
