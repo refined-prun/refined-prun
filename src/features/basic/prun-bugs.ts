@@ -5,6 +5,7 @@ import {
 } from '@src/infrastructure/prun-ui/refined-prun-css';
 import classes from './prun-bugs.module.css';
 import { getPrunCssStylesheets } from '@src/infrastructure/prun-ui/prun-css';
+import { changeInputValue } from '@src/util';
 
 function removeMobileCssRules() {
   const styles = getPrunCssStylesheets();
@@ -32,9 +33,27 @@ function fixZOrder() {
   applyClassCssRule(C.ScrollView.track, classes.scrollTrack);
 }
 
+function fixContractConditionEditor() {
+  // Condition editor fails to save the condition unless the user interacts with the input.
+  // Here we simulate this interaction.
+  tiles.observe('CONTD', tile => {
+    subscribe($$(tile.anchor, C.DraftConditionEditor.form), form => {
+      subscribe($$(form, 'input'), input => {
+        if (input.type !== 'text') {
+          return;
+        }
+        const value = input.value;
+        changeInputValue(input, '');
+        changeInputValue(input, value);
+      });
+    });
+  });
+}
+
 function init() {
   removeMobileCssRules();
   fixZOrder();
+  fixContractConditionEditor();
 
   // Prevents top-right user info from shrinking.
   applyCssRule(`.${C.Head.container} > div:nth-child(2)`, classes.userInfo);
@@ -49,4 +68,4 @@ function init() {
   applyScopedClassCssRule(['PROD', 'PRODQ'], C.OrderTile.overlay, classes.disablePointerEvents);
 }
 
-features.add(import.meta.url, init, 'Fixes CSS bugs.');
+features.add(import.meta.url, init, 'Fixes PrUn bugs.');
