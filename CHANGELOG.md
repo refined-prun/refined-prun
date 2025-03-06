@@ -3,6 +3,7 @@
 ### Added
 
 - `highlight-production-order-error`: (new) Highlights production orders with errors in PROD, PRODQ, and PRODCO
+- `market-contextmenu`: (new) Right click any material to quickly see material market buttons
 - `prun-bugs`: Add a fix for amount input field in CONTD condition editor
 
 ### Fixed
