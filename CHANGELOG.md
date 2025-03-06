@@ -1,3 +1,14 @@
+## Unreleased
+
+### Added
+
+- `highlight-production-order-error`: (new) Highlights production orders with errors in PROD, PRODQ, and PRODCO
+- `prun-bugs`: Add a fix for amount input field in CONTD condition editor
+
+### Fixed
+
+- Fix incorrect bolding of command arguments in context controls
+
 ## 25.2.27
 
 ### Fixed

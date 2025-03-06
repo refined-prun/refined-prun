@@ -25,6 +25,7 @@ import './header-calculator-button';
 import './header-duplicate-button';
 import './hide-inactive-close-button';
 import './highlight-own-exchange-orders';
+import './highlight-production-order-error';
 import './input-math';
 import './inv-search';
 import './item-icons';
