@@ -25,5 +25,6 @@ import './lm-hide-rating';
 import './mat-clean-info';
 import './minimize-headers/minimize-headers';
 import './nots-clean-notifications';
+import './prod-collapse-orders/prod-collapse-orders';
 import './prod-hide-percent';
 import './shpf-hide-sort-options';
