@@ -3,13 +3,13 @@
 ### Added
 
 - `contd-fill-condition-address`: (new) Fills the address field in the condition editor
-- `highlight-production-order-error`: (new) Highlights production orders with errors in PROD, PRODQ, and PRODCO
-- `prun-bugs`: Add a fix for amount input field in CONTD condition editor
+- `highlight-production-order-error`: (new) Highlights production orders with errors in `PROD`, `PRODQ`, and `PRODCO`
 - `shipment-item-detail`: Add font auto-sizing
 
 ### Fixed
 
-- Fix incorrect bolding of command arguments in context controls
+- `prun-bugs`: Fix `CONTD` condition saving issues when amount is not changed
+- Fix incorrect bolding of commands in context controls added by Refined PrUn
 
 ## 25.2.27
 
