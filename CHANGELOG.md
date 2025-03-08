@@ -2,6 +2,7 @@
 
 ### Added
 
+- `contd-fill-condition-address`: (new) Fills the address field in the condition editor
 - `highlight-production-order-error`: (new) Highlights production orders with errors in PROD, PRODQ, and PRODCO
 - `prun-bugs`: Add a fix for amount input field in CONTD condition editor
 - `shipment-item-detail`: Add font auto-sizing
