@@ -1,103 +1,102 @@
+import { productionStore } from '@src/infrastructure/prun-api/data/production';
+import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
+import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { computedTileState } from '@src/store/user-data-tiles';
+import HiddenIndicator from './HiddenIndicator.vue';
 import HideOrders from './HideOrders.vue';
 import classes from './prod-collapse-orders.module.css';
 import { getTileState } from './tile-state';
 
 async function onTileReady(tile: PrunTile) {
-  const hideOrdersInfo = computedTileState(
-    getTileState(tile),
-    'hideOrdersInfo',
-    new Map<string, number[]>(),
-  );
-  console.log(hideOrdersInfo);
+  const parameter = tile.parameter;
+  if (!parameter) return;
+  const hideOrdersInfo = computedTileState(getTileState(tile), 'hideOrdersInfo', {});
+  const infoProxy = computed({
+    get: () => {
+      return hideOrdersInfo.value;
+    },
+    set: (data: [string, number, number]) => {
+      const result = { ...hideOrdersInfo.value };
+      if (data[1] === -1 && data[2] === -1) {
+        delete result[data[0]];
+      } else {
+        result[data[0]] = [data[1], data[2]];
+      }
+      hideOrdersInfo.value = result;
+    },
+  });
 
-  const siteProductionGrid = await $(tile.anchor, C.SiteProductionLines.grid);
-  const headerCount = siteProductionGrid.children.length / 2;
-  for (let counter = 0; counter < headerCount; counter++) {
-    subscribe(
-      $$(siteProductionGrid.children[counter], C.SiteProductionLines.headerActions),
-      headerActions => {
-        const headerName = headerActions.parentElement?.children[0].children[0].innerHTML!;
-        const prodLineOrdersAmt = getOrdersAmt(siteProductionGrid, headerCount + counter);
-        createFragmentApp(
-          HideOrders,
-          reactive({
-            hideOrdersInfo: (hideOrdersInfo.value as Map<string, number[]>).get(headerName)!,
-            totalProd: prodLineOrdersAmt[0],
-            totalQueue: prodLineOrdersAmt[1],
-            setOrdersDisplay: (keepProdAmt: number, keepQueueAmt: number) => {
-              setOrdersDisplay(
-                siteProductionGrid,
-                headerCount + counter,
-                keepProdAmt,
-                keepQueueAmt,
-              );
-              (hideOrdersInfo.value as Map<string, number[]>).set(headerName, [
-                keepProdAmt,
-                keepQueueAmt,
-              ]);
-              console.log(hideOrdersInfo);
-            },
-            displayAllOrders: () => {
-              displayAllOrders(siteProductionGrid, headerCount + counter);
-            },
+  subscribe($$(tile.anchor, C.SiteProductionLines.grid), grid => {
+    const site = sitesStore.getById(parameter);
+    if (!site) return;
+    const production = productionStore.getBySiteId(site.siteId);
+    if (!production) return;
+    for (let lineNum = 0; lineNum < production.length; lineNum++) {
+      const headerActions = _$(grid.children[lineNum], C.SiteProductionLines.headerActions);
+      if (!headerActions) return;
+
+      const orders = Array.from(
+        _$$(grid, C.SiteProductionLines.column)[lineNum].children,
+      ) as HTMLElement[];
+
+      const firstOrderId = getPrunId(orders[0] as HTMLElement);
+      const line = production?.find((line: PrunApi.ProductionLine) => {
+        return line.orders.find((order: PrunApi.ProductionOrder) => {
+          return order.id === firstOrderId;
+        });
+      });
+
+      if (!line) return;
+      const lineName = line.type;
+      createFragmentApp(
+        HideOrders,
+        reactive({
+          headerOrdersInfo: infoProxy.value[lineName],
+          capacity: line.capacity,
+          slots: line.slots,
+          setOrdersDisplay: (keepCapacity: number, keepSlots: number) => {
+            infoProxy.value = [lineName, keepCapacity, keepSlots];
+            orders.forEach((order: HTMLElement, index: number) => {
+              if (index < line.capacity) {
+                order.style.display = index < keepCapacity ? '' : 'none';
+              } else if (index > line.capacity) {
+                order.style.display = index - line.capacity - 1 < keepSlots ? '' : 'none';
+              }
+            });
+          },
+          displayAllOrders: () => {
+            orders.forEach(order => order.style.removeProperty('display'));
+            infoProxy.value = [lineName, -1, -1];
+          },
+        }),
+      ).appendTo(headerActions);
+
+      const divider = orders.find(order =>
+        order.classList.contains(C.SiteProductionLines.slotDivider),
+      );
+      if (!divider) return;
+      createFragmentApp(
+        HiddenIndicator,
+        reactive({
+          amtHidden: computed(() => {
+            return infoProxy.value[lineName] ? line.capacity - infoProxy.value[lineName][0] : 0;
           }),
-        ).appendTo(headerActions);
-      },
-    );
-  }
-}
+        }),
+      ).before(divider);
 
-function setOrdersDisplay(
-  grid: HTMLElement,
-  gridIndex: number,
-  keepProdAmt: number,
-  keepQueueAmt: number,
-) {
-  const siteProductionLine = grid.children[gridIndex];
-  if (siteProductionLine) {
-    const orders = Array.from(siteProductionLine.children) as HTMLElement[];
-    const dividerIndex = orders.findIndex(order =>
-      order.classList.contains(C.SiteProductionLines.slotDivider),
-    );
-    const prodOrders = orders.slice(0, dividerIndex);
-    setDisplayOnOrders(prodOrders, keepProdAmt);
-    const queueOrders = orders.slice(dividerIndex + 1, orders.length);
-    setDisplayOnOrders(queueOrders, keepQueueAmt);
-  }
-}
-
-function setDisplayOnOrders(orders: HTMLElement[], keepAmt: number) {
-  for (let counter = 0; counter < orders.length; counter++) {
-    if (counter < keepAmt) {
-      orders[counter].style.display = 'flex';
-    } else {
-      orders[counter].style.display = 'none';
+      const lastOrder = orders[orders.length - 1];
+      if (!lastOrder) return;
+      createFragmentApp(
+        HiddenIndicator,
+        reactive({
+          amtHidden: computed(() => {
+            return infoProxy.value[lineName] ? line.slots - infoProxy.value[lineName][1] : 0;
+          }),
+        }),
+      ).after(lastOrder);
     }
-  }
-}
-
-function displayAllOrders(grid: HTMLElement, gridIndex: number) {
-  const siteProductionLine = grid.children[gridIndex];
-  if (siteProductionLine) {
-    const orders = Array.from(siteProductionLine.children) as HTMLElement[];
-    for (const order of orders) {
-      order.style.display = 'flex';
-    }
-  }
-}
-
-function getOrdersAmt(grid: HTMLElement, gridIndex: number) {
-  const siteProductionLine = grid.children[gridIndex];
-  if (siteProductionLine) {
-    const orders = Array.from(siteProductionLine.children) as HTMLElement[];
-    const dividerIndex = orders.findIndex(order =>
-      order.classList.contains(C.SiteProductionLines.slotDivider),
-    );
-    return [dividerIndex, orders.length - dividerIndex - 1];
-  }
-  return [0, 0];
+  });
 }
 
 function init() {

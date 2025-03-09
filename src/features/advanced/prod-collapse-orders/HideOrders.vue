@@ -2,25 +2,25 @@
 import PrunButton from '@src/components/PrunButton.vue';
 
 const props = defineProps<{
-  hideOrdersInfo: number[];
-  totalProd: number;
-  totalQueue: number;
-  setOrdersDisplay: (keepProdAmt: number, keepQueueAmt) => void;
+  headerOrdersInfo: number[];
+  capacity: number;
+  slots: number;
+  setOrdersDisplay: (keepProdAmt: number, keepQueueAmt: number) => void;
   displayAllOrders: () => void;
 }>();
 
-const keepProdAmt = ref<number>();
-const keepQueueAmt = ref<number>();
-const state = ref<number>(0);
+const keepCapacity = ref<number>();
+const keepSlots = ref<number>();
+const state = ref<0 | 1 | 2>(0);
 
 function validateProdInput() {
-  const amt = Number(keepProdAmt.value);
-  keepProdAmt.value = clamp(amt, 0, props.totalProd);
+  const amt = Number(keepCapacity.value);
+  keepCapacity.value = clamp(amt, 0, props.capacity);
 }
 
 function validateQueueInput() {
-  const amt = Number(keepQueueAmt.value);
-  keepQueueAmt.value = clamp(amt, 0, props.totalQueue);
+  const amt = Number(keepSlots.value);
+  keepSlots.value = clamp(amt, 0, props.slots);
 }
 
 function clamp(val: number, min: number, max: number) {
@@ -32,50 +32,54 @@ function unHide() {
   state.value = 0;
 }
 
-function setHideAmt() {
-  const prodAmt = Number(keepProdAmt.value);
-  const queueAmt = Number(keepQueueAmt.value);
-  if (props.totalProd >= prodAmt && prodAmt >= 0 && props.totalQueue >= queueAmt && queueAmt >= 0) {
-    props.setOrdersDisplay(prodAmt, queueAmt);
-    state.value = 2;
+function hideOrders() {
+  if (keepCapacity.value || keepSlots.value) {
+    const prodAmt = Number(keepCapacity.value);
+    const queueAmt = Number(keepSlots.value);
+    if (props.capacity >= prodAmt && prodAmt >= 0 && props.slots >= queueAmt && queueAmt >= 0) {
+      props.setOrdersDisplay(prodAmt, queueAmt);
+      state.value = 2;
+    }
+  } else {
+    state.value = 0;
   }
 }
 
-function openInput() {
+function openHideSettings() {
   state.value = 1;
 }
-console.log(props.hideOrdersInfo);
-if (props.hideOrdersInfo) {
-  keepProdAmt.value = props.hideOrdersInfo[0];
-  keepQueueAmt.value = props.hideOrdersInfo[1];
-  setHideAmt();
+if (props.headerOrdersInfo) {
+  keepCapacity.value = props.headerOrdersInfo[0];
+  keepSlots.value = props.headerOrdersInfo[1];
+  hideOrders();
 }
 </script>
 
 <template>
   <PrunButton v-if="state == 2" :primary="true" @click="unHide">Unhide</PrunButton>
-  <div v-if="state == 1">Production orders:</div>
-  <div v-if="state == 1">Keep top 0 - {{ props.totalProd }}?</div>
-  <input
-    v-if="state == 1"
-    v-model="keepProdAmt"
-    size="5"
-    type="number"
-    :min="0"
-    :max="props.totalProd"
-    @input="validateProdInput" />
-  <div v-if="state == 1">Queued orders:</div>
-  <div v-if="state == 1">Keep top 0 - {{ props.totalQueue }}?</div>
-  <input
-    v-if="state == 1"
-    v-model="keepQueueAmt"
-    size="5"
-    type="number"
-    :min="0"
-    :max="props.totalQueue"
-    @input="validateQueueInput" />
-  <PrunButton v-if="state == 1" :primary="true" @click="setHideAmt">Hide Orders</PrunButton>
-  <PrunButton v-if="state == 0" :primary="true" @click="openInput">Hide Orders</PrunButton>
+  <div v-if="state == 1">
+    <div>Production orders:</div>
+    <div>Keep top 0 - {{ props.capacity }}?</div>
+    <input
+      v-model="keepCapacity"
+      size="5"
+      type="number"
+      :min="0"
+      :max="props.capacity"
+      @input="validateProdInput" />
+    <div>Queued orders:</div>
+    <div>Keep top 0 - {{ props.slots }}?</div>
+    <input
+      v-model="keepSlots"
+      size="5"
+      type="number"
+      :min="0"
+      :max="props.slots"
+      @input="validateQueueInput" />
+    <PrunButton :primary="true" @click="hideOrders">Hide Orders</PrunButton>
+    <PrunButton :primary="true" @click="unHide">Cancel</PrunButton>
+  </div>
+  <PrunButton v-if="state == 0" :primary="true" @click="openHideSettings">Hide Orders</PrunButton>
 </template>
 
 <style module></style>
