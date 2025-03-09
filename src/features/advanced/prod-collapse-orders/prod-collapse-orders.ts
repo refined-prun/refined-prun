@@ -89,4 +89,4 @@ function init() {
   tiles.observe('PROD', onTileReady);
 }
 
-features.add(import.meta.url, init, 'PROD: Collapse all or some ongoing and queued recipes');
+features.add(import.meta.url, init, 'PROD: Collapse all or some ongoing and queued recipes.');
