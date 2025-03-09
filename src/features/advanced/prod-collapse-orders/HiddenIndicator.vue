@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
-defineProps({
-  amtHidden: {
-    type: Number,
-    required: true,
-  },
-});
+defineProps<{ amtHidden: number }>();
 </script>
 
 <template>

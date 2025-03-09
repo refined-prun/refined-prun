@@ -1,6 +1,5 @@
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { computedTileState } from '@src/store/user-data-tiles';
 import HiddenIndicator from './HiddenIndicator.vue';
@@ -32,22 +31,14 @@ async function onTileReady(tile: PrunTile) {
     if (!site) return;
     const production = productionStore.getBySiteId(site.siteId);
     if (!production) return;
-    for (let lineNum = 0; lineNum < production.length; lineNum++) {
-      const headerActions = _$(grid.children[lineNum], C.SiteProductionLines.headerActions);
+    production.forEach((line, index) => {
+      const headerActions = _$(grid.children[index], C.SiteProductionLines.headerActions);
       if (!headerActions) return;
 
       const orders = Array.from(
-        _$$(grid, C.SiteProductionLines.column)[lineNum].children,
+        _$$(grid, C.SiteProductionLines.column)[index].children,
       ) as HTMLElement[];
 
-      const firstOrderId = getPrunId(orders[0] as HTMLElement);
-      const line = production?.find((line: PrunApi.ProductionLine) => {
-        return line.orders.find((order: PrunApi.ProductionOrder) => {
-          return order.id === firstOrderId;
-        });
-      });
-
-      if (!line) return;
       const lineName = line.type;
       createFragmentApp(
         HideOrders,
@@ -72,10 +63,6 @@ async function onTileReady(tile: PrunTile) {
         }),
       ).appendTo(headerActions);
 
-      const divider = orders.find(order =>
-        order.classList.contains(C.SiteProductionLines.slotDivider),
-      );
-      if (!divider) return;
       createFragmentApp(
         HiddenIndicator,
         reactive({
@@ -83,10 +70,8 @@ async function onTileReady(tile: PrunTile) {
             return infoProxy.value[lineName] ? line.capacity - infoProxy.value[lineName][0] : 0;
           }),
         }),
-      ).before(divider);
+      ).before(orders.at(line.capacity)!);
 
-      const lastOrder = orders[orders.length - 1];
-      if (!lastOrder) return;
       createFragmentApp(
         HiddenIndicator,
         reactive({
@@ -94,8 +79,8 @@ async function onTileReady(tile: PrunTile) {
             return infoProxy.value[lineName] ? line.slots - infoProxy.value[lineName][1] : 0;
           }),
         }),
-      ).after(lastOrder);
-    }
+      ).after(orders[orders.length - 1]);
+    });
   });
 }
 
