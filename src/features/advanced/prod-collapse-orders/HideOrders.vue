@@ -40,7 +40,7 @@ if (props.headerOrdersInfo) {
 
 <template>
   <PrunButton v-if="state == 2" :primary="true" @click="unHide">Unhide</PrunButton>
-  <div v-if="state == 1">
+  <div v-if="state == 1" :class="$style.container">
     <div>Production orders:</div>
     <div>Keep top 0 - {{ props.capacity }}?</div>
     <input
@@ -64,3 +64,11 @@ if (props.headerOrdersInfo) {
   </div>
   <PrunButton v-if="state == 0" :primary="true" @click="state = 1">Hide Orders</PrunButton>
 </template>
+
+<style module>
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>
