@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Added
+
+- `market-contextmenu`: (new) Right click any material to quickly see material market buttons
+
 ## 25.3.8
 
 ### Added
