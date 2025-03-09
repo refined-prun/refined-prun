@@ -74,6 +74,11 @@ export function changeSelectIndex(input, selectIndex) {
   input.dispatchEvent(changeEvent);
 }
 
+export function focusInput(input: HTMLInputElement) {
+  const event = new Event('focusin', { bubbles: true, cancelable: false });
+  input.dispatchEvent(event);
+}
+
 // Return all matching buffers
 export function getBuffers(bufferCode: string): HTMLElement[] {
   const nodes = document.evaluate(
