@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Fixed
+
+- `prun-bugs`: Fix scroll bar gutter in `PROD` taking up space without a scroll bar present
+
 ## 25.3.8
 
 ### Added
