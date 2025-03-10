@@ -1,4 +1,3 @@
-import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
@@ -31,22 +30,16 @@ async function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.SiteProductionLines.grid), grid => {
     const site = sitesStore.getById(parameter);
     if (!site) return;
+    const production = productionStore.getBySiteId(site.siteId);
+    if (!production) return;
+    let columnIndex = 0;
     subscribe($$(grid, C.SiteProductionLines.column), column => {
-      console.log(column);
-      const production = productionStore.getBySiteId(site.siteId);
-      if (!production) return;
       const orders = Array.from(column.children) as HTMLElement[];
 
       let line = production.find(line =>
         line.orders.some(order => order.id === getPrunId(orders[0] as HTMLElement)),
       )!;
       if (!line) return;
-      console.log(line);
-
-      const lineIndex = production.findIndex(prodLine => prodLine.id === line.id);
-
-      const headerActions = _$(grid.children[lineIndex], C.SiteProductionLines.headerActions);
-      if (!headerActions) return;
 
       function setOrdersDisplay(keepCapacity: number, keepSlots: number) {
         infoProxy.value = [line.type, keepCapacity, keepSlots];
@@ -71,7 +64,7 @@ async function onTileReady(tile: PrunTile) {
             infoProxy.value = [line.type, -1, -1];
           },
         }),
-      ).appendTo(headerActions);
+      ).appendTo(_$(grid.children[columnIndex++], C.SiteProductionLines.headerActions)!);
 
       const hiddenProd = document.createElement('div');
       const hiddenQueue = document.createElement('div');
@@ -101,26 +94,21 @@ async function onTileReady(tile: PrunTile) {
         }),
       ).appendTo(hiddenQueue);
 
-      onApiMessage({
-        PRODUCTION_PRODUCTION_LINE_UPDATED(data: PrunApi.ProductionLine) {
-          console.log('PRODUCTION_PRODUCTION_LINE_UPDATED');
-          console.log(data);
-          console.log(line);
-          if (data.id !== line.id || (data.capacity === line.capacity && data.slots === line.slots))
-            return;
-          setIndicatorPositions();
+      const lineStore = computed(
+        () => productionStore.all.value?.find(line => line.id === line.id)!,
+      );
+      watch(lineStore, (data: PrunApi.ProductionLine) => {
+        if (data.capacity === line.capacity && data.slots === line.slots) return;
+        setIndicatorPositions();
 
-          const newOrders = Array.from(column.children) as HTMLElement[];
-          if (newOrders.length === orders.length) return;
-          orders.length = 0;
-          orders.push(...newOrders);
+        const newOrders = Array.from(column.children) as HTMLElement[];
+        if (newOrders.length === orders.length) return;
+        orders.length = 0;
+        orders.push(...newOrders);
 
-          line = data;
-          setOrdersDisplay(infoProxy.value[line.type][0], infoProxy.value[line.type][1]);
-          console.log('updated orders and called setOrdersDisplay');
-        },
+        line = data;
+        setOrdersDisplay(infoProxy.value[line.type][0], infoProxy.value[line.type][1]);
       });
-      console.log('apiMessageReady');
     });
   });
 }
