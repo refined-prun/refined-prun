@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Added
+
+- `prod-collapse-orders`: (new) Collapse all or some ongoing and queued recipes in `PROD`
+
 ## 25.3.8
 
 ### Added
