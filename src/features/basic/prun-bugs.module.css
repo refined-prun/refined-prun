@@ -24,3 +24,7 @@
 .disablePointerEvents {
   pointer-events: none;
 }
+
+.containerSidebarGutter {
+  scrollbar-gutter: auto;
+}
