@@ -12,6 +12,7 @@ defineProps<{ amtHidden: number }>();
 <style module>
 .hiddenIndicator {
   font-size: 9px;
+  margin: -1px;
   text-align: center;
 }
 </style>

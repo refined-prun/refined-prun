@@ -1,5 +1,7 @@
+import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
+import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { computedTileState } from '@src/store/user-data-tiles';
 import HiddenIndicator from './HiddenIndicator.vue';
@@ -29,57 +31,96 @@ async function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.SiteProductionLines.grid), grid => {
     const site = sitesStore.getById(parameter);
     if (!site) return;
-    const production = productionStore.getBySiteId(site.siteId);
-    if (!production) return;
-    production.forEach((line, index) => {
-      const headerActions = _$(grid.children[index], C.SiteProductionLines.headerActions);
+    subscribe($$(grid, C.SiteProductionLines.column), column => {
+      console.log(column);
+      const production = productionStore.getBySiteId(site.siteId);
+      if (!production) return;
+      const orders = Array.from(column.children) as HTMLElement[];
+
+      let line = production.find(line =>
+        line.orders.some(order => order.id === getPrunId(orders[0] as HTMLElement)),
+      )!;
+      if (!line) return;
+      console.log(line);
+
+      const lineIndex = production.findIndex(prodLine => prodLine.id === line.id);
+
+      const headerActions = _$(grid.children[lineIndex], C.SiteProductionLines.headerActions);
       if (!headerActions) return;
 
-      const orders = Array.from(
-        _$$(grid, C.SiteProductionLines.column)[index].children,
-      ) as HTMLElement[];
+      function setOrdersDisplay(keepCapacity: number, keepSlots: number) {
+        infoProxy.value = [line.type, keepCapacity, keepSlots];
+        orders.forEach((order: HTMLElement, index: number) => {
+          if (index < line.capacity) {
+            order.style.display = index < keepCapacity ? '' : 'none';
+          } else {
+            order.style.display = index <= line.capacity + keepSlots ? '' : 'none';
+          }
+        });
+      }
 
-      const lineName = line.type;
       createFragmentApp(
         HideOrders,
         reactive({
-          headerOrdersInfo: infoProxy.value[lineName],
+          headerOrdersInfo: infoProxy.value[line.type],
           capacity: line.capacity,
           slots: line.slots,
-          setOrdersDisplay: (keepCapacity: number, keepSlots: number) => {
-            infoProxy.value = [lineName, keepCapacity, keepSlots];
-            orders.forEach((order: HTMLElement, index: number) => {
-              if (index < line.capacity) {
-                order.style.display = index < keepCapacity ? '' : 'none';
-              } else if (index > line.capacity) {
-                order.style.display = index - line.capacity - 1 < keepSlots ? '' : 'none';
-              }
-            });
-          },
+          setOrdersDisplay,
           displayAllOrders: () => {
             orders.forEach(order => order.style.removeProperty('display'));
-            infoProxy.value = [lineName, -1, -1];
+            infoProxy.value = [line.type, -1, -1];
           },
         }),
       ).appendTo(headerActions);
 
-      createFragmentApp(
-        HiddenIndicator,
-        reactive({
-          amtHidden: computed(() => {
-            return infoProxy.value[lineName] ? line.capacity - infoProxy.value[lineName][0] : 0;
-          }),
-        }),
-      ).before(orders.at(line.capacity)!);
+      const hiddenProd = document.createElement('div');
+      const hiddenQueue = document.createElement('div');
+
+      function setIndicatorPositions() {
+        orders.at(line.capacity)!.before(hiddenProd);
+        column.appendChild(hiddenQueue);
+      }
+
+      setIndicatorPositions();
 
       createFragmentApp(
         HiddenIndicator,
         reactive({
-          amtHidden: computed(() => {
-            return infoProxy.value[lineName] ? line.slots - infoProxy.value[lineName][1] : 0;
-          }),
+          amtHidden: computed(() =>
+            infoProxy.value[line.type] ? line.capacity - infoProxy.value[line.type][0] : 0,
+          ),
         }),
-      ).after(orders[orders.length - 1]);
+      ).appendTo(hiddenProd);
+
+      createFragmentApp(
+        HiddenIndicator,
+        reactive({
+          amtHidden: computed(() =>
+            infoProxy.value[line.type] ? line.slots - infoProxy.value[line.type][1] : 0,
+          ),
+        }),
+      ).appendTo(hiddenQueue);
+
+      onApiMessage({
+        PRODUCTION_PRODUCTION_LINE_UPDATED(data: PrunApi.ProductionLine) {
+          console.log('PRODUCTION_PRODUCTION_LINE_UPDATED');
+          console.log(data);
+          console.log(line);
+          if (data.id !== line.id || (data.capacity === line.capacity && data.slots === line.slots))
+            return;
+          setIndicatorPositions();
+
+          const newOrders = Array.from(column.children) as HTMLElement[];
+          if (newOrders.length === orders.length) return;
+          orders.length = 0;
+          orders.push(...newOrders);
+
+          line = data;
+          setOrdersDisplay(infoProxy.value[line.type][0], infoProxy.value[line.type][1]);
+          console.log('updated orders and called setOrdersDisplay');
+        },
+      });
+      console.log('apiMessageReady');
     });
   });
 }
