@@ -94,11 +94,11 @@ async function onTileReady(tile: PrunTile) {
         }),
       ).appendTo(hiddenQueue);
 
-      const lineStore = computed(
-        () => productionStore.all.value?.find(line => line.id === line.id)!,
+      const lineStore = computed(() =>
+        productionStore.all.value?.find(line => line.id === line.id),
       );
-      watch(lineStore, (data: PrunApi.ProductionLine) => {
-        if (data.capacity === line.capacity && data.slots === line.slots) return;
+      watch(lineStore, (data: PrunApi.ProductionLine | undefined) => {
+        if (!data || (data.capacity === line.capacity && data.slots === line.slots)) return;
         setIndicatorPositions();
 
         const newOrders = Array.from(column.children) as HTMLElement[];
