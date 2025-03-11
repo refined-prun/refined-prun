@@ -1,8 +1,8 @@
 ## Unreleased
 
-### Added
+### Fixed
 
-- `prod-collapse-orders`: (new) Collapse all or some ongoing and queued recipes in `PROD`
+- `prun-bugs`: Fix scrollbar gutter in `PROD` taking up space without a scrollbar present
 
 ## 25.3.8
 
