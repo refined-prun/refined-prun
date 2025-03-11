@@ -1,8 +1,8 @@
 ## Unreleased
 
-### Added
+### Fixed
 
-- `market-contextmenu`: (new) Right click any material to quickly see material market buttons
+- `prun-bugs`: Fix scrollbar gutter in `PROD` taking up space without a scrollbar present
 
 ## 25.3.8
 
