@@ -1,11 +1,11 @@
+import { getPrunCssStylesheets } from '@src/infrastructure/prun-ui/prun-css';
 import {
   applyClassCssRule,
   applyCssRule,
   applyScopedClassCssRule,
 } from '@src/infrastructure/prun-ui/refined-prun-css';
-import classes from './prun-bugs.module.css';
-import { getPrunCssStylesheets } from '@src/infrastructure/prun-ui/prun-css';
 import { changeInputValue } from '@src/util';
+import classes from './prun-bugs.module.css';
 
 function removeMobileCssRules() {
   const styles = getPrunCssStylesheets();
@@ -66,6 +66,13 @@ function init() {
 
   // The overlay stops materials from being clickable
   applyScopedClassCssRule(['PROD', 'PRODQ'], C.OrderTile.overlay, classes.disablePointerEvents);
+
+  // Prevent PROD buffer vertical scroll bar gutter from being always visible
+  applyScopedClassCssRule(
+    'PROD',
+    C.SiteProductionLines.container,
+    classes.containerScrollbarGutter,
+  );
 }
 
 features.add(import.meta.url, init, 'Fixes PrUn bugs.');
