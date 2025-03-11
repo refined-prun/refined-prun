@@ -2,7 +2,7 @@
 
 ### Fixed
 
-- `prun-bugs`: Fix scroll bar gutter in `PROD` taking up space without a scroll bar present
+- `prun-bugs`: Fix scrollbar gutter in `PROD` taking up space without a scrollbar present
 
 ## 25.3.8
 
