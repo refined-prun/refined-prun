@@ -1,8 +1,21 @@
 ## Unreleased
 
+### Fixed
+
+- `prun-bugs`: Fix scrollbar gutter in `PROD` taking up space without a scrollbar present
+
+## 25.3.8
+
 ### Added
 
-- `inv-add-context-controls`: (new) Add context controls to inventory windows
+- `contd-fill-condition-address`: (new) Fills the address field in the condition editor
+- `highlight-production-order-error`: (new) Highlights production orders with errors in `PROD`, `PRODQ`, and `PRODCO`
+- `shipment-item-detail`: Add font auto-sizing
+
+### Fixed
+
+- `prun-bugs`: Fix `CONTD` condition saving issues when amount is not changed
+- Fix incorrect bolding of commands in context controls added by Refined PrUn
 
 ## 25.2.27
 

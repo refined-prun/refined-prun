@@ -23,12 +23,14 @@ function onTileReady(tile: PrunTile) {
         contractsStore.getDestinationByShipmentId(id)
       );
     });
-    createFragmentApp(
-      ColoredIconDetail,
-      reactive({
-        detail,
-      }),
-    ).appendTo(label);
+    if (detail.value) {
+      createFragmentApp(
+        ColoredIconDetail,
+        reactive({
+          detail,
+        }),
+      ).appendTo(label);
+    }
   });
 }
 
