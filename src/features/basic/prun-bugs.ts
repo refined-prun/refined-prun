@@ -68,7 +68,11 @@ function init() {
   applyScopedClassCssRule(['PROD', 'PRODQ'], C.OrderTile.overlay, classes.disablePointerEvents);
 
   // Prevent PROD buffer vertical scroll bar gutter from being always visible
-  applyScopedClassCssRule('PROD', C.SiteProductionLines.container, classes.containerSidebarGutter);
+  applyScopedClassCssRule(
+    'PROD',
+    C.SiteProductionLines.container,
+    classes.containerScrollbarGutter,
+  );
 }
 
 features.add(import.meta.url, init, 'Fixes PrUn bugs.');

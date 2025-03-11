@@ -25,6 +25,6 @@
   pointer-events: none;
 }
 
-.containerSidebarGutter {
+.containerScrollbarGutter {
   scrollbar-gutter: auto;
 }
