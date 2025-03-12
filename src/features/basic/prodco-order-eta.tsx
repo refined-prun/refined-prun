@@ -10,24 +10,26 @@ function onTileReady(tile: PrunTile) {
 
   subscribe($$(tile.anchor, C.ProductionLine.form), form => {
     const staticInputDuration = form.children[8].children[1].children[0];
-    const staticInputTime = refTextContent(staticInputDuration.children[0]);
+    const dropDownBoxItem = refTextContent(_$(form.children[5], C.DropDownBox.currentItem)!);
     const rcSlider = refAttributeValue(_$(form, 'rc-slider-handle')!, 'aria-valuenow');
     const line = computed(() =>
       productionStore.all.value?.find(line => line.id.substring(0, 8) === tile.parameter),
     );
+    let template: PrunApi.ProductionTemplate | undefined = undefined;
 
-    function getCompletion() {
+    function getCompletion(needTemplate: boolean = true) {
       if (!line.value) return '';
-      const template = getTemplateFromForm(line.value.productionTemplates, form);
-      if (!template) return '';
-      const orderSize = Number(rcSlider.value);
-      const completion = calcCompletionDate(line.value, template, orderSize);
-      return `(${formatEta(Date.now(), completion)})`;
+      if (needTemplate || !template) {
+        template = getTemplateFromForm(line.value.productionTemplates, form);
+        if (!template) return '';
+      }
+      return `(${formatEta(Date.now(), calcCompletionDate(line.value, template, Number(rcSlider.value)))})`;
     }
 
     const completionText = ref(getCompletion());
-    watch(staticInputTime, () => (completionText.value = getCompletion()));
-    watch(line, () => (completionText.value = getCompletion()));
+    watch(dropDownBoxItem, () => (completionText.value = getCompletion()));
+    watch(line, () => (completionText.value = getCompletion(false)));
+    watch(rcSlider, () => (completionText.value = getCompletion(false)));
     staticInputDuration.append(createReactiveDiv(staticInputDuration, completionText));
   });
 }
