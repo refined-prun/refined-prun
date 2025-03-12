@@ -44,13 +44,15 @@ async function onTileReady(tile: PrunTile) {
       )!.id;
       if (!lineId) return;
 
-      const line = computed(
-        () => productionStore.all.value?.find(prodLine => prodLine.id === lineId)!,
+      const line = computed(() =>
+        productionStore.all.value?.find(prodLine => prodLine.id === lineId),
       );
 
       function setOrdersDisplay(keepCapacity: number, keepSlots: number) {
+        if (!line.value) return;
         infoProxy.value = [line.value.type, keepCapacity, keepSlots];
         orders.value.forEach((order: HTMLElement, index: number) => {
+          if (!line.value) return;
           if (index < line.value.capacity) {
             order.style.display = index < keepCapacity ? '' : 'none';
           } else {
@@ -62,12 +64,13 @@ async function onTileReady(tile: PrunTile) {
       createFragmentApp(
         HideOrders,
         reactive({
-          headerOrdersInfo: infoProxy.value[line.value.type],
-          capacity: line.value.capacity,
-          slots: line.value.slots,
+          headerOrdersInfo: line.value ? infoProxy.value[line.value.type] : [],
+          capacity: line.value ? line.value.capacity : 0,
+          slots: line.value ? line.value.slots : 0,
           setOrdersDisplay,
           displayAllOrders: () => {
             orders.value.forEach(order => order.style.removeProperty('display'));
+            if (!line.value) return;
             infoProxy.value = [line.value.type, -1, -1];
           },
         }),
@@ -79,7 +82,7 @@ async function onTileReady(tile: PrunTile) {
         HiddenIndicator,
         reactive({
           amtHidden: computed(() =>
-            infoProxy.value[line.value.type]
+            line.value && infoProxy.value[line.value.type]
               ? line.value.capacity - infoProxy.value[line.value.type][0]
               : 0,
           ),
@@ -92,7 +95,7 @@ async function onTileReady(tile: PrunTile) {
         HiddenIndicator,
         reactive({
           amtHidden: computed(() =>
-            infoProxy.value[line.value.type]
+            line.value && infoProxy.value[line.value.type]
               ? line.value.slots - infoProxy.value[line.value.type][1]
               : 0,
           ),
@@ -101,6 +104,7 @@ async function onTileReady(tile: PrunTile) {
 
       watch(line, () => {
         diviver.before(hiddenProd);
+        if (!line.value) return;
         setOrdersDisplay(infoProxy.value[line.value.type][0], infoProxy.value[line.value.type][1]);
       });
     });
