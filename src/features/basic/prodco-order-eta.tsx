@@ -12,24 +12,28 @@ function onTileReady(tile: PrunTile) {
     const staticInputDuration = form.children[8].children[1].children[0];
     const dropDownBoxItem = refTextContent(_$(form.children[5], C.DropDownBox.currentItem)!);
     const rcSlider = refAttributeValue(_$(form, 'rc-slider-handle')!, 'aria-valuenow');
-    const line = computed(() =>
-      productionStore.all.value?.find(line => line.id.substring(0, 8) === tile.parameter),
-    );
-    let template: PrunApi.ProductionTemplate | undefined = undefined;
+    const line = computed(() => {
+      return productionStore.all.value?.find(line => line.id.substring(0, 8) === tile.parameter)!;
+    });
+    let template: PrunApi.ProductionTemplate;
 
     function getCompletion(needTemplate: boolean = true) {
-      if (!line.value) return '';
       if (needTemplate || !template) {
-        template = getTemplateFromForm(line.value.productionTemplates, form);
-        if (!template) return '';
+        template = getTemplateFromForm(line.value.productionTemplates, form)!;
       }
       return `(${formatEta(Date.now(), calcCompletionDate(line.value, template, Number(rcSlider.value)))})`;
     }
 
     const completionText = ref(getCompletion());
-    watch(dropDownBoxItem, () => (completionText.value = getCompletion()));
-    watch(line, () => (completionText.value = getCompletion(false)));
-    watch(rcSlider, () => (completionText.value = getCompletion(false)));
+    watch(dropDownBoxItem, () => {
+      completionText.value = getCompletion();
+    });
+    watch(line, () => {
+      completionText.value = getCompletion(false);
+    });
+    watch(rcSlider, () => {
+      completionText.value = getCompletion(false);
+    });
     staticInputDuration.append(createReactiveDiv(staticInputDuration, completionText));
   });
 }
@@ -39,19 +43,20 @@ function getTemplateFromForm(templates: PrunApi.ProductionTemplate[], form: HTML
   const inputs: [string, number][] = [];
   const outputs: [string, number][] = [];
   let input = true;
-  Array.from(template!.children).forEach(mat => {
-    if (!mat.classList.contains(C.MaterialIcon.container)) {
+  const templateMaterials = Array.from(template!.children);
+  for (const materials of templateMaterials) {
+    if (!materials.classList.contains(C.MaterialIcon.container)) {
       input = false;
-      return;
+      continue;
     }
-    const indicator = Number(_$(mat, C.MaterialIcon.indicator)!.textContent ?? 0);
-    const ticker = _$(mat, C.ColoredIcon.label)!.textContent ?? '';
+    const indicator = Number(_$(materials, C.MaterialIcon.indicator)!.textContent ?? 0);
+    const ticker = _$(materials, C.ColoredIcon.label)!.textContent ?? '';
     if (input) {
       inputs.push([ticker, indicator]);
     } else {
       outputs.push([ticker, indicator]);
     }
-  });
+  }
 
   for (const template of templates) {
     if (
@@ -63,13 +68,18 @@ function getTemplateFromForm(templates: PrunApi.ProductionTemplate[], form: HTML
     const allInputsMatch = template.inputFactors.every(inputT =>
       inputs.some(input => input[0] === inputT.material.ticker && input[1] === inputT.factor),
     );
-    if (!allInputsMatch) continue;
+    if (!allInputsMatch) {
+      continue;
+    }
 
     const allOutputsMatch = template.outputFactors.every(outputT =>
       outputs.some(output => output[0] === outputT.material.ticker && output[1] === outputT.factor),
     );
-    if (allOutputsMatch) return template;
+    if (allOutputsMatch) {
+      return template;
+    }
   }
+  // There should be no way to get here.
   return undefined;
 }
 
@@ -79,7 +89,9 @@ function calcCompletionDate(
   orderSize: number,
 ): number {
   const templateDuration = template.duration.millis * orderSize;
-  if (line.orders.length < line.capacity) return templateDuration;
+  if (line.orders.length < line.capacity) {
+    return templateDuration;
+  }
 
   const queue: number[] = [];
   for (const lineOrder of line.orders) {
