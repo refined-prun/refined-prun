@@ -21,8 +21,7 @@
     "types": ["vite/client", "node"],
     "paths": {
       "@src/*": ["src/*"],
-      "~/*": ["src/assets/*"],
-      "@root/*": ["./*"]
+      "~/*": ["src/assets/*"]
     },
     "lib": [
       "DOM",
