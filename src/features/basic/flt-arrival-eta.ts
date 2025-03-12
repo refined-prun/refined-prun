@@ -1,9 +1,10 @@
-import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
-import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
+import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
 import { formatEta } from '@src/utils/format';
-import { keepLast } from '@src/utils/keep-last';
+import { timestampEachMinute } from '@src/utils/dayjs';
+import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { createReactiveSpan } from '@src/utils/reactive-element';
+import { keepLast } from '@src/utils/keep-last';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'tr'), onRowReady);
@@ -17,7 +18,7 @@ function onRowReady(row: HTMLTableRowElement) {
     return flight?.arrival.timestamp;
   });
   const eta = computed(() =>
-    arrival.value ? ` (${formatEta(Date.now(), arrival.value)})` : undefined,
+    arrival.value ? ` (${formatEta(timestampEachMinute.value, arrival.value)})` : undefined,
   );
   const span = createReactiveSpan(row, eta);
   keepLast(row, () => row.children[7], span);

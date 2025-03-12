@@ -1,30 +1,30 @@
+import { timestampEachSecond } from '@src/utils/dayjs';
+import { currentAssets } from '@src/core/balance/current-assets';
+import { nonCurrentAssets } from '@src/core/balance/non-current-assets';
+import { currentLiabilities } from '@src/core/balance/current-liabilities';
+import { nonCurrentLiabilities } from '@src/core/balance/non-current-liabilities';
 import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
 import {
   calcAcidTestRatio,
+  calcLiquidationValue,
   calcDebtRatio,
   calcEquity,
-  calcLiquidationValue,
   calcQuickAssets,
   calcQuickLiabilities,
   calcTotalAssets,
   calcTotalCurrentAssets,
   calcTotalCurrentLiabilities,
-  calcTotalIntangibleAssets,
   calcTotalLiabilities,
   calcTotalNonCurrentAssets,
   calcTotalNonCurrentLiabilities,
+  calcTotalIntangibleAssets,
 } from '@src/core/balance/balance-sheet-summary';
-import { currentAssets } from '@src/core/balance/current-assets';
-import { currentLiabilities } from '@src/core/balance/current-liabilities';
-import { nonCurrentAssets } from '@src/core/balance/non-current-assets';
-import { nonCurrentLiabilities } from '@src/core/balance/non-current-liabilities';
-import { timestampEachMinute } from '@src/utils/dayjs';
 
 export const liveBalanceSheet = createLiveBalanceSheet();
 
 function createLiveBalanceSheet(): PartialBalanceSheet {
   return unwrapRefProperties({
-    timestamp: timestampEachMinute,
+    timestamp: timestampEachSecond,
 
     assets: {
       current: unwrapRefProperties({
