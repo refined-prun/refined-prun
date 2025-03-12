@@ -20,8 +20,9 @@
     "verbatimModuleSyntax": false,
     "types": ["vite/client", "node"],
     "paths": {
-      "@src/*": ["./src/*"],
-      "~/*": ["./src/assets/*"]
+      "@src/*": ["src/*"],
+      "~/*": ["src/assets/*"],
+      "@root/*": ["./*"]
     },
     "lib": [
       "DOM",
