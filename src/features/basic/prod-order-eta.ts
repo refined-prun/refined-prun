@@ -2,7 +2,7 @@ import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { formatEta } from '@src/utils/format';
-import { timestampEachMinute, timestampEachSecond } from '@src/utils/dayjs';
+import { timestampEachMinute } from '@src/utils/dayjs';
 import { createReactiveDiv } from '@src/utils/reactive-element';
 import { keepLast } from '@src/utils/keep-last';
 
