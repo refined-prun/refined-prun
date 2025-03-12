@@ -1,26 +1,26 @@
 <script setup lang="ts">
+import Active from '@src/components/forms/Active.vue';
 import NumberInput from '@src/components/forms/NumberInput.vue';
+import LoadingSpinner from '@src/components/LoadingSpinner.vue';
+import MaterialPurchaseTable from '@src/components/MaterialPurchaseTable.vue';
+import PrunLink from '@src/components/PrunLink.vue';
+import SectionHeader from '@src/components/SectionHeader.vue';
+import { calcBuildingCondition } from '@src/core/buildings';
+import { mergeMaterialAmounts } from '@src/core/sort-materials';
 import {
   calculateBuildingEntries,
   calculateShipEntries,
   getParameterShips,
   getParameterSites,
 } from '@src/features/XIT/REP/entries';
-import { timestampEachSecond } from '@src/utils/dayjs';
-import { binarySearch } from '@src/utils/binary-search';
-import dayjs from 'dayjs';
-import { fixed1, percent1 } from '@src/utils/format';
-import MaterialPurchaseTable from '@src/components/MaterialPurchaseTable.vue';
-import LoadingSpinner from '@src/components/LoadingSpinner.vue';
-import { calcBuildingCondition } from '@src/core/buildings';
-import { diffDays } from '@src/utils/time-diff';
-import { userData } from '@src/store/user-data';
-import { mergeMaterialAmounts } from '@src/core/sort-materials';
-import Active from '@src/components/forms/Active.vue';
-import SectionHeader from '@src/components/SectionHeader.vue';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
-import PrunLink from '@src/components/PrunLink.vue';
+import { userData } from '@src/store/user-data';
+import { binarySearch } from '@src/utils/binary-search';
+import { timestampEachHour } from '@src/utils/dayjs';
+import { fixed1, percent1 } from '@src/utils/format';
 import { objectId } from '@src/utils/object-id';
+import { diffDays } from '@src/utils/time-diff';
+import dayjs from 'dayjs';
 
 const parameters = useXitParameters();
 
@@ -42,7 +42,7 @@ const currentSplitIndex = computed(() => {
   }
   const settings = userData.settings.repair;
   const currentSplitDate =
-    timestampEachSecond.value - settings.threshold * msInADay + settings.offset * msInADay;
+    timestampEachHour.value - settings.threshold * msInADay + settings.offset * msInADay;
   return binarySearch(currentSplitDate, buildingEntries.value, x => x.lastRepair);
 });
 
@@ -57,7 +57,7 @@ const materials = computed(() => {
     return undefined;
   }
   const materials: PrunApi.MaterialAmount[] = [];
-  const time = timestampEachSecond.value;
+  const time = timestampEachHour.value;
   for (const building of visibleBuildings.value) {
     const plannedRepairDate =
       (time - building.lastRepair) / msInADay + userData.settings.repair.offset;
@@ -73,7 +73,7 @@ const materials = computed(() => {
 });
 
 function calculateAge(lastRepair: number) {
-  return diffDays(lastRepair, timestampEachSecond.value, true);
+  return diffDays(lastRepair, timestampEachHour.value, true);
 }
 </script>
 

@@ -1,10 +1,9 @@
-import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
-import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
+import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
+import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { formatEta } from '@src/utils/format';
-import { timestampEachSecond } from '@src/utils/dayjs';
-import { createReactiveDiv } from '@src/utils/reactive-element';
 import { keepLast } from '@src/utils/keep-last';
+import { createReactiveDiv } from '@src/utils/reactive-element';
 
 function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {
@@ -33,7 +32,7 @@ function onOrderSlotReady(slot: HTMLElement, siteId: string) {
       return undefined;
     }
 
-    return `(${formatEta(timestampEachSecond.value, completion.value)})`;
+    return `(${formatEta(Date.now(), completion.value)})`;
   });
   const div = createReactiveDiv(slot, eta);
   keepLast(slot, () => _$(slot, C.OrderSlot.info), div);

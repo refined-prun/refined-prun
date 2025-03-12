@@ -1,10 +1,10 @@
-import { contractsStore, isFactionContract } from '@src/infrastructure/prun-api/data/contracts';
-import dayjs from 'dayjs';
-import { timestampEachSecond } from '@src/utils/dayjs';
-import { sumBy } from '@src/utils/sum-by';
 import { calcMaterialAmountPrice } from '@src/infrastructure/fio/cx';
+import { contractsStore, isFactionContract } from '@src/infrastructure/prun-api/data/contracts';
 import { binarySearch } from '@src/utils/binary-search';
+import { timestampEachMinute } from '@src/utils/dayjs';
 import { map } from '@src/utils/map-values';
+import { sumBy } from '@src/utils/sum-by';
+import dayjs from 'dayjs';
 import { isDefined } from 'ts-extras';
 
 interface ContractCondition {
@@ -86,7 +86,7 @@ const currentSplitIndex = computed(() => {
   if (sorted === undefined) {
     return undefined;
   }
-  const currentSplitDate = timestampEachSecond.value + accountingPeriod;
+  const currentSplitDate = timestampEachMinute.value + accountingPeriod;
   return binarySearch(currentSplitDate, sorted, x => x.deadline);
 });
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import ContractLink from '@src/features/XIT/CONTC/ContractLink.vue';
-import { timestampEachSecond } from '@src/utils/dayjs';
-import dayjs from 'dayjs';
 import ConditionText from '@src/features/XIT/CONTC/ConditionText.vue';
+import ContractLink from '@src/features/XIT/CONTC/ContractLink.vue';
+import { timestampEachHour } from '@src/utils/dayjs';
+import dayjs from 'dayjs';
 
 const { deadline } = defineProps<{
   condition: PrunApi.ContractCondition;
@@ -14,10 +14,11 @@ const eta = computed(() => {
   if (!isFinite(deadline)) {
     return '∞';
   }
-  if (deadline <= timestampEachSecond.value) {
+  const timestamp = timestampEachHour.value;
+  if (deadline <= timestamp) {
     return '-';
   }
-  let duration = dayjs.duration({ milliseconds: deadline - timestampEachSecond.value });
+  let duration = dayjs.duration({ milliseconds: deadline - timestamp });
   const days = Math.floor(duration.asDays());
   duration = duration.subtract(days, 'days');
   const hours = Math.floor(duration.asHours());

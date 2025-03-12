@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
+import { cxStore } from '@src/infrastructure/fio/cx';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
-import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
-import { productionStore } from '@src/infrastructure/prun-api/data/production';
-import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
+import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
-import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
-import { cxStore } from '@src/infrastructure/fio/cx';
-import { dayjsEachSecond } from '@src/utils/dayjs';
+import { productionStore } from '@src/infrastructure/prun-api/data/production';
+import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
+import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
+import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
+import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
+import { dayjsEachMinute } from '@src/utils/dayjs';
 import { objectId } from '@src/utils/object-id';
 
 const bases = computed(() => {
@@ -36,7 +36,7 @@ const otherData = computed(() => [
   ['CXOS', cxosStore.all.value?.length],
   ['FXOS', fxosStore.all.value?.length],
   ['Currency', (balancesStore.all.value?.length ?? 0) > 0],
-  ['Last CX Price Update', cxStore.fetched ? `${dayjsEachSecond.value.to(cxStore.age)}` : false],
+  ['Last CX Price Update', cxStore.fetched ? `${dayjsEachMinute.value.to(cxStore.age)}` : false],
 ]);
 
 const positive = C.ColoredValue.positive;
