@@ -16,7 +16,6 @@ setInterval(() => eachMinute.value++, 60000);
 export const dayjsEachSecond = computed(() => live(dayjs(), eachSecond));
 export const timestampEachSecond = computed(() => live(Date.now(), eachSecond));
 
-export const dayjsEachMinute = computed(() => live(dayjs(), eachMinute));
 export const timestampEachMinute = computed(() => live(Date.now(), eachMinute));
 
 function live<T>(value: T, tick: Ref<number>): T {
