@@ -1,12 +1,8 @@
-import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { percent2 } from '@src/utils/format';
 import { refAttributeValue } from '@src/utils/reactive-dom';
-import classes from './progress-bar-tooltips.module.css';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 
 function init() {
-  applyClassCssRule(C.ProgressBar.primary, classes.progressBarPrimary);
-
   subscribe($$(document, C.ProgressBar.container), progressBar => {
     // FLT has primary bar and secondary bar.
     const primary = _$(progressBar, C.ProgressBar.progress)!;
