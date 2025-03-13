@@ -7,7 +7,7 @@ xit.add({
   description: 'Refined PrUn settings.',
   optionalParameters: 'Settings Tab Identifier',
   component: parameters => {
-    switch (parameters[1]?.toUpperCase()) {
+    switch (parameters[0]?.toUpperCase()) {
       case 'PMMG':
         return PMMG;
       default:
