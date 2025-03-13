@@ -1,6 +1,7 @@
 import { contractDraftsStore } from '@src/infrastructure/prun-api/data/contract-drafts';
-import { changeInputValue, clickElement, focusInput } from '@src/util';
+import { changeInputValue, clickElement, focusElement, mouseOverElement } from '@src/util';
 import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { sleep } from '@src/utils/sleep';
 
 function onTileReady(tile: PrunTile) {
   const draft = computed(() => contractDraftsStore.getByNaturalId(tile.parameter));
@@ -32,9 +33,14 @@ function onTileReady(tile: PrunTile) {
       const input = (await $(container, C.AddressSelector.input)) as HTMLInputElement;
       const suggestionsContainer = await $(container, C.AddressSelector.suggestionsContainer);
       suggestionsContainer.style.display = 'none';
+      focusElement(input);
       changeInputValue(input, naturalId);
-      focusInput(input);
-      const suggestion = await $(container, C.AddressSelector.suggestion);
+      // The first section container is the "Search results".
+      const sectionContainer = await $(container, C.AddressSelector.sectionContainer);
+      const suggestion = await $(sectionContainer, C.AddressSelector.suggestion);
+      // Mouse over event is needed for react-autosuggest to properly use the clicked suggestion.
+      mouseOverElement(sectionContainer, suggestion);
+      await sleep(0);
       await clickElement(suggestion);
       suggestionsContainer.style.display = '';
     }
