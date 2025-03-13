@@ -13,7 +13,7 @@ function onTileReady(tile: PrunTile) {
     const dropDownBoxItem = refTextContent(_$(form.children[5], C.DropDownBox.currentItem)!);
     const rcSlider = refAttributeValue(_$(form, 'rc-slider-handle')!, 'aria-valuenow');
     const line = computed(() => {
-      return productionStore.all.value?.find(line => line.id.substring(0, 8) === tile.parameter)!;
+      return productionStore.all.value!.find(line => line.id.substring(0, 8) === tile.parameter)!;
     });
     let template: PrunApi.ProductionTemplate;
 
@@ -62,19 +62,24 @@ function getTemplateFromForm(templates: PrunApi.ProductionTemplate[], form: HTML
     if (
       template.inputFactors.length !== inputs.length ||
       template.outputFactors.length !== outputs.length
-    )
+    ) {
       continue;
+    }
 
-    const allInputsMatch = template.inputFactors.every(inputT =>
-      inputs.some(input => input[0] === inputT.material.ticker && input[1] === inputT.factor),
-    );
+    const allInputsMatch = template.inputFactors.every(inputT => {
+      return inputs.some(input => {
+        return input[0] === inputT.material.ticker && input[1] === inputT.factor;
+      });
+    });
     if (!allInputsMatch) {
       continue;
     }
 
-    const allOutputsMatch = template.outputFactors.every(outputT =>
-      outputs.some(output => output[0] === outputT.material.ticker && output[1] === outputT.factor),
-    );
+    const allOutputsMatch = template.outputFactors.every(outputT => {
+      return outputs.some(output => {
+        return output[0] === outputT.material.ticker && output[1] === outputT.factor;
+      });
+    });
     if (allOutputsMatch) {
       return template;
     }
