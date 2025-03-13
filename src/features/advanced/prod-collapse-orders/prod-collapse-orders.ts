@@ -34,18 +34,24 @@ async function onTileReady(tile: PrunTile) {
     if (!production) return;
     let columnIndex = 0;
     subscribe($$(grid, C.SiteProductionLines.column), column => {
-      const orders = computed(() => _$$(column, C.OrderSlot.container));
+      const orders = computed(() => {
+        return _$$(column, C.OrderSlot.container);
+      });
       const diviver = _$(column, C.SiteProductionLines.slotDivider)!;
       if (!diviver) return;
 
-      const lineId = production.find(line =>
-        line.orders.some(order => order.id === getPrunId(orders.value[0] as HTMLElement)),
-      )!.id;
+      const lineId = production.find(line => {
+        return line.orders.some(order => {
+          return order.id === getPrunId(orders.value[0] as HTMLElement);
+        });
+      })!.id;
       if (!lineId) return;
 
-      const line = computed(
-        () => productionStore.all.value?.find(prodLine => prodLine.id === lineId)!,
-      );
+      const line = computed(() => {
+        return productionStore.all.value!.find(prodLine => {
+          return prodLine.id === lineId!;
+        })!;
+      });
 
       function setOrdersDisplay(keepCapacity: number, keepSlots: number) {
         infoProxy.value = [line.value.type, keepCapacity, keepSlots];
@@ -66,7 +72,9 @@ async function onTileReady(tile: PrunTile) {
           slots: line.value.slots,
           setOrdersDisplay,
           displayAllOrders: () => {
-            orders.value.forEach(order => order.style.removeProperty('display'));
+            orders.value.forEach(order => {
+              return order.style.removeProperty('display');
+            });
             infoProxy.value = [line.value.type, -1, -1];
           },
         }),
