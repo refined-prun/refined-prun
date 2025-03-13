@@ -3,8 +3,7 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { computedTileState } from '@src/store/user-data-tiles';
-import { keepLast } from '@src/utils/keep-last';
-import HiddenIndicator from './HiddenIndicator.vue';
+import { createReactiveDiv } from '@src/utils/reactive-element';
 import HideOrders from './HideOrders.vue';
 import classes from './prod-collapse-orders.module.css';
 import { getTileState } from './tile-state';
@@ -44,15 +43,13 @@ async function onTileReady(tile: PrunTile) {
       )!.id;
       if (!lineId) return;
 
-      const line = computed(() =>
-        productionStore.all.value?.find(prodLine => prodLine.id === lineId),
+      const line = computed(
+        () => productionStore.all.value?.find(prodLine => prodLine.id === lineId)!,
       );
 
       function setOrdersDisplay(keepCapacity: number, keepSlots: number) {
-        if (!line.value) return;
         infoProxy.value = [line.value.type, keepCapacity, keepSlots];
         orders.value.forEach((order: HTMLElement, index: number) => {
-          if (!line.value) return;
           if (index < line.value.capacity) {
             order.style.display = index < keepCapacity ? '' : 'none';
           } else {
@@ -64,47 +61,52 @@ async function onTileReady(tile: PrunTile) {
       createFragmentApp(
         HideOrders,
         reactive({
-          headerOrdersInfo: line.value ? infoProxy.value[line.value.type] : [],
-          capacity: line.value ? line.value.capacity : 0,
-          slots: line.value ? line.value.slots : 0,
+          headerOrdersInfo: infoProxy.value[line.value.type],
+          capacity: line.value.capacity,
+          slots: line.value.slots,
           setOrdersDisplay,
           displayAllOrders: () => {
             orders.value.forEach(order => order.style.removeProperty('display'));
-            if (!line.value) return;
             infoProxy.value = [line.value.type, -1, -1];
           },
         }),
       ).appendTo(_$(grid.children[columnIndex++], C.SiteProductionLines.headerActions)!);
 
-      const hiddenProd = document.createElement('div');
-      diviver.before(hiddenProd);
-      createFragmentApp(
-        HiddenIndicator,
-        reactive({
-          amtHidden: computed(() =>
-            line.value && infoProxy.value[line.value.type]
-              ? line.value.capacity - infoProxy.value[line.value.type][0]
-              : 0,
-          ),
+      const hiddenProdText = ref(
+        computed(() => {
+          if (infoProxy.value[line.value.type]) {
+            const amt = line.value.capacity - infoProxy.value[line.value.type][0];
+            if (amt) {
+              return `+${amt} more`;
+            }
+          }
+          return undefined;
         }),
-      ).appendTo(hiddenProd);
+      );
+      const hiddenProd = createReactiveDiv(column, hiddenProdText);
+      hiddenProd.style.textAlign = 'center';
+      hiddenProd.style.fontSize = '9px';
+      column.insertBefore(hiddenProd, diviver);
 
-      const hiddenQueue = document.createElement('div');
-      keepLast(column, () => column, hiddenQueue);
-      createFragmentApp(
-        HiddenIndicator,
-        reactive({
-          amtHidden: computed(() =>
-            line.value && infoProxy.value[line.value.type]
-              ? line.value.slots - infoProxy.value[line.value.type][1]
-              : 0,
-          ),
+      const hiddenQueueText = ref(
+        computed(() => {
+          if (infoProxy.value[line.value.type]) {
+            const amt = line.value.slots - infoProxy.value[line.value.type][1];
+            if (amt) {
+              return `+${amt} more`;
+            }
+          }
+          return undefined;
         }),
-      ).appendTo(hiddenQueue);
+      );
+      const hiddenQueue = createReactiveDiv(column, hiddenQueueText);
+      hiddenQueue.style.textAlign = 'center';
+      hiddenQueue.style.fontSize = '9px';
+      column.appendChild(hiddenQueue);
 
       watch(line, () => {
-        diviver.before(hiddenProd);
-        if (!line.value) return;
+        column.insertBefore(hiddenProd, diviver);
+        column.appendChild(hiddenQueue);
         setOrdersDisplay(infoProxy.value[line.value.type][0], infoProxy.value[line.value.type][1]);
       });
     });
