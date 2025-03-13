@@ -8,13 +8,11 @@ xit.add({
   description: 'Shows the materials to repair buildings.',
   optionalParameters: 'Planet Identifier(s)',
   contextItems: parameters => {
-    const cmds = [{ cmd: 'BRA' }];
-    // Sites will never be given empty parameter, which makes it always defined.
-    const sites = getParameterSites(parameters)!;
-    for (const site of sites) {
-      cmds.push({ cmd: `BRA ${getEntityNaturalIdFromAddress(site.address)}` });
+    if (parameters.length === 0) {
+      return [{ cmd: 'BRA' }];
     }
-    return cmds;
+    const sites = getParameterSites(parameters) ?? [];
+    return sites.map(x => ({ cmd: `BRA ${getEntityNaturalIdFromAddress(x.address)}` }));
   },
   component: () => REP,
 });
