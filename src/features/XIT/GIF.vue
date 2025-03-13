@@ -14,7 +14,7 @@ async function load() {
   }
   isLoading.value = true;
   url.value = undefined;
-  let rawUrl = 'https://api.giphy.com/v1/gifs/random?api_key=0UTRbFtkMxAplrohufYco5IY74U8hOes';
+  let rawUrl = 'https://api.giphy.com/v1/gifs/random?api_key=c92SYJwV9J9MYJ33WGRdux4mNxAipq9y';
   if (tag) {
     rawUrl += '&tag=' + tag;
   }
