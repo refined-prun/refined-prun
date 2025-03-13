@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Changed
+
+- `XIT REP`: Use planet id in `BRA` context button
+
 ### Fixed
 
 - `XIT GIF`: Fix borked gifs
