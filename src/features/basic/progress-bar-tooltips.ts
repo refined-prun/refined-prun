@@ -7,9 +7,9 @@ function init() {
     // FLT has primary bar and secondary bar.
     const primary = _$(progressBar, C.ProgressBar.progress)!;
     const value = refAttributeValue(primary, 'value');
-    const max = refAttributeValue(primary, 'max');
+    const max = primary.getAttribute('max');
     watchEffectWhileNodeAlive(progressBar, () => {
-      progressBar.title = percent2(Number(value.value) / Number(max.value));
+      progressBar.title = percent2(Number(value.value) / Number(max));
     });
   });
 
