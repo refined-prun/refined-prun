@@ -4,7 +4,6 @@ import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 
 function init() {
   subscribe($$(document, C.ProgressBar.container), progressBar => {
-    // FLT has primary bar and secondary bar.
     const primary = _$(progressBar, C.ProgressBar.progress)!;
     const value = refAttributeValue(primary, 'value');
     const max = primary.getAttribute('max');
