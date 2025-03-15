@@ -5,6 +5,9 @@ import { getInvStore } from '@src/core/store-id';
 
 const migrations: Migration[] = [
   userData => {
+    userData.configVersion = config.version;
+  },
+  userData => {
     const sorting = {} as Record<string, any>;
     for (const mode of userData.sorting) {
       const store = getInvStore(mode.storeId);
