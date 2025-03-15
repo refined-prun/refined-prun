@@ -108,12 +108,11 @@ async function fetchData() {
     changelog.value = setupInfo(text);
   } else {
     error.value = true;
-    console.log('Error fetching changelog from refined-prun');
-    throw new Error(`Failed to fetch changelog: ${response.status}`);
+    console.error('Failed to fetch changelog from refined-prun');
+    console.error(`${response.status}`);
   }
   loading.value = false;
 }
-console.log(config);
 
 fetchData();
 const TESTVERSION = '25.2.27';
