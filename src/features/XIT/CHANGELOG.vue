@@ -3,36 +3,36 @@ import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import SectionHeader from '@src/components/SectionHeader.vue';
 import PrunLink from '@src/components/PrunLink.vue';
 import PrunButton from '@src/components/PrunButton.vue';
+import getBrowserVersion from '@src/utils/browser-version';
 
-const selections = [
-  [
-    'Report a bug',
-    'https://github.com/refined-prun/refined-prun/issues/new?template=1_bug_report.yml',
-  ],
-  [
-    'Make a suggestion',
-    'https://github.com/refined-prun/refined-prun/issues/new?template=2_feature_request.yml',
-  ],
-  [
-    'Ask a github question',
-    'https://github.com/refined-prun/refined-prun/issues/new?template=3_discussion.md',
-  ],
-  [
-    'Ask a forum question',
-    'https://com.prosperousuniverse.com/t/refined-prun-qol-extension-for-prosperous-universe/6760',
-  ],
-];
+const selections = ['Report a bug', 'Make a suggestion', 'Ask a question', 'Ask a forum question'];
 
 function onClick(selection: number) {
-  window.open(selections[selection][1]);
+  const newIssueUrl = new URL('https://github.com/refined-prun/refined-prun/issues/new');
+  if (selection === 0) {
+    newIssueUrl.searchParams.set('template', '1_bug_report.yml');
+    newIssueUrl.searchParams.set('version', config.version.toString());
+    newIssueUrl.searchParams.set('browser', getBrowserVersion());
+  } else if (selection === 1) {
+    newIssueUrl.searchParams.set('template', '2_feature_request.yml');
+  } else if (selection === 2) {
+    newIssueUrl.searchParams.set('template', '3_discussion.md');
+  } else if (selection === 3) {
+    window.open(
+      'https://com.prosperousuniverse.com/t/refined-prun-qol-extension-for-prosperous-universe/6760/9999',
+    );
+    return;
+  }
+  window.open(newIssueUrl);
 }
 
 const lists = ['New commands', 'Added', 'Changed', 'Fixed', 'Removed'];
+const patternVersions = /(## [0-9.Unreleased]+(?:\n(?!(## [0-9.]+|\n*$)).*)*)/g;
+const patternSections = /###\s*(.+?)\n\n([\s\S]*?)(?=###|\s*$)/gs;
+const patternDetails = /-.*/g;
 
 function setupInfo(text: string) {
   const changelogOutput: object[] = [];
-  const patternVersions = /(## [0-9.Unreleased]+(?:\n(?!(## [0-9.]+|\n*$)).*)*)/g;
-  const patternSections = /###\s*(.+?)\n\n([\s\S]*?)(?=###|\s*$)/gs;
   const changelogVersions = [...text.matchAll(patternVersions)].map(match => match[0]);
   for (const section of changelogVersions) {
     const version = {
@@ -41,7 +41,7 @@ function setupInfo(text: string) {
     };
     const changelogSections = [...section.matchAll(patternSections)].map(match => match[0]);
     for (const detail of changelogSections) {
-      const info = detail.split('\n').slice(2);
+      const info = [...detail.matchAll(patternDetails)].map(match => match[0]);
       for (const item of lists) {
         if (detail.startsWith(`### ${item}`)) {
           version['details'][item] = info;
@@ -97,74 +97,91 @@ fetchData();
 <template>
   <LoadingSpinner v-if="loading" :class="$style.loading" />
   <div v-else-if="!loading && changelog">
-    <table>
-      <tr>
-        <td colspan="2" :class="$style.header">
-          <div>Thanks for using Refined PrUn version: {{ config.version }}</div>
-          <div v-if="changelog[1]['version'] !== config.version" :class="$style.notCurrentVersion"
-            >You currently don't have the latest version, you may need to update manually.</div
-          >
-          <div>
-            <PrunButton
-              v-for="(selection, indexSelection) in selections"
-              :key="indexSelection"
-              :class="[$style.prunLink, $style.button]"
-              primary
-              @click="onClick(indexSelection)"
-              >{{ selection[0] }}
-              <div :class="$style.prunLink">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="11"
-                  height="11"
-                  fill="currentColor"
-                  class="bi bi-box-arrow-up-right"
-                  viewBox="0 0 16 16">
-                  <path
-                    fill-rule="evenodd"
-                    d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
-                  <path
-                    fill-rule="evenodd"
-                    d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
-                </svg>
-              </div>
-            </PrunButton>
-          </div>
-        </td>
-      </tr>
-      <template v-for="(version, indexVersion) in changelog" :key="indexVersion">
+    <table :class="$style.changelogTable">
+      <tbody>
         <tr>
-          <td
-            :key="indexVersion"
-            colspan="2"
-            :class="version['version'] === config.version ? $style.currentVersion : ''">
-            <SectionHeader style="display: flex">
-              {{ version['version'] }}
-            </SectionHeader>
+          <td colspan="2" :class="$style.changelogHeader">
+            <div
+              >Thanks for using Refined PrUn version:
+              <span
+                :class="[
+                  changelog[1]['version'] == config.version
+                    ? $style.currentVersion
+                    : $style.notCurrentVersion,
+                  $style.changelogVersion,
+                ]"
+                >{{ config.version }}</span
+              ></div
+            >
+            <div v-if="changelog[1]['version'] !== config.version" :class="$style.notCurrentVersion"
+              >You currently don't have the latest version, you may need to update manually.</div
+            >
+            <div v-else :class="$style.currentVersion">You have the latest version!</div>
+            <div>
+              <PrunButton
+                v-for="(selection, indexSelection) in selections"
+                :key="indexSelection"
+                :class="[$style.prunLink, $style.prunButton]"
+                primary
+                @click="onClick(indexSelection)"
+                >{{ selection }}
+                <div :class="$style.prunLink">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="11"
+                    height="11"
+                    fill="currentColor"
+                    class="bi bi-box-arrow-up-right"
+                    viewBox="0 0 16 16">
+                    <path
+                      fill-rule="evenodd"
+                      d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
+                    <path
+                      fill-rule="evenodd"
+                      d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
+                  </svg>
+                </div>
+              </PrunButton>
+            </div>
           </td>
         </tr>
-        <tr v-for="(detail, indexDetail) in Object.keys(version['details'])" :key="indexDetail">
-          <td
-            :key="version['version']"
-            :class="version['version'] === config.version ? $style.currentVersion : ''">
-            {{ detail }}
-          </td>
-          <td :class="version['version'] === config.version ? $style.currentVersion : ''">
-            <template v-for="(log, indexLog) in version['details'][detail]" :key="indexLog">
-              <div>
-                <template v-for="(item, indexItem) in processedLog(log)">
-                  <template v-if="item['type'] === 'span'">
-                    <span :key="indexItem"> {{ item['text'] }}</span>
+        <template v-for="(version, indexVersion) in changelog" :key="indexVersion">
+          <tr>
+            <td
+              :key="indexVersion"
+              colspan="2"
+              :class="[
+                version['version'] === config.version ? $style.currentVersion : '',
+                $style.tdVersionHeader,
+              ]">
+              <SectionHeader :class="$style.sectionHeader">
+                {{ version['version'] }}
+              </SectionHeader>
+            </td>
+          </tr>
+          <tr v-for="(detail, indexDetail) in Object.keys(version['details'])" :key="indexDetail">
+            <td
+              :key="indexDetail"
+              :class="version['version'] === config.version ? $style.currentVersion : ''">
+              {{ detail }}
+            </td>
+            <td :class="version['version'] === config.version ? $style.currentVersion : ''">
+              <template v-for="(log, indexLog) in version['details'][detail]" :key="indexLog">
+                <div>
+                  <template v-for="(item, indexItem) in processedLog(log)">
+                    <template v-if="item['type'] === 'span'">
+                      <span :key="indexItem"> {{ item['text'] }}</span>
+                    </template>
+                    <template v-if="item['type'] === 'PrunLink'">
+                      <PrunLink :key="indexItem" :class="$style.prunLink" :command="item['text']" />
+                    </template>
                   </template>
-                  <template v-if="item['type'] === 'PrunLink'">
-                    <PrunLink :key="indexItem" :class="$style.prunLink" :command="item['text']" />
-                  </template>
-                </template>
-              </div>
-            </template>
-          </td>
-        </tr>
-      </template>
+                </div>
+              </template>
+            </td>
+          </tr>
+        </template>
+      </tbody>
     </table>
   </div>
   <div v-else-if="!loading">Error fetching changelog from refined-prun</div>
@@ -179,11 +196,45 @@ fetchData();
   left: 0;
 }
 
-.header > div {
+.sectionHeader {
+  padding-left: 8px;
+  margin: 0;
+}
+
+.tdVersionHeader {
+  padding: 0;
+}
+
+.changelogTable tbody td:nth-child(2n + 1),
+.changelogTable tbody tr:nth-child(2n)::after,
+.changelogTable tbody tr:hover td {
+  background-color: transparent;
+}
+
+.changelogTable tbody tr:not(:first-child) {
+  td:not(.tdVersionHeader) {
+    padding: 4px 8px 4px 8px;
+  }
+
+  td div:first-child {
+    padding-top: 2px;
+  }
+
+  td div {
+    padding-bottom: 2px;
+  }
+}
+
+.changelogHeader > div {
   padding: 4px;
 }
 
-.button {
+.changelogVersion {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.prunButton {
   margin-right: 4px;
 }
 
@@ -199,18 +250,10 @@ fetchData();
 }
 
 .notCurrentVersion {
-  background-color: rgba(217, 83, 79, 0.2);
+  background-color: rgba(247, 166, 0, 0.175);
 }
 
 .currentVersion {
-  background-color: rgba(247, 166, 0, 0.05);
-}
-
-table > tr:nth-child(2n) {
-  background-color: #222222;
-}
-
-table > tr:nth-child(2n + 1) {
-  background-color: #23282b;
+  background-color: rgba(92, 184, 92, 0.175) !important;
 }
 </style>
