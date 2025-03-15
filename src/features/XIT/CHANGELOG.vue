@@ -2,6 +2,24 @@
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import SectionHeader from '@src/components/SectionHeader.vue';
 import PrunLink from '@src/components/PrunLink.vue';
+import PrunButton from '@src/components/PrunButton.vue';
+
+const selections = [
+  'Report a bug',
+  'Make a suggestion',
+  'Ask a github question',
+  'Ask a forum question',
+];
+const selectionUrls = [
+  'https://github.com/refined-prun/refined-prun/issues/new?template=1_bug_report.yml',
+  'https://github.com/refined-prun/refined-prun/issues/new?template=2_feature_request.yml',
+  'https://github.com/refined-prun/refined-prun/issues/new?template=3_discussion.md',
+  'https://com.prosperousuniverse.com/t/refined-prun-qol-extension-for-prosperous-universe/6760',
+];
+
+function onClick(selection: number) {
+  window.open(selectionUrls[selection]);
+}
 
 const loading = ref(true);
 const error = ref(false);
@@ -95,8 +113,17 @@ async function fetchData() {
   }
   loading.value = false;
 }
+console.log(config);
 
 fetchData();
+const TESTVERSION = '25.2.27';
+const boxArrowUpRight = computed(() => {
+  return `
+<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+    <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+</svg>`;
+});
 </script>
 
 <template>
@@ -104,10 +131,28 @@ fetchData();
   <div v-else-if="!loading && error">Error fetching changelog from refined-prun</div>
   <div v-else>
     <table>
+      <tr>
+        <td colspan="2" :class="$style.header">
+          <div>Thanks for using Refined PrUn version: {{ config.version }}</div>
+          <div v-if="changelog![1].version! !== config.version" :class="$style.notCurrentVersion"
+            >You currently don't have the latest version, you may need to update manually.</div
+          >
+          <div>
+            <PrunButton
+              v-for="(selection, index) in selections"
+              :class="[$style.prunLink, $style.button]"
+              primary
+              @click="onClick(index)"
+              >{{ selection }}
+              <div :class="$style.prunLink" v-html="boxArrowUpRight" />
+            </PrunButton>
+          </div>
+        </td>
+      </tr>
       <template v-for="version in changelog">
         <tr>
-          <td colspan="2">
-            <SectionHeader>
+          <td colspan="2" :class="version.version === TESTVERSION ? $style.currentVersion : ''">
+            <SectionHeader style="display: flex">
               {{ version.version }}
             </SectionHeader>
           </td>
@@ -115,17 +160,17 @@ fetchData();
         <tr
           v-for="detail in Object.keys(version.details)"
           v-if="version.details && Object.keys(version.details)">
-          <td>
+          <td :class="version.version === TESTVERSION ? $style.currentVersion : ''">
             {{ detail }}
           </td>
-          <td>
+          <td :class="version.version === TESTVERSION ? $style.currentVersion : ''">
             <template v-for="log in version.details[detail]">
               <div>
                 <template v-for="item in processedLog(log)">
                   <span v-if="item.type === 'span'"> {{ item.text }}</span>
                   <PrunLink
                     v-if="item.type === 'PrunLink'"
-                    :class="$style.PrunLink"
+                    :class="$style.prunLink"
                     :command="item.text"></PrunLink>
                 </template>
               </div>
@@ -146,8 +191,35 @@ fetchData();
   left: 0;
 }
 
-.PrunLink {
+.header > div {
+  padding: 4px;
+}
+
+.button {
+  margin-right: 4px;
+}
+
+.prunLink {
+  + .prunLink {
+    margin-right: 4px !important;
+    margin-left: 0px !important;
+  }
+
   display: inline;
+  margin-bottom: 1px;
+  margin-top: 1px;
+}
+
+.notCurrentVersion {
+  background-color: rgba(217, 83, 79, 0.2);
+}
+
+.currentVersion {
+  background-color: rgba(247, 166, 0, 0.05);
+}
+
+table > tr:nth-child(2n) {
+  background-color: #222222;
 }
 
 table > tr:nth-child(2n + 1) {
