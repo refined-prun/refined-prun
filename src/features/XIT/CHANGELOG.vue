@@ -117,13 +117,6 @@ console.log(config);
 
 fetchData();
 const TESTVERSION = '25.2.27';
-const boxArrowUpRight = computed(() => {
-  return `
-<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
-    <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
-    <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
-</svg>`;
-});
 </script>
 
 <template>
@@ -139,39 +132,59 @@ const boxArrowUpRight = computed(() => {
           >
           <div>
             <PrunButton
-              v-for="(selection, index) in selections"
+              v-for="(selection, indexSelection) in selections"
+              :key="indexSelection"
               :class="[$style.prunLink, $style.button]"
               primary
-              @click="onClick(index)"
+              @click="onClick(indexSelection)"
               >{{ selection }}
-              <div :class="$style.prunLink" v-html="boxArrowUpRight" />
+              <div :class="$style.prunLink">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="11"
+                  height="11"
+                  fill="currentColor"
+                  class="bi bi-box-arrow-up-right"
+                  viewBox="0 0 16 16">
+                  <path
+                    fill-rule="evenodd"
+                    d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
+                  <path
+                    fill-rule="evenodd"
+                    d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
+                </svg>
+              </div>
             </PrunButton>
           </div>
         </td>
       </tr>
-      <template v-for="version in changelog">
+      <template v-for="(version, indexVersion) in changelog" :key="indexVersion">
         <tr>
-          <td colspan="2" :class="version.version === TESTVERSION ? $style.currentVersion : ''">
+          <td
+            :key="indexVersion"
+            colspan="2"
+            :class="version.version === TESTVERSION ? $style.currentVersion : ''">
             <SectionHeader style="display: flex">
               {{ version.version }}
             </SectionHeader>
           </td>
         </tr>
-        <tr
-          v-for="detail in Object.keys(version.details)"
-          v-if="version.details && Object.keys(version.details)">
-          <td :class="version.version === TESTVERSION ? $style.currentVersion : ''">
+        <tr v-for="(detail, indexDetail) in Object.keys(version.details!)" :key="indexDetail">
+          <td
+            :key="version.version"
+            :class="version.version === TESTVERSION ? $style.currentVersion : ''">
             {{ detail }}
           </td>
           <td :class="version.version === TESTVERSION ? $style.currentVersion : ''">
-            <template v-for="log in version.details[detail]">
+            <template v-for="(log, indexLog) in version.details![detail]" :key="indexLog">
               <div>
-                <template v-for="item in processedLog(log)">
-                  <span v-if="item.type === 'span'"> {{ item.text }}</span>
-                  <PrunLink
-                    v-if="item.type === 'PrunLink'"
-                    :class="$style.prunLink"
-                    :command="item.text"></PrunLink>
+                <template v-for="(item, indexItem) in processedLog(log)">
+                  <template v-if="item.type === 'span'">
+                    <span :key="indexItem"> {{ item.text }}</span>
+                  </template>
+                  <template v-if="item.type === 'PrunLink'">
+                    <PrunLink :key="indexItem" :class="$style.prunLink" :command="item.text" />
+                  </template>
                 </template>
               </div>
             </template>
