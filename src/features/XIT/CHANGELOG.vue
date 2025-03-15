@@ -5,20 +5,26 @@ import PrunLink from '@src/components/PrunLink.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 
 const selections = [
-  'Report a bug',
-  'Make a suggestion',
-  'Ask a github question',
-  'Ask a forum question',
-];
-const selectionUrls = [
-  'https://github.com/refined-prun/refined-prun/issues/new?template=1_bug_report.yml',
-  'https://github.com/refined-prun/refined-prun/issues/new?template=2_feature_request.yml',
-  'https://github.com/refined-prun/refined-prun/issues/new?template=3_discussion.md',
-  'https://com.prosperousuniverse.com/t/refined-prun-qol-extension-for-prosperous-universe/6760',
+  [
+    'Report a bug',
+    'https://github.com/refined-prun/refined-prun/issues/new?template=1_bug_report.yml',
+  ],
+  [
+    'Make a suggestion',
+    'https://github.com/refined-prun/refined-prun/issues/new?template=2_feature_request.yml',
+  ],
+  [
+    'Ask a github question',
+    'https://github.com/refined-prun/refined-prun/issues/new?template=3_discussion.md',
+  ],
+  [
+    'Ask a forum question',
+    'https://com.prosperousuniverse.com/t/refined-prun-qol-extension-for-prosperous-universe/6760',
+  ],
 ];
 
 function onClick(selection: number) {
-  window.open(selectionUrls[selection]);
+  window.open(selections[selection][1]);
 }
 
 const loading = ref(true);
@@ -136,7 +142,7 @@ const TESTVERSION = '25.2.27';
               :class="[$style.prunLink, $style.button]"
               primary
               @click="onClick(indexSelection)"
-              >{{ selection }}
+              >{{ selection[0] }}
               <div :class="$style.prunLink">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
