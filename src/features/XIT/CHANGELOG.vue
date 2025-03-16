@@ -58,7 +58,9 @@ function parseChangelog(text: string) {
       const detailTexts = sectionText.match(patternDetail) ?? [];
       for (const detailText of detailTexts) {
         const parts = detailText.split(patternLink);
-        const links = [...detailText.matchAll(patternLink)].map(match => match[0]);
+        const links = [...detailText.matchAll(patternLink)].map(match =>
+          match[0].replaceAll('`', ''),
+        );
         const weaved = parts.flatMap((part, index) => {
           if (index < links.length) {
             return [part, links[index]];
@@ -92,7 +94,7 @@ async function fetchData() {
 
 fetchData();
 
-const patternVersionOnly = /[\d\.]+/g;
+const patternVersionOnly = /[\d.]+/g;
 
 function getRecentVersion() {
   for (const version of changelog.value ?? []) {
