@@ -91,18 +91,36 @@ async function fetchData() {
 }
 
 fetchData();
-const isLatestVersion = () => {
-  return changelog.value?.[1].isUsedVersion;
-};
-const isCurrentVersionClass = (version: Version) => {
-  if (version.isUsedVersion && changelog.value?.[1].version === version.version) {
+
+const patternVersionOnly = /[\d\.]+/g;
+
+function getRecentVersion() {
+  for (const version of changelog.value ?? []) {
+    if (version.version.match(patternVersionOnly)) {
+      return version;
+    }
+  }
+  return undefined;
+}
+
+function isLatestVersion() {
+  const newestVersion = getRecentVersion();
+  if (newestVersion) {
+    return newestVersion.isUsedVersion;
+  }
+  return false;
+}
+
+function isCurrentVersionClass(version: Version) {
+  const newestVersion = getRecentVersion();
+  if (newestVersion && version.isUsedVersion && newestVersion.version === version.version) {
     return $style.currentVersion;
   } else if (version.version === config.version) {
     return $style.notCurrentVersion;
   } else {
     return '';
   }
-};
+}
 </script>
 
 <template>
