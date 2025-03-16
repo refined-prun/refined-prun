@@ -5,6 +5,8 @@ import PrunLink from '@src/components/PrunLink.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import getBrowserVersion from '@src/utils/browser-version';
 
+const classes = useCssModule();
+
 const selections = ['Report a bug', 'Make a suggestion', 'Ask a question', 'Ask a forum question'];
 
 function onClick(selection: number) {
@@ -26,17 +28,27 @@ function onClick(selection: number) {
   window.open(newIssueUrl);
 }
 
+interface Version {
+  version: string;
+  isUsedVersion: boolean;
+  details: {
+    [key: string]: string[];
+  };
+}
+
 const lists = ['New commands', 'Added', 'Changed', 'Fixed', 'Removed'];
 const patternVersions = /(## [0-9.Unreleased]+(?:\n(?!(## [0-9.]+|\n*$)).*)*)/g;
 const patternSections = /###\s*(.+?)\n\n([\s\S]*?)(?=###|\s*$)/gs;
 const patternDetails = /-.*/g;
 
 function setupInfo(text: string) {
-  const changelogOutput: object[] = [];
+  const changelogOutput: Version[] = [];
   const changelogVersions = [...text.matchAll(patternVersions)].map(match => match[0]);
   for (const section of changelogVersions) {
+    const versionName = section.substring(0, section.indexOf('\n')).replace('## ', '');
     const version = {
-      version: section.substring(0, section.indexOf('\n')).replace('## ', ''),
+      version: versionName,
+      isUsedVersion: versionName === config.version,
       details: {},
     };
     const changelogSections = [...section.matchAll(patternSections)].map(match => match[0]);
@@ -74,7 +86,7 @@ function processedLog(text: string) {
   return items;
 }
 
-const changelog = ref<object[]>();
+const changelog = ref<Version[]>();
 const loading = ref(true);
 
 async function fetchData() {
@@ -92,6 +104,18 @@ async function fetchData() {
 }
 
 fetchData();
+const isLatestVersionClass = () => {
+  return changelog.value?.[1].isUsedVersion ? classes.currentVersion : classes.notCurrentVersion;
+};
+const isCurrentVersionClass = (version: Version) => {
+  if (version.isUsedVersion && changelog.value?.[1].version === version.version) {
+    return classes.currentVersion;
+  } else if (version.version === config.version) {
+    return classes.notCurrentVersion;
+  } else {
+    return '';
+  }
+};
 </script>
 
 <template>
@@ -103,17 +127,11 @@ fetchData();
           <td colspan="2" :class="$style.changelogHeader">
             <div
               >Thanks for using Refined PrUn version:
-              <span
-                :class="[
-                  changelog[1]['version'] == config.version
-                    ? $style.currentVersion
-                    : $style.notCurrentVersion,
-                  $style.changelogVersion,
-                ]"
-                >{{ config.version }}</span
-              ></div
-            >
-            <div v-if="changelog[1]['version'] !== config.version" :class="$style.notCurrentVersion"
+              <span :class="[isLatestVersionClass(), $style.changelogVersion]">{{
+                config.version
+              }}</span>
+            </div>
+            <div v-if="isLatestVersionClass()" :class="$style.notCurrentVersion"
               >You currently don't have the latest version, you may need to update manually.</div
             >
             <div v-else :class="$style.currentVersion">You have the latest version!</div>
@@ -146,27 +164,22 @@ fetchData();
           </td>
         </tr>
         <template v-for="(version, indexVersion) in changelog" :key="indexVersion">
-          <tr>
-            <td
-              :key="indexVersion"
-              colspan="2"
-              :class="[
-                version['version'] === config.version ? $style.currentVersion : '',
-                $style.tdVersionHeader,
-              ]">
+          <tr :class="isCurrentVersionClass(version)">
+            <td :key="indexVersion" colspan="2" :class="$style.tdVersionHeader">
               <SectionHeader :class="$style.sectionHeader">
                 {{ version['version'] }}
               </SectionHeader>
             </td>
           </tr>
-          <tr v-for="(detail, indexDetail) in Object.keys(version['details'])" :key="indexDetail">
-            <td
-              :key="indexDetail"
-              :class="version['version'] === config.version ? $style.currentVersion : ''">
+          <tr
+            v-for="(detail, indexDetail) in Object.keys(version['details'])"
+            :key="indexDetail"
+            :class="isCurrentVersionClass(version)">
+            <td :key="indexDetail">
               {{ detail }}
             </td>
-            <td :class="version['version'] === config.version ? $style.currentVersion : ''">
-              <template v-for="(log, indexLog) in version['details'][detail]" :key="indexLog">
+            <td>
+              <template v-for="log in version['details'][detail]" :key="indexLog">
                 <div>
                   <template v-for="(item, indexItem) in processedLog(log)">
                     <template v-if="item['type'] === 'span'">
