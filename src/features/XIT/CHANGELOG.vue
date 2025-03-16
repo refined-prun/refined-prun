@@ -5,7 +5,7 @@ import PrunLink from '@src/components/PrunLink.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import getBrowserVersion from '@src/utils/browser-version';
 
-const classes = useCssModule();
+const $style = useCssModule();
 
 const selections = ['Report a bug', 'Make a suggestion', 'Ask a question', 'Ask a forum question'];
 
@@ -32,58 +32,45 @@ interface Version {
   version: string;
   isUsedVersion: boolean;
   details: {
-    [key: string]: string[];
+    [key: string]: string[][];
   };
 }
 
-const lists = ['New commands', 'Added', 'Changed', 'Fixed', 'Removed'];
-const patternVersions = /(## [0-9.Unreleased]+(?:\n(?!(## [0-9.]+|\n*$)).*)*)/g;
-const patternSections = /###\s*(.+?)\n\n([\s\S]*?)(?=###|\s*$)/gs;
-const patternDetails = /-.*/g;
+const patternVersion = /## [0-9.Unreleased]+(?:\n(?!## [0-9.]+|$).*)*/g;
+const patternSection = /### .+(?:\n(?!### .+|$).*)*/g;
+const patternDetail = /-.*/g;
+const patternLink = /`[A-Z ]*`/g;
 
-function setupInfo(text: string) {
+function parseChangelog(text: string) {
   const changelogOutput: Version[] = [];
-  const changelogVersions = [...text.matchAll(patternVersions)].map(match => match[0]);
-  for (const section of changelogVersions) {
-    const versionName = section.substring(0, section.indexOf('\n')).replace('## ', '');
+  const versionTexts = text.match(patternVersion) ?? [];
+  for (const versionText of versionTexts) {
+    const versionName = versionText.substring(0, versionText.indexOf('\n')).replace('## ', '');
     const version = {
       version: versionName,
       isUsedVersion: versionName === config.version,
       details: {},
     };
-    const changelogSections = [...section.matchAll(patternSections)].map(match => match[0]);
-    for (const detail of changelogSections) {
-      const info = [...detail.matchAll(patternDetails)].map(match => match[0]);
-      for (const item of lists) {
-        if (detail.startsWith(`### ${item}`)) {
-          version['details'][item] = info;
-        }
+    const sectionTexts = versionText.match(patternSection) ?? [];
+    for (const sectionText of sectionTexts) {
+      const sectionName = sectionText.substring(0, sectionText.indexOf('\n')).replace('### ', '');
+      version.details[sectionName] = [];
+      const detailTexts = sectionText.match(patternDetail) ?? [];
+      for (const detailText of detailTexts) {
+        const parts = detailText.split(patternLink);
+        const links = [...detailText.matchAll(patternLink)].map(match => match[0]);
+        const weaved = parts.flatMap((part, index) => {
+          if (index < links.length) {
+            return [part, links[index]];
+          }
+          return [part];
+        });
+        version.details[sectionName].push(weaved);
       }
     }
     changelogOutput.push(version);
   }
   return changelogOutput;
-}
-
-const patternLink = /`[A-Z ]*`/g;
-
-function processedLog(text: string) {
-  const items: object[] = [];
-  const parts = text.split(patternLink);
-  const links = [...text.matchAll(patternLink)].map(match => match[0]);
-  for (let index = 0; index < parts.length; index++) {
-    items.push({
-      type: 'span',
-      text: parts[index],
-    });
-    if (index < links.length) {
-      items.push({
-        type: 'PrunLink',
-        text: links[index].replaceAll('`', ''),
-      });
-    }
-  }
-  return items;
 }
 
 const changelog = ref<Version[]>();
@@ -95,7 +82,7 @@ async function fetchData() {
   );
   if (response.status === 200) {
     const text = await response.text();
-    changelog.value = setupInfo(text);
+    changelog.value = parseChangelog(text);
   } else {
     console.error('Failed to fetch changelog from refined-prun');
     console.error(`${response.status}`);
@@ -104,14 +91,14 @@ async function fetchData() {
 }
 
 fetchData();
-const isLatestVersionClass = () => {
-  return changelog.value?.[1].isUsedVersion ? classes.currentVersion : classes.notCurrentVersion;
+const isLatestVersion = () => {
+  return changelog.value?.[1].isUsedVersion;
 };
 const isCurrentVersionClass = (version: Version) => {
   if (version.isUsedVersion && changelog.value?.[1].version === version.version) {
-    return classes.currentVersion;
+    return $style.currentVersion;
   } else if (version.version === config.version) {
-    return classes.notCurrentVersion;
+    return $style.notCurrentVersion;
   } else {
     return '';
   }
@@ -121,73 +108,73 @@ const isCurrentVersionClass = (version: Version) => {
 <template>
   <LoadingSpinner v-if="loading" :class="$style.loading" />
   <div v-else-if="!loading && changelog">
+    <div :class="$style.changelogHeader">
+      <div
+        >Thanks for using Refined PrUn version:
+        <span
+          :class="[
+            isLatestVersion() ? $style.currentVersion : $style.notCurrentVersion,
+            $style.changelogConfigVersion,
+          ]"
+          >{{ config.version }}</span
+        >
+      </div>
+      <div :class="isLatestVersion() ? $style.currentVersion : $style.notCurrentVersion">
+        <div v-if="isLatestVersion()">You have the latest version!</div>
+        <div v-else
+          >You currently don't have the latest version, you may need to update manually.</div
+        >
+      </div>
+      <div>
+        <PrunButton
+          v-for="(selection, indexSelection) in selections"
+          :key="indexSelection"
+          :class="[$style.prunLink, $style.prunButton]"
+          primary
+          @click="onClick(indexSelection)"
+          >{{ selection }}
+          <div :class="$style.prunLink">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="11"
+              height="11"
+              fill="currentColor"
+              class="bi bi-box-arrow-up-right"
+              viewBox="0 0 16 16">
+              <path
+                fill-rule="evenodd"
+                d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
+              <path
+                fill-rule="evenodd"
+                d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
+            </svg>
+          </div>
+        </PrunButton>
+      </div>
+    </div>
     <table :class="$style.changelogTable">
-      <tbody>
-        <tr>
-          <td colspan="2" :class="$style.changelogHeader">
-            <div
-              >Thanks for using Refined PrUn version:
-              <span :class="[isLatestVersionClass(), $style.changelogVersion]">{{
-                config.version
-              }}</span>
-            </div>
-            <div v-if="isLatestVersionClass()" :class="$style.notCurrentVersion"
-              >You currently don't have the latest version, you may need to update manually.</div
-            >
-            <div v-else :class="$style.currentVersion">You have the latest version!</div>
-            <div>
-              <PrunButton
-                v-for="(selection, indexSelection) in selections"
-                :key="indexSelection"
-                :class="[$style.prunLink, $style.prunButton]"
-                primary
-                @click="onClick(indexSelection)"
-                >{{ selection }}
-                <div :class="$style.prunLink">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="11"
-                    fill="currentColor"
-                    class="bi bi-box-arrow-up-right"
-                    viewBox="0 0 16 16">
-                    <path
-                      fill-rule="evenodd"
-                      d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
-                    <path
-                      fill-rule="evenodd"
-                      d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
-                  </svg>
-                </div>
-              </PrunButton>
-            </div>
-          </td>
-        </tr>
+      <tbody :class="null">
         <template v-for="(version, indexVersion) in changelog" :key="indexVersion">
           <tr :class="isCurrentVersionClass(version)">
-            <td :key="indexVersion" colspan="2" :class="$style.tdVersionHeader">
-              <SectionHeader :class="$style.sectionHeader">
-                {{ version['version'] }}
+            <td :key="indexVersion" colspan="2" :class="$style.tableTdVersionHeader">
+              <SectionHeader :class="$style.tableSectionHeader">
+                {{ version.version }}
               </SectionHeader>
             </td>
           </tr>
           <tr
-            v-for="(detail, indexDetail) in Object.keys(version['details'])"
+            v-for="(detail, indexDetail) in Object.keys(version.details)"
             :key="indexDetail"
             :class="isCurrentVersionClass(version)">
             <td :key="indexDetail">
               {{ detail }}
             </td>
             <td>
-              <template v-for="log in version['details'][detail]" :key="indexLog">
+              <template v-for="(line, indexLine) in version.details[detail]" :key="indexLine">
                 <div>
-                  <template v-for="(item, indexItem) in processedLog(log)">
-                    <template v-if="item['type'] === 'span'">
-                      <span :key="indexItem"> {{ item['text'] }}</span>
-                    </template>
-                    <template v-if="item['type'] === 'PrunLink'">
-                      <PrunLink :key="indexItem" :class="$style.prunLink" :command="item['text']" />
-                    </template>
+                  <template v-for="(item, indexItem) in line" :key="indexItem">
+                    <span v-if="indexItem % 2 === 0" :key="indexItem"> {{ item }}</span>
+                    <PrunLink v-else :class="$style.prunLink" :command="item" />
                   </template>
                 </div>
               </template>
@@ -209,12 +196,12 @@ const isCurrentVersionClass = (version: Version) => {
   left: 0;
 }
 
-.sectionHeader {
+.tableSectionHeader {
   padding-left: 8px;
   margin: 0;
 }
 
-.tdVersionHeader {
+.tableTdVersionHeader {
   padding: 0;
 }
 
@@ -224,11 +211,7 @@ const isCurrentVersionClass = (version: Version) => {
   background-color: transparent;
 }
 
-.changelogTable tbody tr:not(:first-child) {
-  td:not(.tdVersionHeader) {
-    padding: 4px 8px 4px 8px;
-  }
-
+.changelogTable tbody tr {
   td div:first-child {
     padding-top: 2px;
   }
@@ -242,7 +225,7 @@ const isCurrentVersionClass = (version: Version) => {
   padding: 4px;
 }
 
-.changelogVersion {
+.changelogConfigVersion {
   padding-left: 2px;
   padding-right: 2px;
 }
