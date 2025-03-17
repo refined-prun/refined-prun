@@ -4,9 +4,9 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 const { inline, autoSubmit = true } = defineProps<{
   autoSubmit?: boolean;
   command?: string;
+  commandText?: string;
   href?: string;
   inline?: boolean;
-  linkText?: string;
 }>();
 
 const $style = useCssModule();
@@ -23,7 +23,7 @@ const classes = computed(() => ({
   </a>
   <div v-else :class="classes" @click.stop="() => showBuffer(command!, { autoSubmit })">
     <slot v-if="$slots.default"></slot>
-    <template v-else>{{ linkText ? linkText : command }}</template>
+    <template v-else>{{ commandText ? commandText : command }}</template>
   </div>
 </template>
 
