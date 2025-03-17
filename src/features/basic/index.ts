@@ -24,6 +24,7 @@ import './flt-ship-condition/flt-ship-condition';
 import './focus-buffers-on-click';
 import './header-calculator-button';
 import './header-duplicate-button';
+import './header-hide-controls-button/header-hide-controls-button';
 import './hide-inactive-close-button';
 import './highlight-own-exchange-orders';
 import './highlight-production-order-error';
