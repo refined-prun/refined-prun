@@ -44,6 +44,7 @@ import './nots-ship-arrival-inventory';
 import './prevent-delete-button-misclicks';
 import './prod-burn-link';
 import './prod-order-eta';
+import './prodq-shorten-material-names';
 import './prodq-queue-load';
 import './prun-bugs';
 import './rprun-version-label';

@@ -6,6 +6,7 @@ const { inline, autoSubmit = true } = defineProps<{
   command?: string;
   href?: string;
   inline?: boolean;
+  linkText?: string;
 }>();
 
 const $style = useCssModule();
@@ -22,7 +23,7 @@ const classes = computed(() => ({
   </a>
   <div v-else :class="classes" @click.stop="() => showBuffer(command!, { autoSubmit })">
     <slot v-if="$slots.default"></slot>
-    <template v-else>{{ command }}</template>
+    <template v-else>{{ linkText ? linkText : command }}</template>
   </div>
 </template>
 
