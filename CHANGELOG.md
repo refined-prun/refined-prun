@@ -7,6 +7,7 @@
 
 ### Changed
 
+- `XIT HQUC`: Uncap HQ level
 - `XIT REP`: Use planet id in the `BRA` context button
 
 ### Fixed
