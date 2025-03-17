@@ -34,5 +34,5 @@ function init() {
 features.add(
   import.meta.url,
   init,
-  'Adds a hide context menu button to the buffer header of tiles with a context menu.',
+  'Adds a hide context controls button to the buffer header of tiles with a context control bar.',
 );
