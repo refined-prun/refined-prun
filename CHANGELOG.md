@@ -12,9 +12,12 @@
 ### Fixed
 
 - `XIT GIF`: Fix borked gifs
-- `contd-fill-condition-address`: Fix incorrect address selection
 - `focus-buffers-on-click`: Disable this feature in `HQ` to fix relocation input resetting
 - `prun-bugs`: Fix scrollbar gutter in `PROD` taking up space without a scrollbar present
+
+### Removed
+
+- `contd-fill-condition-address`: Superseded by `contd-condition-address-placeholder`
 
 ## 25.3.8
 
