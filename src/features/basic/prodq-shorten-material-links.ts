@@ -10,19 +10,6 @@ async function onTileReady(tile: PrunTile) {
     return;
   }
 
-  if (!productionStore.getById(parameter)) {
-    const unwatch = watchEffect(() => {
-      if (productionStore.all.value?.find(line => line.id.substring(0, 8) === parameter)) {
-        setupBuffer(tile, parameter);
-        unwatch();
-      }
-    });
-  } else {
-    setupBuffer(tile, parameter);
-  }
-}
-
-function setupBuffer(tile: PrunTile, parameter: string) {
   subscribe($$(tile.anchor, C.ProductionQueue.table), table => {
     subscribe($$(table, 'tr'), order => {
       if (_$(order, 'th')) {
