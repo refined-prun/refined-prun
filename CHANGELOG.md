@@ -1,5 +1,10 @@
 ## Unreleased
 
+### Added
+
+- `contd-condition-address-placeholder`: (new) Sets the current address as the placeholder for the address field of the
+  condition editor
+
 ### Changed
 
 - `XIT REP`: Use planet id in the `BRA` context button
