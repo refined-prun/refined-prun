@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getInvStore } from '@src/core/store-id';
-import { tilesStore } from '@src/infrastructure/prun-api/data/tiles';
 import removeArrayElement from '@src/utils/remove-array-element';
+import { tilesStore } from '@src/infrastructure/prun-api/data/tiles';
+import { getInvStore } from '@src/core/store-id';
 
 const migrations: Migration[] = [
   userData => {
