@@ -8,6 +8,9 @@ const migrations: Migration[] = [
     userData.configVersion = config.version;
   },
   userData => {
+    removeArrayElement(userData.settings.disabled, 'contd-fill-condition-address');
+  },
+  userData => {
     const sorting = {} as Record<string, any>;
     for (const mode of userData.sorting) {
       const store = getInvStore(mode.storeId);
