@@ -31,6 +31,7 @@ function onTileReady(tile: PrunTile) {
     return;
   }
   const xitCommand = xit.get(command);
+  parameters = parameters.slice(1);
 
   if (xitCommand) {
     _$(tile.frame, C.TileFrame.title)!.textContent =
@@ -66,7 +67,7 @@ function onTileReady(tile: PrunTile) {
     createFragmentApp(xitCommand.component(parameters))
       .use(tileStatePlugin, { tile })
       .provide(xitCommandKey, command)
-      .provide(xitParametersKey, parameters.slice(1))
+      .provide(xitParametersKey, parameters)
       .appendTo(container);
     stopMeasure();
   });

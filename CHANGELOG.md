@@ -1,8 +1,24 @@
-## Unreleased
+## 25.3.17
+
+### Added
+
+- `contd-condition-address-placeholder`: (new) Sets the current address as the placeholder for the address field of the
+  condition editor
+
+### Changed
+
+- `XIT HQUC`: Uncap HQ level
+- `XIT REP`: Use planet id in the `BRA` context button
 
 ### Fixed
 
+- `XIT GIF`: Fix borked gifs
+- `focus-buffers-on-click`: Disable this feature in `HQ` to fix relocation input resetting
 - `prun-bugs`: Fix scrollbar gutter in `PROD` taking up space without a scrollbar present
+
+### Removed
+
+- `contd-fill-condition-address`: Superseded by `contd-condition-address-placeholder`
 
 ## 25.3.8
 

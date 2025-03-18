@@ -16,8 +16,7 @@ import { sumMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { shipyardProjectsStore } from '@src/infrastructure/prun-api/data/shipyard-projects';
 import { map } from '@src/utils/map-values';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
-import { clamp } from '@src/utils/clamp';
-import { accumulatedHQUpgrades, maxHQLevel } from '@src/core/hq';
+import { calculateHQUpgradeMaterials } from '@src/core/hq';
 
 const builtShips = computed(() => {
   blueprintsStore.request();
@@ -42,12 +41,10 @@ const shipsDepreciation = computed(() => {
   return sumBy(shipsStore.all.value, x => sumMaterialAmountPrice(x.repairMaterials));
 });
 
-const hqLevel = computed(() =>
-  map([companyStore.value], x => clamp(x.headquarters.level, 0, maxHQLevel)),
-);
+const hqLevel = computed(() => map([companyStore.value], x => x.headquarters.level));
 
 const hqBuiltLevels = computed(() =>
-  map([hqLevel.value], x => sumMaterialAmountPrice(accumulatedHQUpgrades.value[x])),
+  map([hqLevel.value], x => sumMaterialAmountPrice(calculateHQUpgradeMaterials(0, x))),
 );
 
 const hqAssignedItems = computed(() =>
