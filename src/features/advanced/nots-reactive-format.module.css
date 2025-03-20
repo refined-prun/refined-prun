@@ -13,7 +13,7 @@
   display: block;
   float: left;
   height: 15px;
-  width: calc(79.99px + max(calc(calc(100% - 270px) * -1000000),0px));
+  width: calc(79.99px + max(calc(calc(100% - 280px) * -1000000),0px));
 }
 
 .alertListItemTime {
@@ -22,6 +22,6 @@
   white-space: nowrap;
   max-width: 70px;
   overflow: hidden;
-  left: max(calc(80px - calc(calc(100% - min(100%,289.99px))) * 1000000),10px);
+  left: max(calc(80px - calc(calc(100% - min(100%,299.99px))) * 1000000),10px);
   top: max(calc(18px - calc(calc(100% - min(100%,35px))) * 1000000),6px);
 }
