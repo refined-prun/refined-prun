@@ -24,7 +24,7 @@ import './lm-clean-ads';
 import './lm-hide-rating';
 import './mat-clean-info';
 import './minimize-headers/minimize-headers';
-import './nots-change-format';
+import './nots-reactive-format';
 import './nots-clean-notifications';
 import './prod-hide-percent';
 import './shpf-hide-sort-options';
