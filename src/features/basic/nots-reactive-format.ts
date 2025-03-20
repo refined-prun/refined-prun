@@ -25,5 +25,5 @@ function init() {
 features.add(
   import.meta.url,
   init,
-  'NOTS: Allow notification contents to take up the full width of the buffer.',
+  'NOTS: Allow notification contents to reorganize when in a small window. (Requires `nots-notification-type-label`)',
 );
