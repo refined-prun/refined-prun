@@ -40,7 +40,6 @@ import './mtra-auto-focus-amount';
 import './mtra-transfer-on-enter';
 import './nots-material-ticker';
 import './nots-notification-type-label';
-import './nots-reactive-format';
 import './nots-ship-arrival-inventory';
 import './prevent-delete-button-misclicks';
 import './prod-burn-link';
