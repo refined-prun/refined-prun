@@ -5,3 +5,14 @@
 .matchingCategory {
   background-color: rgba(92, 184, 92, 0.175);
 }
+
+.rowAfter {
+  content: "";
+  position: absolute;
+  inset: 0px;
+  pointer-events: none;
+}
+
+.rowOdd {
+  position: relative;
+}
