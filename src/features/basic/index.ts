@@ -22,6 +22,7 @@ import './finla-more-columns';
 import './flt-arrival-eta';
 import './flt-ship-condition/flt-ship-condition';
 import './focus-buffers-on-click';
+import './funny-rations';
 import './header-calculator-button';
 import './header-duplicate-button';
 import './hide-inactive-close-button';
