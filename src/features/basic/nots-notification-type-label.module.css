@@ -1,30 +1,14 @@
 .label {
-  position: absolute;
   text-transform: uppercase;
   min-width: 65px;
   max-width: 65px;
 }
 
 .alertListItemContent {
-  position: relative;
-  overflow-x: hidden;
-  min-height: 34.2px;
-}
-
-.alertListItemInnerContentBefore {
-  content: '';
-  display: block;
-  float: left;
-  height: 15px;
-  width: calc(79.5px + max(calc(calc(100% - 280px) * -10000),0px));
+  display: flex; 
+  flex-wrap: wrap;
 }
 
 .alertListItemTime {
-  position: absolute;
-  margin-top: 0;
-  white-space: nowrap;
-  max-width: 70px;
-  overflow: hidden;
-  left: max(calc(80px - calc(calc(100% - min(100%,299.5px))) * 10000),10px);
-  top: max(calc(18px - calc(calc(100% - min(100%,35px))) * 10000),6px);
+  width:100%
 }

@@ -171,11 +171,6 @@ const labelMap = new Map(labels.flatMap(x => x.types.map(y => [y, x])));
 function init() {
   applyScopedCssRule('NOTS', `.${C.AlertListItem.content}`, classes.alertListItemContent);
   applyScopedCssRule('NOTS', `.${C.AlertListItem.time}`, classes.alertListItemTime);
-  applyScopedCssRule(
-    'NOTS',
-    `.${C.AlertListItem.content} > span:first-of-type:before`,
-    classes.alertListItemInnerContentBefore,
-  );
 
   tiles.observe('NOTS', onTileReady);
 }
