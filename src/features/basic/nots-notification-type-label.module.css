@@ -1,6 +1,14 @@
 .label {
-  position: absolute;
   text-transform: uppercase;
   min-width: 65px;
   max-width: 65px;
+}
+
+.alertListItemContent {
+  display: flex; 
+  flex-wrap: wrap;
+}
+
+.alertListItemTime {
+  width:100%
 }
