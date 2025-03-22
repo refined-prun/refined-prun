@@ -4,10 +4,6 @@ import { refAttributeValue, refTextContent } from '@src/utils/reactive-dom';
 import { createReactiveDiv } from '@src/utils/reactive-element';
 
 function onTileReady(tile: PrunTile) {
-  if (!tile.parameter) {
-    return;
-  }
-
   subscribe($$(tile.anchor, C.ProductionLine.form), form => {
     const staticInputDuration = form.children[8].children[1].children[0];
     const dropDownBoxItem = refTextContent(_$(form.children[5], C.DropDownBox.currentItem)!);
