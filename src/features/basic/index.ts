@@ -33,6 +33,7 @@ import './inv-search';
 import './item-icons';
 import './item-markers/item-markers';
 import './item-ticker-shadow';
+import './lead-per-day-column';
 import './lm-colored-buy-sell';
 import './lm-highlight-own-ads';
 import './lm-item-icons/lm-item-icons';

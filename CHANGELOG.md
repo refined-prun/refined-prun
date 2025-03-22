@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+
+- `lead-per-day-column`: (new) Adds a "Per Day" column to the "Commodity Production" leaderboard
+
 ## 25.3.17
 
 ### Added
