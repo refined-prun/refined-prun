@@ -28,11 +28,11 @@ function linkifyMaterialNames(elements: HTMLCollection, resources: PrunApi.Mater
     const materialName = children.length === 2 ? children[1] : children[0];
     materialName.innerText = '';
     const material = resources[i].material.ticker;
-    createFragmentApp(PrunLink, {
-      command: `MAT ${material}`,
-      inline: true,
-      commandText: `${material}`,
-    }).appendTo(materialName);
+    createFragmentApp(() => (
+      <PrunLink inline command={`MAT ${material}`}>
+        {material}
+      </PrunLink>
+    )).appendTo(materialName);
   }
 }
 
