@@ -26,4 +26,5 @@ import './mat-clean-info';
 import './minimize-headers/minimize-headers';
 import './nots-clean-notifications';
 import './prod-hide-percent';
+import './prodq-shorten-material-links';
 import './shpf-hide-sort-options';
