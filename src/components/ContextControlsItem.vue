@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import fa from '@src/utils/font-awesome.module.css';
 
-const props = defineProps<{ cmd: string; label?: string; onClick?: (cmd: string) => void }>();
+const props = defineProps<{ cmd: string; label?: string }>();
 
 const commandParts = computed(() => {
   const words = props.cmd.split(' ');
@@ -18,15 +17,9 @@ const itemClasses = [C.ContextControls.item, C.fonts.fontRegular, C.type.typeSma
 
 <template>
   <!-- The node structure is fully replicated from PrUn, don't mind unnecessary nodes. -->
-  <div
-    :class="itemClasses"
-    @click="
-      () => {
-        onClick ? onClick(cmd) : showBuffer(cmd);
-      }
-    ">
+  <div :class="itemClasses" @click="() => showBuffer(cmd)">
     <span>
-      <span :class="[C.ContextControls.cmd, fa.solid]">{{ commandParts[0] }}</span>
+      <span :class="C.ContextControls.cmd">{{ commandParts[0] }}</span>
       {{ commandParts[1] }}
     </span>
     <span v-if="label" :class="C.ContextControls.label">: {{ label }}</span>
