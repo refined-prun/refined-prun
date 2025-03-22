@@ -20,11 +20,7 @@ function onTileReady(tile: PrunTile) {
   });
 }
 
-function onOrderSlotReady(
-  slot: HTMLElement,
-  orderId: globalThis.Ref<string | null, string | null>,
-  siteId: string,
-) {
+function onOrderSlotReady(slot: HTMLElement, orderId: Ref<string | null>, siteId: string) {
   const completion = computed(() => {
     const line = productionStore.getById(siteId);
     for (const order of line?.orders ?? []) {
