@@ -7,6 +7,7 @@ import { createReactiveDiv } from '@src/utils/reactive-element';
 import HideOrders from './HideOrders.vue';
 import classes from './prod-collapse-orders.module.css';
 import { getTileState } from './tile-state';
+import css from '@src/utils/css-utils.module.css';
 
 async function onTileReady(tile: PrunTile) {
   const parameter = tile.parameter;
@@ -29,9 +30,7 @@ async function onTileReady(tile: PrunTile) {
 
   subscribe($$(tile.anchor, C.SiteProductionLines.grid), grid => {
     const site = sitesStore.getById(parameter);
-    if (!site) return;
-    const production = productionStore.getBySiteId(site.siteId);
-    if (!production) return;
+    const production = productionStore.getBySiteId(site?.siteId);
     let columnIndex = 0;
     subscribe($$(grid, C.SiteProductionLines.column), column => {
       const orders = computed(() => {
@@ -40,28 +39,27 @@ async function onTileReady(tile: PrunTile) {
       const diviver = _$(column, C.SiteProductionLines.slotDivider)!;
       if (!diviver) return;
 
-      const lineId = production.find(line => {
+      const lineId = production?.find(line => {
         return line.orders.some(order => {
           return order.id === getPrunId(orders.value[0] as HTMLElement);
         });
-      })!.id;
-      if (!lineId) return;
+      })?.id;
 
       const line = computed(() => {
-        return productionStore.all.value!.find(prodLine => {
-          return prodLine.id === lineId!;
+        return productionStore.all.value?.find(prodLine => {
+          return prodLine.id === lineId;
         })!;
       });
 
       function setOrdersDisplay(keepCapacity: number, keepSlots: number) {
         infoProxy.value = [line.value.type, keepCapacity, keepSlots];
-        orders.value.forEach((order: HTMLElement, index: number) => {
-          if (index < line.value.capacity) {
-            order.style.display = index < keepCapacity ? '' : 'none';
+        for (let i = 0; i < orders.value.length; i++) {
+          if (i < line.value.capacity) {
+            orders.value[i].classList.toggle(css.hidden, i >= keepCapacity);
           } else {
-            order.style.display = index < line.value.capacity + keepSlots ? '' : 'none';
+            orders.value[i].classList.toggle(css.hidden, i >= line.value.capacity + keepSlots);
           }
-        });
+        }
       }
 
       createFragmentApp(
@@ -72,9 +70,9 @@ async function onTileReady(tile: PrunTile) {
           slots: line.value.slots,
           setOrdersDisplay,
           displayAllOrders: () => {
-            orders.value.forEach(order => {
-              return order.style.removeProperty('display');
-            });
+            for (const order of orders.value) {
+              order.classList.toggle(css.hidden, false);
+            }
             infoProxy.value = [line.value.type, -1, -1];
           },
         }),
@@ -112,6 +110,7 @@ async function onTileReady(tile: PrunTile) {
       hiddenQueue.style.fontSize = '9px';
       column.appendChild(hiddenQueue);
 
+      // Doesn't need to be updated on infoProxy changes, so only watch line.
       watch(line, () => {
         column.insertBefore(hiddenProd, diviver);
         column.appendChild(hiddenQueue);
