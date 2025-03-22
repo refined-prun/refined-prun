@@ -7,16 +7,14 @@ async function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.ProductionQueue.table), table => {
     subscribe($$(table, 'tr'), order => {
       const prunId = refPrunId(order);
-      if (prunId.value) {
-        watchEffectWhileNodeAlive(order, () => {
-          const line = productionStore.getById(tile.parameter);
-          const productionOrder = line?.orders.find(order => order.id === prunId.value);
-          if (productionOrder) {
-            linkifyMaterialNames(order.children[3].children, productionOrder.inputs);
-            linkifyMaterialNames(order.children[4].children, productionOrder.outputs);
-          }
-        });
-      }
+      watchEffectWhileNodeAlive(order, () => {
+        const line = productionStore.getById(tile.parameter);
+        const productionOrder = line?.orders.find(order => order.id === prunId.value);
+        if (productionOrder) {
+          linkifyMaterialNames(order.children[3].children, productionOrder.inputs);
+          linkifyMaterialNames(order.children[4].children, productionOrder.outputs);
+        }
+      });
     });
   });
 }
