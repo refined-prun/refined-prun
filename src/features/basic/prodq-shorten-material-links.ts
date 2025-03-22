@@ -1,62 +1,38 @@
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
-import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import PrunLink from '@src/components/PrunLink.vue';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 
 async function onTileReady(tile: PrunTile) {
-  const parameter = tile.parameter;
-  if (!parameter) {
-    return;
-  }
-
   subscribe($$(tile.anchor, C.ProductionQueue.table), table => {
     subscribe($$(table, 'tr'), order => {
-      if (_$(order, 'th')) {
-        return;
-      }
       const prunId = refPrunId(order);
-      watchEffectWhileNodeAlive(order, () => {
-        if (!prunId.value) {
-          return;
-        }
-
-        const line = productionStore.getById(parameter)!;
-        const productionOrder = line.orders.find(order => order.id === prunId.value);
-        if (!productionOrder) {
-          return;
-        }
-
-        subscribe($$(order.children[2], 'span'), span => {
-          span.innerText = getEntityNameFromAddress(line.address)!;
+      if (prunId.value) {
+        watchEffectWhileNodeAlive(order, () => {
+          const line = productionStore.getById(tile.parameter);
+          const productionOrder = line?.orders.find(order => order.id === prunId.value);
+          if (productionOrder) {
+            linkifyMaterialNames(order.children[3].children, productionOrder.inputs);
+            linkifyMaterialNames(order.children[4].children, productionOrder.outputs);
+          }
         });
-        const columnInputs = Array.from(order.children[3].children) as HTMLDivElement[];
-        createAppForRow(columnInputs, productionOrder.inputs);
-        const columnOutputs = Array.from(order.children[4].children) as HTMLDivElement[];
-        createAppForRow(columnOutputs, productionOrder.outputs);
-      });
+      }
     });
   });
 }
 
-function createAppForRow(elements: HTMLDivElement[], resources: PrunApi.MaterialAmountValue[]) {
-  for (const [index, materialCount] of elements.entries()) {
-    let materialName = {} as HTMLSpanElement;
-    if (materialCount.children.length === 2) {
-      materialName = materialCount.children[1] as HTMLSpanElement;
-    } else {
-      materialName = materialCount.children[0] as HTMLSpanElement;
-    }
-    const material = resources[index].material.ticker;
+function linkifyMaterialNames(elements: HTMLCollection, resources: PrunApi.MaterialAmountValue[]) {
+  for (let i = 0; i < elements.length; i++) {
+    const children = Array.from(elements[i].children) as HTMLSpanElement[];
+    // In-progress orders have only one child, while queued ones have two.
+    const materialName = children.length === 2 ? children[1] : children[0];
     materialName.innerText = '';
-    createFragmentApp(
-      PrunLink,
-      reactive({
-        command: `MAT ${material}`,
-        inline: true,
-        linkText: `${material}`,
-      }),
-    ).appendTo(materialName);
+    const material = resources[i].material.ticker;
+    createFragmentApp(PrunLink, {
+      command: `MAT ${material}`,
+      inline: true,
+      commandText: `${material}`,
+    }).appendTo(materialName);
   }
 }
 
@@ -67,5 +43,5 @@ function init() {
 features.add(
   import.meta.url,
   init,
-  'PRODQ: Shortens material and government full names into their ticker and planet with a link.',
+  'PRODQ: Shortens material full names into their ticker with a link.',
 );
