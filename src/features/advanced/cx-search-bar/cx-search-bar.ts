@@ -4,33 +4,31 @@ import classes from './cx-search-bar.module.css';
 import { applyScopedCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import css from '@src/utils/css-utils.module.css';
 
-export const store = reactive({
-  matchedMaterials: [] as PrunApi.Material[],
-  collapseOthers: false,
-});
-
 function onTileReady(tile: PrunTile) {
-  const parameter = tile.parameter;
-  if (!parameter) {
-    return;
-  }
-
   subscribe($$(tile.anchor, C.ComExPanel.input), comExPanel => {
     const actionBar = _$(comExPanel, C.ActionBar.container)!;
+
+    const store = reactive({
+      matchedTickers: new Set<string>(),
+      matchedCategories: new Set<string>(),
+      collapseOthers: false,
+    });
 
     createFragmentApp(
       MaterialSearchAndResults,
       reactive({
         node: comExPanel,
+        store: store,
       }),
     ).before(actionBar.children[0]);
 
     const options = _$$(comExPanel, 'option')!;
     for (const option of options) {
-      const value = option.getAttribute('value');
+      const value = option.getAttribute('value')!;
       watchEffectWhileNodeAlive(option, () => {
-        const isMatch = store.matchedMaterials.some(material => value === material.category);
-        setClassesForElement(option, isMatch, classes.matchingCategory);
+        const isMatch = store.matchedCategories.has(value);
+        option.classList.toggle(classes.matchingCategory, isMatch);
+        option.classList.toggle(css.hidden, !isMatch && store.collapseOthers);
       });
     }
 
@@ -38,17 +36,13 @@ function onTileReady(tile: PrunTile) {
       subscribe($$(tbody, 'tr'), tr => {
         const labelText = _$(tr, C.ColoredIcon.label)!.innerText;
         watchEffectWhileNodeAlive(tr, () => {
-          const isMatch = store.matchedMaterials.some(material => labelText === material.ticker);
-          setClassesForElement(tr, isMatch, classes.matchingRow);
+          const isMatch = store.matchedTickers.has(labelText);
+          tr.classList.toggle(classes.matchingRow, isMatch);
+          tr.classList.toggle(css.hidden, !isMatch && store.collapseOthers);
         });
       });
     });
   });
-}
-
-function setClassesForElement(element: HTMLElement, isMatch: boolean, matchClass: string) {
-  element.classList.toggle(matchClass, isMatch);
-  element.classList.toggle(css.hidden, !isMatch && store.collapseOthers);
 }
 
 function init() {

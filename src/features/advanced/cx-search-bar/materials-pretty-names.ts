@@ -348,8 +348,9 @@ export const tickerToName: TickerToNameMap = {
   BL: 'Breathable Liquid',
 };
 
-export function searchForTickerFromName(substring: string): string[] | undefined {
-  return Object.keys(tickerToName).filter(key =>
-    tickerToName[key].toUpperCase().includes(substring.toUpperCase()),
-  );
+export function searchForTickerFromSubstring(substring: string): string[] | undefined {
+  substring = substring.toUpperCase();
+  return Object.keys(tickerToName).filter(key => {
+    return key.includes(substring) || tickerToName[key].toUpperCase().includes(substring);
+  });
 }

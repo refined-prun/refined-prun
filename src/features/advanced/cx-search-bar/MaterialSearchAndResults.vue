@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import TextInput from '@src/components/forms/TextInput.vue';
-import { searchForTickerFromName } from './materials-pretty-names';
+import { searchForTickerFromSubstring } from './materials-pretty-names';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { store } from './cx-search-bar';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 
-const { node } = defineProps<{ node: HTMLElement }>();
+const { node, store } = defineProps<{
+  node: HTMLElement;
+  store: { collapseOthers: boolean; matchedTickers: Set<string>; matchedCategories: Set<string> };
+}>();
 
 const searchText = ref('');
 const collapseOthers = ref(false);
@@ -16,23 +18,22 @@ watchEffectWhileNodeAlive(node, () => {
 });
 
 watchEffectWhileNodeAlive(node, () => {
+  const tickers = new Set<string>();
+  const categories = new Set<string>();
   if (!searchText.value || searchText.value.length === 0) {
-    store.matchedMaterials = [];
+    store.matchedTickers = tickers;
+    store.matchedCategories = categories;
     return;
   }
-  const tickers =
-    materialsStore.all.value?.filter(material =>
-      material.ticker.includes(searchText.value.toUpperCase()),
-    ) ?? [];
 
-  const search = searchForTickerFromName(searchText.value.toUpperCase()) ?? [];
+  const search = searchForTickerFromSubstring(searchText.value) ?? [];
   for (const ticker of search) {
-    const material = materialsStore.getByTicker(ticker);
-    if (material) {
-      tickers.push(material);
-    }
+    const material = materialsStore.getByTicker(ticker)!;
+    tickers.add(material.ticker);
+    categories.add(material.category);
   }
-  store.matchedMaterials = tickers;
+  store.matchedTickers = tickers;
+  store.matchedCategories = categories;
 });
 </script>
 
