@@ -5,6 +5,7 @@ import { formatEta } from '@src/utils/format';
 import { timestampEachMinute } from '@src/utils/dayjs';
 import { createReactiveDiv } from '@src/utils/reactive-element';
 import { keepLast } from '@src/utils/keep-last';
+import { calcCompletionDate } from '@src/core/production-line';
 
 function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {
@@ -37,44 +38,6 @@ function onOrderSlotReady(slot: HTMLElement, siteId: string) {
   });
   const div = createReactiveDiv(slot, eta);
   keepLast(slot, () => _$(slot, C.OrderSlot.info), div);
-}
-
-function calcCompletionDate(line: PrunApi.ProductionLine, order: PrunApi.ProductionOrder) {
-  if (!order.duration) {
-    return undefined;
-  }
-
-  if (order.completion) {
-    return order.completion.timestamp;
-  }
-
-  const capacity = line.capacity;
-  if (capacity === 0) {
-    return undefined;
-  }
-  const queue: number[] = [];
-
-  for (const lineOrder of line.orders) {
-    if (!lineOrder.duration) {
-      return undefined;
-    }
-    if (lineOrder.completion) {
-      // Order has started
-      queue.push(lineOrder.completion.timestamp);
-    } else if (queue.length < capacity) {
-      // Order has not started but there's capacity to start it
-      queue.push(Date.now() + lineOrder.duration.millis);
-    } else {
-      // Order has not started
-      queue.sort();
-      queue.push(queue.shift()! + lineOrder.duration.millis);
-    }
-    if (lineOrder === order) {
-      return queue.pop();
-    }
-  }
-
-  return undefined;
 }
 
 function init() {
