@@ -20,7 +20,6 @@ watchEffectWhileNodeAlive(node, () => {
     store.matchedMaterials = [];
     return;
   }
-  console.log(searchText.value);
   const tickers =
     materialsStore.all.value?.filter(material =>
       material.ticker.includes(searchText.value.toUpperCase()),

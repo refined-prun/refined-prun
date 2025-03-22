@@ -1,4 +1,3 @@
-import { refAttributeValue, refTextContent } from '@src/utils/reactive-dom';
 import MaterialSearchAndResults from './MaterialSearchAndResults.vue';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import classes from './cx-search-bar.module.css';
