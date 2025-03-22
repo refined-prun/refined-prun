@@ -46,7 +46,7 @@ async function onTileReady(tile: PrunTile) {
       })?.id;
 
       const line = computed(() => {
-        return productionStore.all.value?.find(prodLine => {
+        return productionStore.all.value!.find(prodLine => {
           return prodLine.id === lineId;
         })!;
       });
