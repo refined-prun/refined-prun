@@ -1,6 +1,4 @@
-type TickerToNameMap = { [ticker: string]: string };
-
-export const tickerToName: TickerToNameMap = {
+export const tickerToPrettyName: { [ticker: string]: string } = {
   AAR: 'Antenna Array',
   ABH: 'Advanced Bulkhead',
   ACS: 'Automated Cooling System',
@@ -347,10 +345,3 @@ export const tickerToName: TickerToNameMap = {
   ZIR: 'Zircon Crystals',
   ZR: 'Zirconium',
 };
-
-export function searchForTickerFromSubstring(substring: string): string[] | undefined {
-  substring = substring.toUpperCase();
-  return Object.keys(tickerToName).filter(key => {
-    return key.includes(substring) || tickerToName[key].toUpperCase().includes(substring);
-  });
-}

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import TextInput from '@src/components/forms/TextInput.vue';
-import { searchForTickerFromSubstring } from './materials-pretty-names';
+import { tickerToPrettyName } from './materials-pretty-names';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
@@ -13,8 +13,9 @@ const { comExPanel } = defineProps<{
 }>();
 
 const searchText = ref('');
+let collapseText = searchText.value;
 const collapseOthers = ref(false);
-let searchCollapse = false;
+let collapseSearch = false;
 
 const select = _$(comExPanel, 'select')!;
 const selectValue = ref('');
@@ -22,91 +23,100 @@ select.addEventListener('change', () => {
   selectValue.value = select.value;
 });
 
-const options = _$$(comExPanel, 'option')!;
-const optionElements: { [category: string]: { element: HTMLOptionElement; changed: boolean } } = {};
-options.every(
-  option => (optionElements[option.getAttribute('value')!] = { element: option, changed: false }),
-);
+type TickerToElement = Map<string, HTMLElement>;
+const optionElements: TickerToElement = new Map();
+const rowElements: TickerToElement = new Map();
 
-const rowElements: { [ticker: string]: { element: HTMLTableRowElement; changed: boolean } } = {};
+if (optionElements.size === 0) {
+  const options = _$$(comExPanel, 'option')!;
+  for (const option of options) {
+    optionElements.set(option.getAttribute('value')!, option);
+  }
+}
+
+function loadRowElements() {
+  const currentTBody = _$(comExPanel, 'tbody');
+  if (!currentTBody) {
+    return;
+  }
+  const rows = _$$(currentTBody, 'tr');
+  for (const row of rows) {
+    const labelText = _$(row, C.ColoredIcon.label)!.innerText;
+    rowElements.set(labelText, row);
+  }
+  triggerRef(searchText);
+}
+
+// If CX loads a category it's already seen, it loads the data from memory and only tr's will be changed.
+const selectValueWatch = watch(selectValue, () => {
+  loadRowElements();
+});
+onNodeDisconnected(comExPanel, selectValueWatch);
 
 // If CX loads a category it hasn't fetched from the server yet, a new tbody will be generated.
-// If CX loads a category it's already seen, it loads the data from memory and only tr's will be changed.
-// This subscribe/watch combo account for both instances.
-subscribe($$(comExPanel, 'tbody'), tbody => {
-  const selectValueWatch = watch(
-    selectValue,
-    () => {
-      const currentTBody = _$(comExPanel, 'tbody');
-      if (!currentTBody) {
-        return;
-      }
-      Object.keys(rowElements).forEach(key => {
-        delete rowElements[key];
-      });
-      const rows = _$$(currentTBody, 'tr');
-      for (const row of rows) {
-        const labelText = _$(row, C.ColoredIcon.label)!.innerText;
-        rowElements[labelText] = { element: row, changed: false };
-      }
-      triggerRef(searchText);
-    },
-    { immediate: true },
-  );
-  onNodeDisconnected(tbody, selectValueWatch);
+subscribe($$(comExPanel, 'tbody'), () => {
+  loadRowElements();
 });
 
 watchEffectWhileNodeAlive(comExPanel, () => {
-  Object.values(optionElements).forEach(option =>
-    option.element.classList.toggle(css.hidden, !option.changed && collapseOthers.value),
-  );
-  Object.values(rowElements).forEach(row =>
-    row.element.classList.toggle(css.hidden, !row.changed && collapseOthers.value),
-  );
-  searchCollapse = collapseOthers.value;
+  const collapseOthersWithoutText = collapseOthers.value && collapseText.length !== 0;
+  for (const option of optionElements.values()) {
+    option.classList.toggle(
+      css.hidden,
+      !option.classList.contains(classes.matchingCategory) && collapseOthersWithoutText,
+    );
+  }
+  for (const row of rowElements.values()) {
+    if (row.isConnected) {
+      row.classList.toggle(
+        css.hidden,
+        !row.classList.contains(classes.matchingRow) && collapseOthersWithoutText,
+      );
+    }
+  }
+  collapseSearch = collapseOthers.value;
 });
 
+const resetElement = (value: HTMLElement) => {
+  if (value.isConnected) {
+    value.classList.remove(classes.matchingCategory, classes.matchingRow);
+    value.classList.toggle(css.hidden, collapseSearch && collapseText.length !== 0);
+  }
+};
+
+// Main search loop.
 watchEffectWhileNodeAlive(comExPanel, () => {
-  Object.values(optionElements).forEach(option => {
-    option.changed = false;
-  });
-  Object.values(rowElements).forEach(row => {
-    row.changed = false;
-  });
+  const searchTerm = searchText.value.toUpperCase();
+  collapseText = searchTerm;
 
-  if (searchText.value && searchText.value.length > 0) {
-    const search = searchForTickerFromSubstring(searchText.value) ?? [];
-    for (const ticker of search) {
-      const material = materialsStore.getByTicker(ticker)!;
+  if (rowElements.size === 0) {
+    loadRowElements();
+    return;
+  }
 
-      const optionElement = optionElements[material.category];
-      if (optionElement) {
-        optionElement.changed = true;
-      }
+  optionElements.forEach(resetElement);
+  rowElements.forEach(resetElement);
 
-      const rowElement = rowElements[material.ticker];
-      if (rowElement) {
-        rowElement.changed = true;
+  if (searchTerm.length > 0) {
+    for (const material of materialsStore.all.value!) {
+      if (
+        material.ticker.includes(searchTerm) ||
+        tickerToPrettyName[material.ticker]?.toUpperCase().includes(searchTerm)
+      ) {
+        const optionElement = optionElements.get(material.category);
+        if (optionElement) {
+          optionElement.classList.add(classes.matchingCategory);
+          optionElement.classList.toggle(css.hidden, !collapseSearch);
+        }
+        const rowElement = rowElements.get(material.ticker);
+        if (rowElement && rowElement.isConnected) {
+          rowElement.classList.add(classes.matchingRow);
+          rowElement.classList.toggle(css.hidden, !collapseSearch);
+        }
       }
     }
   }
-
-  Object.values(optionElements).forEach(option => {
-    toggleClasses(option.element, classes.matchingCategory, option.changed);
-  });
-  Object.values(rowElements).forEach(row => {
-    toggleClasses(row.element, classes.matchingRow, row.changed);
-  });
 });
-
-function toggleClasses(
-  element: HTMLTableRowElement | HTMLOptionElement,
-  classes: string,
-  toggle: boolean,
-) {
-  element.classList.toggle(classes, toggle);
-  element.classList.toggle(css.hidden, !toggle && searchCollapse);
-}
 </script>
 
 <template>
