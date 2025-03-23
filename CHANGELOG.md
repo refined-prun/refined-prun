@@ -1,15 +1,37 @@
 ## Unreleased
 
+### Added
+
+- `header-hide-controls-button`: (new) Adds buttons to hide and show context controls for tiles containing them
+- `lead-per-day-column`: (new) Adds a "Per Day" column to the "Commodity Production" leaderboard
+- `prodq-hide-government-links`: (new) Hides fee collector links
+
 ### Changed
 
+- `inv-compress-inventory-info`: Move feature to the basic feature set
+- `nots-notification-type-label`: Make notification layout more space-efficient is smaller buffer sizes
+
+## 25.3.17
+
+### Added
+
+- `contd-condition-address-placeholder`: (new) Sets the current address as the placeholder for the address field of the
+  condition editor
+
+### Changed
+
+- `XIT HQUC`: Uncap HQ level
 - `XIT REP`: Use planet id in the `BRA` context button
 
 ### Fixed
 
 - `XIT GIF`: Fix borked gifs
-- `contd-fill-condition-address`: Fix incorrect address selection
 - `focus-buffers-on-click`: Disable this feature in `HQ` to fix relocation input resetting
 - `prun-bugs`: Fix scrollbar gutter in `PROD` taking up space without a scrollbar present
+
+### Removed
+
+- `contd-fill-condition-address`: Superseded by `contd-condition-address-placeholder`
 
 ## 25.3.8
 
