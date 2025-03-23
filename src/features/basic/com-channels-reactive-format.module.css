@@ -1,0 +1,19 @@
+.message {
+  grid-template-columns: minmax(12em, 8fr) minmax(8em, 15fr);
+}
+
+.messageTimestamp {
+  border-right: 1px solid #999;
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.messageName {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.messageControlsAndText {
+  grid-column: 2;
+  grid-row: 1/3;
+}
