@@ -29,6 +29,7 @@ import './hide-inactive-close-button';
 import './highlight-own-exchange-orders';
 import './highlight-production-order-error';
 import './input-math';
+import './inv-compress-inventory-info';
 import './inv-search';
 import './item-icons';
 import './item-markers/item-markers';
