@@ -22,7 +22,7 @@ async function processNotification(container: HTMLElement) {
     return;
   }
 
-  const textSpan = _$$(content, 'span')[0];
+  const textSpan = _$(content, 'span');
   if (!textSpan) {
     return;
   }
@@ -169,8 +169,9 @@ const labels: NotificationTypeLabel[] = [
 const labelMap = new Map(labels.flatMap(x => x.types.map(y => [y, x])));
 
 function init() {
-  applyScopedCssRule('NOTS', `.${C.AlertListItem.content}`, classes.alertListItemContent);
-  applyScopedCssRule('NOTS', `.${C.AlertListItem.time}`, classes.alertListItemTime);
+  applyScopedCssRule('NOTS', `.${C.AlertListItem.content}`, classes.content);
+  applyScopedCssRule('NOTS', `.${C.AlertListItem.time}`, classes.time);
+  applyScopedCssRule('NOTS', `.${C.AlertListItem.content} > span:nth-child(2)`, classes.text);
 
   tiles.observe('NOTS', onTileReady);
 }

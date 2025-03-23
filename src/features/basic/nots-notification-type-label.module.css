@@ -4,11 +4,15 @@
   max-width: 65px;
 }
 
-.alertListItemContent {
+.content {
   display: flex;
   flex-wrap: wrap;
 }
 
-.alertListItemTime {
+.text {
+  flex: 1 1 200px;
+}
+
+.time {
   width: 100%
 }
