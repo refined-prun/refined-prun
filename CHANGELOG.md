@@ -5,6 +5,7 @@
 - `header-hide-controls-button`: (new) Adds buttons to hide and show context controls for tiles containing them
 - `lead-per-day-column`: (new) Adds a "Per Day" column to the "Commodity Production" leaderboard
 - `prodq-hide-government-links`: (new) Hides fee collector links
+- `prodq-order-eta`: (new) Adds a finish ETA label to orders
 
 ### Changed
 
