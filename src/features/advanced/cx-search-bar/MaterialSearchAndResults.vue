@@ -106,12 +106,12 @@ watchEffectWhileNodeAlive(comExPanel, () => {
         const optionElement = optionElements.get(material.category);
         if (optionElement) {
           optionElement.classList.add(classes.matchingCategory);
-          optionElement.classList.toggle(css.hidden, !collapseSearch);
+          optionElement.classList.remove(css.hidden);
         }
         const rowElement = rowElements.get(material.ticker);
         if (rowElement && rowElement.isConnected) {
           rowElement.classList.add(classes.matchingRow);
-          rowElement.classList.toggle(css.hidden, !collapseSearch);
+          rowElement.classList.remove(css.hidden);
         }
       }
     }
