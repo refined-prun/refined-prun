@@ -53,6 +53,7 @@ const tagNames = new Set<string>([
   'progress',
   'style',
   'option',
+  'select',
 ]);
 const classNames = new Set<string>(['rc-slider-handle']);
 
