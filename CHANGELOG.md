@@ -3,6 +3,7 @@
 ### Added
 
 - `lead-per-day-column`: (new) Adds a "Per Day" column to the "Commodity Production" leaderboard
+- `prodq-hide-government-links`: (new) Hides fee collector links
 
 ### Changed
 
