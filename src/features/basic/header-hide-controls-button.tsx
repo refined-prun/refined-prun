@@ -23,28 +23,27 @@ async function onTileReady(tile: PrunTile) {
   });
 
   const tileControls = await $(tile.frame, C.TileFrame.controls);
-  const display = computed(() => (isMinimized.value ? '' : css.HIDDEN));
-  createFragmentApp(() => (
-    <TileControlsButton
-      class={[display.value]}
-      icon=""
-      marginTop={4}
-      onClick={() => (isMinimized.value = false)}
-    />
-  )).before(tileControls.children[0]);
-
-  const flexDiv = document.createElement('div');
-  flexDiv.style.flexGrow = '1';
-  tileContextControls.children[0].insertAdjacentElement('beforebegin', flexDiv);
+  createFragmentApp(() =>
+    isMinimized.value ? (
+      <TileControlsButton
+        icon={'\uf0c9'}
+        marginTop={4}
+        onClick={() => (isMinimized.value = false)}
+      />
+    ) : null,
+  ).before(tileControls.children[0]);
 
   createFragmentApp(() => (
-    <div
-      class={[C.ContextControls.item, C.fonts.fontRegular, C.type.typeSmall]}
-      onClick={() => {
-        isMinimized.value = true;
-      }}>
-      <i class={[fa.solid]}></i>
-    </div>
+    <>
+      <div
+        class={[C.ContextControls.item, C.fonts.fontRegular, C.type.typeSmall]}
+        onClick={() => {
+          isMinimized.value = true;
+        }}>
+        <i class={[fa.solid]}>{'\uf070'}</i>
+      </div>
+      <div style={{ flexGrow: '1' }} />
+    </>
   )).before(tileContextControls.children[0]);
 }
 
@@ -55,5 +54,5 @@ function init() {
 features.add(
   import.meta.url,
   init,
-  'Adds a button to hide and show context controls for buffers containing them.',
+  'Adds buttons to hide and show context controls for tiles containing them.',
 );
