@@ -26,4 +26,5 @@ import './minimize-headers/minimize-headers';
 import './nots-clean-notifications';
 import './prod-hide-percent';
 import './prodq-hide-government-links';
+import './prodq-shorten-material-links';
 import './shpf-hide-sort-options';
