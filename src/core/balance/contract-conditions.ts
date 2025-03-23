@@ -1,6 +1,6 @@
 import { contractsStore, isFactionContract } from '@src/infrastructure/prun-api/data/contracts';
 import dayjs from 'dayjs';
-import { timestampEachSecond } from '@src/utils/dayjs';
+import { timestampEachMinute } from '@src/utils/dayjs';
 import { sumBy } from '@src/utils/sum-by';
 import { calcMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { binarySearch } from '@src/utils/binary-search';
@@ -86,7 +86,7 @@ const currentSplitIndex = computed(() => {
   if (sorted === undefined) {
     return undefined;
   }
-  const currentSplitDate = timestampEachSecond.value + accountingPeriod;
+  const currentSplitDate = timestampEachMinute.value + accountingPeriod;
   return binarySearch(currentSplitDate, sorted, x => x.deadline);
 });
 

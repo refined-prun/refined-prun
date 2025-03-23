@@ -1,6 +1,5 @@
 import { contractDraftsStore } from '@src/infrastructure/prun-api/data/contract-drafts';
-import { changeInputValue, clickElement, focusInput } from '@src/util';
-import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 
 function onTileReady(tile: PrunTile) {
   const draft = computed(() => contractDraftsStore.getByNaturalId(tile.parameter));
@@ -25,18 +24,11 @@ function onTileReady(tile: PrunTile) {
       return;
     }
     const address = draft.value?.conditions[conditionIndex]?.address;
-    const naturalId = getEntityNaturalIdFromAddress(address);
+    const name = getEntityNameFromAddress(address);
     conditionIndex = undefined;
-    if (naturalId) {
-      const container = await $(form, C.AddressSelector.container);
-      const input = (await $(container, C.AddressSelector.input)) as HTMLInputElement;
-      const suggestionsContainer = await $(container, C.AddressSelector.suggestionsContainer);
-      suggestionsContainer.style.display = 'none';
-      changeInputValue(input, naturalId);
-      focusInput(input);
-      const suggestion = await $(container, C.AddressSelector.suggestion);
-      await clickElement(suggestion);
-      suggestionsContainer.style.display = '';
+    if (name) {
+      const input = (await $(form, C.AddressSelector.input)) as HTMLInputElement;
+      input.placeholder = name;
     }
   });
 }
@@ -45,4 +37,8 @@ function init() {
   tiles.observe('CONTD', onTileReady);
 }
 
-features.add(import.meta.url, init, 'CONTD: Fills the address field in the condition editor.');
+features.add(
+  import.meta.url,
+  init,
+  'CONTD: Sets the current address as the placeholder for the address field of the condition editor.',
+);

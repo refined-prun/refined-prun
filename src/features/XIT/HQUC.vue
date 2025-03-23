@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { calculateHQUpgradeMaterials, maxHQLevel } from '@src/core/hq';
+import { calculateHQUpgradeMaterials } from '@src/core/hq';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import MaterialPurchaseTable from '@src/components/MaterialPurchaseTable.vue';
 import { useTileState } from '@src/store/user-data-tiles';
 import PrunButton from '@src/components/PrunButton.vue';
 import Active from '@src/components/forms/Active.vue';
-import SelectInput from '@src/components/forms/SelectInput.vue';
 import Commands from '@src/components/forms/Commands.vue';
-
-const levels = Array.from({ length: maxHQLevel }, (_, i) => (i + 1).toString());
+import NumberInput from '@src/components/forms/NumberInput.vue';
 
 const from = useTileState('from', companyStore.value?.headquarters.level ?? 1);
 const to = useTileState('to', from.value + 1);
@@ -24,10 +22,10 @@ function reset() {
 <template>
   <form>
     <Active label="From">
-      <SelectInput v-model="from" :options="levels" />
+      <NumberInput v-model="from" />
     </Active>
     <Active label="To">
-      <SelectInput v-model="to" :options="levels" />
+      <NumberInput v-model="to" />
     </Active>
     <Commands>
       <PrunButton primary @click="reset">RESET</PrunButton>

@@ -2,7 +2,7 @@ import { refTextContent } from '@src/utils/reactive-dom';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
 import { formatEta } from '@src/utils/format';
-import { timestampEachSecond } from '@src/utils/dayjs';
+import { timestampEachMinute } from '@src/utils/dayjs';
 import { createReactiveSpan } from '@src/utils/reactive-element';
 import { keepLast } from '@src/utils/keep-last';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
@@ -28,7 +28,7 @@ function onRowReady(
     getFlightSegmentArrival(ship.value, firstColumn.value, planId.value),
   );
   const eta = computed(() =>
-    arrival.value ? ` (${formatEta(timestampEachSecond.value, arrival.value)})` : undefined,
+    arrival.value ? ` (${formatEta(timestampEachMinute.value, arrival.value)})` : undefined,
   );
   const span = createReactiveSpan(row, eta);
   keepLast(row, () => row.children[3], span);
