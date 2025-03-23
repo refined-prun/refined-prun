@@ -5,10 +5,10 @@
 }
 
 .alertListItemContent {
-  display: flex; 
+  display: flex;
   flex-wrap: wrap;
 }
 
 .alertListItemTime {
-  width:100%
+  width: 100%
 }
