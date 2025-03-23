@@ -1,3 +1,13 @@
+## Unreleased
+
+### Added
+
+- `lead-per-day-column`: (new) Adds a "Per Day" column to the "Commodity Production" leaderboard
+
+### Changed
+
+- `nots-notification-type-label`: Make notification layout more space-efficient is smaller buffer sizes
+
 ## 25.3.17
 
 ### Added
