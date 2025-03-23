@@ -2,11 +2,14 @@
 
 ### Added
 
+- `header-hide-controls-button`: (new) Adds buttons to hide and show context controls for tiles containing them
 - `lead-per-day-column`: (new) Adds a "Per Day" column to the "Commodity Production" leaderboard
 - `prodq-hide-government-links`: (new) Hides fee collector links
+- `prodq-order-eta`: (new) Adds a finish ETA label to orders
 
 ### Changed
 
+- `inv-compress-inventory-info`: Move feature to the basic feature set
 - `nots-notification-type-label`: Make notification layout more space-efficient is smaller buffer sizes
 
 ## 25.3.17
