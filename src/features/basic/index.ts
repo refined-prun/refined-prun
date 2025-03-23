@@ -25,6 +25,7 @@ import './focus-buffers-on-click';
 import './funny-rations';
 import './header-calculator-button';
 import './header-duplicate-button';
+import './header-hide-controls-button';
 import './hide-inactive-close-button';
 import './highlight-own-exchange-orders';
 import './highlight-production-order-error';
