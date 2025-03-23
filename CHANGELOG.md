@@ -6,6 +6,7 @@
 - `lead-per-day-column`: (new) Adds a "Per Day" column to the "Commodity Production" leaderboard
 - `prodq-hide-government-links`: (new) Hides fee collector links
 - `prodq-order-eta`: (new) Adds a finish ETA label to orders
+- `prodq-shorten-material-links`: (new) Shortens material full names into their ticker with a link
 
 ### Changed
 
