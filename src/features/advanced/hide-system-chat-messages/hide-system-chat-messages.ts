@@ -55,7 +55,7 @@ function onTileReady(tile: PrunTile) {
     createFragmentApp(
       SelectButton,
       reactive({
-        label: 'hide times',
+        label: 'hide timestamps',
         selected: hideTimestamp,
         set: (value: boolean) => setState(state => (state.hideTimestamp = value)),
       }),
