@@ -11,7 +11,7 @@
 ### Changed
 
 - `inv-compress-inventory-info`: Move feature to the basic feature set
-- `nots-notification-type-label`: Make notification layout more space-efficient is smaller buffer sizes
+- `nots-notification-type-label`: Make notification layout more space-efficient in smaller buffer sizes
 
 ### Fixed
 
