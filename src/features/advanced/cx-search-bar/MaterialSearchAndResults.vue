@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import TextInput from '@src/components/forms/TextInput.vue';
-import { tickerToPrettyName } from './materials-pretty-names';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import classes from './cx-search-bar.module.css';
 import css from '@src/utils/css-utils.module.css';
 import onNodeDisconnected from '@src/utils/on-node-disconnected';
+import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
 
 const { comExPanel } = defineProps<{
   comExPanel: HTMLElement;
@@ -101,7 +101,7 @@ watchEffectWhileNodeAlive(comExPanel, () => {
     for (const material of materialsStore.all.value!) {
       if (
         material.ticker.includes(searchTerm) ||
-        tickerToPrettyName[material.ticker]?.toUpperCase().includes(searchTerm)
+        getMaterialName(material)?.toUpperCase().includes(searchTerm)
       ) {
         const optionElement = optionElements.get(material.category);
         if (optionElement) {
