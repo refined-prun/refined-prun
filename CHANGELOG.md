@@ -13,6 +13,10 @@
 - `inv-compress-inventory-info`: Move feature to the basic feature set
 - `nots-notification-type-label`: Make notification layout more space-efficient is smaller buffer sizes
 
+### Fixed
+
+- `XIT CXTS`: Fix incorrect date display when there is a gap between days
+
 ## 25.3.17
 
 ### Added

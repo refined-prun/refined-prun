@@ -55,7 +55,7 @@ const days = computed(() => {
 
     if (trade.date < day.date) {
       day = {
-        date: day.date - msInDay,
+        date: getDateComponent(trade.date),
         trades: [],
         totals: {},
       };
