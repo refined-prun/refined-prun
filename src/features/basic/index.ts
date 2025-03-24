@@ -12,7 +12,6 @@ import './bs-satisfaction-percentage';
 import './chat-images';
 import './clickable-apex-logo';
 import './co-base-count';
-import './com-channels-reactive-format';
 import './contd-condition-address-placeholder';
 import './contd-upward-search-results';
 import './correct-commands/correct-commands';

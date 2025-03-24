@@ -38,6 +38,7 @@ declare namespace UserData {
     chat: string;
     hideJoined: boolean;
     hideDeleted: boolean;
+    hideTimestamp: boolean;
   }
 
   interface ActionPackageData {
