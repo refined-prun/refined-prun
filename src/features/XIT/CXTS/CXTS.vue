@@ -2,7 +2,6 @@
 import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import DateRow from '@src/features/XIT/CXTS/DateRow.vue';
 import TradeRow from '@src/features/XIT/CXTS/TradeRow.vue';
-import dayjs from 'dayjs';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { isEmpty } from 'ts-extras';
 import { clamp } from '@src/utils/clamp';
@@ -20,8 +19,6 @@ interface DayTrades {
   trades: OrderTrade[];
   totals: { [currency: string]: { purchases: number; sales: number } };
 }
-
-const msInDay = dayjs.duration(1, 'day').asMilliseconds();
 
 const days = computed(() => {
   const trades: OrderTrade[] = [];
