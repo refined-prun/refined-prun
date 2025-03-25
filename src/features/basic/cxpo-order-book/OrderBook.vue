@@ -4,7 +4,10 @@ import OrderRow from './OrderRow.vue';
 import { fixed2 } from '@src/utils/format';
 import { isEmpty } from 'ts-extras';
 
-const { ticker } = defineProps<{ ticker?: string }>();
+const { ticker, setinputs } = defineProps<{
+  ticker?: string;
+  setinputs: (quantity: string | undefined, priceLimit: string | undefined) => void;
+}>();
 
 const orderInfo = computed(() => cxobStore.getByTicker(ticker));
 
@@ -41,7 +44,7 @@ watchEffect(() => {
           <th colSpan="2">Offers</th>
         </tr>
         <template v-if="!isEmpty(offers)">
-          <OrderRow v-for="order in offers" :key="order.id" :order="order" />
+          <OrderRow v-for="order in offers" :key="order.id" :order="order" :setinputs="setinputs" />
         </template>
         <tr v-else>
           <td :class="C.ComExOrderBookPanel.empty" colSpan="2">No offers.</td>
@@ -59,7 +62,12 @@ watchEffect(() => {
           <th colSpan="2">Requests</th>
         </tr>
         <template v-if="!isEmpty(requests)">
-          <OrderRow v-for="order in requests" :key="order.id" request :order="order" />
+          <OrderRow
+            v-for="order in requests"
+            :key="order.id"
+            request
+            :order="order"
+            :setinputs="setinputs" />
         </template>
         <tr v-else>
           <td :class="C.ComExOrderBookPanel.empty" colSpan="2">No requests.</td>
