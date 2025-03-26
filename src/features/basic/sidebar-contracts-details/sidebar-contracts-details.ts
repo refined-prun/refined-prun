@@ -2,7 +2,6 @@ import css from '@src/utils/css-utils.module.css';
 import classes from './sidebar-contracts-details.module.css';
 import ContractPartnerName from './ContractPartnerName.vue';
 import { refTextContent } from '@src/utils/reactive-dom';
-import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 function onContractIdReady(id: HTMLElement) {

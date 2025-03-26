@@ -1,14 +1,13 @@
-import { applyScopedCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import classes from './highlight-production-order-error.module.css';
 
 function init() {
-  applyScopedCssRule(
+  applyCssRule(
     'PROD',
     `.${C.OrderSlot.container}:has(.${C.OrderStatus.error})`,
     classes.inputMissingContainer,
   );
-  applyScopedCssRule('PRODQ', `tr:has(.${C.OrderStatus.error})`, classes.orderRow);
-  applyScopedCssRule(
+  applyCssRule('PRODQ', `tr:has(.${C.OrderStatus.error})`, classes.orderRow);
+  applyCssRule(
     'PRODCO',
     `.${C.InputsOutputsView.input}:has(.${C.InputsOutputsView.amountMissing})`,
     classes.inputMissingContainer,

@@ -3,7 +3,6 @@ import classes from './input-math.module.css';
 import { changeInputValue } from '@src/util';
 import Mexp from 'math-expression-evaluator';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 const mexp = new Mexp();
 

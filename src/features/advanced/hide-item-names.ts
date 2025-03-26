@@ -1,11 +1,10 @@
 import css from '@src/utils/css-utils.module.css';
 import classes from './hide-item-names.module.css';
-import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {
-  applyClassCssRule(C.GridItemView.name, css.hidden);
+  applyCssRule(`.${C.GridItemView.name}`, css.hidden);
   // Remove gaps between items in GridView
-  applyClassCssRule(C.GridItemView.container, classes.gridItem);
+  applyCssRule(`.${C.GridItemView.container}`, classes.gridItem);
 }
 
 features.add(

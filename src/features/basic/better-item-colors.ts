@@ -1,5 +1,4 @@
 import classes from './better-item-colors.module.css';
-import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
 
 function init() {

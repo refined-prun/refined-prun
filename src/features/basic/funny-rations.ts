@@ -1,5 +1,4 @@
 import classes from './funny-rations.module.css';
-import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import css from '@src/utils/css-utils.module.css';
 
 function applyFunny() {
