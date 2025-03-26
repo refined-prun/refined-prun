@@ -7,10 +7,10 @@
 .content {
   display: flex;
   flex-wrap: wrap;
-}
 
-.text {
-  flex: 1 1 200px;
+  > span:nth-child(2) {
+    flex: 1 1 200px;
+  }
 }
 
 .time {

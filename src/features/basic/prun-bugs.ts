@@ -56,7 +56,7 @@ function init() {
   fixContractConditionEditor();
 
   // Prevents top-right user info from shrinking.
-  applyCssRule(`.${C.Head.container} > div:nth-child(2)`, classes.userInfo);
+  applyCssRule(`.${C.Head.container}`, classes.head);
 
   // Removes GridItemView background color.
   applyClassCssRule(C.GridItemView.container, classes.gridItem);

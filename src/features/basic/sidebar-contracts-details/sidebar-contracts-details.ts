@@ -18,7 +18,6 @@ function onContractIdReady(id: HTMLElement) {
 function init() {
   applyCssRule(`.${C.Sidebar.contract} .${C.Link.link}`, css.hidden);
   applyCssRule(`.${C.Sidebar.contractId}`, classes.contractId);
-  applyCssRule(`.${C.Sidebar.contractId}:hover`, `${classes.contractId}:hover`);
   subscribe($$(document, C.Sidebar.contractId), onContractIdReady);
 }
 

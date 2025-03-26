@@ -24,7 +24,7 @@ async function onFooterReady(footer: HTMLElement) {
 }
 
 function init() {
-  applyCssRule(`.${C.Frame.foot} > span`, classes.grow);
+  applyCssRule(`.${C.Frame.foot}`, classes.foot);
   subscribe($$(document, C.Frame.foot), onFooterReady);
 }
 
