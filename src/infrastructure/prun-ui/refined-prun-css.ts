@@ -55,16 +55,6 @@ export function applyCssRule(selector: string, sourceClass: string) {
   applyRawCssRule(match.replace(sourceSelector, selector));
 }
 
-let at: string | undefined = undefined;
-
-export function startCssAtScope(scope: string) {
-  at = scope;
-}
-
-export function endCssAtScope() {
-  at = undefined;
-}
-
 let currentSheet = {
   id: '',
   textContent: '',
@@ -82,7 +72,7 @@ export function applyRawCssRule(rule: string) {
   } else {
     currentSheet.textContent += '\n\n';
   }
-  currentSheet.textContent += at ? `${at} ${wrapInBrackets(rule)}` : rule;
+  currentSheet.textContent += rule;
 }
 
 function queueSheetAppend() {
