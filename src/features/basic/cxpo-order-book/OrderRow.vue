@@ -4,10 +4,12 @@ import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { fixed0, fixed2 } from '@src/utils/format';
 import PrunButton from '@src/components/PrunButton.vue';
 
-const { order, request, setinputs } = defineProps<{
+const { order, request, click } = defineProps<{
   order: PrunApi.CXBrokerOrder;
   request?: boolean;
-  setinputs: (quantity: string | undefined, priceLimit: string | undefined) => void;
+  infinite: boolean;
+  infinite1: boolean;
+  click: (quantity: string, info: string | PrunApi.CXBrokerOrder) => void;
 }>();
 
 const ownOrderClass = computed(() => ({
@@ -23,15 +25,17 @@ const priceClass = computed(() =>
 <template>
   <tr :class="ownOrderClass">
     <td :class="C.ComExOrderBookPanel.amount"
-      ><div :class="$style.tdDiv"
-        ><PrunButton dark inline @click="setinputs(amount, price)">Both</PrunButton>
+      ><div :class="!infinite ? $style.tdDiv : ''"
+        ><PrunButton v-if="!infinite" dark inline @click="click('fill', order)">fill</PrunButton>
         {{ amount }}</div
       ></td
     >
     <td :class="[priceClass, $style.price]"
-      ><div :class="$style.tdDiv"
+      ><div :class="!infinite1 ? $style.tdDiv : ''"
         >{{ price }}
-        <PrunButton dark inline @click="setinputs(undefined, price)">Set</PrunButton></div
+        <PrunButton v-if="!infinite1" dark inline @click="click('price', price)"
+          >set</PrunButton
+        ></div
       ></td
     >
   </tr>
