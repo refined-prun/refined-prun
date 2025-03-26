@@ -29,9 +29,12 @@ watchEffect(() => {
   orderBook.value.scrollTop = Math.max(offerBody.value.offsetHeight - 90, 0);
 });
 
-const offerInfiniteIndex = offers.value.findIndex(offer => !offer.amount);
-const requestIndex = requests.value.findIndex(offer => !offer.amount);
-const requestInfiniteIndex = requestIndex === -1 ? Infinity : requestIndex;
+// Market maker index to prevent 'fill' button on Infinity orders, and 'set' button on anything past MM.
+const offerInfiniteIndex = computed(() => offers.value.findIndex(offer => !offer.amount));
+const requestInfiniteIndex = computed(() => {
+  const index = requests.value.findIndex(offer => !offer.amount);
+  return index === -1 ? Infinity : index;
+});
 
 function click(type: string, info: string | PrunApi.CXBrokerOrder) {
   if (type === 'fill') {
