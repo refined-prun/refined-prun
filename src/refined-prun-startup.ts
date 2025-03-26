@@ -26,10 +26,7 @@ async function startup() {
     if (!rule) {
       continue;
     }
-    rules[rule.selectorText] = rule.cssText
-      .replaceAll('{ ', '{\n  ')
-      .replaceAll('; ', ';\n  ')
-      .replaceAll('  }', '}');
+    rules[rule.selectorText] = rule.cssText;
   }
   css.textContent = JSON.stringify(rules);
   const script = document.createElement('script');
