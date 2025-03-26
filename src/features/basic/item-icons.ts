@@ -1,5 +1,5 @@
 import fa from '@src/utils/font-awesome.module.css';
-import classes from './item-icons.module.css';
+import $style from './item-icons.module.css';
 import { applyRawCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { objectKeys } from 'ts-extras';
 import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
@@ -8,9 +8,9 @@ function init() {
   const container = C.ColoredIcon.container;
   const label = C.ColoredIcon.label;
 
-  applyCssRule(`.${container}`, classes.container);
+  applyCssRule(`.${container}`, $style.container);
   applyCssRule(`.${container}:before`, fa.solid);
-  applyCssRule(`.${label}`, classes.label);
+  applyCssRule(`.${label}`, $style.label);
   applyCssRule(`.${label}:before`, fa.solid);
 
   for (const category of objectKeys(categories)) {

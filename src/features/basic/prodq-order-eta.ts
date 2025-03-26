@@ -4,7 +4,7 @@ import { formatEta } from '@src/utils/format';
 import { timestampEachMinute } from '@src/utils/dayjs';
 import { createReactiveDiv } from '@src/utils/reactive-element';
 import { keepLast } from '@src/utils/keep-last';
-import classes from './prodq-order-eta.module.css';
+import $style from './prodq-order-eta.module.css';
 import { calcCompletionDate } from '@src/core/production-line';
 
 function onTileReady(tile: PrunTile) {
@@ -41,7 +41,7 @@ function onOrderSlotReady(slot: HTMLElement, orderId: Ref<string | null>, siteId
 }
 
 function init() {
-  applyCssRule('PRODQ', `.${C.ProductionQueue.table}`, classes.table);
+  applyCssRule('PRODQ', `.${C.ProductionQueue.table}`, $style.table);
   tiles.observe('PRODQ', onTileReady);
 }
 

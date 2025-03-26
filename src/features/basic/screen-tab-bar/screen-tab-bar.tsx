@@ -1,4 +1,4 @@
-import classes from './screen-tab-bar.module.css';
+import $style from './screen-tab-bar.module.css';
 import TabBar from './TabBar.vue';
 import { userData } from '@src/store/user-data';
 import removeArrayElement from '@src/utils/remove-array-element';
@@ -42,9 +42,9 @@ async function onScreenItemReady(item: HTMLElement) {
 
   watchEffectWhileNodeAlive(name, () => {
     if (hidden.value) {
-      name.classList.add(classes.hiddenName);
+      name.classList.add($style.hiddenName);
     } else {
-      name.classList.remove(classes.hiddenName);
+      name.classList.remove($style.hiddenName);
     }
   });
 
@@ -60,7 +60,7 @@ async function onScreenItemReady(item: HTMLElement) {
 
   createFragmentApp(() => (
     <div
-      class={[C.ScreenControls.delete, C.ScreenControls.copy, C.type.typeSmall, classes.hideButton]}
+      class={[C.ScreenControls.delete, C.ScreenControls.copy, C.type.typeSmall, $style.hideButton]}
       onClick={onClick}>
       {hidden.value ? 'shw' : 'hide'}
     </div>
@@ -76,7 +76,7 @@ function init() {
     createFragmentApp(TabBar).appendTo(container);
   });
   subscribe($$(document, C.ScreenControls.screens), onListReady);
-  applyCssRule(`.${C.ScreenControls.container}`, classes.screenControls);
+  applyCssRule(`.${C.ScreenControls.container}`, $style.screenControls);
 }
 
 features.add(import.meta.url, init, 'Adds a tab bar for user screens.');

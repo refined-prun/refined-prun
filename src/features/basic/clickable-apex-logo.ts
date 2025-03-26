@@ -1,9 +1,9 @@
-import classes from './clickable-apex-logo.module.css';
+import $style from './clickable-apex-logo.module.css';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 function init() {
-  applyCssRule(`.${C.Frame.logo}`, classes.logo);
+  applyCssRule(`.${C.Frame.logo}`, $style.logo);
   subscribe($$(document, C.Frame.logo), logo => {
     logo.addEventListener('click', () => showBuffer(`CO ${companyStore.value?.code}`));
   });

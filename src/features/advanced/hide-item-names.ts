@@ -1,10 +1,10 @@
 import css from '@src/utils/css-utils.module.css';
-import classes from './hide-item-names.module.css';
+import $style from './hide-item-names.module.css';
 
 function init() {
   applyCssRule(`.${C.GridItemView.name}`, css.hidden);
   // Remove gaps between items in GridView
-  applyCssRule(`.${C.GridItemView.container}`, classes.gridItem);
+  applyCssRule(`.${C.GridItemView.container}`, $style.gridItem);
 }
 
 features.add(
