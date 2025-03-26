@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Added
+
+- `tile-controls-background`: (new) Adds a solid color background to the top-right tile controls
+
 ### Fixed
 
 - `prodq-order-eta`: Fix eta missing in order slots that were initially empty
