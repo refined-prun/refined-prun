@@ -2,6 +2,7 @@
 
 ### Fixed
 
+- `prodq-order-eta`: Fix
 - `table-rows-alternating-colors`: Fix a rendering issue in Firefox
 
 ## 25.3.24

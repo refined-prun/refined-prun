@@ -11,16 +11,16 @@ import { calcCompletionDate } from '@src/core/production-line';
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.ProductionQueue.table), table => {
     subscribe($$(table, 'tr'), order => {
-      const orderId = refPrunId(order);
-      if (!orderId.value) {
+      if (_$(order, 'th')) {
         return;
       }
-      onOrderSlotReady(order.children[5] as HTMLElement, orderId, tile.parameter!);
+      onOrderSlotReady(order.children[5] as HTMLElement, order, tile.parameter!);
     });
   });
 }
 
-function onOrderSlotReady(slot: HTMLElement, orderId: Ref<string | null>, siteId: string) {
+function onOrderSlotReady(slot: HTMLElement, order: HTMLElement, siteId: string) {
+  const orderId = refPrunId(order);
   const completion = computed(() => {
     const line = productionStore.getById(siteId);
     for (const order of line?.orders ?? []) {
