@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixed
+
+- `table-rows-alternating-colors`: Fix a rendering issue in Firefox
+
 ## 25.3.24
 
 ### Added
