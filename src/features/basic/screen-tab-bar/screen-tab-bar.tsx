@@ -5,7 +5,7 @@ import removeArrayElement from '@src/utils/remove-array-element';
 import { isDefined } from 'ts-extras';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { syncState } from '@src/features/basic/screen-tab-bar/sync';
-import { applyClassCssRule, applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
+import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function onListReady(list: HTMLElement) {
   subscribe($$(list, C.ScreenControls.screen), onScreenItemReady);
@@ -78,7 +78,6 @@ function init() {
   });
   subscribe($$(document, C.ScreenControls.screens), onListReady);
   applyClassCssRule(C.ScreenControls.container, classes.screenControls);
-  applyCssRule(`.${C.ScreenControls.container} > *:not(:last-child)`, classes.screenControlsItems);
 }
 
 features.add(import.meta.url, init, 'Adds a tab bar for user screens.');

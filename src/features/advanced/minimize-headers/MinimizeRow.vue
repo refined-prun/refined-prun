@@ -32,10 +32,10 @@ const symbol = computed(() => (isMinimized ? '+' : '-'));
   cursor: pointer;
   background-color: #26353e;
   color: #3fa2de;
-}
 
-.minimize:hover {
-  color: #26353e;
-  background-color: #3fa2de;
+  &:hover {
+    color: #26353e;
+    background-color: #3fa2de;
+  }
 }
 </style>

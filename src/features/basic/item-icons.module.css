@@ -1,29 +1,39 @@
 .container {
   container-type: size;
+
+  &:before {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.25;
+    font-size: 2.2em;
+
+    @container (height < 24px) {
+      display: none;
+    }
+  }
 }
 
-.main {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.25;
-  font-size: 2.2em;
-}
+.label {
+  &:before {
+    position: absolute;
+    left: 0;
+    right: 2px;
+    top: 2px;
+    bottom: 0;
+    display: flex;
+    justify-content: end;
+    line-height: 1;
+    opacity: 0.5;
+    text-shadow: none;
 
-.detail {
-  position: absolute;
-  left: 0;
-  right: 2px;
-  top: 2px;
-  bottom: 0;
-  display: flex;
-  justify-content: end;
-  line-height: 1;
-  opacity: 0.5;
-  text-shadow: none;
+    @container (height < 24px) {
+      display: none;
+    }
+  }
 }

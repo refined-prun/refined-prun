@@ -73,8 +73,7 @@ function hiddenIfZero(total: Ref<number | undefined>) {
 }
 
 function init() {
-  applyCssRule(`.${C.LiquidAssetsPanel.row} td:first-child`, classes.firstColumn);
-  applyCssRule(`.${C.LiquidAssetsPanel.row} td:not(:first-child)`, classes.otherColumns);
+  applyCssRule(`.${C.LiquidAssetsPanel.row}`, classes.row);
   tiles.observe('FINLA', onTileReady);
 }
 

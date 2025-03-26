@@ -42,11 +42,7 @@ function onOrderSlotReady(slot: HTMLElement, orderId: Ref<string | null>, siteId
 }
 
 function init() {
-  applyScopedCssRule(
-    'PRODQ',
-    `.${C.ProductionQueue.table} thead tr th:nth-child(6)`,
-    classes.thCompletion,
-  );
+  applyScopedCssRule('PRODQ', `.${C.ProductionQueue.table}`, classes.table);
   tiles.observe('PRODQ', onTileReady);
 }
 

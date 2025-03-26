@@ -56,7 +56,7 @@ function binarySearchFontSize(span: HTMLElement, low: number, high: number, maxW
 </template>
 
 <style module>
-.detail {
+.label {
   font-size: 7px;
   white-space: nowrap;
 }

@@ -8,7 +8,6 @@ function init() {
     classes.inputMissingContainer,
   );
   applyScopedCssRule('PRODQ', `tr:has(.${C.OrderStatus.error})`, classes.orderRow);
-  applyScopedCssRule('PRODQ', `tr:has(.${C.OrderStatus.error}):after`, classes.orderRowOverlay);
   applyScopedCssRule(
     'PRODCO',
     `.${C.InputsOutputsView.input}:has(.${C.InputsOutputsView.amountMissing})`,

@@ -1,3 +1,5 @@
-.thCompletion {
-  width: min-content;
+.table {
+  thead tr th:nth-child(6) {
+    width: min-content;
+  }
 }
