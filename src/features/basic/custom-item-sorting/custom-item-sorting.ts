@@ -1,5 +1,5 @@
 import css from '@src/utils/css-utils.module.css';
-import classes from './custom-item-sorting.module.css';
+import $style from './custom-item-sorting.module.css';
 import { BurnValues, getPlanetBurn } from '@src/core/burn';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import CategoryHeader from './CategoryHeader.vue';
@@ -87,9 +87,9 @@ async function applyCustomSorting(tile: PrunTile, container: HTMLElement) {
 
   watchEffectWhileNodeAlive(sortOptions, () => {
     if (sortingData.active || catSort.value) {
-      sortOptions.classList.add(classes.custom);
+      sortOptions.classList.add($style.custom);
     } else {
-      sortOptions.classList.remove(classes.custom);
+      sortOptions.classList.remove($style.custom);
     }
   });
 
@@ -252,7 +252,7 @@ const burnSortingMode = {
 };
 
 function init() {
-  applyCssRule(`.${classes.custom} .${C.InventorySortControls.order} > div`, css.hidden);
+  applyCssRule(`.${$style.custom} .${C.InventorySortControls.order} > div`, css.hidden);
   tiles.observe(['INV', 'SHPI'], onTileReady);
   xit.add({
     command: 'SORT',

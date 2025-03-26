@@ -1,4 +1,4 @@
-import classes from './finla-more-columns.module.css';
+import $style from './finla-more-columns.module.css';
 import css from '@src/utils/css-utils.module.css';
 import { refTextContent } from '@src/utils/reactive-dom';
 import { fixed0 } from '@src/utils/format';
@@ -72,7 +72,7 @@ function hiddenIfZero(total: Ref<number | undefined>) {
 }
 
 function init() {
-  applyCssRule(`.${C.LiquidAssetsPanel.row}`, classes.row);
+  applyCssRule(`.${C.LiquidAssetsPanel.row}`, $style.row);
   tiles.observe('FINLA', onTileReady);
 }
 

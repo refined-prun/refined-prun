@@ -1,4 +1,4 @@
-import classes from './inv-search.module.css';
+import $style from './inv-search.module.css';
 import css from '@src/utils/css-utils.module.css';
 
 function onTileReady(tile: PrunTile) {
@@ -24,7 +24,7 @@ function onTileReady(tile: PrunTile) {
 
     createFragmentApp(() => (
       <div>
-        <input class={classes.inputText} placeholder="Enter location" onInput={onInput} />
+        <input class={$style.inputText} placeholder="Enter location" onInput={onInput} />
       </div>
     )).after(inventoryFilters);
   });

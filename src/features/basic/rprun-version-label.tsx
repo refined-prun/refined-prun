@@ -1,4 +1,4 @@
-import classes from './rprun-version-label.module.css';
+import $style from './rprun-version-label.module.css';
 
 async function onFooterReady(footer: HTMLElement) {
   const userCount = await $(footer, C.UsersOnlineCount.container);
@@ -9,11 +9,11 @@ async function onFooterReady(footer: HTMLElement) {
 
   createFragmentApp(() => (
     <div
-      class={[classes.container, C.HeadItem.container, C.fonts.fontRegular, C.type.typeRegular]}
+      class={[$style.container, C.HeadItem.container, C.fonts.fontRegular, C.type.typeRegular]}
       onClick={onClick}>
       <div class={[C.HeadItem.indicator, C.HeadItem.indicatorSuccess]} />
       <div
-        class={[classes.label, C.HeadItem.label]}
+        class={[$style.label, C.HeadItem.label]}
         data-tooltip="Refined PrUn version."
         data-tooltip-position="top">
         v. {config.version}
@@ -23,7 +23,7 @@ async function onFooterReady(footer: HTMLElement) {
 }
 
 function init() {
-  applyCssRule(`.${C.Frame.foot}`, classes.foot);
+  applyCssRule(`.${C.Frame.foot}`, $style.foot);
   subscribe($$(document, C.Frame.foot), onFooterReady);
 }
 

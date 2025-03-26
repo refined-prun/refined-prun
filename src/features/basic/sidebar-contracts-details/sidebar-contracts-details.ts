@@ -1,5 +1,5 @@
 import css from '@src/utils/css-utils.module.css';
-import classes from './sidebar-contracts-details.module.css';
+import $style from './sidebar-contracts-details.module.css';
 import ContractPartnerName from './ContractPartnerName.vue';
 import { refTextContent } from '@src/utils/reactive-dom';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
@@ -16,7 +16,7 @@ function onContractIdReady(id: HTMLElement) {
 
 function init() {
   applyCssRule(`.${C.Sidebar.contract} .${C.Link.link}`, css.hidden);
-  applyCssRule(`.${C.Sidebar.contractId}`, classes.contractId);
+  applyCssRule(`.${C.Sidebar.contractId}`, $style.contractId);
   subscribe($$(document, C.Sidebar.contractId), onContractIdReady);
 }
 

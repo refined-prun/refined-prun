@@ -1,6 +1,6 @@
 import { getPrunCssStylesheets } from '@src/infrastructure/prun-ui/prun-css';
 import { changeInputValue } from '@src/util';
-import classes from './prun-bugs.module.css';
+import $style from './prun-bugs.module.css';
 
 function removeMobileCssRules() {
   const styles = getPrunCssStylesheets();
@@ -27,9 +27,9 @@ function fixZOrder() {
       `.${C.LocalMarket.filter}`,
       `.${C.ContractsListTable.filter}`,
     ],
-    classes.filter,
+    $style.filter,
   );
-  applyCssRule(`.${C.ScrollView.track}`, classes.scrollTrack);
+  applyCssRule(`.${C.ScrollView.track}`, $style.scrollTrack);
 }
 
 function fixContractConditionEditor() {
@@ -55,19 +55,19 @@ function init() {
   fixContractConditionEditor();
 
   // Prevents top-right user info from shrinking.
-  applyCssRule(`.${C.Head.container}`, classes.head);
+  applyCssRule(`.${C.Head.container}`, $style.head);
 
   // Removes GridItemView background color.
-  applyCssRule(`.${C.GridItemView.container}`, classes.gridItem);
+  applyCssRule(`.${C.GridItemView.container}`, $style.gridItem);
 
   // Adds text centering to GridItemView name.
-  applyCssRule(`.${C.GridItemView.name}`, classes.gridItemName);
+  applyCssRule(`.${C.GridItemView.name}`, $style.gridItemName);
 
   // The overlay stops materials from being clickable
-  applyCssRule(['PROD', 'PRODQ'], `.${C.OrderTile.overlay}`, classes.disablePointerEvents);
+  applyCssRule(['PROD', 'PRODQ'], `.${C.OrderTile.overlay}`, $style.disablePointerEvents);
 
   // Prevent PROD buffer vertical scroll bar gutter from being always visible
-  applyCssRule('PROD', `.${C.SiteProductionLines.container}`, classes.containerScrollbarGutter);
+  applyCssRule('PROD', `.${C.SiteProductionLines.container}`, $style.containerScrollbarGutter);
 }
 
 features.add(import.meta.url, init, 'Fixes PrUn bugs.');
