@@ -1,9 +1,4 @@
 import { getPrunCssStylesheets } from '@src/infrastructure/prun-ui/prun-css';
-import {
-  applyClassCssRule,
-  applyCssRule,
-  applyScopedClassCssRule,
-} from '@src/infrastructure/prun-ui/refined-prun-css';
 import { changeInputValue } from '@src/util';
 import classes from './prun-bugs.module.css';
 
@@ -26,11 +21,15 @@ function removeMobileCssRules() {
 }
 
 function fixZOrder() {
-  applyClassCssRule(
-    [C.ComExOrdersPanel.filter, C.LocalMarket.filter, C.ContractsListTable.filter],
+  applyCssRule(
+    [
+      `.${C.ComExOrdersPanel.filter}`,
+      `.${C.LocalMarket.filter}`,
+      `.${C.ContractsListTable.filter}`,
+    ],
     classes.filter,
   );
-  applyClassCssRule(C.ScrollView.track, classes.scrollTrack);
+  applyCssRule(`.${C.ScrollView.track}`, classes.scrollTrack);
 }
 
 function fixContractConditionEditor() {
@@ -59,20 +58,16 @@ function init() {
   applyCssRule(`.${C.Head.container}`, classes.head);
 
   // Removes GridItemView background color.
-  applyClassCssRule(C.GridItemView.container, classes.gridItem);
+  applyCssRule(`.${C.GridItemView.container}`, classes.gridItem);
 
   // Adds text centering to GridItemView name.
-  applyClassCssRule(C.GridItemView.name, classes.gridItemName);
+  applyCssRule(`.${C.GridItemView.name}`, classes.gridItemName);
 
   // The overlay stops materials from being clickable
-  applyScopedClassCssRule(['PROD', 'PRODQ'], C.OrderTile.overlay, classes.disablePointerEvents);
+  applyCssRule(['PROD', 'PRODQ'], `.${C.OrderTile.overlay}`, classes.disablePointerEvents);
 
   // Prevent PROD buffer vertical scroll bar gutter from being always visible
-  applyScopedClassCssRule(
-    'PROD',
-    C.SiteProductionLines.container,
-    classes.containerScrollbarGutter,
-  );
+  applyCssRule('PROD', `.${C.SiteProductionLines.container}`, classes.containerScrollbarGutter);
 }
 
 features.add(import.meta.url, init, 'Fixes PrUn bugs.');

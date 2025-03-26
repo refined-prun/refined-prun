@@ -1,6 +1,6 @@
 import fa from '@src/utils/font-awesome.module.css';
 import classes from './item-icons.module.css';
-import { applyCssRule, applyRawCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
+import { applyRawCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { objectKeys } from 'ts-extras';
 import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
 

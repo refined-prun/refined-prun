@@ -1,5 +1,4 @@
 import css from '@src/utils/css-utils.module.css';
-import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {
   // Unfortunately, there are two classes that start with 'ContextControls__container'.

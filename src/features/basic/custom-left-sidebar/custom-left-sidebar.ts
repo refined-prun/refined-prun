@@ -1,6 +1,5 @@
 import css from '@src/utils/css-utils.module.css';
 import SidebarButtons from './SidebarButtons.vue';
-import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { refAttributeValue } from '@src/utils/reactive-dom';
 
 function init() {

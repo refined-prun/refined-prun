@@ -1,5 +1,4 @@
 import css from '@src/utils/css-utils.module.css';
-import { applyScopedCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
@@ -33,19 +32,19 @@ function setAttribute(element: HTMLElement, attribute: string, value: boolean) {
 
 function init() {
   // Hide 'Last repair'
-  applyScopedCssRule(
+  applyCssRule(
     'BBL',
     `.${C.SectionList.section}[data-rp-established] .${C.SectionList.table} tr:nth-child(2)`,
     css.hidden,
   );
   // Hide 'Established'
-  applyScopedCssRule(
+  applyCssRule(
     'BBL',
     `.${C.SectionList.section}[data-rp-repaired] .${C.SectionList.table} tr:nth-child(1)`,
     css.hidden,
   );
   // Hide 'Repair costs'
-  applyScopedCssRule(
+  applyCssRule(
     'BBL',
     `.${C.SectionList.section}[data-rp-infrastructure] .${C.SectionList.table} tr:nth-child(3)`,
     css.hidden,

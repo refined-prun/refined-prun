@@ -1,8 +1,7 @@
-import { applyScopedCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import css from '@src/utils/css-utils.module.css';
 
 function init() {
-  applyScopedCssRule(
+  applyCssRule(
     'PRODQ',
     `.${C.ProductionQueue.table} tbody tr td:nth-child(3) .${C.Link.link}`,
     css.hidden,
