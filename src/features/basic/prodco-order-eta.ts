@@ -40,50 +40,42 @@ function getTemplateFromForm(templates: PrunApi.ProductionTemplate[], form: HTML
   const template = _$(form, C.ProductionLine.template);
   const inputs: [string, number][] = [];
   const outputs: [string, number][] = [];
+  // The structure of the template element looks like this:
+  // MaterialIcon[], ⇨, MaterialIcon[], duration
+  // First, we grab all inputs, and then on ⇨ flip to grabbing outputs.
   let input = true;
-  const templateMaterials = Array.from(template!.children);
-  for (const materials of templateMaterials) {
+  for (const materials of Array.from(template!.children)) {
     if (!materials.classList.contains(C.MaterialIcon.container)) {
       input = false;
       continue;
     }
-    const indicator = Number(_$(materials, C.MaterialIcon.indicator)!.textContent ?? 0);
-    const ticker = _$(materials, C.ColoredIcon.label)!.textContent ?? '';
+    const ticker = _$(materials, C.ColoredIcon.label)?.textContent ?? '';
+    const count = Number(_$(materials, C.MaterialIcon.indicator)?.textContent ?? 0);
     if (input) {
-      inputs.push([ticker, indicator]);
+      inputs.push([ticker, count]);
     } else {
-      outputs.push([ticker, indicator]);
+      outputs.push([ticker, count]);
     }
   }
 
   for (const template of templates) {
-    if (
-      template.inputFactors.length !== inputs.length ||
-      template.outputFactors.length !== outputs.length
-    ) {
+    const templateInputs = template.inputFactors;
+    const templateOutputs = template.outputFactors;
+    if (templateInputs.length !== inputs.length || templateOutputs.length !== outputs.length) {
       continue;
     }
 
-    const allInputsMatch = template.inputFactors.every(inputT => {
-      return inputs.some(input => {
-        return input[0] === inputT.material.ticker && input[1] === inputT.factor;
-      });
-    });
-    if (!allInputsMatch) {
-      continue;
-    }
-
-    const allOutputsMatch = template.outputFactors.every(outputT => {
-      return outputs.some(output => {
-        return output[0] === outputT.material.ticker && output[1] === outputT.factor;
-      });
-    });
-    if (allOutputsMatch) {
+    const inputsMatch = inputs.every(x => findFactor(templateInputs, x[0], x[1]));
+    const outputsMatch = outputs.every(x => findFactor(templateOutputs, x[0], x[1]));
+    if (inputsMatch && outputsMatch) {
       return template;
     }
   }
-  // There should be no way to get here.
   return undefined;
+}
+
+function findFactor(factors: PrunApi.ProductionFactor[], ticker: string, factor: number) {
+  return factors.find(x => x.material.ticker === ticker && x.factor === factor);
 }
 
 function calcCompletionDate(
