@@ -8,9 +8,7 @@ function onTileReady(tile: PrunTile) {
     const staticInputDuration = form.children[8].children[1].children[0];
     const dropDownBoxItem = refTextContent(_$(form.children[5], C.DropDownBox.currentItem)!);
     const rcSlider = refAttributeValue(_$(form, 'rc-slider-handle')!, 'aria-valuenow');
-    const line = computed(() => {
-      return productionStore.all.value!.find(line => line.id.substring(0, 8) === tile.parameter)!;
-    });
+    const line = computed(() => productionStore.getById(tile.parameter)!);
     let template: PrunApi.ProductionTemplate;
 
     function getCompletion(needTemplate: boolean = true) {
