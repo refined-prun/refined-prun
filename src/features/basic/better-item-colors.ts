@@ -1,15 +1,14 @@
-import classes from './better-item-colors.module.css';
-import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
+import $style from './better-item-colors.module.css';
 import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
 
 function init() {
-  applyCategoryRule('agricultural products', classes.agriculturalProducts);
-  applyCategoryRule('consumables (basic)', classes.consumablesBasic);
-  applyCategoryRule('consumables (luxury)', classes.consumablesLuxury);
-  applyCategoryRule('fuels', classes.fuels);
-  applyCategoryRule('liquids', classes.liquids);
-  applyCategoryRule('plastics', classes.plastics);
-  applyCategoryRule('ship shields', classes.shipShields);
+  applyCategoryRule('agricultural products', $style.agriculturalProducts);
+  applyCategoryRule('consumables (basic)', $style.consumablesBasic);
+  applyCategoryRule('consumables (luxury)', $style.consumablesLuxury);
+  applyCategoryRule('fuels', $style.fuels);
+  applyCategoryRule('liquids', $style.liquids);
+  applyCategoryRule('plastics', $style.plastics);
+  applyCategoryRule('ship shields', $style.shipShields);
 }
 
 function applyCategoryRule(category: string, rule: string) {

@@ -42,10 +42,10 @@ const boxStyle = computed(() => ({
   height: 100%;
   width: 100%;
   display: none;
-}
 
-.container:hover > .box {
-  display: block;
+  .container:hover > & {
+    display: block;
+  }
 }
 
 .icon {

@@ -1,8 +1,7 @@
-import classes from './finla-more-columns.module.css';
+import $style from './finla-more-columns.module.css';
 import css from '@src/utils/css-utils.module.css';
 import { refTextContent } from '@src/utils/reactive-dom';
 import { fixed0 } from '@src/utils/format';
-import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { currentAssets } from '@src/core/balance/current-assets';
 
 function onTileReady(tile: PrunTile) {
@@ -73,8 +72,7 @@ function hiddenIfZero(total: Ref<number | undefined>) {
 }
 
 function init() {
-  applyCssRule(`.${C.LiquidAssetsPanel.row} td:first-child`, classes.firstColumn);
-  applyCssRule(`.${C.LiquidAssetsPanel.row} td:not(:first-child)`, classes.otherColumns);
+  applyCssRule(`.${C.LiquidAssetsPanel.row}`, $style.row);
   tiles.observe('FINLA', onTileReady);
 }
 

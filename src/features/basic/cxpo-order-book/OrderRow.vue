@@ -45,8 +45,10 @@ const priceClass = computed(() =>
 /*
   Override left/right padding from vanilla class
 */
-table tbody td.price {
-  padding: 2px;
+.price {
+  table tbody td& {
+    padding: 2px;
+  }
 }
 
 .tdDiv {

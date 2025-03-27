@@ -6,8 +6,10 @@
   z-index: 2;
 }
 
-.userInfo {
-  flex-shrink: 0;
+.head {
+  > div:nth-child(2) {
+    flex-shrink: 0;
+  }
 }
 
 .gridItem {
