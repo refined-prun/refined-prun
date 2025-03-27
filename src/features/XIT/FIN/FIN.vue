@@ -142,7 +142,7 @@ const figures = computed(() => {
 </template>
 
 <style scoped>
-table tr > *:not(:first-child) {
+table tr > :not(:first-child) {
   text-align: right;
 }
 </style>

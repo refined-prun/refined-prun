@@ -44,11 +44,8 @@ function onAddClick(ev: Event) {
   margin-right: 5px;
 }
 
-.checkmark > * {
-  grid-area: 1 / 1;
-}
-
 .plus {
+  grid-area: 1 / 1;
   font-size: 8px;
   display: flex;
   justify-content: center;
@@ -60,6 +57,7 @@ function onAddClick(ev: Event) {
 }
 
 .plusHover {
+  grid-area: 1 / 1;
   font-size: 14px;
   opacity: 0;
 }
