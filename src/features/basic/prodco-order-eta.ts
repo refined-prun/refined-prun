@@ -1,7 +1,7 @@
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { formatEta } from '@src/utils/format';
 import { refAttributeValue, refTextContent } from '@src/utils/reactive-dom';
-import { createReactiveDiv } from '@src/utils/reactive-element';
+import { createReactiveSpan } from '@src/utils/reactive-element';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.ProductionLine.form), form => {
@@ -17,7 +17,7 @@ function onTileReady(tile: PrunTile) {
       if (needTemplate || !template) {
         template = getTemplateFromForm(line.value.productionTemplates, form)!;
       }
-      return `(${formatEta(Date.now(), calcCompletionDate(line.value, template, Number(rcSlider.value)))})`;
+      return ` (${formatEta(Date.now(), calcCompletionDate(line.value, template, Number(rcSlider.value)))})`;
     }
 
     const completionText = ref(getCompletion());
@@ -30,7 +30,8 @@ function onTileReady(tile: PrunTile) {
     watch(rcSlider, () => {
       completionText.value = getCompletion(false);
     });
-    staticInputDuration.append(createReactiveDiv(staticInputDuration, completionText));
+    const eta = createReactiveSpan(staticInputDuration, completionText);
+    staticInputDuration.append(eta);
   });
 }
 
