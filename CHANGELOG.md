@@ -2,6 +2,7 @@
 
 ### Added
 
+- `tile-controls-background`: (new) Adds a solid color background to the top-right tile controls
 - `prodco-order-eta`: (new) Adds a finish ETA label to orders
 
 ### Fixed

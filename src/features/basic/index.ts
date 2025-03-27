@@ -60,3 +60,4 @@ import './shipment-item-detail';
 import './shipping-per-unit-price/shipping-per-unit-price';
 import './sidebar-contracts-details/sidebar-contracts-details';
 import './table-rows-alternating-colors';
+import './tile-controls-background';
