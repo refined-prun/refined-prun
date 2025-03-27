@@ -1,8 +1,10 @@
 import { registerClassName } from '@src/utils/select-dom';
 import { isEmpty } from 'ts-extras';
+import { sleep } from '@src/utils/sleep';
 
 export const C = {} as PrunCssClasses;
 export let mergedPrunStyles = '';
+export const prunStyleUpdated = ref(false);
 
 export function loadPrunCss() {
   const styles = getPrunCssStylesheets();
@@ -63,6 +65,10 @@ export function loadPrunCss() {
   }
 
   Object.assign(C, result);
+
+  if (import.meta.env.DEV) {
+    void checkPrunCssUpdate();
+  }
 }
 
 export function getPrunCssStylesheets() {
@@ -83,4 +89,20 @@ export function getPrunCssStylesheets() {
     }
   }
   return valid;
+}
+
+async function checkPrunCssUpdate() {
+  let lastStylesheet = '';
+  while (!lastStylesheet) {
+    try {
+      const response = await fetch('https://refined-prun.github.io/prun-css/prun.css');
+      lastStylesheet = await response.text();
+    } catch {
+      // Do nothing.
+    }
+    if (!lastStylesheet) {
+      await sleep(1000);
+    }
+  }
+  prunStyleUpdated.value = lastStylesheet !== mergedPrunStyles;
 }
