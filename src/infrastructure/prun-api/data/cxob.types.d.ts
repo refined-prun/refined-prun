@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface CXBroker {
+  interface CXBroker {
     id: string;
     ticker: string;
     exchange: ExchangeEntity;
@@ -25,19 +25,19 @@ declare namespace PrunApi {
     buyingOrders: CXBrokerOrder[];
   }
 
-  export interface CXBrokerPriceAmount {
+  interface CXBrokerPriceAmount {
     price: CurrencyAmount;
     amount: number;
   }
 
-  export interface CXBrokerOrder {
+  interface CXBrokerOrder {
     id: string;
     trader: ExchangeEntity;
     amount?: number;
     limit: CurrencyAmount;
   }
 
-  export interface CXBrokerPriceBand {
+  interface CXBrokerPriceBand {
     low: number;
     high: number;
   }

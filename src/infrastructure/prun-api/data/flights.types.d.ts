@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface Flight {
+  interface Flight {
     id: string;
     shipId: string;
     origin: Address;
@@ -13,7 +13,7 @@ declare namespace PrunApi {
     aborted: boolean;
   }
 
-  export interface FlightSegment {
+  interface FlightSegment {
     type: SegmentType;
     origin: Address;
     departure: DateTime;
@@ -27,7 +27,7 @@ declare namespace PrunApi {
     damage: number;
   }
 
-  export interface TransferEllipse {
+  interface TransferEllipse {
     startPosition: Position;
     targetPosition: Position;
     center: Position;
@@ -36,7 +36,7 @@ declare namespace PrunApi {
     semiMinorAxis: number;
   }
 
-  declare type SegmentType =
+  type SegmentType =
     | 'TAKE_OFF'
     | 'LANDING'
     | 'DEPARTURE'
