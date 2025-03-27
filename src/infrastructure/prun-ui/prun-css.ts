@@ -43,7 +43,6 @@ export function loadPrunCss() {
 
   const classes = Array.from(classSet);
   classes.sort();
-  const result = {};
   for (const cssClass of classes) {
     const camelize = (s: string) => s.replace(/-./g, x => x[1].toUpperCase());
     const parts = cssClass.replace('__', '.').replace('___', '.').split('.');
@@ -52,10 +51,10 @@ export function loadPrunCss() {
       continue;
     }
     const child = camelize(parts[1]);
-    let parentObject = result[parent];
+    let parentObject = C[parent];
     if (parentObject === undefined) {
       parentObject = {};
-      result[parent] = parentObject;
+      C[parent] = parentObject;
     }
     if (parentObject[child] !== undefined) {
       continue;
@@ -63,8 +62,6 @@ export function loadPrunCss() {
     parentObject[child] = cssClass;
     registerClassName(cssClass);
   }
-
-  Object.assign(C, result);
 
   if (import.meta.env.DEV) {
     void checkPrunCssUpdate();

@@ -1,10 +1,10 @@
 import { castArray } from '@src/utils/cast-array';
 
-const rules: { [id: string]: string } = {};
+let rules: { [id: string]: string } = {};
 
 export function loadRefinedPrunCss() {
   const css = document.getElementById('refined-prun-css')!;
-  Object.assign(rules, JSON.parse(css.textContent!));
+  rules = JSON.parse(css.textContent!);
   css.textContent = null;
 }
 
