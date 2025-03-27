@@ -3,7 +3,7 @@ import TextInput from '@src/components/forms/TextInput.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
-import classes from './cx-search-bar.module.css';
+import $style from './cx-search-bar.module.css';
 import css from '@src/utils/css-utils.module.css';
 import onNodeDisconnected from '@src/utils/on-node-disconnected';
 import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
@@ -63,14 +63,14 @@ watchEffectWhileNodeAlive(comExPanel, () => {
   for (const option of optionElements.values()) {
     option.classList.toggle(
       css.hidden,
-      !option.classList.contains(classes.matchingCategory) && collapseOthersWithoutText,
+      !option.classList.contains($style.matchingCategory) && collapseOthersWithoutText,
     );
   }
   for (const row of rowElements.values()) {
     if (row.isConnected) {
       row.classList.toggle(
         css.hidden,
-        !row.classList.contains(classes.matchingRow) && collapseOthersWithoutText,
+        !row.classList.contains($style.matchingRow) && collapseOthersWithoutText,
       );
     }
   }
@@ -79,7 +79,7 @@ watchEffectWhileNodeAlive(comExPanel, () => {
 
 const resetElement = (value: HTMLElement) => {
   if (value.isConnected) {
-    value.classList.remove(classes.matchingCategory, classes.matchingRow);
+    value.classList.remove($style.matchingCategory, $style.matchingRow);
     value.classList.toggle(css.hidden, collapseSearch && collapseText.length !== 0);
   }
 };
@@ -105,12 +105,12 @@ watchEffectWhileNodeAlive(comExPanel, () => {
       ) {
         const optionElement = optionElements.get(material.category);
         if (optionElement) {
-          optionElement.classList.add(classes.matchingCategory);
+          optionElement.classList.add($style.matchingCategory);
           optionElement.classList.remove(css.hidden);
         }
         const rowElement = rowElements.get(material.ticker);
         if (rowElement && rowElement.isConnected) {
-          rowElement.classList.add(classes.matchingRow);
+          rowElement.classList.add($style.matchingRow);
           rowElement.classList.remove(css.hidden);
         }
       }
@@ -126,10 +126,3 @@ watchEffectWhileNodeAlive(comExPanel, () => {
     <RadioItem v-model="collapseOthers">Results Only</RadioItem>
   </div>
 </template>
-
-<style module>
-.textInputElement {
-  display: flex;
-  align-items: center;
-}
-</style>

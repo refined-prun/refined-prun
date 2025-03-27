@@ -1,6 +1,5 @@
 import MaterialSearchAndResults from './MaterialSearchAndResults.vue';
-import classes from './cx-search-bar.module.css';
-import { applyScopedCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
+import $style from './cx-search-bar.module.css';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.ComExPanel.input), comExPanel => {
@@ -16,12 +15,7 @@ function onTileReady(tile: PrunTile) {
 }
 
 function init() {
-  applyScopedCssRule('CX', `.${C.BrokerList.table} tbody tr:nth-child(2n+1)`, classes.rowOdd);
-  applyScopedCssRule(
-    'CX',
-    `.${C.BrokerList.table} tbody tr:nth-child(2n+1)::after`,
-    classes.rowAfter,
-  );
+  applyCssRule('CX', `.${C.BrokerList.table}`, $style.table);
   tiles.observe('CX', onTileReady);
 }
 
