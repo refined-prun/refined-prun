@@ -5,8 +5,10 @@ import { createReactiveSpan } from '@src/utils/reactive-element';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.ProductionLine.form), form => {
-    const staticInputDuration = form.children[8].children[1].children[0];
-    const dropDownBoxItem = refTextContent(_$(form.children[5], C.DropDownBox.currentItem)!);
+    const productionTemplateField = form.children[5];
+    const durationField = form.children[8];
+
+    const dropDownBoxItem = refTextContent(_$(productionTemplateField, C.DropDownBox.currentItem)!);
     const rcSlider = refAttributeValue(_$(form, 'rc-slider-handle')!, 'aria-valuenow');
     const line = computed(() => productionStore.getById(tile.parameter)!);
     let template: PrunApi.ProductionTemplate;
@@ -28,8 +30,9 @@ function onTileReady(tile: PrunTile) {
     watch(rcSlider, () => {
       completionText.value = getCompletion(false);
     });
-    const eta = createReactiveSpan(staticInputDuration, completionText);
-    staticInputDuration.append(eta);
+
+    const durationLabel = _$(durationField, C.StaticInput.static)!;
+    durationLabel.append(createReactiveSpan(durationLabel, completionText));
   });
 }
 
