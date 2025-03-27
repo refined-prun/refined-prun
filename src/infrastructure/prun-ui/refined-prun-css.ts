@@ -96,5 +96,5 @@ function indent(text: string) {
 }
 
 function selectCommand(command: string) {
-  return `.${C.TileFrame.frame}[data-rp-command='${command}']`;
+  return `.rp-command-${command}`;
 }

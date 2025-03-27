@@ -83,7 +83,7 @@ function activateFrame(frame: HTMLDivElement, anchor: HTMLDivElement) {
     command: (indexOfSpace > 0 ? fullCommand.slice(0, indexOfSpace) : fullCommand).toUpperCase(),
     parameter: indexOfSpace > 0 ? fullCommand.slice(indexOfSpace + 1) : undefined,
   };
-  frame.setAttribute('data-rp-command', tile.command);
+  frame.classList.add(`rp-command-${tile.command}`);
   activateTile(tile);
   onNodeDisconnected(frame, () => deactivateTile(tile));
   if (!docked && !pastWindows.has(container)) {
