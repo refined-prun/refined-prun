@@ -1,3 +1,5 @@
 .headerActions {
-  margin-bottom: 2px;
+  :not(:last-child) {
+    margin-bottom: 2px;
+  }
 }

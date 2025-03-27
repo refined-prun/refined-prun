@@ -5,7 +5,7 @@ import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { computedTileState } from '@src/store/user-data-tiles';
 import { createReactiveDiv } from '@src/utils/reactive-element';
 import HideOrders from './HideOrders.vue';
-import classes from './prod-collapse-orders.module.css';
+import $style from './prod-collapse-orders.module.css';
 import { getTileState } from './tile-state';
 import css from '@src/utils/css-utils.module.css';
 
@@ -121,7 +121,7 @@ async function onTileReady(tile: PrunTile) {
 }
 
 function init() {
-  applyCssRule(`.${C.SiteProductionLines.headerActions} :not(:last-child)`, classes.headerActions);
+  applyCssRule(`.${C.SiteProductionLines.headerActions}`, $style.headerActions);
   tiles.observe('PROD', onTileReady);
 }
 
