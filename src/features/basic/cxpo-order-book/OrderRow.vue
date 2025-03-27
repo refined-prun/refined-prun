@@ -4,11 +4,13 @@ import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { fixed0, fixed2 } from '@src/utils/format';
 import PrunButton from '@src/components/PrunButton.vue';
 
-const { order, request, click } = defineProps<{
+const $style = useCssModule();
+
+const { order, request, infiniteFill, infiniteSet, click } = defineProps<{
   order: PrunApi.CXBrokerOrder;
   request?: boolean;
-  infinite: boolean;
-  infinite1: boolean;
+  infiniteFill: boolean;
+  infiniteSet: boolean;
   click: (quantity: string, info: string | PrunApi.CXBrokerOrder) => void;
 }>();
 
@@ -20,20 +22,24 @@ const price = computed(() => fixed2(order.limit.amount));
 const priceClass = computed(() =>
   request ? C.ComExOrderBookPanel.requestPrice : C.ComExOrderBookPanel.offerPrice,
 );
+const fillButtonClass = computed(() => (infiniteFill ? $style.tdDiv : ''));
+const setButtonClass = computed(() => (infiniteSet ? $style.tdDiv : ''));
 </script>
 
 <template>
   <tr :class="ownOrderClass">
     <td :class="C.ComExOrderBookPanel.amount"
-      ><div :class="!infinite ? $style.tdDiv : ''"
-        ><PrunButton v-if="!infinite" dark inline @click="click('fill', order)">fill</PrunButton>
+      ><div :class="fillButtonClass"
+        ><PrunButton v-if="!infiniteFill" dark inline @click="click('fill', order)"
+          >fill</PrunButton
+        >
         {{ amount }}</div
       ></td
     >
     <td :class="[priceClass, $style.price]"
-      ><div :class="!infinite1 ? $style.tdDiv : ''"
+      ><div :class="setButtonClass"
         >{{ price }}
-        <PrunButton v-if="!infinite1" dark inline @click="click('price', price)"
+        <PrunButton v-if="!infiniteSet" dark inline @click="click('price', price)"
           >set</PrunButton
         ></div
       ></td

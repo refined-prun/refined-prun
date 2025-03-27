@@ -41,12 +41,10 @@ function click(type: string, info: string | PrunApi.CXBrokerOrder) {
     const order = info as PrunApi.CXBrokerOrder;
     const orders = offers.value.includes(order) ? offers.value.toReversed() : requests.value;
     let quantity = 0;
-    let priceLimit = 0;
     for (const offer of orders) {
       quantity += offer.amount!;
-      priceLimit = offer.limit.amount;
       if (offer.id === order.id) {
-        setinputs(quantity.toString(), priceLimit.toString());
+        setinputs(quantity.toString(), offer.limit.amount.toString());
         return;
       }
     }
@@ -76,8 +74,8 @@ function click(type: string, info: string | PrunApi.CXBrokerOrder) {
             v-for="(order, index) in offers"
             :key="order.id"
             :order="order"
-            :infinite="index <= offerInfiniteIndex"
-            :infinite1="index <= offerInfiniteIndex - 1"
+            :infinite-fill="index <= offerInfiniteIndex"
+            :infinite-set="index <= offerInfiniteIndex - 1"
             :click="click" />
         </template>
         <tr v-else>
@@ -101,8 +99,8 @@ function click(type: string, info: string | PrunApi.CXBrokerOrder) {
             :key="order.id"
             request
             :order="order"
-            :infinite="index >= requestInfiniteIndex"
-            :infinite1="index >= requestInfiniteIndex + 1"
+            :infinite-fill="index >= requestInfiniteIndex"
+            :infinite-set="index >= requestInfiniteIndex + 1"
             :click="click" />
         </template>
         <tr v-else>
