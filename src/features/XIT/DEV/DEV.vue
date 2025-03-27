@@ -34,6 +34,9 @@ function downloadCssDefinition() {
 
 function downloadPrunStyles() {
   downloadFile(mergedPrunStyles, 'prun.css', false);
+  if (import.meta.env.DEV) {
+    window.open('https://github.com/refined-prun/prun-css/upload/main');
+  }
 }
 </script>
 
