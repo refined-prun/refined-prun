@@ -3,6 +3,7 @@ import { registerClassName } from '@src/utils/select-dom';
 import { isEmpty } from 'ts-extras';
 
 export const C = {} as CssClasses;
+export let mergedPrunStyles = '';
 
 export function loadPrunCss() {
   const styles = getPrunCssStylesheets();
@@ -12,6 +13,11 @@ export function loadPrunCss() {
   let appContainerFound = false;
   const classSet = new Set<string>();
   for (const style of styles) {
+    mergedPrunStyles +=
+      style
+        .textContent!.split('\n')
+        .filter(x => !x.includes('sourceMappingURL'))
+        .join('\n') + '\n';
     const cssRules = style.sheet!.cssRules;
     for (let i = 0; i < cssRules.length; i++) {
       const rule = cssRules.item(i) as CSSStyleRule;

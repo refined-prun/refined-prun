@@ -3,6 +3,7 @@ import { downloadFile } from '@src/util';
 import DebugButton from '@src/features/XIT/DEV/DevButton.vue';
 import { userData } from '@src/store/user-data';
 import Cookies from 'js-cookie';
+import { mergedPrunStyles } from '@src/infrastructure/prun-ui/prun-css';
 
 function logUserData() {
   console.log(userData);
@@ -27,6 +28,10 @@ function downloadCssDefinition() {
   definition += '}\n';
   downloadFile(definition, 'prun-css-types.ts', false);
 }
+
+function downloadPrunStyles() {
+  downloadFile(mergedPrunStyles, 'prun.css', false);
+}
 </script>
 
 <template>
@@ -36,5 +41,6 @@ function downloadCssDefinition() {
     </DebugButton>
     <DebugButton @click="logUserData">Log User Data</DebugButton>
     <DebugButton @click="downloadCssDefinition">Export prun-css-types.ts</DebugButton>
+    <DebugButton @click="downloadPrunStyles">Export prun.css</DebugButton>
   </div>
 </template>
