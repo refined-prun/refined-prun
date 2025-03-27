@@ -3,10 +3,11 @@ import TextInput from '@src/components/forms/TextInput.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
-import $style from './cx-search-bar.module.css';
 import css from '@src/utils/css-utils.module.css';
 import onNodeDisconnected from '@src/utils/on-node-disconnected';
 import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
+
+const $style = useCssModule();
 
 const { comExPanel } = defineProps<{
   comExPanel: HTMLElement;
@@ -126,3 +127,18 @@ watchEffectWhileNodeAlive(comExPanel, () => {
     <RadioItem v-model="collapseOthers">Results Only</RadioItem>
   </div>
 </template>
+
+<style module>
+.textInputElement {
+  display: flex;
+  align-items: center;
+}
+
+.matchingRow::after {
+  background-color: rgba(92, 184, 92, 0.175) !important;
+}
+
+.matchingCategory {
+  background-color: rgba(92, 184, 92, 0.175);
+}
+</style>
