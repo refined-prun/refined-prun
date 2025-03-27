@@ -1,9 +1,9 @@
 .screenControls {
   display: inline-flex;
-}
 
-.screenControlsItems {
-  flex-shrink: 0;
+  > :not(:last-child) {
+    flex-shrink: 0;
+  }
 }
 
 .hideButton {

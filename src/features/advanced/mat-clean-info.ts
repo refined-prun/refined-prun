@@ -1,13 +1,12 @@
 import css from '@src/utils/css-utils.module.css';
-import { applyScopedCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {
-  applyScopedCssRule(
+  applyCssRule(
     'MAT',
     `.${C.MaterialInformation.container} > .${C.FormComponent.containerPassive}:nth-child(2)`,
     css.hidden,
   );
-  applyScopedCssRule(
+  applyCssRule(
     'MAT',
     `.${C.MaterialInformation.container} > .${C.FormComponent.containerPassive}:nth-child(6)`,
     css.hidden,
