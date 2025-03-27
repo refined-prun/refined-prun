@@ -1,5 +1,7 @@
-.grow {
-  flex-grow: 1;
+.foot {
+  > span {
+    flex-grow: 1;
+  }
 }
 
 .container {

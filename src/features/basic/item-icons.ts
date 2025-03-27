@@ -1,12 +1,6 @@
 import fa from '@src/utils/font-awesome.module.css';
-import css from '@src/utils/css-utils.module.css';
-import classes from './item-icons.module.css';
-import {
-  applyCssRule,
-  applyRawCssRule,
-  endCssAtScope,
-  startCssAtScope,
-} from '@src/infrastructure/prun-ui/refined-prun-css';
+import $style from './item-icons.module.css';
+import { applyRawCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { objectKeys } from 'ts-extras';
 import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
 
@@ -14,16 +8,10 @@ function init() {
   const container = C.ColoredIcon.container;
   const label = C.ColoredIcon.label;
 
-  applyCssRule(`.${container}`, classes.container);
+  applyCssRule(`.${container}`, $style.container);
   applyCssRule(`.${container}:before`, fa.solid);
-  applyCssRule(`.${container}:before`, classes.main);
+  applyCssRule(`.${label}`, $style.label);
   applyCssRule(`.${label}:before`, fa.solid);
-  applyCssRule(`.${label}:before`, classes.detail);
-
-  startCssAtScope('@container (height < 24px)');
-  applyCssRule(`.${container}:before`, css.hidden);
-  applyCssRule(`.${label}:before`, css.hidden);
-  endCssAtScope();
 
   for (const category of objectKeys(categories)) {
     applyIconRules(`.rp-category-${sanitizeCategoryName(category)}`, categories[category]);

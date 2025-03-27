@@ -1,5 +1,4 @@
-import { applyScopedClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
-import classes from './inv-compress-inventory-info.module.css';
+import $style from './inv-compress-inventory-info.module.css';
 
 async function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.StoreView.column), column => {
@@ -8,7 +7,7 @@ async function onTileReady(tile: PrunTile) {
       return;
     }
     const container = document.createElement('div');
-    container.classList.add(classes.capacityContainer);
+    container.classList.add($style.capacityContainer);
     container.appendChild(capacities[1]);
     container.appendChild(capacities[2]);
     capacities[0].after(container);
@@ -16,9 +15,9 @@ async function onTileReady(tile: PrunTile) {
 }
 
 function init() {
-  applyScopedClassCssRule('INV', C.StoreView.column, classes.storeViewColumn);
-  applyScopedClassCssRule('INV', C.StoreView.container, classes.storeViewContainer);
-  applyScopedClassCssRule('INV', C.InventorySortControls.controls, classes.sortControls);
+  applyCssRule('INV', `.${C.StoreView.column}`, $style.storeViewColumn);
+  applyCssRule('INV', `.${C.StoreView.container}`, $style.storeViewContainer);
+  applyCssRule('INV', `.${C.InventorySortControls.controls}`, $style.sortControls);
   tiles.observe('INV', onTileReady);
 }
 

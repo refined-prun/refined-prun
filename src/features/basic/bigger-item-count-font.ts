@@ -1,8 +1,7 @@
-import classes from './bigger-item-count-font.module.css';
-import { applyClassCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
+import $style from './bigger-item-count-font.module.css';
 
 function init() {
-  applyClassCssRule(C.MaterialIcon.typeVerySmall, classes.indicator);
+  applyCssRule(`.${C.MaterialIcon.typeVerySmall}`, $style.indicator);
 }
 
 features.add(import.meta.url, init, 'Makes the item count label font bigger.');
