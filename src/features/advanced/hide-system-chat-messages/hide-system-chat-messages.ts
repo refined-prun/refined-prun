@@ -1,4 +1,4 @@
-import classes from './hide-system-chat-messages.module.css';
+import $style from './hide-system-chat-messages.module.css';
 import css from '@src/utils/css-utils.module.css';
 import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
@@ -64,9 +64,9 @@ function onTileReady(tile: PrunTile) {
 
   subscribe($$(tile.anchor, C.MessageList.messages), messages => {
     watchEffectWhileNodeAlive(messages, () => {
-      messages.classList.toggle(classes.hideJoined, hideJoined.value ?? false);
-      messages.classList.toggle(classes.hideDeleted, hideDeleted.value ?? false);
-      messages.classList.toggle(classes.hideTimestamp, hideTimestamp.value ?? false);
+      messages.classList.toggle($style.hideJoined, hideJoined.value ?? false);
+      messages.classList.toggle($style.hideDeleted, hideDeleted.value ?? false);
+      messages.classList.toggle($style.hideTimestamp, hideTimestamp.value ?? false);
     });
     subscribe($$(messages, C.Message.message), processMessage);
   });
@@ -80,22 +80,22 @@ function processMessage(message: HTMLElement) {
       return;
     }
     if (name.children.length > 0) {
-      message.classList.add(classes.deleted);
+      message.classList.add($style.deleted);
     } else {
-      message.classList.add(classes.joined);
+      message.classList.add($style.joined);
     }
   });
   const timestamp = _$(message, C.Message.timestamp)!;
-  timestamp.classList.add(classes.timestamp);
+  timestamp.classList.add($style.timestamp);
 }
 
 function init() {
   tiles.observe(['COMG', 'COMP', 'COMU'], onTileReady);
-  applyCssRule(`.${classes.hideJoined} .${classes.joined}`, css.hidden);
-  applyCssRule(`.${classes.hideDeleted} .${classes.deleted}`, css.hidden);
-  applyCssRule(`.${classes.hideTimestamp} .${classes.timestamp}`, css.hidden);
-  applyCssRule(`.${classes.hideTimestamp} .${C.Message.message}`, classes.message);
-  applyCssRule(`.${classes.hideTimestamp} .${C.Message.name}`, classes.messageName);
+  applyCssRule(`.${$style.hideJoined} .${$style.joined}`, css.hidden);
+  applyCssRule(`.${$style.hideDeleted} .${$style.deleted}`, css.hidden);
+  applyCssRule(`.${$style.hideTimestamp} .${$style.timestamp}`, css.hidden);
+  applyCssRule(`.${$style.hideTimestamp} .${C.Message.message}`, $style.message);
+  applyCssRule(`.${$style.hideTimestamp} .${C.Message.name}`, $style.messageName);
 }
 
 features.add(import.meta.url, init, 'Hides system messages in chats.');
