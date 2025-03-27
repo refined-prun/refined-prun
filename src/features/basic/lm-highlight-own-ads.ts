@@ -1,4 +1,4 @@
-import classes from './lm-highlight-own-ads.module.css';
+import $style from './lm-highlight-own-ads.module.css';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { localAdsStore } from '@src/infrastructure/prun-api/data/local-ads';
@@ -9,7 +9,7 @@ function onTileReady(tile: PrunTile) {
     const id = getPrunId(container);
     const ad = localAdsStore.getById(id);
     if (ad?.creator.id === companyStore.value?.id) {
-      item.classList.add(classes.ownAd);
+      item.classList.add($style.ownAd);
     }
   });
 }

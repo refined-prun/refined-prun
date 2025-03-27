@@ -1,6 +1,5 @@
-import classes from './hide-system-chat-messages.module.css';
+import $style from './hide-system-chat-messages.module.css';
 import css from '@src/utils/css-utils.module.css';
-import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
 import SelectButton from '@src/features/advanced/hide-system-chat-messages/SelectButton.vue';
@@ -54,12 +53,12 @@ function onTileReady(tile: PrunTile) {
 
   subscribe($$(tile.anchor, C.MessageList.messages), messages => {
     watchEffectWhileNodeAlive(messages, () => {
-      messages.classList.remove(classes.hideJoined, classes.hideDeleted);
+      messages.classList.remove($style.hideJoined, $style.hideDeleted);
       if (hideJoined.value) {
-        messages.classList.add(classes.hideJoined);
+        messages.classList.add($style.hideJoined);
       }
       if (hideDeleted.value) {
-        messages.classList.add(classes.hideDeleted);
+        messages.classList.add($style.hideDeleted);
       }
     });
     subscribe($$(messages, C.Message.message), processMessage);
@@ -74,17 +73,17 @@ function processMessage(message: HTMLElement) {
       return;
     }
     if (name.children.length > 0) {
-      message.classList.add(classes.deleted);
+      message.classList.add($style.deleted);
     } else {
-      message.classList.add(classes.joined);
+      message.classList.add($style.joined);
     }
   });
 }
 
 function init() {
   tiles.observe(['COMG', 'COMP', 'COMU'], onTileReady);
-  applyCssRule(`.${classes.hideJoined} .${classes.joined}`, css.hidden);
-  applyCssRule(`.${classes.hideDeleted} .${classes.deleted}`, css.hidden);
+  applyCssRule(`.${$style.hideJoined} .${$style.joined}`, css.hidden);
+  applyCssRule(`.${$style.hideDeleted} .${$style.deleted}`, css.hidden);
 }
 
 features.add(import.meta.url, init, 'Hides system messages in chats.');

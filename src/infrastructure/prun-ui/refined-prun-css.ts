@@ -8,61 +8,49 @@ export function loadRefinedPrunCss() {
   css.textContent = null;
 }
 
-export function applyClassCssRule(classNames: Arrayable<string>, sourceClass: string) {
-  for (const className of castArray(classNames)) {
-    applyCssRule(`.${className}`, sourceClass);
-  }
-}
-
-export function applyScopedClassCssRule(
-  commands: Arrayable<string>,
-  classNames: Arrayable<string>,
-  sourceClass: string,
-) {
-  classNames = castArray(classNames);
-  for (const command of castArray(commands)) {
-    for (const className of classNames) {
-      applyCssRule(`${selectCommand(command)} .${className}`, sourceClass);
-    }
-  }
-}
-
-export function applyScopedCssRule(
+export function applyCssRule(selectors: Arrayable<string>, sourceClass: string): void;
+export function applyCssRule(
   commands: Arrayable<string>,
   selectors: Arrayable<string>,
   sourceClass: string,
-) {
-  selectors = castArray(selectors);
-  for (const command of castArray(commands)) {
-    for (const selector of selectors) {
-      applyCssRule(`${selectCommand(command)} ${selector}`, sourceClass);
-    }
-  }
-}
+): void;
 
-export function applyCssRule(selector: string, sourceClass: string) {
-  if (!sourceClass) {
-    throw new Error('Source class is undefined');
-  }
+export function applyCssRule(arg1: Arrayable<string>, arg2: Arrayable<string>, arg3?: string) {
   if (!features.current) {
     throw new Error('Cannot apply css rules outside of feature init');
+  }
+  let commands: string[];
+  let selectors: string[];
+  let sourceClass: string;
+  if (arguments.length === 2) {
+    commands = [];
+    selectors = castArray(arg1);
+    sourceClass = arg2 as string;
+  } else {
+    commands = castArray(arg1);
+    selectors = castArray(arg2);
+    sourceClass = arg3 as string;
+  }
+
+  if (!sourceClass) {
+    throw new Error('Source class is undefined');
   }
   const sourceSelector = '.' + sourceClass;
   const match = rules[sourceSelector];
   if (!match) {
     throw new Error(`Failed to find css selector ${sourceSelector}`);
   }
-  applyRawCssRule(match.replace(sourceSelector, selector));
-}
-
-let at: string | undefined = undefined;
-
-export function startCssAtScope(scope: string) {
-  at = scope;
-}
-
-export function endCssAtScope() {
-  at = undefined;
+  if (commands.length > 0) {
+    for (const selector of selectors) {
+      for (const command of commands) {
+        applyRawCssRule(match.replace(sourceSelector, `${selectCommand(command)} ${selector}`));
+      }
+    }
+  } else {
+    for (const selector of selectors) {
+      applyRawCssRule(match.replace(sourceSelector, selector));
+    }
+  }
 }
 
 let currentSheet = {
@@ -82,7 +70,7 @@ export function applyRawCssRule(rule: string) {
   } else {
     currentSheet.textContent += '\n\n';
   }
-  currentSheet.textContent += at ? `${at} ${wrapInBrackets(rule)}` : rule;
+  currentSheet.textContent += rule;
 }
 
 function queueSheetAppend() {

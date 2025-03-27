@@ -1,9 +1,8 @@
 import fa from '@src/utils/font-awesome.module.css';
-import classes from './input-math.module.css';
+import $style from './input-math.module.css';
 import { changeInputValue } from '@src/util';
 import Mexp from 'math-expression-evaluator';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 const mexp = new Mexp();
 
@@ -66,13 +65,13 @@ function applyCssRules() {
   const inputSelector = `div:has(> input:is([inputmode='numeric'], [inputmode='decimal']):focus)`;
   // Remove hard-coded class when molp fixes class duplication
   const selector = `.FormComponent__input___f43wqaQ ${inputSelector}`;
-  applyCssRule(selector, classes.inputContainer);
+  applyCssRule(selector, $style.inputContainer);
   applyCssRule(`${selector}:before`, fa.solid);
-  applyCssRule(`${selector}:before`, classes.functionIcon);
+  applyCssRule(`${selector}:before`, $style.functionIcon);
   const selectorDynamic = `.${C.DynamicInput.dynamic} ${inputSelector}`;
-  applyCssRule(selectorDynamic, classes.inputContainer);
+  applyCssRule(selectorDynamic, $style.inputContainer);
   applyCssRule(`${selectorDynamic}:before`, fa.solid);
-  applyCssRule(`${selectorDynamic}:before`, classes.functionIconDynamic);
+  applyCssRule(`${selectorDynamic}:before`, $style.functionIconDynamic);
 }
 
 features.add(
