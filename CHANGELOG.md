@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Added
+
+- `prodco-order-eta`: (new) Adds a finish ETA label to orders
+
 ### Fixed
 
 - `prodq-order-eta`: Fix eta missing in order slots that were initially empty
