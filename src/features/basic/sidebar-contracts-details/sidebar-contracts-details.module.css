@@ -3,8 +3,8 @@
   width: 65px;
   color: #3fa2de;
   cursor: pointer;
-}
 
-.contractId:hover {
-  color: #f7a600;
+  &:hover {
+    color: #f7a600;
+  }
 }

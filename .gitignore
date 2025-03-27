@@ -16,3 +16,4 @@
 .DS_Store
 .idea
 **/.turbo
+vite.config.mts.timestamp-*.mjs

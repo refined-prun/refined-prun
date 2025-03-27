@@ -1,7 +1,9 @@
-.firstColumn {
-  width: 1%;
-}
+.row {
+  td:first-child {
+    width: 1%;
+  }
 
-.otherColumns {
-  width: unset;
+  td:not(:first-child) {
+    width: unset;
+  }
 }

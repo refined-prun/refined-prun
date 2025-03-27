@@ -53,6 +53,7 @@ export default defineConfig({
         { name: 'default', as: 'xit', from: '@src/features/XIT/xit-registry' },
         { name: 'default', as: 'config', from: '@src/infrastructure/shell/config' },
         { name: 'createFragmentApp', from: '@src/utils/vue-fragment-app' },
+        { name: 'applyCssRule', from: '@src/infrastructure/prun-ui/refined-prun-css' },
       ],
       //dts: 'src/types/unimport.d.ts',
       addons: {

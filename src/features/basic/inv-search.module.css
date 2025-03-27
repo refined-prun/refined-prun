@@ -1,12 +1,12 @@
 .inputText {
-  padding: 0px 5px;
+  padding: 0 5px;
   margin: 5px;
   background-color: #42361d;
-  border-width: 0px;
+  border-width: 0;
   border-bottom: 1px solid #8d6411;
   color: #cccccc;
-}
 
-.inputText:focus {
-  outline: none;
+  &:focus {
+    outline: none;
+  }
 }
