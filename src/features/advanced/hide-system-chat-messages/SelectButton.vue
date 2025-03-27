@@ -14,7 +14,7 @@ const model = computed({
 </script>
 
 <template>
-  <div class="SelectButton__container___vjN14Xf">
+  <div :class="C.SelectButton.container">
     <RadioItem v-model="model">
       {{ label }}
     </RadioItem>

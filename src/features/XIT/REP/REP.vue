@@ -6,7 +6,7 @@ import {
   getParameterShips,
   getParameterSites,
 } from '@src/features/XIT/REP/entries';
-import { timestampEachSecond } from '@src/utils/dayjs';
+import { timestampEachMinute } from '@src/utils/dayjs';
 import { binarySearch } from '@src/utils/binary-search';
 import dayjs from 'dayjs';
 import { fixed1, percent1 } from '@src/utils/format';
@@ -42,7 +42,7 @@ const currentSplitIndex = computed(() => {
   }
   const settings = userData.settings.repair;
   const currentSplitDate =
-    timestampEachSecond.value - settings.threshold * msInADay + settings.offset * msInADay;
+    timestampEachMinute.value - settings.threshold * msInADay + settings.offset * msInADay;
   return binarySearch(currentSplitDate, buildingEntries.value, x => x.lastRepair);
 });
 
@@ -57,7 +57,7 @@ const materials = computed(() => {
     return undefined;
   }
   const materials: PrunApi.MaterialAmount[] = [];
-  const time = timestampEachSecond.value;
+  const time = timestampEachMinute.value;
   for (const building of visibleBuildings.value) {
     const plannedRepairDate =
       (time - building.lastRepair) / msInADay + userData.settings.repair.offset;
@@ -73,7 +73,7 @@ const materials = computed(() => {
 });
 
 function calculateAge(lastRepair: number) {
-  return diffDays(lastRepair, timestampEachSecond.value, true);
+  return diffDays(lastRepair, timestampEachMinute.value, true);
 }
 </script>
 

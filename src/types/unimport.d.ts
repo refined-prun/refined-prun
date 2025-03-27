@@ -6,6 +6,7 @@ declare global {
   const EffectScope: typeof import('vue')['EffectScope'];
   const _$$: typeof import('@src/utils/select-dom')['_$$'];
   const _$: typeof import('@src/utils/select-dom')['_$'];
+  const applyCssRule: typeof import('@src/infrastructure/prun-ui/refined-prun-css')['applyCssRule'];
   const computed: typeof import('vue')['computed'];
   const config: typeof import('@src/infrastructure/shell/config')['default'];
   const createApp: typeof import('vue')['createApp'];
@@ -100,6 +101,7 @@ declare module 'vue' {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>;
     readonly _$$: UnwrapRef<typeof import('@src/utils/select-dom')['_$$']>;
     readonly _$: UnwrapRef<typeof import('@src/utils/select-dom')['_$']>;
+    readonly applyCssRule: UnwrapRef<typeof import('@src/infrastructure/prun-ui/refined-prun-css')['applyCssRule']>;
     readonly computed: UnwrapRef<typeof import('vue')['computed']>;
     readonly config: UnwrapRef<typeof import('@src/infrastructure/shell/config')['default']>;
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>;

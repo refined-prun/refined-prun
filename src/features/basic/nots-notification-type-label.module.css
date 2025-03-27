@@ -1,6 +1,18 @@
 .label {
-  position: absolute;
   text-transform: uppercase;
   min-width: 65px;
   max-width: 65px;
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+
+  > span:nth-child(2) {
+    flex: 1 1 200px;
+  }
+}
+
+.time {
+  width: 100%
 }

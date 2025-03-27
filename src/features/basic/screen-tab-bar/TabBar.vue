@@ -35,9 +35,9 @@ function getScreen(id: string) {
   display: inline-flex;
   flex-wrap: wrap;
   overflow: hidden;
-}
 
-.container > * {
-  flex-shrink: 0;
+  > * {
+    flex-shrink: 0;
+  }
 }
 </style>

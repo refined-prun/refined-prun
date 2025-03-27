@@ -6,6 +6,11 @@ async function onTileReady(tile: PrunTile) {
     return;
   }
 
+  if (tile.command === 'HQ') {
+    // https://github.com/refined-prun/refined-prun/issues/68
+    return;
+  }
+
   const tileWindow = tile.frame.closest(`.${C.Window.window}`) as HTMLElement;
   tileWindow?.addEventListener('mousedown', () => {
     const command = UI_WINDOWS_REQUEST_FOCUS(tile.id);
