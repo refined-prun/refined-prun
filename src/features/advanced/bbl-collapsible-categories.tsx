@@ -1,9 +1,5 @@
 import css from '@src/utils/css-utils.module.css';
-import classes from './bbl-collapsible-categories.module.css';
-import {
-  applyScopedClassCssRule,
-  applyScopedCssRule,
-} from '@src/infrastructure/prun-ui/refined-prun-css';
+import $style from './bbl-collapsible-categories.module.css';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.SectionList.container), container => {
@@ -22,12 +18,12 @@ function onTileReady(tile: PrunTile) {
 }
 
 function init() {
-  applyScopedCssRule(
+  applyCssRule(
     'BBL',
     `.${C.SectionList.divider}:not(:has(.${C.RadioItem.active})) + div`,
     css.hidden,
   );
-  applyScopedClassCssRule('BBL', C.SectionList.divider, classes.divider);
+  applyCssRule('BBL', `.${C.SectionList.divider}`, $style.divider);
   tiles.observe('BBL', onTileReady);
 }
 

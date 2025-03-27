@@ -1,8 +1,7 @@
 import css from '@src/utils/css-utils.module.css';
-import classes from './sidebar-contracts-details.module.css';
+import $style from './sidebar-contracts-details.module.css';
 import ContractPartnerName from './ContractPartnerName.vue';
 import { refTextContent } from '@src/utils/reactive-dom';
-import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 function onContractIdReady(id: HTMLElement) {
@@ -17,8 +16,7 @@ function onContractIdReady(id: HTMLElement) {
 
 function init() {
   applyCssRule(`.${C.Sidebar.contract} .${C.Link.link}`, css.hidden);
-  applyCssRule(`.${C.Sidebar.contractId}`, classes.contractId);
-  applyCssRule(`.${C.Sidebar.contractId}:hover`, `${classes.contractId}:hover`);
+  applyCssRule(`.${C.Sidebar.contractId}`, $style.contractId);
   subscribe($$(document, C.Sidebar.contractId), onContractIdReady);
 }
 

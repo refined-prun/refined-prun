@@ -1,8 +1,7 @@
 import css from '@src/utils/css-utils.module.css';
-import { applyScopedCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 
 function init() {
-  applyScopedCssRule(
+  applyCssRule(
     'BBL',
     `.${C.SectionList.section} .${C.SectionList.table} tr:nth-child(5)`,
     css.hidden,

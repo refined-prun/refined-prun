@@ -1,3 +1,29 @@
+## Unreleased
+
+### Fixed
+
+- `prodq-order-eta`: Fix eta missing in order slots that were initially empty
+- `table-rows-alternating-colors`: Fix a rendering issue in Firefox
+
+## 25.3.24
+
+### Added
+
+- `header-hide-controls-button`: (new) Adds buttons to hide and show context controls for tiles containing them
+- `lead-per-day-column`: (new) Adds a "Per Day" column to the "Commodity Production" leaderboard
+- `prodq-hide-government-links`: (new) Hides fee collector links
+- `prodq-order-eta`: (new) Adds a finish ETA label to orders
+- `prodq-shorten-material-links`: (new) Shortens material full names into their ticker with a link
+
+### Changed
+
+- `inv-compress-inventory-info`: Move feature to the basic feature set
+- `nots-notification-type-label`: Make notification layout more space-efficient in smaller buffer sizes
+
+### Fixed
+
+- `XIT CXTS`: Fix incorrect date display when there is a gap between days
+
 ## 25.3.17
 
 ### Added
