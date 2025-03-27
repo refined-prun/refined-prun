@@ -9,7 +9,7 @@ function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.SectionList.section), section => {
     const id = refPrunId(section);
     const building = computed(() => site.value?.platforms.find(p => p.id == id.value));
-    return subscribe($$(tile.anchor, C.SectionList.button), buttons => {
+    subscribe($$(tile.anchor, C.SectionList.button), buttons => {
       const repair = buttons.children[0];
       if (!repair) {
         return;

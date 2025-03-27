@@ -1,4 +1,4 @@
-import classes from './nots-notification-type-label.module.css';
+import $style from './nots-notification-type-label.module.css';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { alertsStore } from '@src/infrastructure/prun-api/data/alerts';
 import { waitNotificationLoaded } from '@src/infrastructure/prun-ui/notifications';
@@ -21,15 +21,13 @@ async function processNotification(container: HTMLElement) {
     return;
   }
 
-  const textSpan = _$$(content, 'span')[0];
+  const textSpan = _$(content, 'span');
   if (!textSpan) {
     return;
   }
 
-  textSpan.style.display = 'block';
-  textSpan.style.marginLeft = '65px';
   createFragmentApp(() => (
-    <div class={classes.label} style={{ color: label.color }}>
+    <div class={$style.label} style={{ color: label.color }}>
       {label.label}
     </div>
   )).before(textSpan);
@@ -170,6 +168,9 @@ const labels: NotificationTypeLabel[] = [
 const labelMap = new Map(labels.flatMap(x => x.types.map(y => [y, x])));
 
 function init() {
+  applyCssRule('NOTS', `.${C.AlertListItem.content}`, $style.content);
+  applyCssRule('NOTS', `.${C.AlertListItem.time}`, $style.time);
+
   tiles.observe('NOTS', onTileReady);
 }
 

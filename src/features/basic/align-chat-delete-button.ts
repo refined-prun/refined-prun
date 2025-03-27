@@ -1,12 +1,11 @@
-import classes from './align-chat-delete-button.module.css';
-import { applyClassCssRule, applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
+import $style from './align-chat-delete-button.module.css';
 
 function init() {
-  applyClassCssRule(C.Message.controlsAndText, classes.container);
-  applyClassCssRule(C.Message.controls, classes.delete);
+  applyCssRule(`.${C.Message.controlsAndText}`, $style.container);
+  applyCssRule(`.${C.Message.controls}`, $style.delete);
   applyCssRule(
     `.${C.Message.message}:has(.${C.Message.controlsAndText} .${C.Message.controls}) .${C.Sender.name}`,
-    classes.username,
+    $style.username,
   );
 }
 
