@@ -63,11 +63,14 @@ function init() {
   // Adds text centering to GridItemView name.
   applyCssRule(`.${C.GridItemView.name}`, $style.gridItemName);
 
-  // The overlay stops materials from being clickable
+  // The overlay stops materials from being clickable.
   applyCssRule(['PROD', 'PRODQ'], `.${C.OrderTile.overlay}`, $style.disablePointerEvents);
 
-  // Prevent PROD buffer vertical scroll bar gutter from being always visible
+  // Prevent PROD buffer vertical scroll bar gutter from being always visible.
   applyCssRule('PROD', `.${C.SiteProductionLines.container}`, $style.containerScrollbarGutter);
+
+  // User search results box in GIFT is too big to fit in the tile.
+  applyCssRule('GIFT', `.${C.UserSelector.suggestionsContainer}`, $style.giftSearchResults);
 }
 
 features.add(import.meta.url, init, 'Fixes PrUn bugs.');

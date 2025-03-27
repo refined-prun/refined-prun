@@ -30,3 +30,7 @@
 .containerScrollbarGutter {
   scrollbar-gutter: auto;
 }
+
+.giftSearchResults {
+  max-height: 190px;
+}

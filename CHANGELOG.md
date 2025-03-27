@@ -8,6 +8,7 @@
 ### Fixed
 
 - `prodq-order-eta`: Fix eta missing in order slots that were initially empty
+- `prun-bugs`: Fix user search results box being too big for the tile
 - `table-rows-alternating-colors`: Fix a rendering issue in Firefox
 
 ## 25.3.24
