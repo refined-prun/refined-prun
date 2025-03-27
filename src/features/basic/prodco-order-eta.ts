@@ -14,9 +14,7 @@ function onTileReady(tile: PrunTile) {
       // The ProductionLine.template element is re-created each time
       // a new template in the drop-down box is selected.
       const templateElement = _$(dropDownItem, C.ProductionLine.template);
-      if (templateElement) {
-        template.value = parseTemplate(line.value, templateElement);
-      }
+      template.value = parseTemplate(line.value, templateElement);
     });
 
     const orderSizeField = form.children[6];
@@ -36,7 +34,10 @@ function onTileReady(tile: PrunTile) {
   });
 }
 
-function parseTemplate(line: PrunApi.ProductionLine, templateElement: HTMLElement) {
+function parseTemplate(line: PrunApi.ProductionLine, templateElement: HTMLElement | undefined) {
+  if (!templateElement) {
+    return undefined;
+  }
   const inputs: [string, number][] = [];
   const outputs: [string, number][] = [];
   // The structure of the template element looks like this:
