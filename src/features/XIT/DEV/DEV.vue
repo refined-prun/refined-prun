@@ -17,16 +17,19 @@ function switchPrunDebug() {
 }
 
 function downloadCssDefinition() {
-  let definition = `export interface CssClasses {\n`;
+  let definition = `export {};\n`;
+  definition += `declare global {\n`;
+  definition += `  interface PrunCssClasses {\n`;
   for (const key of Object.keys(C)) {
-    definition += `  ${key}: {\n`;
+    definition += `    ${key}: {\n`;
     for (const childKey of Object.keys(C[key])) {
-      definition += `    ${childKey}: string;\n`;
+      definition += `      ${childKey}: string;\n`;
     }
-    definition += `  };\n`;
+    definition += `    };\n`;
   }
+  definition += '  }\n';
   definition += '}\n';
-  downloadFile(definition, 'prun-css-types.ts', false);
+  downloadFile(definition, 'prun-css.types.d.ts', false);
 }
 
 function downloadPrunStyles() {
@@ -40,7 +43,7 @@ function downloadPrunStyles() {
       {{ prunDebug ? 'Disable' : 'Enable' }} pu-debug
     </DebugButton>
     <DebugButton @click="logUserData">Log User Data</DebugButton>
-    <DebugButton @click="downloadCssDefinition">Export prun-css-types.ts</DebugButton>
+    <DebugButton @click="downloadCssDefinition">Export prun-css.types.d.ts</DebugButton>
     <DebugButton @click="downloadPrunStyles">Export prun.css</DebugButton>
   </div>
 </template>

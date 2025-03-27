@@ -1,8 +1,7 @@
-import { CssClasses } from '@src/infrastructure/prun-ui/prun-css-types';
 import { registerClassName } from '@src/utils/select-dom';
 import { isEmpty } from 'ts-extras';
 
-export const C = {} as CssClasses;
+export const C = {} as PrunCssClasses;
 export let mergedPrunStyles = '';
 
 export function loadPrunCss() {
