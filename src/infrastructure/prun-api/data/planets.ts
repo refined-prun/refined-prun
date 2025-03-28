@@ -3,26 +3,22 @@ import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 import { isEmpty } from 'ts-extras';
 
-interface ShortPlanet {
-  naturalId: string;
-  name: string;
-}
-
-const store = createEntityStore<ShortPlanet>(x => x.naturalId.toLowerCase(), {
+const store = createEntityStore<PrunApi.Planet>(x => x.naturalId.toLowerCase(), {
   preserveOnOpen: true,
 });
 const state = store.state;
 
 onApiMessage({
-  FIO_PLANET_DATA(data: { planets: ShortPlanet[] }) {
+  FIO_PLANET_DATA(data: { planets: PrunApi.Planet[] }) {
     store.setAll(data.planets);
     store.setFetched();
   },
 
-  DATA_DATA(data: { body: Arrayable<PrunApi.Planet>; path: string[] }) {
-    if (isEmpty(data.path) || data.path[0] !== 'planets') {
+  DATA_DATA(data: { body: PrunApi.Planet; path: string[] }) {
+    if (isEmpty(data.path) || data.path[0] !== 'planets' || data.path[2]) {
       return;
     }
+    console.log(data.body);
     store.setOne(data.body);
     store.setFetched();
   },
