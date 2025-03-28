@@ -13,9 +13,9 @@ function onTileReady(tile: PrunTile) {
     userData.systemMessages.find(x => x.chat.toUpperCase() === tile.fullCommand.toUpperCase()),
   );
   const hideFilterBar = computed(() => state.value?.hideFilterBar ?? false);
-  const hideJoined = computed(() => state.value?.hideJoined ?? true);
-  const hideDeleted = computed(() => state.value?.hideDeleted ?? true);
-  const hideTimestamp = computed(() => state.value?.hideTimestamp ?? true);
+  const hideJoined = computed(() => state.value?.hideJoined ?? false);
+  const hideDeleted = computed(() => state.value?.hideDeleted ?? false);
+  const hideTimestamp = computed(() => state.value?.hideTimestamp ?? false);
 
   function setState(set: (state: UserData.SystemMessages) => void) {
     let newState = state.value;
@@ -23,17 +23,17 @@ function onTileReady(tile: PrunTile) {
       newState = {
         chat: tile.fullCommand,
         hideFilterBar: false,
-        hideJoined: true,
-        hideDeleted: true,
-        hideTimestamp: true,
+        hideJoined: false,
+        hideDeleted: false,
+        hideTimestamp: false,
       };
     }
     set(newState);
     const shouldSave =
       newState.hideFilterBar ||
-      !newState.hideJoined ||
-      !newState.hideDeleted ||
-      !newState.hideTimestamp;
+      newState.hideJoined ||
+      newState.hideDeleted ||
+      newState.hideTimestamp;
     if (shouldSave && !state.value) {
       userData.systemMessages.push(newState);
     }
@@ -103,9 +103,9 @@ function onTileReady(tile: PrunTile) {
 
   subscribe($$(tile.anchor, C.MessageList.messages), messages => {
     watchEffectWhileNodeAlive(messages, () => {
-      messages.classList.toggle($style.hideJoined, hideJoined.value ?? false);
-      messages.classList.toggle($style.hideDeleted, hideDeleted.value ?? false);
-      messages.classList.toggle($style.hideTimestamp, hideTimestamp.value ?? false);
+      messages.classList.toggle($style.hideJoined, hideJoined.value);
+      messages.classList.toggle($style.hideDeleted, hideDeleted.value);
+      messages.classList.toggle($style.hideTimestamp, hideTimestamp.value);
     });
     subscribe($$(messages, C.Message.message), processMessage);
   });
