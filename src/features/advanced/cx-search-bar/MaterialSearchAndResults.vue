@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import TextInput from '@src/components/forms/TextInput.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import RadioItem from '@src/components/forms/RadioItem.vue';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import css from '@src/utils/css-utils.module.css';
 import onNodeDisconnected from '@src/utils/on-node-disconnected';
 import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
+import fa from '@src/utils/font-awesome.module.css';
+import PrunButton from '@src/components/PrunButton.vue';
 
 const $style = useCssModule();
 
@@ -14,9 +15,6 @@ const { comExPanel } = defineProps<{
 }>();
 
 const searchText = ref('');
-let collapseText = searchText.value;
-const collapseOthers = ref(false);
-let collapseSearch = false;
 
 const select = _$(comExPanel, 'select')!;
 const selectValue = ref('');
@@ -59,44 +57,23 @@ subscribe($$(comExPanel, 'tbody'), () => {
   loadRowElements();
 });
 
-watchEffectWhileNodeAlive(comExPanel, () => {
-  const collapseOthersWithoutText = collapseOthers.value && collapseText.length !== 0;
-  for (const option of optionElements.values()) {
-    option.classList.toggle(
-      css.hidden,
-      !option.classList.contains($style.matchingCategory) && collapseOthersWithoutText,
-    );
-  }
-  for (const row of rowElements.values()) {
-    if (row.isConnected) {
-      row.classList.toggle(
-        css.hidden,
-        !row.classList.contains($style.matchingRow) && collapseOthersWithoutText,
-      );
-    }
-  }
-  collapseSearch = collapseOthers.value;
-});
-
-const resetElement = (value: HTMLElement) => {
+const resetMatches = (value: HTMLElement) => {
   if (value.isConnected) {
-    value.classList.remove($style.matchingCategory, $style.matchingRow);
-    value.classList.toggle(css.hidden, collapseSearch && collapseText.length !== 0);
+    value.classList.toggle(css.hidden, searchText.value.length !== 0);
   }
 };
 
 // Main search loop.
 watchEffectWhileNodeAlive(comExPanel, () => {
   const searchTerm = searchText.value.toUpperCase();
-  collapseText = searchTerm;
 
   if (rowElements.size === 0) {
     loadRowElements();
     return;
   }
 
-  optionElements.forEach(resetElement);
-  rowElements.forEach(resetElement);
+  optionElements.forEach(resetMatches);
+  rowElements.forEach(resetMatches);
 
   if (searchTerm.length > 0) {
     for (const material of materialsStore.all.value!) {
@@ -106,12 +83,10 @@ watchEffectWhileNodeAlive(comExPanel, () => {
       ) {
         const optionElement = optionElements.get(material.category);
         if (optionElement) {
-          optionElement.classList.add($style.matchingCategory);
           optionElement.classList.remove(css.hidden);
         }
         const rowElement = rowElements.get(material.ticker);
         if (rowElement && rowElement.isConnected) {
-          rowElement.classList.add($style.matchingRow);
           rowElement.classList.remove(css.hidden);
         }
       }
@@ -124,7 +99,9 @@ watchEffectWhileNodeAlive(comExPanel, () => {
   <div :class="[C.ActionBar.element, $style.textInputElement]">
     Search:
     <TextInput v-model="searchText" />
-    <RadioItem v-model="collapseOthers">Results Only</RadioItem>
+    <PrunButton :class="$style.button" dark @click="searchText = ''">
+      <i :class="fa.solid">{{ '\uf00d' }} </i>
+    </PrunButton>
   </div>
 </template>
 
@@ -134,11 +111,13 @@ watchEffectWhileNodeAlive(comExPanel, () => {
   align-items: center;
 }
 
-.matchingRow::after {
-  background-color: rgba(92, 184, 92, 0.175) !important;
-}
-
-.matchingCategory {
-  background-color: rgba(92, 184, 92, 0.175);
+.button {
+  width: 18px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 11px;
+  margin-left: 2px;
+  height: 18px;
 }
 </style>
