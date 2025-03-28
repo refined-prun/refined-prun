@@ -1,0 +1,17 @@
+.progressBarTooltips {
+  &[data-tooltip] {
+    padding:0
+  }
+  &[data-tooltip]::before {
+    padding: 2px;  
+  }
+  &[data-tooltip-position="right"]::before {
+    left:55%;
+  }
+  &[data-tooltip-position="right"]::after {
+    border-left-color: transparent;
+  }
+  &[data-tooltip-position="left"]::after {
+    border-left-color: transparent;
+  }
+}
