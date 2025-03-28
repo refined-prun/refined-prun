@@ -42,6 +42,7 @@ export function streamElementsByClassNameOrTag<
 
 const tagNames = new Set<string>([
   'div',
+  'input',
   'span',
   'table',
   'thead',
