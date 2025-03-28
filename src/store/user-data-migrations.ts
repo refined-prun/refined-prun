@@ -5,6 +5,9 @@ import { getInvStore } from '@src/core/store-id';
 
 const migrations: Migration[] = [
   userData => {
+    userData.settings.contextMenuExchange = 'AI1' as UserData.Exchange;
+  },
+  userData => {
     removeArrayElement(userData.settings.disabled, 'contd-fill-condition-address');
   },
   userData => {
