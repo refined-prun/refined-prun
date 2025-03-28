@@ -1,15 +1,18 @@
-import $style from './hide-system-chat-messages.module.css';
+import $style from './chat-filters.module.css';
 import css from '@src/utils/css-utils.module.css';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
-import SelectButton from '@src/features/advanced/hide-system-chat-messages/SelectButton.vue';
+import SelectButton from '@src/features/advanced/chat-filters/SelectButton.vue';
 import { userData } from '@src/store/user-data';
 import removeArrayElement from '@src/utils/remove-array-element';
+import TileControlsButton from '@src/components/TileControlsButton.vue';
+import fa from '@src/utils/font-awesome.module.css';
 
 function onTileReady(tile: PrunTile) {
   const state = computed(() =>
     userData.systemMessages.find(x => x.chat.toUpperCase() === tile.fullCommand.toUpperCase()),
   );
+  const hideFilterBar = computed(() => state.value?.hideFilterBar ?? false);
   const hideJoined = computed(() => state.value?.hideJoined ?? true);
   const hideDeleted = computed(() => state.value?.hideDeleted ?? true);
   const hideTimestamp = computed(() => state.value?.hideTimestamp ?? true);
@@ -19,13 +22,18 @@ function onTileReady(tile: PrunTile) {
     if (!newState) {
       newState = {
         chat: tile.fullCommand,
+        hideFilterBar: false,
         hideJoined: true,
         hideDeleted: true,
         hideTimestamp: true,
       };
     }
     set(newState);
-    const shouldSave = !newState.hideJoined || !newState.hideDeleted || !newState.hideTimestamp;
+    const shouldSave =
+      newState.hideFilterBar ||
+      !newState.hideJoined ||
+      !newState.hideDeleted ||
+      !newState.hideTimestamp;
     if (shouldSave && !state.value) {
       userData.systemMessages.push(newState);
     }
@@ -38,7 +46,7 @@ function onTileReady(tile: PrunTile) {
     createFragmentApp(
       SelectButton,
       reactive({
-        label: 'hide joined',
+        label: 'joined',
         selected: hideJoined,
         set: (value: boolean) => setState(state => (state.hideJoined = value)),
       }),
@@ -46,7 +54,7 @@ function onTileReady(tile: PrunTile) {
     createFragmentApp(
       SelectButton,
       reactive({
-        label: 'hide deleted',
+        label: 'deleted',
         selected: hideDeleted,
         set: (value: boolean) => setState(state => (state.hideDeleted = value)),
       }),
@@ -54,11 +62,43 @@ function onTileReady(tile: PrunTile) {
     createFragmentApp(
       SelectButton,
       reactive({
-        label: 'hide timestamps',
+        label: 'timestamps',
         selected: hideTimestamp,
         set: (value: boolean) => setState(state => (state.hideTimestamp = value)),
       }),
     ).appendTo(controls);
+
+    const channelControls = _$(tile.frame, C.Channel.controls);
+    watchEffect(() => {
+      channelControls?.classList.toggle(css.hidden, hideFilterBar.value);
+    });
+
+    createFragmentApp(() => (
+      <>
+        <div style={{ flexGrow: '1' }} />
+        <div
+          class={[
+            $style.channelControlsHideButton,
+            C.ContextControls.item,
+            C.fonts.fontRegular,
+            C.type.typeSmall,
+          ]}
+          onClick={() => setState(state => (state.hideFilterBar = true))}>
+          <i class={[fa.solid]}>{'\uf00d'}</i>
+        </div>
+      </>
+    )).appendTo(controls);
+
+    const tileControls = _$(tile.frame, C.TileFrame.controls)!;
+    createFragmentApp(() =>
+      hideFilterBar.value ? (
+        <TileControlsButton
+          icon={'\uf0b0'}
+          marginTop={4}
+          onClick={() => setState(state => (state.hideFilterBar = false))}
+        />
+      ) : null,
+    ).before(tileControls.children[0]);
   });
 
   subscribe($$(tile.anchor, C.MessageList.messages), messages => {
