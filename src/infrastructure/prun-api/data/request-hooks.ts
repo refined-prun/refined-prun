@@ -6,6 +6,7 @@ interface RequestHooks {
   blueprints(): void;
   shipyards(): void;
   shipyardProjects(): void;
+  planet(naturalId?: string | null): void;
 }
 
 let hooks: RequestHooks | undefined = undefined;
@@ -35,6 +36,9 @@ export const request = {
   },
   shipyardProjects(): void {
     getHooks().shipyardProjects();
+  },
+  planet(naturalId?: string | null): void {
+    getHooks().planet(naturalId);
   },
 };
 

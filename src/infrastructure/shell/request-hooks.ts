@@ -8,6 +8,7 @@ import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
 import { blueprintsStore } from '@src/infrastructure/prun-api/data/blueprints';
 import { shipyardsStore } from '@src/infrastructure/prun-api/data/shipyards';
 import { shipyardProjectsStore } from '@src/infrastructure/prun-api/data/shipyard-projects';
+import { planetsStore } from '../prun-api/data/planets';
 
 const bs: Set<string> = new Set();
 
@@ -56,4 +57,9 @@ implementRequestHooks({
   blueprints: singleBufferRequest('BLU', () => blueprintsStore.fetched.value),
   shipyards: singleBufferRequest('SHY', () => shipyardsStore.fetched.value),
   shipyardProjects: singleBufferRequest('SHYP', () => shipyardProjectsStore.fetched.value),
+  planet: naturalId =>
+    singleBufferRequest(
+      `BSC ${naturalId}`,
+      () => planetsStore.getByNaturalId(naturalId)?.id !== undefined,
+    )(),
 });
