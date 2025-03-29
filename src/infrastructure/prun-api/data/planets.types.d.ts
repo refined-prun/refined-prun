@@ -47,22 +47,10 @@ declare namespace PrunApi {
   }
 
   interface PlanetProductionFee {
-    category: PlanetWorkforceCategory;
+    category: ExpertiseCategory;
     fee: Cost;
-    workforceLevel: PlanetWorkforceLevel;
+    workforceLevel: WorkforceLevel;
   }
-
-  type PlanetWorkforceCategory =
-    | 'AGRICULTURE'
-    | 'CHEMISTRY'
-    | 'CONSTRUCTION'
-    | 'ELECTRONICS'
-    | 'FOOD_INDUSTRIES'
-    | 'FUEL_REFINING'
-    | 'MANUFACTURING'
-    | 'METALLURGY'
-    | 'RESOURCE_EXTRACTION';
-  type PlanetWorkforceLevel = 'PIONEER' | 'SETTLER' | 'TECHNICIAN' | 'ENGINEER' | 'SCIENTIST';
 
   interface PlanetMarketFee {
     base: number;
