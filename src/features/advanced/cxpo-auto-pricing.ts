@@ -137,8 +137,8 @@ function onTileReady(tile: PrunTile) {
         quantityNeeded,
       );
 
-      priceBuy.value = `${fixed02(buyPriceLimit)}`;
-      priceSell.value = `${fixed02(sellPriceLimit)}`;
+      priceBuy.value = `${buyPriceLimit}`;
+      priceSell.value = `${sellPriceLimit}`;
 
       featureEffectivePriceLabels.buyValue.value = buyEffectivePrice;
       featureEffectivePriceLabels.sellValue.value = sellEffectivePrice;
@@ -172,8 +172,6 @@ function createDualLabels(container: HTMLElement, currencyUnit: string) {
 
 function getInfoFromOrderType(orders: PrunApi.CXBrokerOrder[], quantityNeeded: number) {
   let quantityCounted = 0;
-  let priceLimit = 0;
-  let effectivePrice = 0;
   let volumeAccum = 0;
   for (let i = 0; i < orders.length; i++) {
     const offerAmt = orders[i].amount;
@@ -182,10 +180,8 @@ function getInfoFromOrderType(orders: PrunApi.CXBrokerOrder[], quantityNeeded: n
     }
     const offerPrice = orders[i].limit!.amount;
     if (offerAmt >= quantityNeeded - quantityCounted) {
-      priceLimit = offerPrice;
       volumeAccum += (quantityNeeded - quantityCounted) * offerPrice;
-      effectivePrice = volumeAccum / quantityNeeded;
-      return [priceLimit, effectivePrice, volumeAccum];
+      return [offerPrice, volumeAccum / quantityNeeded, volumeAccum];
     }
     quantityCounted += offerAmt;
     volumeAccum += offerAmt * offerPrice;
