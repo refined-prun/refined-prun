@@ -9,12 +9,12 @@ import PrunButton from '@src/components/PrunButton.vue';
 import fa from '@src/utils/font-awesome.module.css';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, C.ComExPanel.input), comExPanel => {
-    const actionBar = _$(comExPanel, C.ActionBar.container)!;
+  subscribe($$(tile.anchor, C.ComExPanel.input), async comExPanel => {
+    const actionBar = await $(comExPanel, C.ActionBar.container)!;
 
     const searchText = ref('');
 
-    const select = _$(comExPanel, 'select')!;
+    const select = await $(comExPanel, 'select')!;
     const selectValue = ref('');
     select.addEventListener('change', () => {
       selectValue.value = select.value;
@@ -25,21 +25,18 @@ function onTileReady(tile: PrunTile) {
     const rowElements: TickerToElement = new Map();
 
     if (optionElements.size === 0) {
-      const options = _$$(comExPanel, 'option')!;
+      const options = _$$(comExPanel, 'option');
       for (const option of options) {
         optionElements.set(option.getAttribute('value')!, option);
       }
     }
 
-    function loadRowElements() {
-      const currentTBody = _$(comExPanel, 'tbody');
-      if (!currentTBody) {
-        return;
-      }
+    async function loadRowElements() {
+      const currentTBody = await $(comExPanel, 'tbody');
       const rows = _$$(currentTBody, 'tr');
       for (const row of rows) {
-        const labelText = _$(row, C.ColoredIcon.label)!.innerText;
-        rowElements.set(labelText, row);
+        const labelText = await $(row, C.ColoredIcon.label);
+        rowElements.set(labelText.innerText, row);
       }
       triggerRef(searchText);
     }
