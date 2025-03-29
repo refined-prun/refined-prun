@@ -2,13 +2,14 @@ import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
 import { changeInputValue } from '@src/util';
 import { fixed02 } from '@src/utils/format';
 import { refAttributeValue } from '@src/utils/reactive-dom';
-import { createReactiveSpan } from '@src/utils/reactive-element';
+import { createReactiveDiv } from '@src/utils/reactive-element';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.ComExPlaceOrderForm.form), async form => {
     const quantityInput = await $(form.children[7], 'input');
     const quantityValue = refAttributeValue(quantityInput, 'value');
+
     const priceInput = await $(form.children[8], 'input');
     const priceInputValue = refAttributeValue(priceInput, 'value');
 
@@ -36,14 +37,14 @@ function onTileReady(tile: PrunTile) {
     const currencyCode = orderInfo.value?.currency.code ?? '';
 
     const effectivePriceLabel = await $(form.children[9], C.StaticInput.static);
-    const featureEffectivePriceLabels = createDualLabels(
-      form.children[10],
-      effectivePriceLabel,
-      currencyCode,
-    );
+    effectivePriceLabel.style.display = 'none';
+    const effectivePriceLabelParent = effectivePriceLabel.parentElement!;
+    const featureEffectivePriceLabels = createDualLabels(effectivePriceLabelParent, currencyCode);
 
     const volumeLabel = await $(form.children[10], C.StaticInput.static);
-    const featureVolumeLabels = createDualLabels(form.children[10], volumeLabel, currencyCode);
+    volumeLabel.style.display = 'none';
+    const volumeLabelParent = volumeLabel.parentElement!;
+    const featureVolumeLabels = createDualLabels(volumeLabelParent, currencyCode);
 
     const buttonsField = form.children[12];
     const buy = await $(buttonsField, C.Button.success);
@@ -97,6 +98,8 @@ function onTileReady(tile: PrunTile) {
 
     watchEffectWhileNodeAlive(form, () => {
       if (priceInputValue.value !== '') {
+        effectivePriceLabel.style.display = '';
+        volumeLabel.style.display = '';
         featureEffectivePriceLabels.showBuy.value = false;
         featureEffectivePriceLabels.showSell.value = false;
         featureVolumeLabels.showBuy.value = false;
@@ -111,6 +114,8 @@ function onTileReady(tile: PrunTile) {
         return;
       }
 
+      effectivePriceLabel.style.display = 'none';
+      volumeLabel.style.display = 'none';
       featureEffectivePriceLabels.showBuy.value = true;
       featureEffectivePriceLabels.showSell.value = true;
       featureVolumeLabels.showBuy.value = true;
@@ -143,7 +148,7 @@ function onTileReady(tile: PrunTile) {
   });
 }
 
-function createDualLabels(element: Element, container: HTMLElement, currencyUnit: string) {
+function createDualLabels(container: HTMLElement, currencyUnit: string) {
   const [buyValue, sellValue] = [ref(0), ref(0)];
   const [showBuy, showSell] = [ref(true), ref(true)];
   const divText = computed(() => {
@@ -158,7 +163,8 @@ function createDualLabels(element: Element, container: HTMLElement, currencyUnit
     }
     return 'Error';
   });
-  const div = createReactiveSpan(element, divText);
+  const div = createReactiveDiv(container, divText);
+  div.classList.add(...[C.StaticInput.static, C.forms.static]);
   container.prepend(div);
 
   return { buyValue: buyValue, sellValue: sellValue, showBuy: showBuy, showSell: showSell };
