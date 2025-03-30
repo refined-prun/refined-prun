@@ -7,6 +7,7 @@ import './cogcpex-clean-labels';
 import './context-controls-no-hover';
 import './cxos-hide-exchange';
 import './cxpo-shorten-fields';
+import './exp-expert-eta';
 import './finla-hide-ecd';
 import './flt-flight-status-icons';
 import './flt-hide-transponder';
