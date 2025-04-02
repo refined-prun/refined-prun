@@ -42,28 +42,23 @@ function onTileReady(tile: PrunTile) {
         for (const row of allRows) {
           // Calculate the column index from the end of the array.
           // The first row has a <th> with colspan=2 that messes it up otherwise.
-          const indexFromEnd = wfTypes.length - j;
-          row.children[row.children.length - indexFromEnd].classList.toggle(
-            css.hidden,
-            !wfShown[wfShown.length - indexFromEnd].value,
-          );
+          const columnIndex = row.children.length - (wfTypes.length - j);
+          row.children[columnIndex].classList.toggle(css.hidden, !wfShown[j].value);
         }
       }
     }
     setRowColumnsStyle();
 
-    for (let i = 0; i <= 4; i++) {
+    for (let i = 0; i < wfTypes.length; i++) {
       createFragmentApp(() => (
-        <>
-          <SelectButton
-            label={`${wfTypes[i]}`}
-            selected={wfShown[i].value}
-            set={(value: boolean) => {
-              wfShown[i].value = value;
-              setRowColumnsStyle();
-            }}
-          />
-        </>
+        <SelectButton
+          label={`${wfTypes[i]}`}
+          selected={wfShown[i].value}
+          set={(value: boolean) => {
+            wfShown[i].value = value;
+            setRowColumnsStyle();
+          }}
+        />
       )).appendTo(toggleWorkforces);
     }
   });
