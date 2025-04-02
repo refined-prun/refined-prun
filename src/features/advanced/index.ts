@@ -16,6 +16,7 @@ import './hide-ctx-name';
 import './hide-form-errors';
 import './hide-item-names';
 import './hide-system-chat-messages/hide-system-chat-messages';
+import './hide-unused-workforce';
 import './hide-weight-volume-labels';
 import './inv-shorten-addresses';
 import './inv-shorten-storage-types';
