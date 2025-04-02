@@ -13,12 +13,13 @@ function onTileReady(tile: PrunTile) {
 
     const materialBody = table.children[2];
     const materialRows = _$$(materialBody, 'tr');
-    const wfConsumables: HTMLElement[][] = [[], [], [], [], []];
     const headerBody = await $(table, C.Workforces.stats);
     const wfRequiredValues = _$$(headerBody, C.Workforces.requiredValue);
-    const wfShown = [ref(false), ref(false), ref(false), ref(false), ref(false)];
+    const wfConsumables: HTMLElement[][] = Array.from({ length: wfTypes.length }, () => []);
+    const wfShown = Array.from({ length: wfTypes.length }, () => ref(false));
     for (let i = 0; i < wfTypes.length; i++) {
       for (let j = 0; j < materialRows.length; j++) {
+        // Column index 6 is the first workforce type column, followed by subsequent types.
         if (materialRows[j].children[6 + i].children.length !== 0) {
           wfConsumables[i].push(materialRows[j]);
         }
@@ -39,19 +40,19 @@ function onTileReady(tile: PrunTile) {
           }
         }
         for (const row of allRows) {
-          row.children[row.children.length - Math.abs(wfTypes.length - 1 - j) - 1].classList.toggle(
+          // Calculate the column index from the end of the array.
+          // The first row has a <th> with colspan=2 that messes it up otherwise.
+          const indexFromEnd = wfTypes.length - j;
+          row.children[row.children.length - indexFromEnd].classList.toggle(
             css.hidden,
-            !wfShown[wfShown.length - Math.abs(wfTypes.length - 1 - j) - 1].value,
+            !wfShown[wfShown.length - indexFromEnd].value,
           );
         }
       }
     }
+    setRowColumnsStyle();
 
     for (let i = 0; i <= 4; i++) {
-      if (wfShown[i].value) {
-        setRowColumnsStyle();
-      }
-
       createFragmentApp(() => (
         <>
           <SelectButton
@@ -60,7 +61,8 @@ function onTileReady(tile: PrunTile) {
             set={(value: boolean) => {
               wfShown[i].value = value;
               setRowColumnsStyle();
-            }}></SelectButton>
+            }}
+          />
         </>
       )).appendTo(toggleWorkforces);
     }
