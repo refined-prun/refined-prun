@@ -2,7 +2,7 @@ import $style from './hide-system-chat-messages.module.css';
 import css from '@src/utils/css-utils.module.css';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
-import SelectButton from '@src/features/advanced/hide-system-chat-messages/SelectButton.vue';
+import SelectButton from '@src/components/refined-prun/SelectButton.vue';
 import { userData } from '@src/store/user-data';
 import removeArrayElement from '@src/utils/remove-array-element';
 

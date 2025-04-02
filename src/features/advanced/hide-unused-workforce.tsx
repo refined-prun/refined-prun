@@ -1,6 +1,6 @@
 import css from '@src/utils/css-utils.module.css';
 import $style from './hide-unused-workforce.module.css';
-import SelectButton from './hide-system-chat-messages/SelectButton.vue';
+import SelectButton from '@src/components/refined-prun/SelectButton.vue';
 
 const wfTypes = ['Pioneers', 'Settlers', 'Technicians', 'Engineers', 'Scientists'];
 
