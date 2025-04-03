@@ -1,7 +1,5 @@
-import Tooltip from '@src/components/Tooltip.vue';
 import { expertsStore } from '@src/infrastructure/prun-api/data/experts';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
-import { request } from '@src/infrastructure/prun-api/data/request-hooks';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { timestampEachMinute } from '@src/utils/dayjs';
 import { formatEta } from '@src/utils/format';
@@ -27,16 +25,6 @@ function onTileReady(tile: PrunTile) {
   let index = 0;
   subscribe($$(tile.anchor, 'tr'), tr => {
     if (_$(tr, 'th')) {
-      createFragmentApp(() => (
-        <th>
-          Expert Eta
-          <Tooltip
-            style="float: revert; padding-top: 0;"
-            position="left"
-            tooltip="ETA will be exact if you will get a new expert with your current orders, and approximate if your current orders are not enough."
-          />
-        </th>
-      )).appendTo(tr);
       return;
     }
     onExpertRowReady(tr, index++, site.siteId);
@@ -49,7 +37,6 @@ function onExpertRowReady(row: HTMLTableRowElement, index: number, siteId: strin
     return experts?.experts.find(field => field.category === expertise[index]);
   });
 
-  request.production(siteId);
   const expertOrders = computed(() => {
     const production = productionStore.getBySiteId(siteId);
     // Combine all production orders from all lines that contribute to this expert field.
@@ -59,20 +46,7 @@ function onExpertRowReady(row: HTMLTableRowElement, index: number, siteId: strin
       ),
     );
     // Sort them by ascending completion time if ongoing, and by ascending creation time if queued.
-    return expertFieldLines
-      ?.flatMap(line => line.orders)
-      .sort((a, b) => {
-        if (!a.completion && !b.completion) {
-          return a.created.timestamp - b.created.timestamp;
-        }
-        if (!a.completion) {
-          return 1;
-        }
-        if (!b.completion) {
-          return -1;
-        }
-        return a.completion!.timestamp - b.completion!.timestamp;
-      });
+    return expertFieldLines?.flatMap(line => line.orders).sort(sortOrders);
   });
 
   const completion = computed(() => {
@@ -120,9 +94,9 @@ function onExpertRowReady(row: HTMLTableRowElement, index: number, siteId: strin
     } else if (completion.value[0] === -2) {
       return `${formatEta(timestampEachMinute.value, completion.value[1])}`;
     } else if (completion.value[0] === -3) {
-      return `After (${formatEta(timestampEachMinute.value, completion.value[1])}) and (${formatDuration(completion.value[2])}) more of orders`;
+      return `(${formatEta(timestampEachMinute.value, completion.value[1])}) + (${formatDuration(completion.value[2])}) more of orders`;
     }
-    return `DON'T LOOK! I'M A BUG!`;
+    return `Error`;
   });
 
   const div = createReactiveDiv(row, text);
@@ -131,6 +105,20 @@ function onExpertRowReady(row: HTMLTableRowElement, index: number, siteId: strin
   row.append(td);
 }
 
+function sortOrders(a: PrunApi.ProductionOrder, b: PrunApi.ProductionOrder) {
+  if (!a.completion && !b.completion) {
+    return a.created.timestamp - b.created.timestamp;
+  }
+  if (!a.completion) {
+    return 1;
+  }
+  if (!b.completion) {
+    return -1;
+  }
+  return a.completion!.timestamp - b.completion!.timestamp;
+}
+
+// Would have used Intl.DurationFormat but it doesn't exist in the typescript.
 function formatDuration(millis: number) {
   const seconds = Math.floor(millis / 1000);
   const minutes = Math.floor(seconds / 60);
