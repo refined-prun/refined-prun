@@ -25,6 +25,9 @@ function onTileReady(tile: PrunTile) {
   let index = 0;
   subscribe($$(tile.anchor, 'tr'), tr => {
     if (_$(tr, 'th')) {
+      const header = document.createElement('th');
+      header.textContent = 'Expert ETA';
+      tr.append(header);
       return;
     }
     onExpertRowReady(tr, index++, site.siteId);
@@ -92,14 +95,15 @@ function onExpertRowReady(row: HTMLTableRowElement, index: number, siteId: strin
     } else if (completion.value[0] === -1) {
       return 'Experts Maxed.';
     } else if (completion.value[0] === -2) {
-      return `${formatEta(timestampEachMinute.value, completion.value[1])}`;
+      return `(${formatEta(timestampEachMinute.value, completion.value[1])})`;
     } else if (completion.value[0] === -3) {
-      return `(${formatEta(timestampEachMinute.value, completion.value[1])}) + (${formatDuration(completion.value[2])}) more of orders`;
+      return `(${formatEta(timestampEachMinute.value, completion.value[1])}) +\n(${formatDuration(completion.value[2])}) needed`;
     }
     return `Error`;
   });
 
   const div = createReactiveDiv(row, text);
+  div.style.whiteSpace = 'pre-wrap';
   const td = document.createElement('td');
   td.append(div);
   row.append(td);
