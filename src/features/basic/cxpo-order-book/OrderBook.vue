@@ -4,7 +4,10 @@ import OrderRow from './OrderRow.vue';
 import { fixed2 } from '@src/utils/format';
 import { isEmpty } from 'ts-extras';
 
-const { ticker } = defineProps<{ ticker?: string }>();
+const { ticker, setinputs } = defineProps<{
+  ticker?: string;
+  setinputs: (quantity: string | undefined, priceLimit: string | undefined) => void;
+}>();
 
 const orderInfo = computed(() => cxobStore.getByTicker(ticker));
 
@@ -25,6 +28,32 @@ watchEffect(() => {
 
   orderBook.value.scrollTop = Math.max(offerBody.value.offsetHeight - 90, 0);
 });
+
+// Market maker index to prevent 'fill' button on Infinity orders, and 'set' button on anything past MM.
+const offerInfiniteIndex = computed(() => offers.value.findIndex(offer => !offer.amount));
+const requestInfiniteIndex = computed(() => {
+  const index = requests.value.findIndex(offer => !offer.amount);
+  return index === -1 ? Infinity : index;
+});
+
+function click(type: string, info: string | PrunApi.CXBrokerOrder) {
+  if (type === 'fill') {
+    const order = info as PrunApi.CXBrokerOrder;
+    const orders = offers.value.includes(order) ? offers.value.toReversed() : requests.value;
+    let quantity = 0;
+    for (const offer of orders) {
+      quantity += offer.amount!;
+      if (offer.id === order.id) {
+        setinputs(quantity.toString(), offer.limit.amount.toString());
+        return;
+      }
+    }
+    return undefined;
+  } else if (type === 'price') {
+    setinputs(undefined, info as string);
+  }
+  return undefined;
+}
 </script>
 
 <template>
@@ -41,7 +70,13 @@ watchEffect(() => {
           <th colSpan="2">Offers</th>
         </tr>
         <template v-if="!isEmpty(offers)">
-          <OrderRow v-for="order in offers" :key="order.id" :order="order" />
+          <OrderRow
+            v-for="(order, index) in offers"
+            :key="order.id"
+            :order="order"
+            :infinite-fill="index <= offerInfiniteIndex"
+            :infinite-set="index <= offerInfiniteIndex - 1"
+            :click="click" />
         </template>
         <tr v-else>
           <td :class="C.ComExOrderBookPanel.empty" colSpan="2">No offers.</td>
@@ -59,7 +94,14 @@ watchEffect(() => {
           <th colSpan="2">Requests</th>
         </tr>
         <template v-if="!isEmpty(requests)">
-          <OrderRow v-for="order in requests" :key="order.id" request :order="order" />
+          <OrderRow
+            v-for="(order, index) in requests"
+            :key="order.id"
+            request
+            :order="order"
+            :infinite-fill="index >= requestInfiniteIndex"
+            :infinite-set="index >= requestInfiniteIndex + 1"
+            :click="click" />
         </template>
         <tr v-else>
           <td :class="C.ComExOrderBookPanel.empty" colSpan="2">No requests.</td>

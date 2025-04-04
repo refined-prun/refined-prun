@@ -1,5 +1,6 @@
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import OrderBook from './OrderBook.vue';
+import { changeInputValue } from '@src/util';
 
 function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {
@@ -17,7 +18,19 @@ function onTileReady(tile: PrunTile) {
       span.setAttribute('data-tooltip-position', 'right');
     }
 
-    createFragmentApp(OrderBook, { ticker: tile.parameter }).appendTo(formParent);
+    const dynamicInputs = _$$(form, 'input');
+    function setInputs(quantity: string | undefined, priceLimit: string | undefined) {
+      if (quantity) {
+        changeInputValue(dynamicInputs[0], quantity);
+      }
+      if (priceLimit) {
+        changeInputValue(dynamicInputs[1], priceLimit);
+      }
+    }
+
+    createFragmentApp(OrderBook, { ticker: tile.parameter, setinputs: setInputs }).appendTo(
+      formParent,
+    );
   });
 }
 
