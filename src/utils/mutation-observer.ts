@@ -12,3 +12,12 @@ export function observeDescendantListChanged<T extends Node>(
   const observer = new MutationObserver(() => callback(target));
   observer.observe(target, { childList: true, subtree: true });
 }
+
+export function observeDescendantAttributeListChanged<T extends Node>(
+  target: T,
+  callback: (target: T) => void,
+) {
+  callback(target);
+  const observer = new MutationObserver(() => callback(target));
+  observer.observe(target, { childList: true, subtree: true, attributes: true });
+}

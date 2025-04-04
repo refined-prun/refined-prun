@@ -2,7 +2,7 @@ import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { formatEta } from '@src/utils/format';
 import { refAttributeValue } from '@src/utils/reactive-dom';
 import { createReactiveSpan } from '@src/utils/reactive-element';
-import { observeChildListChanged } from '@src/utils/mutation-observer';
+import { observeDescendantAttributeListChanged } from '@src/utils/mutation-observer';
 
 function onTileReady(tile: PrunTile) {
   const line = computed(() => productionStore.getById(tile.parameter)!);
@@ -10,7 +10,7 @@ function onTileReady(tile: PrunTile) {
     const template = ref<PrunApi.ProductionTemplate>();
     const templateField = form.children[5];
     const dropDownItem = _$(templateField, C.DropDownBox.currentItem)!;
-    observeChildListChanged(dropDownItem, () => {
+    observeDescendantAttributeListChanged(dropDownItem, () => {
       // The ProductionLine.template element is re-created each time
       // a new template in the drop-down box is selected.
       const templateElement = _$(dropDownItem, C.ProductionLine.template);
