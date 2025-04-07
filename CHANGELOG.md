@@ -11,6 +11,7 @@
 - `prun-bugs`: Fix user search results box being too big for the tile
 - `table-rows-alternating-colors`: Fix a rendering issue in Firefox
 - Fix stacking overlays (like in `XIT ACT`) not displaying correctly
+- Fix item color of consumable bundles in icons made by the extension
 
 ## 25.3.24
 
