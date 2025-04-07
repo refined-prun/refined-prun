@@ -5,6 +5,10 @@
 - `tile-controls-background`: (new) Adds a solid color background to the top-right tile controls
 - `prodco-order-eta`: (new) Adds a finish ETA label to orders
 
+### Changed
+
+- Change item sorting in the "consumable bundles" category to tier-based
+
 ### Fixed
 
 - `prodq-order-eta`: Fix eta missing in order slots that were initially empty
