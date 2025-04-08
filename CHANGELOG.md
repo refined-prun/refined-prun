@@ -7,6 +7,7 @@
 
 ### Changed
 
+- `item-icons`: Add an icon for consumable bundles category
 - Change item sorting in the "consumable bundles" category to tier-based
 
 ### Fixed
