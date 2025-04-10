@@ -7,6 +7,14 @@
 
 ### Changed
 
+- `XIT ACT`: Add ability to open missing tiles during package run
+- `XIT ACT`: Change configuration UI to form-based
+- `XIT ACT`: Add auto-fetching burn data for Resupply material groups
+- `XIT ACT`: Make UI layout more stable during package run
+- `XIT ACT`: Add a companion tile for package runs in a buffer
+- `XIT ACT`: Improve sorting in inventory selection dropdown
+- `XIT ACT`: Show additional context data in the log
+- `XIT ACT`: Add log auto-scrolling
 - `item-icons`: Add an icon for consumable bundles category
 - Change item sorting in the "consumable bundles" category to tier-based
 

@@ -71,7 +71,7 @@ function getActionDescription(action: UserData.ActionData) {
 }
 
 function onExecuteClick() {
-  showBuffer(`XIT ACTION_${pkg.global.name.replace(' ', '_')}`);
+  showBuffer(`XIT ACT_${pkg.global.name.replace(' ', '_')}`);
 }
 </script>
 

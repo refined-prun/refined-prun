@@ -29,8 +29,11 @@ const getById = (value?: string | null) => state.getById(value) ?? getByShortId(
 
 const getByAddressableId = createGroupMapGetter(state.all, x => x.addressableId);
 
+const getByName = createGroupMapGetter(state.all, x => x.name ?? '');
+
 export const storagesStore = {
   ...state,
   getById,
   getByAddressableId,
+  getByName,
 };

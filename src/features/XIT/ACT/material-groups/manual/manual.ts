@@ -1,6 +1,6 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import { fixed0 } from '@src/utils/format';
-import Manual from '@src/features/XIT/ACT/material-groups/Manual.vue';
+import Edit from '@src/features/XIT/ACT/material-groups/manual/Edit.vue';
 import { deepToRaw } from '@src/utils/deep-to-raw';
 
 act.addMaterialGroup({
@@ -15,9 +15,12 @@ act.addMaterialGroup({
       .map(ticker => `${fixed0(materials[ticker])} ${ticker}`)
       .join(', ');
   },
-  generateMaterialBill: group =>
-    group.materials
-      ? structuredClone(deepToRaw(group.materials))
-      : 'Missing materials in manual group',
-  editForm: Manual,
+  editComponent: Edit,
+  generateMaterialBill: async ({ data, log }) => {
+    if (!data.materials || Object.keys(data.materials).length == 0) {
+      log.error('Missing materials.');
+      return undefined;
+    }
+    return structuredClone(deepToRaw(data.materials));
+  },
 });

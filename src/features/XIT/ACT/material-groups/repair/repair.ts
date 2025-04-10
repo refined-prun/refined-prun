@@ -1,5 +1,5 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
-import Repair from '@src/features/XIT/ACT/material-groups/Repair.vue';
+import Edit from '@src/features/XIT/ACT/material-groups/repair/Edit.vue';
 import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { isRepairableBuilding } from '@src/core/buildings';
 
@@ -15,19 +15,23 @@ act.addMaterialGroup({
     const advanceDays = group.advanceDays || 0;
     return `Repair buildings on ${group.planet} ${daysPart} in ${advanceDays} day${advanceDays == 1 ? '' : 's'}`;
   },
-  generateMaterialBill: group => {
-    if (!group.planet) {
-      return 'Missing resupply planet';
+  editComponent: Edit,
+  generateMaterialBill: async ({ data, log }) => {
+    const planet = data.planet;
+    if (!planet) {
+      log.error('Missing resupply planet');
+      return undefined;
     }
 
-    const planetSite = sitesStore.getByPlanetNaturalIdOrName(group.planet);
-    if (!planetSite || !planetSite.platforms) {
-      return 'Missing data on repair planet';
+    const planetSite = sitesStore.getByPlanetNaturalIdOrName(planet);
+    if (!planetSite?.platforms) {
+      log.error('Missing data on repair planet');
+      return undefined;
     }
 
-    const days = typeof group.days === 'number' ? group.days : parseFloat(group.days!);
+    const days = typeof data.days === 'number' ? data.days : parseFloat(data.days!);
     let advanceDays =
-      typeof group.advanceDays === 'number' ? group.advanceDays : parseFloat(group.advanceDays!);
+      typeof data.advanceDays === 'number' ? data.advanceDays : parseFloat(data.advanceDays!);
     const threshold = isNaN(days) ? 0 : days;
     advanceDays = isNaN(advanceDays) ? 0 : advanceDays;
 
@@ -81,5 +85,4 @@ act.addMaterialGroup({
     }
     return parsedGroup;
   },
-  editForm: Repair,
 });

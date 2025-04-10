@@ -147,14 +147,21 @@ function observeAllTiles(observer: PrunTileObserver) {
   }
 }
 
-function findTiles(command: string) {
-  return activeTiles.filter(tile => tile.fullCommand === command);
+function findTiles(command: string, ignoreCase = false) {
+  return ignoreCase
+    ? activeTiles.filter(tile => tile.fullCommand.toUpperCase() === command.toUpperCase())
+    : activeTiles.filter(tile => tile.fullCommand === command);
+}
+
+function findByContainer(container?: HTMLElement | null) {
+  return activeTiles.filter(tile => tile.container === container);
 }
 
 const tiles = {
   observe: observeTiles,
   observeAll: observeAllTiles,
   find: findTiles,
+  findByContainer,
 };
 
 export default tiles;

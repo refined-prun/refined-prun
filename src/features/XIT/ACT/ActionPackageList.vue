@@ -18,7 +18,7 @@ function onCreateClick(ev: Event) {
         groups: [],
         actions: [],
       });
-      showBuffer('XIT ACTION GEN ' + name.split(' ').join('_'));
+      showBuffer('XIT ACT_EDIT_' + name.split(' ').join('_'));
     },
   });
 }
@@ -75,17 +75,17 @@ function paramName(pkg: UserData.ActionPackageData) {
     <tbody v-else>
       <tr v-for="pkg in userData.actionPackages" :key="objectId(pkg)">
         <td>
-          <PrunLink :command="`XIT ACTION ${paramName(pkg)}`">
+          <PrunLink :command="`XIT ACT_${paramName(pkg)}`">
             {{ friendlyName(pkg) }}
           </PrunLink>
         </td>
         <td>
-          <PrunButton primary @click="showBuffer(`XIT ACTION ${paramName(pkg)}`)">
+          <PrunButton primary @click="showBuffer(`XIT ACT_${paramName(pkg)}`)">
             EXECUTE
           </PrunButton>
         </td>
         <td>
-          <PrunButton primary @click="showBuffer(`XIT ACTION EDIT ${paramName(pkg)}`)">
+          <PrunButton primary @click="showBuffer(`XIT ACT_EDIT_${paramName(pkg)}`)">
             EDIT
           </PrunButton>
         </td>
