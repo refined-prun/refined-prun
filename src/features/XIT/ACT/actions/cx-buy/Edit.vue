@@ -5,7 +5,7 @@ import PrunButton from '@src/components/PrunButton.vue';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { showTileOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
-import EditCXBuyPriceLimits from '@src/features/XIT/ACT/actions/EditCXBuyPriceLimits.vue';
+import EditPriceLimits from '@src/features/XIT/ACT/actions/cx-buy/EditPriceLimits.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 
 const { action, pkg } = defineProps<{
@@ -31,7 +31,7 @@ const buyPartial = ref(action.buyPartial ?? false);
 const useCXInv = ref(action.useCXInv ?? true);
 
 function onEditPriceLimitsClick(e: Event) {
-  showTileOverlay(e, EditCXBuyPriceLimits, reactive({ priceLimits }));
+  showTileOverlay(e, EditPriceLimits, reactive({ priceLimits }));
 }
 
 function validate() {

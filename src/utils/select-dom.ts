@@ -53,7 +53,7 @@ const tagNames = new Set<string>([
   'progress',
   'style',
 ]);
-const classNames = new Set<string>(['rc-slider-handle']);
+const classNames = new Set<string>(['rc-slider-handle', 'rc-slider-mark-text']);
 
 export function registerClassName(className: string) {
   classNames.add(className);

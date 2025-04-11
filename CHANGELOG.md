@@ -5,11 +5,33 @@
 - `tile-controls-background`: (new) Adds a solid color background to the top-right tile controls
 - `prodco-order-eta`: (new) Adds a finish ETA label to orders
 
+### Changed
+
+- `XIT ACT`: Add a quickstart flow for users without any action packages
+- `XIT ACT`: Add ability to open missing tiles during a package run
+- `XIT ACT`: Add a companion tile for package runs in a floating buffer
+- `XIT ACT`: Add "Configure on Execute" as a planet option in Resupply and Repair actions
+- `XIT ACT`: Auto-select the material during the MTRA action
+- `XIT ACT`: Improve the "will not be transferred" warning wording during the MTRA action
+- `XIT ACT`: Stop a package run if there's not enough materials during CX Buy
+- `XIT ACT`: Improve sorting in inventory selection dropdown
+- `XIT ACT`: Add log auto-scrolling
+- `XIT ACT`: Show additional context data in the log
+- `XIT ACT`: Add auto-fetching burn data for Resupply material groups
+- `XIT ACT`: Change configuration UI to form-based
+- `XIT ACT`: Make UI layout more stable during a package run
+- `item-icons`: Add an icon for consumable bundles category
+- Change item sorting in the "consumable bundles" category to tier-based
+
 ### Fixed
 
+- `XIT ACT`: Fix action displacement on buffer move during a package run
+- `XIT ACT`: Fix various issues for package runs in floating buffers
 - `prodq-order-eta`: Fix eta missing in order slots that were initially empty
-- `prun-bugs`: Fix user search results box being too big for the tile
+- `prun-bugs`: Fix user search results box being too big for the GIFT tile
 - `table-rows-alternating-colors`: Fix a rendering issue in Firefox
+- Fix stacking overlays (like in `XIT ACT`) not displaying correctly
+- Fix item color of consumable bundles in icons made by the extension
 
 ## 25.3.24
 

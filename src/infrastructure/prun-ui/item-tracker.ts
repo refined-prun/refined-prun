@@ -88,6 +88,9 @@ const categoryColors = {
   'construction prefabs': {
     color: '1c39bb',
   },
+  'consumable bundles': {
+    color: '971728',
+  },
   'consumables (basic)': {
     color: 'cd5c5c',
   },
