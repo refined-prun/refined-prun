@@ -11,7 +11,7 @@ import PrunLink from '@src/components/PrunLink.vue';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { objectId } from '@src/utils/object-id';
 
-const showQuickstart = computed(() => userData.actionPackages.length === 0 || true);
+const showQuickstart = computed(() => userData.actionPackages.length === 0);
 
 function onQuickstartClick(ev: Event) {
   showTileOverlay(ev, Quickstart);
