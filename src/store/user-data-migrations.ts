@@ -5,6 +5,9 @@ import { getInvStore } from '@src/core/store-id';
 
 const migrations: Migration[] = [
   userData => {
+    userData.configVersion = config.version;
+  },
+  userData => {
     removeArrayElement(userData.settings.disabled, 'contd-fill-condition-address');
   },
   userData => {
