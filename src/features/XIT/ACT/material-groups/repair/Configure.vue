@@ -15,6 +15,10 @@ const planets = computed(() =>
     .filter(isDefined)
     .sort(comparePlanets),
 );
+
+if (!config.planet) {
+  config.planet = planets.value[0];
+}
 </script>
 
 <template>

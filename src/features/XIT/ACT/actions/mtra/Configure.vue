@@ -33,6 +33,10 @@ const originOptions = computed(() => {
   return getOptions(originStorages.value);
 });
 
+if (data.origin === configurableValue && !config.origin) {
+  config.origin = serializeStorage(originStorages.value[0]);
+}
+
 const destinationStorages = computed(() => {
   let storages = [...allStorages.value];
   if (data.origin !== configurableValue) {
@@ -48,6 +52,10 @@ const destinationStorages = computed(() => {
 const destinationOptions = computed(() => {
   return getOptions(destinationStorages.value);
 });
+
+if (data.dest === configurableValue && !config.destination) {
+  config.destination = serializeStorage(destinationStorages.value[0]);
+}
 
 // Autofill and autofix selections on storage list change.
 watchEffect(() => {
