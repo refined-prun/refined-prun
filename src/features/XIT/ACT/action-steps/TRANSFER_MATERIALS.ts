@@ -2,7 +2,6 @@ import { act } from '@src/features/XIT/ACT/act-registry';
 import { serializeStorage } from '@src/features/XIT/ACT/actions/mtra/utils';
 import { fixed0 } from '@src/utils/format';
 import { changeInputValue, clickElement, focusElement } from '@src/util';
-import { sleep } from '@src/utils/sleep';
 
 interface Data {
   from: PrunApi.Store;
