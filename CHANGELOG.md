@@ -18,6 +18,7 @@
 - `XIT ACT`: Stop a package run if there's not enough materials during CX Buy
 - `XIT ACT`: Auto-select the material during the MTRA action
 - `XIT ACT`: Improve the "will not be transferred" warning wording during the MTRA action
+- `XIT ACT`: Add "Configure on Execute" as a planet option in Resupply and Repair actions
 - `item-icons`: Add an icon for consumable bundles category
 - Change item sorting in the "consumable bundles" category to tier-based
 

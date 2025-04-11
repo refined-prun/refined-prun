@@ -1,30 +1,36 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import Edit from '@src/features/XIT/ACT/material-groups/repair/Edit.vue';
+import Configure from '@src/features/XIT/ACT/material-groups/repair/Configure.vue';
 import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { isRepairableBuilding } from '@src/core/buildings';
+import { Config } from '@src/features/XIT/ACT/material-groups/repair/config';
+import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
-act.addMaterialGroup({
+act.addMaterialGroup<Config>({
   type: 'Repair',
-  description: group => {
-    if (!group.planet) {
+  description: data => {
+    if (!data.planet) {
       return '--';
     }
 
-    const days = group.days;
+    const days = data.days;
     const daysPart = days ? `older than ${days} day${days == 1 ? '' : 's'}` : '';
-    const advanceDays = group.advanceDays || 0;
-    return `Repair buildings on ${group.planet} ${daysPart} in ${advanceDays} day${advanceDays == 1 ? '' : 's'}`;
+    const advanceDays = data.advanceDays || 0;
+    return `Repair buildings on ${data.planet} ${daysPart} in ${advanceDays} day${advanceDays == 1 ? '' : 's'}`;
   },
   editComponent: Edit,
-  generateMaterialBill: async ({ data, log }) => {
-    const planet = data.planet;
-    if (!planet) {
-      log.error('Missing resupply planet');
+  configureComponent: Configure,
+  needsConfigure: data => data.planet === configurableValue,
+  isValidConfig: (data, config) => data.planet !== configurableValue || config.planet !== undefined,
+  generateMaterialBill: async ({ data, config, log }) => {
+    if (!data.planet) {
+      log.error('Resupply planet is not configured');
       return undefined;
     }
 
-    const planetSite = sitesStore.getByPlanetNaturalIdOrName(planet);
-    if (!planetSite?.platforms) {
+    const planet = data.planet === configurableValue ? config.planet : data.planet;
+    const site = sitesStore.getByPlanetNaturalIdOrName(planet);
+    if (!site?.platforms) {
       log.error('Missing data on repair planet');
       return undefined;
     }
@@ -36,7 +42,7 @@ act.addMaterialGroup({
     advanceDays = isNaN(advanceDays) ? 0 : advanceDays;
 
     const parsedGroup = {};
-    for (const building of planetSite.platforms) {
+    for (const building of site.platforms) {
       if (!isRepairableBuilding(building)) {
         continue;
       }

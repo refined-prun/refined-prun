@@ -13,7 +13,7 @@ interface MaterialGroupInfo<TConfig> {
   needsConfigure?: (data: UserData.MaterialGroupData) => boolean;
   isValidConfig?: (data: UserData.MaterialGroupData, config: TConfig) => boolean;
   generateMaterialBill: (
-    ctx: MaterialGroupGenerateContext,
+    ctx: MaterialGroupGenerateContext<TConfig>,
   ) => Promise<Record<string, number> | undefined>;
 }
 

@@ -3,7 +3,8 @@ import Edit from '@src/features/XIT/ACT/actions/mtra/Edit.vue';
 import Configure from '@src/features/XIT/ACT/actions/mtra/Configure.vue';
 import { TRANSFER_MATERIALS } from '@src/features/XIT/ACT/action-steps/TRANSFER_MATERIALS';
 import { atSameLocation, deserializeStorage } from '@src/features/XIT/ACT/actions/mtra/utils';
-import { Config, configuredLocation } from '@src/features/XIT/ACT/actions/mtra/config';
+import { Config } from '@src/features/XIT/ACT/actions/mtra/config';
+import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 act.addAction<Config>({
   type: 'MTRA',
@@ -13,11 +14,11 @@ act.addAction<Config>({
     }
 
     const origin =
-      action.origin == configuredLocation
+      action.origin == configurableValue
         ? (config?.origin ?? 'configured location')
         : action.origin;
     const dest =
-      action.dest == configuredLocation
+      action.dest == configurableValue
         ? (config?.destination ?? 'configured location')
         : action.dest;
     return `Transfer group [${action.group}] from ${origin} to ${dest}`;
@@ -25,12 +26,12 @@ act.addAction<Config>({
   editComponent: Edit,
   configureComponent: Configure,
   needsConfigure: data => {
-    return data.origin === configuredLocation || data.dest === configuredLocation;
+    return data.origin === configurableValue || data.dest === configurableValue;
   },
   isValidConfig: (data, config) => {
     return (
-      (data.origin !== configuredLocation || config.origin !== undefined) &&
-      (data.dest !== configuredLocation || config.destination !== undefined)
+      (data.origin !== configurableValue || config.origin !== undefined) &&
+      (data.dest !== configurableValue || config.destination !== undefined)
     );
   },
   generateSteps: async ctx => {
@@ -41,13 +42,13 @@ act.addAction<Config>({
       log.error('Invalid material group');
     }
 
-    const serializedOrigin = data.origin === configuredLocation ? config?.origin : data.origin;
+    const serializedOrigin = data.origin === configurableValue ? config?.origin : data.origin;
     const origin = deserializeStorage(serializedOrigin);
     if (!origin) {
       log.error('Invalid origin');
     }
 
-    const serializedDest = data.dest === configuredLocation ? config?.destination : data.dest;
+    const serializedDest = data.dest === configurableValue ? config?.destination : data.dest;
     const dest = deserializeStorage(serializedDest);
     if (!dest) {
       log.error('Invalid destination');

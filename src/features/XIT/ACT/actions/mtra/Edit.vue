@@ -3,6 +3,7 @@ import Active from '@src/components/forms/Active.vue';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { serializeStorage, storageSort } from '@src/features/XIT/ACT/actions/mtra/utils';
+import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 const { action, pkg } = defineProps<{
   action: UserData.ActionData;
@@ -14,7 +15,7 @@ const materialGroup = ref(action.group ?? materialGroups.value[0]);
 
 const storages = computed(() => {
   const storages = [...(storagesStore.all.value ?? [])].sort(storageSort).map(serializeStorage);
-  storages.unshift('Configure on Execution');
+  storages.unshift(configurableValue);
   return storages;
 });
 

@@ -33,7 +33,7 @@ export class StepGenerator {
         log: new Logger((tag, message) => this.log.logMessage(tag, `[${action.name}] ${message}`)),
         fail: () => (fail = true),
         emitStep: step => steps.push(step),
-        getMaterialGroup: async name => await this.getMaterialGroup(pkg, name),
+        getMaterialGroup: async name => await this.getMaterialGroup(pkg, config, name),
         state,
       });
       if (fail) {
@@ -47,7 +47,11 @@ export class StepGenerator {
     return { steps, fail };
   }
 
-  private async getMaterialGroup(pkg: UserData.ActionPackageData, name: string | undefined) {
+  private async getMaterialGroup(
+    pkg: UserData.ActionPackageData,
+    config: ActionPackageConfig,
+    name: string | undefined,
+  ) {
     if (!name) {
       this.log.error('Missing material group');
     }
@@ -64,8 +68,10 @@ export class StepGenerator {
     }
 
     this.options.onStatusChanged(`Generating material bill for ${group.name}...`);
+    const groupConfig = config.materialGroups[name!] ?? {};
     return await info.generateMaterialBill({
       data: group,
+      config: groupConfig,
       log: new Logger((tag, message) => this.log.logMessage(tag, `[${group.name}] ${message}`)),
       setStatus: status => this.options.onStatusChanged(status),
     });

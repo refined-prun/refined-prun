@@ -2,7 +2,7 @@
 import Active from '@src/components/forms/Active.vue';
 import Passive from '@src/components/forms/Passive.vue';
 import SelectInput from '@src/components/forms/SelectInput.vue';
-import { Config, configuredLocation } from '@src/features/XIT/ACT/actions/mtra/config';
+import { Config } from '@src/features/XIT/ACT/actions/mtra/config';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import {
   atSameLocation,
@@ -10,6 +10,7 @@ import {
   serializeStorage,
   storageSort,
 } from '@src/features/XIT/ACT/actions/mtra/utils';
+import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 const { data, config } = defineProps<{ data: UserData.ActionData; config: Config }>();
 
@@ -19,7 +20,7 @@ const allStorages = computed(() => {
 
 const originStorages = computed(() => {
   let storages = [...allStorages.value];
-  if (data.dest !== configuredLocation) {
+  if (data.dest !== configurableValue) {
     const destination = deserializeStorage(data.dest);
     if (destination) {
       storages = storages.filter(x => atSameLocation(x, destination) && x !== destination);
@@ -34,7 +35,7 @@ const originOptions = computed(() => {
 
 const destinationStorages = computed(() => {
   let storages = [...allStorages.value];
-  if (data.origin !== configuredLocation) {
+  if (data.origin !== configurableValue) {
     const origin = deserializeStorage(data.origin);
     if (origin) {
       storages = storages.filter(x => atSameLocation(x, origin) && x !== origin);
@@ -50,7 +51,7 @@ const destinationOptions = computed(() => {
 
 // Autofill and autofix selections on storage list change.
 watchEffect(() => {
-  if (data.origin === configuredLocation) {
+  if (data.origin === configurableValue) {
     if (config.origin) {
       const origin = deserializeStorage(config.origin);
       if (!origin || !originStorages.value.includes(origin)) {
@@ -63,7 +64,7 @@ watchEffect(() => {
     }
   }
 
-  if (data.dest === configuredLocation) {
+  if (data.dest === configurableValue) {
     if (config.destination) {
       const destination = deserializeStorage(config.destination);
       if (!destination || !destinationStorages.value.includes(destination)) {
@@ -88,13 +89,13 @@ function getOptions(storages: PrunApi.Store[]) {
 
 <template>
   <form>
-    <Active v-if="data.origin === configuredLocation" label="From">
+    <Active v-if="data.origin === configurableValue" label="From">
       <SelectInput v-model="config.origin" :options="originOptions" />
     </Active>
     <Passive v-else label="From">
       <span>{{ data.origin }}</span>
     </Passive>
-    <Active v-if="data.dest === configuredLocation" label="To">
+    <Active v-if="data.dest === configurableValue" label="To">
       <SelectInput v-model="config.destination" :options="destinationOptions" />
     </Active>
     <Passive v-else label="To">

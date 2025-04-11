@@ -14,8 +14,9 @@ export interface ActionRunnerContext<T> {
   log: Logger;
 }
 
-export interface MaterialGroupGenerateContext
+export interface MaterialGroupGenerateContext<TConfig>
   extends ActionRunnerContext<UserData.MaterialGroupData> {
+  config: TConfig;
   setStatus: (status: string) => void;
 }
 
@@ -42,3 +43,5 @@ export interface ActionStepExecuteContext<T> extends ActionRunnerContext<T> {
   fail: () => void;
   requestTile: (Command: string) => Promise<PrunTile | undefined>;
 }
+
+export const configurableValue = 'Configure on Execution';

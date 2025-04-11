@@ -5,8 +5,8 @@ import { deepToRaw } from '@src/utils/deep-to-raw';
 
 act.addMaterialGroup({
   type: 'Manual',
-  description: group => {
-    const materials = group.materials;
+  description: data => {
+    const materials = data.materials;
     if (!materials || Object.keys(materials).length == 0) {
       return '--';
     }
