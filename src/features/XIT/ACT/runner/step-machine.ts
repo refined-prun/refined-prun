@@ -3,6 +3,7 @@ import { ActionStep } from '@src/features/XIT/ACT/shared-types';
 import { Logger } from '@src/features/XIT/ACT/runner/logger';
 import { TileAllocator } from '@src/features/XIT/ACT/runner/tile-allocator';
 import { clickElement } from '@src/util';
+import { sleep } from '@src/utils/sleep';
 
 interface StepMachineOptions {
   tile: PrunTile;
@@ -94,12 +95,16 @@ export class StepMachine {
         this.options.onStatusChanged('Waiting for action feedback...');
         const error = await waitActionFeedback(tile);
         if (error) {
-          this.log.error(`Action failed: ${error}`);
+          this.log.error(error);
+          this.log.error(info.description(this.next));
+          this.log.error('Action Package execution failed');
           this.stop();
           return;
         }
       },
-      complete: () => {
+      complete: async () => {
+        // Wait a moment to allow data to update.
+        await sleep(0);
         this.log.success(info.description(this.next));
         this.loadNext();
       },

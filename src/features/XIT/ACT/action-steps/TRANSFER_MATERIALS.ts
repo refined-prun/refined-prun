@@ -2,6 +2,7 @@ import { act } from '@src/features/XIT/ACT/act-registry';
 import { serializeStorage } from '@src/features/XIT/ACT/actions/mtra/utils';
 import { fixed0 } from '@src/utils/format';
 import { changeInputValue, clickElement, focusElement } from '@src/util';
+import { sleep } from '@src/utils/sleep';
 
 interface Data {
   from: PrunApi.Store;
@@ -64,7 +65,8 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     }
     const amount = data.amount;
     if (amount > maxAmount) {
-      log.warning(`Only ${maxAmount} of ${amount} ${ticker} will be transferred.`);
+      const leftover = amount - maxAmount;
+      log.warning(`${leftover} ${ticker} not transferred (${maxAmount} of ${amount} transferred)`);
     }
     changeInputValue(amountInput, Math.min(amount, maxAmount).toString());
 
