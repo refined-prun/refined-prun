@@ -5,10 +5,17 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { showConfirmationOverlay, showTileOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import CreateActionPackage from '@src/features/XIT/ACT/CreateActionPackage.vue';
 import ImportActionPackage from '@src/features/XIT/ACT/ImportActionPackage.vue';
+import Quickstart from '@src/features/XIT/ACT/Quickstart.vue';
 import { userData } from '@src/store/user-data';
 import PrunLink from '@src/components/PrunLink.vue';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { objectId } from '@src/utils/object-id';
+
+const showQuickstart = computed(() => userData.actionPackages.length === 0 || true);
+
+function onQuickstartClick(ev: Event) {
+  showTileOverlay(ev, Quickstart);
+}
 
 function onCreateClick(ev: Event) {
   showTileOverlay(ev, CreateActionPackage, {
@@ -55,6 +62,9 @@ function paramName(pkg: UserData.ActionPackageData) {
 
 <template>
   <ActionBar>
+    <div v-if="showQuickstart">Click here if you don't<br />know what to do!</div>
+    <div v-if="showQuickstart">→</div>
+    <PrunButton v-if="showQuickstart" primary @click="onQuickstartClick">QUICKSTART</PrunButton>
     <PrunButton primary @click="onCreateClick">CREATE NEW</PrunButton>
     <PrunButton primary @click="onImportClick">IMPORT</PrunButton>
   </ActionBar>

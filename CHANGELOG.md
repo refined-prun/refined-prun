@@ -19,6 +19,7 @@
 - `XIT ACT`: Auto-select the material during the MTRA action
 - `XIT ACT`: Improve the "will not be transferred" warning wording during the MTRA action
 - `XIT ACT`: Add "Configure on Execute" as a planet option in Resupply and Repair actions
+- `XIT ACT`: Add a quickstart flow for users without any action packages
 - `item-icons`: Add an icon for consumable bundles category
 - Change item sorting in the "consumable bundles" category to tier-based
 

@@ -31,7 +31,7 @@ act.addAction({
     }
 
     // Take out materials in CX inventory if requested
-    if (data.useCXInv && data.exchange) {
+    if ((data.useCXInv ?? true) && data.exchange) {
       for (const mat of Object.keys(materials)) {
         for (const CXMat of Object.keys(state.WAR[data.exchange])) {
           if (CXMat === mat) {

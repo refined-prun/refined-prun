@@ -70,7 +70,7 @@ act.addMaterialGroup<Config>({
         // Consuming not producing
         const days = typeof data.days === 'number' ? data.days : parseFloat(data.days);
         let amount = Math.ceil(-planetBurn[mat].DailyAmount * days);
-        if (data.useBaseInv) {
+        if (data.useBaseInv ?? true) {
           amount -= planetBurn[mat].Inventory;
         }
 
