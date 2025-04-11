@@ -7,19 +7,23 @@
 
 ### Changed
 
-- `XIT ACT`: Add ability to open missing tiles during package run
+- `XIT ACT`: Add ability to open missing tiles during a package run
 - `XIT ACT`: Change configuration UI to form-based
 - `XIT ACT`: Add auto-fetching burn data for Resupply material groups
-- `XIT ACT`: Make UI layout more stable during package run
-- `XIT ACT`: Add a companion tile for package runs in a buffer
+- `XIT ACT`: Make UI layout more stable during a package run
+- `XIT ACT`: Add a companion tile for package runs in a floating buffer
 - `XIT ACT`: Improve sorting in inventory selection dropdown
 - `XIT ACT`: Show additional context data in the log
 - `XIT ACT`: Add log auto-scrolling
+- `XIT ACT`: Stop a package run if there's not enough materials during CX Buy
+- `XIT ACT`: Auto-select the material during the MTRA action
 - `item-icons`: Add an icon for consumable bundles category
 - Change item sorting in the "consumable bundles" category to tier-based
 
 ### Fixed
 
+- `XIT ACT`: Fix various issues for package runs in floating buffers
+- `XIT ACT`: Fix action displacement on buffer move during a package run
 - `prodq-order-eta`: Fix eta missing in order slots that were initially empty
 - `prun-bugs`: Fix user search results box being too big for the tile
 - `table-rows-alternating-colors`: Fix a rendering issue in Firefox
