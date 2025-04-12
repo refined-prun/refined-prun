@@ -42,9 +42,9 @@ function onTileReady(tile: PrunTile) {
   });
 }
 
-function getMaterialsFromElements(elements: Element[] | undefined) {
+function getMaterialsFromElements(elements: Element[]) {
   const result: [string, number][] = [];
-  for (const material of elements ?? []) {
+  for (const material of elements) {
     const ticker = _$(material, C.ColoredIcon.label)?.textContent ?? '';
     const count = Number(_$(material, C.MaterialIcon.indicator)?.textContent ?? 0);
     result.push([ticker, count]);
@@ -58,13 +58,17 @@ function parseTemplate(line: PrunApi.ProductionLine, templateElement: HTMLElemen
   }
   // The structure of the template element looks like this:
   // C.ProductionLine.inputs, ⇨, MaterialIcon[], duration.
-  const inputMaterials = Array.from(_$(templateElement, C.ProductionLine.inputs)?.children ?? []);
+  const inputsContainer = _$(templateElement, C.ProductionLine.inputs);
+  if (!inputsContainer) {
+    return undefined;
+  }
+  const inputMaterials = _$$(inputsContainer, C.MaterialIcon.container);
   const inputs: [string, number][] = getMaterialsFromElements(inputMaterials);
 
-  const templateElements = Array.from(templateElement.children);
-  // Remove the inputs div, arrow div, and duration div to leave just outputs.
-  const outputElements = templateElements.slice(2, -1);
-  const outputs: [string, number][] = getMaterialsFromElements(outputElements);
+  const outputMaterials = _$$(templateElement, C.MaterialIcon.container).filter(
+    x => !inputMaterials.includes(x),
+  );
+  const outputs: [string, number][] = getMaterialsFromElements(outputMaterials);
 
   for (const template of line.productionTemplates) {
     const templateInputs = template.inputFactors;
