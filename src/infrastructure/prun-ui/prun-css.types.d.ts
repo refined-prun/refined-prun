@@ -180,6 +180,7 @@ declare global {
       gridContainer: string;
       header: string;
       image: string;
+      inputs: string;
       name: string;
       recipeList: string;
       recipe: string;
@@ -912,6 +913,7 @@ declare global {
     MaterialIcon: {
       containerMobile: string;
       container: string;
+      contextContainer: string;
       danger: string;
       indicatorContainer: string;
       indicator: string;
@@ -1199,6 +1201,7 @@ declare global {
       efficiencyProgress: string;
       efficiencyValue: string;
       form: string;
+      inputs: string;
       template: string;
     };
     ProductionLines: {
@@ -1745,6 +1748,9 @@ declare global {
       container: string;
       iconHighlightContainer: string;
       iconHighlightItem: string;
+    };
+    Unpack: {
+      container: string;
     };
     UpcomingTerm: {
       container: string;
