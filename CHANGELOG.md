@@ -8,7 +8,7 @@
 ### Changed
 
 - `XIT ACT`: Add a quickstart flow for users without any action packages
-- `XIT ACT`: Add ability to open missing tiles during a package run
+- `XIT ACT`: Add an ability to open missing tiles during a package run
 - `XIT ACT`: Add a companion tile for package runs in a floating buffer
 - `XIT ACT`: Add "Configure on Execute" as a planet option in Resupply and Repair actions
 - `XIT ACT`: Auto-select the material during the MTRA action
@@ -26,7 +26,7 @@
 ### Fixed
 
 - `XIT ACT`: Fix the Resupply material amounts not matching the ones in `XIT BURN`
-- `XIT ACT`: Fix action displacement on buffer move during a package run
+- `XIT ACT`: Fix the action button displacement on buffer move during a package run
 - `XIT ACT`: Fix various issues for package runs in floating buffers
 - `XIT BURN`: Fix zero amount being displayed as "-0" sometimes
 - `prodco-order-eta`: Fix broken feature caused by recent game update
