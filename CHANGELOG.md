@@ -27,6 +27,7 @@
 
 - `XIT ACT`: Fix action displacement on buffer move during a package run
 - `XIT ACT`: Fix various issues for package runs in floating buffers
+- `prodco-order-eta`: Fix broken feature caused by recent game update
 - `prodq-order-eta`: Fix eta missing in order slots that were initially empty
 - `prun-bugs`: Fix user search results box being too big for the GIFT tile
 - `table-rows-alternating-colors`: Fix a rendering issue in Firefox
