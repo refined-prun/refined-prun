@@ -25,11 +25,12 @@
 
 ### Fixed
 
+- `XIT ACT`: Fix the Resupply material amounts not matching the ones in `XIT BURN`
 - `XIT ACT`: Fix action displacement on buffer move during a package run
 - `XIT ACT`: Fix various issues for package runs in floating buffers
 - `XIT BURN`: Fix zero amount being displayed as "-0" sometimes
 - `prodq-order-eta`: Fix eta missing in order slots that were initially empty
-- `prun-bugs`: Fix user search results box being too big for the GIFT tile
+- `prun-bugs`: Fix user search results box being too big for the `GIFT` tile
 - `table-rows-alternating-colors`: Fix a rendering issue in Firefox
 - Fix stacking overlays (like in `XIT ACT`) not displaying correctly
 - Fix item color of consumable bundles in icons made by the extension
