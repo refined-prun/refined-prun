@@ -58,25 +58,25 @@ act.addMaterialGroup<Config>({
     }
     const stores = storagesStore.getByAddressableId(site.siteId);
 
-    const parsedGroup = {};
     const planetBurn = calculatePlanetBurn(
       data.consumablesOnly ? undefined : production.value,
       workforce.value,
-      stores,
+      (data.useBaseInv ?? true) ? stores : undefined,
     );
 
-    for (const mat of Object.keys(planetBurn)) {
-      if (planetBurn[mat].DailyAmount < 0) {
-        // Consuming not producing
-        const days = typeof data.days === 'number' ? data.days : parseFloat(data.days);
-        let amount = Math.ceil(-planetBurn[mat].DailyAmount * days);
-        if (data.useBaseInv ?? true) {
-          amount -= planetBurn[mat].Inventory;
-        }
-
-        if (amount > 0 && !exclusions.includes(mat)) {
-          parsedGroup[mat] = amount;
-        }
+    const parsedGroup = {};
+    for (const ticker of Object.keys(planetBurn)) {
+      if (exclusions.includes(ticker)) {
+        continue;
+      }
+      const matBurn = planetBurn[ticker];
+      if (matBurn.DailyAmount >= 0) {
+        continue;
+      }
+      const days = typeof data.days === 'number' ? data.days : parseFloat(data.days);
+      const need = Math.ceil((matBurn.DaysLeft - days) * matBurn.DailyAmount);
+      if (need > 0) {
+        parsedGroup[ticker] = need;
       }
     }
     return parsedGroup;
