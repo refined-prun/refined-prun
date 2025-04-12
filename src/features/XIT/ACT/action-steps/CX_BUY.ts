@@ -69,6 +69,7 @@ export const CX_BUY = act.addActionStep<Data>({
 
     if (filledAmount === 0 && data.buyPartial) {
       log.info(`No matching orders for ${cxTicker}`);
+      complete();
       return;
     }
 

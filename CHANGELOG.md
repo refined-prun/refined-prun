@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixed
+
+- `XIT ACT`: Fix the CX Buy action getting stuck when there are no orders in the order book and the "buy partial" toggle is on
+
 ## 25.4.12
 
 ### Added
