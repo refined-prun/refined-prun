@@ -56,7 +56,7 @@ export class StepMachine {
       return;
     }
     const info = act.getActionStepInfo(next.type);
-    this.log.warning(`Skipped ${info.description(next)}`);
+    this.log.skip(info.description(next));
     this.nextAct = undefined;
     this.loadNext();
   }

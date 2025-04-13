@@ -32,6 +32,7 @@ function getTagClass(tag: LogTag) {
     case 'SUCCESS':
       return $style.success;
     case 'WARNING':
+    case 'SKIP':
       return $style.warning;
     case 'ERROR':
     case 'CANCEL':
