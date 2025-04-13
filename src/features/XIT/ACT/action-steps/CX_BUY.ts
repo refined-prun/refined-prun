@@ -92,6 +92,9 @@ export const CX_BUY = act.addActionStep<Data>({
 
     const buyButton = await $(tile.anchor, C.Button.success);
 
+    // Cache description before clicking the buy button because
+    // order book data will change after that.
+    ctx.cacheDescription();
     await waitAct();
     await clickElement(buyButton);
     await waitActionFeedback(tile);

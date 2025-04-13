@@ -83,12 +83,13 @@ export class StepMachine {
     }
     this.next = this.steps.shift()!;
     const info = act.getActionStepInfo(this.next.type);
+    let description: string | undefined;
     info.execute({
       data: this.next,
       log: this.options.log,
       setStatus: status => this.options.onStatusChanged(status),
       waitAct: async status => {
-        status ??= info.description(this.next);
+        status ??= description ?? info.description(this.next);
         await this.waitAct(status);
       },
       waitActionFeedback: async tile => {
@@ -96,16 +97,17 @@ export class StepMachine {
         const error = await waitActionFeedback(tile);
         if (error) {
           this.log.error(error);
-          this.log.error(info.description(this.next));
+          this.log.error(description ?? info.description(this.next));
           this.log.error('Action Package execution failed');
           this.stop();
           return;
         }
       },
+      cacheDescription: () => (description = info.description(this.next)),
       complete: async () => {
         // Wait a moment to allow data to update.
         await sleep(0);
-        this.log.success(info.description(this.next));
+        this.log.success(description ?? info.description(this.next));
         this.loadNext();
       },
       fail: () => {
