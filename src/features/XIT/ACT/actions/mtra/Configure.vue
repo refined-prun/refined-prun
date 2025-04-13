@@ -33,7 +33,7 @@ const originOptions = computed(() => {
   return getOptions(originStorages.value);
 });
 
-if (data.origin === configurableValue && !config.origin) {
+if (data.origin === configurableValue && !config.origin && originStorages.value.length > 0) {
   config.origin = serializeStorage(originStorages.value[0]);
 }
 
@@ -53,7 +53,11 @@ const destinationOptions = computed(() => {
   return getOptions(destinationStorages.value);
 });
 
-if (data.dest === configurableValue && !config.destination) {
+if (
+  data.dest === configurableValue &&
+  !config.destination &&
+  destinationStorages.value.length > 0
+) {
   config.destination = serializeStorage(destinationStorages.value[0]);
 }
 
