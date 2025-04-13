@@ -2,6 +2,7 @@
 
 ### Changed
 
+- `XIT ACT`: Add total cost to CX Buy action step description
 - `XIT ACT`: Improve step generation and log messages for "buy partial" CX Buy actions
 
 ### Fixed
