@@ -9,6 +9,7 @@
 
 - `XIT ACT`: Fix the CX Buy action getting stuck when there are no orders in the order book and the "buy partial" toggle is on
 - `XIT ACT`: Fix opening a run tile for packages with configurable MTRA and no origins/destinations available
+- `XIT SET`: Fix financial data point deletion targeting the wrong data point
 
 ## 25.4.12
 
