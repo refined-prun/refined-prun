@@ -65,7 +65,10 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     const amount = data.amount;
     if (amount > maxAmount) {
       const leftover = amount - maxAmount;
-      log.warning(`${leftover} ${ticker} not transferred (${maxAmount} of ${amount} transferred)`);
+      log.warning(
+        `${fixed0(leftover)} ${ticker} not transferred ` +
+          `(${fixed0(maxAmount)} of ${fixed0(amount)} transferred)`,
+      );
     }
     changeInputValue(amountInput, Math.min(amount, maxAmount).toString());
 
