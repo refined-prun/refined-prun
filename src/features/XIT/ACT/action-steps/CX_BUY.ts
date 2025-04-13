@@ -1,8 +1,7 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import { fixed0, fixed02 } from '@src/utils/format';
 import { changeInputValue, clickElement } from '@src/util';
-import { clamp } from '@src/utils/clamp';
-import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
+import { fillAmount } from '@src/features/XIT/ACT/actions/cx-buy/utils';
 
 interface Data {
   exchange: string;
@@ -15,11 +14,27 @@ interface Data {
 export const CX_BUY = act.addActionStep<Data>({
   type: 'CX_BUY',
   preProcessData: data => ({ ...data, ticker: data.ticker.toUpperCase() }),
-  description: data =>
-    `Buy ${fixed0(data.amount)} ${data.ticker} from ${data.exchange}${getPriceLimit(data)}`,
+  description: data => {
+    const { ticker, exchange } = data;
+    const cxTicker = `${ticker}.${exchange}`;
+    const filled = fillAmount(cxTicker, data.amount, data.priceLimit);
+    const amount = filled?.amount ?? data.amount;
+    const priceLimit = filled?.priceLimit ?? data.priceLimit;
+    let description = `Buy ${fixed0(amount)} ${ticker} on ${exchange}`;
+    if (isFinite(priceLimit)) {
+      description += ` with price limit ${fixed02(priceLimit)}`;
+    }
+    if (filled) {
+      description += ` (${fixed0(filled.cost)} total cost)`;
+    } else {
+      description += ' (no price data yet)';
+    }
+    return description;
+  },
   execute: async ctx => {
     const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete, fail } = ctx;
-    const cxTicker = `${data.ticker}.${data.exchange}`;
+    const { amount, ticker, exchange, priceLimit } = data;
+    const cxTicker = `${ticker}.${exchange}`;
 
     const tile = await requestTile(`CXPO ${cxTicker}`);
     if (!tile) {
@@ -38,53 +53,42 @@ export const CX_BUY = act.addActionStep<Data>({
       return;
     }
 
-    const priceLimit = data.priceLimit;
-    const orderBook = cxobStore.getByTicker(cxTicker);
+    const filled = fillAmount(cxTicker, amount, priceLimit);
 
-    if (!orderBook) {
+    if (!filled) {
       log.error(`Missing ${cxTicker} order book data`);
       fail();
       return;
     }
 
-    const requiredAmount = data.amount;
-    let filledAmount = 0;
-    let filledPrice = 0;
-    for (const order of orderBook.sellingOrders) {
-      const orderPrice = order.limit.amount;
-      if (priceLimit < orderPrice) {
-        break;
+    if (filled.amount < amount) {
+      if (!data.buyPartial) {
+        let message = `Not enough materials on ${exchange} to buy ${fixed0(amount)} ${ticker}`;
+        if (isFinite(priceLimit)) {
+          message += ` with price limit ${fixed02(priceLimit)}/u`;
+        }
+        log.error(message);
+        fail();
+        return;
       }
-      filledPrice = orderPrice;
-      // MM orders don't have the amount.
-      if (!order.amount) {
-        filledAmount = requiredAmount;
-        break;
-      }
-      filledAmount = clamp(filledAmount + order.amount, 0, requiredAmount);
-      if (filledAmount === requiredAmount) {
-        break;
-      }
-    }
 
-    if (filledAmount === 0 && data.buyPartial) {
-      log.info(`No matching orders for ${cxTicker}`);
-      complete();
-      return;
-    }
-
-    if (filledAmount < requiredAmount && !data.buyPartial) {
-      let message = `Not enough materials on ${cxTicker} to buy ${fixed0(requiredAmount)} ${data.ticker}`;
+      const leftover = amount - filled.amount;
+      let message =
+        `${fixed0(leftover)} ${ticker} will not be bought on ${exchange} ` +
+        `(${filled.amount} of ${amount} available`;
       if (isFinite(priceLimit)) {
-        message += ` with the provided price limit ${fixed02(priceLimit)}/u`;
+        message += ` with price limit ${fixed02(priceLimit)}/u`;
       }
-      log.error(message);
-      fail();
-      return;
+      message += ')';
+      log.warning(message);
+      if (filled.amount === 0) {
+        complete();
+        return;
+      }
     }
 
-    changeInputValue(quantityInput, filledAmount.toString());
-    changeInputValue(priceInput, filledPrice.toString());
+    changeInputValue(quantityInput, filled.amount.toString());
+    changeInputValue(priceInput, filled.priceLimit.toString());
 
     const buyButton = await $(tile.anchor, C.Button.success);
 
@@ -95,7 +99,3 @@ export const CX_BUY = act.addActionStep<Data>({
     complete();
   },
 });
-
-function getPriceLimit(step: Data) {
-  return isFinite(step.priceLimit) ? ` with price limit ${fixed02(step.priceLimit)}/u` : '';
-}

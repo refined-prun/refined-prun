@@ -1,6 +1,8 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import Edit from '@src/features/XIT/ACT/actions/cx-buy/Edit.vue';
 import { CX_BUY } from '@src/features/XIT/ACT/action-steps/CX_BUY';
+import { fixed0, fixed02 } from '@src/utils/format';
+import { fillAmount } from '@src/features/XIT/ACT/actions/cx-buy/utils';
 
 act.addAction({
   type: 'CX Buy',
@@ -60,8 +62,42 @@ act.addAction({
         continue;
       }
 
+      const cxTicker = `${ticker}.${data.exchange}`;
+      const filled = fillAmount(cxTicker, amount, priceLimit);
+
+      if (filled && filled.amount < amount) {
+        if (!data.buyPartial) {
+          let message = `Not enough materials on ${exchange} to buy ${fixed0(amount)} ${ticker}`;
+          if (isFinite(priceLimit)) {
+            message += ` with price limit ${fixed02(priceLimit)}/u`;
+          }
+          log.error(message);
+          fail();
+          return;
+        }
+
+        const leftover = amount - filled.amount;
+        let message =
+          `${fixed0(leftover)} ${ticker} will not be bought on ${exchange} ` +
+          `(${filled.amount} of ${amount} available`;
+        if (isFinite(priceLimit)) {
+          message += ` with price limit ${fixed02(priceLimit)}/u`;
+        }
+        message += ')';
+        log.warning(message);
+        if (filled.amount === 0) {
+          continue;
+        }
+      }
+
       emitStep(
-        CX_BUY({ exchange, ticker, amount, priceLimit, buyPartial: data.buyPartial ?? false }),
+        CX_BUY({
+          exchange,
+          ticker,
+          amount: filled?.amount ?? amount,
+          priceLimit: filled?.priceLimit ?? priceLimit,
+          buyPartial: data.buyPartial ?? false,
+        }),
       );
     }
   },

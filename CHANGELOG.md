@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Changed
+
+- `XIT ACT`: Improve step generation and log messages for "buy partial" CX Buy actions
+
 ### Fixed
 
 - `XIT ACT`: Fix the CX Buy action getting stuck when there are no orders in the order book and the "buy partial" toggle is on
