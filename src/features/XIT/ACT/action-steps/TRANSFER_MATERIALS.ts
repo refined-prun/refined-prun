@@ -8,8 +8,8 @@ import { watchWhile } from '@src/utils/watch';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 
 interface Data {
-  from: PrunApi.Store;
-  to: PrunApi.Store;
+  from: string;
+  to: string;
   ticker: string;
   amount: number;
 }
@@ -17,13 +17,24 @@ interface Data {
 export const TRANSFER_MATERIALS = act.addActionStep<Data>({
   type: 'TRANSFER_MATERIALS',
   preProcessData: data => ({ ...data, ticker: data.ticker.toUpperCase() }),
-  description: data =>
-    `Transfer ${fixed0(data.amount)} ${data.ticker} ` +
-    `from ${serializeStorage(data.from)} to ${serializeStorage(data.to)}`,
+  description: data => {
+    const from = storagesStore.getById(data.from);
+    const to = storagesStore.getById(data.to);
+    const fromName = from ? serializeStorage(from) : 'NOT FOUND';
+    const toName = to ? serializeStorage(to) : 'NOT FOUND';
+    return `Transfer ${fixed0(data.amount)} ${data.ticker} from ${fromName} to ${toName}`;
+  },
   execute: async ctx => {
     const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete, skip, fail } =
       ctx;
-    const { ticker, from, to } = data;
+    const { ticker } = data;
+    const from = storagesStore.getById(data.from);
+    const to = storagesStore.getById(data.to);
+    if (!from || !to) {
+      log.error('Origin or destination inventory not found');
+      fail();
+      return;
+    }
 
     if (!from.items.find(x => x.quantity?.material.ticker === ticker)) {
       log.warning(`No ${ticker} was transferred (not present in origin)`);
@@ -109,7 +120,7 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
 
     await waitAct();
     const destinationAmount = computed(() => {
-      const store = storagesStore.getById(to.id);
+      const store = storagesStore.getById(data.to);
       return (
         store?.items
           .map(x => x.quantity ?? undefined)

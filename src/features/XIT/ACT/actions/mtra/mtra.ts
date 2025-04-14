@@ -67,8 +67,8 @@ act.addAction<Config>({
     for (const ticker of Object.keys(materials)) {
       emitStep(
         TRANSFER_MATERIALS({
-          from: origin,
-          to: dest,
+          from: origin.id,
+          to: dest.id,
           ticker,
           amount: materials[ticker],
         }),
