@@ -54,7 +54,12 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     focusElement(input);
     changeInputValue(input, ticker);
 
-    const suggestionsList = await $(container, C.MaterialSelector.suggestionsList);
+    const suggestionsList = _$(container, C.MaterialSelector.suggestionsList);
+    if (!suggestionsList) {
+      log.error(`Ticker ${ticker} not found in the material selector`);
+      fail();
+      return;
+    }
     suggestionsContainer.style.display = 'none';
     const match = _$$(suggestionsList, C.MaterialSelector.suggestionEntry).find(
       x => _$(x, C.ColoredIcon.label)?.textContent === ticker,
@@ -83,16 +88,15 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     }
     const amount = data.amount;
     if (amount > maxAmount) {
-      if (maxAmount === 0) {
-        log.warning(`No ${ticker} was transferred (no space)`);
-        skip();
-        return;
-      }
       const leftover = amount - maxAmount;
       log.warning(
         `${fixed0(leftover)} ${ticker} not transferred ` +
           `(${fixed0(maxAmount)} of ${fixed0(amount)} transferred)`,
       );
+      if (maxAmount === 0) {
+        skip();
+        return;
+      }
     }
     changeInputValue(amountInput, Math.min(amount, maxAmount).toString());
 
