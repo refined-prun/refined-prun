@@ -35,7 +35,7 @@ export class StepMachine {
 
   start() {
     this.options.onStart();
-    this.loadNext();
+    this.startNext();
   }
 
   act() {
@@ -58,7 +58,7 @@ export class StepMachine {
     const info = act.getActionStepInfo(next.type);
     this.log.skip(info.description(next));
     this.nextAct = undefined;
-    this.loadNext();
+    this.startNext();
   }
 
   cancel() {
@@ -75,49 +75,55 @@ export class StepMachine {
     this.options.onEnd();
   }
 
-  private loadNext() {
+  private startNext() {
     if (this.steps.length === 0) {
       this.log.success('Action Package execution completed');
       this.stop();
       return;
     }
-    this.next = this.steps.shift()!;
-    const info = act.getActionStepInfo(this.next.type);
+    const next = this.steps.shift()!;
+    this.next = next;
+    const info = act.getActionStepInfo(next.type);
     let description: string | undefined;
-    info.execute({
-      data: this.next,
-      log: this.options.log,
-      setStatus: status => this.options.onStatusChanged(status),
-      waitAct: async status => {
-        status ??= description ?? info.description(this.next);
-        await this.waitAct(status);
-      },
-      waitActionFeedback: async tile => {
-        this.options.onStatusChanged('Waiting for action feedback...');
-        const error = await waitActionFeedback(tile);
-        if (error) {
-          this.log.error(error);
-          this.log.error(description ?? info.description(this.next));
+    info
+      .execute({
+        data: next,
+        log: this.options.log,
+        setStatus: status => this.options.onStatusChanged(status),
+        waitAct: async status => {
+          status ??= description ?? info.description(next);
+          await this.waitAct(status);
+        },
+        waitActionFeedback: async tile => {
+          this.options.onStatusChanged('Waiting for action feedback...');
+          const error = await waitActionFeedback(tile);
+          if (error) {
+            this.log.error(error);
+            this.log.error(description ?? info.description(next));
+            this.log.error('Action Package execution failed');
+            this.stop();
+            return;
+          }
+        },
+        cacheDescription: () => (description = info.description(next)),
+        complete: async () => {
+          // Wait a moment to allow data to update.
+          await sleep(0);
+          this.log.success(description ?? info.description(next));
+          this.startNext();
+        },
+        skip: () => this.skip(),
+        fail: () => {
           this.log.error('Action Package execution failed');
           this.stop();
           return;
-        }
-      },
-      cacheDescription: () => (description = info.description(this.next)),
-      complete: async () => {
-        // Wait a moment to allow data to update.
-        await sleep(0);
-        this.log.success(description ?? info.description(this.next));
-        this.loadNext();
-      },
-      skip: () => this.skip(),
-      fail: () => {
-        this.log.error('Action Package execution failed');
+        },
+        requestTile: async command => await this.requestTile(command),
+      })
+      .catch(e => {
+        logRuntimeError(e, this.log);
         this.stop();
-        return;
-      },
-      requestTile: async command => await this.requestTile(command),
-    });
+      });
   }
 
   private async requestTile(command: string) {
@@ -186,4 +192,21 @@ async function waitActionProgress(overlay: HTMLElement) {
     });
     mutationObserver.observe(overlay, { attributes: true });
   });
+}
+
+function logRuntimeError(e: unknown, log: Logger) {
+  console.error(e);
+  log.error(`Action Package execution failed due to a runtime error`);
+  log.error(`Please report this error to the extension developer`);
+  if (e instanceof Error) {
+    if (e.stack) {
+      for (const line of e.stack.split('\n')) {
+        log.error(line);
+      }
+    } else {
+      log.error(e.message);
+    }
+  } else {
+    log.error(e as string);
+  }
 }

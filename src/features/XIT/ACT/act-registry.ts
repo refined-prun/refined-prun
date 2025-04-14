@@ -59,7 +59,7 @@ interface ActionStepInfo<T> {
   type: string;
   preProcessData?: (data: T) => T;
   description: (data: T) => string;
-  execute: (ctx: ActionStepExecuteContext<T>) => void;
+  execute: (ctx: ActionStepExecuteContext<T>) => Promise<void>;
 }
 
 const actionSteps: ActionStepInfo<unknown>[] = [];
