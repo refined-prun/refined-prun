@@ -2,6 +2,11 @@ import { act } from '@src/features/XIT/ACT/act-registry';
 import { fixed0, fixed02 } from '@src/utils/format';
 import { changeInputValue, clickElement } from '@src/util';
 import { fillAmount } from '@src/features/XIT/ACT/actions/cx-buy/utils';
+import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
+import { isDefined } from 'ts-extras';
+import { ExchangeTickersReverse } from '@src/legacy';
+import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
+import { watchWhile } from '@src/utils/watch';
 
 interface Data {
   exchange: string;
@@ -97,8 +102,22 @@ export const CX_BUY = act.addActionStep<Data>({
     // order book data will change after that.
     ctx.cacheDescription();
     await waitAct();
+    const warehouseAmount = computed(() => {
+      const naturalId = ExchangeTickersReverse[exchange];
+      const warehouse = warehousesStore.getByEntityNaturalId(naturalId);
+      const store = storagesStore.getById(warehouse?.storeId);
+      return (
+        store?.items
+          .map(x => x.quantity ?? undefined)
+          .filter(isDefined)
+          .find(x => x.material.ticker === ticker)?.amount ?? 0
+      );
+    });
+    const currentAmount = warehouseAmount.value;
     await clickElement(buyButton);
     await waitActionFeedback(tile);
+    setStatus('Waiting for storage update...');
+    await watchWhile(() => warehouseAmount.value === currentAmount);
 
     complete();
   },
