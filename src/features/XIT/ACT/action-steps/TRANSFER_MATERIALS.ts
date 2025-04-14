@@ -23,23 +23,29 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
   execute: async ctx => {
     const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete, skip, fail } =
       ctx;
+    const { ticker, from, to } = data;
 
-    const material = materialsStore.getByTicker(data.ticker);
+    if (!from.items.find(x => x.quantity?.material.ticker === ticker)) {
+      log.warning(`No ${ticker} was transferred (not present in origin)`);
+      skip();
+      return;
+    }
+    const material = materialsStore.getByTicker(ticker);
     if (!material) {
-      log.error(`Unknown material ${data.ticker}`);
+      log.error(`Unknown material ${ticker}`);
       fail();
       return;
     }
-    const canFitWeight = material.weight <= data.to.weightCapacity - data.to.weightLoad;
-    const canFitVolume = material.volume <= data.to.volumeCapacity - data.to.volumeLoad;
+    const canFitWeight = material.weight <= to.weightCapacity - to.weightLoad;
+    const canFitVolume = material.volume <= to.volumeCapacity - to.volumeLoad;
     if (!canFitWeight || !canFitVolume) {
-      log.warning(`No ${data.ticker} was transferred (no space)`);
+      log.warning(`No ${ticker} was transferred (no space)`);
       skip();
       return;
     }
 
     const tile = await requestTile(
-      `MTRA from-${data.from.id.substring(0, 8)} to-${data.to.id.substring(0, 8)}`,
+      `MTRA from-${from.id.substring(0, 8)} to-${to.id.substring(0, 8)}`,
     );
     if (!tile) {
       return;
@@ -49,7 +55,6 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     const container = await $(tile.anchor, C.MaterialSelector.container);
     const input = await $(container, 'input');
 
-    const ticker = data.ticker;
     const suggestionsContainer = await $(container, C.MaterialSelector.suggestionsContainer);
     focusElement(input);
     changeInputValue(input, ticker);
@@ -104,7 +109,7 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
 
     await waitAct();
     const destinationAmount = computed(() => {
-      const store = storagesStore.getById(data.to.id);
+      const store = storagesStore.getById(to.id);
       return (
         store?.items
           .map(x => x.quantity ?? undefined)
