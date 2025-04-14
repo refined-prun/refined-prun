@@ -6,6 +6,7 @@
 - `XIT ACT`: Improve step generation and log messages for "buy partial" CX Buy actions
 - `XIT ACT`: Tag non-failed actions as skipped if they cannot be executed
 - `XIT ACT`: Make CX Buy and MTRA actions wait for the storage update before executing the next action
+- `XIT ACT`: Add an error for the CX Buy action when there is not enough space in the CX warehouse
 
 ### Fixed
 

@@ -7,6 +7,7 @@ import { isDefined } from 'ts-extras';
 import { ExchangeTickersReverse } from '@src/legacy';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { watchWhile } from '@src/utils/watch';
+import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 
 interface Data {
   exchange: string;
@@ -41,6 +42,34 @@ export const CX_BUY = act.addActionStep<Data>({
       ctx;
     const { amount, ticker, exchange, priceLimit } = data;
     const cxTicker = `${ticker}.${exchange}`;
+    const cxWarehouse = computed(() => {
+      const naturalId = ExchangeTickersReverse[exchange];
+      const warehouse = warehousesStore.getByEntityNaturalId(naturalId);
+      return storagesStore.getById(warehouse?.storeId);
+    });
+
+    if (!cxWarehouse.value) {
+      log.error(`CX warehouse not found for ${exchange}`);
+      fail();
+      return;
+    }
+
+    const material = materialsStore.getByTicker(ticker);
+    if (!material) {
+      log.error(`Unknown material ${ticker}`);
+      fail();
+      return;
+    }
+
+    const canFitWeight =
+      material.weight * amount <= cxWarehouse.value.weightCapacity - cxWarehouse.value.weightLoad;
+    const canFitVolume =
+      material.volume * amount <= cxWarehouse.value.volumeCapacity - cxWarehouse.value.volumeLoad;
+    if (!canFitWeight || !canFitVolume) {
+      log.error(`Cannot not buy ${fixed0(amount)} ${ticker} (will not fit in the warehouse)`);
+      fail();
+      return;
+    }
 
     const tile = await requestTile(`CXPO ${cxTicker}`);
     if (!tile) {
@@ -103,11 +132,8 @@ export const CX_BUY = act.addActionStep<Data>({
     ctx.cacheDescription();
     await waitAct();
     const warehouseAmount = computed(() => {
-      const naturalId = ExchangeTickersReverse[exchange];
-      const warehouse = warehousesStore.getByEntityNaturalId(naturalId);
-      const store = storagesStore.getById(warehouse?.storeId);
       return (
-        store?.items
+        cxWarehouse.value?.items
           .map(x => x.quantity ?? undefined)
           .filter(isDefined)
           .find(x => x.material.ticker === ticker)?.amount ?? 0
