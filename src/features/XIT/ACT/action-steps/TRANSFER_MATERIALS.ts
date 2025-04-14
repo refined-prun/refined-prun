@@ -21,7 +21,8 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     `Transfer ${fixed0(data.amount)} ${data.ticker} ` +
     `from ${serializeStorage(data.from)} to ${serializeStorage(data.to)}`,
   execute: async ctx => {
-    const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete, fail } = ctx;
+    const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete, skip, fail } =
+      ctx;
 
     const material = materialsStore.getByTicker(data.ticker);
     if (!material) {
@@ -32,10 +33,8 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     const canFitWeight = material.weight <= data.to.weightCapacity - data.to.weightLoad;
     const canFitVolume = material.volume <= data.to.volumeCapacity - data.to.volumeLoad;
     if (!canFitWeight || !canFitVolume) {
-      log.warning(
-        `Not enough space in ${serializeStorage(data.to)} to transfer at least 1 ${data.ticker}`,
-      );
-      complete();
+      log.warning(`No ${data.ticker} was transferred (no space)`);
+      skip();
       return;
     }
 
@@ -84,15 +83,16 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     }
     const amount = data.amount;
     if (amount > maxAmount) {
+      if (maxAmount === 0) {
+        log.warning(`No ${ticker} was transferred (no space)`);
+        skip();
+        return;
+      }
       const leftover = amount - maxAmount;
       log.warning(
         `${fixed0(leftover)} ${ticker} not transferred ` +
           `(${fixed0(maxAmount)} of ${fixed0(amount)} transferred)`,
       );
-      if (maxAmount === 0) {
-        complete();
-        return;
-      }
     }
     changeInputValue(amountInput, Math.min(amount, maxAmount).toString());
 

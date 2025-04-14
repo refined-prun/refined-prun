@@ -110,6 +110,7 @@ export class StepMachine {
         this.log.success(description ?? info.description(this.next));
         this.loadNext();
       },
+      skip: () => this.skip(),
       fail: () => {
         this.log.error('Action Package execution failed');
         this.stop();

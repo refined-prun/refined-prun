@@ -32,7 +32,8 @@ export const CX_BUY = act.addActionStep<Data>({
     return description;
   },
   execute: async ctx => {
-    const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete, fail } = ctx;
+    const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete, skip, fail } =
+      ctx;
     const { amount, ticker, exchange, priceLimit } = data;
     const cxTicker = `${ticker}.${exchange}`;
 
@@ -82,7 +83,7 @@ export const CX_BUY = act.addActionStep<Data>({
       message += ')';
       log.warning(message);
       if (filled.amount === 0) {
-        complete();
+        skip();
         return;
       }
     }

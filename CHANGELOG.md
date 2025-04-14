@@ -4,6 +4,7 @@
 
 - `XIT ACT`: Add total cost to CX Buy action step description
 - `XIT ACT`: Improve step generation and log messages for "buy partial" CX Buy actions
+- `XIT ACT`: Tag non-failed actions as skipped if they cannot be executed
 
 ### Fixed
 

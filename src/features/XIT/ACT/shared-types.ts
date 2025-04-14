@@ -41,6 +41,7 @@ export interface ActionStepExecuteContext<T> extends ActionRunnerContext<T> {
   waitActionFeedback: (tile: PrunTile) => Promise<void>;
   cacheDescription: () => void;
   complete: () => void;
+  skip: () => void;
   fail: () => void;
   requestTile: (Command: string) => Promise<PrunTile | undefined>;
 }
