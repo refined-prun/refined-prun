@@ -110,7 +110,7 @@ export const CX_BUY = act.addActionStep<Data>({
       const leftover = amount - filled.amount;
       let message =
         `${fixed0(leftover)} ${ticker} will not be bought on ${exchange} ` +
-        `(${filled.amount} of ${amount} available`;
+        `(${fixed0(filled.amount)} of ${fixed0(amount)} available`;
       if (isFinite(priceLimit)) {
         message += ` with price limit ${fixed02(priceLimit)}/u`;
       }
