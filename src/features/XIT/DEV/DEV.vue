@@ -4,6 +4,7 @@ import DebugButton from '@src/features/XIT/DEV/DevButton.vue';
 import { userData } from '@src/store/user-data';
 import Cookies from 'js-cookie';
 import { mergedPrunStyles, prunStyleUpdated } from '@src/infrastructure/prun-ui/prun-css';
+import { isRecordingPrunLog, prunLog } from '@src/infrastructure/prun-api/prun-api-listener';
 
 function logUserData() {
   console.log(userData);
@@ -14,6 +15,16 @@ const prunDebug = ref(Cookies.get('pu-debug') === 'true');
 function switchPrunDebug() {
   Cookies.set('pu-debug', (!prunDebug.value).toString());
   prunDebug.value = !prunDebug.value;
+}
+
+function recordPrunLog() {
+  isRecordingPrunLog.value = true;
+}
+
+function stopRecordingPrunLog() {
+  isRecordingPrunLog.value = false;
+  downloadFile(prunLog.value, 'prun-log.json', true);
+  prunLog.value = [];
 }
 
 function downloadCssDefinition() {
@@ -42,6 +53,8 @@ function downloadPrunStyles() {
 
 <template>
   <div :style="{ paddingTop: '4px' }">
+    <DebugButton v-if="!isRecordingPrunLog" @click="recordPrunLog">Record PrUn Log</DebugButton>
+    <DebugButton v-else @click="stopRecordingPrunLog">Stop Recording</DebugButton>
     <DebugButton @click="switchPrunDebug">
       {{ prunDebug ? 'Disable' : 'Enable' }} pu-debug
     </DebugButton>
