@@ -5,6 +5,7 @@ import { userData } from '@src/store/user-data';
 import Cookies from 'js-cookie';
 import { mergedPrunStyles, prunStyleUpdated } from '@src/infrastructure/prun-ui/prun-css';
 import { isRecordingPrunLog, prunLog } from '@src/infrastructure/prun-api/prun-api-listener';
+import SectionHeader from '@src/components/SectionHeader.vue';
 
 function logUserData() {
   console.log(userData);
@@ -53,6 +54,7 @@ function downloadPrunStyles() {
 
 <template>
   <div :style="{ paddingTop: '4px' }">
+    <SectionHeader>Warning: Messing with these can lead to unexpected behavior</SectionHeader>
     <DebugButton v-if="!isRecordingPrunLog" @click="recordPrunLog">Record PrUn Log</DebugButton>
     <DebugButton v-else @click="stopRecordingPrunLog">Stop Recording</DebugButton>
     <DebugButton @click="switchPrunDebug">
