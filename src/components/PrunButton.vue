@@ -28,7 +28,7 @@ const classes = computed(() => ({
 </script>
 
 <template>
-  <button :class="classes" type="button">
+  <button :class="classes" type="button" :disabled="disabled">
     <slot />
   </button>
 </template>

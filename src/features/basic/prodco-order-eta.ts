@@ -1,8 +1,8 @@
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { formatEta } from '@src/utils/format';
-import { refAttributeValue } from '@src/utils/reactive-dom';
+import { refAttributeValue, refTextContent } from '@src/utils/reactive-dom';
 import { createReactiveSpan } from '@src/utils/reactive-element';
-import { observeChildListChanged } from '@src/utils/mutation-observer';
+import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 
 function onTileReady(tile: PrunTile) {
   const line = computed(() => productionStore.getById(tile.parameter)!);
@@ -10,7 +10,15 @@ function onTileReady(tile: PrunTile) {
     const template = ref<PrunApi.ProductionTemplate>();
     const templateField = form.children[5];
     const dropDownItem = _$(templateField, C.DropDownBox.currentItem)!;
-    observeChildListChanged(dropDownItem, () => {
+    // In some edge cases C.ProductionLine.template is not re-created
+    // on template change. So, instead of using observeChildListChanged
+    // on the dropDownItem, we'll watch its textContent, as it always
+    // reflects the template change.
+    const templateText = refTextContent(dropDownItem);
+    watchEffectWhileNodeAlive(dropDownItem, () => {
+      // Touch reactive value.
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const _ = templateText.value;
       // The ProductionLine.template element is re-created each time
       // a new template in the drop-down box is selected.
       const templateElement = _$(dropDownItem, C.ProductionLine.template);
@@ -34,29 +42,33 @@ function onTileReady(tile: PrunTile) {
   });
 }
 
+function getMaterialsFromElements(elements: Element[]) {
+  const result: [string, number][] = [];
+  for (const material of elements) {
+    const ticker = _$(material, C.ColoredIcon.label)?.textContent ?? '';
+    const count = Number(_$(material, C.MaterialIcon.indicator)?.textContent ?? 0);
+    result.push([ticker, count]);
+  }
+  return result;
+}
+
 function parseTemplate(line: PrunApi.ProductionLine, templateElement: HTMLElement | undefined) {
   if (!templateElement) {
     return undefined;
   }
-  const inputs: [string, number][] = [];
-  const outputs: [string, number][] = [];
   // The structure of the template element looks like this:
-  // MaterialIcon[], ⇨, MaterialIcon[], duration
-  // First, we grab all inputs, and then on ⇨ flip to grabbing outputs.
-  let input = true;
-  for (const materials of Array.from(templateElement.children)) {
-    if (!materials.classList.contains(C.MaterialIcon.container)) {
-      input = false;
-      continue;
-    }
-    const ticker = _$(materials, C.ColoredIcon.label)?.textContent ?? '';
-    const count = Number(_$(materials, C.MaterialIcon.indicator)?.textContent ?? 0);
-    if (input) {
-      inputs.push([ticker, count]);
-    } else {
-      outputs.push([ticker, count]);
-    }
+  // C.ProductionLine.inputs, ⇨, MaterialIcon[], duration.
+  const inputsContainer = _$(templateElement, C.ProductionLine.inputs);
+  if (!inputsContainer) {
+    return undefined;
   }
+  const inputMaterials = _$$(inputsContainer, C.MaterialIcon.container);
+  const inputs: [string, number][] = getMaterialsFromElements(inputMaterials);
+
+  const outputMaterials = _$$(templateElement, C.MaterialIcon.container).filter(
+    x => !inputMaterials.includes(x),
+  );
+  const outputs: [string, number][] = getMaterialsFromElements(outputMaterials);
 
   for (const template of line.productionTemplates) {
     const templateInputs = template.inputFactors;

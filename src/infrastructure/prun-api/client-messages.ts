@@ -11,7 +11,7 @@ export function UI_WINDOWS_UPDATE_SIZE(id: string, width: number, height: number
   };
 }
 
-export function UI_TILES_CHANGE_COMMAND(id: string, command: string) {
+export function UI_TILES_CHANGE_COMMAND(id: string, command: string | null) {
   return {
     messageType: 'UI_TILES_CHANGE_COMMAND',
     payload: {

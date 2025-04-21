@@ -2,7 +2,8 @@
 import Active from '@src/components/forms/Active.vue';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { parseStorageName } from '@src/features/XIT/ACT/utils';
+import { serializeStorage, storageSort } from '@src/features/XIT/ACT/actions/mtra/utils';
+import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 const { action, pkg } = defineProps<{
   action: UserData.ActionData;
@@ -13,21 +14,10 @@ const materialGroups = computed(() => pkg.groups.map(x => x.name!).filter(x => x
 const materialGroup = ref(action.group ?? materialGroups.value[0]);
 
 const storages = computed(() => {
-  const storages = [...(storagesStore.all.value ?? [])].sort(storageSort).map(parseStorageName);
-  storages.unshift('Configure on Execution');
+  const storages = [...(storagesStore.all.value ?? [])].sort(storageSort).map(serializeStorage);
+  storages.unshift(configurableValue);
   return storages;
 });
-
-function storageSort(a: PrunApi.Store, b: PrunApi.Store) {
-  const storagePriorityMap = {
-    FTL_FUEL_STORE: 4,
-    STL_FUEL_STORE: 3,
-    SHIP_STORE: 2,
-    STORE: 0,
-    WAREHOUSE_STORE: 1,
-  };
-  return a.type && b.type && storagePriorityMap[a.type] > storagePriorityMap[b.type] ? 1 : -1;
-}
 
 const origin = ref(action.origin ?? storages.value[0]);
 const destination = ref(action.dest ?? storages.value[0]);

@@ -76,6 +76,7 @@ const sortOrder = {
     'LC',
     'WS',
   ]),
+  'consumable bundles': makeSortOrderMap(['PBU', 'SBU', 'TBU', 'EBU', 'CBU']),
   'construction prefabs': makeSortOrderMap([
     'BBH',
     'BDE',
