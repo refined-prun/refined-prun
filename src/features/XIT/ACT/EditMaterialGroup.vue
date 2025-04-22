@@ -21,7 +21,7 @@ const nameError = ref(false);
 const typeOptions = act.getMaterialGroupTypes();
 const type = ref(group.type);
 
-const editFormComponent = computed(() => act.getMaterialGroupInfo(type.value)?.editForm);
+const editFormComponent = computed(() => act.getMaterialGroupInfo(type.value)?.editComponent);
 const editForm = useTemplateRef('editForm');
 
 function onSaveClick() {

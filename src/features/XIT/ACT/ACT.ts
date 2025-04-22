@@ -1,11 +1,9 @@
-import './ACT.css';
+import './actions/cx-buy/cx-buy';
+import './actions/mtra/mtra';
 
-import './actions/cx-buy';
-import './actions/mtra';
-
-import './material-groups/repair';
-import './material-groups/resupply';
-import './material-groups/manual';
+import './material-groups/repair/repair';
+import './material-groups/resupply/resupply';
+import './material-groups/manual/manual';
 
 import ACT from '@src/features/XIT/ACT/ACT.vue';
 

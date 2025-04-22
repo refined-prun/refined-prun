@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface Alert {
+  interface Alert {
     id: string;
     type: AlertType;
     contextId: string;
@@ -10,7 +10,7 @@ declare namespace PrunApi {
     read: boolean;
   }
 
-  export type AlertType =
+  type AlertType =
     | 'ADMIN_CENTER_ELECTION_STARTED'
     | 'ADMIN_CENTER_GOVERNOR_ELECTED'
     | 'ADMIN_CENTER_MOTION_ENDED'

@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface ProductionLine {
+  interface ProductionLine {
     id: string;
     siteId: string;
     address: Address;
@@ -14,7 +14,7 @@ declare namespace PrunApi {
     efficiencyFactors: EfficiencyFactor[];
   }
 
-  export interface EfficiencyFactor {
+  interface EfficiencyFactor {
     expertiseCategory?: string;
     type: EfficiencyFactorType;
     effectivity: number;
@@ -23,7 +23,7 @@ declare namespace PrunApi {
 
   type EfficiencyFactorType = 'EXPERTS' | 'COGC_PROGRAM' | 'PRODUCTION_LINE_CONDITION';
 
-  export interface ProductionOrder {
+  interface ProductionOrder {
     id: string;
     productionLineId: string;
     inputs: MaterialAmountValue[];
@@ -40,11 +40,11 @@ declare namespace PrunApi {
     recurring: boolean;
   }
 
-  export interface ProductionFeeCollector {
+  interface ProductionFeeCollector {
     currency: Currency;
   }
 
-  export interface ProductionTemplate {
+  interface ProductionTemplate {
     id: string;
     name: string;
     inputFactors: ProductionFactor[];
@@ -56,12 +56,12 @@ declare namespace PrunApi {
     productionFeeCollector: ProductionFeeCollector;
   }
 
-  export interface ProductionFactor {
+  interface ProductionFactor {
     material: Material;
     factor: number;
   }
 
-  export interface ProductionWorkforce {
+  interface ProductionWorkforce {
     level: string;
     efficiency: number;
   }

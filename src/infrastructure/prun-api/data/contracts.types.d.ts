@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface Contract {
+  interface Contract {
     id: string;
     localId: string;
     date: DateTime;
@@ -20,7 +20,7 @@ declare namespace PrunApi {
     contractType: null | string;
   }
 
-  export interface ContractCondition {
+  interface ContractCondition {
     quantity?: MaterialAmount | null;
     address?: Address;
     blockId?: string | null;
@@ -46,9 +46,9 @@ declare namespace PrunApi {
     total?: CurrencyAmount;
   }
 
-  export type ContractParty = 'CUSTOMER' | 'PROVIDER';
+  type ContractParty = 'CUSTOMER' | 'PROVIDER';
 
-  export type ContractConditionStatus =
+  type ContractConditionStatus =
     | 'PENDING'
     | 'IN_PROGRESS'
     | 'FULFILLED'
@@ -56,7 +56,7 @@ declare namespace PrunApi {
     | 'FULFILLMENT_ATTEMPTED'
     | 'VIOLATED';
 
-  export type ContractConditionType =
+  type ContractConditionType =
     | 'BASE_CONSTRUCTION'
     | 'COMEX_PURCHASE_PICKUP'
     | 'CONTRIBUTION'
@@ -79,7 +79,7 @@ declare namespace PrunApi {
     | 'POWER'
     | 'REPAIR_SHIP';
 
-  export interface ContractPartner {
+  interface ContractPartner {
     id?: string;
     name: string;
     code?: null | string;
@@ -89,9 +89,9 @@ declare namespace PrunApi {
     type?: ContractPartnerTypeEnum;
   }
 
-  export type ContractPartnerTypeEnum = 'EXPLORATION' | 'GOVERNANCE' | 'LOGISTICS';
+  type ContractPartnerTypeEnum = 'EXPLORATION' | 'GOVERNANCE' | 'LOGISTICS';
 
-  export type ContractStatus =
+  type ContractStatus =
     | 'OPEN'
     | 'CLOSED'
     | 'CANCELLED'

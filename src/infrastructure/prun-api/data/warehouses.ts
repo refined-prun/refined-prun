@@ -1,7 +1,10 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
-import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import {
+  getEntityNameFromAddress,
+  getEntityNaturalIdFromAddress,
+} from '@src/infrastructure/prun-api/data/addresses';
 
 const store = createEntityStore<PrunApi.Warehouse>(x => x.warehouseId);
 const state = store.state;
@@ -24,7 +27,14 @@ const getByEntityNaturalId = createMapGetter(
   x => getEntityNaturalIdFromAddress(x.address)!,
 );
 
+const getByEntityName = createMapGetter(state.all, x => getEntityNameFromAddress(x.address)!);
+
+const getByEntityNaturalIdOrName = (value?: string | null) =>
+  getByEntityNaturalId(value) ?? getByEntityName(value);
+
 export const warehousesStore = {
   ...state,
   getByEntityNaturalId,
+  getByEntityName,
+  getByEntityNaturalIdOrName,
 };

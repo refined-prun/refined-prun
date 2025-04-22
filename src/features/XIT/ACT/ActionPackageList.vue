@@ -5,10 +5,17 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { showConfirmationOverlay, showTileOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import CreateActionPackage from '@src/features/XIT/ACT/CreateActionPackage.vue';
 import ImportActionPackage from '@src/features/XIT/ACT/ImportActionPackage.vue';
+import Quickstart from '@src/features/XIT/ACT/Quickstart.vue';
 import { userData } from '@src/store/user-data';
 import PrunLink from '@src/components/PrunLink.vue';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { objectId } from '@src/utils/object-id';
+
+const showQuickstart = computed(() => userData.actionPackages.length === 0);
+
+function onQuickstartClick(ev: Event) {
+  showTileOverlay(ev, Quickstart);
+}
 
 function onCreateClick(ev: Event) {
   showTileOverlay(ev, CreateActionPackage, {
@@ -18,7 +25,7 @@ function onCreateClick(ev: Event) {
         groups: [],
         actions: [],
       });
-      showBuffer('XIT ACTION GEN ' + name.split(' ').join('_'));
+      showBuffer('XIT ACT_EDIT_' + name.split(' ').join('_'));
     },
   });
 }
@@ -55,6 +62,9 @@ function paramName(pkg: UserData.ActionPackageData) {
 
 <template>
   <ActionBar>
+    <div v-if="showQuickstart">Click here if you don't<br />know what to do!</div>
+    <div v-if="showQuickstart">→</div>
+    <PrunButton v-if="showQuickstart" primary @click="onQuickstartClick">QUICKSTART</PrunButton>
     <PrunButton primary @click="onCreateClick">CREATE NEW</PrunButton>
     <PrunButton primary @click="onImportClick">IMPORT</PrunButton>
   </ActionBar>
@@ -75,17 +85,17 @@ function paramName(pkg: UserData.ActionPackageData) {
     <tbody v-else>
       <tr v-for="pkg in userData.actionPackages" :key="objectId(pkg)">
         <td>
-          <PrunLink :command="`XIT ACTION ${paramName(pkg)}`">
+          <PrunLink :command="`XIT ACT_${paramName(pkg)}`">
             {{ friendlyName(pkg) }}
           </PrunLink>
         </td>
         <td>
-          <PrunButton primary @click="showBuffer(`XIT ACTION ${paramName(pkg)}`)">
+          <PrunButton primary @click="showBuffer(`XIT ACT_${paramName(pkg)}`)">
             EXECUTE
           </PrunButton>
         </td>
         <td>
-          <PrunButton primary @click="showBuffer(`XIT ACTION EDIT ${paramName(pkg)}`)">
+          <PrunButton primary @click="showBuffer(`XIT ACT_EDIT_${paramName(pkg)}`)">
             EDIT
           </PrunButton>
         </td>

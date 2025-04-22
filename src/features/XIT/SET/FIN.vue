@@ -98,7 +98,7 @@ function onIgnoredMaterialsSubmit() {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="balance in sortedData" :key="objectId(balance)">
+      <tr v-for="(balance, i) in sortedData" :key="objectId(balance)">
         <td>{{ hhmm(balance.timestamp) }} {{ ddmmyyyy(balance.timestamp) }}</td>
         <td>{{ formatValue(calcEquity(balance)) }}</td>
         <td>

@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface Star {
+  interface Star {
     systemId: string;
     address: Address;
     name: string;
@@ -10,5 +10,5 @@ declare namespace PrunApi {
     connections: string[];
   }
 
-  declare type StarType = 'A' | 'B' | 'F' | 'G' | 'K' | 'M' | 'O';
+  type StarType = 'A' | 'B' | 'F' | 'G' | 'K' | 'M' | 'O';
 }
