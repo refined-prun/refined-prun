@@ -13,7 +13,7 @@ const requests = computed(() => orderInfo.value?.buyingOrders ?? []);
 const spread = computed(() => {
   const ask = orderInfo.value?.ask?.price.amount;
   const bid = orderInfo.value?.bid?.price.amount;
-  return ask && bid ? fixed2(ask - bid) : '--';
+  return ask !== undefined && bid !== undefined ? fixed2(ask - bid) : '--';
 });
 
 const orderBook = useTemplateRef<HTMLDivElement>('order-book');

@@ -128,13 +128,13 @@ export class StepMachine {
 
   private async requestTile(command: string) {
     let tile = tiles.find(command, true)[0];
-    if (tile) {
+    if (tile !== undefined) {
       return tile;
     }
     await this.waitAct(`Open ${command}`);
     this.options.onStatusChanged(`Opening ${command}...`);
     tile = await this.options.tileAllocator.requestTile(command);
-    if (!tile) {
+    if (tile === undefined) {
       this.log.error(`Failed to open ${command}`);
       this.stop();
     }
@@ -160,7 +160,7 @@ async function waitActionFeedback(tile: PrunTile) {
   await waitActionProgress(overlay);
   if (overlay.classList.contains(C.ActionConfirmationOverlay.container)) {
     const confirm = _$$(overlay, C.Button.btn)[1];
-    if (!confirm) {
+    if (confirm === undefined) {
       return 'Confirmation overlay is missing confirm button';
     }
     await clickElement(confirm);

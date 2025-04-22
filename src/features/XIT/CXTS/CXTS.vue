@@ -45,11 +45,6 @@ const days = computed(() => {
   days.push(day);
 
   for (const trade of trades) {
-    const mat = trade.order.material;
-    if (!mat) {
-      continue;
-    }
-
     if (trade.date < day.date) {
       day = {
         date: getDateComponent(trade.date),

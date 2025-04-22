@@ -17,7 +17,7 @@ import {
 act.addMaterialGroup<Config>({
   type: 'Resupply',
   description: data => {
-    if (!data.planet || !data.days) {
+    if (!data.planet || data.days === undefined) {
       return '--';
     }
 
@@ -31,7 +31,7 @@ act.addMaterialGroup<Config>({
     if (!data.planet) {
       log.error('Missing resupply planet');
     }
-    if (!data.days) {
+    if (data.days === undefined) {
       log.error('Missing resupply days');
     }
 
@@ -42,7 +42,7 @@ act.addMaterialGroup<Config>({
       log.error(`Base is not present on ${data.planet}`);
     }
 
-    if (!site || !data.days) {
+    if (!site || data.days === undefined) {
       return undefined;
     }
 

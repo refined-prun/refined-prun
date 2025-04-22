@@ -7,7 +7,7 @@ import { getTileState } from './tile-state';
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.StoreView.container), container => {
     subscribe($$(container, C.GridItemView.image), item => {
-      if (!item.children[1]) {
+      if (item.children[1] === undefined) {
         void addMarker(item, tile);
       }
     });

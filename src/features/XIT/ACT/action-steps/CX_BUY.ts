@@ -82,7 +82,7 @@ export const CX_BUY = act.addActionStep<Data>({
     const quantityInput = inputs[0];
     const priceInput = inputs[1];
 
-    if (!quantityInput || !priceInput) {
+    if (quantityInput === undefined || priceInput === undefined) {
       log.error('Missing input elements');
       fail();
       return;

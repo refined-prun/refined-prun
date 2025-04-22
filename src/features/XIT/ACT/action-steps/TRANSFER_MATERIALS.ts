@@ -97,7 +97,7 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     const maxAmount = Math.max(...sliderNumbers);
     const allInputs = _$$(tile.anchor, 'input');
     const amountInput = allInputs[1];
-    if (!amountInput) {
+    if (amountInput === undefined) {
       log.error('Missing amount input');
       fail();
       return;

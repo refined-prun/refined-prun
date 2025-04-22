@@ -44,7 +44,7 @@ function save() {
   action.priceLimits = {};
   for (let [ticker, price] of priceLimits.value) {
     const material = materialsStore.getByTicker(ticker);
-    if (!material || !price || !isFinite(price)) {
+    if (!material || price === 0 || !isFinite(price)) {
       continue;
     }
     action.priceLimits[material.ticker] = price;

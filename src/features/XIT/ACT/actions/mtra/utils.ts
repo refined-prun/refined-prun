@@ -109,7 +109,7 @@ export function atSameLocation(storageA: PrunApi.Store, storageB: PrunApi.Store)
   for (let i = 0; i < addressA.lines.length; i++) {
     const lineA = addressA.lines[i];
     const lineB = addressB.lines[i];
-    if (!lineA || !lineB || lineA.entity.id !== lineB.entity.id) {
+    if (lineA === undefined || lineB === undefined || lineA.entity.id !== lineB.entity.id) {
       return false;
     }
   }

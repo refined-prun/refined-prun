@@ -18,7 +18,7 @@ type Currency = string;
 
 const cxDeposits = computed(() => {
   const orders = cxosStore.active.value;
-  if (orders === undefined) {
+  if (!orders) {
     return undefined;
   }
   const deposits = new Map<Currency, number>();
@@ -37,7 +37,7 @@ const cxDepositsTotal = computed(() => sumMapValues(cxDeposits.value));
 
 const fxDeposits = computed(() => {
   const orders = fxosStore.active.value;
-  if (orders === undefined) {
+  if (!orders) {
     return undefined;
   }
   const deposits = new Map<Currency, number>();

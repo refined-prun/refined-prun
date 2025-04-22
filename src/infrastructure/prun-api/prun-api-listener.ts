@@ -34,7 +34,7 @@ export function listenPrunApi() {
 export const isRecordingPrunLog = ref(false);
 export const prunLog = ref([] as Message[]);
 
-function processEvent(message: Message) {
+function processEvent(message: Message | undefined) {
   if (!message || !message.messageType || !message.payload) {
     return;
   }

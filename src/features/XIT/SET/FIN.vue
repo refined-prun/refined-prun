@@ -41,7 +41,7 @@ function confirmAllDataDelete(ev: Event) {
 }
 
 function formatValue(number?: number) {
-  return number ? fixed0(number) : '--';
+  return number !== undefined ? fixed0(number) : '--';
 }
 
 const mmMaterials = ref(userData.settings.financial.mmMaterials);

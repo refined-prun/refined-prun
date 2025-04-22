@@ -51,7 +51,7 @@ function onTileReady(tile: PrunTile) {
     // XIT command produces a tile with full-size green screen as its content.
     // Custom XIT tiles are just mounted inside this green screen.
     const container = scrollView.children[0] as HTMLDivElement;
-    if (!container) {
+    if (container === undefined) {
       return;
     }
 

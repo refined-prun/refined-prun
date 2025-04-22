@@ -13,7 +13,7 @@ const edit = parameters[1]?.toLowerCase() === 'gen' || parameters[1]?.toLowerCas
 if (edit) {
   pkgName = parameters.slice(2).join(' ');
 }
-const run = parameters[1] && !edit;
+const run = parameters[1] !== undefined && !edit;
 if (run) {
   pkgName = parameters.slice(1).join(' ');
 }

@@ -15,7 +15,7 @@ interface Entry {
 
 const orderValue = computed(() => {
   const sites = sitesStore.all.value;
-  if (sites === undefined) {
+  if (!sites) {
     return undefined;
   }
   const orders: Entry[] = [];
@@ -44,7 +44,7 @@ const orderValue = computed(() => {
 });
 
 export const workInProgressByLocation = computed(() => {
-  if (orderValue.value === undefined) {
+  if (!orderValue.value) {
     return undefined;
   }
   const now = timestampEachMinute.value;

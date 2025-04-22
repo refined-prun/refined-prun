@@ -1,5 +1,5 @@
 import { registerClassName } from '@src/utils/select-dom';
-import { isEmpty } from 'ts-extras';
+import { isEmpty, isPresent } from 'ts-extras';
 import { sleep } from '@src/utils/sleep';
 
 export const C = {} as PrunCssClasses;
@@ -77,7 +77,7 @@ export function getPrunCssStylesheets() {
       continue;
     }
     try {
-      if (sheet.cssRules) {
+      if (isPresent(sheet.cssRules)) {
         valid.push(style);
       }
     } catch {

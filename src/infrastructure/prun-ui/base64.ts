@@ -5,7 +5,7 @@ export function prunBtoa(input: string) {
 
 export function prunAtob(input: string) {
   let base64 = input.replaceAll('-', '+').replaceAll('.', '/');
-  while (base64.length % 4) {
+  while (base64.length % 4 !== 0) {
     base64 += '=';
   }
   return atob(base64);

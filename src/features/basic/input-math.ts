@@ -44,7 +44,7 @@ function replaceMaterialProperties(expression: string) {
         property = Math.max(material.weight, material.volume);
         break;
     }
-    if (property) {
+    if (property !== undefined) {
       expression = expression.replace(match, property.toFixed(3));
     }
   }

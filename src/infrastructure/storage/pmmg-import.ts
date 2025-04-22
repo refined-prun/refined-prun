@@ -150,7 +150,7 @@ export function importPmmgActions() {
     if (!json) {
       return;
     }
-    const pmmg = json['PMMG-Action'] as Record<string, UserData.ActionPackageData>;
+    const pmmg = json['PMMG-Action'] as Record<string, UserData.ActionPackageData> | undefined;
     if (pmmg) {
       userData.actionPackages = Object.values(pmmg);
     }
@@ -226,7 +226,7 @@ export function importPmmgCommandLists() {
     if (!json) {
       return;
     }
-    const pmmg = json['PMMG-Lists'] as Record<string, [string, string][]>;
+    const pmmg = json['PMMG-Lists'] as Record<string, [string, string][]> | undefined;
     if (pmmg) {
       for (const key of Object.keys(pmmg)) {
         const list: UserData.CommandList = {
