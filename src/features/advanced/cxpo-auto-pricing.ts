@@ -159,8 +159,4 @@ function init() {
   tiles.observe('CXPO', onTileReady);
 }
 
-features.add(
-  import.meta.url,
-  init,
-  'CXPO: Leave "Price Limit" field empty for automatic calculation.',
-);
+features.add(import.meta.url, init, 'CXPO: Adds automatic price calculation.');
