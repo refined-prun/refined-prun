@@ -75,7 +75,7 @@ async function onComExPanelReady(comExPanel: HTMLElement) {
   });
 
   createFragmentApp(() => (
-    <div class={[C.ActionBar.element, $style.textInputElement]}>
+    <div class={[C.ActionBar.element, $style.container]}>
       Search:&nbsp;
       <TextInput v-model={searchText.value} />
       <PrunButton dark class={[$style.button, fa.solid]} onClick={() => (searchText.value = '')}>
