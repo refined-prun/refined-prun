@@ -1,192 +1,158 @@
 import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
 import { changeInputValue } from '@src/util';
 import { fixed02 } from '@src/utils/format';
-import { refAttributeValue } from '@src/utils/reactive-dom';
+import { refValue } from '@src/utils/reactive-dom';
 import { createReactiveDiv } from '@src/utils/reactive-element';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, C.ComExPlaceOrderForm.form), async form => {
-    const quantityInput = await $(form.children[7], 'input');
-    const quantityValue = refAttributeValue(quantityInput, 'value');
+  subscribe($$(tile.anchor, C.ComExPlaceOrderForm.form), x => onFormReady(x, tile.parameter));
+}
 
-    const priceInput = await $(form.children[8], 'input');
-    const priceInputValue = refAttributeValue(priceInput, 'value');
+async function onFormReady(form: HTMLElement, parameter?: string) {
+  const orderBook = computed(() => cxobStore.getByTicker(parameter));
 
-    const priceBuy = ref('0');
-    const showPriceBuy = ref(false);
-    const priceSell = ref('0');
-    const showPriceSell = ref(false);
+  const quantityInput = await $(form.children[7], 'input');
+  const quantityValue = refValue(quantityInput);
+  const priceInfo = computed(() => {
+    const quantity = Number(quantityValue.value);
+    if (!isFinite(quantity) || quantity <= 0 || !orderBook.value) {
+      return undefined;
+    }
+    return {
+      buy: fillQuantity(orderBook.value.sellingOrders, quantity),
+      sell: fillQuantity(orderBook.value.buyingOrders, quantity),
+    };
+  });
 
-    const placeholderText = computed(() => {
-      if (!showPriceBuy.value && !showPriceSell.value) {
-        return 'Auto';
-      } else if (!showPriceBuy.value) {
-        return `${priceSell.value}`;
-      } else if (!showPriceSell.value) {
-        return `${priceBuy.value}`;
-      }
-      return 'Error';
-    });
+  const priceBuy = computed(() => priceInfo.value?.buy.price ?? 0);
+  const priceSell = computed(() => priceInfo.value?.sell.price ?? 0);
 
-    watchEffectWhileNodeAlive(form, () => {
-      priceInput.placeholder = placeholderText.value;
-    });
+  const priceInput = await $(form.children[8], 'input');
+  const priceInputValue = refValue(priceInput);
+  const showAutoValues = computed(() => priceInputValue.value === '');
 
-    const orderInfo = computed(() => cxobStore.getByTicker(tile.parameter!));
-    const currencyCode = orderInfo.value?.currency.code ?? '';
+  const buttonsField = form.children[12];
 
-    const effectivePriceLabel = await $(form.children[9], C.StaticInput.static);
-    effectivePriceLabel.style.display = 'none';
-    const effectivePriceLabelParent = effectivePriceLabel.parentElement!;
-    const featureEffectivePriceLabels = createDualLabels(effectivePriceLabelParent, currencyCode);
+  const isBuyFocused = ref(false);
+  const buy = await $(buttonsField, C.Button.success);
+  buy.addEventListener('mouseover', () => (isBuyFocused.value = true));
+  buy.addEventListener('mouseleave', () => (isBuyFocused.value = false));
+  buy.addEventListener('click', e => {
+    if (showAutoValues.value) {
+      changeInputValue(priceInput, priceBuy.value.toString());
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  });
 
-    const volumeLabel = await $(form.children[10], C.StaticInput.static);
-    volumeLabel.style.display = 'none';
-    const volumeLabelParent = volumeLabel.parentElement!;
-    const featureVolumeLabels = createDualLabels(volumeLabelParent, currencyCode);
+  const isSellFocused = ref(false);
+  const sell = await $(buttonsField, C.Button.danger);
+  sell.addEventListener('mouseover', () => (isSellFocused.value = true));
+  sell.addEventListener('mouseleave', () => (isSellFocused.value = false));
+  sell.addEventListener('click', e => {
+    if (showAutoValues.value) {
+      changeInputValue(priceInput, priceSell.value.toString());
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  });
 
-    const buttonsField = form.children[12];
-    const buy = await $(buttonsField, C.Button.success);
-    buy.addEventListener('click', e => {
-      if (priceInput.value === '') {
-        changeInputValue(priceInput, priceBuy.value);
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    });
-    buy.addEventListener('mouseover', () => {
-      if (priceInput.value === '') {
-        featureEffectivePriceLabels.showSell.value = false;
-        featureVolumeLabels.showSell.value = false;
-        showPriceBuy.value = true;
-      }
-    });
-    buy.addEventListener('mouseleave', () => {
-      if (priceInput.value === '') {
-        featureEffectivePriceLabels.showSell.value = true;
-        featureVolumeLabels.showSell.value = true;
-        showPriceBuy.value = false;
-      }
-    });
+  const placeholderText = computed(() => {
+    if (isBuyFocused.value) {
+      return fixed02(priceBuy.value);
+    }
+    if (isSellFocused.value) {
+      return fixed02(priceSell.value);
+    }
+    return 'Auto';
+  });
 
-    const sell = await $(buttonsField, C.Button.danger);
-    sell.addEventListener('click', e => {
-      if (priceInput.value === '') {
-        changeInputValue(priceInput, priceSell.value);
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    });
-    sell.addEventListener('mouseover', () => {
-      if (priceInput.value === '') {
-        featureEffectivePriceLabels.showBuy.value = false;
-        featureVolumeLabels.showBuy.value = false;
-        showPriceSell.value = true;
-      }
-    });
-    sell.addEventListener('mouseleave', () => {
-      if (priceInput.value === '') {
-        featureEffectivePriceLabels.showBuy.value = true;
-        featureVolumeLabels.showBuy.value = true;
-        showPriceSell.value = false;
-      }
-    });
+  watchEffectWhileNodeAlive(form, () => {
+    priceInput.placeholder = placeholderText.value;
+  });
 
-    const offers = computed(() => orderInfo.value?.sellingOrders ?? []);
-    const requests = computed(() => orderInfo.value?.buyingOrders ?? []);
+  const currencyCode = orderBook.value?.currency.code ?? '';
+  const showBuyValues = computed(() => showAutoValues.value && !isSellFocused.value);
+  const showSellValues = computed(() => showAutoValues.value && !isBuyFocused.value);
 
-    watchEffectWhileNodeAlive(form, () => {
-      if (priceInputValue.value !== '') {
-        effectivePriceLabel.style.display = '';
-        volumeLabel.style.display = '';
-        featureEffectivePriceLabels.showBuy.value = false;
-        featureEffectivePriceLabels.showSell.value = false;
-        featureVolumeLabels.showBuy.value = false;
-        featureVolumeLabels.showSell.value = false;
-        return;
-      }
-      if (quantityValue.value === '0' || quantityValue.value === '') {
-        featureEffectivePriceLabels.buyValue.value = 0;
-        featureEffectivePriceLabels.sellValue.value = 0;
-        featureVolumeLabels.buyValue.value = 0;
-        featureVolumeLabels.sellValue.value = 0;
-        return;
-      }
+  const effectivePriceLabel = await $(form.children[9], C.StaticInput.static);
+  createDualLabels(
+    effectivePriceLabel.parentElement!,
+    currencyCode,
+    showAutoValues,
+    computed(() => (showBuyValues.value ? priceInfo.value?.buy.effectivePrice : undefined)),
+    computed(() => (showSellValues.value ? priceInfo.value?.sell.effectivePrice : undefined)),
+  );
 
-      effectivePriceLabel.style.display = 'none';
-      volumeLabel.style.display = 'none';
-      featureEffectivePriceLabels.showBuy.value = true;
-      featureEffectivePriceLabels.showSell.value = true;
-      featureVolumeLabels.showBuy.value = true;
-      featureVolumeLabels.showSell.value = true;
+  const volumeLabel = await $(form.children[10], C.StaticInput.static);
+  createDualLabels(
+    volumeLabel.parentElement!,
+    currencyCode,
+    showAutoValues,
+    computed(() => (showBuyValues.value ? priceInfo.value?.buy.volume : undefined)),
+    computed(() => (showSellValues.value ? priceInfo.value?.sell.volume : undefined)),
+  );
 
-      const quantityInputRaw = quantityValue.value;
-      const quantityNeeded = Number(quantityInputRaw);
-      if (isNaN(quantityNeeded)) {
-        return;
-      }
-
-      const [buyPriceLimit, buyEffectivePrice, buyVolumeAccum] = getInfoFromOrderType(
-        offers.value,
-        quantityNeeded,
-      );
-
-      const [sellPriceLimit, sellEffectivePrice, sellVolumeAccum] = getInfoFromOrderType(
-        requests.value,
-        quantityNeeded,
-      );
-
-      priceBuy.value = `${buyPriceLimit}`;
-      priceSell.value = `${sellPriceLimit}`;
-
-      featureEffectivePriceLabels.buyValue.value = buyEffectivePrice;
-      featureEffectivePriceLabels.sellValue.value = sellEffectivePrice;
-      featureVolumeLabels.buyValue.value = buyVolumeAccum;
-      featureVolumeLabels.sellValue.value = sellVolumeAccum;
-    });
+  watchEffectWhileNodeAlive(form, () => {
+    effectivePriceLabel.style.display = showAutoValues.value ? 'none' : '';
+    volumeLabel.style.display = showAutoValues.value ? 'none' : '';
   });
 }
 
-function createDualLabels(container: HTMLElement, currencyUnit: string) {
-  const [buyValue, sellValue] = [ref(0), ref(0)];
-  const [showBuy, showSell] = [ref(true), ref(true)];
-  const divText = computed(() => {
-    if (showBuy.value && showSell.value) {
+function createDualLabels(
+  container: HTMLElement,
+  currencyUnit: string,
+  showAutoValues: Ref<boolean>,
+  buyValue: Ref<number | undefined>,
+  sellValue: Ref<number | undefined>,
+) {
+  const text = computed(() => {
+    if (!showAutoValues.value) {
+      return undefined;
+    }
+    if (buyValue.value && sellValue.value) {
       return `${fixed02(buyValue.value)} ${currencyUnit} / ${fixed02(sellValue.value)} ${currencyUnit}`;
-    } else if (!showBuy.value && !showSell.value) {
-      return '';
-    } else if (!showBuy.value) {
-      return `${fixed02(sellValue.value)} ${currencyUnit}`;
-    } else if (!showSell.value) {
+    }
+    if (buyValue.value) {
       return `${fixed02(buyValue.value)} ${currencyUnit}`;
     }
-    return 'Error';
+    if (sellValue.value) {
+      return `${fixed02(sellValue.value)} ${currencyUnit}`;
+    }
+    return '--';
   });
-  const div = createReactiveDiv(container, divText);
-  div.classList.add(...[C.StaticInput.static, C.forms.static]);
+  const div = createReactiveDiv(container, text);
+  div.classList.add(C.StaticInput.static, C.forms.static);
   container.prepend(div);
-
-  return { buyValue: buyValue, sellValue: sellValue, showBuy: showBuy, showSell: showSell };
 }
 
-function getInfoFromOrderType(orders: PrunApi.CXBrokerOrder[], quantityNeeded: number) {
-  let quantityCounted = 0;
-  let volumeAccum = 0;
-  for (let i = 0; i < orders.length; i++) {
-    const offerAmt = orders[i].amount;
-    if (!offerAmt) {
-      return [0, 0, 0];
+function fillQuantity(orders: PrunApi.CXBrokerOrder[], quantityNeeded: number) {
+  const filled = {
+    amount: 0,
+    priceLimit: 0,
+    volume: 0,
+  };
+  for (const order of orders) {
+    // MM orders don't have the amount.
+    const orderAmount = order.amount ?? Infinity;
+    const remaining = quantityNeeded - filled.amount;
+    const filledByOrder = Math.min(remaining, orderAmount);
+    const orderPrice = order.limit.amount;
+    filled.priceLimit = orderPrice;
+    filled.amount += filledByOrder;
+    filled.volume += filledByOrder * orderPrice;
+    if (filled.amount === quantityNeeded) {
+      break;
     }
-    const offerPrice = orders[i].limit!.amount;
-    if (offerAmt >= quantityNeeded - quantityCounted) {
-      volumeAccum += (quantityNeeded - quantityCounted) * offerPrice;
-      return [offerPrice, volumeAccum / quantityNeeded, volumeAccum];
-    }
-    quantityCounted += offerAmt;
-    volumeAccum += offerAmt * offerPrice;
   }
-  return [0, 0, 0];
+  const leftover = quantityNeeded - filled.amount;
+  filled.volume += leftover * filled.priceLimit;
+  return {
+    price: filled.priceLimit,
+    effectivePrice: filled.volume / quantityNeeded,
+    volume: filled.volume,
+  };
 }
 
 function init() {
