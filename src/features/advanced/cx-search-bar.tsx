@@ -89,4 +89,4 @@ function init() {
   tiles.observe('CX', onTileReady);
 }
 
-features.add(import.meta.url, init, 'CX: Adds a search bar to highlight materials and categories.');
+features.add(import.meta.url, init, 'CX: Adds a search bar for materials.');
