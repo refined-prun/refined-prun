@@ -1,8 +1,10 @@
-import { CssClasses } from '@src/infrastructure/prun-ui/prun-css-types';
 import { registerClassName } from '@src/utils/select-dom';
 import { isEmpty } from 'ts-extras';
+import { sleep } from '@src/utils/sleep';
 
-export const C = {} as CssClasses;
+export const C = {} as PrunCssClasses;
+export let mergedPrunStyles = '';
+export const prunStyleUpdated = ref(false);
 
 export function loadPrunCss() {
   const styles = getPrunCssStylesheets();
@@ -12,6 +14,11 @@ export function loadPrunCss() {
   let appContainerFound = false;
   const classSet = new Set<string>();
   for (const style of styles) {
+    mergedPrunStyles +=
+      style
+        .textContent!.split('\n')
+        .filter(x => !x.includes('sourceMappingURL'))
+        .join('\n') + '\n';
     const cssRules = style.sheet!.cssRules;
     for (let i = 0; i < cssRules.length; i++) {
       const rule = cssRules.item(i) as CSSStyleRule;
@@ -36,7 +43,6 @@ export function loadPrunCss() {
 
   const classes = Array.from(classSet);
   classes.sort();
-  const result = {};
   for (const cssClass of classes) {
     const camelize = (s: string) => s.replace(/-./g, x => x[1].toUpperCase());
     const parts = cssClass.replace('__', '.').replace('___', '.').split('.');
@@ -45,10 +51,10 @@ export function loadPrunCss() {
       continue;
     }
     const child = camelize(parts[1]);
-    let parentObject = result[parent];
+    let parentObject = C[parent];
     if (parentObject === undefined) {
       parentObject = {};
-      result[parent] = parentObject;
+      C[parent] = parentObject;
     }
     if (parentObject[child] !== undefined) {
       continue;
@@ -57,7 +63,9 @@ export function loadPrunCss() {
     registerClassName(cssClass);
   }
 
-  Object.assign(C, result);
+  if (import.meta.env.DEV) {
+    void checkPrunCssUpdate();
+  }
 }
 
 export function getPrunCssStylesheets() {
@@ -78,4 +86,20 @@ export function getPrunCssStylesheets() {
     }
   }
   return valid;
+}
+
+async function checkPrunCssUpdate() {
+  let lastStylesheet = '';
+  while (!lastStylesheet) {
+    try {
+      const response = await fetch('https://refined-prun.github.io/prun-css/prun.css');
+      lastStylesheet = await response.text();
+    } catch {
+      // Do nothing.
+    }
+    if (!lastStylesheet) {
+      await sleep(1000);
+    }
+  }
+  prunStyleUpdated.value = lastStylesheet !== mergedPrunStyles;
 }

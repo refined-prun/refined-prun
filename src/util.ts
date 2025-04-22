@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/stars';
-import { Stations, Selector, Style } from '@src/legacy';
+import { Stations } from '@src/legacy';
 import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
 import { sleep } from './utils/sleep';
 
@@ -17,39 +16,6 @@ export function downloadFile(fileData, fileName, isJSON: boolean = true) {
   urlElement.setAttribute('target', '_blank');
   urlElement.click();
   URL.revokeObjectURL(url);
-  return;
-}
-
-// Create an option element for a select list
-export function createSelectOption(optionLabel, optionValue, rightAlign?) {
-  const option = document.createElement('option');
-  option.value = optionValue;
-  option.textContent = optionLabel;
-  if (rightAlign) {
-    option.style.direction = 'rtl';
-  }
-  return option;
-}
-
-/**
- * Create a span with the given text
- * @param text
- * @param className
- * @returns {HTMLSpanElement}
- */
-export function createTextSpan(text, className: string = 'prun-remove-js') {
-  const newSpan = document.createElement('span');
-  newSpan.classList.add(className);
-  newSpan.textContent = text;
-  return newSpan;
-}
-
-// Remove all the children of a given element
-export function clearChildren(elem) {
-  elem.textContent = '';
-  while (elem.children[0]) {
-    elem.removeChild(elem.children[0]);
-  }
   return;
 }
 
@@ -77,58 +43,6 @@ export function changeSelectIndex(input, selectIndex) {
 export function focusElement(input: HTMLElement) {
   const event = new FocusEvent('focusin', { bubbles: true, cancelable: false });
   input.dispatchEvent(event);
-}
-
-// Return all matching buffers
-export function getBuffers(bufferCode: string): HTMLElement[] {
-  const nodes = document.evaluate(
-    `//div[@class='${Selector.BufferHeaderClass}'][starts-with(translate(., 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), '${bufferCode}')]/../..`,
-    document,
-    null,
-    XPathResult.ANY_TYPE,
-    null,
-  );
-  const buffers = [];
-  let node;
-
-  while ((node = nodes.iterateNext())) {
-    buffers.push(node as never);
-  }
-  return buffers;
-}
-
-// Return all matching buffers from prefound buffer list
-export function getBuffersFromList(bufferCode: string, buffers: any[]): any[] {
-  return buffers
-    .filter(([firstElement]) => firstElement.toLowerCase().startsWith(bufferCode.toLowerCase()))
-    .map(([, secondElement]) => secondElement);
-}
-
-// Create a success dialog with a dismiss button
-export function showSuccessDialog(tile, message: string = 'Action succeeded!') {
-  const displayTile = tile.parentElement.parentElement.parentElement;
-
-  const overlay = document.createElement('div'); // Main striped overlay
-  displayTile.appendChild(overlay);
-  overlay.classList.add(...Style.ActionSuccess);
-
-  const centerInterface = document.createElement('span'); // Center green block with message
-  overlay.appendChild(centerInterface);
-  centerInterface.classList.add(...Style.ActionMessage);
-  centerInterface.textContent = message;
-
-  const dismissMessage = document.createElement('span'); // Dismiss message
-  centerInterface.appendChild(dismissMessage);
-  dismissMessage.textContent = '(click to dismiss)';
-  dismissMessage.classList.add(...Style.ActionDismiss);
-
-  overlay.addEventListener('click', () => {
-    // Just remove the overlay to dismiss
-    displayTile.removeChild(overlay);
-    return;
-  });
-
-  return;
 }
 
 // A function to compare two planets (to be used in .sort() functions)

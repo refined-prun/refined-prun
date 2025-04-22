@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface Ship {
+  interface Ship {
     id: string;
     idShipStore: string;
     idStlFuelStore: string;

@@ -9,15 +9,18 @@ import { isDefined } from 'ts-extras';
 import TextInput from '@src/components/forms/TextInput.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 const { group } = defineProps<{ group: UserData.MaterialGroupData }>();
 
-const planets = computed(() =>
-  (sitesStore.all.value ?? [])
+const planets = computed(() => {
+  const planets = (sitesStore.all.value ?? [])
     .map(x => getEntityNameFromAddress(x.address))
     .filter(isDefined)
-    .sort(comparePlanets),
-);
+    .sort(comparePlanets);
+  planets.unshift(configurableValue);
+  return planets;
+});
 
 const planet = ref(group.planet ?? planets.value[0]);
 const planetError = ref(false);

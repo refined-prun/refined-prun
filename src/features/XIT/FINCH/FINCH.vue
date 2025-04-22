@@ -18,7 +18,7 @@ const finch = ref(Math.random() < 0.01);
     <template v-if="finch">
       <SectionHeader>Finch</SectionHeader>
       <img
-        src="https://images.unsplash.com/photo-1624123793338-9ea5d0050b41"
+        src="https://refined-prun.github.io/assets/finch.jpeg"
         alt="Finch"
         :class="$style.clickable"
         @click="finch = false" />

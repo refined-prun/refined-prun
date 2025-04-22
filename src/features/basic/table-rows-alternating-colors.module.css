@@ -18,7 +18,7 @@
      would render thinner than expected (particularly visible in LEAD)
     */
 
-    > * {
+    > td {
       position: relative;
     }
   }

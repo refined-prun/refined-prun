@@ -1,9 +1,58 @@
-## Unreleased
+## 25.4.14
+
+### Changed
+
+- `XIT ACT`: Add total cost to CX Buy action step description
+- `XIT ACT`: Improve step generation and log messages for "buy partial" CX Buy actions
+- `XIT ACT`: Tag non-failed actions as skipped if they cannot be executed
+- `XIT ACT`: Make CX Buy and MTRA actions wait for the storage update before executing the next action
+- `XIT ACT`: Add an error for the CX Buy action when there is not enough space in the CX warehouse
 
 ### Fixed
 
+- `XIT ACT`: Fix the CX Buy action getting stuck when there are no orders in the order book and the "buy partial" toggle is on
+- `XIT ACT`: Fix opening a run tile for packages with configurable MTRA and no origins/destinations available
+- `XIT ACT`: Fix MTRA action getting stuck when there is no space in the destination inventory
+- `XIT ACT`: Fix MTRA action error when the material is not present in origin inventory
+- `XIT SET`: Fix financial data point deletion targeting the wrong data point
+
+## 25.4.12
+
+### Added
+
+- `tile-controls-background`: (new) Adds a solid color background to the top-right tile controls
+- `prodco-order-eta`: (new) Adds a finish ETA label to orders
+
+### Changed
+
+- `XIT ACT`: Add a quickstart flow for users without any action packages
+- `XIT ACT`: Add an ability to open missing tiles during a package run
+- `XIT ACT`: Add a companion tile for package runs in a floating buffer
+- `XIT ACT`: Add "Configure on Execute" as a planet option in Resupply and Repair actions
+- `XIT ACT`: Auto-select the material during the MTRA action
+- `XIT ACT`: Improve the "will not be transferred" warning wording during the MTRA action
+- `XIT ACT`: Stop a package run if there's not enough materials during CX Buy
+- `XIT ACT`: Improve sorting in inventory selection dropdown
+- `XIT ACT`: Add log auto-scrolling
+- `XIT ACT`: Show additional context data in the log
+- `XIT ACT`: Add auto-fetching burn data for Resupply material groups
+- `XIT ACT`: Change configuration UI to form-based
+- `XIT ACT`: Make UI layout more stable during a package run
+- `item-icons`: Add an icon for consumable bundles category
+- Change item sorting in the "consumable bundles" category to tier-based
+
+### Fixed
+
+- `XIT ACT`: Fix the Resupply material amounts not matching the ones in `XIT BURN`
+- `XIT ACT`: Fix the action button displacement on buffer move during a package run
+- `XIT ACT`: Fix various issues for package runs in floating buffers
+- `XIT BURN`: Fix zero amount being displayed as "-0" sometimes
+- `prodco-order-eta`: Fix broken feature caused by recent game update
 - `prodq-order-eta`: Fix eta missing in order slots that were initially empty
+- `prun-bugs`: Fix user search results box being too big for the `GIFT` tile
 - `table-rows-alternating-colors`: Fix a rendering issue in Firefox
+- Fix stacking overlays (like in `XIT ACT`) not displaying correctly
+- Fix item color of consumable bundles in icons made by the extension
 
 ## 25.3.24
 

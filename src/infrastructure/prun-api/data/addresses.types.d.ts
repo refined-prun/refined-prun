@@ -1,21 +1,21 @@
 declare namespace PrunApi {
-  export interface Address {
+  interface Address {
     lines: AddressLine[];
   }
 
-  export interface AddressLine {
+  interface AddressLine {
     entity: AddressEntity;
     type: AddressLineType;
     orbit?: AddressOrbit;
   }
 
-  export interface AddressEntity {
+  interface AddressEntity {
     id: string;
     naturalId: string;
     name: string;
   }
 
-  export interface AddressOrbit {
+  interface AddressOrbit {
     semiMajorAxis: number;
     eccentricity: number;
     inclination: number;
@@ -23,5 +23,5 @@ declare namespace PrunApi {
     periapsis: number;
   }
 
-  export type AddressLineType = 'SYSTEM' | 'STATION' | 'PLANET' | 'ORBIT';
+  type AddressLineType = 'SYSTEM' | 'STATION' | 'PLANET' | 'ORBIT';
 }

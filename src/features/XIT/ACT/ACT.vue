@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { createExecuteScreen } from '@src/features/XIT/ACT/Execute';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import ActionPackageList from '@src/features/XIT/ACT/ActionPackageList.vue';
 import ActionPackageEditor from '@src/features/XIT/ACT/EditActionPackage.vue';
 import { userData } from '@src/store/user-data';
-
-const container = useTemplateRef<HTMLDivElement>('container');
+import ExecuteActionPackage from '@src/features/XIT/ACT/ExecuteActionPackage.vue';
 
 const parameters = useXitParameters();
 parameters.unshift('ACT');
@@ -21,17 +19,11 @@ if (run) {
 }
 
 const pkg = computed(() => userData.actionPackages.find(x => x.global.name === pkgName));
-
-onMounted(() => {
-  if (run && pkg.value) {
-    createExecuteScreen(container.value, pkgName);
-  }
-});
 </script>
 
 <template>
   <ActionPackageList v-if="parameters.length === 1" />
   <div v-else-if="!pkg">Action package "{{ pkgName }}" not found.</div>
   <ActionPackageEditor v-else-if="edit" :pkg="pkg" />
-  <div v-else ref="container" :style="{ height: '100%', flexGrow: 1, paddingTop: '4px' }" />
+  <ExecuteActionPackage v-else :pkg="pkg" />
 </template>

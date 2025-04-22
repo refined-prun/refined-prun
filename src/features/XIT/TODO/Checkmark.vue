@@ -6,7 +6,7 @@ defineProps<{ task: UserData.Task }>();
 
 <template>
   <div :class="$style.checkmark">
-    <div :class="fa.regular">
+    <div :class="[fa.regular, $style.circle]">
       {{ '\uf111' }}
     </div>
     <div :class="[$style.mark, task.completed ? [fa.solid, $style.markCompleted] : fa.regular]">
@@ -23,11 +23,12 @@ defineProps<{ task: UserData.Task }>();
   font-size: 13px;
 }
 
-.checkmark > * {
+.circle {
   grid-area: 1 / 1;
 }
 
 .mark {
+  grid-area: 1 / 1;
   transition: opacity 0.2s ease-in-out;
   opacity: 0;
 }

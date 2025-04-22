@@ -94,6 +94,7 @@ const categories: Record<string, Icon> = {
   'agricultural products': 'f4d8',
   alloys: 'f219',
   chemicals: 'f492',
+  'consumable bundles': 'f466',
   'construction materials': '',
   'construction parts': '',
   'construction prefabs': '',
