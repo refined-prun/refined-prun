@@ -16,7 +16,7 @@ async function onFormReady(form: HTMLElement, parameter?: string) {
   const quantityValue = refValue(quantityInput);
   const priceInfo = computed(() => {
     const quantity = Number(quantityValue.value);
-    if (!isFinite(quantity) || quantity <= 0 || !orderBook.value) {
+    if (!Number.isFinite(quantity) || quantity <= 0 || !orderBook.value) {
       return undefined;
     }
     return {
@@ -111,13 +111,13 @@ function createDualLabels(
     if (!showAutoValues.value) {
       return undefined;
     }
-    if (buyValue.value && sellValue.value) {
+    if (buyValue.value !== undefined && sellValue.value !== undefined) {
       return `${fixed02(buyValue.value)} ${currencyUnit} / ${fixed02(sellValue.value)} ${currencyUnit}`;
     }
-    if (buyValue.value) {
+    if (buyValue.value !== undefined) {
       return `${fixed02(buyValue.value)} ${currencyUnit}`;
     }
-    if (sellValue.value) {
+    if (sellValue.value !== undefined) {
       return `${fixed02(sellValue.value)} ${currencyUnit}`;
     }
     return '--';
@@ -135,7 +135,7 @@ function fillQuantity(orders: PrunApi.CXBrokerOrder[], quantityNeeded: number) {
   };
   for (const order of orders) {
     // MM orders don't have the amount.
-    const orderAmount = order.amount ?? Infinity;
+    const orderAmount = order.amount ?? Number.POSITIVE_INFINITY;
     const remaining = quantityNeeded - filled.amount;
     const filledByOrder = Math.min(remaining, orderAmount);
     const orderPrice = order.limit.amount;
