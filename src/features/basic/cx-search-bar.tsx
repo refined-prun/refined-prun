@@ -67,7 +67,7 @@ async function onComExPanelReady(comExPanel: HTMLElement) {
           optionElement.classList.remove(css.hidden);
         }
         const rowElement = materialRows.get(material.ticker);
-        if (rowElement && rowElement.isConnected) {
+        if (rowElement?.isConnected) {
           rowElement.classList.remove(css.hidden);
         }
       }
