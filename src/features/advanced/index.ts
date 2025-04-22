@@ -5,7 +5,6 @@ import './bbl-hide-book-value';
 import './bs-hide-zero-workforce';
 import './cogcpex-clean-labels';
 import './context-controls-no-hover';
-import './cx-search-bar';
 import './cxos-hide-exchange';
 import './cxpo-shorten-fields';
 import './finla-hide-ecd';
