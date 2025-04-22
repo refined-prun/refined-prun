@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+
+- `cxpo-auto-price`: (new) Adds automatic price calculation
+
 ## 25.4.14
 
 ### Changed
