@@ -1,27 +1,14 @@
-.table {
-  tbody tr:nth-child(2n+1) {
-    position: relative;
-  }
-
-  tbody tr:nth-child(2n+1)::after {
-    content: "";
-    position: absolute;
-    inset: 0px;
-    pointer-events: none;
-  }
-}
-
 .textInputElement {
   display: flex;
   align-items: center;
 }
 
 .button {
-  width: 18px;
-  display: inline-flex;
+  display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 11px;
   margin-left: 2px;
+  width: 18px;
   height: 18px;
+  font-size: 11px;
 }

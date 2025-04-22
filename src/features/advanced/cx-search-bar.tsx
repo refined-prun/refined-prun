@@ -2,109 +2,90 @@ import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
 import $style from './cx-search-bar.module.css';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import css from '@src/utils/css-utils.module.css';
-import onNodeDisconnected from '@src/utils/on-node-disconnected';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import TextInput from '@src/components/forms/TextInput.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import fa from '@src/utils/font-awesome.module.css';
+import { refValue } from '@src/utils/reactive-dom';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, C.ComExPanel.input), async comExPanel => {
-    const actionBar = await $(comExPanel, C.ActionBar.container)!;
+  subscribe($$(tile.anchor, C.ComExPanel.input), onComExPanelReady);
+}
 
-    const searchText = ref('');
+async function onComExPanelReady(comExPanel: HTMLElement) {
+  const actionBar = await $(comExPanel, C.ActionBar.container);
+  const select = await $(actionBar, 'select');
+  const selectValue = refValue(select);
+  const searchText = ref('');
 
-    const select = await $(comExPanel, 'select')!;
-    const selectValue = ref('');
-    select.addEventListener('change', () => {
-      selectValue.value = select.value;
-    });
+  const categoryOptions = new Map<string, HTMLElement>();
+  for (const option of Array.from(select.options)) {
+    categoryOptions.set(option.value, option);
+  }
 
-    type TickerToElement = Map<string, HTMLElement>;
-    const optionElements: TickerToElement = new Map();
-    const rowElements: TickerToElement = new Map();
+  const materialRows = new Map<string, HTMLElement>();
 
-    if (optionElements.size === 0) {
-      const options = _$$(comExPanel, 'option');
-      for (const option of options) {
-        optionElements.set(option.getAttribute('value')!, option);
-      }
+  async function loadMaterialRows() {
+    const tbody = await $(comExPanel, 'tbody');
+    for (const row of _$$(tbody, 'tr')) {
+      const labelText = await $(row, C.ColoredIcon.label);
+      materialRows.set(labelText.innerText, row);
     }
+    triggerRef(searchText);
+  }
 
-    async function loadRowElements() {
-      const currentTBody = await $(comExPanel, 'tbody');
-      const rows = _$$(currentTBody, 'tr');
-      for (const row of rows) {
-        const labelText = await $(row, C.ColoredIcon.label);
-        rowElements.set(labelText.innerText, row);
-      }
-      triggerRef(searchText);
+  // If CX loads a category it hasn't fetched from the server yet, a new tbody will be generated.
+  subscribe($$(comExPanel, 'tbody'), loadMaterialRows);
+
+  // If CX loads a category it's already seen, it loads the data from memory and only tr's will be changed.
+  watch(selectValue, loadMaterialRows);
+
+  const resetMatches = (value: HTMLElement) => {
+    if (value.isConnected) {
+      value.classList.toggle(css.hidden, searchText.value.length !== 0);
     }
+  };
 
-    // If CX loads a category it's already seen, it loads the data from memory and only tr's will be changed.
-    const selectValueWatch = watch(selectValue, () => {
-      loadRowElements();
-    });
-    onNodeDisconnected(comExPanel, selectValueWatch);
+  // Main search loop.
+  watchEffectWhileNodeAlive(comExPanel, () => {
+    const searchTerm = searchText.value.toUpperCase();
 
-    // If CX loads a category it hasn't fetched from the server yet, a new tbody will be generated.
-    subscribe($$(comExPanel, 'tbody'), () => {
-      loadRowElements();
-    });
+    categoryOptions.forEach(resetMatches);
+    materialRows.forEach(resetMatches);
 
-    const resetMatches = (value: HTMLElement) => {
-      if (value.isConnected) {
-        value.classList.toggle(css.hidden, searchText.value.length !== 0);
-      }
-    };
-
-    // Main search loop.
-    watchEffectWhileNodeAlive(comExPanel, () => {
-      const searchTerm = searchText.value.toUpperCase();
-
-      if (rowElements.size === 0) {
-        loadRowElements();
-        return;
-      }
-
-      optionElements.forEach(resetMatches);
-      rowElements.forEach(resetMatches);
-
-      if (searchTerm.length > 0) {
-        for (const material of materialsStore.all.value!) {
-          if (
-            material.ticker.includes(searchTerm) ||
-            getMaterialName(material)?.toUpperCase().includes(searchTerm)
-          ) {
-            const optionElement = optionElements.get(material.category);
-            if (optionElement) {
-              optionElement.classList.remove(css.hidden);
-            }
-            const rowElement = rowElements.get(material.ticker);
-            if (rowElement && rowElement.isConnected) {
-              rowElement.classList.remove(css.hidden);
-            }
-          }
+    const materials = materialsStore.all.value;
+    if (searchTerm.length === 0 || !materials) {
+      return;
+    }
+    for (const material of materials) {
+      if (
+        material.ticker.includes(searchTerm) ||
+        getMaterialName(material)?.toUpperCase().includes(searchTerm)
+      ) {
+        const optionElement = categoryOptions.get(material.category);
+        if (optionElement) {
+          optionElement.classList.remove(css.hidden);
+        }
+        const rowElement = materialRows.get(material.ticker);
+        if (rowElement && rowElement.isConnected) {
+          rowElement.classList.remove(css.hidden);
         }
       }
-    });
-
-    createFragmentApp(() => (
-      <div class={[C.ActionBar.element, $style.textInputElement]}>
-        Search:
-        <TextInput v-model={searchText.value} />
-        <div onClick={() => (searchText.value = '')}>
-          <PrunButton class={$style.button} dark>
-            <div class={fa.solid}>{'\uf00d'} </div>
-          </PrunButton>
-        </div>
-      </div>
-    )).before(actionBar.children[0]);
+    }
   });
+
+  createFragmentApp(() => (
+    <div class={[C.ActionBar.element, $style.textInputElement]}>
+      Search:&nbsp;
+      <TextInput v-model={searchText.value} />
+      <PrunButton dark class={[$style.button, fa.solid]} onClick={() => (searchText.value = '')}>
+        {'\uf00d'}
+      </PrunButton>
+    </div>
+  )).before(actionBar.children[0]);
 }
 
 function init() {
-  applyCssRule('CX', `.${C.BrokerList.table}`, $style.table);
   tiles.observe('CX', onTileReady);
 }
 
