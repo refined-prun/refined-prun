@@ -4,6 +4,7 @@
 
 ### Added
 
+- `cx-search-bar`: (new) Adds a search bar for materials
 - `cxpo-auto-price`: (new) Adds automatic price calculation
 
 ## 25.4.14

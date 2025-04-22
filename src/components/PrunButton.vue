@@ -7,6 +7,7 @@ const { danger, dark, disabled, inline, neutral, primary, success } = defineProp
   neutral?: boolean;
   primary?: boolean;
   success?: boolean;
+  onClick?: () => void;
 }>();
 
 const classes = computed(() => ({
@@ -28,7 +29,7 @@ const classes = computed(() => ({
 </script>
 
 <template>
-  <button :class="classes" type="button" :disabled="disabled">
+  <button :class="classes" type="button" :disabled="disabled" @click="onClick">
     <slot />
   </button>
 </template>
