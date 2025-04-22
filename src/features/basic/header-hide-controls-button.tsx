@@ -31,7 +31,7 @@ async function onTileReady(tile: PrunTile) {
         onClick={() => (isMinimized.value = false)}
       />
     ) : null,
-  ).before(tileControls.children[0]);
+  ).prependTo(tileControls);
 
   createFragmentApp(() => (
     <>
@@ -44,7 +44,7 @@ async function onTileReady(tile: PrunTile) {
       </div>
       <div style={{ flexGrow: '1' }} />
     </>
-  )).before(tileContextControls.children[0]);
+  )).prependTo(tileContextControls);
 }
 
 function init() {

@@ -82,7 +82,7 @@ async function onComExPanelReady(comExPanel: HTMLElement) {
         {'\uf00d'}
       </PrunButton>
     </div>
-  )).before(actionBar.children[0]);
+  )).prependTo(actionBar);
 }
 
 function init() {
