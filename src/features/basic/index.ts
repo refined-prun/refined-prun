@@ -15,6 +15,7 @@ import './co-base-count';
 import './contd-condition-address-placeholder';
 import './contd-upward-search-results';
 import './cx-search-bar';
+import './cxob-center-on-open';
 import './cxpo-auto-price';
 import './correct-commands/correct-commands';
 import './custom-item-sorting/custom-item-sorting';
