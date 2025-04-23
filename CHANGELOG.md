@@ -6,6 +6,7 @@
 
 - `cx-search-bar`: (new) Adds a search bar for materials
 - `cxpo-auto-price`: (new) Adds automatic price calculation
+- `macos-antialiased-font`: (new) Applies antialiased smoothing to all fonts on macOS
 
 ## 25.4.14
 

@@ -40,6 +40,7 @@ import './item-ticker-shadow';
 import './lead-per-day-column';
 import './lm-colored-buy-sell';
 import './lm-highlight-own-ads';
+import './macos-antialiased-font';
 import './lm-item-icons/lm-item-icons';
 import './mat-linkify-category';
 import './mtra-auto-focus-amount';
