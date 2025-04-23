@@ -28,7 +28,7 @@ function save() {
   group.materials = {};
   for (let [ticker, amount] of materials.value) {
     const material = materialsStore.getByTicker(ticker);
-    if (!material || !amount || !isFinite(amount)) {
+    if (!material || amount === 0 || !isFinite(amount)) {
       continue;
     }
     group.materials[material.ticker] = amount;

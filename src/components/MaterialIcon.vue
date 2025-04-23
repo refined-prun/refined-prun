@@ -4,7 +4,6 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
 import { fixed0 } from '@src/utils/format';
-import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
 
 const {
   amount,
@@ -21,7 +20,6 @@ const {
 const $style = useCssModule();
 
 const material = computed(() => materialsStore.getByTicker(ticker));
-const category = computed(() => materialCategoriesStore.getById(material.value?.category));
 
 const name = computed(() => getMaterialName(material.value) ?? 'Unknown');
 
@@ -52,12 +50,7 @@ const onClick = () => showBuffer(`MAT ${ticker.toUpperCase()}`);
 
 <template>
   <div :class="[C.MaterialIcon.container, $style.container]">
-    <ColoredIcon
-      :label="ticker"
-      :category="category?.name"
-      :title="name"
-      :size="size"
-      @click="onClick" />
+    <ColoredIcon :label="ticker" :title="name" :size="size" @click="onClick" />
     <div
       v-if="amountText !== undefined"
       :class="C.MaterialIcon.indicatorContainer"

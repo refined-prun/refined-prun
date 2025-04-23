@@ -79,13 +79,13 @@ declare namespace UserData {
     dest?: string;
   }
 
-  export interface TaskList {
+  interface TaskList {
     id: string;
     name: string;
     tasks: Task[];
   }
 
-  export interface Task {
+  interface Task {
     id: string;
     type: TaskType;
     completed?: boolean;
@@ -98,9 +98,9 @@ declare namespace UserData {
     subtasks?: Task[];
   }
 
-  export type TaskType = 'Text' | 'Resupply' | 'Repair';
+  type TaskType = 'Text' | 'Resupply' | 'Repair';
 
-  export interface CommandList {
+  interface CommandList {
     id: string;
     name: string;
     commands: Command[];

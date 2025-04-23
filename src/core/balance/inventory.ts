@@ -23,6 +23,7 @@ import { getPlanetBurn } from '@src/core/burn';
 import { mergeMaterialAmounts } from '@src/core/sort-materials';
 import { workInProgress } from '@src/core/balance/orders';
 import { userData } from '@src/store/user-data';
+import { isPresent } from 'ts-extras';
 
 type LocationName = string;
 
@@ -46,7 +47,7 @@ function isStationAddress(address?: PrunApi.Address) {
 
 const inventoryMarketValue = computed(() => {
   const storages = storagesStore.all.value;
-  if (storages === undefined) {
+  if (!storages) {
     return undefined;
   }
   const inventories = new Map<string, MaterialValue[]>();
@@ -73,7 +74,7 @@ const inventoryMarketValue = computed(() => {
 
 function sumStoresValue(stores: PrunApi.Store[] | undefined) {
   const marketValue = inventoryMarketValue.value;
-  if (marketValue === undefined || stores === undefined) {
+  if (!marketValue || !stores) {
     return undefined;
   }
   let total = 0;
@@ -89,7 +90,7 @@ function sumStoresValue(stores: PrunApi.Store[] | undefined) {
 
 const shipyardInventoryByLocation = computed(() => {
   const projects = shipyardProjectsStore.all.value;
-  if (projects === undefined) {
+  if (!projects) {
     return undefined;
   }
   const inventories = new Map<LocationName, number>();
@@ -116,7 +117,7 @@ const byLocation = computed(() => {
   const marketValue = inventoryMarketValue.value;
   const storages = storagesStore.all.value;
   const shipyards = shipyardInventoryByLocation.value;
-  if (marketValue === undefined || storages === undefined || shipyards === undefined) {
+  if (!marketValue || !storages || !shipyards) {
     return undefined;
   }
   const inventories = new Map<LocationName, number>();
@@ -202,7 +203,7 @@ const cxInventoryTotal = computed(() => cxInventory.value?.otherMaterialsTotal);
 const baseInventory = computed(() => {
   const marketValue = inventoryMarketValue.value;
   const sites = sitesStore.all.value;
-  if (marketValue === undefined || sites === undefined) {
+  if (!marketValue || !sites) {
     return undefined;
   }
 
@@ -226,7 +227,7 @@ const baseInventory = computed(() => {
       stores.push(warehouseStore);
     }
     const amounts = mergeMaterialAmounts(
-      stores.flatMap(x => x.items.map(y => y.quantity!).filter(y => !!y)),
+      stores.flatMap(x => x.items.map(y => y.quantity).filter(isPresent)),
     );
     for (const amount of amounts) {
       const value = calcMaterialAmountPrice(amount);
@@ -266,7 +267,7 @@ const workforceConsumables = computed(() => baseInventory.value?.workforceConsum
 
 const siteNaturalIds = computed(() => {
   const sites = sitesStore.all.value;
-  if (sites === undefined) {
+  if (!sites) {
     return undefined;
   }
 
@@ -283,7 +284,7 @@ const siteNaturalIds = computed(() => {
 const unboundWarehouseStores = computed(() => {
   const naturalIds = siteNaturalIds.value;
   const stores = storagesStore.all.value;
-  if (naturalIds === undefined || stores === undefined) {
+  if (!naturalIds || !stores) {
     return undefined;
   }
 
@@ -296,7 +297,7 @@ function isUnboundWarehouseStore(store: PrunApi.Store, siteNaturalIds: Set<strin
   }
 
   const warehouse = warehousesStore.getById(store.addressableId);
-  if (warehouse === undefined) {
+  if (!warehouse) {
     return true;
   }
   const address = warehouse.address;

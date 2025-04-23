@@ -31,7 +31,7 @@ export interface PlanetBurn {
 }
 
 const burnBySiteId = computed(() => {
-  if (sitesStore.all.value === undefined) {
+  if (!sitesStore.all.value) {
     return undefined;
   }
 
@@ -77,9 +77,8 @@ export function calculatePlanetBurn(
   const burnValues: BurnValues = {};
 
   function getBurnValue(ticker: string) {
-    let burnValue = burnValues[ticker];
-    if (!burnValue) {
-      burnValue = {
+    if (burnValues[ticker] === undefined) {
+      burnValues[ticker] = {
         input: 0,
         output: 0,
         workforce: 0,
@@ -88,9 +87,8 @@ export function calculatePlanetBurn(
         DaysLeft: 0,
         Type: 'output',
       };
-      burnValues[ticker] = burnValue;
     }
-    return burnValue;
+    return burnValues[ticker];
   }
 
   if (production) {
@@ -155,7 +153,7 @@ export function calculatePlanetBurn(
           continue;
         }
         const materialBurn = burnValues[quantity.material.ticker];
-        if (!materialBurn) {
+        if (materialBurn === undefined) {
           continue;
         }
         materialBurn.Inventory += quantity.amount;

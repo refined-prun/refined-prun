@@ -37,7 +37,7 @@ function countCompletedTasks(list: UserData.TaskList) {
 function getDueDate(list: UserData.TaskList) {
   const dates: number[] = [];
   const add = (task: UserData.Task) => {
-    if (task.dueDate) {
+    if (task.dueDate !== undefined) {
       dates.push(task.dueDate);
     }
     for (const subtask of task.subtasks ?? []) {

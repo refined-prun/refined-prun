@@ -6,15 +6,18 @@ import SelectInput from '@src/components/forms/SelectInput.vue';
 import NumberInput from '@src/components/forms/NumberInput.vue';
 import { comparePlanets } from '@src/util';
 import { isDefined } from 'ts-extras';
+import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 const { group } = defineProps<{ group: UserData.MaterialGroupData }>();
 
-const planets = computed(() =>
-  (sitesStore.all.value ?? [])
+const planets = computed(() => {
+  const planets = (sitesStore.all.value ?? [])
     .map(x => getEntityNameFromAddress(x.address))
     .filter(isDefined)
-    .sort(comparePlanets),
-);
+    .sort(comparePlanets);
+  planets.unshift(configurableValue);
+  return planets;
+});
 
 const planet = ref(group.planet ?? planets.value[0]);
 const planetError = ref(false);

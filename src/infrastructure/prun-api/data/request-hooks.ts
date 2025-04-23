@@ -1,10 +1,16 @@
 interface RequestHooks {
   production(siteId?: string | null): void;
+
   workforce(siteId?: string | null): void;
+
   cxos(): void;
+
   fxos(): void;
+
   blueprints(): void;
+
   shipyards(): void;
+
   shipyardProjects(): void;
 }
 
@@ -51,7 +57,7 @@ export function createRequestGetter<T, K>(
 ) {
   return (value?: K | null) => {
     const result = getter(value);
-    if (result) {
+    if (result !== undefined) {
       return result;
     }
     request(value);

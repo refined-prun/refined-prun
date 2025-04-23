@@ -16,12 +16,10 @@ function onTileReady(tile: PrunTile) {
         $(tile.frame, C.ActionFeedback.success),
         $(tile.frame, C.ActionFeedback.error),
       ]);
-      const success = await $(tile.frame, C.ActionFeedback.success);
-      if (success) {
-        const window = tile.frame.closest(`.${C.Window.window}`) as HTMLElement;
-        const close = _$$(window, C.Window.button).at(-1)!;
-        close.click();
-      }
+      await $(tile.frame, C.ActionFeedback.success);
+      const window = tile.frame.closest(`.${C.Window.window}`) as HTMLElement;
+      const close = _$$(window, C.Window.button).at(-1);
+      close?.click();
     });
   });
 }

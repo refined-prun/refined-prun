@@ -15,9 +15,9 @@ const { order, request, infiniteFill, infiniteSet, click } = defineProps<{
 }>();
 
 const ownOrderClass = computed(() => ({
-  [highlight.highlight]: order.amount && order.trader.id === companyStore.value?.id,
+  [highlight.highlight]: order.amount !== undefined && order.trader.id === companyStore.value?.id,
 }));
-const amount = computed(() => (order.amount ? fixed0(order.amount) : '∞'));
+const amount = computed(() => (order.amount !== undefined ? fixed0(order.amount) : '∞'));
 const price = computed(() => fixed2(order.limit.amount));
 const priceClass = computed(() =>
   request ? C.ComExOrderBookPanel.requestPrice : C.ComExOrderBookPanel.offerPrice,

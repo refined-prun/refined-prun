@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface UIData {
+  interface UIData {
     screens: Screen[];
     removedScreens: Screen[];
     tiles: Tile[];
@@ -9,14 +9,14 @@ declare namespace PrunApi {
     contextHelpEnabled: boolean;
   }
 
-  export interface Screen {
+  interface Screen {
     id: string;
     name: string;
     hidden: boolean;
     state: UIState[];
   }
 
-  export interface UIState {
+  interface UIState {
     containerId: string;
     key: string;
     value: string;

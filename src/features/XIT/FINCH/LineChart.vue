@@ -172,7 +172,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
         title(items): string | void {
           const item = items[0];
           const timestamp = item?.parsed?.x;
-          if (!timestamp) {
+          if (timestamp === undefined) {
             return;
           }
           return `${hhmm(timestamp)} ${ddmmyyyy(timestamp)}`;

@@ -1,18 +1,15 @@
 <script setup lang="ts">
 import ColoredIconDetail from '@src/components/ColoredIconDetail.vue';
-import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
 
 export type ColoredIconSize = 'large' | 'medium' | 'small' | 'inline' | 'inline-table';
 
 const {
   background,
-  category,
   color,
   label,
   size = 'large',
 } = defineProps<{
   background?: string;
-  category?: string;
   color?: string;
   detail?: string;
   label: string;
@@ -29,8 +26,6 @@ const classes = computed(() => ({
   [$style.small]: size === 'small',
   [$style.inline]: size === 'inline',
   [$style.inlineTable]: size === 'inline-table',
-  [`rp-ticker-${label}`]: true,
-  [`rp-category-${sanitizeCategoryName(category ?? '')}`]: category !== undefined,
 }));
 </script>
 

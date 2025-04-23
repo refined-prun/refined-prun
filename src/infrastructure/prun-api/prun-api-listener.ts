@@ -31,7 +31,10 @@ export function listenPrunApi() {
   socketIOMiddleware<Message>(middleware);
 }
 
-function processEvent(message: Message) {
+export const isRecordingPrunLog = ref(false);
+export const prunLog = ref([] as Message[]);
+
+function processEvent(message: Message | undefined) {
   if (!message || !message.messageType || !message.payload) {
     return;
   }
@@ -41,6 +44,9 @@ function processEvent(message: Message) {
   if (message.messageType === 'ACTION_COMPLETED') {
     processEvent(message.payload.message);
   } else {
+    if (isRecordingPrunLog.value) {
+      prunLog.value.push(message);
+    }
     const storeAction = {
       type: message.messageType,
       data: message.payload,

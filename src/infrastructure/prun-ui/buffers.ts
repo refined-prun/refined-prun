@@ -27,15 +27,15 @@ interface ShowBufferOptions {
 export async function showBuffer(command: string, options?: ShowBufferOptions) {
   if (!options?.force) {
     for (const tile of tiles.find(command).filter(x => !x.docked)) {
+      const window = tile.frame.closest(`.${C.Window.window}`);
       const command = UI_WINDOWS_REQUEST_FOCUS(tile.id);
       if (dispatchClientPrunMessage(command)) {
-        return;
+        return window;
       }
-      const tileWindow = tile.frame.closest(`.${C.Window.window}`) as HTMLElement;
-      if (tileWindow) {
-        const header = _$(tileWindow, C.Window.header);
+      if (window) {
+        const header = _$(window, C.Window.header);
         void clickElement(header);
-        return;
+        return window;
       }
     }
   }
@@ -58,6 +58,7 @@ export async function showBuffer(command: string, options?: ShowBufferOptions) {
       create.click();
     });
     await processWindow(newWindow, command, options);
+    return newWindow;
   } finally {
     releaseSlot();
   }
@@ -127,7 +128,7 @@ async function closeWhenDone(window: HTMLDivElement, options?: ShowBufferOptions
     await watchUntil(closeWhen);
   }
   const buttons = _$$(window, C.Window.button);
-  const closeButton = buttons.find(x => x.textContent === 'x') as HTMLButtonElement;
+  const closeButton = buttons.find(x => x.textContent === 'x');
   if (closeButton) {
     closeButton?.click();
   }

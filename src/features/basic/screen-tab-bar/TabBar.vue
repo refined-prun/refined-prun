@@ -18,7 +18,7 @@ function getScreen(id: string) {
   <div :class="$style.spacer" />
   <div v-draggable="[userData.tabs.order, { animation: 150 }]" :class="$style.container">
     <template v-for="id in userData.tabs.order" :key="id">
-      <a v-show="!userData.tabs.hidden.includes(id)" :href="`#screen=${id}`">
+      <a v-show="!userData.tabs.hidden.includes(id)" :href="`#screen=${id}`" :class="$style.item">
         <HeadItem :label="getScreen(id).name" :active="current === getScreen(id)" />
       </a>
     </template>
@@ -36,7 +36,7 @@ function getScreen(id: string) {
   flex-wrap: wrap;
   overflow: hidden;
 
-  > * {
+  > .item {
     flex-shrink: 0;
   }
 }

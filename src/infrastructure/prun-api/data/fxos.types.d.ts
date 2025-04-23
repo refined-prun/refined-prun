@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface FXOrder {
+  interface FXOrder {
     id: string;
     type: FXOrderType;
     initialAmount: CurrencyAmount;
@@ -10,16 +10,16 @@ declare namespace PrunApi {
     trades: FXTrade[];
   }
 
-  export interface FXOrderLimit {
+  interface FXOrderLimit {
     base: string;
     quote: string;
     rate: number;
     decimals: number;
   }
 
-  declare type FXOrderStatus = 'PLACED' | 'PARTIALLY_FILLED' | 'FILLED';
+  type FXOrderStatus = 'PLACED' | 'PARTIALLY_FILLED' | 'FILLED';
 
-  export interface FXTrade {
+  interface FXTrade {
     id: string;
     amount: CurrencyAmount;
     price: FXOrderLimit;
@@ -27,5 +27,5 @@ declare namespace PrunApi {
     partner: ExchangeEntity;
   }
 
-  declare type CXOrderType = 'BUYING' | 'SELLING';
+  type CXOrderType = 'BUYING' | 'SELLING';
 }

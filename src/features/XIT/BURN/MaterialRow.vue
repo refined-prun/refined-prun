@@ -50,11 +50,17 @@ const changeClass = computed(() => ({
   [C.ColoredValue.positive]: production.value > 0,
 }));
 
-const needAmt = computed(() =>
-  days.value > userData.settings.burn.resupply || production.value > 0
-    ? 0
-    : (days.value - userData.settings.burn.resupply) * production.value,
-);
+const needAmt = computed(() => {
+  const resupply = userData.settings.burn.resupply;
+  if (days.value > resupply || production.value > 0) {
+    return 0;
+  }
+  let need = Math.ceil((days.value - resupply) * production.value);
+  // This check is needed to prevent a "-0" value that can happen
+  // in situations like: 0 * -0.25 => -0.
+  need = need === 0 ? 0 : need;
+  return need;
+});
 </script>
 
 <template>

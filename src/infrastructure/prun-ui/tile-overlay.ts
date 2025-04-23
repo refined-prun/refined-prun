@@ -15,7 +15,7 @@ export function showTileOverlay<T extends Component>(
   if (!scrollView) {
     return;
   }
-  const content = scrollView.children[0] as HTMLElement;
+  const content = scrollView.lastChild as HTMLElement | null;
   if (content) {
     content.style.display = 'none';
   }
@@ -24,8 +24,8 @@ export function showTileOverlay<T extends Component>(
     props: rootProps,
     onClose: () => {
       fragmentApp.unmount();
-      scrollView.appendChild(content);
       if (content) {
+        scrollView.appendChild(content);
         content.style.display = '';
       }
     },

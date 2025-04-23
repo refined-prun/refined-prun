@@ -68,7 +68,7 @@ const totalClass = computed(() => {
 </template>
 
 <style scoped>
-tbody tr > *:not(:first-child) {
+tbody tr > :not(:first-child) {
   text-align: right;
 }
 </style>

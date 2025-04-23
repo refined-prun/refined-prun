@@ -44,7 +44,7 @@ function replaceMaterialProperties(expression: string) {
         property = Math.max(material.weight, material.volume);
         break;
     }
-    if (property) {
+    if (property !== undefined) {
       expression = expression.replace(match, property.toFixed(3));
     }
   }
@@ -64,11 +64,11 @@ function init() {
 function applyCssRules() {
   const inputSelector = `div:has(> input:is([inputmode='numeric'], [inputmode='decimal']):focus)`;
   // Remove hard-coded class when molp fixes class duplication
-  const selector = `.FormComponent__input___f43wqaQ ${inputSelector}`;
+  const selector = `.FormComponent__input___f43wqaQ > ${inputSelector}`;
   applyCssRule(selector, $style.inputContainer);
   applyCssRule(`${selector}:before`, fa.solid);
   applyCssRule(`${selector}:before`, $style.functionIcon);
-  const selectorDynamic = `.${C.DynamicInput.dynamic} ${inputSelector}`;
+  const selectorDynamic = `.${C.DynamicInput.dynamic} > ${inputSelector}`;
   applyCssRule(selectorDynamic, $style.inputContainer);
   applyCssRule(`${selectorDynamic}:before`, fa.solid);
   applyCssRule(`${selectorDynamic}:before`, $style.functionIconDynamic);

@@ -37,7 +37,7 @@ function onContentClick(ev: Event) {
 }
 
 function onCheckmarkClick() {
-  if (task.recurring && task.dueDate) {
+  if (task.recurring !== undefined && task.dueDate !== undefined) {
     task.dueDate = task.dueDate + dayjs.duration(task.recurring, 'days').asMilliseconds();
     for (const subtask of task.subtasks ?? []) {
       subtask.completed = false;

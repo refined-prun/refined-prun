@@ -16,7 +16,7 @@ function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.MaterialInformation.container), async container => {
     const fields = _$$(container, C.StaticInput.static);
     const categoryField = fields[1];
-    if (!categoryField) {
+    if (categoryField === undefined) {
       return;
     }
 
