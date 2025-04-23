@@ -16,6 +16,7 @@ import './contd-condition-address-placeholder';
 import './contd-upward-search-results';
 import './cx-search-bar';
 import './cxob-center-on-open';
+import './cxob-supply-demand-values/cxob-supply-demand-values';
 import './cxpo-auto-price';
 import './cxpo-bigger-buttons';
 import './correct-commands/correct-commands';

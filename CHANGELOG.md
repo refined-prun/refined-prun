@@ -8,6 +8,7 @@
 - `cxob-center-on-open`: (new) Centers the order book on open
 - `cxob-depth-bars`: (new) Adds market depth bars
 - `cxob-hide-section-headers`: (new) Hides "Offers" and "Requests" headers
+- `cxob-supply-demand-values`: (new) Adds supply and demand value labels
 - `cxpo-auto-price`: (new) Adds automatic price calculation
 - `cxpo-bigger-buttons`: (new) Makes "Buy" and "Sell" buttons bigger
 - `macos-antialiased-font`: (new) Applies antialiased smoothing to all fonts on macOS
