@@ -409,11 +409,11 @@ const materials: Record<string, Icon> = {
 };
 
 function circle(detail?: Icon): Icon {
-  return detail === undefined ? ['f111', { detail }] : 'f111';
+  return detail !== undefined ? ['f111', { detail }] : 'f111';
 }
 
 function shield(detail?: Icon): Icon {
-  return detail === undefined ? ['f132', { detail }] : 'f132';
+  return detail !== undefined ? ['f132', { detail }] : 'f132';
 }
 
 features.add(import.meta.url, init, 'Adds icons to items.');
