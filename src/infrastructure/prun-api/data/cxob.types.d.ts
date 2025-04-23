@@ -33,7 +33,7 @@ declare namespace PrunApi {
   interface CXBrokerOrder {
     id: string;
     trader: ExchangeEntity;
-    amount?: number;
+    amount: number | null;
     limit: CurrencyAmount;
   }
 
