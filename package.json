@@ -9,7 +9,8 @@
     "url": "https://github.com/refined-prun/refined-prun.git"
   },
   "scripts": {
-    "build": "pnpm run clean && tsc --noEmit && vite build",
+    "compile": "tsc --noEmit",
+    "build": "pnpm run clean && pnpm run compile && vite build",
     "clean": "rimraf dist",
     "dev": "cross-env NODE_ENV=development vite build -w --mode development",
     "fix": "pnpx eslint ./ --fix",
