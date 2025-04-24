@@ -14,6 +14,10 @@
 - `cxpo-bigger-buttons`: (new) Makes "Buy" and "Sell" buttons bigger
 - `macos-antialiased-font`: (new) Applies antialiased smoothing to all fonts on macOS
 
+### Changed
+
+- `cxpo-order-book`: Add price and quantity autofill by clicking on the order amounts and prices
+
 ## 25.4.14
 
 ### Changed
