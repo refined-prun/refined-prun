@@ -17,6 +17,7 @@ import './contd-upward-search-results';
 import './cx-search-bar';
 import './cxob-center-on-open';
 import './cxpo-auto-price';
+import './cxpo-bigger-buttons';
 import './correct-commands/correct-commands';
 import './custom-item-sorting/custom-item-sorting';
 import './custom-left-sidebar/custom-left-sidebar';
