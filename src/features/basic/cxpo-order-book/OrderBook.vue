@@ -94,9 +94,6 @@ function isPriceHighlighted(order: PrunApi.CXBrokerOrder) {
         </tr>
       </thead>
       <tbody ref="offer-body">
-        <tr>
-          <th colSpan="2">Offers</th>
-        </tr>
         <template v-if="!isEmpty(offers)">
           <OrderRow
             v-for="order in offers"
@@ -119,9 +116,6 @@ function isPriceHighlighted(order: PrunApi.CXBrokerOrder) {
         </tr>
       </tbody>
       <tbody>
-        <tr>
-          <th colSpan="2">Requests</th>
-        </tr>
         <template v-if="!isEmpty(requests)">
           <OrderRow
             v-for="order in requests"

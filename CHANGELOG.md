@@ -18,6 +18,7 @@
 
 - `cxpo-order-book`: Add price and quantity autofill by clicking on the order amounts and prices
 - `cxpo-order-book`: Increase the default width of `CXPO` buffers by 60px
+- `cxpo-order-book`: Remove the "Offers" and "Requests" section headers
 
 ## 25.4.14
 
