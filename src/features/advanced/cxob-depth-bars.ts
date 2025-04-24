@@ -19,18 +19,25 @@ function onTileReady(tile: PrunTile) {
       asks.classList.add($style.tbody, $style.asks);
       bids.classList.add($style.tbody, $style.bids);
 
-      function applyDepthAttribute(rows: HTMLTableRowElement[], orders: PrunApi.CXBrokerOrder[]) {
-        if (rows.length !== orders.length) {
-          return;
-        }
-
-        let totalAmount = 0;
+      function calculateDepth(orders: PrunApi.CXBrokerOrder[]) {
+        let depth = 0;
         for (const order of orders) {
           // MM orders don't have the amount.
           if (order.amount === null) {
             break;
           }
-          totalAmount += order.amount;
+          depth += order.amount;
+        }
+        return depth;
+      }
+
+      function applyDepthAttribute(
+        rows: HTMLTableRowElement[],
+        orders: PrunApi.CXBrokerOrder[],
+        maxDepth: number,
+      ) {
+        if (rows.length !== orders.length) {
+          return;
         }
 
         let accumulated = 0;
@@ -45,7 +52,7 @@ function onTileReady(tile: PrunTile) {
           }
           const order = orders[i];
           accumulated += order.amount ?? 0;
-          const depth = clamp((accumulated / totalAmount) * 100, 0, 100);
+          const depth = clamp((accumulated / maxDepth) * 100, 0, 100);
           rows[i].setAttribute('data-depth', depth.toString());
         }
       }
@@ -64,8 +71,11 @@ function onTileReady(tile: PrunTile) {
         if (!orderBook.value) {
           return;
         }
-        applyDepthAttribute(askRows, orderBook.value.sellingOrders);
-        applyDepthAttribute(bidRows, orderBook.value.buyingOrders);
+        const askDepth = calculateDepth(orderBook.value.sellingOrders);
+        const bidDepth = calculateDepth(orderBook.value.buyingOrders);
+        const maxDepth = Math.max(askDepth, bidDepth);
+        applyDepthAttribute(askRows, orderBook.value.sellingOrders, maxDepth);
+        applyDepthAttribute(bidRows, orderBook.value.buyingOrders, maxDepth);
       });
     });
   });
