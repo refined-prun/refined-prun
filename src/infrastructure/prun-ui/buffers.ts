@@ -26,17 +26,16 @@ interface ShowBufferOptions {
 
 export async function showBuffer(command: string, options?: ShowBufferOptions) {
   if (!options?.force) {
-    for (const tile of tiles.find(command).filter(x => !x.docked)) {
-      const window = tile.frame.closest(`.${C.Window.window}`);
-      const command = UI_WINDOWS_REQUEST_FOCUS(tile.id);
+    const existing = tiles.find(command).find(x => !x.docked);
+    if (existing) {
+      const window = existing.frame.closest(`.${C.Window.window}`)!;
+      const command = UI_WINDOWS_REQUEST_FOCUS(existing.id);
       if (dispatchClientPrunMessage(command)) {
         return window;
       }
-      if (window) {
-        const header = _$(window, C.Window.header);
-        void clickElement(header);
-        return window;
-      }
+      const header = _$(window, C.Window.header);
+      void clickElement(header);
+      return window;
     }
   }
   await acquireSlot();
