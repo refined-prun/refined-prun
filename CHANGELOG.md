@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 25.4.24
 
 ### Added
 
