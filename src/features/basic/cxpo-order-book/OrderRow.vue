@@ -45,20 +45,21 @@ function onValueClick(cumulative: boolean) {
 
 <template>
   <tr :class="ownOrderClass">
-    <td :class="C.ComExOrderBookPanel.amount">
-      <div
-        :class="[amountClass, $style.value]"
-        @mouseenter="onValueMouseEnter(true)"
-        @mouseleave="onValueMouseLeave"
-        @click="onValueClick(true)">
+    <td
+      :class="[C.ComExOrderBookPanel.amount, amountClass, $style.value]"
+      @mouseenter="onValueMouseEnter(true)"
+      @mouseleave="onValueMouseLeave"
+      @click="onValueClick(true)">
+      <div>
         {{ amount }}
       </div>
     </td>
-    <td :class="[priceClass, $style.value, $style.price]">
-      <div
-        @mouseenter="onValueMouseEnter(false)"
-        @mouseleave="onValueMouseLeave"
-        @click="onValueClick(false)">
+    <td
+      :class="[priceClass, $style.value, $style.price]"
+      @mouseenter="onValueMouseEnter(false)"
+      @mouseleave="onValueMouseLeave"
+      @click="onValueClick(false)">
+      <div>
         {{ price }}
       </div>
     </td>
