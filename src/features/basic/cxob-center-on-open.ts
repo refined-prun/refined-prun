@@ -6,7 +6,7 @@ function onTileReady(tile: PrunTile) {
       const spread = await $(table, C.ComExOrderBookPanel.spread);
       const spreadRect = spread.getBoundingClientRect();
       scroll.scrollTop = Math.max(
-        spread.offsetTop - scroll.clientHeight / 2 + spreadRect.height,
+        spread.offsetTop - scroll.clientHeight / 2 + spreadRect.height / 2,
         0,
       );
     });

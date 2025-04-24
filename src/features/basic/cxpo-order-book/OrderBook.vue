@@ -20,14 +20,18 @@ const spread = computed(() => {
   return ask !== undefined && bid !== undefined ? fixed2(ask - bid) : '--';
 });
 
-const orderBookContainer = useTemplateRef<HTMLDivElement>('order-book');
-const offerBody = useTemplateRef<HTMLTableSectionElement>('offer-body');
+const scrollElement = useTemplateRef<HTMLElement>('order-book');
+const spreadElement = useTemplateRef<HTMLElement>('spread');
 watchEffect(() => {
-  if (!orderBookContainer.value || !offerBody.value) {
+  if (!scrollElement.value || !spreadElement.value) {
     return;
   }
 
-  orderBookContainer.value.scrollTop = Math.max(offerBody.value.offsetHeight - 90, 0);
+  const spreadRect = spreadElement.value.getBoundingClientRect();
+  scrollElement.value.scrollTop = Math.max(
+    spreadElement.value.offsetTop - scrollElement.value.clientHeight / 2 + spreadRect.height / 2,
+    0,
+  );
 });
 
 const hoverData = shallowRef<OrderHoverData | null>(null);
@@ -93,7 +97,7 @@ function isPriceHighlighted(order: PrunApi.CXBrokerOrder) {
           <th>Price</th>
         </tr>
       </thead>
-      <tbody ref="offer-body">
+      <tbody>
         <template v-if="!isEmpty(offers)">
           <OrderRow
             v-for="order in offers"
@@ -108,7 +112,7 @@ function isPriceHighlighted(order: PrunApi.CXBrokerOrder) {
           <td :class="C.ComExOrderBookPanel.empty" colSpan="2">No offers.</td>
         </tr>
       </tbody>
-      <tbody>
+      <tbody ref="spread">
         <tr>
           <td colSpan="2" :class="[C.ComExOrderBookPanel.spread, $style.spread]">
             Spread: <span :style="{ color: '#eee' }">{{ spread }}</span>
