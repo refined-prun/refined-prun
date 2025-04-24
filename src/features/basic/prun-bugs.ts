@@ -71,6 +71,10 @@ function init() {
 
   // User search results box in GIFT is too big to fit in the tile.
   applyCssRule('GIFT', `.${C.UserSelector.suggestionsContainer}`, $style.giftSearchResults);
+
+  // Fix the tooltip arrow position.
+  applyCssRule('[data-tooltip-position="bottom"]', $style.tooltipBottom);
+  applyCssRule('[data-tooltip-position="right"]', $style.tooltipRight);
 }
 
 features.add(import.meta.url, init, 'Fixes PrUn bugs.');

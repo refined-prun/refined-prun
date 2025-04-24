@@ -34,3 +34,30 @@
 .giftSearchResults {
   max-height: 190px;
 }
+
+.tooltipBottom {
+  &:before {
+    margin-top: 6px;
+    margin-bottom: 0;
+  }
+
+  &:after {
+    margin-top: -6px;
+    border-top-color: transparent;
+    border-bottom-width: 6px;
+    border-bottom-color: #c48400;
+  }
+}
+
+.tooltipRight {
+  &:before {
+    margin-left: 6px;
+    margin-right: 0;
+  }
+
+  &:after {
+    margin-left: -6px;
+    border-left-color: transparent;
+    border-right-color: #c48400;
+  }
+}
