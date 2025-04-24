@@ -50,41 +50,59 @@ function onClick(data: OrderHoverData) {
     onOrderClick(order.limit.amount);
     return;
   }
-  const orders = orderBook.value.sellingOrders.includes(order)
-    ? orderBook.value.sellingOrders
-    : orderBook.value.buyingOrders;
-  let quantity = 0;
-  for (const bookOrder of orders) {
-    // MM orders don't have the amount.
-    if (bookOrder.amount === null) {
-      break;
-    }
-    quantity += bookOrder.amount;
-    if (bookOrder.id === order.id) {
-      break;
-    }
-  }
-  onOrderClick(order.limit.amount, quantity);
+  const orders = getCumulativeOrders(order);
+  const quantity = orders.map(x => x.amount as number).reduce((a, b) => a + b, 0);
+  onOrderClick(orders.at(-1)?.limit.amount ?? 0, quantity);
 }
 
-const highlightedAmounts = computed(() => {
-  if (!orderBook.value || !hoverData.value || !hoverData.value.cumulative) {
-    return new Set();
+const cumulativeOrders = computed(() => {
+  if (!hoverData.value || !hoverData.value.cumulative) {
+    return [];
   }
-  const order = hoverData.value.order;
-  const orders = orderBook.value.sellingOrders.includes(order)
-    ? orderBook.value.sellingOrders
-    : orderBook.value.buyingOrders;
-  const index = orders.indexOf(order);
-  return new Set(orders.slice(0, index + 1));
+
+  return getCumulativeOrders(hoverData.value.order);
 });
+
+const highlightedAmounts = computed(() => new Set(cumulativeOrders.value));
 
 function isAmountHighlighted(order: PrunApi.CXBrokerOrder) {
   return highlightedAmounts.value.has(order);
 }
 
+const highlightedPrice = computed(() => {
+  if (!hoverData.value) {
+    return undefined;
+  }
+  if (!hoverData.value.cumulative) {
+    return hoverData.value.order;
+  }
+  return cumulativeOrders.value.at(-1);
+});
+
 function isPriceHighlighted(order: PrunApi.CXBrokerOrder) {
-  return hoverData.value?.order.id === order.id;
+  return highlightedPrice.value?.id === order.id;
+}
+
+function getCumulativeOrders(targetOrder: PrunApi.CXBrokerOrder) {
+  if (!orderBook.value) {
+    return [];
+  }
+
+  const orders = orderBook.value.sellingOrders.includes(targetOrder)
+    ? orderBook.value.sellingOrders
+    : orderBook.value.buyingOrders;
+  let cumulativeOrders = [] as PrunApi.CXBrokerOrder[];
+  for (const order of orders) {
+    // MM orders don't have the amount.
+    if (order.amount === null) {
+      break;
+    }
+    cumulativeOrders.push(order);
+    if (order.id === targetOrder.id) {
+      break;
+    }
+  }
+  return cumulativeOrders;
 }
 </script>
 
