@@ -6,6 +6,7 @@
 
 - `cx-search-bar`: (new) Adds a search bar for materials
 - `cxob-center-on-open`: (new) Centers the order book on open
+- `cxob-depth-bars`: (new) Adds market depth bars
 - `cxob-hide-section-headers`: (new) Hides "Offers" and "Requests" headers
 - `cxpo-auto-price`: (new) Adds automatic price calculation
 - `macos-antialiased-font`: (new) Applies antialiased smoothing to all fonts on macOS
