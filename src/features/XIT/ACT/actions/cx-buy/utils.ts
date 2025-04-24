@@ -1,4 +1,5 @@
 import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
+import { isFiniteOrder } from '@src/core/orders';
 
 export function fillAmount(cxTicker: string, amount: number, priceLimit: number) {
   const orderBook = cxobStore.getByTicker(cxTicker);
@@ -17,8 +18,7 @@ export function fillAmount(cxTicker: string, amount: number, priceLimit: number)
     if (priceLimit < orderPrice) {
       break;
     }
-    // MM orders don't have the amount.
-    const orderAmount = order.amount ?? Infinity;
+    const orderAmount = isFiniteOrder(order) ? order.amount : Infinity;
     const remaining = amount - filled.amount;
     const filledByOrder = Math.min(remaining, orderAmount);
     filled.priceLimit = orderPrice;

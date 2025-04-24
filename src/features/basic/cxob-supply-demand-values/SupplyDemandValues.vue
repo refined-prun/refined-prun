@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
 import { fixed0 } from '@src/utils/format';
+import { isFiniteOrder } from '@src/core/orders';
 
 const { ticker } = defineProps<{ ticker?: string }>();
 
@@ -12,8 +13,7 @@ const supply = computed(() => sumOrders(orderBook.value?.sellingOrders ?? []));
 function sumOrders(orders: PrunApi.CXBrokerOrder[]) {
   let sum = 0;
   for (const order of orders) {
-    // MM orders don't have the amount.
-    if (order.amount === null) {
+    if (!isFiniteOrder(order)) {
       break;
     }
     sum += order.amount;

@@ -4,6 +4,7 @@ import { fixed02 } from '@src/utils/format';
 import { refValue } from '@src/utils/reactive-dom';
 import { createReactiveDiv } from '@src/utils/reactive-element';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
+import { isFiniteOrder } from '@src/core/orders';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.ComExPlaceOrderForm.form), x => onFormReady(x, tile.parameter));
@@ -134,8 +135,7 @@ function fillQuantity(orders: PrunApi.CXBrokerOrder[], quantityNeeded: number) {
     volume: 0,
   };
   for (const order of orders) {
-    // MM orders don't have the amount.
-    const orderAmount = order.amount ?? Number.POSITIVE_INFINITY;
+    const orderAmount = isFiniteOrder(order) ? order.amount : Number.POSITIVE_INFINITY;
     const remaining = quantityNeeded - filled.amount;
     const filledByOrder = Math.min(remaining, orderAmount);
     const orderPrice = order.limit.amount;

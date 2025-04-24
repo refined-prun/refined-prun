@@ -4,6 +4,7 @@ import OrderRow from './OrderRow.vue';
 import { fixed2 } from '@src/utils/format';
 import { isEmpty } from 'ts-extras';
 import { OrderHoverData } from '@src/features/basic/cxpo-order-book/order-hover-data';
+import { isFiniteOrder } from '@src/core/orders';
 
 const { ticker, onOrderClick } = defineProps<{
   ticker?: string;
@@ -93,8 +94,7 @@ function getCumulativeOrders(targetOrder: PrunApi.CXBrokerOrder) {
     : orderBook.value.buyingOrders;
   let cumulativeOrders = [] as PrunApi.CXBrokerOrder[];
   for (const order of orders) {
-    // MM orders don't have the amount.
-    if (order.amount === null) {
+    if (!isFiniteOrder(order)) {
       break;
     }
     cumulativeOrders.push(order);

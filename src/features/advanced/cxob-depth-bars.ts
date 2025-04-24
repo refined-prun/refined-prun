@@ -3,6 +3,7 @@ import tableAlternatingColors from '../basic/table-rows-alternating-colors.modul
 import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
 import { clamp } from '@src/utils/clamp';
+import { isFiniteOrder } from '@src/core/orders';
 
 function onTileReady(tile: PrunTile) {
   const orderBook = computed(() => cxobStore.getByTicker(tile.parameter));
@@ -22,8 +23,7 @@ function onTileReady(tile: PrunTile) {
       function calculateDepth(orders: PrunApi.CXBrokerOrder[]) {
         let depth = 0;
         for (const order of orders) {
-          // MM orders don't have the amount.
-          if (order.amount === null) {
+          if (!isFiniteOrder(order)) {
             break;
           }
           depth += order.amount;
@@ -43,7 +43,7 @@ function onTileReady(tile: PrunTile) {
         let accumulated = 0;
         let hitMM = false;
         for (let i = 0; i < orders.length; i++) {
-          if (orders[i].amount === null) {
+          if (!isFiniteOrder(orders[i])) {
             hitMM = true;
           }
           if (hitMM) {
