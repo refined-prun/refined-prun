@@ -1,0 +1,10 @@
+.tbody {
+  > tr > td:first-child {
+    color: #3fa2de;
+    cursor: pointer;
+
+    &:hover {
+      color: #f7a600;
+    }
+  }
+}

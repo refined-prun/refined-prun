@@ -11,6 +11,7 @@ import './bs-merge-area-stats';
 import './bs-satisfaction-percentage';
 import './chat-images';
 import './clickable-apex-logo';
+import './cmds-clickable-commands';
 import './co-base-count';
 import './contd-condition-address-placeholder';
 import './contd-upward-search-results';

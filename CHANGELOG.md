@@ -4,6 +4,7 @@
 
 ### Added
 
+- `cmds-clickable-commands`: (new) Makes commands clickable
 - `cx-search-bar`: (new) Adds a search bar for materials
 - `cxob-center-on-open`: (new) Centers the order book on open
 - `cxob-depth-bars`: (new) Adds market depth bars
