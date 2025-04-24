@@ -19,18 +19,15 @@ function onTileReady(tile: PrunTile) {
     }
 
     const dynamicInputs = _$$(form, 'input');
-    function setInputs(quantity: string | undefined, priceLimit: string | undefined) {
-      if (quantity) {
-        changeInputValue(dynamicInputs[0], quantity);
-      }
-      if (priceLimit) {
-        changeInputValue(dynamicInputs[1], priceLimit);
+
+    function onOrderClick(price: number, quantity?: number) {
+      changeInputValue(dynamicInputs[1], price.toString());
+      if (quantity !== undefined) {
+        changeInputValue(dynamicInputs[0], quantity.toString());
       }
     }
 
-    createFragmentApp(OrderBook, { ticker: tile.parameter, setinputs: setInputs }).appendTo(
-      formParent,
-    );
+    createFragmentApp(OrderBook, { ticker: tile.parameter, onOrderClick }).appendTo(formParent);
   });
 }
 
