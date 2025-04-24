@@ -144,8 +144,7 @@ function isPriceHighlighted(order: PrunApi.CXBrokerOrder) {
 <style module>
 .container {
   overflow-y: scroll;
-  flex: 1;
-  width: 120px;
+  width: 160px;
   height: 248px;
   vertical-align: top;
   scrollbar-width: none;

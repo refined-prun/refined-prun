@@ -17,6 +17,7 @@
 ### Changed
 
 - `cxpo-order-book`: Add price and quantity autofill by clicking on the order amounts and prices
+- `cxpo-order-book`: Increase the default width of `CXPO` buffers by 60px
 
 ## 25.4.14
 
