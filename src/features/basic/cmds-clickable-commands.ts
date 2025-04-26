@@ -1,4 +1,4 @@
-import $style from './cmds-clickable-commands.module.css';
+import link from '@src/infrastructure/prun-ui/css/link.module.css';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { isPresent } from 'ts-extras';
 
@@ -11,6 +11,7 @@ function onTileReady(tile: PrunTile) {
       if (!isPresent(command) || mandatoryParameters === undefined) {
         return;
       }
+      commandColumn.classList.add(link.link);
       commandColumn.addEventListener('click', () => {
         void showBuffer(command, { autoSubmit: (mandatoryParameters.textContent ?? '') === '' });
       });
@@ -19,7 +20,6 @@ function onTileReady(tile: PrunTile) {
 }
 
 function init() {
-  applyCssRule('CMDS', 'tbody', $style.tbody);
   tiles.observe('CMDS', onTileReady);
 }
 

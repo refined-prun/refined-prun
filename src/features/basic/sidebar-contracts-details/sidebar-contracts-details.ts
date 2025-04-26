@@ -1,4 +1,5 @@
 import css from '@src/utils/css-utils.module.css';
+import link from '@src/infrastructure/prun-ui/css/link.module.css';
 import $style from './sidebar-contracts-details.module.css';
 import ContractPartnerName from './ContractPartnerName.vue';
 import { refTextContent } from '@src/utils/reactive-dom';
@@ -15,7 +16,8 @@ function onContractIdReady(id: HTMLElement) {
 }
 
 function init() {
-  applyCssRule(`.${C.Sidebar.contract} .${C.Link.link}`, css.hidden);
+  applyCssRule(`.${C.Sidebar.contract} .${C.Link.link}:last-child`, css.hidden);
+  applyCssRule(`.${C.Sidebar.contractId}`, link.link);
   applyCssRule(`.${C.Sidebar.contractId}`, $style.contractId);
   subscribe($$(document, C.Sidebar.contractId), onContractIdReady);
 }
