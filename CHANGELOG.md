@@ -4,6 +4,7 @@
 
 ### Changed
 
+- `XIT ACT`: Add action package name validation
 - `cxpo-order-book`: Change the display of own orders - an amount link instead of a row highlight
 - `highlight-own-exchange-orders`: Change the display of own orders - an amount link instead of a row highlight
 
