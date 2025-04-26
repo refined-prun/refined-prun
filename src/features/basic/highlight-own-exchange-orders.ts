@@ -1,4 +1,4 @@
-import highlight from '@src/infrastructure/prun-ui/table-row-highlight.module.css';
+import highlight from '@src/infrastructure/prun-ui/css/table-row-highlight.module.css';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 
 function onTileReady(tile: PrunTile) {

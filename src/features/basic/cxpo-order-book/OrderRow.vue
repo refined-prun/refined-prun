@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import highlight from '@src/infrastructure/prun-ui/table-row-highlight.module.css';
+import highlight from '@src/infrastructure/prun-ui/css/table-row-highlight.module.css';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { fixed0, fixed2 } from '@src/utils/format';
 import { OrderHoverData } from '@src/features/basic/cxpo-order-book/order-hover-data';
