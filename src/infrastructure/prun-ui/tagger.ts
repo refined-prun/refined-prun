@@ -1,12 +1,23 @@
 import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
+import { fxobStore } from '@src/infrastructure/prun-api/data/fxob';
 
 export function tagUI() {
-  tagCxobOrders();
+  tagOrderBook('CXOB', cxobStore);
+  tagOrderBook('FXOB', fxobStore);
 }
 
-function tagCxobOrders() {
-  tiles.observe('CXOB', tile => {
-    const orderBook = computed(() => cxobStore.getByTicker(tile.parameter));
+interface Broker {
+  sellingOrders: { id: string }[];
+  buyingOrders: { id: string }[];
+}
+
+interface BrokerStore {
+  getByTicker(ticker?: string): Broker | undefined;
+}
+
+function tagOrderBook(command: string, store: BrokerStore) {
+  tiles.observe(command, tile => {
+    const orderBook = computed(() => store.getByTicker(tile.parameter));
 
     subscribe($$(tile.anchor, 'table'), table => {
       const tbodies = _$$(table, 'tbody');
@@ -24,7 +35,7 @@ function tagCxobOrders() {
           return;
         }
 
-        function tagRows(rows: HTMLTableRowElement[], orders: PrunApi.CXBrokerOrder[]) {
+        function tagRows(rows: HTMLTableRowElement[], orders: { id: string }[]) {
           if (rows.length !== orders.length) {
             return;
           }
