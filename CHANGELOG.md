@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `cxob-depth-bars`: Fix feature not working in Firefox and older Chromium versions
+
 ## 25.4.24
 
 ### Added

@@ -1,10 +1,11 @@
 table {
   .tbody tr {
+    --rp-market-depth: 0%;
     position: relative;
 
     &:after {
       content: '';
-      width: attr(data-depth%);
+      width: var(--rp-market-depth);
       position: absolute;
       top: 0;
       right: 0;

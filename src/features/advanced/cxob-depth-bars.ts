@@ -47,13 +47,13 @@ function onTileReady(tile: PrunTile) {
             hitMM = true;
           }
           if (hitMM) {
-            rows[i].setAttribute('data-depth', '0');
+            rows[i].style.setProperty('--rp-market-depth', '0%');
             continue;
           }
           const order = orders[i];
           accumulated += order.amount ?? 0;
           const depth = clamp((accumulated / maxDepth) * 100, 0, 100);
-          rows[i].setAttribute('data-depth', depth.toString());
+          rows[i].style.setProperty('--rp-market-depth', `${depth}%`);
         }
       }
 
