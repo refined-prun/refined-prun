@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import highlight from '@src/infrastructure/prun-ui/css/table-row-highlight.module.css';
+import link from '@src/infrastructure/prun-ui/css/link.module.css';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { fixed0, fixed2 } from '@src/utils/format';
 import { OrderHoverData } from '@src/features/basic/cxpo-order-book/order-hover-data';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 const { order, request, highlightAmount, highlightPrice, onHover, onClick } = defineProps<{
   order: PrunApi.CXBrokerOrder;
@@ -15,12 +16,14 @@ const { order, request, highlightAmount, highlightPrice, onHover, onClick } = de
 
 const $style = useCssModule();
 
-const ownOrderClass = computed(() => ({
-  [highlight.highlight]: (order.amount ?? 0) > 0 && order.trader.id === companyStore.value?.id,
-}));
+const isOwnOrder = computed(
+  () => (order.amount ?? 0) > 0 && order.trader.id === companyStore.value?.id,
+);
 const amount = computed(() => ((order.amount ?? 0) > 0 ? fixed0(order.amount!) : '∞'));
 const amountClass = computed(() => ({
+  [$style.value]: true,
   [$style.valueHighlight]: highlightAmount,
+  [link.link]: isOwnOrder.value,
 }));
 const price = computed(() => fixed2(order.limit.amount));
 const priceClass = computed(() => [
@@ -31,6 +34,9 @@ const priceClass = computed(() => [
 ]);
 
 function onValueMouseEnter(cumulative: boolean) {
+  if (isOwnOrder.value && cumulative) {
+    return;
+  }
   onHover({ order, cumulative });
 }
 
@@ -39,14 +45,18 @@ function onValueMouseLeave() {
 }
 
 function onValueClick(cumulative: boolean) {
+  if (isOwnOrder.value && cumulative) {
+    showBuffer(`CXO ${order.id.substring(0, 8)}`);
+    return;
+  }
   onClick({ order, cumulative });
 }
 </script>
 
 <template>
-  <tr :class="ownOrderClass">
+  <tr>
     <td
-      :class="[C.ComExOrderBookPanel.amount, amountClass, $style.value]"
+      :class="[C.ComExOrderBookPanel.amount, amountClass]"
       @mouseenter="onValueMouseEnter(true)"
       @mouseleave="onValueMouseLeave"
       @click="onValueClick(true)">

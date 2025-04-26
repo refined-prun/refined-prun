@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- `cxpo-order-book`: Change the display of own orders - an amount link instead of a row highlight
+
 ### Fixed
 
 - `cxob-depth-bars`: Fix feature not working in Firefox and older Chromium versions
