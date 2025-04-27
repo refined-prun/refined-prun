@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `highlight-own-exchange-orders`: Make own order rows bold
+
 ## 25.4.27
 
 ### Added

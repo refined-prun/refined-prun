@@ -1,4 +1,5 @@
 import link from '@src/infrastructure/prun-ui/css/link.module.css';
+import $style from './highlight-own-exchange-orders.module.css';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
@@ -33,7 +34,9 @@ function onTileReady(tile: PrunTile, getOwnOrders: GetOwnOrders, orderCommand: s
       }
     });
     watchEffectWhileNodeAlive(tr, () => {
-      amountColumn.classList.toggle(link.link, ownOrder.value !== undefined);
+      const isOwnOrder = ownOrder.value !== undefined;
+      tr.classList.toggle($style.ownOrder, isOwnOrder);
+      amountColumn.classList.toggle(link.link, isOwnOrder);
     });
   });
 }
