@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `mu-fix-sector-names`: (new) Fixes sector names, for example LE => LS
+
 ### Changed
 
 - `XIT ACT`: Add action package name validation

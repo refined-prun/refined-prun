@@ -24,7 +24,7 @@ const middleware: Middleware<Message> = {
     }
     return false;
   },
-  dispatchClientMessage: undefined,
+  dispatchClientMessage: ref(undefined),
 };
 
 export function listenPrunApi() {
@@ -59,10 +59,14 @@ function processEvent(message: Message | undefined) {
   }
 }
 
+export const canDispatchClientPrunMessage = computed(
+  () => !!middleware.dispatchClientMessage.value,
+);
+
 export function dispatchClientPrunMessage(message: Message) {
-  if (!middleware.dispatchClientMessage) {
+  if (!middleware.dispatchClientMessage.value) {
     return false;
   }
-  middleware.dispatchClientMessage?.(message);
+  middleware.dispatchClientMessage.value(message);
   return true;
 }
