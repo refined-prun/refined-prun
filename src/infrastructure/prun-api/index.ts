@@ -1,3 +1,4 @@
+import { startRelay } from '@src/infrastructure/prun-api/relay';
 import { listenPrunApi } from '@src/infrastructure/prun-api/prun-api-listener';
 import { loadFallbackPlanetData, preloadFioResponses } from '@src/infrastructure/fio/fio-api';
 import { watchUntil } from '@src/utils/watch';
@@ -16,6 +17,7 @@ import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import { fetchPrices } from '@src/infrastructure/fio/cx';
 
 export async function initializeApi() {
+  startRelay();
   void fetchPrices();
   preloadFioResponses();
   listenPrunApi();
