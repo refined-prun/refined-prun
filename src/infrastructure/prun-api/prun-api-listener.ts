@@ -20,7 +20,7 @@ const middleware: Middleware<Message> = {
   },
   onMessage: message => {
     if (context.value === companyContextId.value || !companyContextId.value || !context.value) {
-      processEvent(message);
+      return processEvent(message) ?? false;
     }
     return false;
   },
@@ -41,20 +41,22 @@ function processEvent(message: Message | undefined) {
 
   startMeasure(message.messageType);
 
-  if (message.messageType === 'ACTION_COMPLETED') {
-    processEvent(message.payload.message);
-  } else {
-    if (isRecordingPrunLog.value) {
-      prunLog.value.push(message);
+  try {
+    if (message.messageType === 'ACTION_COMPLETED') {
+      return processEvent(message.payload.message);
+    } else {
+      if (isRecordingPrunLog.value) {
+        prunLog.value.push(message);
+      }
+      const storeAction = {
+        type: message.messageType,
+        data: message.payload,
+      };
+      return dispatch(storeAction);
     }
-    const storeAction = {
-      type: message.messageType,
-      data: message.payload,
-    };
-    dispatch(storeAction);
+  } finally {
+    stopMeasure();
   }
-
-  stopMeasure();
 }
 
 export function dispatchClientPrunMessage(message: Message) {

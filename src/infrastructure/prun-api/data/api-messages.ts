@@ -4,7 +4,7 @@ interface Message {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type MessageHandler = (data: any) => void;
+type MessageHandler = (data: any) => void | boolean;
 
 type MessageHandlers = { [type: string]: MessageHandler };
 
@@ -23,9 +23,14 @@ export function onApiMessage(handlers: MessageHandlers) {
 
 export function dispatch(message: Message) {
   const handlers = registry.get(message.type);
+  let changed = false;
   if (handlers) {
     for (const handler of handlers) {
-      handler(message.data);
+      const result = handler(message.data);
+      if (result) {
+        changed = true;
+      }
     }
   }
+  return changed;
 }
