@@ -69,9 +69,18 @@ export function loadPrunCss() {
 }
 
 export function getPrunCssStylesheets() {
-  const all = _$$(document.head, 'style');
+  // Start searching prun styles from the app script to filter out any other injected styles.
+  const appScript = _$$(document.head, 'script').find(x =>
+    x.src?.includes('prosperousuniverse.com'),
+  );
   const valid: HTMLStyleElement[] = [];
-  for (const style of all) {
+  let nextSibling = appScript?.nextElementSibling;
+  while (nextSibling) {
+    if (nextSibling.tagName !== 'STYLE') {
+      break;
+    }
+    const style = nextSibling as HTMLStyleElement;
+    nextSibling = nextSibling.nextElementSibling;
     const sheet = style.sheet;
     if (!sheet) {
       continue;
