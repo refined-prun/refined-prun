@@ -105,7 +105,10 @@ export class StepMachine {
             return;
           }
         },
-        cacheDescription: () => (description = info.description(next)),
+        cacheDescription: () => {
+          description = info.description(next);
+          this.options.onStatusChanged(description);
+        },
         complete: async () => {
           // Wait a moment to allow data to update.
           await sleep(0);

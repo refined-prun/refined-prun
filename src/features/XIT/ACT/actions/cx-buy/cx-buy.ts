@@ -95,7 +95,7 @@ act.addAction({
           exchange,
           ticker,
           amount: filled?.amount ?? amount,
-          priceLimit: filled?.priceLimit ?? priceLimit,
+          priceLimit: priceLimit,
           buyPartial: data.buyPartial ?? false,
         }),
       );

@@ -13,6 +13,7 @@
 
 ### Fixed
 
+- `XIT ACT`: Fix CX Buy action using stale order book data
 - `cxpo-order-book`: Fix price/quantity autofill number formatting
 
 ## 25.4.27

@@ -8,6 +8,7 @@ import { ExchangeTickersReverse } from '@src/legacy';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { watchWhile } from '@src/utils/watch';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import { watchEffect } from 'vue';
 
 interface Data {
   exchange: string;
@@ -88,49 +89,63 @@ export const CX_BUY = act.addActionStep<Data>({
       return;
     }
 
-    const filled = fillAmount(cxTicker, amount, priceLimit);
+    let shouldUnwatch = false;
+    const unwatch = watchEffect(() => {
+      if (shouldUnwatch) {
+        unwatch();
+        return;
+      }
 
-    if (!filled) {
-      log.error(`Missing ${cxTicker} order book data`);
-      fail();
-      return;
-    }
+      const filled = fillAmount(cxTicker, amount, priceLimit);
 
-    if (filled.amount < amount) {
-      if (!data.buyPartial) {
-        let message = `Not enough materials on ${exchange} to buy ${fixed0(amount)} ${ticker}`;
-        if (isFinite(priceLimit)) {
-          message += ` with price limit ${fixed02(priceLimit)}/u`;
-        }
-        log.error(message);
+      if (!filled) {
+        log.error(`Missing ${cxTicker} order book data`);
+        shouldUnwatch = true;
         fail();
         return;
       }
 
-      const leftover = amount - filled.amount;
-      let message =
-        `${fixed0(leftover)} ${ticker} will not be bought on ${exchange} ` +
-        `(${fixed0(filled.amount)} of ${fixed0(amount)} available`;
-      if (isFinite(priceLimit)) {
-        message += ` with price limit ${fixed02(priceLimit)}/u`;
-      }
-      message += ')';
-      log.warning(message);
-      if (filled.amount === 0) {
-        skip();
-        return;
-      }
-    }
+      if (filled.amount < amount) {
+        if (!data.buyPartial) {
+          let message = `Not enough materials on ${exchange} to buy ${fixed0(amount)} ${ticker}`;
+          if (isFinite(priceLimit)) {
+            message += ` with price limit ${fixed02(priceLimit)}/u`;
+          }
+          log.error(message);
+          shouldUnwatch = true;
+          fail();
+          return;
+        }
 
-    changeInputValue(quantityInput, filled.amount.toString());
-    changeInputValue(priceInput, filled.priceLimit.toString());
+        const leftover = amount - filled.amount;
+        let message =
+          `${fixed0(leftover)} ${ticker} will not be bought on ${exchange} ` +
+          `(${fixed0(filled.amount)} of ${fixed0(amount)} available`;
+        if (isFinite(priceLimit)) {
+          message += ` with price limit ${fixed02(priceLimit)}/u`;
+        }
+        message += ')';
+        log.warning(message);
+        if (filled.amount === 0) {
+          shouldUnwatch = true;
+          skip();
+          return;
+        }
+      }
+
+      changeInputValue(quantityInput, filled.amount.toString());
+      changeInputValue(priceInput, filled.priceLimit.toString());
+
+      // Cache description before clicking the buy button because
+      // order book data will change after that.
+      ctx.cacheDescription();
+    });
 
     const buyButton = await $(tile.anchor, C.Button.success);
 
-    // Cache description before clicking the buy button because
-    // order book data will change after that.
-    ctx.cacheDescription();
     await waitAct();
+    unwatch();
+
     const warehouseAmount = computed(() => {
       return (
         cxWarehouse.value?.items
