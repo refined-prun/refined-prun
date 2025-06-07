@@ -7,8 +7,9 @@ const { danger, dark, disabled, inline, neutral, primary, success } = defineProp
   neutral?: boolean;
   primary?: boolean;
   success?: boolean;
-  onClick?: () => void;
 }>();
+
+const emit = defineEmits<{ (e: 'click', event: MouseEvent): void }>();
 
 const classes = computed(() => ({
   [C.Button.btn]: true,
@@ -31,7 +32,7 @@ const classes = computed(() => ({
 </script>
 
 <template>
-  <button :class="classes" type="button" :disabled="disabled" @click="onClick">
+  <button :class="classes" type="button" :disabled="disabled" @click="emit('click', $event)">
     <slot />
   </button>
 </template>
