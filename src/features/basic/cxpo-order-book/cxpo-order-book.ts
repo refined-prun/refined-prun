@@ -2,6 +2,7 @@ import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import OrderBook from './OrderBook.vue';
 import { changeInputValue } from '@src/util';
 import { increaseDefaultBufferSize } from '@src/infrastructure/prun-ui/buffer-sizes';
+import { fixed0, fixed02 } from '@src/utils/format';
 
 function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {
@@ -22,9 +23,9 @@ function onTileReady(tile: PrunTile) {
     const dynamicInputs = _$$(form, 'input');
 
     function onOrderClick(price: number, quantity?: number) {
-      changeInputValue(dynamicInputs[1], price.toString());
+      changeInputValue(dynamicInputs[1], fixed02(price));
       if (quantity !== undefined) {
-        changeInputValue(dynamicInputs[0], quantity.toString());
+        changeInputValue(dynamicInputs[0], fixed0(quantity));
       }
     }
 

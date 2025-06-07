@@ -8,6 +8,10 @@
 - `item-icons`: Add a detail to the INS icon
 - Swap the order of SF and FF in category sorting
 
+### Fixed
+
+- `cxpo-order-book`: Fix price/quantity autofill number formatting
+
 ## 25.4.27
 
 ### Added
