@@ -79,5 +79,10 @@ export function initializeXitCommands() {
   tiles.observe('XIT', onTileReady);
   if (userData.settings.mode === undefined) {
     setTimeout(() => showBuffer('XIT START'), 1000);
+    return;
+  }
+  if (userData.configVersion !== config.version) {
+    setTimeout(() => showBuffer('XIT CHANGELOG'), 1000);
+    userData.configVersion = config.version;
   }
 }
