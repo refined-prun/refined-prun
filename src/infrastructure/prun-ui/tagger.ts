@@ -52,7 +52,7 @@ function tagOrderBook(command: string, store: BrokerStore) {
         tagRows(bidRows, orderBook.value.buyingOrders);
       };
       const observer = new MutationObserver(observe);
-      observer.observe(asks, { childList: true, subtree: true, characterData: true });
+      observer.observe(table, { childList: true, subtree: true, characterData: true });
       observe();
     });
   });
