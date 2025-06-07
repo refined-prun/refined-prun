@@ -10,7 +10,5 @@ export const companyContextId = computed(
 onApiMessage({
   USER_DATA(data: PrunApi.UserData) {
     Object.assign(userDataStore, data);
-    // Provide username for FIO.
-    window['RPRUN_PRUN_USERNAME'] = data.username;
   },
 });
