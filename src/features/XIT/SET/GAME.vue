@@ -221,7 +221,7 @@ function confirmResetAllData(ev: Event) {
         :label="ddmmyyyy(backup.timestamp) + ' ' + hhmm(backup.timestamp)">
         <PrunButton primary @click="restoreBackupAndReload(backup.data)">Restore</PrunButton>
         <PrunButton primary @click="downloadBackup(backup.data, backup.timestamp)">
-          Download
+          Export
         </PrunButton>
         <PrunButton danger @click="confirmDeleteBackup($event, backup)">Delete</PrunButton>
       </Commands>
