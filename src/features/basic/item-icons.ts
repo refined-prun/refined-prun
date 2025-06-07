@@ -259,7 +259,7 @@ const materials: Record<string, Icon> = {
   IDC: 'f7c2',
   IMM: 'f1c0',
   IND: 'f5bd',
-  INS: 'f5bd',
+  INS: ['f5bd', { detail: 'f2dc' }],
   KOM: 'e516',
   KV: ['', { detail: 'f132' }],
   LBH: 'e583',
