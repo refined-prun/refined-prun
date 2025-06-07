@@ -9,13 +9,21 @@ import Commands from '@src/components/forms/Commands.vue';
 import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import { initialUserData, userData } from '@src/store/user-data';
 import {
+  downloadBackup,
   exportUserData,
   importUserData,
   resetUserData,
+  restoreBackup,
   saveUserData,
 } from '@src/infrastructure/storage/user-data-serializer';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import { objectId } from '@src/utils/object-id';
+import {
+  deleteUserDataBackup,
+  getUserDataBackups,
+  UserDataBackup,
+} from '@src/infrastructure/storage/user-data-backup';
+import { ddmmyyyy, hhmm } from '@src/utils/format';
 
 const timeFormats: { label: string; value: UserData.TimeFormat }[] = [
   {
@@ -83,6 +91,8 @@ const currencySpacing: { label: string; value: UserData.CurrencySpacing }[] = [
   },
 ];
 
+const backups = computed(() => getUserDataBackups());
+
 function addSidebarButton() {
   userData.settings.sidebar.push(['SET', 'XIT SET']);
 }
@@ -102,6 +112,16 @@ function importUserDataAndReload() {
     await saveUserData();
     window.location.reload();
   });
+}
+
+async function restoreBackupAndReload(backup: UserDataBackup) {
+  restoreBackup(backup);
+  await saveUserData();
+  window.location.reload();
+}
+
+function confirmDeleteBackup(ev: Event, backup: UserDataBackup) {
+  showConfirmationOverlay(ev, () => deleteUserDataBackup(backup));
 }
 
 function confirmResetAllData(ev: Event) {
@@ -192,6 +212,21 @@ function confirmResetAllData(ev: Event) {
       <PrunButton primary @click="exportUserData">Export User Data</PrunButton>
     </Commands>
   </form>
+  <template v-if="backups.length > 0">
+    <SectionHeader>Backups</SectionHeader>
+    <form>
+      <Commands
+        v-for="backup in backups"
+        :key="backup.timestamp"
+        :label="ddmmyyyy(backup.timestamp) + ' ' + hhmm(backup.timestamp)">
+        <PrunButton primary @click="restoreBackupAndReload(backup.data)">Restore</PrunButton>
+        <PrunButton primary @click="downloadBackup(backup.data, backup.timestamp)">
+          Download
+        </PrunButton>
+        <PrunButton danger @click="confirmDeleteBackup($event, backup)">Delete</PrunButton>
+      </Commands>
+    </form>
+  </template>
   <SectionHeader>Danger Zone</SectionHeader>
   <form>
     <Commands>

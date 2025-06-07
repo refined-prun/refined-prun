@@ -5,6 +5,8 @@
 ### Added
 
 - `other-context-notification-count`: (new) Displays the number of notifications from other contexts in the NOTS header label
+- Add user data backups (up to 5, every 24 hours)
+- Add user data restore from backup after extension reinstall
 
 ### Changed
 
