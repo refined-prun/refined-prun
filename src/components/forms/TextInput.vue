@@ -1,10 +1,21 @@
 <script setup lang="ts">
 const model = defineModel<string>();
+
+const { focusOnMount = false } = defineProps<{ focusOnMount?: boolean }>();
+
+const input = useTemplateRef<HTMLInputElement>('input');
+
+onMounted(() => {
+  if (focusOnMount) {
+    nextTick(() => input.value?.focus());
+  }
+});
 </script>
 
 <template>
   <div>
     <input
+      ref="input"
       v-model="model"
       type="text"
       autocomplete="off"

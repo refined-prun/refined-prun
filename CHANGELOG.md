@@ -5,6 +5,7 @@
 ### Changed
 
 - `XIT ACT`: Add an export button to the action editor
+- `XIT ACT`: Auto-focus the text input on action import prompt open
 - `XIT SET`: Reload the page after importing or resetting user data
 - `highlight-own-exchange-orders`: Make own order rows bold
 - `item-icons`: Add a detail to the INS icon
