@@ -14,6 +14,7 @@
 ### Fixed
 
 - `XIT ACT`: Fix CX Buy action using stale order book data
+- `XIT WEB`: Fix iframe being a bit too big for Firefox to properly scroll
 - `cxob-depth-bars`: Fix feature not working for newly placed orders
 - `cxpo-order-book`: Fix price/quantity autofill number formatting
 - `cxpo-order-book`: Fix clicking on MM order amount not filling the price
