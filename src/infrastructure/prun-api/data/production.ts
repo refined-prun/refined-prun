@@ -74,10 +74,12 @@ const getByShortId = createMapGetter(state.all, x => x.id.substring(0, 8));
 
 const getById = (value?: string | null) => state.getById(value) ?? getByShortId(value);
 
-const bySiteId = createGroupMapGetter(state.all, x => x.siteId);
+const getByShortSiteId = createGroupMapGetter(state.all, x => x.siteId.substring(0, 8));
+
+const getByFullSiteId = createGroupMapGetter(state.all, x => x.siteId);
 
 const getBySiteId = (value?: string | null) => {
-  const result = bySiteId(value);
+  const result = getByFullSiteId(value) ?? getByShortSiteId(value);
   if (result) {
     return result;
   }
