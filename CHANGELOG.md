@@ -19,6 +19,7 @@
 - `cxpo-order-book`: Fix price/quantity autofill number formatting
 - `cxpo-order-book`: Fix clicking on MM order amount not filling the price
 - `highlight-own-exchange-orders`: Fix feature not working for newly placed orders
+- `screen-tab-bar`: Fix SCRN list not being updated when the page url contains context id
 
 ## 25.4.27
 
