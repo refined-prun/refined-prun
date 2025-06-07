@@ -56,13 +56,14 @@ export async function saveUserData() {
   });
 }
 
-export function importUserData() {
+export function importUserData(onSuccess?: () => void) {
   uploadJson(json => {
     if (json?.type !== fileType) {
       return;
     }
     const userData = migrateUserData(json.data);
     applyUserData(userData);
+    onSuccess?.();
   });
 }
 

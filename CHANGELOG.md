@@ -4,6 +4,7 @@
 
 ### Changed
 
+- `XIT SET`: Reload the page after importing or resetting user data
 - `highlight-own-exchange-orders`: Make own order rows bold
 - `item-icons`: Add a detail to the INS icon
 - Swap the order of SF and FF in category sorting

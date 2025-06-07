@@ -12,6 +12,7 @@ import {
   exportUserData,
   importUserData,
   resetUserData,
+  saveUserData,
 } from '@src/infrastructure/storage/user-data-serializer';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import { objectId } from '@src/utils/object-id';
@@ -96,8 +97,19 @@ function confirmResetSidebar(ev: Event) {
   });
 }
 
+function importUserDataAndReload() {
+  importUserData(async () => {
+    await saveUserData();
+    window.location.reload();
+  });
+}
+
 function confirmResetAllData(ev: Event) {
-  showConfirmationOverlay(ev, resetUserData);
+  showConfirmationOverlay(ev, async () => {
+    resetUserData();
+    await saveUserData();
+    window.location.reload();
+  });
 }
 </script>
 
@@ -176,7 +188,7 @@ function confirmResetAllData(ev: Event) {
   <SectionHeader>Import/Export</SectionHeader>
   <form>
     <Commands>
-      <PrunButton primary @click="importUserData">Import User Data</PrunButton>
+      <PrunButton primary @click="importUserDataAndReload">Import User Data</PrunButton>
       <PrunButton primary @click="exportUserData">Export User Data</PrunButton>
     </Commands>
   </form>
