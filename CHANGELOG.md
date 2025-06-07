@@ -5,6 +5,7 @@
 ### Changed
 
 - `highlight-own-exchange-orders`: Make own order rows bold
+- Swap the order of SF and FF in category sorting
 
 ## 25.4.27
 

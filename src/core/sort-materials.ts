@@ -96,6 +96,7 @@ const sortOrder = {
     'ATA',
     'HSE',
   ]),
+  fuels: makeSortOrderMap(['SF', 'FF']),
 };
 
 function makeSortOrderMap(materials: string[]) {
