@@ -16,6 +16,7 @@
 - `XIT ACT`: Fix CX Buy action using stale order book data
 - `cxob-depth-bars`: Fix feature not working for newly placed orders
 - `cxpo-order-book`: Fix price/quantity autofill number formatting
+- `cxpo-order-book`: Fix clicking on MM order amount not filling the price
 - `highlight-own-exchange-orders`: Fix feature not working for newly placed orders
 
 ## 25.4.27

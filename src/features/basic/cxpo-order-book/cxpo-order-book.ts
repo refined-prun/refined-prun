@@ -24,7 +24,7 @@ function onTileReady(tile: PrunTile) {
 
     function onOrderClick(price: number, quantity?: number) {
       changeInputValue(dynamicInputs[1], fixed02(price));
-      if (quantity !== undefined) {
+      if (quantity !== undefined && quantity > 0) {
         changeInputValue(dynamicInputs[0], fixed0(quantity));
       }
     }

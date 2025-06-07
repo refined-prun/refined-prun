@@ -94,11 +94,8 @@ function getCumulativeOrders(targetOrder: PrunApi.CXBrokerOrder) {
     : orderBook.value.buyingOrders;
   let cumulativeOrders = [] as PrunApi.CXBrokerOrder[];
   for (const order of orders) {
-    if (!isFiniteOrder(order)) {
-      break;
-    }
     cumulativeOrders.push(order);
-    if (order.id === targetOrder.id) {
+    if (order.id === targetOrder.id || !isFiniteOrder(order)) {
       break;
     }
   }

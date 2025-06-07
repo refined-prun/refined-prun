@@ -33,23 +33,31 @@ const priceClass = computed(() => [
   },
 ]);
 
-function onValueMouseEnter(cumulative: boolean) {
-  if (isOwnOrder.value && cumulative) {
+function onAmountMouseEnter() {
+  if (isOwnOrder.value) {
     return;
   }
-  onHover({ order, cumulative });
+  onHover({ order, cumulative: true });
+}
+
+function onPriceMouseEnter() {
+  onHover({ order, cumulative: false });
 }
 
 function onValueMouseLeave() {
   onHover(null);
 }
 
-function onValueClick(cumulative: boolean) {
-  if (isOwnOrder.value && cumulative) {
+function onAmountClick() {
+  if (isOwnOrder.value) {
     showBuffer(`CXO ${order.id.substring(0, 8)}`);
-    return;
+  } else {
+    onClick({ order, cumulative: true });
   }
-  onClick({ order, cumulative });
+}
+
+function onPriceClick() {
+  onClick({ order, cumulative: false });
 }
 </script>
 
@@ -57,18 +65,18 @@ function onValueClick(cumulative: boolean) {
   <tr>
     <td
       :class="[C.ComExOrderBookPanel.amount, amountClass]"
-      @mouseenter="onValueMouseEnter(true)"
+      @mouseenter="onAmountMouseEnter"
       @mouseleave="onValueMouseLeave"
-      @click="onValueClick(true)">
+      @click="onAmountClick">
       <div>
         {{ amount }}
       </div>
     </td>
     <td
       :class="[priceClass, $style.value, $style.price]"
-      @mouseenter="onValueMouseEnter(false)"
+      @mouseenter="onPriceMouseEnter"
       @mouseleave="onValueMouseLeave"
-      @click="onValueClick(false)">
+      @click="onPriceClick">
       <div>
         {{ price }}
       </div>
