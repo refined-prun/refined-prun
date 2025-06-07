@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `other-context-notification-count`: (new) Displays the number of notifications from other contexts in the NOTS header label
+
 ### Changed
 
 - `XIT ACT`: Add an export button to the action editor
