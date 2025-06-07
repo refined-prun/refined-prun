@@ -196,8 +196,6 @@ async function waitActionProgress(overlay: HTMLElement) {
 
 function logRuntimeError(e: unknown, log: Logger) {
   console.error(e);
-  log.error(`Action Package execution failed due to a runtime error`);
-  log.error(`Please report this error to the extension developer`);
   if (e instanceof Error) {
     if (e.stack) {
       for (const line of e.stack.split('\n')) {
@@ -209,4 +207,6 @@ function logRuntimeError(e: unknown, log: Logger) {
   } else {
     log.error(e as string);
   }
+  log.error(`Action Package execution failed due to a runtime error`);
+  log.error(`Please report this error to the extension developer`);
 }
