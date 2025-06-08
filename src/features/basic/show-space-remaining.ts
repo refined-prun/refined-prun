@@ -1,10 +1,10 @@
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { refValue } from '@src/utils/reactive-dom';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 
 function formatFixed(f: number) {
-  return f % 1 ? f.toFixed(2) : f.toString();
+  const x = f % 1 ? f.toFixed(2) : f;
+  return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
 }
 
 function getStore(tile: PrunTile) {
