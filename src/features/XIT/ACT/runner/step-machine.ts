@@ -12,7 +12,7 @@ interface StepMachineOptions {
   onBufferSplit: () => void;
   onStart: () => void;
   onEnd: () => void;
-  onStatusChanged: (status: string) => void;
+  onStatusChanged: (status: string, keepReady?: boolean) => void;
   onActReady: () => void;
 }
 
@@ -107,7 +107,7 @@ export class StepMachine {
         },
         cacheDescription: () => {
           description = info.description(next);
-          this.options.onStatusChanged(description);
+          this.options.onStatusChanged(description, true);
         },
         complete: async () => {
           // Wait a moment to allow data to update.

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `XIT ACT`: Fix CX Buy action getting stuck after unexpected order book updates
+
 ## 25.6.9
 
 ### Fixed

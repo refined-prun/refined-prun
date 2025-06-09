@@ -78,6 +78,8 @@ export const CX_BUY = act.addActionStep<Data>({
     }
 
     setStatus('Setting up CXPO buffer...');
+
+    const buyButton = await $(tile.anchor, C.Button.success);
     const form = await $(tile.anchor, C.ComExPlaceOrderForm.form);
     const inputs = _$$(form, 'input');
     const quantityInput = inputs[0];
@@ -140,8 +142,6 @@ export const CX_BUY = act.addActionStep<Data>({
       // order book data will change after that.
       ctx.cacheDescription();
     });
-
-    const buyButton = await $(tile.anchor, C.Button.success);
 
     await waitAct();
     unwatch();
