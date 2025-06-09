@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `other-context-notification-count`: Fix counter displaying "ghost" notification count
+
 ## 25.6.8
 
 ### Added
