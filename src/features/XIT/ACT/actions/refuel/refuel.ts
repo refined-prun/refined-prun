@@ -4,7 +4,7 @@ import Configure from '@src/features/XIT/ACT/actions/refuel/Configure.vue';
 import { Config } from '@src/features/XIT/ACT/actions/refuel/config';
 import { CX_BUY } from '@src/features/XIT/ACT/action-steps/CX_BUY';
 import { TRANSFER_MATERIALS } from '@src/features/XIT/ACT/action-steps/TRANSFER_MATERIALS';
-import { configurableValue } from '@src/features/XIT/ACT/shared-types';
+import { AssertFn, configurableValue } from '@src/features/XIT/ACT/shared-types';
 import {
   atSameLocation,
   deserializeStorage,
@@ -30,15 +30,12 @@ act.addAction<Config>({
     return data.origin !== configurableValue || config.origin !== undefined;
   },
   generateSteps: async ctx => {
-    const { data, config, log, fail, emitStep } = ctx;
+    const { data, config, log, emitStep } = ctx;
+    const assert: AssertFn = ctx.assert;
 
     const serializedOrigin = data.origin === configurableValue ? config?.origin : data.origin;
     const origin = deserializeStorage(serializedOrigin);
-    if (!origin) {
-      log.error('Invalid origin');
-      fail();
-      return;
-    }
+    assert(origin, 'Invalid origin');
 
     const isCX = isCXWarehouse(origin);
 
@@ -51,24 +48,15 @@ act.addAction<Config>({
     );
 
     if (dockedStl.length === 0 && dockedFtl.length === 0) {
-      log.error('No ships are docked near the origin');
-      fail();
+      log.warning('No ships are docked near the origin');
       return;
     }
 
     const stlMaterial = materialsStore.getByTicker('SF');
-    if (!stlMaterial) {
-      log.error('SF material not found');
-      fail();
-      return;
-    }
+    assert(stlMaterial, 'SF material not found');
 
     const ftlMaterial = materialsStore.getByTicker('FF');
-    if (!ftlMaterial) {
-      log.error('FF material not found');
-      fail();
-      return;
-    }
+    assert(ftlMaterial, 'FF material not found');
 
     const totalStlRefuel = dockedStl.reduce(
       (acc, x) => acc + calculateRefuelAmount(x, stlMaterial),
@@ -80,9 +68,8 @@ act.addAction<Config>({
       0,
     );
 
-    if (totalStlRefuel === 0 && totalFtlRefuel === 0) {
-      log.error('No ships need refueling');
-      fail();
+    if (totalFtlRefuel === 0 && totalStlRefuel === 0) {
+      log.warning('No ships need refueling');
       return;
     }
 
@@ -91,11 +78,7 @@ act.addAction<Config>({
         ?.amount ?? 0;
 
     if (presentStlFuel < totalStlRefuel) {
-      if (!isCX || !data.buyMissingFuel) {
-        log.error('Not enough SF at the origin');
-        fail();
-        return;
-      }
+      assert(isCX && data.buyMissingFuel, 'Not enough SF at the origin');
       emitStep(
         CX_BUY({
           exchange: getExchangeCode(origin),
@@ -112,11 +95,7 @@ act.addAction<Config>({
         ?.amount ?? 0;
 
     if (presentFtlFuel < totalFtlRefuel) {
-      if (!isCX || !data.buyMissingFuel) {
-        log.error('Not enough FF at the origin');
-        fail();
-        return;
-      }
+      assert(isCX && data.buyMissingFuel, 'Not enough FF at the origin');
       emitStep(
         CX_BUY({
           exchange: getExchangeCode(origin),
