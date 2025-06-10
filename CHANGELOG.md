@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `XIT ACT`: Add a Refuel action
+
 ### Fixed
 
 - `other-context-notification-count`: Fox notification count sometimes including deleted notifications

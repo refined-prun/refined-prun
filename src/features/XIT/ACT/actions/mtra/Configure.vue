@@ -9,7 +9,7 @@ import {
   deserializeStorage,
   serializeStorage,
   storageSort,
-} from '@src/features/XIT/ACT/actions/mtra/utils';
+} from '@src/features/XIT/ACT/actions/utils';
 import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 const { data, config } = defineProps<{ data: UserData.ActionData; config: Config }>();

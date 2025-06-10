@@ -2,7 +2,7 @@ import { act } from '@src/features/XIT/ACT/act-registry';
 import Edit from '@src/features/XIT/ACT/actions/mtra/Edit.vue';
 import Configure from '@src/features/XIT/ACT/actions/mtra/Configure.vue';
 import { TRANSFER_MATERIALS } from '@src/features/XIT/ACT/action-steps/TRANSFER_MATERIALS';
-import { atSameLocation, deserializeStorage } from '@src/features/XIT/ACT/actions/mtra/utils';
+import { atSameLocation, deserializeStorage } from '@src/features/XIT/ACT/actions/utils';
 import { Config } from '@src/features/XIT/ACT/actions/mtra/config';
 import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
