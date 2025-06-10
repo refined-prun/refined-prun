@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `other-context-notification-count`: Fox notification count sometimes including deleted notifications
+
 ## 25.6.9.1557
 
 ### Fixed

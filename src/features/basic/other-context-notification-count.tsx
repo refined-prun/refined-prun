@@ -1,8 +1,8 @@
-import { refTextContent } from '@src/utils/reactive-dom';
-import { watchEffectWhileNodeAlive } from '@src/utils/watch';
+import $style from './other-context-notification-count.module.css';
 import { alertsStore } from '@src/infrastructure/prun-api/data/alerts';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { corporationHoldingsStore } from '@src/infrastructure/prun-api/data/corporation-holdings';
+import { createReactiveSpan } from '@src/utils/reactive-element';
 
 function init() {
   // There is a bug in the base game where notifications from corporations
@@ -14,36 +14,28 @@ function init() {
     }
     return set;
   });
-  const expected = computed(() => {
+  const countLabel = computed(() => {
     const companyId = companyStore.value?.id;
     const alerts = alertsStore.all.value;
     if (!companyId || !alerts) {
       return undefined;
     }
     const ignored = contextsToIgnore.value;
-    let thisCount = 0;
-    let otherCount = 0;
+    let count = 0;
     for (const alert of alerts) {
       if (alert.seen || ignored.has(alert.contextId)) {
         continue;
       }
-      if (alert.contextId === companyId) {
-        thisCount++;
-      } else {
-        otherCount++;
+      if (alert.contextId !== companyId) {
+        count++;
       }
     }
-    return otherCount > 0 ? `${thisCount} (${otherCount})` : thisCount.toString();
+    return count > 0 ? ` (${count})` : undefined;
   });
   subscribe($$(document, C.AlertsHeadItem.count), count => {
-    const actual = refTextContent(count);
-    watchEffectWhileNodeAlive(count, () => {
-      if (expected.value === undefined || actual.value === expected.value) {
-        return;
-      }
-
-      count.textContent = expected.value;
-    });
+    const otherCount = createReactiveSpan(count, countLabel);
+    otherCount.classList.add($style.count);
+    count.after(otherCount);
   });
 }
 
