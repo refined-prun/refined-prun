@@ -10,6 +10,8 @@ import { act } from '@src/features/XIT/ACT/act-registry';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import EditMaterialGroup from '@src/features/XIT/ACT/EditMaterialGroup.vue';
 import EditAction from '@src/features/XIT/ACT/EditAction.vue';
+import { downloadJson } from '@src/utils/json-file';
+import { deepToRaw } from '@src/utils/deep-to-raw';
 
 const { pkg } = defineProps<{ pkg: UserData.ActionPackageData }>();
 
@@ -72,6 +74,11 @@ function getActionDescription(action: UserData.ActionData) {
 
 function onExecuteClick() {
   showBuffer(`XIT ACT_${pkg.global.name.replace(' ', '_')}`);
+}
+
+function onExportClick() {
+  const json = deepToRaw(pkg);
+  downloadJson(json, `${pkg.global.name.replace(' ', '_')}-${Date.now()}.json`);
 }
 </script>
 
@@ -149,6 +156,9 @@ function onExecuteClick() {
   <form>
     <Commands label="Execute">
       <PrunButton primary @click="onExecuteClick">EXECUTE</PrunButton>
+    </Commands>
+    <Commands label="Export">
+      <PrunButton primary @click="onExportClick">EXPORT</PrunButton>
     </Commands>
     <Commands label="Help">
       <PrunButton primary @click="showBuffer('XIT HELP ACTION')">HELP</PrunButton>

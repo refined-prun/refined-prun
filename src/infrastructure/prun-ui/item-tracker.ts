@@ -8,7 +8,7 @@ import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/mater
 export function trackItemTickers() {
   appendStylesheet();
   subscribe($$(document, C.ColoredIcon.label), label => {
-    const container = label.closest(`.${C.ColoredIcon.container}`) as HTMLElement;
+    const container = label.closest(`.${C.ColoredIcon.container}`);
     if (!container) {
       return;
     }

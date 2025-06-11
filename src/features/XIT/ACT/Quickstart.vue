@@ -19,7 +19,7 @@ import SelectInput from '@src/components/forms/SelectInput.vue';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { serializeStorage } from '@src/features/XIT/ACT/actions/mtra/utils';
+import { serializeStorage } from '@src/features/XIT/ACT/actions/utils';
 
 const emit = defineEmits<{ (e: 'close'): void }>();
 

@@ -36,7 +36,7 @@ const days = ref(task.days);
 const buildingAge = ref(task.buildingAge);
 
 function formatDateForInput(date: number | undefined) {
-  if (!date) {
+  if (date === undefined) {
     return undefined;
   }
   const localDate = new Date(date);
@@ -49,10 +49,6 @@ function formatDateForInput(date: number | undefined) {
 }
 
 const planets = computed(() => {
-  if (!sitesStore.all) {
-    return [];
-  }
-
   return (sitesStore.all.value ?? []).map(x => ({
     label: getEntityNameFromAddress(x.address),
     value: getEntityNaturalIdFromAddress(x.address),
@@ -90,7 +86,7 @@ function onSaveClick() {
   }
   if (type.value === 'Resupply') {
     task.planet = planet.value;
-    task.days = days.value || 7;
+    task.days = days.value ?? 7;
     const site = sitesStore.getByPlanetNaturalId(task.planet)!;
     task.text =
       `Supply [[p:${getEntityNameFromAddress(site.address)}]] with ` +
@@ -113,7 +109,7 @@ function onSaveClick() {
   }
   if (type.value === 'Repair') {
     task.planet = planet.value;
-    task.buildingAge = buildingAge.value || 50;
+    task.buildingAge = buildingAge.value ?? 50;
     const site = sitesStore.getByPlanetNaturalId(task.planet)!;
     task.text =
       `Repair buildings on [[p:${getEntityNameFromAddress(site.address)}]] ` +
@@ -122,16 +118,14 @@ function onSaveClick() {
     let materials: PrunApi.MaterialAmount[] = [];
 
     task.subtasks = [];
-    if (site?.platforms) {
-      for (const building of site.platforms) {
-        const shouldRepair =
-          isRepairableBuilding(building) &&
-          Date.now() - getBuildingLastRepair(building) > task.buildingAge * 86400000;
-        if (!shouldRepair) {
-          continue;
-        }
-        materials.push(...building.repairMaterials);
+    for (const building of site.platforms) {
+      const shouldRepair =
+        isRepairableBuilding(building) &&
+        Date.now() - getBuildingLastRepair(building) > task.buildingAge * 86400000;
+      if (!shouldRepair) {
+        continue;
       }
+      materials.push(...building.repairMaterials);
     }
 
     materials = sortMaterialAmounts(mergeMaterialAmounts(materials));

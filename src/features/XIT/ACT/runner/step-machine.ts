@@ -12,9 +12,11 @@ interface StepMachineOptions {
   onBufferSplit: () => void;
   onStart: () => void;
   onEnd: () => void;
-  onStatusChanged: (status: string) => void;
+  onStatusChanged: (status: string, keepReady?: boolean) => void;
   onActReady: () => void;
 }
+
+const AssertionError = new Error('Assertion failed');
 
 export class StepMachine {
   private next?: ActionStep;
@@ -85,10 +87,11 @@ export class StepMachine {
     this.next = next;
     const info = act.getActionStepInfo(next.type);
     let description: string | undefined;
+    const log = this.options.log;
     info
       .execute({
         data: next,
-        log: this.options.log,
+        log,
         setStatus: status => this.options.onStatusChanged(status),
         waitAct: async status => {
           status ??= description ?? info.description(next);
@@ -98,43 +101,57 @@ export class StepMachine {
           this.options.onStatusChanged('Waiting for action feedback...');
           const error = await waitActionFeedback(tile);
           if (error) {
-            this.log.error(error);
-            this.log.error(description ?? info.description(next));
-            this.log.error('Action Package execution failed');
+            log.error(error);
+            log.error(description ?? info.description(next));
+            log.error('Action Package execution failed');
             this.stop();
             return;
           }
         },
-        cacheDescription: () => (description = info.description(next)),
+        cacheDescription: () => {
+          description = info.description(next);
+          this.options.onStatusChanged(description, true);
+        },
         complete: async () => {
           // Wait a moment to allow data to update.
           await sleep(0);
-          this.log.success(description ?? info.description(next));
+          log.success(description ?? info.description(next));
           this.startNext();
         },
         skip: () => this.skip(),
-        fail: () => {
-          this.log.error('Action Package execution failed');
+        fail: message => {
+          if (message) {
+            log.error(message);
+          }
+          log.error('Action Package execution failed');
           this.stop();
           return;
+        },
+        assert: (condition, message) => {
+          if (!condition) {
+            log.error(message);
+            throw AssertionError;
+          }
         },
         requestTile: async command => await this.requestTile(command),
       })
       .catch(e => {
-        logRuntimeError(e, this.log);
+        if (e !== AssertionError) {
+          log.runtimeError(e);
+        }
         this.stop();
       });
   }
 
   private async requestTile(command: string) {
     let tile = tiles.find(command, true)[0];
-    if (tile) {
+    if (tile !== undefined) {
       return tile;
     }
     await this.waitAct(`Open ${command}`);
     this.options.onStatusChanged(`Opening ${command}...`);
     tile = await this.options.tileAllocator.requestTile(command);
-    if (!tile) {
+    if (tile === undefined) {
       this.log.error(`Failed to open ${command}`);
       this.stop();
     }
@@ -160,7 +177,7 @@ async function waitActionFeedback(tile: PrunTile) {
   await waitActionProgress(overlay);
   if (overlay.classList.contains(C.ActionConfirmationOverlay.container)) {
     const confirm = _$$(overlay, C.Button.btn)[1];
-    if (!confirm) {
+    if (confirm === undefined) {
       return 'Confirmation overlay is missing confirm button';
     }
     await clickElement(confirm);
@@ -192,21 +209,4 @@ async function waitActionProgress(overlay: HTMLElement) {
     });
     mutationObserver.observe(overlay, { attributes: true });
   });
-}
-
-function logRuntimeError(e: unknown, log: Logger) {
-  console.error(e);
-  log.error(`Action Package execution failed due to a runtime error`);
-  log.error(`Please report this error to the extension developer`);
-  if (e instanceof Error) {
-    if (e.stack) {
-      for (const line of e.stack.split('\n')) {
-        log.error(line);
-      }
-    } else {
-      log.error(e.message);
-    }
-  } else {
-    log.error(e as string);
-  }
 }

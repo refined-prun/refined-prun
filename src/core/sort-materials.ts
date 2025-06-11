@@ -10,7 +10,7 @@ export function sortMaterialAmounts(materials: PrunApi.MaterialAmount[]) {
 
 export function sortByMaterial<T>(items: T[], selector: (item: T) => PrunApi.Material | undefined) {
   const categories = materialCategoriesStore.entities.value;
-  if (categories === undefined) {
+  if (!categories) {
     return items;
   }
   return items.slice().sort((a, b) => {
@@ -96,6 +96,7 @@ const sortOrder = {
     'ATA',
     'HSE',
   ]),
+  fuels: makeSortOrderMap(['SF', 'FF']),
 };
 
 function makeSortOrderMap(materials: string[]) {

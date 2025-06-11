@@ -29,3 +29,12 @@ export function UI_WINDOWS_REQUEST_FOCUS(id: string) {
     },
   };
 }
+
+export function WORLD_SECTORS(sectors: PrunApi.Sector[]) {
+  return {
+    messageType: 'WORLD_SECTORS',
+    payload: {
+      sectors: sectors,
+    },
+  };
+}

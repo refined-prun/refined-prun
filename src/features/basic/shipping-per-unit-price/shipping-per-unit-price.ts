@@ -17,9 +17,9 @@ async function onAdContainerReady(container: HTMLElement) {
     return;
   }
 
-  const weight = ad.cargoWeight;
-  const volume = ad.cargoVolume;
-  if (!weight || !volume) {
+  const weight = ad.cargoWeight ?? 0;
+  const volume = ad.cargoVolume ?? 0;
+  if (weight === 0 && volume === 0) {
     return;
   }
   const unit = weight > volume ? 't' : 'm³';

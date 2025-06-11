@@ -14,14 +14,9 @@ async function onTileReady(tile: PrunTile) {
   }
 
   const contextBar = await $(tile.frame, C.ContextControls.container);
-  const fragmentApp = createFragmentApp(ContextControlsItem, {
+  createFragmentApp(ContextControlsItem, {
     cmd: `XIT BURN ${getEntityNaturalIdFromAddress(site.address)}`,
-  });
-  if (contextBar.children[0]) {
-    fragmentApp.before(contextBar.children[0]);
-  } else {
-    fragmentApp.appendTo(contextBar);
-  }
+  }).prependTo(contextBar);
 }
 
 function init() {

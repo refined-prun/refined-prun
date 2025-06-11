@@ -93,9 +93,11 @@ const runner = new ActionRunner({
     isRunning.value = false;
     status.value = undefined;
   },
-  onStatusChanged: title => {
+  onStatusChanged: (title, keepReady) => {
     status.value = title;
-    actReady.value = false;
+    if (!keepReady) {
+      actReady.value = false;
+    }
   },
   onActReady: () => {
     actReady.value = true;

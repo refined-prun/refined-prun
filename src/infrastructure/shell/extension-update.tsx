@@ -9,7 +9,7 @@ if (import.meta.env.PROD) {
     }
     void setTimeout(() => window.location.reload(), 2000);
     clearInterval(id);
-    if (!C.Connecting) {
+    if (C.Connecting === undefined) {
       // There might be a case where PrUn CSS was not parsed yet.
       return;
     }

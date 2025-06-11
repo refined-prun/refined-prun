@@ -21,7 +21,7 @@ export function calculateSiteProfitability(site: PrunApi.Site): ProfitabilityEnt
   const inputs: PrunApi.MaterialAmount[] = [];
   const outputs: PrunApi.MaterialAmount[] = [];
 
-  if (workforce === undefined) {
+  if (!workforce) {
     return undefined;
   }
 
@@ -34,7 +34,7 @@ export function calculateSiteProfitability(site: PrunApi.Site): ProfitabilityEnt
 
   const msInADay = 86400000;
 
-  if (production !== undefined) {
+  if (production) {
     const isRecurring = production.some(x => x.orders.some(y => y.recurring));
 
     for (const line of production) {

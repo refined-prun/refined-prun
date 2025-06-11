@@ -14,6 +14,19 @@ export default ts.config(
     rules: {
       // This check is already provided by TypeScript.
       'no-undef': 'off',
+      '@typescript-eslint/strict-boolean-expressions': [
+        'error',
+        {
+          allowAny: true,
+          allowNullableBoolean: true,
+          allowNullableEnum: false,
+          allowNullableNumber: false,
+          allowNullableObject: true,
+          allowNullableString: true,
+          allowNumber: false,
+          allowString: true,
+        },
+      ],
     },
   },
 
@@ -26,10 +39,11 @@ export default ts.config(
     },
   },
   {
-    files: ['*.vue', '**/*.vue'],
+    files: ['**/*.vue'],
     languageOptions: {
       parserOptions: {
         parser: ts.parser,
+        extraFileExtensions: ['.vue'],
       },
     },
   },
@@ -46,12 +60,13 @@ export default ts.config(
   {
     languageOptions: {
       parserOptions: {
+        project: './tsconfig.json',
         ecmaVersion: 'latest',
       },
     },
   },
 
   {
-    ignores: ['dist/**/*', 'src/types/unimport.d.ts'],
+    ignores: ['dist/**/*', 'eslint.config.mjs', 'src/types/unimport.d.ts'],
   },
 );

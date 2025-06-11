@@ -34,4 +34,21 @@ export class Logger {
   cancel(msg: string) {
     this.logMessage('CANCEL', msg);
   }
+
+  runtimeError(e: unknown) {
+    console.error(e);
+    if (e instanceof Error) {
+      if (e.stack) {
+        for (const line of e.stack.split('\n')) {
+          this.error(line);
+        }
+      } else {
+        this.error(e.message);
+      }
+    } else {
+      this.error(e as string);
+    }
+    this.error(`Action Package execution failed due to a runtime error`);
+    this.error(`Please report this error to the extension developer`);
+  }
 }

@@ -3,6 +3,7 @@ import Edit from '@src/features/XIT/ACT/actions/cx-buy/Edit.vue';
 import { CX_BUY } from '@src/features/XIT/ACT/action-steps/CX_BUY';
 import { fixed0, fixed02 } from '@src/utils/format';
 import { fillAmount } from '@src/features/XIT/ACT/actions/cx-buy/utils';
+import { AssertFn } from '@src/features/XIT/ACT/shared-types';
 
 act.addAction({
   type: 'CX Buy',
@@ -16,21 +17,13 @@ act.addAction({
   editComponent: Edit,
   generateSteps: async ctx => {
     const { data, state, log, fail, getMaterialGroup, emitStep } = ctx;
+    const assert: AssertFn = ctx.assert;
 
     const materials = await getMaterialGroup(data.group);
-    if (!materials) {
-      log.error('Invalid material group on MTRA');
-    }
+    assert(materials, 'Invalid material group');
 
     const exchange = data.exchange;
-    if (!exchange) {
-      log.error('Missing exchange on CX buy');
-    }
-
-    if (!materials || !exchange) {
-      fail();
-      return;
-    }
+    assert(exchange, 'Missing exchange');
 
     // Take out materials in CX inventory if requested
     if ((data.useCXInv ?? true) && data.exchange) {
@@ -71,8 +64,7 @@ act.addAction({
           if (isFinite(priceLimit)) {
             message += ` with price limit ${fixed02(priceLimit)}/u`;
           }
-          log.error(message);
-          fail();
+          fail(message);
           return;
         }
 
@@ -95,7 +87,7 @@ act.addAction({
           exchange,
           ticker,
           amount: filled?.amount ?? amount,
-          priceLimit: filled?.priceLimit ?? priceLimit,
+          priceLimit: priceLimit,
           buyPartial: data.buyPartial ?? false,
         }),
       );

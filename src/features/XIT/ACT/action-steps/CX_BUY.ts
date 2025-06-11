@@ -8,6 +8,8 @@ import { ExchangeTickersReverse } from '@src/legacy';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { watchWhile } from '@src/utils/watch';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import { watchEffect } from 'vue';
+import { AssertFn } from '@src/features/XIT/ACT/shared-types';
 
 interface Data {
   exchange: string;
@@ -40,6 +42,7 @@ export const CX_BUY = act.addActionStep<Data>({
   execute: async ctx => {
     const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete, skip, fail } =
       ctx;
+    const assert: AssertFn = ctx.assert;
     const { amount, ticker, exchange, priceLimit } = data;
     const cxTicker = `${ticker}.${exchange}`;
     const cxWarehouse = computed(() => {
@@ -47,29 +50,19 @@ export const CX_BUY = act.addActionStep<Data>({
       const warehouse = warehousesStore.getByEntityNaturalId(naturalId);
       return storagesStore.getById(warehouse?.storeId);
     });
-
-    if (!cxWarehouse.value) {
-      log.error(`CX warehouse not found for ${exchange}`);
-      fail();
-      return;
-    }
+    assert(cxWarehouse.value, `CX warehouse not found for ${exchange}`);
 
     const material = materialsStore.getByTicker(ticker);
-    if (!material) {
-      log.error(`Unknown material ${ticker}`);
-      fail();
-      return;
-    }
+    assert(material, `Unknown material ${ticker}`);
 
     const canFitWeight =
       material.weight * amount <= cxWarehouse.value.weightCapacity - cxWarehouse.value.weightLoad;
     const canFitVolume =
       material.volume * amount <= cxWarehouse.value.volumeCapacity - cxWarehouse.value.volumeLoad;
-    if (!canFitWeight || !canFitVolume) {
-      log.error(`Cannot not buy ${fixed0(amount)} ${ticker} (will not fit in the warehouse)`);
-      fail();
-      return;
-    }
+    assert(
+      canFitWeight && canFitVolume,
+      `Cannot not buy ${fixed0(amount)} ${ticker} (will not fit in the warehouse)`,
+    );
 
     const tile = await requestTile(`CXPO ${cxTicker}`);
     if (!tile) {
@@ -77,60 +70,68 @@ export const CX_BUY = act.addActionStep<Data>({
     }
 
     setStatus('Setting up CXPO buffer...');
+
+    const buyButton = await $(tile.anchor, C.Button.success);
     const form = await $(tile.anchor, C.ComExPlaceOrderForm.form);
     const inputs = _$$(form, 'input');
     const quantityInput = inputs[0];
+    assert(quantityInput !== undefined, 'Missing quantity input');
     const priceInput = inputs[1];
+    assert(priceInput !== undefined, 'Missing price input');
 
-    if (!quantityInput || !priceInput) {
-      log.error('Missing input elements');
-      fail();
-      return;
-    }
+    let shouldUnwatch = false;
+    const unwatch = watchEffect(() => {
+      if (shouldUnwatch) {
+        unwatch();
+        return;
+      }
 
-    const filled = fillAmount(cxTicker, amount, priceLimit);
+      const filled = fillAmount(cxTicker, amount, priceLimit);
 
-    if (!filled) {
-      log.error(`Missing ${cxTicker} order book data`);
-      fail();
-      return;
-    }
+      if (!filled) {
+        shouldUnwatch = true;
+        fail(`Missing ${cxTicker} order book data`);
+        return;
+      }
 
-    if (filled.amount < amount) {
-      if (!data.buyPartial) {
-        let message = `Not enough materials on ${exchange} to buy ${fixed0(amount)} ${ticker}`;
+      if (filled.amount < amount) {
+        if (!data.buyPartial) {
+          let message = `Not enough materials on ${exchange} to buy ${fixed0(amount)} ${ticker}`;
+          if (isFinite(priceLimit)) {
+            message += ` with price limit ${fixed02(priceLimit)}/u`;
+          }
+          shouldUnwatch = true;
+          fail(message);
+          return;
+        }
+
+        const leftover = amount - filled.amount;
+        let message =
+          `${fixed0(leftover)} ${ticker} will not be bought on ${exchange} ` +
+          `(${fixed0(filled.amount)} of ${fixed0(amount)} available`;
         if (isFinite(priceLimit)) {
           message += ` with price limit ${fixed02(priceLimit)}/u`;
         }
-        log.error(message);
-        fail();
-        return;
+        message += ')';
+        log.warning(message);
+        if (filled.amount === 0) {
+          shouldUnwatch = true;
+          skip();
+          return;
+        }
       }
 
-      const leftover = amount - filled.amount;
-      let message =
-        `${fixed0(leftover)} ${ticker} will not be bought on ${exchange} ` +
-        `(${fixed0(filled.amount)} of ${fixed0(amount)} available`;
-      if (isFinite(priceLimit)) {
-        message += ` with price limit ${fixed02(priceLimit)}/u`;
-      }
-      message += ')';
-      log.warning(message);
-      if (filled.amount === 0) {
-        skip();
-        return;
-      }
-    }
+      changeInputValue(quantityInput, filled.amount.toString());
+      changeInputValue(priceInput, filled.priceLimit.toString());
 
-    changeInputValue(quantityInput, filled.amount.toString());
-    changeInputValue(priceInput, filled.priceLimit.toString());
+      // Cache description before clicking the buy button because
+      // order book data will change after that.
+      ctx.cacheDescription();
+    });
 
-    const buyButton = await $(tile.anchor, C.Button.success);
-
-    // Cache description before clicking the buy button because
-    // order book data will change after that.
-    ctx.cacheDescription();
     await waitAct();
+    unwatch();
+
     const warehouseAmount = computed(() => {
       return (
         cxWarehouse.value?.items

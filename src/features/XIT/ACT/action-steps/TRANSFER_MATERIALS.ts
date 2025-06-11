@@ -1,11 +1,12 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
-import { serializeStorage } from '@src/features/XIT/ACT/actions/mtra/utils';
+import { serializeStorage } from '@src/features/XIT/ACT/actions/utils';
 import { fixed0 } from '@src/utils/format';
 import { changeInputValue, clickElement, focusElement } from '@src/util';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { isDefined } from 'ts-extras';
 import { watchWhile } from '@src/utils/watch';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
+import { AssertFn } from '@src/features/XIT/ACT/shared-types';
 
 interface Data {
   from: string;
@@ -27,26 +28,22 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
   execute: async ctx => {
     const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete, skip, fail } =
       ctx;
+    const assert: AssertFn = ctx.assert;
     const { ticker } = data;
     const from = storagesStore.getById(data.from);
+    assert(from, 'Origin inventory not found');
     const to = storagesStore.getById(data.to);
-    if (!from || !to) {
-      log.error('Origin or destination inventory not found');
-      fail();
-      return;
-    }
+    assert(to, 'Destination inventory not found');
 
     if (!from.items.find(x => x.quantity?.material.ticker === ticker)) {
       log.warning(`No ${ticker} was transferred (not present in origin)`);
       skip();
       return;
     }
+
     const material = materialsStore.getByTicker(ticker);
-    if (!material) {
-      log.error(`Unknown material ${ticker}`);
-      fail();
-      return;
-    }
+    assert(material, `Unknown material ${ticker}`);
+
     const canFitWeight = material.weight <= to.weightCapacity - to.weightLoad;
     const canFitVolume = material.volume <= to.volumeCapacity - to.volumeLoad;
     if (!canFitWeight || !canFitVolume) {
@@ -71,11 +68,7 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     changeInputValue(input, ticker);
 
     const suggestionsList = _$(container, C.MaterialSelector.suggestionsList);
-    if (!suggestionsList) {
-      log.error(`Ticker ${ticker} not found in the material selector`);
-      fail();
-      return;
-    }
+    assert(suggestionsList, 'Suggestions list not found');
     suggestionsContainer.style.display = 'none';
     const match = _$$(suggestionsList, C.MaterialSelector.suggestionEntry).find(
       x => _$(x, C.ColoredIcon.label)?.textContent === ticker,
@@ -83,8 +76,7 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
 
     if (!match) {
       suggestionsContainer.style.display = '';
-      log.error(`Ticker ${ticker} not found in the material selector`);
-      fail();
+      fail(`Ticker ${ticker} not found in the material selector`);
       return;
     }
 
@@ -97,11 +89,7 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     const maxAmount = Math.max(...sliderNumbers);
     const allInputs = _$$(tile.anchor, 'input');
     const amountInput = allInputs[1];
-    if (!amountInput) {
-      log.error('Missing amount input');
-      fail();
-      return;
-    }
+    assert(amountInput !== undefined, 'Amount input not found');
     const amount = data.amount;
     if (amount > maxAmount) {
       const leftover = amount - maxAmount;

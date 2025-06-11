@@ -29,7 +29,7 @@ function applyIconRules(root: string, icon: Icon) {
   }
   if (typeof icon !== 'string') {
     const detail = icon[1].detail;
-    if (detail) {
+    if (detail !== undefined) {
       const selector = `${root} .${C.ColoredIcon.label}:before `;
       const rule = createRule(detail, 1);
       if (rule) {
@@ -51,10 +51,10 @@ function createRule(icon: Icon, baseFontSize: number) {
   };
   if (hasOptions) {
     const options = icon[1];
-    if (options.opacity) {
+    if (options.opacity !== undefined) {
       addRule(`opacity: ${options.opacity}`);
     }
-    if (options.fontSize) {
+    if (options.fontSize !== undefined) {
       fontSize = options.fontSize;
     }
     if (options.regular) {
@@ -67,7 +67,7 @@ function createRule(icon: Icon, baseFontSize: number) {
   if (character) {
     addRule(`content: '\\${character}'`);
   }
-  if (fontSize) {
+  if (fontSize !== undefined) {
     addRule(`font-size: calc(${fontSize} * ${baseFontSize}em)`);
   }
   contents += ' }';
@@ -259,7 +259,7 @@ const materials: Record<string, Icon> = {
   IDC: 'f7c2',
   IMM: 'f1c0',
   IND: 'f5bd',
-  INS: 'f5bd',
+  INS: ['f5bd', { detail: 'f2dc' }],
   KOM: 'e516',
   KV: ['', { detail: 'f132' }],
   LBH: 'e583',
@@ -409,11 +409,11 @@ const materials: Record<string, Icon> = {
 };
 
 function circle(detail?: Icon): Icon {
-  return detail ? ['f111', { detail }] : 'f111';
+  return detail !== undefined ? ['f111', { detail }] : 'f111';
 }
 
 function shield(detail?: Icon): Icon {
-  return detail ? ['f132', { detail }] : 'f132';
+  return detail !== undefined ? ['f132', { detail }] : 'f132';
 }
 
 features.add(import.meta.url, init, 'Adds icons to items.');

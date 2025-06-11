@@ -14,8 +14,8 @@ act.addMaterialGroup<Config>({
     }
 
     const days = data.days;
-    const daysPart = days ? `older than ${days} day${days == 1 ? '' : 's'}` : '';
-    const advanceDays = data.advanceDays || 0;
+    const daysPart = days !== undefined ? `older than ${days} day${days == 1 ? '' : 's'}` : '';
+    const advanceDays = data.advanceDays ?? 0;
     return `Repair buildings on ${data.planet} ${daysPart} in ${advanceDays} day${advanceDays == 1 ? '' : 's'}`;
   },
   editComponent: Edit,

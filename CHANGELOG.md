@@ -1,3 +1,92 @@
+# Changelog
+
+## Unreleased
+
+### Added
+
+- `XIT ACT`: Add a Refuel action
+
+### Fixed
+
+- `other-context-notification-count`: Fox notification count sometimes including deleted notifications
+
+## 25.6.9.1557
+
+### Fixed
+
+- `XIT ACT`: Fix CX Buy action getting stuck after unexpected order book updates
+
+## 25.6.9
+
+### Fixed
+
+- `other-context-notification-count`: Fix counter displaying "ghost" notification count
+
+## 25.6.8
+
+### Added
+
+- `other-context-notification-count`: (new) Displays the number of notifications from other contexts in the NOTS header label
+- Add user data backups (up to 5, every 24 hours)
+- Add user data restore from backup after the extension reinstall
+
+### Changed
+
+- `XIT ACT`: Add an export button to the action editor
+- `XIT ACT`: Auto-focus the text input on action import prompt open
+- `XIT SET`: Reload the page after importing or resetting user data
+- `highlight-own-exchange-orders`: Make own order rows bold
+- `item-icons`: Add a detail to the INS icon
+- Swap the order of SF and FF in category sorting
+
+### Fixed
+
+- `XIT ACT`: Fix CX Buy action using stale order book data
+- `XIT WEB`: Fix iframe being a bit too big for Firefox to properly scroll
+- `cxob-depth-bars`: Fix feature not working for newly placed orders
+- `cxpo-order-book`: Fix price/quantity autofill number formatting
+- `cxpo-order-book`: Fix clicking on MM order amount not filling the price
+- `highlight-own-exchange-orders`: Fix feature not working for newly placed orders
+- `screen-tab-bar`: Fix SCRN list not being updated when the page url contains context id
+
+## 25.4.27
+
+### Added
+
+- `mu-fix-sector-names`: (new) Fixes sector names, for example LE => LS
+
+### Changed
+
+- `XIT ACT`: Add action package name validation
+- `XIT HELP`: Remove help for action packages
+- `cxpo-order-book`: Change the display of own orders - an amount link instead of a row highlight
+- `highlight-own-exchange-orders`: Change the display of own orders - an amount link instead of a row highlight
+
+### Fixed
+
+- `cxob-depth-bars`: Fix feature not working in Firefox and older Chromium versions
+
+## 25.4.24
+
+### Added
+
+- `cmds-clickable-commands`: (new) Makes commands clickable
+- `cx-search-bar`: (new) Adds a search bar for materials
+- `cxob-center-on-open`: (new) Centers the order book on open
+- `cxob-depth-bars`: (new) Adds market depth bars
+- `cxob-hide-section-headers`: (new) Hides "Offers" and "Requests" headers
+- `cxob-supply-demand-values`: (new) Adds supply and demand value labels
+- `cxpo-auto-price`: (new) Adds automatic price calculation
+- `cxpo-bigger-buttons`: (new) Makes "Buy" and "Sell" buttons bigger
+- `macos-antialiased-font`: (new) Applies antialiased smoothing to all fonts on macOS
+
+### Changed
+
+- `cxpo-order-book`: Add price and quantity autofill by clicking on the order amounts and prices
+- `cxpo-order-book`: Increase the default width of `CXPO` buffers by 60px
+- `cxpo-order-book`: Remove the "Offers" and "Requests" section headers
+- `prun-bugs`: Fix the tooltip arrow position in right and bottom tooltips
+
 ## 25.4.14
 
 ### Changed

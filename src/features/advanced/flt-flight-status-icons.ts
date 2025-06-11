@@ -30,7 +30,7 @@ function onTileReady(tile: PrunTile) {
       }
 
       const segment = flight.value.segments[flight.value.currentSegmentIndex];
-      if (!segment) {
+      if (segment === undefined) {
         return undefined;
       }
 
@@ -42,7 +42,7 @@ function onTileReady(tile: PrunTile) {
         return;
       }
       const statusCell = row.children[3] as HTMLTableCellElement;
-      if (!statusCell) {
+      if (statusCell === undefined) {
         return;
       }
 

@@ -1,5 +1,5 @@
 import { registerClassName } from '@src/utils/select-dom';
-import { isEmpty } from 'ts-extras';
+import { isEmpty, isPresent } from 'ts-extras';
 import { sleep } from '@src/utils/sleep';
 
 export const C = {} as PrunCssClasses;
@@ -69,15 +69,24 @@ export function loadPrunCss() {
 }
 
 export function getPrunCssStylesheets() {
-  const all = _$$(document.head, 'style');
+  // Start searching prun styles from the app script to filter out any other injected styles.
+  const appScript = _$$(document.head, 'script').find(x =>
+    x.src?.includes('prosperousuniverse.com'),
+  );
   const valid: HTMLStyleElement[] = [];
-  for (const style of all) {
+  let nextSibling = appScript?.nextElementSibling;
+  while (nextSibling) {
+    if (nextSibling.tagName !== 'STYLE') {
+      break;
+    }
+    const style = nextSibling as HTMLStyleElement;
+    nextSibling = nextSibling.nextElementSibling;
     const sheet = style.sheet;
     if (!sheet) {
       continue;
     }
     try {
-      if (sheet.cssRules) {
+      if (isPresent(sheet.cssRules)) {
         valid.push(style);
       }
     } catch {

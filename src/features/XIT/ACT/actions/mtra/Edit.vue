@@ -2,7 +2,7 @@
 import Active from '@src/components/forms/Active.vue';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { serializeStorage, storageSort } from '@src/features/XIT/ACT/actions/mtra/utils';
+import { serializeStorage, storageSort } from '@src/features/XIT/ACT/actions/utils';
 import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 const { action, pkg } = defineProps<{

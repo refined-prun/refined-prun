@@ -20,11 +20,11 @@ const middleware: Middleware<Message> = {
   },
   onMessage: message => {
     if (context.value === companyContextId.value || !companyContextId.value || !context.value) {
-      processEvent(message);
+      return processEvent(message) ?? false;
     }
     return false;
   },
-  dispatchClientMessage: undefined,
+  dispatchClientMessage: ref(undefined),
 };
 
 export function listenPrunApi() {
@@ -34,33 +34,39 @@ export function listenPrunApi() {
 export const isRecordingPrunLog = ref(false);
 export const prunLog = ref([] as Message[]);
 
-function processEvent(message: Message) {
+function processEvent(message: Message | undefined) {
   if (!message || !message.messageType || !message.payload) {
     return;
   }
 
   startMeasure(message.messageType);
 
-  if (message.messageType === 'ACTION_COMPLETED') {
-    processEvent(message.payload.message);
-  } else {
-    if (isRecordingPrunLog.value) {
-      prunLog.value.push(message);
+  try {
+    if (message.messageType === 'ACTION_COMPLETED') {
+      return processEvent(message.payload.message);
+    } else {
+      if (isRecordingPrunLog.value) {
+        prunLog.value.push(message);
+      }
+      const storeAction = {
+        type: message.messageType,
+        data: message.payload,
+      };
+      return dispatch(storeAction);
     }
-    const storeAction = {
-      type: message.messageType,
-      data: message.payload,
-    };
-    dispatch(storeAction);
+  } finally {
+    stopMeasure();
   }
-
-  stopMeasure();
 }
 
+export const canDispatchClientPrunMessage = computed(
+  () => !!middleware.dispatchClientMessage.value,
+);
+
 export function dispatchClientPrunMessage(message: Message) {
-  if (!middleware.dispatchClientMessage) {
+  if (!middleware.dispatchClientMessage.value) {
     return false;
   }
-  middleware.dispatchClientMessage?.(message);
+  middleware.dispatchClientMessage.value(message);
   return true;
 }

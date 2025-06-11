@@ -6,6 +6,9 @@ import Cookies from 'js-cookie';
 import { mergedPrunStyles, prunStyleUpdated } from '@src/infrastructure/prun-ui/prun-css';
 import { isRecordingPrunLog, prunLog } from '@src/infrastructure/prun-api/prun-api-listener';
 import SectionHeader from '@src/components/SectionHeader.vue';
+import { relayUrl } from '@src/infrastructure/prun-api/relay';
+import Active from '@src/components/forms/Active.vue';
+import TextInput from '@src/components/forms/TextInput.vue';
 
 function logUserData() {
   console.log(userData);
@@ -55,6 +58,11 @@ function downloadPrunStyles() {
 <template>
   <div :style="{ paddingTop: '4px' }">
     <SectionHeader>Warning: Messing with these can lead to unexpected behavior</SectionHeader>
+    <form>
+      <Active label="Relay">
+        <TextInput v-model="relayUrl" />
+      </Active>
+    </form>
     <DebugButton v-if="!isRecordingPrunLog" @click="recordPrunLog">Record PrUn Log</DebugButton>
     <DebugButton v-else @click="stopRecordingPrunLog">Stop Recording</DebugButton>
     <DebugButton @click="switchPrunDebug">

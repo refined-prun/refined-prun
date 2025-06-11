@@ -68,7 +68,7 @@ async function onScreenItemReady(item: HTMLElement) {
 }
 
 function extractScreenId(url?: string) {
-  return url?.match(/#screen=([\w-]+)/)?.[1] ?? undefined;
+  return url?.match(/screen=([\w-]+)/)?.[1] ?? undefined;
 }
 
 function init() {

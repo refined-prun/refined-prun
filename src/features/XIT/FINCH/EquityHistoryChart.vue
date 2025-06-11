@@ -28,16 +28,13 @@ const lineChartData = computed(() => {
   const equityValues: number[] = [];
 
   for (const entry of balanceHistory.value) {
-    if (!entry) {
-      continue;
-    }
     const equity = calcEquity(entry);
     if (equity === undefined) {
       continue;
     }
 
     const previousDay = date[date.length - 1];
-    if (previousDay && dayjs(previousDay).isSame(entry.timestamp, 'day')) {
+    if (previousDay !== undefined && dayjs(previousDay).isSame(entry.timestamp, 'day')) {
       date[date.length - 1] = entry.timestamp;
       equityValues[equityValues.length - 1] = equity;
     } else {

@@ -5,7 +5,7 @@ import { castArray } from '@src/utils/cast-array';
 export type Middleware<T> = {
   onOpen: () => void;
   onMessage: (payload: T) => boolean;
-  dispatchClientMessage: ((payload: T) => void) | undefined;
+  dispatchClientMessage: Ref<((payload: T) => void) | undefined>;
 };
 
 export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
@@ -17,7 +17,7 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
       return new Proxy(ws, {
         set(target, prop, value) {
           if (prop === 'onmessage') {
-            middleware.dispatchClientMessage = message => {
+            middleware.dispatchClientMessage.value = message => {
               value(new MessageEvent('message', { data: encodeMessage(message) }));
             };
             target.onmessage = e => {
