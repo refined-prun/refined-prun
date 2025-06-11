@@ -7,6 +7,8 @@ declare namespace UserData {
 
   type PricingMethod = 'ASK' | 'BID' | 'AVG' | 'VWAP7D' | 'VWAP30D' | 'DEFAULT' | string;
 
+  export type Exchange = 'AI1' | 'CI1' | 'CI2' | 'IC1' | 'NC1' | 'NC2';
+
   interface StoreSortingData {
     modes: SortingMode[];
     active?: string;
