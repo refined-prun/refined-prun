@@ -6,6 +6,10 @@
 
 - `XIT ACT`: Add a Refuel action
 
+### Changed
+
+- `custom-left-sidebar`: Add ACT, BURN, and REP to the default left sidebar buttons
+
 ### Fixed
 
 - `other-context-notification-count`: Fox notification count sometimes including deleted notifications
