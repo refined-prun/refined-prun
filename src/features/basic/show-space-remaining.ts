@@ -1,68 +1,46 @@
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
-
-function formatFixed(f: number) {
-  const x = f % 1 ? f.toFixed(2) : f;
-  return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
-}
-
-function getStore(tile: PrunTile) {
-  const storeId =
-    tile.command.startsWith('SHPI') && tile.parameter
-      ? shipsStore.getByRegistration(tile.parameter)?.idShipStore
-      : tile.parameter;
-  if (!storeId) {
-    return;
-  }
-  return storagesStore.getById(storeId);
-}
+import { fixed02 } from '@src/utils/format';
+import { getInvStore } from '@src/core/store-id';
+import { createReactiveSpan } from '@src/utils/reactive-element';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, C.StoreView.column), column => {
+  subscribe($$(tile.anchor, C.StoreView.column), async column => {
     const capacities = _$$(column, C.StoreView.capacity);
-    if (capacities.length < 2) {
+    if (capacities.length < 3) {
       return;
     }
-    const weightIndex = capacities.findIndex(x => x.textContent?.includes('Weight'));
-    const volumeIndex = capacities.findIndex(x => x.textContent?.includes('Volume'));
+    // Index 0 is location
+    const weightIndex = 1;
+    const volumeIndex = 2;
 
-    if (weightIndex === -1 || volumeIndex === -1) {
-      return;
-    }
-    const weightBar = capacities[weightIndex].getElementsByTagName('progress')[0];
-    const volumeBar = capacities[volumeIndex].getElementsByTagName('progress')[0];
-    if (!weightBar || !volumeBar) {
-      return;
-    }
-
-    watchEffectWhileNodeAlive(weightBar, () => {
-      const store = getStore(tile);
-      if (!store) {
-        return;
-      }
-      const weightAvailable = formatFixed(store.weightCapacity - store.weightLoad);
-      (capacities[weightIndex].lastChild as Text).textContent = ` (${weightAvailable}t)`;
+    const weightText = computed(() => {
+      const store = tile.parameter ? getInvStore(tile.parameter) : undefined;
+      return store ? ` (${fixed02(store.weightCapacity - store.weightLoad)}t)` : undefined;
     });
 
-    watchEffectWhileNodeAlive(volumeBar, () => {
-      const store = getStore(tile);
-      if (!store) {
-        return;
-      }
-      const volumeAvailable = formatFixed(store.volumeCapacity - store.volumeLoad);
-      (capacities[volumeIndex].lastChild as Text).textContent = ` (${volumeAvailable}m³)`;
+    const weightSpan = createReactiveSpan(capacities[weightIndex], weightText);
+    weightSpan.style.whiteSpace = 'pre';
+    capacities[weightIndex].appendChild(weightSpan);
+
+    const volumeText = computed(() => {
+      const store = tile.parameter ? getInvStore(tile.parameter) : undefined;
+      return store ? ` (${fixed02(store.volumeCapacity - store.volumeLoad)}m³)` : undefined;
     });
+
+    const volumeSpan = createReactiveSpan(capacities[volumeIndex], volumeText);
+    volumeSpan.style.whiteSpace = 'pre';
+    capacities[volumeIndex].appendChild(volumeSpan);
   });
 }
 
 function init() {
-  tiles.observe('INV', onTileReady);
-  tiles.observe('SHPI', onTileReady);
+  tiles.observe(['INV', 'SHPI'], onTileReady);
 }
 
 features.add(
   import.meta.url,
   init,
-  'Show the remaining weight and volume capacity of the selected store in INV and SHPI',
+  'Shows the remaining weight and volume capacity of the selected store in INV and SHPI',
 );
