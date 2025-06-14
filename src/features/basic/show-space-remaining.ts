@@ -1,6 +1,3 @@
-import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
-import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { fixed02 } from '@src/utils/format';
 import { getInvStore } from '@src/core/store-id';
 import { createReactiveSpan } from '@src/utils/reactive-element';
@@ -8,12 +5,11 @@ import { createReactiveSpan } from '@src/utils/reactive-element';
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.StoreView.column), async column => {
     const capacities = _$$(column, C.StoreView.capacity);
-    if (capacities.length < 3) {
+    if (capacities.length < 2) {
       return;
     }
-    // Index 0 is location
-    const weightIndex = 1;
-    const volumeIndex = 2;
+
+    const [weightIndex, volumeIndex] = tile.command === 'SHPI' ? [0, 1] : [1, 2];
 
     const weightText = computed(() => {
       const store = tile.parameter ? getInvStore(tile.parameter) : undefined;
