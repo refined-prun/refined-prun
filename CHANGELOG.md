@@ -1,5 +1,27 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `XIT ACT`: Add a Refuel action
+
+### Fixed
+
+- `other-context-notification-count`: Fox notification count sometimes including deleted notifications
+
+## 25.6.9.1557
+
+### Fixed
+
+- `XIT ACT`: Fix CX Buy action getting stuck after unexpected order book updates
+
+## 25.6.9
+
+### Fixed
+
+- `other-context-notification-count`: Fix counter displaying "ghost" notification count
+
 ## 25.6.8
 
 ### Added

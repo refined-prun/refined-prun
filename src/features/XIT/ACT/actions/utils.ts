@@ -84,7 +84,7 @@ export function storageSort(a: PrunApi.Store, b: PrunApi.Store) {
   return serializeStorage(a).localeCompare(serializeStorage(b));
 }
 
-function isCXWarehouse(storage: PrunApi.Store) {
+export function isCXWarehouse(storage: PrunApi.Store) {
   if (storage.type !== 'WAREHOUSE_STORE') {
     return false;
   }

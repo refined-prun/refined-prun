@@ -20,10 +20,14 @@ export interface MaterialGroupGenerateContext<TConfig>
   setStatus: (status: string) => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AssertFn = (condition: any, message: string) => asserts condition;
+
 export interface ActionStepGenerateContext<TConfig>
   extends ActionRunnerContext<UserData.ActionData> {
   config: TConfig;
-  fail: () => void;
+  fail: (message?: string) => void;
+  assert: AssertFn;
   getMaterialGroup: (name: string | undefined) => Promise<Record<string, number> | undefined>;
   emitStep: (step: ActionStep) => void;
   state: {
@@ -42,7 +46,8 @@ export interface ActionStepExecuteContext<T> extends ActionRunnerContext<T> {
   cacheDescription: () => void;
   complete: () => void;
   skip: () => void;
-  fail: () => void;
+  fail: (message?: string) => void;
+  assert: AssertFn;
   requestTile: (Command: string) => Promise<PrunTile | undefined>;
 }
 

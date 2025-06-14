@@ -6,6 +6,15 @@ export const CurrencySymbols = {
   ECD: '€',
 };
 
+export const ExchangeTickers = {
+  ANT: 'AI1',
+  BEN: 'CI1',
+  MOR: 'NC1',
+  HRT: 'IC1',
+  HUB: 'NC2',
+  ARC: 'CI2',
+};
+
 export const ExchangeTickersReverse = {
   AI1: 'ANT',
   CI1: 'BEN',

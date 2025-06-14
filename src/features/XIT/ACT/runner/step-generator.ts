@@ -10,6 +10,8 @@ interface StepGeneratorOptions {
   onStatusChanged: (status: string) => void;
 }
 
+const AssertionError = new Error('Assertion failed');
+
 export class StepGenerator {
   constructor(private options: StepGeneratorOptions) {}
 
@@ -27,15 +29,37 @@ export class StepGenerator {
         continue;
       }
       const actionConfig = config.actions[action.name!] ?? {};
-      await info.generateSteps({
-        data: action,
-        config: actionConfig,
-        log: new Logger((tag, message) => this.log.logMessage(tag, `[${action.name}] ${message}`)),
-        fail: () => (fail = true),
-        emitStep: step => steps.push(step),
-        getMaterialGroup: async name => await this.getMaterialGroup(pkg, config, name),
-        state,
-      });
+      const log = new Logger((tag, message) =>
+        this.log.logMessage(tag, `[${action.name}] ${message}`),
+      );
+      try {
+        await info.generateSteps({
+          data: action,
+          config: actionConfig,
+          log,
+          fail: message => {
+            if (message) {
+              log.error(message);
+            }
+            fail = true;
+          },
+          assert: (condition, message) => {
+            if (!condition) {
+              log.error(message);
+              throw AssertionError;
+            }
+          },
+          emitStep: step => steps.push(step),
+          getMaterialGroup: async name => await this.getMaterialGroup(pkg, config, name),
+          state,
+        });
+      } catch (e) {
+        if (e !== AssertionError) {
+          this.log.runtimeError(e);
+        }
+        fail = true;
+      }
+
       if (fail) {
         break;
       }

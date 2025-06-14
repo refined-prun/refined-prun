@@ -12,7 +12,7 @@ interface ActionRunnerOptions {
   onBufferSplit: () => void;
   onStart: () => void;
   onEnd: () => void;
-  onStatusChanged: (status: string) => void;
+  onStatusChanged: (status: string, keepReady?: boolean) => void;
   onActReady: () => void;
 }
 

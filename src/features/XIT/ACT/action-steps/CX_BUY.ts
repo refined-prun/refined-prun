@@ -9,6 +9,7 @@ import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { watchWhile } from '@src/utils/watch';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { watchEffect } from 'vue';
+import { AssertFn } from '@src/features/XIT/ACT/shared-types';
 
 interface Data {
   exchange: string;
@@ -41,6 +42,7 @@ export const CX_BUY = act.addActionStep<Data>({
   execute: async ctx => {
     const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete, skip, fail } =
       ctx;
+    const assert: AssertFn = ctx.assert;
     const { amount, ticker, exchange, priceLimit } = data;
     const cxTicker = `${ticker}.${exchange}`;
     const cxWarehouse = computed(() => {
@@ -48,29 +50,19 @@ export const CX_BUY = act.addActionStep<Data>({
       const warehouse = warehousesStore.getByEntityNaturalId(naturalId);
       return storagesStore.getById(warehouse?.storeId);
     });
-
-    if (!cxWarehouse.value) {
-      log.error(`CX warehouse not found for ${exchange}`);
-      fail();
-      return;
-    }
+    assert(cxWarehouse.value, `CX warehouse not found for ${exchange}`);
 
     const material = materialsStore.getByTicker(ticker);
-    if (!material) {
-      log.error(`Unknown material ${ticker}`);
-      fail();
-      return;
-    }
+    assert(material, `Unknown material ${ticker}`);
 
     const canFitWeight =
       material.weight * amount <= cxWarehouse.value.weightCapacity - cxWarehouse.value.weightLoad;
     const canFitVolume =
       material.volume * amount <= cxWarehouse.value.volumeCapacity - cxWarehouse.value.volumeLoad;
-    if (!canFitWeight || !canFitVolume) {
-      log.error(`Cannot not buy ${fixed0(amount)} ${ticker} (will not fit in the warehouse)`);
-      fail();
-      return;
-    }
+    assert(
+      canFitWeight && canFitVolume,
+      `Cannot not buy ${fixed0(amount)} ${ticker} (will not fit in the warehouse)`,
+    );
 
     const tile = await requestTile(`CXPO ${cxTicker}`);
     if (!tile) {
@@ -78,16 +70,14 @@ export const CX_BUY = act.addActionStep<Data>({
     }
 
     setStatus('Setting up CXPO buffer...');
+
+    const buyButton = await $(tile.anchor, C.Button.success);
     const form = await $(tile.anchor, C.ComExPlaceOrderForm.form);
     const inputs = _$$(form, 'input');
     const quantityInput = inputs[0];
+    assert(quantityInput !== undefined, 'Missing quantity input');
     const priceInput = inputs[1];
-
-    if (quantityInput === undefined || priceInput === undefined) {
-      log.error('Missing input elements');
-      fail();
-      return;
-    }
+    assert(priceInput !== undefined, 'Missing price input');
 
     let shouldUnwatch = false;
     const unwatch = watchEffect(() => {
@@ -99,9 +89,8 @@ export const CX_BUY = act.addActionStep<Data>({
       const filled = fillAmount(cxTicker, amount, priceLimit);
 
       if (!filled) {
-        log.error(`Missing ${cxTicker} order book data`);
         shouldUnwatch = true;
-        fail();
+        fail(`Missing ${cxTicker} order book data`);
         return;
       }
 
@@ -111,9 +100,8 @@ export const CX_BUY = act.addActionStep<Data>({
           if (isFinite(priceLimit)) {
             message += ` with price limit ${fixed02(priceLimit)}/u`;
           }
-          log.error(message);
           shouldUnwatch = true;
-          fail();
+          fail(message);
           return;
         }
 
@@ -140,8 +128,6 @@ export const CX_BUY = act.addActionStep<Data>({
       // order book data will change after that.
       ctx.cacheDescription();
     });
-
-    const buyButton = await $(tile.anchor, C.Button.success);
 
     await waitAct();
     unwatch();

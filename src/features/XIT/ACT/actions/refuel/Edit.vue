@@ -1,48 +1,45 @@
 <script setup lang="ts">
 import Active from '@src/components/forms/Active.vue';
 import SelectInput from '@src/components/forms/SelectInput.vue';
-import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { serializeStorage, storageSort } from '@src/features/XIT/ACT/actions/utils';
 import { configurableValue } from '@src/features/XIT/ACT/shared-types';
+import RadioItem from '@src/components/forms/RadioItem.vue';
+import { getRefuelOrigins } from '@src/features/XIT/ACT/actions/refuel/utils';
 
-const { action, pkg } = defineProps<{
+const { action } = defineProps<{
   action: UserData.ActionData;
   pkg: UserData.ActionPackageData;
 }>();
 
-const materialGroups = computed(() => pkg.groups.map(x => x.name!).filter(x => x));
-const materialGroup = ref(action.group ?? materialGroups.value[0]);
-
 const storages = computed(() => {
-  const storages = [...(storagesStore.all.value ?? [])].sort(storageSort).map(serializeStorage);
+  const storages = getRefuelOrigins().sort(storageSort).map(serializeStorage);
   storages.unshift(configurableValue);
   return storages;
 });
 
 const origin = ref(action.origin ?? storages.value[0]);
-const destination = ref(action.dest ?? storages.value[0]);
+
+const buyMissingFuel = ref(action.buyMissingFuel ?? true);
 
 function validate() {
   return true;
 }
 
 function save() {
-  action.group = materialGroup.value;
   action.origin = origin.value;
-  action.dest = destination.value;
+  action.buyMissingFuel = buyMissingFuel.value;
 }
 
 defineExpose({ validate, save });
 </script>
 
 <template>
-  <Active label="Material Group">
-    <SelectInput v-model="materialGroup" :options="materialGroups" />
-  </Active>
   <Active label="Origin">
     <SelectInput v-model="origin" :options="storages" />
   </Active>
-  <Active label="Destination">
-    <SelectInput v-model="destination" :options="storages" />
+  <Active
+    label="Buy Missing Fuel"
+    tooltip="Whether the fuel will be bought if there is not enough stock (CX warehouse only).">
+    <RadioItem v-model="buyMissingFuel">buy fuel</RadioItem>
   </Active>
 </template>
