@@ -4,12 +4,12 @@
 
 ### Added
 
-- `XIT ACT`: Add a Refuel action
 - `exp-expert-eta`: (new) Displays ETA for next expert to appear
 - `show-space-remaining`: (new) Shows the remaining weight and volume capacity of the selected store in INV and SHPI
 
 ### Changed
 
+- `XIT ACT`: Add a Refuel action
 - `custom-left-sidebar`: Add ACT, BURN, and REP to the default left sidebar buttons
 
 ### Fixed
