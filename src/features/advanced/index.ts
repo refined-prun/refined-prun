@@ -9,6 +9,7 @@ import './cxob-depth-bars';
 import './cxob-hide-section-headers';
 import './cxos-hide-exchange';
 import './cxpo-shorten-fields';
+import './exp-expert-eta';
 import './finla-hide-ecd';
 import './flt-flight-status-icons';
 import './flt-hide-transponder';

@@ -5,6 +5,7 @@
 ### Added
 
 - `XIT ACT`: Add a Refuel action
+- `exp-expert-eta`: (new) Displays ETA for next expert to appear
 
 ### Changed
 

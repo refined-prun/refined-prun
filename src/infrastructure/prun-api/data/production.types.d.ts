@@ -38,6 +38,7 @@ declare namespace PrunApi {
     productionFee: CurrencyAmount;
     productionFeeCollector: ProductionFeeCollector;
     recurring: boolean;
+    recipeId: string;
   }
 
   interface ProductionFeeCollector {
@@ -49,6 +50,7 @@ declare namespace PrunApi {
     name: string;
     inputFactors: ProductionFactor[];
     outputFactors: ProductionFactor[];
+    experience: number;
     effortFactor: number;
     efficiency: number;
     duration: TimeSpan;
