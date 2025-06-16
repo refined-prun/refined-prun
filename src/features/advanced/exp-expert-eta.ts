@@ -100,7 +100,7 @@ function calculateEta(entry: PrunApi.ExpertFieldEntry, lines: PrunApi.Production
     return undefined;
   }
 
-  const msToGo = (1 - entry.progress) * expertDays[getTotalExperts(entry)] * MS_IN_DAY;
+  const remainingExperience = (1 - entry.progress) * expertDays[getTotalExperts(entry)] * MS_IN_DAY;
   const inProgressOrders = lines
     .flatMap(line =>
       line.orders
@@ -120,7 +120,7 @@ function calculateEta(entry: PrunApi.ExpertFieldEntry, lines: PrunApi.Production
   let accumulatedExperience = 0;
   for (const order of inProgressOrders) {
     accumulatedExperience += order.experience;
-    if (accumulatedExperience >= msToGo) {
+    if (accumulatedExperience >= remainingExperience) {
       return {
         type: 'precise',
         ms: order.completion,
@@ -135,14 +135,17 @@ function calculateEta(entry: PrunApi.ExpertFieldEntry, lines: PrunApi.Production
     if (recurringOrders.length === 0) {
       continue;
     }
-    const totalDuration = sumBy(recurringOrders, x => x.duration?.millis ?? Infinity);
+    const totalDuration = sumBy(
+      recurringOrders,
+      x => x.duration?.millis ?? Number.POSITIVE_INFINITY,
+    );
     const totalExperience = sumBy(recurringOrders, x => getExperience(x, line));
     experiencePerMs += (line.capacity * totalExperience) / totalDuration;
   }
 
   return {
     type: 'estimate',
-    ms: msToGo / experiencePerMs,
+    ms: remainingExperience / experiencePerMs,
   };
 }
 

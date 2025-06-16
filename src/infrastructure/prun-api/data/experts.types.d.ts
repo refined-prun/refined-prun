@@ -5,7 +5,7 @@ declare namespace PrunApi {
     experts: ExpertField[];
     siteId: string;
     total: number;
-    totalActiveCap: 6;
+    totalActiveCap: number;
   }
 
   export interface ExpertField {
