@@ -15,6 +15,7 @@
 ### Fixed
 
 - `other-context-notification-count`: Fix notification count sometimes including deleted notifications
+- Fix date/time/number formatting not respecting the selected language
 
 ## 25.6.9.1557
 
@@ -501,7 +502,7 @@
 - `XIT SHEETS`: Displays Google Sheets in minimalist mode.
 - Clicking on the APEX logo opens player company information.
 - Prices are calculated with VWAP formula over all exchanges, leading to more stable equity values.
-- Equity includes ships, HQ upgrades and APEX Representation Center. A new "Liquidation Value"
+- Equity includes ships, HQ upgrades, and APEX Representation Center. A new "Liquidation Value"
   metric is added to represent the old equity metric.
 - Blocked/Shipped materials are included in assets.
 - Materials in "Pick up shipment" contract condition are included in assets.
