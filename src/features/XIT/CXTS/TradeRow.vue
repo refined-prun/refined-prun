@@ -44,7 +44,7 @@ const onTickerClick = () => showBuffer(`CXOB ${fullTicker.value}`);
     <td>
       <PrunLink :command="`CO ${trade.partner.code}`">{{ trade.partner.name }}</PrunLink>
     </td>
-    <td :class="C.ComExOrdersTable.number">{{ trade.amount }}</td>
+    <td :class="C.ComExOrdersTable.number">{{ fixed0(trade.amount) }}</td>
     <td :class="C.ComExOrdersTable.number">{{ price }} {{ currency }}</td>
     <td :class="C.ComExOrdersTable.number">{{ total }} {{ currency }}</td>
   </tr>
