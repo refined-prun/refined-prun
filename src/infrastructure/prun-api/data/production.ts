@@ -34,16 +34,18 @@ onApiMessage({
     store.setFetched();
   },
   PRODUCTION_PRODUCTION_LINE_ADDED(data: PrunApi.ProductionLine) {
-    store.setOne(data);
+    store.addOne(data);
     store.setFetched();
   },
   PRODUCTION_PRODUCTION_LINE_UPDATED(data: PrunApi.ProductionLine) {
-    store.setOne(data);
-    store.setFetched();
+    store.updateOne(data);
+  },
+  PRODUCTION_PRODUCTION_LINE_REMOVED(data: { productionLineId: string }) {
+    store.removeOne(data.productionLineId);
   },
   PRODUCTION_ORDER_ADDED(data: PrunApi.ProductionOrder) {
     const line = state.getById(data.productionLineId);
-    if (line !== undefined) {
+    if (line !== undefined && !line.orders.some(x => x.id === data.id)) {
       store.setOne({
         ...line,
         orders: [...line.orders, data],
@@ -55,7 +57,7 @@ onApiMessage({
     if (line !== undefined) {
       store.setOne({
         ...line,
-        orders: line.orders.map(x => (x.id === data.id ? data : x)),
+        orders: line.orders.map(x => (x.id === data.id ? { ...x, ...data } : x)),
       });
     }
   },
