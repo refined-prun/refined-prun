@@ -7,7 +7,7 @@ import {
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
 import { sumBy } from '@src/utils/sum-by';
-import { isEmpty } from 'ts-extras';
+import { getRecurringOrders } from '@src/core/orders';
 
 export interface MaterialBurn {
   input: number;
@@ -94,9 +94,7 @@ export function calculatePlanetBurn(
   if (production) {
     for (const line of production) {
       const capacity = line.capacity;
-      const queuedOrders = line.orders.filter(x => !x.started);
-      const recurringOrders = queuedOrders.filter(x => x.recurring);
-      const burnOrders = isEmpty(recurringOrders) ? queuedOrders : recurringOrders;
+      const burnOrders = getRecurringOrders(line);
       let totalDuration = sumBy(burnOrders, x => x.duration?.millis ?? Infinity);
       // Convert to days
       totalDuration /= 86400000;

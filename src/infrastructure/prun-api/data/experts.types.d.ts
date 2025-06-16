@@ -1,10 +1,10 @@
 declare namespace PrunApi {
   export interface Experts {
-    active: ExpertsTotalAllowed;
+    active: number;
     address: Address;
     experts: ExpertField[];
     siteId: string;
-    total: ExpertsTotalAllowed;
+    total: number;
     totalActiveCap: 6;
   }
 
@@ -14,16 +14,13 @@ declare namespace PrunApi {
   }
 
   export interface ExpertFieldEntry {
-    available: ExpertsFieldAllowed;
+    available: number;
     category: ExpertCategory;
-    current: ExpertsFieldAllowed;
+    current: number;
     efficiencyGain: number;
-    limit: 5;
+    limit: number;
     progress: number;
   }
-
-  export type ExpertsFieldAllowed = 0 | 1 | 2 | 3 | 4 | 5;
-  export type ExpertsTotalAllowed = ExpertsFieldAllowed | 6;
 
   export type ExpertCategory =
     | 'AGRICULTURE'

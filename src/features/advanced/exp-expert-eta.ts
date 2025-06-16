@@ -4,8 +4,10 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { timestampEachMinute } from '@src/utils/dayjs';
 import { formatEta } from '@src/utils/format';
 import { createReactiveDiv } from '@src/utils/reactive-element';
+import { getRecurringOrders } from '@src/core/orders';
+import { sumBy } from '@src/utils/sum-by';
 
-const expertise = [
+const orderedExpertiseRows = [
   'AGRICULTURE',
   'CHEMISTRY',
   'CONSTRUCTION',
@@ -17,89 +19,73 @@ const expertise = [
   'RESOURCE_EXTRACTION',
 ];
 
+// https://handbook.apex.prosperousuniverse.com/wiki/efficiency-factors/index.html#expert-spawn-rates--bonuses
 const expertDays = [10.0, 12.5, 57.57, 276.5, 915.1];
+const MS_IN_DAY = 24 * 60 * 60 * 1000;
 
 function onTileReady(tile: PrunTile) {
   const site = sitesStore.getById(tile.parameter)!;
 
-  let index = 0;
   subscribe($$(tile.anchor, 'tr'), tr => {
     if (_$(tr, 'th')) {
       const header = document.createElement('th');
-      header.textContent = 'Expert ETA';
+      header.textContent = 'ETA';
       tr.append(header);
       return;
     }
-    onExpertRowReady(tr, index++, site.siteId);
+    const parent = tr.parentElement!;
+    const index = Array.from(parent.children).indexOf(tr);
+    if (index >= orderedExpertiseRows.length) {
+      return;
+    }
+    const expertise = orderedExpertiseRows[index];
+    onExpertRowReady(tr, expertise, site.siteId);
   });
 }
 
-function onExpertRowReady(row: HTMLTableRowElement, index: number, siteId: string) {
-  const expertField = computed(() => {
+function onExpertRowReady(row: HTMLTableRowElement, expertise: string, siteId: string) {
+  const expertEntry = computed(() => {
     const experts = expertsStore.getBySiteId(siteId);
-    return experts?.experts.find(field => field.category === expertise[index]);
+    return experts?.experts.find(x => x.category === expertise)?.entry;
   });
 
-  const expertOrders = computed(() => {
+  const expertLines = computed(() => {
     const production = productionStore.getBySiteId(siteId);
-    // Combine all production orders from all lines that contribute to this expert field.
-    const expertFieldLines = production?.filter(line =>
-      line.efficiencyFactors.some(
-        factor => factor.type === 'EXPERTS' && factor.expertiseCategory === expertise[index],
-      ),
+    return production?.filter(line =>
+      line.efficiencyFactors.some(x => x.type === 'EXPERTS' && x.expertiseCategory === expertise),
     );
-    // Sort them by ascending completion time if ongoing, and by ascending creation time if queued.
-    return expertFieldLines?.flatMap(line => line.orders).sort(sortOrders);
   });
 
-  const completion = computed(() => {
-    if (!expertField.value) {
-      return undefined;
-    }
-    if (expertField.value.entry.current === 5) {
-      return [-1];
-    }
-    const orders = expertOrders.value;
-    if (orders && orders.length > 0) {
-      const entry = expertField.value.entry;
-      const msToGo = (1 - entry.progress) * expertDays[entry.current] * 86400000;
-
-      // Get completion time and duration for all orders, including queued ones.
-      const completions: number[] = [];
-      let contributingOrdersTime = 0;
-      for (const order of orders) {
-        const duration = order.completion
-          ? order.completion!.timestamp - Date.now()
-          : order.duration!.millis;
-        contributingOrdersTime += duration;
-        if (order.completion) {
-          completions.push(order.completion.timestamp);
-        } else {
-          completions.push(completions.shift()! + duration);
-          completions.sort();
-        }
-        if (contributingOrdersTime > msToGo) {
-          return [-2, completions[completions.length - 1]];
-        }
-      }
-
-      // All ongoing and queued orders completed, but we still need more for a new expert.
-      return [-3, completions[completions.length - 1], msToGo - contributingOrdersTime];
-    }
-    return undefined;
+  const eta = computed(() => {
+    const entry = expertEntry.value;
+    const lines = expertLines.value;
+    return entry && lines ? calculateEta(entry, lines) : undefined;
   });
 
   const text = computed(() => {
-    if (!completion.value) {
-      return 'No production.';
-    } else if (completion.value[0] === -1) {
-      return 'Experts Maxed.';
-    } else if (completion.value[0] === -2) {
-      return `(${formatEta(timestampEachMinute.value, completion.value[1])})`;
-    } else if (completion.value[0] === -3) {
-      return `(${formatEta(timestampEachMinute.value, completion.value[1])}) +\n(${formatDuration(completion.value[2])}) needed`;
+    const entry = expertEntry.value;
+    const lines = expertLines.value;
+    if (!entry || !lines) {
+      return '--';
     }
-    return `Error`;
+
+    if (getTotalExperts(entry) >= entry.limit) {
+      return 'Maxed';
+    }
+
+    if (!eta.value) {
+      return '--';
+    }
+
+    if (eta.value.type === 'precise') {
+      return `${formatEta(timestampEachMinute.value, eta.value.ms)}`;
+    }
+
+    if (eta.value.type === 'estimate') {
+      return `~${(eta.value.ms / MS_IN_DAY).toFixed(1)}d`;
+    }
+
+    return '--';
   });
 
   const div = createReactiveDiv(row, text);
@@ -109,34 +95,74 @@ function onExpertRowReady(row: HTMLTableRowElement, index: number, siteId: strin
   row.append(td);
 }
 
-function sortOrders(a: PrunApi.ProductionOrder, b: PrunApi.ProductionOrder) {
-  if (!a.completion && !b.completion) {
-    return a.created.timestamp - b.created.timestamp;
+function calculateEta(entry: PrunApi.ExpertFieldEntry, lines: PrunApi.ProductionLine[]) {
+  if (lines.length === 0) {
+    return undefined;
   }
-  if (!a.completion) {
-    return 1;
+
+  const msToGo = (1 - entry.progress) * expertDays[getTotalExperts(entry)] * MS_IN_DAY;
+  const inProgressOrders = lines
+    .flatMap(line =>
+      line.orders
+        .filter(x => x.completion)
+        .map(x => ({
+          order: x,
+          completion: x.completion!.timestamp,
+          experience: getExperience(x, line),
+        })),
+    )
+    .sort((a, b) => a.completion - b.completion);
+  if (inProgressOrders.length === 0) {
+    return undefined;
   }
-  if (!b.completion) {
-    return -1;
+
+  // If we can finish the current expert with the orders already in progress, return that time.
+  let accumulatedExperience = 0;
+  for (const order of inProgressOrders) {
+    accumulatedExperience += order.experience;
+    if (accumulatedExperience >= msToGo) {
+      return {
+        type: 'precise',
+        ms: order.completion,
+      };
+    }
   }
-  return a.completion!.timestamp - b.completion!.timestamp;
+
+  // Otherwise, estimate the remaining number of days.
+  let experiencePerMs = 0;
+  for (const line of lines) {
+    const recurringOrders = getRecurringOrders(line);
+    if (recurringOrders.length === 0) {
+      continue;
+    }
+    const totalDuration = sumBy(recurringOrders, x => x.duration?.millis ?? Infinity);
+    const totalExperience = sumBy(recurringOrders, x => getExperience(x, line));
+    experiencePerMs += (line.capacity * totalExperience) / totalDuration;
+  }
+
+  return {
+    type: 'estimate',
+    ms: msToGo / experiencePerMs,
+  };
 }
 
-// Would have used Intl.DurationFormat but it doesn't exist in the typescript.
-function formatDuration(millis: number) {
-  const seconds = Math.floor(millis / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
+function getExperience(order: PrunApi.ProductionOrder, line: PrunApi.ProductionLine) {
+  const recipeId = order.recipeId;
+  const template = line.productionTemplates.find(x => x.id === recipeId);
+  if (!template) {
+    return 0;
+  }
 
-  const remainingHours = hours % 24;
-  const remainingMinutes = minutes % 60;
+  const orderSize = order.outputs[0].amount / template.outputFactors[0].factor;
+  return template.experience * orderSize;
+}
 
-  return `${days}d, ${remainingHours}h, ${remainingMinutes}m`;
+function getTotalExperts(entry: PrunApi.ExpertFieldEntry) {
+  return entry.current + entry.available;
 }
 
 function init() {
   tiles.observe('EXP', onTileReady);
 }
 
-features.add(import.meta.url, init, 'EXP: Display ETA for next expert to appear.');
+features.add(import.meta.url, init, 'EXP: Displays ETA for next expert to appear.');
