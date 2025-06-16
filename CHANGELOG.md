@@ -5,10 +5,15 @@
 ### Added
 
 - `XIT ACT`: Add a Refuel action
+- `exp-expert-eta`: (new) Displays ETA for next expert to appear
+
+### Changed
+
+- `custom-left-sidebar`: Add ACT, BURN, and REP to the default left sidebar buttons
 
 ### Fixed
 
-- `other-context-notification-count`: Fox notification count sometimes including deleted notifications
+- `other-context-notification-count`: Fшx notification count sometimes including deleted notifications
 
 ## 25.6.9.1557
 
