@@ -24,6 +24,7 @@ import './correct-commands/correct-commands';
 import './custom-item-sorting/custom-item-sorting';
 import './custom-left-sidebar/custom-left-sidebar';
 import './cxpo-order-book/cxpo-order-book';
+import './exp-expert-eta';
 import './finla-more-columns';
 import './flt-arrival-eta';
 import './flt-ship-condition/flt-ship-condition';
