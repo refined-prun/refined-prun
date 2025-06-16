@@ -14,7 +14,7 @@
 
 ### Fixed
 
-- `other-context-notification-count`: Fшx notification count sometimes including deleted notifications
+- `other-context-notification-count`: Fix notification count sometimes including deleted notifications
 
 ## 25.6.9.1557
 
