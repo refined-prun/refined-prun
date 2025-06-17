@@ -17,6 +17,7 @@ function onKeyDown(input: HTMLInputElement, e: KeyboardEvent) {
 
   let expression = input.value.charAt(0) === '=' ? input.value.substring(1) : input.value;
   expression = replaceMaterialProperties(expression);
+  expression = replaceKilo(expression);
   const result = parseFloat(mexp.eval(expression).toFixed(6));
   changeInputValue(input, result.toString());
 }
@@ -44,11 +45,15 @@ function replaceMaterialProperties(expression: string) {
         property = Math.max(material.weight, material.volume);
         break;
     }
-    if (property) {
+    if (property !== undefined) {
       expression = expression.replace(match, property.toFixed(3));
     }
   }
   return expression;
+}
+
+function replaceKilo(expression: string) {
+  return expression.replace(/(\d+)k\b/gi, (_, num) => (parseFloat(num) * 1000).toString());
 }
 
 function init() {

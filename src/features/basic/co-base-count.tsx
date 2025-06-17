@@ -12,9 +12,7 @@ function onTileReady(tile: PrunTile) {
     const bases = await $(container, C.StaticInput.static);
     const baseCount = ref(bases.childElementCount);
     observeChildListChanged(bases, () => (baseCount.value = bases.childElementCount));
-    createFragmentApp(() => <span>{baseCount.value ? ` (${baseCount.value})` : ''}</span>).appendTo(
-      label,
-    );
+    createFragmentApp(() => <span> {`(${baseCount.value})`}</span>).appendTo(label);
   });
 }
 

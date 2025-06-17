@@ -54,6 +54,15 @@ export function createEntityStore<T>(
         entities[id] = item;
       }
     },
+    updateOne(item: T) {
+      const id = selectId(item);
+      if (entities[id]) {
+        entities[id] = {
+          ...entities[id],
+          ...item,
+        };
+      }
+    },
     removeOne(id: string) {
       delete entities[id];
     },

@@ -25,13 +25,13 @@ function onTileReady(tile: PrunTile) {
         case 'FTL_FUEL_STORE':
           return 'FTL';
         default:
-          return null;
+          return undefined;
       }
     });
     watchEffectWhileNodeAlive(row, () => {
       // tr -> td -> span
       const typeLabel = row.firstChild?.firstChild;
-      if (typeLabel && name) {
+      if (typeLabel && name.value !== undefined) {
         typeLabel.textContent = name.value;
       }
     });

@@ -4,6 +4,8 @@ let matchers: [RegExp, number, number][] | null = null;
 
 watch(userData, () => (matchers = null), { immediate: true, deep: true });
 
+const defaultSize = [450, 300];
+
 export function matchBufferSize(command: string): [number, number] | undefined {
   if (!matchers) {
     matchers = userData.settings.buffers
@@ -24,7 +26,7 @@ export function matchBufferSize(command: string): [number, number] | undefined {
 
   if (commandUpper === 'PLI' || commandUpper === 'SYSI') {
     // PLI and SYSI without parameters have the default buffer size.
-    return [450, 300];
+    return defaultSize.slice() as [number, number];
   }
   let keyword = commandUpper.split(' ')[0];
   if (keyword === 'XIT') {
@@ -34,7 +36,20 @@ export function matchBufferSize(command: string): [number, number] | undefined {
   return defaultBufferSizes[keyword];
 }
 
-const defaultBufferSizes = {
+export function increaseDefaultBufferSize(
+  keyword: string,
+  delta: { width?: number; height?: number },
+) {
+  let size = defaultBufferSizes[keyword];
+  if (size === undefined) {
+    size = defaultSize.slice() as [number, number];
+    defaultBufferSizes[keyword] = size;
+  }
+  size[0] += delta.width ?? 0;
+  size[1] += delta.height ?? 0;
+}
+
+const defaultBufferSizes: Record<string, [number, number]> = {
   ADM: [380, 550],
   BBC: [500, 450],
   BLU: [550, 600],

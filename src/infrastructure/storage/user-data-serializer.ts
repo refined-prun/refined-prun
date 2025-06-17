@@ -2,18 +2,30 @@ import { downloadJson, uploadJson } from '@src/utils/json-file';
 import { migrateUserData } from '@src/store/user-data-migrations';
 import { applyInitialUserData, applyUserData, userData } from '@src/store/user-data';
 import { deepToRaw } from '@src/utils/deep-to-raw';
+import { backupUserData, getUserDataBackups } from '@src/infrastructure/storage/user-data-backup';
 
 const fileType = 'rp-user-data';
 
 export function loadUserData() {
-  if (config.userData) {
-    try {
-      const userData = migrateUserData(config.userData);
-      applyUserData(userData);
-    } catch {
-      migrateUserData(userData);
+  let loaded = false;
+  let userDataToLoad = config.userData;
+  if (!userDataToLoad) {
+    const backups = getUserDataBackups();
+    if (backups.length > 0) {
+      userDataToLoad = backups[0].data;
     }
-  } else {
+  }
+  if (userDataToLoad) {
+    try {
+      const userData = migrateUserData(userDataToLoad);
+      applyUserData(userData);
+      loaded = true;
+    } catch (e) {
+      console.error('Error loading user data', e);
+      loaded = false;
+    }
+  }
+  if (!loaded) {
     migrateUserData(userData);
   }
   watchUserData();
@@ -41,6 +53,8 @@ function watchUserData() {
 }
 
 export async function saveUserData() {
+  const data = deepToRaw(userData);
+  backupUserData(data);
   await new Promise<void>(resolve => {
     const listener = (e: MessageEvent) => {
       if (e.source !== window) {
@@ -52,17 +66,33 @@ export async function saveUserData() {
       }
     };
     window.addEventListener('message', listener);
-    window.postMessage({ type: 'rp-save-user-data', userData: deepToRaw(userData) }, '*');
+    window.postMessage({ type: 'rp-save-user-data', userData: data }, '*');
   });
 }
 
-export function importUserData() {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function restoreBackup(backup: any) {
+  const userData = migrateUserData(backup);
+  applyUserData(userData);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function downloadBackup(backup: any, timestamp: number) {
+  const json = {
+    type: fileType,
+    data: backup,
+  };
+  downloadJson(json, `${fileType}-${timestamp}.json`);
+}
+
+export function importUserData(onSuccess?: () => void) {
   uploadJson(json => {
     if (json?.type !== fileType) {
       return;
     }
     const userData = migrateUserData(json.data);
     applyUserData(userData);
+    onSuccess?.();
   });
 }
 

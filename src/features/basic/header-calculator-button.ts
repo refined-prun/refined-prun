@@ -8,7 +8,7 @@ async function onTileReady(tile: PrunTile) {
     icon: '\uf1ec',
     onClick: () => showBuffer('XIT CALC'),
     marginTop: 4,
-  }).before(tileControls.children[0]);
+  }).prependTo(tileControls);
   return;
 }
 

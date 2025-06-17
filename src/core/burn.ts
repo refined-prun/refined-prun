@@ -7,7 +7,7 @@ import {
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
 import { sumBy } from '@src/utils/sum-by';
-import { isEmpty } from 'ts-extras';
+import { getRecurringOrders } from '@src/core/orders';
 
 export interface MaterialBurn {
   input: number;
@@ -31,7 +31,7 @@ export interface PlanetBurn {
 }
 
 const burnBySiteId = computed(() => {
-  if (sitesStore.all.value === undefined) {
+  if (!sitesStore.all.value) {
     return undefined;
   }
 
@@ -77,9 +77,8 @@ export function calculatePlanetBurn(
   const burnValues: BurnValues = {};
 
   function getBurnValue(ticker: string) {
-    let burnValue = burnValues[ticker];
-    if (!burnValue) {
-      burnValue = {
+    if (burnValues[ticker] === undefined) {
+      burnValues[ticker] = {
         input: 0,
         output: 0,
         workforce: 0,
@@ -88,17 +87,14 @@ export function calculatePlanetBurn(
         DaysLeft: 0,
         Type: 'output',
       };
-      burnValues[ticker] = burnValue;
     }
-    return burnValue;
+    return burnValues[ticker];
   }
 
   if (production) {
     for (const line of production) {
       const capacity = line.capacity;
-      const queuedOrders = line.orders.filter(x => !x.started);
-      const recurringOrders = queuedOrders.filter(x => x.recurring);
-      const burnOrders = isEmpty(recurringOrders) ? queuedOrders : recurringOrders;
+      const burnOrders = getRecurringOrders(line);
       let totalDuration = sumBy(burnOrders, x => x.duration?.millis ?? Infinity);
       // Convert to days
       totalDuration /= 86400000;
@@ -155,7 +151,7 @@ export function calculatePlanetBurn(
           continue;
         }
         const materialBurn = burnValues[quantity.material.ticker];
-        if (!materialBurn) {
+        if (materialBurn === undefined) {
           continue;
         }
         materialBurn.Inventory += quantity.amount;

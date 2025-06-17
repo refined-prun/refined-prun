@@ -19,7 +19,7 @@ onApiMessage({
   },
   SITE_PLATFORM_BUILT(data: PrunApi.Platform) {
     const site = state.getById(data.siteId);
-    if (site !== undefined) {
+    if (site !== undefined && !site.platforms.some(x => x.id === data.id)) {
       store.setOne({
         ...site,
         platforms: [...site.platforms, data],
@@ -31,7 +31,7 @@ onApiMessage({
     if (site !== undefined) {
       store.setOne({
         ...site,
-        platforms: site.platforms.map(x => (x.id === data.id ? data : x)),
+        platforms: site.platforms.map(x => (x.id === data.id ? { ...x, ...data } : x)),
       });
     }
   },

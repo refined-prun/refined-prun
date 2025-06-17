@@ -1,5 +1,6 @@
 import { userData } from '@src/store/user-data';
 import dayjs from 'dayjs';
+import { isPresent } from 'ts-extras';
 
 const updateInterval = dayjs.duration(15, 'minutes').asMilliseconds();
 
@@ -86,13 +87,13 @@ function weightedAverage<T>(
   let sum: number | null = null;
   let weights: number | null = null;
   for (const item of items) {
-    if (!item) {
+    if (item === undefined) {
       continue;
     }
 
     const itemValue = value(item);
     const itemWeight = weight ? weight(item) : 1;
-    if (!itemValue || !itemWeight) {
+    if (!isPresent(itemValue) || !isPresent(itemWeight)) {
       continue;
     }
 
@@ -100,7 +101,7 @@ function weightedAverage<T>(
     weights = (weights ?? 0) + itemWeight;
   }
 
-  if (!sum || !weights) {
+  if (!isPresent(sum) || !isPresent(weights)) {
     return null;
   }
 

@@ -8,7 +8,7 @@ function onTileReady(tile: PrunTile) {
     return subscribe($$(conditions, 'tr'), row => {
       const indexText = row.children[0]?.textContent;
       const conditionEditButton = _$$(row, C.Button.btn)[0];
-      if (!indexText || !conditionEditButton) {
+      if (!indexText || conditionEditButton === undefined) {
         return;
       }
       conditionEditButton.addEventListener('click', () => {

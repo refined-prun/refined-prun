@@ -5,6 +5,7 @@ import { sumBy } from '@src/utils/sum-by';
 import { mergeMaterialAmounts } from '@src/core/sort-materials';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { calcBuildingMarketValue, isRepairableBuilding } from '@src/core/buildings';
+import { getRecurringOrders } from '@src/core/orders';
 
 export interface ProfitabilityEntry {
   name: string;
@@ -21,7 +22,7 @@ export function calculateSiteProfitability(site: PrunApi.Site): ProfitabilityEnt
   const inputs: PrunApi.MaterialAmount[] = [];
   const outputs: PrunApi.MaterialAmount[] = [];
 
-  if (workforce === undefined) {
+  if (!workforce) {
     return undefined;
   }
 
@@ -34,11 +35,9 @@ export function calculateSiteProfitability(site: PrunApi.Site): ProfitabilityEnt
 
   const msInADay = 86400000;
 
-  if (production !== undefined) {
-    const isRecurring = production.some(x => x.orders.some(y => y.recurring));
-
+  if (production) {
     for (const line of production) {
-      const queuedOrders = line.orders.filter(x => !x.started && (!isRecurring || x.recurring));
+      const queuedOrders = getRecurringOrders(line);
       const totalDuration = sumBy(queuedOrders, x => x.duration?.millis ?? Infinity);
 
       for (const order of queuedOrders) {

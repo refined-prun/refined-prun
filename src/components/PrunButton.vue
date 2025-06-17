@@ -9,10 +9,14 @@ const { danger, dark, disabled, inline, neutral, primary, success } = defineProp
   success?: boolean;
 }>();
 
+const emit = defineEmits<{ (e: 'click', event: MouseEvent): void }>();
+
 const classes = computed(() => ({
   [C.Button.btn]: true,
   [C.Button.inline]: inline,
   [C.Button.primary]: primary,
+  // I have zero idea why this rule is triggered here.
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   [C.Button.primaryInline]: primary && inline,
   [C.Button.disabled]: disabled,
   [C.Button.disabledInline]: disabled && inline,
@@ -28,7 +32,7 @@ const classes = computed(() => ({
 </script>
 
 <template>
-  <button :class="classes" type="button">
+  <button :class="classes" type="button" :disabled="disabled" @click="emit('click', $event)">
     <slot />
   </button>
 </template>

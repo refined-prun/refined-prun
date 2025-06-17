@@ -1,5 +1,8 @@
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import OrderBook from './OrderBook.vue';
+import { changeInputValue } from '@src/util';
+import { increaseDefaultBufferSize } from '@src/infrastructure/prun-ui/buffer-sizes';
+import { fixed0, fixed02 } from '@src/utils/format';
 
 function onTileReady(tile: PrunTile) {
   if (!tile.parameter) {
@@ -17,11 +20,21 @@ function onTileReady(tile: PrunTile) {
       span.setAttribute('data-tooltip-position', 'right');
     }
 
-    createFragmentApp(OrderBook, { ticker: tile.parameter }).appendTo(formParent);
+    const dynamicInputs = _$$(form, 'input');
+
+    function onOrderClick(price: number, quantity?: number) {
+      changeInputValue(dynamicInputs[1], fixed02(price));
+      if (quantity !== undefined && quantity > 0) {
+        changeInputValue(dynamicInputs[0], fixed0(quantity));
+      }
+    }
+
+    createFragmentApp(OrderBook, { ticker: tile.parameter, onOrderClick }).appendTo(formParent);
   });
 }
 
 function init() {
+  increaseDefaultBufferSize('CXPO', { width: 60 });
   tiles.observe('CXPO', onTileReady);
 }
 

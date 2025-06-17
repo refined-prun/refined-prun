@@ -41,7 +41,7 @@ function confirmAllDataDelete(ev: Event) {
 }
 
 function formatValue(number?: number) {
-  return number ? fixed0(number) : '--';
+  return number !== undefined ? fixed0(number) : '--';
 }
 
 const mmMaterials = ref(userData.settings.financial.mmMaterials);
@@ -98,7 +98,7 @@ function onIgnoredMaterialsSubmit() {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="balance in sortedData" :key="objectId(balance)">
+      <tr v-for="(balance, i) in sortedData" :key="objectId(balance)">
         <td>{{ hhmm(balance.timestamp) }} {{ ddmmyyyy(balance.timestamp) }}</td>
         <td>{{ formatValue(calcEquity(balance)) }}</td>
         <td>

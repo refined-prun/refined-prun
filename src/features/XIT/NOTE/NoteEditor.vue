@@ -28,7 +28,10 @@ function processText(text?: string) {
       break;
     }
 
-    text = text.replaceAll(regexp, `<span class="${$style.link}">${matches[0]}</span>`);
+    text = text.replaceAll(
+      regexp,
+      `<span class="${C.Link.link} ${$style.link}">${matches[0]}</span>`,
+    );
 
     counter++;
     if (counter > 100) {
@@ -135,13 +138,7 @@ watch(
 }
 
 .link {
-  color: #3fa2de;
-  cursor: pointer;
   position: relative;
   z-index: 2;
-}
-
-.link:hover {
-  color: #f7a600;
 }
 </style>

@@ -22,11 +22,11 @@ async function startup() {
   const rules: { [id: string]: string } = {};
   const sheet = css.sheet!;
   for (let i = 0; i < sheet.cssRules.length; i++) {
-    const rule = sheet.cssRules.item(i) as CSSStyleRule;
+    const rule = sheet.cssRules.item(i);
     if (!rule) {
       continue;
     }
-    rules[rule.selectorText] = rule.cssText;
+    rules[(rule as CSSStyleRule).selectorText] = rule.cssText;
   }
   css.textContent = JSON.stringify(rules);
   const script = document.createElement('script');
@@ -63,7 +63,7 @@ async function loadUserData() {
 }
 
 async function waitDocumentReady() {
-  while (!document.head || !document.body) {
+  while (document.head === null || document.body === null) {
     await new Promise(resolve => setTimeout(resolve, 10));
   }
 }

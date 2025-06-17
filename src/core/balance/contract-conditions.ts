@@ -17,7 +17,7 @@ interface ContractCondition {
 
 const sortedConditions = computed(() => {
   const active = contractsStore.active.value;
-  if (active === undefined) {
+  if (!active) {
     return undefined;
   }
   const conditions: ContractCondition[] = [];
@@ -83,7 +83,7 @@ const accountingPeriod = dayjs.duration(1, 'week').asMilliseconds();
 
 const currentSplitIndex = computed(() => {
   const sorted = sortedConditions.value;
-  if (sorted === undefined) {
+  if (!sorted) {
     return undefined;
   }
   const currentSplitDate = timestampEachMinute.value + accountingPeriod;
@@ -162,7 +162,7 @@ export function sumMaterialsPickup(conditions: MaybeConditions) {
 export function sumShipmentDeliveries(conditions: MaybeConditions) {
   let total = 0;
   const filtered = conditions.value?.filter(x => x.condition.type === 'DELIVERY_SHIPMENT');
-  if (filtered === undefined) {
+  if (!filtered) {
     return undefined;
   }
   for (const cc of filtered) {
@@ -175,7 +175,7 @@ export function sumShipmentDeliveries(conditions: MaybeConditions) {
       continue;
     }
     const value = getMaterialQuantityValue(provision);
-    if (!value) {
+    if (value === undefined) {
       return undefined;
     }
     total += value;

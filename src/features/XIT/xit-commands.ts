@@ -7,6 +7,7 @@ import { xitParametersKey } from '@src/hooks/use-xit-parameters';
 import { xitCommandKey } from '@src/hooks/use-xit-command';
 import { userData } from '@src/store/user-data';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { tileKey } from '@src/hooks/use-tile';
 
 function onTileReady(tile: PrunTile) {
   const rawParameter = tile.parameter;
@@ -50,7 +51,7 @@ function onTileReady(tile: PrunTile) {
     // XIT command produces a tile with full-size green screen as its content.
     // Custom XIT tiles are just mounted inside this green screen.
     const container = scrollView.children[0] as HTMLDivElement;
-    if (!container) {
+    if (container === undefined) {
       return;
     }
 
@@ -66,6 +67,7 @@ function onTileReady(tile: PrunTile) {
     startMeasure(tile.fullCommand);
     createFragmentApp(xitCommand.component(parameters))
       .use(tileStatePlugin, { tile })
+      .provide(tileKey, tile)
       .provide(xitCommandKey, command)
       .provide(xitParametersKey, parameters)
       .appendTo(container);

@@ -27,7 +27,7 @@ const amount = computed(() => {
 });
 
 const totalSize = computed(() => {
-  if (unit.value && amount.value) {
+  if (unit.value && amount.value !== undefined) {
     return fixed0(amount.value * unit.value.size);
   }
 
@@ -40,7 +40,7 @@ const totalPrice = computed(() => {
 });
 
 const perUnit = computed(() => {
-  if (unit.value && amount.value && totalPrice.value) {
+  if (unit.value && amount.value !== undefined && totalPrice.value !== undefined) {
     return fixed0(totalPrice.value / (amount.value * unit.value.size));
   }
 
