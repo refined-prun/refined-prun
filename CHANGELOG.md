@@ -11,6 +11,7 @@
 
 - `XIT ACT`: Add a Refuel action
 - `custom-left-sidebar`: Add ACT, BURN, and REP to the default left sidebar buttons
+- `input-math`: Add "k" replacement for 1000 in math expressions
 
 ### Fixed
 
