@@ -16,7 +16,7 @@
 
 ### Fixed
 
-- `XIT BURN`: Fix Burn values being incorrect values in some occasions
+- `XIT BURN`: Fix Burn values being incorrect in some occasions
 - `XIT CXTS`: Fix Amount column not being formatted properly
 - `other-context-notification-count`: Fix notification count sometimes including deleted notifications
 - Fix date/time/number formatting not respecting the selected language
