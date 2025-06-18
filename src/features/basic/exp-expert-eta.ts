@@ -168,4 +168,4 @@ function init() {
   tiles.observe('EXP', onTileReady);
 }
 
-features.add(import.meta.url, init, 'EXP: Displays ETA for next expert to appear.');
+features.add(import.meta.url, init, 'EXP: Displays ETA for the next expert to appear.');
