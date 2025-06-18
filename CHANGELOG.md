@@ -6,6 +6,7 @@
 
 - `exp-expert-eta`: (new) Displays ETA for next expert to appear
 - `show-space-remaining`: (new) Shows the remaining weight and volume capacity of the selected store in INV and SHPI
+- `wf-workforce-filters`: (new) Adds filters to hide zero workforce types and consumables
 
 ### Changed
 

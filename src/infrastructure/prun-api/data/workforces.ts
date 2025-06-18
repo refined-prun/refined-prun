@@ -1,6 +1,7 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createRequestGetter, request } from '@src/infrastructure/prun-api/data/request-hooks';
+import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 
 interface Entity {
   address: PrunApi.Address;
@@ -21,7 +22,11 @@ onApiMessage({
   },
 });
 
-const getById = createRequestGetter(state.getById, x => request.workforce(x));
+const getByShortId = createMapGetter(state.all, x => x.siteId.substring(0, 8));
+
+const getByAnyId = (value?: string | null) => state.getById(value) ?? getByShortId(value);
+
+const getById = createRequestGetter(getByAnyId, x => request.workforce(x));
 
 export const workforcesStore = {
   ...state,
