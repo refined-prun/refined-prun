@@ -1,6 +1,7 @@
 import './ACT/ACT';
 import './BURN/BURN';
 import './CALC';
+import './CHANGELOG';
 import './CHAT';
 import './CMDL/CMDL';
 import './CMDS';
