@@ -1,10 +1,6 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
-import {
-  getEntityNameFromAddress,
-  getLocationLineFromAddress,
-} from '@src/infrastructure/prun-api/data/addresses';
 
 const store = createEntityStore<PrunApi.Contract>();
 const state = store.state;
@@ -21,7 +17,7 @@ onApiMessage({
 
 const getByLocalId = createMapGetter(state.all, x => x.localId);
 
-function getByShipmentId(id?: string | undefined) {
+function getByShipmentId(id?: string | null) {
   if (!id) {
     return undefined;
   }
@@ -43,7 +39,7 @@ function getByShipmentId(id?: string | undefined) {
   return undefined;
 }
 
-function getDeliveryConditionByShipmentId(id?: string | undefined) {
+function getDeliveryConditionByShipmentId(id?: string | null) {
   if (!id) {
     return undefined;
   }
@@ -76,47 +72,16 @@ function getDeliveryConditionByShipmentId(id?: string | undefined) {
   return undefined;
 }
 
-function getDestinationByShipmentId(id?: string | undefined) {
-  const deliveryCondition = getDeliveryConditionByShipmentId(id);
-  const destination = deliveryCondition?.destination;
-  if (!destination) {
-    return undefined;
-  }
-
-  const location = getLocationLineFromAddress(destination);
-  if (location?.type === 'STATION') {
-    return location.entity.naturalId;
-  }
-
-  return getEntityNameFromAddress(destination);
+function getDestinationByShipmentId(id?: string | null) {
+  return getDeliveryConditionByShipmentId(id)?.destination;
 }
 
-function getDeliveryConditionByLocalContractId(id?: string | undefined) {
-  if (!id) {
-    return undefined;
-  }
-
-  const all = state.all.value;
-  if (all === undefined) {
-    return undefined;
-  }
-
-  return all.find(x => x.localId === id)?.conditions.find(x => x.type === 'DELIVERY_SHIPMENT');
+function getDeliveryConditionByLocalContractId(id?: string | null) {
+  return getByLocalId(id)?.conditions.find(x => x.type === 'DELIVERY_SHIPMENT');
 }
 
-function getDestinationByLocalContractId(id?: string | undefined) {
-  const deliveryCondition = getDeliveryConditionByLocalContractId(id);
-  const destination = deliveryCondition?.destination;
-  if (!destination) {
-    return undefined;
-  }
-
-  const location = getLocationLineFromAddress(destination);
-  if (location?.type === 'STATION') {
-    return location.entity.naturalId;
-  }
-
-  return getEntityNameFromAddress(destination);
+function getDestinationByLocalContractId(id?: string | null) {
+  return getDeliveryConditionByLocalContractId(id)?.destination;
 }
 
 export const active = computed(() =>
@@ -133,8 +98,9 @@ export const contractsStore = {
   active,
   getByLocalId,
   getByShipmentId,
+  getDeliveryConditionByShipmentId,
+  getDeliveryConditionByLocalContractId,
   getDestinationByShipmentId,
-  getDestinationByLocalContractId,
 };
 
 export function isFactionContract(contract: PrunApi.Contract) {

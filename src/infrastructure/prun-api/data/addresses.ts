@@ -71,6 +71,50 @@ export const getLocationLineFromAddress = (address?: PrunApi.Address | undefined
   return isLocationLine(address.lines[1]) ? address.lines[1] : address.lines.find(isLocationLine);
 };
 
+export function getDestinationName(destination?: PrunApi.Address) {
+  if (!destination) {
+    return undefined;
+  }
+
+  const location = getLocationLineFromAddress(destination);
+  if (location?.type === 'STATION') {
+    return location.entity.naturalId;
+  }
+
+  return getEntityNameFromAddress(destination);
+}
+
+export function getDestinationFullName(destination?: PrunApi.Address) {
+  if (!destination) {
+    return undefined;
+  }
+
+  const location = getLocationLineFromAddress(destination);
+  if (location?.type === 'STATION') {
+    return location.entity.name;
+  }
+
+  const system = destination.lines[0];
+  const planet = destination.lines[1];
+
+  if (system === undefined) {
+    return undefined;
+  }
+
+  if (planet === undefined) {
+    return system.entity.name;
+  }
+
+  const isPlanetNamed = planet.entity.name !== planet.entity.naturalId;
+
+  if (isPlanetNamed) {
+    return `${system.entity.name} - ${planet.entity.name}`;
+  }
+
+  const planetLetter = planet.entity.naturalId.replace(system.entity.naturalId, '');
+  return `${system.entity.name} ${planetLetter}`;
+}
+
 function isSystemLine(line?: PrunApi.AddressLine) {
   return line?.type === 'SYSTEM';
 }

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Added
+
+- `blck-item-destination`: Adds a destination address to BLCK items
+- `shorten-shpt-blck-address`: Shortens addresses in SHPT and BLCK items
+
 ### Changed
 
 - `XIT ACT`: Change the "No ships need refueling" message level to INFO
@@ -12,6 +17,10 @@
 - `XIT ACT`: Fix an off-by-one error in the Refuel action
 - `XIT FINPR`: Fix profitability calculation after PRO license expiration
 - `cxpo-order-book`: Fix form label text overflow
+
+### Removed
+
+- `shipment-item-detail`: This feature is now natively implemented in the APEX
 
 ## 25.6.18
 

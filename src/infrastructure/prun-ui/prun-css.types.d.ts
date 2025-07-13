@@ -325,6 +325,7 @@ declare global {
       container: string;
       labelContainer: string;
       label: string;
+      subLabel: string;
       typeIntro: string;
       typeLarge: string;
       typeLarger: string;

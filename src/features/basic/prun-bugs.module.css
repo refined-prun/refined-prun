@@ -12,6 +12,10 @@
   }
 }
 
+.subLabel {
+  word-break: break-word;
+}
+
 .gridItem {
   background-color: unset;
 }

@@ -38,6 +38,9 @@ function init() {
   // Prevents top-right user info from shrinking.
   applyCssRule(`.${C.Head.container}`, $style.head);
 
+  // Item sub-labels are missing word-break.
+  applyCssRule(`.${C.ColoredIcon.subLabel}`, $style.subLabel);
+
   // Removes GridItemView background color.
   applyCssRule(`.${C.GridItemView.container}`, $style.gridItem);
 

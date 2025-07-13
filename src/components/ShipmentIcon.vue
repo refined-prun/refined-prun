@@ -2,39 +2,39 @@
 import ColoredIcon, { ColoredIconSize } from '@src/components/ColoredIcon.vue';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import {
+  getDestinationFullName,
+  getDestinationName,
+} from '@src/infrastructure/prun-api/data/addresses';
 
-const {
-  destination,
-  shipmentId,
-  size = 'large',
-} = defineProps<{
-  destination?: string;
+const { shipmentId, size = 'large' } = defineProps<{
   shipmentId?: string;
   size?: ColoredIconSize;
 }>();
 
-const contract = computed(() => contractsStore.getByShipmentId(shipmentId));
-const resolvedDestination = computed(
-  () => destination ?? contractsStore.getDestinationByShipmentId(shipmentId),
-);
+const resolvedDestination = computed(() => {
+  const destination = contractsStore.getDestinationByShipmentId(shipmentId);
+  return size === 'large' ? getDestinationFullName(destination) : getDestinationName(destination);
+});
 
 const background = 'linear-gradient(135deg, #030303, #181818)';
 const color = '#7f7f7f';
 
 const onClick = () => {
-  if (!contract.value) {
-    return;
+  const contract = contractsStore.getByShipmentId(shipmentId);
+  if (contract) {
+    showBuffer(`CONT ${contract.localId}`);
   }
-  showBuffer(`CONT ${contract.value?.localId}`);
 };
 </script>
 
 <template>
   <div :class="[C.MaterialIcon.container, $style.container]">
     <ColoredIcon
+      :data-prun-id="shipmentId"
       label="SHPT"
       title="Shipment"
-      :detail="resolvedDestination"
+      :sub-label="resolvedDestination"
       :background="background"
       :color="color"
       :size="size"

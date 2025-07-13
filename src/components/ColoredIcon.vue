@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import ColoredIconDetail from '@src/components/ColoredIconDetail.vue';
-
 export type ColoredIconSize = 'large' | 'medium' | 'small' | 'inline' | 'inline-table';
 
 const {
   background,
   color,
   label,
+  subLabel,
   size = 'large',
 } = defineProps<{
   background?: string;
   color?: string;
-  detail?: string;
+  subLabel?: string;
   label: string;
   size?: ColoredIconSize;
   title: string;
@@ -27,13 +26,23 @@ const classes = computed(() => ({
   [$style.inline]: size === 'inline',
   [$style.inlineTable]: size === 'inline-table',
 }));
+
+const isSubLabelVisible = computed(() => subLabel && (size === 'large' || size === 'medium'));
+
+const subLabelClasses = [
+  C.ColoredIcon.subLabel,
+  C.type.typeVerySmall,
+  {
+    [$style.mediumSubLabel]: size === 'medium',
+  },
+];
 </script>
 
 <template>
   <div :class="classes" :style="{ background, color }" :title="title">
     <div :class="C.ColoredIcon.labelContainer">
       <span :class="C.ColoredIcon.label">{{ label }}</span>
-      <ColoredIconDetail :detail="detail" />
+      <span v-if="isSubLabelVisible" :class="subLabelClasses">{{ subLabel }}</span>
     </div>
   </div>
 </template>
@@ -67,5 +76,9 @@ const classes = computed(() => ({
   height: 18px;
   width: 32px;
   font-size: 11px;
+}
+
+.mediumSubLabel {
+  font-size: 7px;
 }
 </style>
