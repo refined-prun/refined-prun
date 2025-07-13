@@ -149,5 +149,5 @@ function calculateRefuelAmount(store: PrunApi.Store, material: PrunApi.Material)
   // Fuel stores have the same volume/weight capacity ratio as the material,
   // so we can use either one.
   const freeVolume = store.volumeCapacity - store.volumeLoad;
-  return Math.floor(freeVolume / material.volume);
+  return Math.round(freeVolume / material.volume);
 }

@@ -29,7 +29,7 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete, skip, fail } =
       ctx;
     const assert: AssertFn = ctx.assert;
-    const { ticker } = data;
+    const { ticker, amount } = data;
     const from = storagesStore.getById(data.from);
     assert(from, 'Origin inventory not found');
     const to = storagesStore.getById(data.to);
@@ -44,8 +44,11 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     const material = materialsStore.getByTicker(ticker);
     assert(material, `Unknown material ${ticker}`);
 
-    const canFitWeight = material.weight <= to.weightCapacity - to.weightLoad;
-    const canFitVolume = material.volume <= to.volumeCapacity - to.volumeLoad;
+    const epsilon = 0.000001;
+    const canFitWeight =
+      to.weightCapacity - to.weightLoad - material.weight * amount + epsilon >= 0;
+    const canFitVolume =
+      to.volumeCapacity - to.volumeLoad - material.volume * amount + epsilon >= 0;
     if (!canFitWeight || !canFitVolume) {
       log.warning(`No ${ticker} was transferred (no space)`);
       skip();
@@ -90,7 +93,6 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     const allInputs = _$$(tile.anchor, 'input');
     const amountInput = allInputs[1];
     assert(amountInput !== undefined, 'Amount input not found');
-    const amount = data.amount;
     if (amount > maxAmount) {
       const leftover = amount - maxAmount;
       log.warning(
