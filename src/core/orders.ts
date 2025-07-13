@@ -1,4 +1,5 @@
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
+import { userDataStore } from '@src/infrastructure/prun-api/data/user-data';
 
 // MM orders don't have the amount.
 export function isFiniteOrder(
@@ -9,6 +10,9 @@ export function isFiniteOrder(
 
 // If any line has a recurring order, we consider all lines to have recurring orders.
 const hasRecurringOrders = computed(() => {
+  if (userDataStore.subscriptionLevel !== 'PRO') {
+    return false;
+  }
   return productionStore.all.value?.some(line => line.orders.some(x => x.recurring)) ?? false;
 });
 

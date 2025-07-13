@@ -8,6 +8,7 @@
 
 ### Fixed
 
+- `XIT FINPR`: Fix profitability calculation after PRO license expiration
 - `cxpo-order-book`: Fix form label text overflow
 
 ## 25.6.18
