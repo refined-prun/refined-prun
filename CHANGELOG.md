@@ -4,6 +4,7 @@
 
 ### Changed
 
+- `XIT ACT`: Change the "No ships need refueling" message level to INFO
 - `prun-bugs`: Remove the `CONTD` condition saving fix
 
 ### Fixed

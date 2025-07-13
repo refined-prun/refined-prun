@@ -69,7 +69,7 @@ act.addAction<Config>({
     );
 
     if (totalFtlRefuel === 0 && totalStlRefuel === 0) {
-      log.warning('No ships need refueling');
+      log.info('No ships need refueling');
       return;
     }
 
