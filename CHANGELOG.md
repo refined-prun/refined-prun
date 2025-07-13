@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `prun-bugs`: Remove the `CONTD` condition saving fix
+
 ## 25.6.18
 
 ### Added
