@@ -70,8 +70,8 @@ export function loadPrunCss() {
 
 export function getPrunCssStylesheets() {
   // Start searching prun styles from the app script to filter out any other injected styles.
-  const appScript = _$$(document.head, 'script').find(x =>
-    x.src?.includes('prosperousuniverse.com'),
+  const appScript = _$$(document.head, 'script').find(
+    x => !x.src.includes('://') || x.src?.includes('prosperousuniverse.com'),
   );
   const valid: HTMLStyleElement[] = [];
   let nextSibling = appScript?.nextElementSibling;
