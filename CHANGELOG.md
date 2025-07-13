@@ -6,6 +6,10 @@
 
 - `prun-bugs`: Remove the `CONTD` condition saving fix
 
+### Fixed
+
+- `cxpo-order-book`: Fix form label text overflow
+
 ## 25.6.18
 
 ### Added
