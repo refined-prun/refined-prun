@@ -27,7 +27,7 @@ import { ddmmyyyy, hhmm } from '@src/utils/format';
 
 const timeFormats: { label: string; value: UserData.TimeFormat }[] = [
   {
-    label: 'Browser Default',
+    label: 'Default',
     value: 'DEFAULT',
   },
   {
