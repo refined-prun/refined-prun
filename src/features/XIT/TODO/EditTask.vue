@@ -96,7 +96,7 @@ function onSaveClick() {
     if (burn) {
       task.subtasks = [];
       for (const mat of Object.keys(burn)) {
-        const daily = burn[mat].DailyAmount;
+        const daily = burn[mat].dailyAmount;
         if (daily < 0) {
           task.subtasks.push({
             id: createId(),

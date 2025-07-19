@@ -160,10 +160,10 @@ function sortInventory(
 
   if (sorting.burn && burn) {
     const tickers = Object.keys(burn);
-    const inputs = new Set(tickers.filter(x => burn[x].Type === 'input'));
-    const outputs = new Set(tickers.filter(x => burn[x].Type === 'output' && !inputs.has(x)));
+    const inputs = new Set(tickers.filter(x => burn[x].type === 'input'));
+    const outputs = new Set(tickers.filter(x => burn[x].type === 'output' && !inputs.has(x)));
     const workforce = tickers.filter(
-      x => burn[x].Type === 'workforce' && !inputs.has(x) && !outputs.has(x),
+      x => burn[x].type === 'workforce' && !inputs.has(x) && !outputs.has(x),
     );
 
     categories.push({

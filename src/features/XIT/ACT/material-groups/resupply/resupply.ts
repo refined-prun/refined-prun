@@ -70,11 +70,11 @@ act.addMaterialGroup<Config>({
         continue;
       }
       const matBurn = planetBurn[ticker];
-      if (matBurn.DailyAmount >= 0) {
+      if (matBurn.dailyAmount >= 0) {
         continue;
       }
       const days = typeof data.days === 'number' ? data.days : parseFloat(data.days);
-      const need = Math.ceil((matBurn.DaysLeft - days) * matBurn.DailyAmount);
+      const need = Math.ceil((matBurn.daysLeft - days) * matBurn.dailyAmount);
       if (need > 0) {
         parsedGroup[ticker] = need;
       }
