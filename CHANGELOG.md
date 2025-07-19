@@ -19,6 +19,7 @@
 - `XIT ACT`: Fix an off-by-one error in the Refuel action
 - `XIT FINPR`: Fix profitability calculation after PRO license expiration
 - `cxpo-order-book`: Fix form label text overflow
+- Fix the extension not loading in certain cases
 
 ### Removed
 
