@@ -1,0 +1,25 @@
+.hideJoined {}
+
+.joined {}
+
+.hideDeleted {}
+
+.deleted {}
+
+.hideTimestamp {}
+
+.timestamp {}
+
+.message {
+  grid-template-columns: minmax(8em, 4fr) minmax(8em, 15fr);
+}
+
+.messageName {
+  padding: 2px 5px;
+}
+
+.channelControlsHideButton {
+  width: min-content;
+  height: min-content;
+  padding: 2px;
+}
