@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Fix another case of the extension failing to load
+
 ## 25.7.19
 
 ### Added
