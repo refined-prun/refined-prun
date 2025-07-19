@@ -6,6 +6,7 @@
 
 - `blck-item-destination`: Adds a destination address to BLCK items
 - `shorten-shpt-blck-address`: Shortens addresses in SHPT and BLCK items
+- `usr-subscription-level`: Adds user license info
 
 ### Changed
 

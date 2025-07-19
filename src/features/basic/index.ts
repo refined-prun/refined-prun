@@ -72,3 +72,4 @@ import './show-space-remaining';
 import './sidebar-contracts-details/sidebar-contracts-details';
 import './table-rows-alternating-colors';
 import './tile-controls-background';
+import './usr-subscription-level';
