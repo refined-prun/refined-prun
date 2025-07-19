@@ -40,6 +40,21 @@ const timeFormats: { label: string; value: UserData.TimeFormat }[] = [
   },
 ];
 
+const exchangeChartTypes: { label: string; value: UserData.ExchangeChartType }[] = [
+  {
+    label: 'Smooth',
+    value: 'SMOOTH',
+  },
+  {
+    label: 'Aligned',
+    value: 'ALIGNED',
+  },
+  {
+    label: 'Raw',
+    value: 'RAW',
+  },
+];
+
 const currencySettings = computed(() => userData.settings.currency);
 
 const currencyPresets: { label: string; value: UserData.CurrencyPreset }[] = [
@@ -138,6 +153,9 @@ function confirmResetAllData(ev: Event) {
   <form>
     <Active label="Time">
       <SelectInput v-model="userData.settings.time" :options="timeFormats" />
+    </Active>
+    <Active label="Default CX Chart Type">
+      <SelectInput v-model="userData.settings.defaultChartType" :options="exchangeChartTypes" />
     </Active>
   </form>
   <SectionHeader>

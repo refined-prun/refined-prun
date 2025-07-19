@@ -38,3 +38,10 @@ export function WORLD_SECTORS(sectors: PrunApi.Sector[]) {
     },
   };
 }
+
+export function COMEX_BROKER_PRICES(prices: PrunApi.CXBrokerPrices) {
+  return {
+    messageType: 'COMEX_BROKER_PRICES',
+    payload: prices,
+  };
+}

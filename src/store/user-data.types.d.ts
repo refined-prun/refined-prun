@@ -113,4 +113,6 @@ declare namespace UserData {
     label: string;
     command: string;
   }
+
+  type ExchangeChartType = 'SMOOTH' | 'ALIGNED' | 'RAW';
 }

@@ -5,6 +5,7 @@
 ### Added
 
 - `blck-item-destination`: Adds a destination address to BLCK items
+- `cxpc-chart-types`: Adds "Smooth" and "Aligned" chart types
 - `shorten-shpt-blck-address`: Shortens addresses in SHPT and BLCK items
 - `usr-subscription-level`: Adds user license info
 

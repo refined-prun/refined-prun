@@ -5,6 +5,9 @@ import { getInvStore } from '@src/core/store-id';
 
 const migrations: Migration[] = [
   userData => {
+    userData.settings.defaultChartType = 'SMOOTH';
+  },
+  userData => {
     removeArrayElement(userData.settings.disabled, 'shipment-item-detail');
   },
   userData => {

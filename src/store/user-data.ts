@@ -8,6 +8,7 @@ export const initialUserData = deepFreeze({
     mode: undefined as 'BASIC' | 'FULL' | undefined,
     disabled: [] as string[],
     time: 'DEFAULT' as UserData.TimeFormat,
+    defaultChartType: 'SMOOTH' as UserData.ExchangeChartType,
     currency: {
       preset: 'DEFAULT' as UserData.CurrencyPreset,
       custom: '$',
