@@ -80,10 +80,6 @@ function getDeliveryConditionByLocalContractId(id?: string | null) {
   return getByLocalId(id)?.conditions.find(x => x.type === 'DELIVERY_SHIPMENT');
 }
 
-function getDestinationByLocalContractId(id?: string | null) {
-  return getDeliveryConditionByLocalContractId(id)?.destination;
-}
-
 export const active = computed(() =>
   state.all.value?.filter(
     x =>

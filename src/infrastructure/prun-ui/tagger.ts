@@ -2,7 +2,6 @@ import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
 import { fxobStore } from '@src/infrastructure/prun-api/data/fxob';
 import { refAttributeValue } from '@src/utils/reactive-dom';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
-import { getDestinationFullName } from '@src/infrastructure/prun-api/data/addresses';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 
