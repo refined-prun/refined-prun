@@ -43,7 +43,7 @@ function appendStylesheet() {
   const gradientEnd = defaultColor.brighten(10).toHexString();
   const fontColor = defaultColor.brighten(40).toHexString();
   const defaultStyle =
-    `.rp-category- {\n` +
+    `.${C.ColoredIcon.container} {\n` +
     `  background: linear-gradient(135deg, ${gradientStart}, ${gradientEnd});\n` +
     `  color: ${fontColor};\n` +
     '}\n\n';
