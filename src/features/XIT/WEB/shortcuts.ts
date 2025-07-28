@@ -85,3 +85,20 @@ shortcut(
   'Opens the Yet Another PrUn Tool website.',
   () => 'https://aeryen23.github.io/yapt/',
 );
+
+shortcut(
+  'FINREPORT',
+  'PrUn Financial Report',
+  'Opens the PrUn Financial Report website.',
+  parameters => {
+    console.log(parameters);
+    let url =
+      'https://pmmg-products.github.io/reports/?' +
+      parameters.map(param => param.replace('-', '=')).join('&');
+    if (parameters.length > 0) {
+      url += '&';
+    }
+    url += 'cb=' + Date.now();
+    return url;
+  },
+);
