@@ -87,7 +87,7 @@ shortcut(
 );
 
 shortcut(
-  'FINREPORT',
+  ['PRUNSTATS', 'PRUNSTAT'],
   'PrUn Financial Report',
   'Opens the PrUn Financial Report website.',
   parameters => {
