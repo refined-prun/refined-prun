@@ -8,6 +8,7 @@
 
 ### Changed
 
+- `XIT ACT`: Allow Refuel to process without sufficient fuel stored
 - `XIT FIN`: Add a missing `XIT FINBS` command to FIN context bars
 
 ### Fixed

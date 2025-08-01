@@ -15,6 +15,7 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { ExchangeTickers } from '@src/legacy';
+import { clamp } from '@src/utils/clamp';
 
 act.addAction<Config>({
   type: 'Refuel',
@@ -73,42 +74,50 @@ act.addAction<Config>({
       return;
     }
 
-    const presentStlFuel =
+    let presentStlFuel =
       origin.items.find(x => x.quantity?.material.ticker === stlMaterial.ticker)?.quantity
         ?.amount ?? 0;
 
     if (presentStlFuel < totalStlRefuel) {
-      assert(isCX && data.buyMissingFuel, 'Not enough SF at the origin');
-      emitStep(
-        CX_BUY({
-          exchange: getExchangeCode(origin),
-          ticker: stlMaterial.ticker,
-          amount: totalStlRefuel - presentStlFuel,
-          priceLimit: Number.POSITIVE_INFINITY,
-          buyPartial: false,
-        }),
-      );
+      if (isCX && data.buyMissingFuel) {
+        emitStep(
+          CX_BUY({
+            exchange: getExchangeCode(origin),
+            ticker: stlMaterial.ticker,
+            amount: totalStlRefuel - presentStlFuel,
+            priceLimit: Number.POSITIVE_INFINITY,
+            buyPartial: false,
+          }),
+        );
+        presentStlFuel = totalStlRefuel;
+      } else {
+        log.warning('Not enough SF at the origin. Some ships will not be refueled.');
+      }
     }
 
-    const presentFtlFuel =
+    let presentFtlFuel =
       origin.items.find(x => x.quantity?.material.ticker === ftlMaterial.ticker)?.quantity
         ?.amount ?? 0;
 
     if (presentFtlFuel < totalFtlRefuel) {
-      assert(isCX && data.buyMissingFuel, 'Not enough FF at the origin');
-      emitStep(
-        CX_BUY({
-          exchange: getExchangeCode(origin),
-          ticker: ftlMaterial.ticker,
-          amount: totalFtlRefuel - presentFtlFuel,
-          priceLimit: Number.POSITIVE_INFINITY,
-          buyPartial: false,
-        }),
-      );
+      if (isCX && data.buyMissingFuel) {
+        emitStep(
+          CX_BUY({
+            exchange: getExchangeCode(origin),
+            ticker: ftlMaterial.ticker,
+            amount: totalFtlRefuel - presentFtlFuel,
+            priceLimit: Number.POSITIVE_INFINITY,
+            buyPartial: false,
+          }),
+        );
+        presentFtlFuel = totalFtlRefuel;
+      } else {
+        log.warning('Not enough FF at the origin. Some ships will not be refueled.');
+      }
     }
 
     for (const store of dockedStl) {
-      const amount = calculateRefuelAmount(store, stlMaterial);
+      const amount = clamp(calculateRefuelAmount(store, stlMaterial), 0, presentStlFuel);
       if (amount === 0) {
         continue;
       }
@@ -120,10 +129,11 @@ act.addAction<Config>({
           amount,
         }),
       );
+      presentStlFuel -= amount;
     }
 
     for (const store of dockedFtl) {
-      const amount = calculateRefuelAmount(store, ftlMaterial);
+      const amount = clamp(calculateRefuelAmount(store, ftlMaterial), 0, presentFtlFuel);
       if (amount === 0) {
         continue;
       }
@@ -135,6 +145,7 @@ act.addAction<Config>({
           amount,
         }),
       );
+      presentFtlFuel -= amount;
     }
   },
 });
