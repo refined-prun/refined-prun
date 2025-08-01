@@ -12,6 +12,8 @@
 
 ### Fixed
 
+- `XIT ACT`: Fix MTRA actions failing to execute if the material cannot be transferred in full
+
 ## 25.7.19.1611
 
 ### Fixed

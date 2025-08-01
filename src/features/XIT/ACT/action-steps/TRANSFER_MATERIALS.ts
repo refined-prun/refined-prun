@@ -44,11 +44,10 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     const material = materialsStore.getByTicker(ticker);
     assert(material, `Unknown material ${ticker}`);
 
+    // Check if we can fit a single unit. MTRA will be unusable otherwise.
     const epsilon = 0.000001;
-    const canFitWeight =
-      to.weightCapacity - to.weightLoad - material.weight * amount + epsilon >= 0;
-    const canFitVolume =
-      to.volumeCapacity - to.volumeLoad - material.volume * amount + epsilon >= 0;
+    const canFitWeight = to.weightCapacity - to.weightLoad - material.weight + epsilon >= 0;
+    const canFitVolume = to.volumeCapacity - to.volumeLoad - material.volume + epsilon >= 0;
     if (!canFitWeight || !canFitVolume) {
       log.warning(`No ${ticker} was transferred (no space)`);
       skip();
