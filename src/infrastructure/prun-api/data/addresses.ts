@@ -122,3 +122,26 @@ function isSystemLine(line?: PrunApi.AddressLine) {
 function isLocationLine(line?: PrunApi.AddressLine) {
   return line?.type === 'PLANET' || line?.type === 'STATION';
 }
+
+export function isSameAddress(
+  addressA?: PrunApi.Address | null,
+  addressB?: PrunApi.Address | null,
+) {
+  if (!addressA || !addressB) {
+    return false;
+  }
+
+  if (addressA === addressB) {
+    return true;
+  }
+
+  for (let i = 0; i < addressA.lines.length; i++) {
+    const lineA = addressA.lines[i];
+    const lineB = addressB.lines[i];
+    if (lineA === undefined || lineB === undefined || lineA.entity.id !== lineB.entity.id) {
+      return false;
+    }
+  }
+
+  return true;
+}
