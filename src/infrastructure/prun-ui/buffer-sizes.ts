@@ -31,6 +31,7 @@ export function matchBufferSize(command: string): [number, number] | undefined {
   let keyword = commandUpper.split(' ')[0];
   if (keyword === 'XIT') {
     keyword = commandUpper.split(' ')[1];
+    keyword = keyword.split('_')[0];
     return defaultXitBufferSizes[keyword];
   }
   return defaultBufferSizes[keyword];
@@ -101,4 +102,6 @@ const defaultBufferSizes: Record<string, [number, number]> = {
 const defaultXitBufferSizes = {
   CALC: [275, 326],
   YAPT: [1100, 700],
+  PRUNSTAT: [830, 680],
+  PRUNSTATS: [830, 680],
 };

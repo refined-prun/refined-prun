@@ -36,6 +36,7 @@ const loading = ref(true);
     <LoadingSpinner v-if="loading" />
     <iframe
       :src="url"
+      allow="clipboard-write"
       width="100%"
       height="99.65%"
       style="border-width: 0"
