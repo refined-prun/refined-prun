@@ -14,7 +14,10 @@ const materialGroups = computed(() => pkg.groups.map(x => x.name!).filter(x => x
 const materialGroup = ref(action.group ?? materialGroups.value[0]);
 
 const storages = computed(() => {
-  const storages = [...(storagesStore.all.value ?? [])].sort(storageSort).map(serializeStorage);
+  const storages = [...(storagesStore.all.value ?? [])]
+    .filter(x => x.type !== 'STL_FUEL_STORE' && x.type !== 'FTL_FUEL_STORE')
+    .sort(storageSort)
+    .map(serializeStorage);
   storages.unshift(configurableValue);
   return storages;
 });
