@@ -5,6 +5,11 @@ xit.add({
   name: 'Financial Charts',
   description: 'Financial charts for equity and assets.',
   optionalParameters: 'EQUITY, ASSETS, LOCATIONS',
-  contextItems: () => [{ cmd: 'XIT FIN' }, { cmd: 'XIT FINPR' }, { cmd: 'XIT SET FIN' }],
+  contextItems: () => [
+    { cmd: 'XIT FIN' },
+    { cmd: 'XIT FINBS' },
+    { cmd: 'XIT FINPR' },
+    { cmd: 'XIT SET FIN' },
+  ],
   component: () => FINCH,
 });
