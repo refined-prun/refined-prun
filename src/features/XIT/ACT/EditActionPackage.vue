@@ -12,6 +12,7 @@ import EditMaterialGroup from '@src/features/XIT/ACT/EditMaterialGroup.vue';
 import EditAction from '@src/features/XIT/ACT/EditAction.vue';
 import { downloadJson } from '@src/utils/json-file';
 import { deepToRaw } from '@src/utils/deep-to-raw';
+import RenameActionPackage from '@src/features/XIT/ACT/RenameActionPackage.vue';
 
 const { pkg } = defineProps<{ pkg: UserData.ActionPackageData }>();
 
@@ -72,6 +73,13 @@ function getActionDescription(action: UserData.ActionData) {
   return info ? info.description(action) : '--';
 }
 
+function onRenameClick(ev: Event) {
+  showTileOverlay(ev, RenameActionPackage, {
+    name: pkg.global.name,
+    onRename: name => (pkg.global.name = name),
+  });
+}
+
 function onExecuteClick() {
   showBuffer(`XIT ACT_${pkg.global.name.replace(' ', '_')}`);
 }
@@ -83,7 +91,7 @@ function onExportClick() {
 </script>
 
 <template>
-  <Header>{{ pkg.global.name }}</Header>
+  <Header v-model="pkg.global.name" editable :class="$style.header" />
   <SectionHeader>Material Groups</SectionHeader>
   <table>
     <thead>
@@ -154,6 +162,9 @@ function onExportClick() {
   </form>
   <SectionHeader>Commands</SectionHeader>
   <form>
+    <Commands label="Remame">
+      <PrunButton primary @click="onRenameClick">RENAME</PrunButton>
+    </Commands>
     <Commands label="Execute">
       <PrunButton primary @click="onExecuteClick">EXECUTE</PrunButton>
     </Commands>
@@ -167,6 +178,10 @@ function onExportClick() {
 </template>
 
 <style module>
+.header {
+  margin-left: 4px;
+}
+
 .emptyRow {
   text-align: center;
 }

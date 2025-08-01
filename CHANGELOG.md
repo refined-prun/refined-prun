@@ -9,7 +9,10 @@
 ### Changed
 
 - `XIT ACT`: Allow Refuel to process without sufficient fuel stored
+- `XIT ACT`: Add a Rename button
 - `XIT FIN`: Add a missing `XIT FINBS` command to FIN context bars
+- `XIT NOTE`: Make header clickable to allow renaming
+- `XIT TODO`: Make header clickable to allow renaming
 
 ### Fixed
 

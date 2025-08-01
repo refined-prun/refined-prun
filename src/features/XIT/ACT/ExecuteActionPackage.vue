@@ -155,7 +155,7 @@ function clearLog() {
 <template>
   <div v-if="goingToSplit" />
   <div v-else :class="$style.root">
-    <Header>{{ pkg.global.name }}</Header>
+    <Header :class="$style.header">{{ pkg.global.name }}</Header>
     <ConfigWindow
       v-if="shouldShowConfigure"
       :pkg="pkg"
@@ -212,6 +212,10 @@ function clearLog() {
 
 .mainWindow {
   flex-grow: 1;
+}
+
+.header {
+  margin-left: 4px;
 }
 
 .status {

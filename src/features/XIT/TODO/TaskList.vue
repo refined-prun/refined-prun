@@ -3,6 +3,7 @@ import grip from '@src/utils/grip.module.css';
 import TaskItem from '@src/features/XIT/TODO/TaskItem.vue';
 import AddTaskItem from '@src/features/XIT/TODO/AddTaskItem.vue';
 import { vDraggable } from 'vue-draggable-plus';
+import Header from '@src/components/Header.vue';
 
 defineProps<{ list: UserData.TaskList }>();
 
@@ -18,9 +19,7 @@ const draggableOptions = {
 
 <template>
   <div :class="$style.root">
-    <div :class="$style.title">
-      <span>{{ list.name }}</span>
-    </div>
+    <Header v-model="list.name" editable :class="$style.header" />
     <div v-draggable="[list.tasks, draggableOptions]" :class="$style.list">
       <TaskItem
         v-for="task in list.tasks"
@@ -39,11 +38,8 @@ const draggableOptions = {
   padding-top: 10px;
 }
 
-.title {
-  font-weight: bold;
-  display: block;
-  font-size: 16px;
-  padding-left: 5px;
+.header {
+  margin-left: 10px;
 }
 
 .list {
