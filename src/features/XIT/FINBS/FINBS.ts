@@ -4,6 +4,11 @@ xit.add({
   command: ['FINBS'],
   name: 'Balance Statement',
   description: 'Balance statement showing your assets and liabilities.',
-  contextItems: () => [{ cmd: 'XIT FIN' }, { cmd: 'XIT FINPR' }, { cmd: 'XIT SET FIN' }],
+  contextItems: () => [
+    { cmd: 'XIT FIN' },
+    { cmd: 'XIT FINPR' },
+    { cmd: 'XIT FINCH' },
+    { cmd: 'XIT SET FIN' },
+  ],
   component: () => FINBS,
 });

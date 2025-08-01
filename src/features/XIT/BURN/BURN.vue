@@ -43,21 +43,21 @@ const planetBurn = computed(() => {
   for (const burn of filtered) {
     for (const mat of Object.keys(burn.burn)) {
       if (overallBurn[mat]) {
-        overallBurn[mat].DailyAmount += burn.burn[mat].DailyAmount;
-        overallBurn[mat].Inventory += burn.burn[mat].Inventory;
+        overallBurn[mat].dailyAmount += burn.burn[mat].dailyAmount;
+        overallBurn[mat].inventory += burn.burn[mat].inventory;
       } else {
         overallBurn[mat] = {};
-        overallBurn[mat].DailyAmount = burn.burn[mat].DailyAmount;
-        overallBurn[mat].Inventory = burn.burn[mat].Inventory;
+        overallBurn[mat].dailyAmount = burn.burn[mat].dailyAmount;
+        overallBurn[mat].inventory = burn.burn[mat].inventory;
       }
     }
   }
 
   for (const mat of Object.keys(overallBurn)) {
-    if (overallBurn[mat].DailyAmount >= 0) {
-      overallBurn[mat].DaysLeft = 1000;
+    if (overallBurn[mat].dailyAmount >= 0) {
+      overallBurn[mat].daysLeft = 1000;
     } else {
-      overallBurn[mat].DaysLeft = -overallBurn[mat].Inventory / overallBurn[mat].DailyAmount;
+      overallBurn[mat].daysLeft = -overallBurn[mat].inventory / overallBurn[mat].dailyAmount;
     }
   }
 
@@ -71,10 +71,10 @@ const green = useTileState('green');
 const inf = useTileState('inf');
 
 const fakeBurn: MaterialBurn = {
-  DailyAmount: -100000,
-  DaysLeft: 10,
-  Inventory: 100000,
-  Type: 'input',
+  dailyAmount: -100000,
+  daysLeft: 10,
+  inventory: 100000,
+  type: 'input',
   input: 100000,
   output: 0,
   workforce: 0,
@@ -131,7 +131,7 @@ function onExpandAllClick() {
         </tr>
       </thead>
       <tbody :class="$style.fakeRow">
-        <MaterialRow always-visible :burn="fakeBurn" :material="rat" />
+        <MaterialRow always-visible :burn="fakeBurn" :material="rat!" />
       </tbody>
       <BurnSection
         v-for="burn in planetBurn"

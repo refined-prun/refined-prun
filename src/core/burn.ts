@@ -13,10 +13,10 @@ export interface MaterialBurn {
   input: number;
   output: number;
   workforce: number;
-  DailyAmount: number;
-  Inventory: number;
-  DaysLeft: number;
-  Type: 'input' | 'output' | 'workforce';
+  dailyAmount: number;
+  inventory: number;
+  daysLeft: number;
+  type: 'input' | 'output' | 'workforce';
 }
 
 export interface BurnValues {
@@ -82,10 +82,10 @@ export function calculatePlanetBurn(
         input: 0,
         output: 0,
         workforce: 0,
-        DailyAmount: 0,
-        Inventory: 0,
-        DaysLeft: 0,
-        Type: 'output',
+        dailyAmount: 0,
+        inventory: 0,
+        daysLeft: 0,
+        type: 'output',
       };
     }
     return burnValues[ticker];
@@ -131,15 +131,15 @@ export function calculatePlanetBurn(
 
   for (const ticker of Object.keys(burnValues)) {
     const burnValue = burnValues[ticker];
-    burnValue.DailyAmount = burnValue.output;
-    burnValue.Type = 'output';
-    burnValue.DailyAmount -= burnValue.workforce;
-    if (burnValue.workforce > 0 && burnValue.DailyAmount <= 0) {
-      burnValue.Type = 'workforce';
+    burnValue.dailyAmount = burnValue.output;
+    burnValue.type = 'output';
+    burnValue.dailyAmount -= burnValue.workforce;
+    if (burnValue.workforce > 0 && burnValue.dailyAmount <= 0) {
+      burnValue.type = 'workforce';
     }
-    burnValue.DailyAmount -= burnValue.input;
-    if (burnValue.input > 0 && burnValue.DailyAmount <= 0) {
-      burnValue.Type = 'input';
+    burnValue.dailyAmount -= burnValue.input;
+    if (burnValue.input > 0 && burnValue.dailyAmount <= 0) {
+      burnValue.type = 'input';
     }
   }
 
@@ -154,12 +154,12 @@ export function calculatePlanetBurn(
         if (materialBurn === undefined) {
           continue;
         }
-        materialBurn.Inventory += quantity.amount;
+        materialBurn.inventory += quantity.amount;
         if (quantity.amount != 0) {
-          materialBurn.DaysLeft =
-            materialBurn.DailyAmount > 0
+          materialBurn.daysLeft =
+            materialBurn.dailyAmount > 0
               ? 1000
-              : Math.floor(-materialBurn.Inventory / materialBurn.DailyAmount);
+              : Math.floor(-materialBurn.inventory / materialBurn.dailyAmount);
         }
       }
     }

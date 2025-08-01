@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `XIT FIN`: Add a missing `XIT FINBS` command to FIN context bars
+
+### Fixed
+
 ## 25.7.19.1611
 
 ### Fixed

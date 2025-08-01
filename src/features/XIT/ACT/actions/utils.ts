@@ -3,6 +3,7 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import {
   getEntityNameFromAddress,
   getLocationLineFromAddress,
+  isSameAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
@@ -102,19 +103,7 @@ export function atSameLocation(storageA: PrunApi.Store, storageB: PrunApi.Store)
   const addressA = getStoreAddress(storageA);
   const addressB = getStoreAddress(storageB);
 
-  if (!addressA || !addressB) {
-    return false;
-  }
-
-  for (let i = 0; i < addressA.lines.length; i++) {
-    const lineA = addressA.lines[i];
-    const lineB = addressB.lines[i];
-    if (lineA === undefined || lineB === undefined || lineA.entity.id !== lineB.entity.id) {
-      return false;
-    }
-  }
-
-  return true;
+  return isSameAddress(addressA, addressB);
 }
 
 function getStoreAddress(store: PrunApi.Store) {

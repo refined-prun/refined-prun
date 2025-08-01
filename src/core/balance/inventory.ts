@@ -235,7 +235,7 @@ const baseInventory = computed(() => {
         return undefined;
       }
       const burnEntry = burn.burn[amount.material.ticker];
-      switch (burnEntry?.Type) {
+      switch (burnEntry?.type) {
         case 'input':
           rawMaterials += value;
           break;
