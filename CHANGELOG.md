@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `XIT PRUNSTAT`: Opens the PrUn Financial Report website
+
 ### Changed
 
 - `XIT FIN`: Add a missing `XIT FINBS` command to FIN context bars

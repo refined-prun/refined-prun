@@ -91,7 +91,6 @@ shortcut(
   'PrUn Financial Report',
   'Opens the PrUn Financial Report website.',
   parameters => {
-    console.log(parameters);
     let url =
       'https://pmmg-products.github.io/reports/?' +
       parameters.map(param => param.replace('-', '=')).join('&');
