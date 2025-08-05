@@ -36,8 +36,10 @@ declare namespace UserData {
 
   interface SystemMessages {
     chat: string;
+    hideFilterBar: boolean;
     hideJoined: boolean;
     hideDeleted: boolean;
+    hideTimestamp: boolean;
   }
 
   interface ActionPackageData {
