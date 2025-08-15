@@ -1,14 +1,9 @@
 import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
 import { fxobStore } from '@src/infrastructure/prun-api/data/fxob';
-import { refAttributeValue } from '@src/utils/reactive-dom';
-import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
-import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
-import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 
 export function tagUI() {
   tagOrderBook('CXOB', cxobStore);
   tagOrderBook('FXOB', fxobStore);
-  tagItems();
 }
 
 interface Broker {
@@ -59,43 +54,6 @@ function tagOrderBook(command: string, store: BrokerStore) {
       const observer = new MutationObserver(observe);
       observer.observe(table, { childList: true, subtree: true, characterData: true });
       observe();
-    });
-  });
-}
-
-function tagItems() {
-  subscribe($$(document, C.ColoredIcon.container), async container => {
-    const label = await $(container, C.ColoredIcon.label);
-    if (label.textContent !== 'BLCK' && label.textContent !== 'SHPT') {
-      return;
-    }
-
-    const prunId = getPrunId(container);
-    if (prunId) {
-      return;
-    }
-
-    const attribute = refAttributeValue(container, 'title');
-    watchEffectWhileNodeAlive(container, () => {
-      const regex = /#([a-zA-Z0-9]+)/;
-      const match = attribute.value?.match(regex);
-
-      if (!match) {
-        return;
-      }
-
-      const id = match[1];
-      // The id is the localId of the contract
-      // getDestinationByShipmentId is needed until the APEX bug is fixed
-      // https://discord.com/channels/667551433503014924/1333780301234569228/1333780301234569228
-      const condition =
-        contractsStore.getDeliveryConditionByLocalContractId(id) ??
-        contractsStore.getDeliveryConditionByShipmentId(id);
-      if (!condition?.shipmentItemId) {
-        return;
-      }
-
-      container.setAttribute('data-prun-id', condition.shipmentItemId);
     });
   });
 }

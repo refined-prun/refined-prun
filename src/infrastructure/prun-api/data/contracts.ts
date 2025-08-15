@@ -39,6 +39,10 @@ function getByShipmentId(id?: string | null) {
   return undefined;
 }
 
+function getDestinationByShipmentId(id?: string | null) {
+  return getDeliveryConditionByShipmentId(id)?.destination;
+}
+
 function getDeliveryConditionByShipmentId(id?: string | null) {
   if (!id) {
     return undefined;
@@ -72,14 +76,6 @@ function getDeliveryConditionByShipmentId(id?: string | null) {
   return undefined;
 }
 
-function getDestinationByShipmentId(id?: string | null) {
-  return getDeliveryConditionByShipmentId(id)?.destination;
-}
-
-function getDeliveryConditionByLocalContractId(id?: string | null) {
-  return getByLocalId(id)?.conditions.find(x => x.type === 'DELIVERY_SHIPMENT');
-}
-
 export const active = computed(() =>
   state.all.value?.filter(
     x =>
@@ -94,8 +90,6 @@ export const contractsStore = {
   active,
   getByLocalId,
   getByShipmentId,
-  getDeliveryConditionByShipmentId,
-  getDeliveryConditionByLocalContractId,
   getDestinationByShipmentId,
 };
 
