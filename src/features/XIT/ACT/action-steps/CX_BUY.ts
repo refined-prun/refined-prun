@@ -4,7 +4,7 @@ import { changeInputValue, clickElement } from '@src/util';
 import { fillAmount } from '@src/features/XIT/ACT/actions/cx-buy/utils';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { isDefined } from 'ts-extras';
-import { ExchangeTickersReverse } from '@src/legacy';
+import { exchangesStore } from '@src/infrastructure/prun-api/data/exchanges';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { watchWhile } from '@src/utils/watch';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
@@ -46,7 +46,7 @@ export const CX_BUY = act.addActionStep<Data>({
     const { amount, ticker, exchange, priceLimit } = data;
     const cxTicker = `${ticker}.${exchange}`;
     const cxWarehouse = computed(() => {
-      const naturalId = ExchangeTickersReverse[exchange];
+      const naturalId = exchangesStore.getNaturalIdFromCode(exchange);
       const warehouse = warehousesStore.getByEntityNaturalId(naturalId);
       return storagesStore.getById(warehouse?.storeId);
     });

@@ -1,7 +1,7 @@
 import { ActionPackageConfig, ActionStep } from '@src/features/XIT/ACT/shared-types';
 import { Logger } from '@src/features/XIT/ACT/runner/logger';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
-import { ExchangeTickersReverse } from '@src/legacy';
+import { exchangesStore } from '@src/infrastructure/prun-api/data/exchanges';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { act } from '@src/features/XIT/ACT/act-registry';
 
@@ -106,7 +106,8 @@ function generateState() {
   const war = {} as Record<string, Record<string, number>>;
   for (const ticker of ['AI1', 'CI1', 'CI2', 'IC1', 'NC1', 'NC2']) {
     war[ticker] = {};
-    const warehouse = warehousesStore.getByEntityNaturalId(ExchangeTickersReverse[ticker]);
+    const naturalId = exchangesStore.getNaturalIdFromCode(ticker);
+    const warehouse = warehousesStore.getByEntityNaturalId(naturalId);
     const inv = storagesStore.getById(warehouse?.storeId);
 
     if (inv) {

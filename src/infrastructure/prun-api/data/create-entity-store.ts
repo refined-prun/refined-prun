@@ -6,7 +6,7 @@ type IdSelector<T, Id extends EntityId> = (model: T) => Id;
 export function createEntityStore<T>(
   selectId?: IdSelector<T, string>,
   options?: {
-    preserveOnOpen?: boolean;
+    preserveOnConnectionOpen?: boolean;
   },
 ) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -14,7 +14,7 @@ export function createEntityStore<T>(
   let entities = shallowReactive({} as Record<string, T>);
   const fetched = ref(false);
 
-  if (!options?.preserveOnOpen) {
+  if (!options?.preserveOnConnectionOpen) {
     onApiMessage({
       CLIENT_CONNECTION_OPENED() {
         fetched.value = false;

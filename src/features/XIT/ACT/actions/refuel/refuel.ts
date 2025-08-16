@@ -5,16 +5,12 @@ import { Config } from '@src/features/XIT/ACT/actions/refuel/config';
 import { CX_BUY } from '@src/features/XIT/ACT/action-steps/CX_BUY';
 import { TRANSFER_MATERIALS } from '@src/features/XIT/ACT/action-steps/TRANSFER_MATERIALS';
 import { AssertFn, configurableValue } from '@src/features/XIT/ACT/shared-types';
-import {
-  atSameLocation,
-  deserializeStorage,
-  isCXWarehouse,
-} from '@src/features/XIT/ACT/actions/utils';
+import { atSameLocation, deserializeStorage } from '@src/features/XIT/ACT/actions/utils';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
-import { ExchangeTickers } from '@src/legacy';
+import { exchangesStore } from '@src/infrastructure/prun-api/data/exchanges';
 import { clamp } from '@src/utils/clamp';
 
 act.addAction<Config>({
@@ -38,7 +34,8 @@ act.addAction<Config>({
     const origin = deserializeStorage(serializedOrigin);
     assert(origin, 'Invalid origin');
 
-    const isCX = isCXWarehouse(origin);
+    const exchangeCode = getExchangeCode(origin);
+    const isCX = exchangeCode !== undefined;
 
     const dockedStl = (storagesStore.all.value ?? []).filter(
       x => x.type === 'STL_FUEL_STORE' && atSameLocation(x, origin),
@@ -82,7 +79,7 @@ act.addAction<Config>({
       if (isCX && data.buyMissingFuel) {
         emitStep(
           CX_BUY({
-            exchange: getExchangeCode(origin),
+            exchange: exchangeCode,
             ticker: stlMaterial.ticker,
             amount: totalStlRefuel - presentStlFuel,
             priceLimit: Number.POSITIVE_INFINITY,
@@ -103,7 +100,7 @@ act.addAction<Config>({
       if (isCX && data.buyMissingFuel) {
         emitStep(
           CX_BUY({
-            exchange: getExchangeCode(origin),
+            exchange: exchangeCode,
             ticker: ftlMaterial.ticker,
             amount: totalFtlRefuel - presentFtlFuel,
             priceLimit: Number.POSITIVE_INFINITY,
@@ -153,7 +150,8 @@ act.addAction<Config>({
 function getExchangeCode(store: PrunApi.Store) {
   const warehouse = warehousesStore.getById(store.addressableId);
   const originNaturalId = getEntityNaturalIdFromAddress(warehouse?.address);
-  return originNaturalId ? ExchangeTickers[originNaturalId] : undefined;
+  const exchange = exchangesStore.getByNaturalId(originNaturalId);
+  return exchange?.code;
 }
 
 function calculateRefuelAmount(store: PrunApi.Store, material: PrunApi.Material) {

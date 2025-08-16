@@ -8,7 +8,7 @@ interface Planet {
 }
 
 const store = createEntityStore<Planet>(x => x.naturalId.toLowerCase(), {
-  preserveOnOpen: true,
+  preserveOnConnectionOpen: true,
 });
 const state = store.state;
 

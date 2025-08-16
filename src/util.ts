@@ -1,7 +1,7 @@
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/stars';
-import { Stations } from '@src/legacy';
+import { stationsStore } from '@src/infrastructure/prun-api/data/stations';
 import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
 import { sleep } from './utils/sleep';
 
@@ -116,7 +116,7 @@ export function extractPlanetName(text: string | null) {
     .replace(/(\d)\s+(?=[a-zA-Z])/, '$1')
     // Clear system name in named systems
     .replace(/.*\s-\s/, '');
-  return (Stations[text] ?? text) as string;
+  return (stationsStore.getNaturalIdFromName(text) ?? text) as string;
 }
 
 export function getMaterialNameByTicker(ticker?: string | null) {
