@@ -9,42 +9,63 @@ export function sortMaterialAmounts(materials: PrunApi.MaterialAmount[]) {
 }
 
 export function sortByMaterial<T>(items: T[], selector: (item: T) => PrunApi.Material | undefined) {
-  const categories = materialCategoriesStore.entities.value;
+  return items.slice().sort((a, b) => compareMaterials(selector(a), selector(b)));
+}
+
+const categoryNameMap = new Map<string, string>();
+const categorySortOrder = new Map<string, number>();
+
+watch(materialCategoriesStore.all, categories => {
+  categoryNameMap.clear();
+  categorySortOrder.clear();
   if (!categories) {
-    return items;
+    return;
   }
-  return items.slice().sort((a, b) => {
-    const materialA = selector(a);
-    const materialB = selector(b);
-    if (materialA === materialB) {
-      return 0;
-    }
-    if (!materialA) {
-      return 1;
-    }
-    if (!materialB) {
+
+  categories = categories.slice().sort((a, b) => a.name.localeCompare(b.name));
+  for (let i = 0; i < categories.length; i++) {
+    const category = categories[i];
+    categorySortOrder.set(category.id, i);
+    categoryNameMap.set(category.id, category.name);
+  }
+});
+
+export function compareMaterials(
+  materialA: PrunApi.Material | undefined | null,
+  materialB: PrunApi.Material | undefined | null,
+) {
+  if (materialA === materialB) {
+    return 0;
+  }
+  if (!materialA) {
+    return 1;
+  }
+  if (!materialB) {
+    return -1;
+  }
+  const categoryAPosition = categorySortOrder.get(materialA.category);
+  const categoryBPosition = categorySortOrder.get(materialB.category);
+  if (categoryAPosition !== categoryBPosition) {
+    return (
+      (categoryAPosition ?? Number.POSITIVE_INFINITY) -
+      (categoryBPosition ?? Number.POSITIVE_INFINITY)
+    );
+  }
+
+  const categoryAName = categoryNameMap.get(materialA.category) ?? '';
+  const intraCategoryOrder = sortOrder[categoryAName];
+  if (intraCategoryOrder) {
+    const indexA = intraCategoryOrder.get(materialA.ticker);
+    const indexB = intraCategoryOrder.get(materialB.ticker);
+    if (indexA !== undefined && indexB === undefined) {
       return -1;
     }
-    const categoryA = categories[materialA.category].name;
-    const categoryB = categories[materialB.category].name;
-    if (categoryA !== categoryB) {
-      return categoryA.localeCompare(categoryB);
+    if (indexA === undefined && indexB !== undefined) {
+      return 1;
     }
-
-    const categoryOrder = sortOrder[categoryA];
-    if (categoryOrder) {
-      const indexA = categoryOrder.get(materialA.ticker);
-      const indexB = categoryOrder.get(materialB.ticker);
-      if (indexA && !indexB) {
-        return 1;
-      }
-      if (!indexA && indexB) {
-        return -1;
-      }
-      return indexA - indexB;
-    }
-    return materialA.ticker.localeCompare(materialB.ticker);
-  });
+    return indexA - indexB;
+  }
+  return materialA.ticker.localeCompare(materialB.ticker);
 }
 
 const sortOrder = {
