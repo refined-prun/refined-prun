@@ -4,6 +4,7 @@
 
 ### Changed
 
+- `XIT BURN`: Add an `OVERALL` optional parameter to display overall burn only
 - `shipping-per-unit-price`: Remove the currency symbol in the `LMP` per-unit price label
 
 ### Fixed

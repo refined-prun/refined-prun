@@ -14,7 +14,8 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { countDays } from '@src/features/XIT/BURN/utils';
 
 const parameters = useXitParameters();
-const isBurnAll = isEmpty(parameters) || parameters[0].toLowerCase() == 'all';
+const isBurnOverall = !isEmpty(parameters) && parameters[0].toLowerCase() == 'overall';
+const isBurnAll = isEmpty(parameters) || isBurnOverall || parameters[0].toLowerCase() == 'all';
 
 const sites = computed(() => {
   if (isBurnAll) {
@@ -61,7 +62,12 @@ const planetBurn = computed(() => {
     }
   }
 
-  filtered.push({ burn: overallBurn, planetName: 'Overall', naturalId: '', storeId: '' });
+  const overall = { burn: overallBurn, planetName: 'Overall', naturalId: '', storeId: '' };
+  if (isBurnOverall) {
+    return [overall];
+  }
+
+  filtered.push(overall);
   return filtered;
 });
 
@@ -107,7 +113,10 @@ function onExpandAllClick() {
     <table>
       <thead>
         <tr>
-          <th v-if="sites.length > 0" :class="$style.expand" @click="onExpandAllClick">
+          <th
+            v-if="sites.length > 0 && !isBurnOverall"
+            :class="$style.expand"
+            @click="onExpandAllClick">
             {{ anyExpanded ? '-' : '+' }}
           </th>
           <th v-else />
@@ -136,7 +145,7 @@ function onExpandAllClick() {
       <BurnSection
         v-for="burn in planetBurn"
         :key="burn.planetName"
-        :can-minimize="sites.length > 1"
+        :can-minimize="sites.length > 1 && !isBurnOverall"
         :burn="burn" />
     </table>
   </template>
