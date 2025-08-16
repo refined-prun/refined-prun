@@ -6,6 +6,10 @@
 
 - `shipping-per-unit-price`: Remove the currency symbol in the `LMP` per-unit price label
 
+### Fixed
+
+- `planet-commands`: Fix replacing station natural ids with planet natural ids
+
 ## 25.8.1
 
 ### Added
