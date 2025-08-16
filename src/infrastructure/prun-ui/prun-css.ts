@@ -1,44 +1,44 @@
 import { registerClassName } from '@src/utils/select-dom';
-import { isEmpty, isPresent } from 'ts-extras';
+import { watchUntil } from '@src/utils/watch';
 import { sleep } from '@src/utils/sleep';
 
 export const C = {} as PrunCssClasses;
+export const prunCssStylesheets = reactive<Set<HTMLStyleElement>>(new Set());
+const appContainerFound = ref(false);
 export let mergedPrunStyles = '';
 export const prunStyleUpdated = ref(false);
 
-export function loadPrunCss() {
-  const styles = getPrunCssStylesheets();
-  if (isEmpty(styles)) {
-    throw new Error('No styles found');
-  }
-  let appContainerFound = false;
-  const classSet = new Set<string>();
-  for (const style of styles) {
-    mergedPrunStyles +=
-      style
-        .textContent!.split('\n')
-        .filter(x => !x.includes('sourceMappingURL'))
-        .join('\n') + '\n';
-    const cssRules = style.sheet!.cssRules;
-    for (let i = 0; i < cssRules.length; i++) {
-      const rule = cssRules.item(i) as CSSStyleRule;
-      const selector = rule?.selectorText;
-      if (!selector?.includes('___')) {
-        continue;
-      }
-      const matches = selector.match(/[\w-]+__[\w-]+___[\w-]+/g);
-      for (const match of matches ?? []) {
-        const className = match.replace('.', '');
-        classSet.add(className);
-        if (className.startsWith('App__container')) {
-          appContainerFound = true;
-        }
-      }
-    }
+export async function loadPrunCss() {
+  for (const style of _$$(document.head, 'style')) {
+    processStylesheet(style);
   }
 
-  if (!appContainerFound) {
-    throw new Error('No App.container class found');
+  subscribe($$(document.head, 'style'), processStylesheet);
+  await watchUntil(() => appContainerFound.value);
+
+  if (import.meta.env.DEV) {
+    void checkPrunCssUpdate();
+  }
+}
+
+function processStylesheet(style: HTMLStyleElement) {
+  if (style.dataset.source !== 'prun' || prunCssStylesheets.has(style)) {
+    return;
+  }
+
+  const classSet = new Set<string>();
+  const cssRules = style.sheet!.cssRules;
+  for (let i = 0; i < cssRules.length; i++) {
+    const rule = cssRules.item(i) as CSSStyleRule;
+    const selector = rule?.selectorText;
+    if (!selector?.includes('___')) {
+      continue;
+    }
+    const matches = selector.match(/[\w-]+__[\w-]+___[\w-]+/g);
+    for (const match of matches ?? []) {
+      const className = match.replace('.', '');
+      classSet.add(className);
+    }
   }
 
   const classes = Array.from(classSet);
@@ -63,46 +63,14 @@ export function loadPrunCss() {
     registerClassName(cssClass);
   }
 
-  if (import.meta.env.DEV) {
-    void checkPrunCssUpdate();
-  }
-}
+  prunCssStylesheets.add(style);
+  appContainerFound.value = C.App?.container !== undefined;
 
-export function getPrunCssStylesheets() {
-  // Start searching prun styles from the app script to filter out any other injected styles.
-  const appScript = _$$(document.head, 'script').find(
-    x => x.src && (!x.src.includes('://') || x.src.includes('prosperousuniverse.com')),
-  );
-  const valid: HTMLStyleElement[] = [];
-  let nextSibling = appScript?.nextElementSibling;
-  let foundStyle = false;
-  while (nextSibling) {
-    if (nextSibling.tagName !== 'STYLE') {
-      if (foundStyle) {
-        break;
-      }
-
-      nextSibling = nextSibling.nextElementSibling;
-      continue;
-    }
-
-    foundStyle = true;
-    const style = nextSibling as HTMLStyleElement;
-    nextSibling = nextSibling.nextElementSibling;
-    const sheet = style.sheet;
-    if (!sheet) {
-      continue;
-    }
-    try {
-      if (isPresent(sheet.cssRules)) {
-        valid.push(style);
-      }
-    } catch {
-      // SecurityError: CSSStyleSheet.cssRules getter: Not allowed to access cross-origin stylesheet
-      // This exception can be thrown if we try to inspect stylesheets injected by other extensions.
-    }
-  }
-  return valid;
+  mergedPrunStyles +=
+    style
+      .textContent!.split('\n')
+      .filter(x => !x.includes('sourceMappingURL'))
+      .join('\n') + '\n';
 }
 
 async function checkPrunCssUpdate() {

@@ -1,9 +1,8 @@
-import { getPrunCssStylesheets } from '@src/infrastructure/prun-ui/prun-css';
+import { prunCssStylesheets } from '@src/infrastructure/prun-ui/prun-css';
 import $style from './prun-bugs.module.css';
 
 function removeMobileCssRules() {
-  const styles = getPrunCssStylesheets();
-  for (const style of styles) {
+  for (const style of prunCssStylesheets) {
     const styleSheet = style.sheet!;
     const rules = styleSheet.cssRules;
     try {

@@ -5,7 +5,7 @@ import PmmgMigrationGuide from '@src/components/PmmgMigrationGuide.vue';
 
 async function main() {
   await initializeApi();
-  initializeUI();
+  await initializeUI();
 
   if (window['PMMG_COLLECTOR_HAS_RUN']) {
     createFragmentApp(PmmgMigrationGuide).before(await $(document, C.App.container));

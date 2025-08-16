@@ -5,8 +5,8 @@ import { trackItemTickers } from '@src/infrastructure/prun-ui/item-tracker';
 import { tagUI } from '@src/infrastructure/prun-ui/tagger';
 import { initTileDataExport } from '@src/infrastructure/prun-ui/tile-data-export';
 
-export function initializeUI() {
-  loadPrunCss();
+export async function initializeUI() {
+  await loadPrunCss();
   loadPrunI18N();
   loadRefinedPrunCss();
   tagUI();
