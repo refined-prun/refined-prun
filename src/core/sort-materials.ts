@@ -117,7 +117,24 @@ const sortOrder = {
     'ATA',
     'HSE',
   ]),
+  drones: makeSortOrderMap(['DRF', 'DCH']),
   fuels: makeSortOrderMap(['SF', 'FF']),
+  'ship kits': makeSortOrderMap([
+    'TCB',
+    'VSC',
+    'SCB',
+    'MCB',
+    'LCB',
+    'WCB',
+    'VCB',
+    'HCB',
+    'SSL',
+    'MSL',
+    'LSL',
+    'SFL',
+    'MFL',
+    'LFL',
+  ]),
 };
 
 function makeSortOrderMap(materials: string[]) {
