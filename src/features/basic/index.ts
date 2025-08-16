@@ -10,6 +10,7 @@ import './blck-item-destination';
 import './bs-building-list/bs-building-list';
 import './bs-merge-area-stats';
 import './bs-satisfaction-percentage';
+import './bui-sort-recipes';
 import './chat-images';
 import './clickable-apex-logo';
 import './cmds-clickable-commands';

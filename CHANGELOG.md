@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `bui-sort-recipes`: Sorts the recipes and materials by category/ticker/amount sort order
+
 ### Changed
 
 - `XIT BURN`: Add an `OVERALL` optional parameter to display overall burn only
