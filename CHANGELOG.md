@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `shipping-per-unit-price`: Remove the currency symbol in the `LMP` per-unit price label
+
 ## 25.8.1
 
 ### Added

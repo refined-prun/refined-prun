@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { CurrencySymbols } from '@src/legacy';
 import { fixed0 } from '@src/utils/format';
 import { getMaterialByName } from '@src/infrastructure/prun-ui/i18n';
 
-const { amountInput, currencyInput, materialName, totalPriceInput } = defineProps<{
+const { amountInput, materialName, totalPriceInput } = defineProps<{
   amountInput: string;
-  currencyInput: string;
   materialName: string;
   totalPriceInput: string;
 }>();
@@ -46,16 +44,12 @@ const perUnit = computed(() => {
 
   return '--';
 });
-
-const currency = computed(() => {
-  return CurrencySymbols[currencyInput] ?? '';
-});
 </script>
 
 <template>
   <span>
     <template v-if="material">
-      {{ totalSize }} {{ unit?.symbol }} | {{ currency }}{{ perUnit }}/{{ unit?.symbol }}
+      {{ totalSize }} {{ unit?.symbol }} | {{ perUnit }}/{{ unit?.symbol }}
     </template>
     <template v-else>--</template>
   </span>

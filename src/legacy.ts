@@ -1,11 +1,3 @@
-export const CurrencySymbols = {
-  CIS: '₡',
-  AIC: '₳',
-  NCC: '₦',
-  ICA: 'ǂ',
-  ECD: '€',
-};
-
 export const ExchangeTickers = {
   ANT: 'AI1',
   BEN: 'CI1',

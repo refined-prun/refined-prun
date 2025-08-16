@@ -54,7 +54,6 @@ function onFormReady(form: HTMLElement) {
   const commodityInput = selectInput("div[label/span[text()='Commodity']]//input");
   const amountInput = selectInput("div[label/span[text()='Amount']]//input");
   const totalPriceInput = selectInput("div[label/span[text()='Total price']]//input");
-  const currencyInput = selectInput("div[label/span[text()='Currency']]//select");
 
   createFragmentApp(
     PpuLabel,
@@ -62,7 +61,6 @@ function onFormReady(form: HTMLElement) {
       materialName: refValue(commodityInput),
       amountInput: refValue(amountInput),
       totalPriceInput: refValue(totalPriceInput),
-      currencyInput: refValue(currencyInput),
     }),
   ).before(totalPriceInput.parentElement!);
 }
