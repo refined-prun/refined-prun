@@ -87,13 +87,6 @@ function getTileData(command: string): object {
     };
   }
 
-  if (command.startsWith('CONT')) {
-    const id = command.replace('CONT', '').trim();
-    return {
-      contract: contractsStore.getByLocalId(id),
-    };
-  }
-
   if (command.startsWith('CONTD')) {
     const id = command.replace('CONTD', '').trim();
     if (id) {
@@ -125,6 +118,13 @@ function getTileData(command: string): object {
     }
     return {
       contracts: contracts,
+    };
+  }
+
+  if (command.startsWith('CONT')) {
+    const id = command.replace('CONT', '').trim();
+    return {
+      contract: contractsStore.getByLocalId(id),
     };
   }
 
