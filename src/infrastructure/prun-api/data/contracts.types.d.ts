@@ -87,6 +87,7 @@ declare namespace PrunApi {
     countryId?: string;
     countryCode?: string;
     type?: ContractPartnerTypeEnum;
+    currency?: Currency;
   }
 
   type ContractPartnerTypeEnum = 'EXPLORATION' | 'GOVERNANCE' | 'LOGISTICS';

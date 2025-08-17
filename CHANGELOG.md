@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `XIT CONTS`: Fix government partner display in contracts
+
 ## 25.8.16
 
 ### Added
