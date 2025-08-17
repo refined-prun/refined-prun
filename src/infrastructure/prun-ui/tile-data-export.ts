@@ -112,6 +112,22 @@ function getTileData(command: string): object {
     };
   }
 
+  if (command.startsWith('XIT CONTS')) {
+    let contracts = contractsStore.all.value;
+    if (contracts) {
+      contracts = contracts.filter(
+        x =>
+          x.status === 'OPEN' ||
+          x.status === 'CLOSED' ||
+          x.status === 'PARTIALLY_FULFILLED' ||
+          x.status === 'DEADLINE_EXCEEDED',
+      );
+    }
+    return {
+      contracts: contracts,
+    };
+  }
+
   if (command.startsWith('CXOB')) {
     const ticker = command.replace('CXOB', '').trim();
     return {
