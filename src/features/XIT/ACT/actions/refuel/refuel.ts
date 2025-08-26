@@ -84,6 +84,7 @@ act.addAction<Config>({
             amount: totalStlRefuel - presentStlFuel,
             priceLimit: Number.POSITIVE_INFINITY,
             buyPartial: false,
+            createBids: false,
           }),
         );
         presentStlFuel = totalStlRefuel;
@@ -105,6 +106,7 @@ act.addAction<Config>({
             amount: totalFtlRefuel - presentFtlFuel,
             priceLimit: Number.POSITIVE_INFINITY,
             buyPartial: false,
+            createBids: false,
           }),
         );
         presentFtlFuel = totalFtlRefuel;

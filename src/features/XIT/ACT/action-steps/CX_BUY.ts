@@ -17,6 +17,7 @@ interface Data {
   amount: number;
   priceLimit: number;
   buyPartial: boolean;
+  createBids: boolean;
 }
 
 export const CX_BUY = act.addActionStep<Data>({
@@ -28,6 +29,16 @@ export const CX_BUY = act.addActionStep<Data>({
     const filled = fillAmount(cxTicker, data.amount, data.priceLimit);
     const amount = filled?.amount ?? data.amount;
     const priceLimit = filled?.priceLimit ?? data.priceLimit;
+    const createBids = data.createBids ?? false;
+
+    if (createBids) {
+      let description = `Bid for ${fixed0(data.amount)} ${ticker} on ${exchange}`;
+      if (isFinite(priceLimit)) {
+        description += ` at price ${fixed02(data.priceLimit)}`;
+      }
+      return description;
+    }
+
     let description = `Buy ${fixed0(amount)} ${ticker} on ${exchange}`;
     if (isFinite(priceLimit)) {
       description += ` with price limit ${fixed02(priceLimit)}`;
@@ -94,35 +105,41 @@ export const CX_BUY = act.addActionStep<Data>({
         return;
       }
 
-      if (filled.amount < amount) {
-        if (!data.buyPartial) {
-          let message = `Not enough materials on ${exchange} to buy ${fixed0(amount)} ${ticker}`;
+      if (data.createBids) {
+        // don't check to see if the amount is present on the cx (in the `filled` var).
+        // Just make the bids for the full amount at the specified price limit.
+        changeInputValue(quantityInput, amount.toString());
+        changeInputValue(priceInput, priceLimit.toString());
+      } else {
+        if (filled.amount < amount) {
+          if (!data.buyPartial) {
+            let message = `Not enough materials on ${exchange} to buy ${fixed0(amount)} ${ticker}`;
+            if (isFinite(priceLimit)) {
+              message += ` with price limit ${fixed02(priceLimit)}/u`;
+            }
+            shouldUnwatch = true;
+            fail(message);
+            return;
+          }
+
+          const leftover = amount - filled.amount;
+          let message =
+            `${fixed0(leftover)} ${ticker} will not be bought on ${exchange} ` +
+            `(${fixed0(filled.amount)} of ${fixed0(amount)} available`;
           if (isFinite(priceLimit)) {
             message += ` with price limit ${fixed02(priceLimit)}/u`;
           }
-          shouldUnwatch = true;
-          fail(message);
-          return;
+          message += ')';
+          log.warning(message);
+          if (filled.amount === 0) {
+            shouldUnwatch = true;
+            skip();
+            return;
+          }
         }
-
-        const leftover = amount - filled.amount;
-        let message =
-          `${fixed0(leftover)} ${ticker} will not be bought on ${exchange} ` +
-          `(${fixed0(filled.amount)} of ${fixed0(amount)} available`;
-        if (isFinite(priceLimit)) {
-          message += ` with price limit ${fixed02(priceLimit)}/u`;
-        }
-        message += ')';
-        log.warning(message);
-        if (filled.amount === 0) {
-          shouldUnwatch = true;
-          skip();
-          return;
-        }
+        changeInputValue(quantityInput, filled.amount.toString());
+        changeInputValue(priceInput, filled.priceLimit.toString());
       }
-
-      changeInputValue(quantityInput, filled.amount.toString());
-      changeInputValue(priceInput, filled.priceLimit.toString());
 
       // Cache description before clicking the buy button because
       // order book data will change after that.
@@ -143,8 +160,15 @@ export const CX_BUY = act.addActionStep<Data>({
     const currentAmount = warehouseAmount.value;
     await clickElement(buyButton);
     await waitActionFeedback(tile);
-    setStatus('Waiting for storage update...');
-    await watchWhile(() => warehouseAmount.value === currentAmount);
+
+    // if we created bids, there will be no storage update.
+    if (data.createBids) {
+      // but it would be cool to wait for a CXPO update, if we could trigger that..?
+      setStatus('Bids created.');
+    } else {
+      setStatus('Waiting for storage update...');
+      await watchWhile(() => warehouseAmount.value === currentAmount);
+    }
 
     complete();
   },
