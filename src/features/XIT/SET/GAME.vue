@@ -129,10 +129,19 @@ function importUserDataAndReload() {
   });
 }
 
-async function restoreBackupAndReload(backup: UserDataBackup) {
-  restoreBackup(backup);
-  await saveUserData();
-  window.location.reload();
+async function restoreBackupAndReload(ev: Event, backup: UserDataBackup) {
+  showConfirmationOverlay(
+    ev,
+    async () => {
+      restoreBackup(backup);
+      await saveUserData();
+      window.location.reload();
+    },
+    {
+      message:
+        'Are you sure you want to restore this backup? This will overwrite your current data.',
+    },
+  );
 }
 
 function confirmDeleteBackup(ev: Event, backup: UserDataBackup) {
@@ -237,9 +246,11 @@ function confirmResetAllData(ev: Event) {
         v-for="backup in backups"
         :key="backup.timestamp"
         :label="ddmmyyyy(backup.timestamp) + ' ' + hhmm(backup.timestamp)">
-        <PrunButton primary @click="restoreBackupAndReload(backup.data)">Restore</PrunButton>
         <PrunButton primary @click="downloadBackup(backup.data, backup.timestamp)">
           Export
+        </PrunButton>
+        <PrunButton primary @click="restoreBackupAndReload($event, backup.data)">
+          Restore
         </PrunButton>
         <PrunButton danger @click="confirmDeleteBackup($event, backup)">Delete</PrunButton>
       </Commands>

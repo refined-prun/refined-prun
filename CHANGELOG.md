@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- `XIT SET`: Add a confirmation popup for restore from backup
+
 ### Fixed
 
 - `XIT CONTS`: Fix government partner display in contracts
