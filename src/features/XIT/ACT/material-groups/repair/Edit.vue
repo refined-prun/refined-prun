@@ -5,7 +5,6 @@ import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addr
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import NumberInput from '@src/components/forms/NumberInput.vue';
 import { comparePlanets } from '@src/util';
-import { isDefined } from 'ts-extras';
 import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 const { group } = defineProps<{ group: UserData.MaterialGroupData }>();
@@ -13,7 +12,7 @@ const { group } = defineProps<{ group: UserData.MaterialGroupData }>();
 const planets = computed(() => {
   const planets = (sitesStore.all.value ?? [])
     .map(x => getEntityNameFromAddress(x.address))
-    .filter(isDefined)
+    .filter(x => x !== undefined)
     .sort(comparePlanets);
   planets.unshift(configurableValue);
   return planets;

@@ -6,13 +6,12 @@ import { calculateSiteProfitability } from '@src/core/profitability';
 import { sumBy } from '@src/utils/sum-by';
 import { fixed0, formatCurrency, percent2 } from '@src/utils/format';
 import { map } from '@src/utils/map-values';
-import { isDefined } from 'ts-extras';
 
 const entries = computed(() => {
   return (
     sitesStore.all.value
       ?.map(x => calculateSiteProfitability(x))
-      .filter(isDefined)
+      .filter(x => x !== undefined)
       .sort((a, b) => b.profit - a.profit) ?? []
   );
 });

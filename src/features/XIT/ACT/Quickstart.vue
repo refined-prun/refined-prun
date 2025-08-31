@@ -13,7 +13,6 @@ import {
   getEntityNaturalIdFromAddress,
   getLocationLineFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
-import { isDefined } from 'ts-extras';
 import { comparePlanets } from '@src/util';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
@@ -28,7 +27,7 @@ const name = ref(`Base Resupply ${days.value}d`);
 const planets = computed(() =>
   (sitesStore.all.value ?? [])
     .map(x => getEntityNameFromAddress(x.address))
-    .filter(isDefined)
+    .filter(x => x !== undefined)
     .sort(comparePlanets),
 );
 const planet = ref(planets.value[0]);

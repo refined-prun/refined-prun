@@ -2,7 +2,6 @@ import $style from './screen-tab-bar.module.css';
 import TabBar from './TabBar.vue';
 import { userData } from '@src/store/user-data';
 import removeArrayElement from '@src/utils/remove-array-element';
-import { isDefined } from 'ts-extras';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { syncState } from '@src/features/basic/screen-tab-bar/sync';
 
@@ -34,7 +33,7 @@ function sortScreenList(list: HTMLElement) {
 async function onScreenItemReady(item: HTMLElement) {
   const name = (await $(item, C.ScreenControls.name)) as HTMLAnchorElement;
   const id = extractScreenId(name.href)!;
-  if (!isDefined(id)) {
+  if (id === undefined) {
     return;
   }
   const copy = await $(item, C.ScreenControls.copy);

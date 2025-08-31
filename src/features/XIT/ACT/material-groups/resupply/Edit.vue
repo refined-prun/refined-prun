@@ -5,7 +5,6 @@ import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addr
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import NumberInput from '@src/components/forms/NumberInput.vue';
 import { comparePlanets } from '@src/util';
-import { isDefined } from 'ts-extras';
 import TextInput from '@src/components/forms/TextInput.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
@@ -16,7 +15,7 @@ const { group } = defineProps<{ group: UserData.MaterialGroupData }>();
 const planets = computed(() => {
   const planets = (sitesStore.all.value ?? [])
     .map(x => getEntityNameFromAddress(x.address))
-    .filter(isDefined)
+    .filter(x => x !== undefined)
     .sort(comparePlanets);
   planets.unshift(configurableValue);
   return planets;
@@ -51,7 +50,7 @@ function save() {
   group.exclusions = exclusions.value
     .split(',')
     .map(x => materialsStore.getByTicker(x.trim())?.ticker)
-    .filter(isDefined);
+    .filter(x => x !== undefined);
   group.useBaseInv = useBaseInventory.value;
   group.consumablesOnly = workforceOnly.value;
 }

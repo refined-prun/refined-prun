@@ -3,7 +3,6 @@ import { serializeStorage } from '@src/features/XIT/ACT/actions/utils';
 import { fixed0 } from '@src/utils/format';
 import { changeInputValue, clickElement, focusElement } from '@src/util';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { isDefined } from 'ts-extras';
 import { watchWhile } from '@src/utils/watch';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { AssertFn } from '@src/features/XIT/ACT/shared-types';
@@ -113,7 +112,7 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
       return (
         store?.items
           .map(x => x.quantity ?? undefined)
-          .filter(isDefined)
+          .filter(x => x !== undefined)
           .find(x => x.material.ticker === ticker)?.amount ?? 0
       );
     });

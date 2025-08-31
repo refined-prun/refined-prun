@@ -9,7 +9,7 @@ import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import MaterialRow from '@src/features/XIT/BURN/MaterialRow.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
-import { isDefined, isEmpty } from 'ts-extras';
+import { isEmpty } from 'ts-extras';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { countDays } from '@src/features/XIT/BURN/utils';
 
@@ -22,11 +22,11 @@ const sites = computed(() => {
     return sitesStore.all.value;
   }
 
-  return parameters.map(x => sitesStore.getByPlanetNaturalIdOrName(x)).filter(isDefined);
+  return parameters.map(x => sitesStore.getByPlanetNaturalIdOrName(x)).filter(x => x !== undefined);
 });
 
 const planetBurn = computed(() => {
-  const filtered = sites.value!.map(getPlanetBurn).filter(isDefined);
+  const filtered = sites.value!.map(getPlanetBurn).filter(x => x !== undefined);
   if (filtered.length <= 1) {
     return filtered;
   }

@@ -11,7 +11,7 @@ import { createFragmentApp, FragmentAppScope } from '@src/utils/vue-fragment-app
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { sortByMaterial, sortMaterials } from '@src/core/sort-materials';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
-import { isDefined, isEmpty } from 'ts-extras';
+import { isEmpty } from 'ts-extras';
 import SortCriteria from '@src/features/basic/custom-item-sorting/SortCriteria.vue';
 import { getSortingData } from '@src/store/user-data-sorting';
 import { getInvStore } from '@src/core/store-id';
@@ -191,7 +191,7 @@ function sortInventory(
     let materials = category.materials
       .filter(x => !addedItems.has(x))
       .map(x => materialsStore.getByTicker(x))
-      .filter(isDefined);
+      .filter(x => x !== undefined);
     if (isEmpty(materials)) {
       continue;
     }

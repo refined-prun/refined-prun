@@ -1,7 +1,6 @@
 import { uploadJson } from '@src/utils/json-file';
 import { userData } from '@src/store/user-data';
 import { createId } from '@src/store/create-id';
-import { isDefined } from 'ts-extras';
 import { getInvStore } from '@src/core/store-id';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,7 +31,7 @@ function parsePmmgUserData(pmmg: any) {
     },
     sidebar: pmmg.sidebar,
     sorting: parseSortingModes(pmmg.sorting),
-    disabled: (pmmg.disabled ?? []).flatMap(mapPmmgFeature).filter(isDefined),
+    disabled: (pmmg.disabled ?? []).flatMap(mapPmmgFeature).filter(x => x !== undefined),
   };
 }
 

@@ -3,7 +3,6 @@ import { fixed0, fixed02 } from '@src/utils/format';
 import { changeInputValue, clickElement } from '@src/util';
 import { fillAmount } from '@src/features/XIT/ACT/actions/cx-buy/utils';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { isDefined } from 'ts-extras';
 import { exchangesStore } from '@src/infrastructure/prun-api/data/exchanges';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { watchWhile } from '@src/utils/watch';
@@ -136,7 +135,7 @@ export const CX_BUY = act.addActionStep<Data>({
       return (
         cxWarehouse.value?.items
           .map(x => x.quantity ?? undefined)
-          .filter(isDefined)
+          .filter(x => x !== undefined)
           .find(x => x.material.ticker === ticker)?.amount ?? 0
       );
     });
