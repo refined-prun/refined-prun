@@ -100,4 +100,4 @@ export interface BalanceSheet {
   equity: number;
 }
 
-export type PartialBalanceSheet = DeepPartial<BalanceSheet> & { timestamp: number };
+export type PartialBalanceSheet = PartialDeep<BalanceSheet> & { timestamp: number };
