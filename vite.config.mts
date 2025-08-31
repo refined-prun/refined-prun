@@ -87,10 +87,6 @@ export default defineConfig({
         preserveModulesRoot: 'source',
         sanitizeFileName: name =>
           name.replace('_virtual', 'virtual').replace('\x00', '').replace(':', '_'),
-        assetFileNames: assetInfo =>
-          assetInfo.name?.endsWith('css')
-            ? assetInfo.name.replace('style.css', 'refined-prun.css')
-            : 'assets/[name]-[hash][extname]',
         entryFileNames(chunkInfo) {
           if (chunkInfo.name.includes('node_modules')) {
             const cleanName = chunkInfo.name
