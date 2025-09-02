@@ -51,6 +51,12 @@ export const CXPO_BUY = act.addActionStep<Data>({
     });
     assert(cxWarehouse.value, `CX warehouse not found for ${exchange}`);
 
+    if (amount <= 0) {
+      log.warning(`No ${ticker} was bought (target amount is 0)`);
+      skip();
+      return;
+    }
+
     const material = materialsStore.getByTicker(ticker);
     assert(material, `Unknown material ${ticker}`);
 

@@ -9,6 +9,7 @@
 ### Fixed
 
 - `XIT ACT`: Fix MTRA action getting stuck when the material amount is zero
+- `XIT ACT`: Fix CX Buy action getting stuck when the material amount is zero
 - `XIT CONTS`: Fix government partner display in contracts
 - `sidebar-contracts-details`: Fix government partner display in contracts
 
