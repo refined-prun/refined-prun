@@ -15,6 +15,7 @@
 - `XIT ACT`: Fix MTRA action getting stuck when the material amount is zero
 - `XIT ACT`: Fix CX Buy action getting stuck when the material amount is zero
 - `XIT CONTS`: Fix government partner display in contracts
+- `correct-commands`: Fix url correction for links without http:// or https:// in XIT WEB
 - `sidebar-contracts-details`: Fix government partner display in contracts
 
 ## 25.8.16
