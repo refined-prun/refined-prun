@@ -58,9 +58,7 @@ async function onScreenItemReady(item: HTMLElement) {
   }
 
   createFragmentApp(() => (
-    <div
-      class={[C.ScreenControls.delete, C.ScreenControls.copy, C.type.typeSmall, $style.hideButton]}
-      onClick={onClick}>
+    <div class={[C.ScreenControls.delete, C.type.typeSmall, $style.hideButton]} onClick={onClick}>
       {hidden.value ? 'shw' : 'hide'}
     </div>
   )).before(copy);

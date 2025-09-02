@@ -66,6 +66,7 @@ import './prodq-order-eta';
 import './prodq-queue-load';
 import './prun-bugs';
 import './rprun-version-label';
+import './screen-layout-lock';
 import './screen-tab-bar/screen-tab-bar';
 import './search-auto-focus';
 import './sfc-flight-eta';

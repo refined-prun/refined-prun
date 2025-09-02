@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `screen-layout-lock`: Adds screen locking
+
 ### Changed
 
 - `XIT SET`: Add a confirmation popup for restore from backup

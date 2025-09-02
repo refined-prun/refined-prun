@@ -5,6 +5,9 @@ import { getInvStore } from '@src/core/store-id';
 
 const migrations: Migration[] = [
   userData => {
+    userData.tabs.locked = [];
+  },
+  userData => {
     userData.settings.defaultChartType = 'SMOOTH';
   },
   userData => {
