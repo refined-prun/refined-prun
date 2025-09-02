@@ -40,6 +40,12 @@ export const MTRA_TRANSFER = act.addActionStep<Data>({
       return;
     }
 
+    if (amount <= 0) {
+      log.warning(`No ${ticker} was transferred (target amount is 0)`);
+      skip();
+      return;
+    }
+
     const material = materialsStore.getByTicker(ticker);
     assert(material, `Unknown material ${ticker}`);
 
