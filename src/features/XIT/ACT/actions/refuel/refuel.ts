@@ -2,8 +2,8 @@ import { act } from '@src/features/XIT/ACT/act-registry';
 import Edit from '@src/features/XIT/ACT/actions/refuel/Edit.vue';
 import Configure from '@src/features/XIT/ACT/actions/refuel/Configure.vue';
 import { Config } from '@src/features/XIT/ACT/actions/refuel/config';
-import { CX_BUY } from '@src/features/XIT/ACT/action-steps/CX_BUY';
-import { TRANSFER_MATERIALS } from '@src/features/XIT/ACT/action-steps/TRANSFER_MATERIALS';
+import { CXPO_BUY } from '@src/features/XIT/ACT/action-steps/CXPO_BUY.ts';
+import { MTRA_TRANSFER } from '@src/features/XIT/ACT/action-steps/MTRA_TRANSFER.ts';
 import { AssertFn, configurableValue } from '@src/features/XIT/ACT/shared-types';
 import { atSameLocation, deserializeStorage } from '@src/features/XIT/ACT/actions/utils';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
@@ -78,7 +78,7 @@ act.addAction<Config>({
     if (presentStlFuel < totalStlRefuel) {
       if (isCX && data.buyMissingFuel) {
         emitStep(
-          CX_BUY({
+          CXPO_BUY({
             exchange: exchangeCode,
             ticker: stlMaterial.ticker,
             amount: totalStlRefuel - presentStlFuel,
@@ -99,7 +99,7 @@ act.addAction<Config>({
     if (presentFtlFuel < totalFtlRefuel) {
       if (isCX && data.buyMissingFuel) {
         emitStep(
-          CX_BUY({
+          CXPO_BUY({
             exchange: exchangeCode,
             ticker: ftlMaterial.ticker,
             amount: totalFtlRefuel - presentFtlFuel,
@@ -119,7 +119,7 @@ act.addAction<Config>({
         continue;
       }
       emitStep(
-        TRANSFER_MATERIALS({
+        MTRA_TRANSFER({
           from: origin.id,
           to: store.id,
           ticker: stlMaterial.ticker,
@@ -135,7 +135,7 @@ act.addAction<Config>({
         continue;
       }
       emitStep(
-        TRANSFER_MATERIALS({
+        MTRA_TRANSFER({
           from: origin.id,
           to: store.id,
           ticker: ftlMaterial.ticker,

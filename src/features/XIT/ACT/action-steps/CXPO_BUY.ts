@@ -18,8 +18,8 @@ interface Data {
   buyPartial: boolean;
 }
 
-export const CX_BUY = act.addActionStep<Data>({
-  type: 'CX_BUY',
+export const CXPO_BUY = act.addActionStep<Data>({
+  type: 'CXPO_BUY',
   preProcessData: data => ({ ...data, ticker: data.ticker.toUpperCase() }),
   description: data => {
     const { ticker, exchange } = data;

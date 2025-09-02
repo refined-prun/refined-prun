@@ -14,8 +14,8 @@ interface Data {
   amount: number;
 }
 
-export const TRANSFER_MATERIALS = act.addActionStep<Data>({
-  type: 'TRANSFER_MATERIALS',
+export const MTRA_TRANSFER = act.addActionStep<Data>({
+  type: 'MTRA_TRANSFER',
   preProcessData: data => ({ ...data, ticker: data.ticker.toUpperCase() }),
   description: data => {
     const from = storagesStore.getById(data.from);

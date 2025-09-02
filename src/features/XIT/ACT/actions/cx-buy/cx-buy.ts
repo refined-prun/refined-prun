@@ -1,6 +1,6 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import Edit from '@src/features/XIT/ACT/actions/cx-buy/Edit.vue';
-import { CX_BUY } from '@src/features/XIT/ACT/action-steps/CX_BUY';
+import { CXPO_BUY } from '@src/features/XIT/ACT/action-steps/CXPO_BUY.ts';
 import { fixed0, fixed02 } from '@src/utils/format';
 import { fillAmount } from '@src/features/XIT/ACT/actions/cx-buy/utils';
 import { AssertFn } from '@src/features/XIT/ACT/shared-types';
@@ -83,7 +83,7 @@ act.addAction({
       }
 
       emitStep(
-        CX_BUY({
+        CXPO_BUY({
           exchange,
           ticker,
           amount: filled?.amount ?? amount,
