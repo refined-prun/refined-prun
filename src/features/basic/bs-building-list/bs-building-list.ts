@@ -1,4 +1,3 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import BuildingCountSection from './BuildingCountSection.vue';
 
 function onTileReady(tile: PrunTile) {

@@ -1,4 +1,3 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import { PrunI18N } from '@src/infrastructure/prun-ui/i18n';
 import { observeChildListChanged } from '@src/utils/mutation-observer';
 

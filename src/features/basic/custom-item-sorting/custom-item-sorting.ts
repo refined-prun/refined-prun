@@ -7,7 +7,7 @@ import InventorySortControls from './InventorySortControls.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
 import SORT from '@src/features/XIT/SORT/SORT.vue';
-import { createFragmentApp, FragmentAppScope } from '@src/utils/vue-fragment-app';
+import { FragmentAppScope } from '@src/utils/vue-fragment-app';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { sortByMaterial, sortMaterials } from '@src/core/sort-materials';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';

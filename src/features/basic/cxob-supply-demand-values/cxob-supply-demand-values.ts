@@ -1,5 +1,4 @@
 import $style from './cxob-supply-demand-values.module.css';
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import SupplyDemandValues from './SupplyDemandValues.vue';
 
 function onTileReady(tile: PrunTile) {
