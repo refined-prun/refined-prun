@@ -58,27 +58,31 @@ act.addAction({
       const cxTicker = `${ticker}.${data.exchange}`;
       const filled = fillAmount(cxTicker, amount, priceLimit);
 
-      if (filled && filled.amount < amount) {
-        if (!data.buyPartial) {
-          let message = `Not enough materials on ${exchange} to buy ${fixed0(amount)} ${ticker}`;
+      if (!data.createBids) {
+        // if creating bids, don't check to see if the amount is present on the cx (in the `filled` var).
+
+        if (filled && filled.amount < amount) {
+          if (!data.buyPartial) {
+            let message = `Not enough materials on ${exchange} to buy ${fixed0(amount)} ${ticker}`;
+            if (isFinite(priceLimit)) {
+              message += ` with price limit ${fixed02(priceLimit)}/u`;
+            }
+            fail(message);
+            return;
+          }
+
+          const leftover = amount - filled.amount;
+          let message =
+            `${fixed0(leftover)} ${ticker} will not be bought on ${exchange} ` +
+            `(${fixed0(filled.amount)} of ${fixed0(amount)} available`;
           if (isFinite(priceLimit)) {
             message += ` with price limit ${fixed02(priceLimit)}/u`;
           }
-          fail(message);
-          return;
-        }
-
-        const leftover = amount - filled.amount;
-        let message =
-          `${fixed0(leftover)} ${ticker} will not be bought on ${exchange} ` +
-          `(${fixed0(filled.amount)} of ${fixed0(amount)} available`;
-        if (isFinite(priceLimit)) {
-          message += ` with price limit ${fixed02(priceLimit)}/u`;
-        }
-        message += ')';
-        log.warning(message);
-        if (filled.amount === 0) {
-          continue;
+          message += ')';
+          log.warning(message);
+          if (filled.amount === 0) {
+            continue;
+          }
         }
       }
 
@@ -89,6 +93,7 @@ act.addAction({
           amount: filled?.amount ?? amount,
           priceLimit: priceLimit,
           buyPartial: data.buyPartial ?? false,
+          createBids: data.createBids ?? false,
         }),
       );
     }
