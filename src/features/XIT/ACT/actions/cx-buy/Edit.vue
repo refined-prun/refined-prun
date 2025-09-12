@@ -27,7 +27,7 @@ function getPriceLimits() {
 }
 
 const buyPartial = ref(action.buyPartial ?? false);
-
+const createBids = ref(action.createBids ?? false);
 const useCXInv = ref(action.useCXInv ?? true);
 
 function onEditPriceLimitsClick(e: Event) {
@@ -50,6 +50,7 @@ function save() {
     action.priceLimits[material.ticker] = price;
   }
   action.buyPartial = buyPartial.value;
+  action.createBids = createBids.value;
   action.useCXInv = useCXInv.value;
 }
 
@@ -70,6 +71,11 @@ defineExpose({ validate, save });
     label="Buy Partial"
     tooltip="Whether the action will be taken if there is not enough stock on the CX.">
     <RadioItem v-model="buyPartial">buy partial</RadioItem>
+  </Active>
+  <Active
+    label="Create Bids"
+    tooltip="Create bids to buy items that are not in stock on the CX at the specified price limit.">
+    <RadioItem v-model="createBids">create bids</RadioItem>
   </Active>
   <Active
     label="Use CX Inventory"
