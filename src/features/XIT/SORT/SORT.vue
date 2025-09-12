@@ -42,6 +42,37 @@ function deleteSortingMode(ev: Event, sorting: UserData.SortingMode) {
     },
   );
 }
+
+async function copyToClipboard(text: string) {
+  await navigator.clipboard.writeText(text);
+}
+
+async function pasteFromClipboard() {
+  try {
+    const text = navigator.clipboard.readText();
+    return text;
+  } catch (err) {
+    console.error('Failed to read clipboard contents: ', err);
+    return '';
+  }
+}
+
+function pasteSortingMode(ev: Event) {
+  pasteFromClipboard().then(clipText => {
+    var sorting = JSON.parse(clipText);
+
+    sorting.storeId = storeId;
+    showTileOverlay(ev, SortingModeEditor, {
+      storeId,
+      sorting,
+      onSave: sorting => sortingData.value.modes.push(sorting),
+    });
+  });
+}
+
+function copySortingMode(ev: Event, sorting: UserData.SortingMode) {
+  copyToClipboard(JSON.stringify(sorting));
+}
 </script>
 
 <template>
@@ -49,6 +80,7 @@ function deleteSortingMode(ev: Event, sorting: UserData.SortingMode) {
   <template v-else>
     <ActionBar>
       <PrunButton primary @click="createSortingMode">CREATE NEW</PrunButton>
+      <PrunButton primary @click="pasteSortingMode">PASTE</PrunButton>
     </ActionBar>
     <table>
       <thead>
@@ -64,6 +96,7 @@ function deleteSortingMode(ev: Event, sorting: UserData.SortingMode) {
           <td>{{ mode.categories.map(x => x.name).join(', ') }}</td>
           <td>
             <PrunButton primary @click="editSortingMode($event, mode)">edit</PrunButton>
+            <PrunButton primary @click="copySortingMode($event, mode)">copy</PrunButton>
             <PrunButton danger @click="deleteSortingMode($event, mode)">delete</PrunButton>
           </td>
         </tr>
