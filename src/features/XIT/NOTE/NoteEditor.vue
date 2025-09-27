@@ -29,10 +29,9 @@ function processText(text?: string) {
       break;
     }
 
-    text = text.replaceAll(
-      regexp,
-      `<span class="${C.Link.link} ${$style.link}">${matches[0]}</span>`,
-    );
+    text = text.replaceAll(regexp, function (match) {
+      return `<span class="${C.Link.link} ${$style.link}">${match}</span>`;
+    });
 
     counter++;
     if (counter > 100) {
