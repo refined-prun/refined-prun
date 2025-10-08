@@ -4,4 +4,8 @@ function init() {
   applyCssRule('CXOS', `button + .${C.ActionBar.container} .${C.Button.danger}`, css.hidden);
 }
 
-features.add(import.meta.url, init, 'CXOS: Hides the "Delete Filled" button.');
+features.add(
+  import.meta.url,
+  init,
+  'CXOS: Hides the "Delete Filled" button when filters are hidden.',
+);
