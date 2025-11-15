@@ -17,6 +17,7 @@
 - `XIT ACT`: Fix MTRA action getting stuck when the material amount is zero
 - `XIT ACT`: Fix CX Buy action getting stuck when the material amount is zero
 - `XIT CONTS`: Fix government partner display in contracts
+- `XIT CONTS`: Fix the display text of the "Construct Ship" condition
 - `XIT NOTE`: Fix material tickers being changed to the first one in the note
 - `correct-commands`: Fix url correction for links without http:// or https:// in XIT WEB
 - `sidebar-contracts-details`: Fix government partner display in contracts
