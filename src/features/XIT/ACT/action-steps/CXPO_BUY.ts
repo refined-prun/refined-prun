@@ -16,6 +16,7 @@ interface Data {
   amount: number;
   priceLimit: number;
   buyPartial: boolean;
+  allowUnfilled: boolean;
 }
 
 export const CXPO_BUY = act.addActionStep<Data>({
@@ -27,6 +28,18 @@ export const CXPO_BUY = act.addActionStep<Data>({
     const filled = fillAmount(cxTicker, data.amount, data.priceLimit);
     const amount = filled?.amount ?? data.amount;
     const priceLimit = filled?.priceLimit ?? data.priceLimit;
+    const allowUnfilled = data.allowUnfilled ?? false;
+    const willFillCompletely = filled && filled.amount === data.amount;
+
+    if (!willFillCompletely && allowUnfilled) {
+      let description = `Bid for ${fixed0(data.amount)} ${ticker} on ${exchange}`;
+      if (isFinite(priceLimit)) {
+        description += ` at price ${fixed02(data.priceLimit)}`;
+        description += ` (${fixed0(data.amount * data.priceLimit)} total cost)`;
+      }
+      return description;
+    }
+
     let description = `Buy ${fixed0(amount)} ${ticker} on ${exchange}`;
     if (isFinite(priceLimit)) {
       description += ` with price limit ${fixed02(priceLimit)}`;
@@ -99,7 +112,7 @@ export const CXPO_BUY = act.addActionStep<Data>({
         return;
       }
 
-      if (filled.amount < amount) {
+      if (filled.amount < amount && !data.allowUnfilled) {
         if (!data.buyPartial) {
           let message = `Not enough materials on ${exchange} to buy ${fixed0(amount)} ${ticker}`;
           if (isFinite(priceLimit)) {
@@ -126,8 +139,13 @@ export const CXPO_BUY = act.addActionStep<Data>({
         }
       }
 
-      changeInputValue(quantityInput, filled.amount.toString());
-      changeInputValue(priceInput, filled.priceLimit.toString());
+      if (data.allowUnfilled) {
+        changeInputValue(quantityInput, data.amount.toString());
+        changeInputValue(priceInput, data.priceLimit.toString());
+      } else {
+        changeInputValue(quantityInput, filled.amount.toString());
+        changeInputValue(priceInput, filled.priceLimit.toString());
+      }
 
       // Cache description before clicking the buy button because
       // order book data will change after that.
@@ -146,10 +164,18 @@ export const CXPO_BUY = act.addActionStep<Data>({
       );
     });
     const currentAmount = warehouseAmount.value;
+    const amountToFill = fillAmount(cxTicker, amount, priceLimit)?.amount ?? 0;
+    const shouldWaitForUpdate = amountToFill > 0;
+
     await clickElement(buyButton);
     await waitActionFeedback(tile);
-    setStatus('Waiting for storage update...');
-    await watchWhile(() => warehouseAmount.value === currentAmount);
+
+    if (shouldWaitForUpdate) {
+      setStatus('Waiting for storage update...');
+      await watchWhile(() => warehouseAmount.value === currentAmount);
+    } else {
+      setStatus('Bid order created');
+    }
 
     complete();
   },
