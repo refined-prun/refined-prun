@@ -5,6 +5,7 @@
 ### Added
 
 - `screen-layout-lock`: Adds screen locking
+- `cxos-hide-delete-filled`: Hides the "Delete Filled" button when filters are hidden
 
 ### Changed
 
