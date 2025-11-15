@@ -9,6 +9,7 @@
 ### Changed
 
 - `XIT SET`: Add a confirmation popup for restore from backup
+- `screen-tab-bar`: Make tab bar scrollable to allow offscreen tabs
 
 ### Fixed
 

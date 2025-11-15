@@ -73,6 +73,7 @@ function init() {
     createFragmentApp(TabBar).appendTo(container);
   });
   subscribe($$(document, C.ScreenControls.screens), onListReady);
+  applyCssRule(`.${C.Head.contextAndScreens}`, $style.contextAndScreens);
   applyCssRule(`.${C.ScreenControls.container}`, $style.screenControls);
 }
 
