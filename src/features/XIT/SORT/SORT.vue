@@ -42,6 +42,22 @@ function deleteSortingMode(ev: Event, sorting: UserData.SortingMode) {
     },
   );
 }
+
+async function copySortingMode(sorting: UserData.SortingMode) {
+  const json = JSON.stringify(sorting);
+  await navigator.clipboard.writeText(json);
+}
+
+async function pasteSortingMode(ev: Event) {
+  const clipText = await navigator.clipboard.readText();
+  const sorting = JSON.parse(clipText);
+
+  showTileOverlay(ev, SortingModeEditor, {
+    storeId,
+    sorting,
+    onSave: sorting => sortingData.value.modes.push(sorting),
+  });
+}
 </script>
 
 <template>
@@ -49,6 +65,7 @@ function deleteSortingMode(ev: Event, sorting: UserData.SortingMode) {
   <template v-else>
     <ActionBar>
       <PrunButton primary @click="createSortingMode">CREATE NEW</PrunButton>
+      <PrunButton primary @click="pasteSortingMode">PASTE</PrunButton>
     </ActionBar>
     <table>
       <thead>
@@ -64,6 +81,7 @@ function deleteSortingMode(ev: Event, sorting: UserData.SortingMode) {
           <td>{{ mode.categories.map(x => x.name).join(', ') }}</td>
           <td>
             <PrunButton primary @click="editSortingMode($event, mode)">edit</PrunButton>
+            <PrunButton primary @click="copySortingMode(mode)">copy</PrunButton>
             <PrunButton danger @click="deleteSortingMode($event, mode)">delete</PrunButton>
           </td>
         </tr>
