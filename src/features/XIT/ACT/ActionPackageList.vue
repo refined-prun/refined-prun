@@ -14,21 +14,16 @@ import { vDraggable } from 'vue-draggable-plus';
 import grip from '@src/utils/grip.module.css';
 import fa from '@src/utils/font-awesome.module.css';
 
+const actionPackages = computed(() => userData.actionPackages);
 const showQuickstart = computed(() => userData.actionPackages.length === 0);
 
-// Sorting
-const actionPackages = ref<UserData.ActionPackageData[]>(userData.actionPackages);
-
-// Dragging
 const dragging = ref(false);
-const draggableOptions = computed(() => ({
+const draggableOptions = {
   animation: 150,
   handle: `.${grip.grip}`,
   onStart: () => (dragging.value = true),
-  onEnd: () => {
-    dragging.value = false;
-  },
-}));
+  onEnd: () => (dragging.value = false),
+};
 
 function onQuickstartClick(ev: Event) {
   showTileOverlay(ev, Quickstart);
