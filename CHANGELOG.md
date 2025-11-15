@@ -11,6 +11,7 @@
 
 - `XIT ACT`: Make the action package list reorderable
 - `XIT SET`: Add a confirmation popup for restore from backup
+- `XIT SORT`: Add copy/paste buttons to sorting modes
 - `item-icons`: Add icons for colony-ship-related materials
 - `screen-tab-bar`: Make tab bar scrollable to allow offscreen tabs
 
