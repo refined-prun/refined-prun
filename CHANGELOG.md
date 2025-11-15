@@ -18,6 +18,7 @@
 - `XIT CONTS`: Fix government partner display in contracts
 - `correct-commands`: Fix url correction for links without http:// or https:// in XIT WEB
 - `sidebar-contracts-details`: Fix government partner display in contracts
+- Fix the color of materials in the "Infrastructure" category
 
 ## 25.8.16
 
