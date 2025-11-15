@@ -83,7 +83,7 @@ function paramName(pkg: UserData.ActionPackageData) {
   <table>
     <thead>
       <tr>
-        <th></th>
+        <th :class="$style.dragHeaderCell"></th>
         <th>Name</th>
         <th>Execute</th>
         <th>Edit</th>
@@ -106,7 +106,7 @@ function paramName(pkg: UserData.ActionPackageData) {
           </span>
         </td>
         <td>
-          <PrunLink :command="`XIT ACT_${paramName(pkg)}`">
+          <PrunLink inline :command="`XIT ACT_${paramName(pkg)}`">
             {{ friendlyName(pkg) }}
           </PrunLink>
         </td>
@@ -129,13 +129,27 @@ function paramName(pkg: UserData.ActionPackageData) {
 </template>
 
 <style module>
+.dragHeaderCell {
+  padding: 0;
+}
+
 .dragCell {
-  width: 30px;
-  padding: 0 5px;
+  width: 14px;
+  padding: 0;
   text-align: center;
 }
 
-.dragging {
-  opacity: 0.8;
+.grip {
+  cursor: move;
+  transition: opacity 0.2s ease-in-out;
+  opacity: 0;
+}
+
+tr:hover .grip {
+  opacity: 1;
+}
+
+.dragging td .grip {
+  opacity: 0;
 }
 </style>
