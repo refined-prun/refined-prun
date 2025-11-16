@@ -25,7 +25,6 @@ async function onScreenItemReady(item: HTMLElement) {
     }
     e.stopPropagation();
     e.preventDefault();
-    console.log(userData.tabs.locked);
   }
 
   createFragmentApp(() => (
