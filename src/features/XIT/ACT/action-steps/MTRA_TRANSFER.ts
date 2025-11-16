@@ -74,8 +74,7 @@ export const MTRA_TRANSFER = act.addActionStep<Data>({
     focusElement(input);
     changeInputValue(input, ticker);
 
-    const suggestionsList = _$(container, C.MaterialSelector.suggestionsList);
-    assert(suggestionsList, 'Suggestions list not found');
+    const suggestionsList = await $(container, C.MaterialSelector.suggestionsList);
     suggestionsContainer.style.display = 'none';
     const match = _$$(suggestionsList, C.MaterialSelector.suggestionEntry).find(
       x => _$(x, C.ColoredIcon.label)?.textContent === ticker,
