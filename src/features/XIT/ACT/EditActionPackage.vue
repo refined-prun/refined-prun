@@ -171,9 +171,6 @@ function onExportClick() {
     <Commands label="Export">
       <PrunButton primary @click="onExportClick">EXPORT</PrunButton>
     </Commands>
-    <Commands label="Help">
-      <PrunButton primary @click="showBuffer('XIT HELP ACTION')">HELP</PrunButton>
-    </Commands>
   </form>
 </template>
 
