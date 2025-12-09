@@ -64,7 +64,7 @@ act.addMaterialGroup<Config>({
       data.consumablesOnly ? undefined : production.value,
       workforce.value,
       (data.useBaseInv ?? true) ? stores : undefined,
-      upkeeps, // ADD AN OPTION TO IGNORE THIS
+      data.useCustomUpkeeps ? upkeeps : undefined,
     );
 
     const parsedGroup = {};

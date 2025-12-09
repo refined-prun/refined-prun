@@ -65,6 +65,7 @@ declare namespace UserData {
     advanceDays?: number | string;
     planet?: string;
     useBaseInv?: boolean;
+    useCustomUpkeeps?: boolean;
     materials?: Record<string, number>;
     exclusions?: string[];
     consumablesOnly?: boolean;
