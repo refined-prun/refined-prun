@@ -73,6 +73,7 @@ export function calculatePlanetBurn(
   production: PrunApi.ProductionLine[] | undefined,
   workforces: PrunApi.Workforce[] | undefined,
   storage: PrunApi.Store[] | undefined,
+  includeStopped: boolean = true,
 ) {
   const burnValues: BurnValues = {};
 
@@ -94,7 +95,12 @@ export function calculatePlanetBurn(
   if (production) {
     for (const line of production) {
       const capacity = line.capacity;
-      const burnOrders = getRecurringOrders(line);
+      let burnOrders = getRecurringOrders(line);
+
+      if (!includeStopped) {
+        burnOrders = removeStoppedOrders(burnOrders, storage);
+      }
+
       let totalDuration = sumBy(burnOrders, x => x.duration?.millis ?? Infinity);
       // Convert to days
       totalDuration /= 86400000;
@@ -166,4 +172,42 @@ export function calculatePlanetBurn(
   }
 
   return burnValues;
+}
+
+function removeStoppedOrders(
+  orders: PrunApi.ProductionOrder[],
+  storage: PrunApi.Store[] | undefined,
+): PrunApi.ProductionOrder[] {
+  let output = orders;
+
+  const materialAmounts = new Map<string, number>();
+
+  if (storage) {
+    // Get total material stockpiles for each material
+    for (const inventory of storage) {
+      for (const item of inventory.items) {
+        const quantity = item.quantity;
+        if (!quantity) {
+          continue;
+        }
+        materialAmounts.set(
+          quantity.material.ticker,
+          (materialAmounts.get(quantity.material.ticker) ?? 0) + quantity.amount,
+        );
+      }
+    }
+  }
+
+  // Compare input amount to stockpile and discard stopped orders
+  output = output.filter(order => {
+    for (const input of order.inputs) {
+      const materialStock = materialAmounts.get(input.material.ticker) ?? 0;
+      if (materialStock < input.amount) {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  return output;
 }
