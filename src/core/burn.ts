@@ -8,6 +8,7 @@ import {
 } from '@src/infrastructure/prun-api/data/addresses';
 import { sumBy } from '@src/utils/sum-by';
 import { getRecurringOrders } from '@src/core/orders';
+import { userData } from '@src/store/user-data.ts';
 
 export interface MaterialBurn {
   input: number;
@@ -44,6 +45,7 @@ const burnBySiteId = computed(() => {
         const workforce = workforcesStore.getById(id)?.workforces;
         const production = productionStore.getBySiteId(id);
         const storage = storagesStore.getByAddressableId(id);
+        const upkeeps = userData.upkeeps[id];
         if (!workforce || !production) {
           return undefined;
         }
@@ -52,7 +54,7 @@ const burnBySiteId = computed(() => {
           storeId: storage?.[0]?.id,
           planetName: getEntityNameFromAddress(site.address),
           naturalId: getEntityNaturalIdFromAddress(site.address),
-          burn: calculatePlanetBurn(production, workforce, storage ?? []),
+          burn: calculatePlanetBurn(production, workforce, storage ?? [], upkeeps),
         } as PlanetBurn;
       }),
     );
@@ -73,6 +75,7 @@ export function calculatePlanetBurn(
   production: PrunApi.ProductionLine[] | undefined,
   workforces: PrunApi.Workforce[] | undefined,
   storage: PrunApi.Store[] | undefined,
+  upkeeps: UserData.Upkeep[] | undefined,
 ) {
   const burnValues: BurnValues = {};
 
@@ -125,6 +128,19 @@ export function calculatePlanetBurn(
       for (const need of tier.needs) {
         const materialBurn = getBurnValue(need.material.ticker);
         materialBurn.workforce += need.unitsPerInterval;
+      }
+    }
+  }
+
+  if (upkeeps) {
+    for (const upkeep of upkeeps) {
+      for (const matAmount of upkeep.matAmounts) {
+        const materialBurn = getBurnValue(matAmount.material.ticker);
+        if (matAmount.amount > 0) {
+          materialBurn.output += matAmount.amount / (upkeep.duration.millis / 1000 / 60 / 60 / 24);
+        } else {
+          materialBurn.input += -matAmount.amount / (upkeep.duration.millis / 1000 / 60 / 60 / 24);
+        }
       }
     }
   }
