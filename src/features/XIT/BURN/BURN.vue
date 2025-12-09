@@ -17,6 +17,8 @@ const parameters = useXitParameters();
 const isBurnOverall = !isEmpty(parameters) && parameters[0].toLowerCase() == 'overall';
 const isBurnAll = isEmpty(parameters) || isBurnOverall || parameters[0].toLowerCase() == 'all';
 
+const out = useTileState('out');
+
 const sites = computed(() => {
   if (isBurnAll) {
     return sitesStore.all.value;
@@ -28,7 +30,11 @@ const sites = computed(() => {
 const planetBurn = computed(() => {
   const filtered = sites.value!.map(getPlanetBurn).filter(x => x !== undefined);
   if (filtered.length <= 1) {
-    return filtered;
+    if (out.value) {
+      return filtered;
+    } else {
+      return filtered.map(x => ({ ...x, burn: x.notStoppedBurn ?? x.burn }));
+    }
   }
 
   filtered.sort((a, b) => {
@@ -41,28 +47,57 @@ const planetBurn = computed(() => {
   });
 
   const overallBurn = {};
-  for (const burn of filtered) {
-    for (const mat of Object.keys(burn.burn)) {
-      if (overallBurn[mat]) {
-        overallBurn[mat].dailyAmount += burn.burn[mat].dailyAmount;
-        overallBurn[mat].inventory += burn.burn[mat].inventory;
+  if (out.value) {
+    for (const burn of filtered) {
+      for (const mat of Object.keys(burn.burn)) {
+        if (overallBurn[mat]) {
+          overallBurn[mat].dailyAmount += burn.burn[mat].dailyAmount;
+          overallBurn[mat].inventory += burn.burn[mat].inventory;
+        } else {
+          overallBurn[mat] = {};
+          overallBurn[mat].dailyAmount = burn.burn[mat].dailyAmount;
+          overallBurn[mat].inventory = burn.burn[mat].inventory;
+        }
+      }
+    }
+
+    for (const mat of Object.keys(overallBurn)) {
+      if (overallBurn[mat].dailyAmount >= 0) {
+        overallBurn[mat].daysLeft = 1000;
       } else {
-        overallBurn[mat] = {};
-        overallBurn[mat].dailyAmount = burn.burn[mat].dailyAmount;
-        overallBurn[mat].inventory = burn.burn[mat].inventory;
+        overallBurn[mat].daysLeft = -overallBurn[mat].inventory / overallBurn[mat].dailyAmount;
+      }
+    }
+  } else {
+    for (const burn of filtered) {
+      for (const [mat, matBurn] of Object.entries(burn.notStoppedBurn ?? {})) {
+        if (mat in overallBurn) {
+          overallBurn[mat].dailyAmount += matBurn.dailyAmount;
+          overallBurn[mat].inventory += matBurn.inventory;
+        } else {
+          overallBurn[mat] = {
+            dailyAmount: matBurn.dailyAmount,
+            inventory: matBurn.inventory,
+          } as MaterialBurn;
+        }
+      }
+    }
+    for (const mat of Object.keys(overallBurn)) {
+      if (overallBurn[mat].dailyAmount >= 0) {
+        overallBurn[mat].daysLeft = 1000;
+      } else {
+        overallBurn[mat].daysLeft = -overallBurn[mat].inventory / overallBurn[mat].dailyAmount;
       }
     }
   }
 
-  for (const mat of Object.keys(overallBurn)) {
-    if (overallBurn[mat].dailyAmount >= 0) {
-      overallBurn[mat].daysLeft = 1000;
-    } else {
-      overallBurn[mat].daysLeft = -overallBurn[mat].inventory / overallBurn[mat].dailyAmount;
-    }
-  }
-
-  const overall = { burn: overallBurn, planetName: 'Overall', naturalId: '', storeId: '' };
+  const overall = {
+    burn: overallBurn,
+    notStoppedBurn: undefined,
+    planetName: 'Overall',
+    naturalId: '',
+    storeId: '',
+  };
   if (isBurnOverall) {
     return [overall];
   }
@@ -109,6 +144,7 @@ function onExpandAllClick() {
       <RadioItem v-model="yellow" horizontal>YELLOW</RadioItem>
       <RadioItem v-model="green" horizontal>GREEN</RadioItem>
       <RadioItem v-model="inf" horizontal>INF</RadioItem>
+      <RadioItem v-model="out" horizontal>OUT</RadioItem>
     </div>
     <table>
       <thead>
