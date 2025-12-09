@@ -28,6 +28,7 @@ export interface PlanetBurn {
   planetName: string;
   naturalId: string;
   burn: BurnValues;
+  notStoppedBurn: BurnValues | undefined;
 }
 
 const burnBySiteId = computed(() => {
@@ -53,6 +54,7 @@ const burnBySiteId = computed(() => {
           planetName: getEntityNameFromAddress(site.address),
           naturalId: getEntityNaturalIdFromAddress(site.address),
           burn: calculatePlanetBurn(production, workforce, storage ?? []),
+          notStoppedBurn: calculatePlanetBurn(production, workforce, storage ?? [], false),
         } as PlanetBurn;
       }),
     );
@@ -98,7 +100,7 @@ export function calculatePlanetBurn(
       let burnOrders = getRecurringOrders(line);
 
       if (!includeStopped) {
-        burnOrders = removeStoppedOrders(burnOrders, storage);
+        burnOrders = transformStoppedOrders(burnOrders, storage);
       }
 
       let totalDuration = sumBy(burnOrders, x => x.duration?.millis ?? Infinity);
@@ -174,7 +176,7 @@ export function calculatePlanetBurn(
   return burnValues;
 }
 
-function removeStoppedOrders(
+function transformStoppedOrders(
   orders: PrunApi.ProductionOrder[],
   storage: PrunApi.Store[] | undefined,
 ): PrunApi.ProductionOrder[] {
@@ -198,15 +200,38 @@ function removeStoppedOrders(
     }
   }
 
-  // Compare input amount to stockpile and discard stopped orders
-  output = output.filter(order => {
-    for (const input of order.inputs) {
-      const materialStock = materialAmounts.get(input.material.ticker) ?? 0;
-      if (materialStock < input.amount) {
-        return false;
-      }
+  // Set stopped orders to 0% time, input, output
+  output = output.map(order => {
+    let outputOrder = order;
+    const inputStocks = outputOrder.inputs.map(
+      input => materialAmounts.get(input.material.ticker) ?? 0,
+    );
+    if (inputStocks.some((stock, idx) => stock < outputOrder.inputs[idx].amount)) {
+      outputOrder = {
+        ...outputOrder,
+        halted: true,
+        duration: {
+          millis: 0,
+        },
+        inputs: outputOrder.inputs.map(input => {
+          return {
+            ...input,
+            amount: 0.0000001,
+          };
+        }),
+        outputs: outputOrder.outputs.map(output => {
+          return {
+            ...output,
+            amount: 0,
+            value: {
+              ...output.value,
+              amount: 0,
+            },
+          };
+        }),
+      };
     }
-    return true;
+    return outputOrder;
   });
 
   return output;
