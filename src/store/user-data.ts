@@ -54,6 +54,7 @@ export const initialUserData = deepFreeze({
     buffers: [] as [string, number, number][],
   },
   sorting: {} as Record<string, UserData.StoreSortingData>,
+  scroll: {} as Record<string, UserData.TileScroll>,
   balanceHistory: {
     v1: [],
     v2: [],
