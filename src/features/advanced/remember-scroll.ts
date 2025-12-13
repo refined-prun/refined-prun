@@ -12,7 +12,7 @@ function onTileReady(tile: PrunTile) {
         }
       }
     };
-    updateScroll();
+    updateScroll(); // In case tile does not need to load (like XIT BURN) scroll immediately
     const observer = new MutationObserver((mutationsList, observer) => {
       // Listen for changes in children and scroll when scrollable content is loaded for the first time
       for (const mutation of mutationsList) {
