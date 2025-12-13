@@ -1,4 +1,6 @@
 import { userData } from '@src/store/user-data.ts';
+import { screenHash } from '@src/infrastructure/prun-api/data/screens.ts';
+import featureRegistry from '@src/features/feature-registry.ts';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.ScrollView.view), scrollView => {
@@ -34,6 +36,11 @@ function onTileReady(tile: PrunTile) {
     observer.observe(scrollView, { childList: true, subtree: true });
 
     scrollView.addEventListener('scrollend', () => {
+      const isScreenLocked = userData.tabs.locked.includes(screenHash.value ?? '');
+      const isScreenLayoutLockDisabled = userData.settings.disabled.includes('screen-layout-lock');
+      if (isScreenLocked && !isScreenLayoutLockDisabled) {
+        return;
+      }
       userData.scroll[tile.id] = {
         top: scrollView.scrollTop,
         left: scrollView.scrollLeft,
