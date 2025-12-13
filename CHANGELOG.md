@@ -1,15 +1,32 @@
 # Changelog
 
-## Unreleased
+## 25.11.16
+
+### Added
+
+- `screen-layout-lock`: Adds screen locking
+- `cxos-hide-delete-filled`: Hides the "Delete Filled" button when filters are hidden
 
 ### Changed
 
+- `XIT ACT`: Make the action package list reorderable
+- `XIT ACT`: Add an "Allow Unfilled" option to the CX Buy action
+- `XIT ACT`: Remove the Help button
 - `XIT SET`: Add a confirmation popup for restore from backup
+- `XIT SORT`: Add copy/paste buttons to sorting modes
+- `item-icons`: Add icons for colony-ship-related materials
+- `screen-tab-bar`: Make tab bar scrollable to allow offscreen tabs
 
 ### Fixed
 
+- `XIT ACT`: Fix MTRA action getting stuck when the material amount is zero
+- `XIT ACT`: Fix CX Buy action getting stuck when the material amount is zero
 - `XIT CONTS`: Fix government partner display in contracts
+- `XIT CONTS`: Fix the display text of the "Construct Ship" condition
+- `XIT NOTE`: Fix material tickers being changed to the first one in the note
+- `correct-commands`: Fix url correction for links without http:// or https:// in XIT WEB
 - `sidebar-contracts-details`: Fix government partner display in contracts
+- Fix the color of materials in the "Infrastructure" category
 
 ## 25.8.16
 

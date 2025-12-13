@@ -124,6 +124,9 @@ const categoryColors = {
   gases: {
     color: '00ced1',
   },
+  infrastructure: {
+    color: '1e1e8c',
+  },
   liquids: {
     color: 'bcd4e6',
   },

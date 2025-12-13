@@ -5,6 +5,16 @@ import { getInvStore } from '@src/core/store-id';
 
 const migrations: Migration[] = [
   userData => {
+    for (const data of Object.values(userData.sorting) as any[]) {
+      for (const mode of data.modes) {
+        delete mode.storeId;
+      }
+    }
+  },
+  userData => {
+    userData.tabs.locked = [];
+  },
+  userData => {
     userData.settings.defaultChartType = 'SMOOTH';
   },
   userData => {

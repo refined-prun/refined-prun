@@ -66,6 +66,7 @@ export const initialUserData = deepFreeze({
   tabs: {
     order: [] as string[],
     hidden: [] as string[],
+    locked: [] as string[],
   },
   commandLists: [] as UserData.CommandList[],
 });

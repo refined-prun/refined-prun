@@ -58,9 +58,7 @@ async function onScreenItemReady(item: HTMLElement) {
   }
 
   createFragmentApp(() => (
-    <div
-      class={[C.ScreenControls.delete, C.ScreenControls.copy, C.type.typeSmall, $style.hideButton]}
-      onClick={onClick}>
+    <div class={[C.ScreenControls.delete, C.type.typeSmall, $style.hideButton]} onClick={onClick}>
       {hidden.value ? 'shw' : 'hide'}
     </div>
   )).before(copy);
@@ -75,6 +73,7 @@ function init() {
     createFragmentApp(TabBar).appendTo(container);
   });
   subscribe($$(document, C.ScreenControls.screens), onListReady);
+  applyCssRule(`.${C.Head.contextAndScreens}`, $style.contextAndScreens);
   applyCssRule(`.${C.ScreenControls.container}`, $style.screenControls);
 }
 

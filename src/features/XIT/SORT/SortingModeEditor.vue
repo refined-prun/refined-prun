@@ -49,7 +49,6 @@ function onSaveClick() {
   }
   onSave({
     label: label.value,
-    storeId: storeId,
     categories: categories.value.map(x => ({
       name: x.name,
       materials: x.materials.replaceAll(' ', '').split(','),

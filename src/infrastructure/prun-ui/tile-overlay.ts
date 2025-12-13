@@ -1,4 +1,3 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import Overlay from '@src/components/Overlay.vue';
 import ActionConfirmationOverlay from '@src/components/ActionConfirmationOverlay.vue';
 

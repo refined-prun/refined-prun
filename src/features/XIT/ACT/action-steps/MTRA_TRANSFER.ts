@@ -14,8 +14,8 @@ interface Data {
   amount: number;
 }
 
-export const TRANSFER_MATERIALS = act.addActionStep<Data>({
-  type: 'TRANSFER_MATERIALS',
+export const MTRA_TRANSFER = act.addActionStep<Data>({
+  type: 'MTRA_TRANSFER',
   preProcessData: data => ({ ...data, ticker: data.ticker.toUpperCase() }),
   description: data => {
     const from = storagesStore.getById(data.from);
@@ -36,6 +36,12 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
 
     if (!from.items.find(x => x.quantity?.material.ticker === ticker)) {
       log.warning(`No ${ticker} was transferred (not present in origin)`);
+      skip();
+      return;
+    }
+
+    if (amount <= 0) {
+      log.warning(`No ${ticker} was transferred (target amount is 0)`);
       skip();
       return;
     }
@@ -68,8 +74,7 @@ export const TRANSFER_MATERIALS = act.addActionStep<Data>({
     focusElement(input);
     changeInputValue(input, ticker);
 
-    const suggestionsList = _$(container, C.MaterialSelector.suggestionsList);
-    assert(suggestionsList, 'Suggestions list not found');
+    const suggestionsList = await $(container, C.MaterialSelector.suggestionsList);
     suggestionsContainer.style.display = 'none';
     const match = _$$(suggestionsList, C.MaterialSelector.suggestionEntry).find(
       x => _$(x, C.ColoredIcon.label)?.textContent === ticker,

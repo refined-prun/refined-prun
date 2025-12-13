@@ -1,4 +1,3 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import IconMarker from './IconMarker.vue';
 import { computedTileState } from '@src/store/user-data-tiles';
 import { refTextContent } from '@src/utils/reactive-dom';

@@ -1,5 +1,3 @@
-import features from '@src/features/feature-registry';
-
 function onTileReady(tile: PrunTile) {
   // Replace 'view details/vote' with 'vote'
   subscribe($$(tile.anchor, C.Button.darkInline), button => {
