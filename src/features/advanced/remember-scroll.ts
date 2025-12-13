@@ -1,16 +1,15 @@
 import { userData } from '@src/store/user-data.ts';
 import { screenHash } from '@src/infrastructure/prun-api/data/screens.ts';
-import featureRegistry from '@src/features/feature-registry.ts';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.ScrollView.view), scrollView => {
     const updateScroll = () => {
       if (userData.scroll[tile.id] !== undefined) {
         if (userData.scroll[tile.id].top !== undefined) {
-          scrollView.scrollTop = userData.scroll[tile.id].top ?? 0;
+          scrollView.scrollTop = userData.scroll[tile.id].top ?? scrollView.scrollTop;
         }
         if (userData.scroll[tile.id].left !== undefined) {
-          scrollView.scrollLeft = userData.scroll[tile.id].left ?? 0;
+          scrollView.scrollLeft = userData.scroll[tile.id].left ?? scrollView.scrollLeft;
         }
       }
     };
