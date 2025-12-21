@@ -5,6 +5,7 @@
 ### Fixed
 
 - `XIT ACT`: Fix the CX Buy action failing to execute due to number formatting in some localizations
+- `cxpo-auto-price`: Fix localized number formatting
 
 ## 25.11.16
 
