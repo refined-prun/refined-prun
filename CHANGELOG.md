@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `XIT ACT`: Fix the CX Buy action failing to execute due to number formatting in some localizations
+
 ## 25.11.16
 
 ### Added
