@@ -53,15 +53,15 @@ const patches: AlertPatch[] = [
     types: [
       'CONTRACT_CONDITION_FULFILLED',
       'CONTRACT_CONTRACT_BREACHED',
-      'CONTRACT_CONTRACT_RECEIVED',
+      'CONTRACT_CONTRACT_CANCELLED',
       'CONTRACT_CONTRACT_CLOSED',
       'CONTRACT_CONTRACT_EXTENDED',
+      'CONTRACT_CONTRACT_RECEIVED',
+      'CONTRACT_CONTRACT_REJECTED',
       'CONTRACT_CONTRACT_TERMINATED',
       'CONTRACT_CONTRACT_TERMINATION_REQUESTED',
-      'CONTRACT_CONTRACT_CANCELLED',
-      'CONTRACT_DEADLINE_EXCEEDED_WITHOUT_CONTROL',
       'CONTRACT_DEADLINE_EXCEEDED_WITH_CONTROL',
-      'CONTRACT_CONTRACT_REJECTED',
+      'CONTRACT_DEADLINE_EXCEEDED_WITHOUT_CONTROL',
     ],
     replace(text: string) {
       return text.replace('fulfilled a contract condition for contract', 'fulfilled on');
@@ -91,7 +91,7 @@ const patches: AlertPatch[] = [
     },
   },
   {
-    types: ['COGC_PROGRAM_CHANGED', 'COGC_UPKEEP_STARTED', 'COGC_STATUS_CHANGED'],
+    types: ['COGC_PROGRAM_CHANGED', 'COGC_STATUS_CHANGED', 'COGC_UPKEEP_STARTED'],
     replace(text: string) {
       return text
         .replace('Chamber of Global Commerce', 'COGC')
