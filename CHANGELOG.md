@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- `nots-notification-type-label`: Add labels for the new notification types
+
 ### Fixed
 
 - `XIT ACT`: Fix the CX Buy action failing to execute due to number formatting in some localizations

@@ -62,6 +62,7 @@ const labels: NotificationTypeLabel[] = [
       'CONTRACT_CONTRACT_TERMINATION_REQUESTED',
       'CONTRACT_DEADLINE_EXCEEDED_WITH_CONTROL',
       'CONTRACT_DEADLINE_EXCEEDED_WITHOUT_CONTROL',
+      'COMEX_PICKUP_CONTRACT_CREATED',
     ],
     label: 'CONTRACT',
     color: '#f7a600',
@@ -98,7 +99,7 @@ const labels: NotificationTypeLabel[] = [
   },
   {
     types: ['POPULATION_REPORT_AVAILABLE'],
-    label: 'REPORT',
+    label: 'POPR',
     color: '#00aa77',
   },
   {
@@ -139,9 +140,29 @@ const labels: NotificationTypeLabel[] = [
     color: '#8f52cc',
   },
   {
-    types: ['PLANETARY_PROJECT_FINISHED'],
+    types: [
+      'PLANETARY_PROJECT_FINISHED',
+      'INFRASTRUCTURE_OPERATIONAL_STATE_CHANGED',
+      'INFRASTRUCTURE_PROJECT_COMPLETED',
+      'INFRASTRUCTURE_UPGRADE_COMPLETED',
+      'INFRASTRUCTURE_UPKEEP_PHASE_STARTED',
+    ],
     label: 'INFRA',
     color: '#8f52cc',
+  },
+  {
+    types: [
+      'GATEWAY_JUMP_ABORTED_LINK_CHANGED',
+      'GATEWAY_JUMP_ABORTED_LINK_NOT_ESTABLISHED',
+      'GATEWAY_JUMP_ABORTED_MISSING_FUNDS',
+      'GATEWAY_JUMP_ABORTED_NO_CAPACITY',
+      'GATEWAY_JUMP_ABORTED_NO_FUEL',
+      'GATEWAY_JUMP_ABORTED_NOT_OPERATIONAL',
+      'GATEWAY_LINK_REQUEST_RECEIVED',
+      'GATEWAY_LINK_UNLINKED',
+    ],
+    label: 'GATEWAY',
+    color: '#334aaf',
   },
   {
     types: ['SHIPYARD_PROJECT_FINISHED'],
@@ -159,7 +180,14 @@ const labels: NotificationTypeLabel[] = [
     color: '#8f52cc',
   },
   {
-    types: ['RELEASE_NOTES'],
+    types: [
+      'RELEASE_NOTES',
+      'USER_CONVERSION_REMINDER_LICENSE',
+      'USER_LICENSE_ABOUT_TO_EXPIRE',
+      'USER_LICENSE_EXPIRED',
+      'USER_LICENSE_GIFT_RECEIVED',
+      'USER_STEAM_REVIEW',
+    ],
     label: 'APEX',
     color: '#8f52cc',
   },
