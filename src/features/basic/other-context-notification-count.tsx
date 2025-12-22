@@ -1,32 +1,32 @@
 import $style from './other-context-notification-count.module.css';
 import { alertsStore } from '@src/infrastructure/prun-api/data/alerts';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
-import { corporationHoldingsStore } from '@src/infrastructure/prun-api/data/corporation-holdings';
 import { createReactiveSpan } from '@src/utils/reactive-element';
 
 function init() {
-  // There is a bug in the base game where notifications from corporations
+  // There is a bug in the base game where some notifications
   // are being sent to the wrong context. We need to ignore them.
-  const contextsToIgnore = computed(() => {
-    const set = new Set<string>();
-    for (const holding of corporationHoldingsStore.all.value ?? []) {
-      set.add(holding.corporation.id);
-    }
-    return set;
-  });
+  const buggyNotificationTypes = new Set([
+    // https://com.prosperousuniverse.com/t/corporation-invite-notifications-are-being-sent-to-a-wrong-context/7078
+    'CORPORATION_MANAGER_INVITE_ACCEPTED',
+    'CORPORATION_MANAGER_INVITE_REJECTED',
+
+    // https://discord.com/channels/350171287785701388/535426425495355402/1451941402694127678
+    // (in the #behind-the-scenes channel)
+    'INFRASTRUCTURE_UPGRADE_COMPLETED',
+  ]);
   const countLabel = computed(() => {
     const companyId = companyStore.value?.id;
     const alerts = alertsStore.all.value;
     if (!companyId || !alerts) {
       return undefined;
     }
-    const ignored = contextsToIgnore.value;
     let count = 0;
     for (const alert of alerts) {
-      if (alert.seen || ignored.has(alert.contextId)) {
+      if (alert.seen) {
         continue;
       }
-      if (alert.contextId !== companyId) {
+      if (alert.contextId !== companyId && !buggyNotificationTypes.has(alert.type)) {
         count++;
       }
     }
