@@ -2,15 +2,15 @@ export {};
 declare global {
   interface PrunCssClasses {
     ActionBar: {
-      containerMobile: string;
       container: string;
-      elementMobile: string;
+      containerMobile: string;
       element: string;
+      elementMobile: string;
     };
     ActionConfirmationOverlay: {
       buttons: string;
-      containerMobile: string;
       container: string;
+      containerMobile: string;
       message: string;
       text: string;
     };
@@ -35,38 +35,38 @@ declare global {
       header: string;
     };
     AddressSelector: {
-      activeMobile: string;
       active: string;
+      activeMobile: string;
+      btn: string;
       btnDanger: string;
       btnNeutral: string;
       btnPrimary: string;
       btnSuccess: string;
-      btn: string;
-      cmdMobile: string;
       cmd: string;
-      containerOpen: string;
+      cmdMobile: string;
       container: string;
-      dynamicMobile: string;
+      containerOpen: string;
       dynamic: string;
-      errorMobile: string;
+      dynamicMobile: string;
       error: string;
-      formComponentMobile: string;
-      formComponent: string;
+      errorMobile: string;
       form: string;
-      headerMobile: string;
+      formComponent: string;
+      formComponentMobile: string;
       header: string;
-      inputMobile: string;
+      headerMobile: string;
       input: string;
-      passiveMobile: string;
+      inputMobile: string;
       passive: string;
+      passiveMobile: string;
       sectionContainer: string;
       sectionTitle: string;
-      staticMobile: string;
       static: string;
-      suggestionHighlighted: string;
+      staticMobile: string;
       suggestion: string;
-      suggestionsContainerMobile: string;
+      suggestionHighlighted: string;
       suggestionsContainer: string;
+      suggestionsContainerMobile: string;
       suggestionsList: string;
     };
     AdminCenter: {
@@ -84,10 +84,10 @@ declare global {
     AlertListItem: {
       container: string;
       content: string;
+      indicator: string;
       indicatorRead: string;
       indicatorUnread: string;
       indicatorUnseen: string;
-      indicator: string;
       time: string;
     };
     AlertsHeadItem: {
@@ -128,8 +128,8 @@ declare global {
     Blueprint: {
       form: string;
       header: string;
-      inputMobile: string;
       input: string;
+      inputMobile: string;
       name: string;
       naturalid: string;
     };
@@ -144,10 +144,10 @@ declare global {
       table: string;
     };
     BrokerPriceCell: {
-      enterNegativeActive: string;
       enterNegative: string;
-      enterPositiveActive: string;
+      enterNegativeActive: string;
       enterPositive: string;
+      enterPositiveActive: string;
     };
     BtnOpen: {
       btnOpen: string;
@@ -157,8 +157,8 @@ declare global {
     };
     BuildingIcon: {
       container: string;
-      tickerContainer: string;
       ticker: string;
+      tickerContainer: string;
       typeIntro: string;
       typeLarge: string;
       typeLarger: string;
@@ -182,16 +182,16 @@ declare global {
       image: string;
       inputs: string;
       name: string;
-      recipeList: string;
       recipe: string;
+      recipeList: string;
     };
     BuildingList: {
       item: string;
       materiallist: string;
     };
     BuildingRepairAssistantPanel: {
-      buildingList: string;
       building: string;
+      buildingList: string;
       typeIntro: string;
       typeLarge: string;
       typeLarger: string;
@@ -204,34 +204,35 @@ declare global {
     };
     Button: {
       btn: string;
-      dangerInlineMobile: string;
-      dangerInline: string;
       danger: string;
-      darkInlineMobile: string;
-      darkInline: string;
-      darkMobile: string;
+      dangerInline: string;
+      dangerInlineMobile: string;
       dark: string;
-      disabledInlineMobile: string;
-      disabledInline: string;
+      darkInline: string;
+      darkInlineMobile: string;
+      darkMobile: string;
       disabled: string;
-      inlineMobile: string;
+      disabledInline: string;
+      disabledInlineMobile: string;
       inline: string;
+      inlineMobile: string;
       loading: string;
-      neutralInlineMobile: string;
-      neutralInline: string;
       neutral: string;
-      primaryInlineMobile: string;
-      primaryInline: string;
+      neutralInline: string;
+      neutralInlineMobile: string;
       primary: string;
+      primaryInline: string;
+      primaryInlineMobile: string;
       restricted: string;
-      successInlineMobile: string;
-      successInline: string;
       success: string;
+      successInline: string;
+      successInlineMobile: string;
       unavailable: string;
     };
     Card: {
-      borderError: string;
       border: string;
+      borderError: string;
+      card: string;
       cardBuffer: string;
       cardContainer: string;
       cardContent: string;
@@ -239,7 +240,6 @@ declare global {
       cardHeading: string;
       cardMenuBtn: string;
       cardSubheading: string;
-      card: string;
       fixedHeader: string;
       paddingSmall: string;
       withMenu: string;
@@ -253,43 +253,43 @@ declare global {
     CashBookings: {
       number: string;
     };
+    Channel: {
+      container: string;
+      containerMobile: string;
+      controls: string;
+      messageAndUserList: string;
+      prompt: string;
+      wrapper: string;
+    };
     ChannelCatalog: {
       buttons: string;
-      channelMobile: string;
       channel: string;
+      channelMobile: string;
       channels: string;
-      containerMobile: string;
       container: string;
+      containerMobile: string;
       controls: string;
       name: string;
       scrollbars: string;
       users: string;
     };
+    ChannelMembership: {
+      actionPanel: string;
+    };
     ChannelMembershipList: {
-      containerMobile: string;
       container: string;
+      containerMobile: string;
       controls: string;
       scrollbars: string;
     };
     ChannelMembershipListitem: {
-      containerMobile: string;
       container: string;
+      containerMobile: string;
       content: string;
+      indicator: string;
       indicatorActive: string;
       indicatorMuted: string;
       indicatorUnread: string;
-      indicator: string;
-    };
-    ChannelMembership: {
-      actionPanel: string;
-    };
-    Channel: {
-      containerMobile: string;
-      container: string;
-      controls: string;
-      messageAndUserList: string;
-      prompt: string;
-      wrapper: string;
     };
     ChartContainer: {
       chart: string;
@@ -299,6 +299,12 @@ declare global {
     ChatMessage: {
       message: string;
     };
+    CoGC: {
+      container: string;
+      contributionNote: string;
+      description: string;
+      sectionHead: string;
+    };
     CoGCUpkeep: {
       container: string;
       description: string;
@@ -307,24 +313,18 @@ declare global {
       name: string;
       sectionHead: string;
     };
+    CoGCVoting: {
+      container: string;
+    };
     CoGCVotingDetails: {
       container: string;
       sectionHead: string;
       vote: string;
     };
-    CoGCVoting: {
-      container: string;
-    };
-    CoGC: {
-      container: string;
-      contributionNote: string;
-      description: string;
-      sectionHead: string;
-    };
     ColoredIcon: {
       container: string;
-      labelContainer: string;
       label: string;
+      labelContainer: string;
       subLabel: string;
       typeIntro: string;
       typeLarge: string;
@@ -385,8 +385,8 @@ declare global {
       change: string;
       current: string;
       data: string;
-      infoMobile: string;
       info: string;
+      infoMobile: string;
       label: string;
       panel: string;
       price: string;
@@ -433,16 +433,16 @@ declare global {
       name: string;
       selector: string;
     };
+    Contract: {
+      header: string;
+      inactive: string;
+      preamble: string;
+    };
     ContractStatus: {
       bad: string;
       good: string;
       neutral: string;
       partial: string;
-    };
-    Contract: {
-      header: string;
-      inactive: string;
-      preamble: string;
     };
     ContractsListTable: {
       filter: string;
@@ -511,34 +511,34 @@ declare global {
       buffer: string;
       create: string;
       disabled: string;
+      indicator: string;
       indicatorMinimized: string;
       indicatorOpened: string;
-      indicator: string;
       item: string;
       title: string;
-    };
-    DraftConditionEditor: {
-      form: string;
     };
     Draft: {
       conditions: string;
       form: string;
       header: string;
       heading: string;
-      inputMobile: string;
       input: string;
+      inputMobile: string;
       name: string;
       naturalId: string;
       templateSelect: string;
     };
+    DraftConditionEditor: {
+      form: string;
+    };
     DropDownBox: {
       container: string;
       currentItem: string;
+      item: string;
       itemContainer: string;
       itemName: string;
-      item: string;
-      listItem: string;
       list: string;
+      listItem: string;
       toggle: string;
     };
     DropTargetView: {
@@ -549,13 +549,13 @@ declare global {
       item: string;
     };
     DynamicInput: {
-      dynamicMobile: string;
       dynamic: string;
+      dynamicMobile: string;
     };
     EndlessScrollControl: {
       hidden: string;
-      loadMoreMobile: string;
       loadMore: string;
+      loadMoreMobile: string;
     };
     EnvironmentTable: {
       gridContainer: string;
@@ -563,17 +563,17 @@ declare global {
     };
     Error: {
       containerMobile: string;
-      errorMobile: string;
       error: string;
-      messageMobile: string;
+      errorMobile: string;
       message: string;
-      overlayMobile: string;
+      messageMobile: string;
       overlay: string;
+      overlayMobile: string;
     };
     Experts: {
+      figure: string;
       figureLabel: string;
       figureMobile: string;
-      figure: string;
       figures: string;
     };
     ExternalURLPanel: {
@@ -584,16 +584,16 @@ declare global {
       inner: string;
       left: string;
       primary: string;
-      progressLabel: string;
       progress: string;
+      progressLabel: string;
       right: string;
       secondary: string;
     };
     FinanceOverviewPanel: {
       data: string;
       header: string;
-      infoMobile: string;
       info: string;
+      infoMobile: string;
       label: string;
     };
     Fleet: {
@@ -641,8 +641,8 @@ declare global {
       current: string;
       data: string;
       exchange: string;
-      infoMobile: string;
       info: string;
+      infoMobile: string;
       label: string;
       panel: string;
       price: string;
@@ -657,19 +657,19 @@ declare global {
       table: string;
     };
     FormComponent: {
-      containerActiveMobile: string;
       containerActive: string;
-      containerCommandMobile: string;
+      containerActiveMobile: string;
       containerCommand: string;
-      containerErrorMobile: string;
+      containerCommandMobile: string;
       containerError: string;
+      containerErrorMobile: string;
       containerHidden: string;
-      containerPassiveMobile: string;
       containerPassive: string;
-      errorMessageMobile: string;
+      containerPassiveMobile: string;
       errorMessage: string;
-      inputMobile: string;
+      errorMessageMobile: string;
       input: string;
+      inputMobile: string;
       label: string;
     };
     FormCorporationForm: {
@@ -681,26 +681,26 @@ declare global {
       container: string;
       foot: string;
       height95vh: string;
-      loginRequiredDismiss: string;
       loginRequired: string;
-      logoLoading: string;
+      loginRequiredDismiss: string;
       logo: string;
+      logoLoading: string;
       main: string;
       sidebar: string;
       title: string;
+      toggle: string;
       toggleDisabled: string;
+      toggleIndicator: string;
+      toggleIndicatorPrimary: string;
       toggleIndicatorPrimaryActive: string;
       toggleIndicatorPrimaryDisabled: string;
-      toggleIndicatorPrimary: string;
+      toggleIndicatorPulse: string;
       toggleIndicatorPulseActive: string;
       toggleIndicatorPulseDisabled: string;
-      toggleIndicatorPulse: string;
+      toggleIndicatorSecondary: string;
       toggleIndicatorSecondaryActive: string;
       toggleIndicatorSecondaryDisabled: string;
-      toggleIndicatorSecondary: string;
-      toggleIndicator: string;
       toggleLabel: string;
-      toggle: string;
       uiToggles: string;
     };
     GridItemView: {
@@ -708,29 +708,38 @@ declare global {
       image: string;
       name: string;
     };
-    HeadItem: {
-      container: string;
-      disabled: string;
-      indicatorDisabled: string;
-      indicatorFailureActive: string;
-      indicatorFailurePulse: string;
-      indicatorFailure: string;
-      indicatorPrimaryActive: string;
-      indicatorPrimaryPulse: string;
-      indicatorPrimary: string;
-      indicatorSecondaryActive: string;
-      indicatorSecondaryPulse: string;
-      indicatorSecondary: string;
-      indicatorSuccessActive: string;
-      indicatorSuccessPulse: string;
-      indicatorSuccess: string;
-      indicator: string;
-      label: string;
-      link: string;
-    };
     Head: {
       container: string;
       contextAndScreens: string;
+    };
+    HeadItem: {
+      container: string;
+      disabled: string;
+      indicator: string;
+      indicatorDisabled: string;
+      indicatorFailure: string;
+      indicatorFailureActive: string;
+      indicatorFailurePulse: string;
+      indicatorPrimary: string;
+      indicatorPrimaryActive: string;
+      indicatorPrimaryPulse: string;
+      indicatorSecondary: string;
+      indicatorSecondaryActive: string;
+      indicatorSecondaryPulse: string;
+      indicatorSuccess: string;
+      indicatorSuccessActive: string;
+      indicatorSuccessPulse: string;
+      label: string;
+      link: string;
+    };
+    Header: {
+      balanceLink: string;
+      balances: string;
+      currencyCode: string;
+      header: string;
+      heading: string;
+      name: string;
+      naturalId: string;
     };
     HeaderDropdown: {
       header__dropdown: string;
@@ -742,23 +751,14 @@ declare global {
       icon: string;
       notification: string;
     };
-    Header: {
-      balanceLink: string;
-      balances: string;
-      currencyCode: string;
-      header: string;
-      heading: string;
-      name: string;
-      naturalId: string;
+    Help: {
+      container: string;
+      settings: string;
+      settingsItem: string;
+      text: string;
     };
     HelpHeadItem: {
       progress: string;
-    };
-    Help: {
-      container: string;
-      settingsItem: string;
-      settings: string;
-      text: string;
     };
     Hints: {
       container: string;
@@ -785,46 +785,46 @@ declare global {
     Indicator: {
       container: string;
       enabled: string;
-      indicatorActive: string;
       indicator: string;
+      indicatorActive: string;
       value: string;
     };
     InputsOutputsView: {
+      amount: string;
       amountAvailable: string;
       amountMissing: string;
       amountRemark: string;
-      amount: string;
       column: string;
       container: string;
       description: string;
       header: string;
-      inputMaterials: string;
       input: string;
+      inputMaterials: string;
       inputs: string;
-      materialContainer: string;
       material: string;
+      materialContainer: string;
       materials: string;
-      outputMaterials: string;
       output: string;
+      outputMaterials: string;
       outputs: string;
-    };
-    InventoriesListContainer: {
-      filter: string;
     };
     InventoriesList: {
       capacityContainer: string;
       filter: string;
     };
+    InventoriesListContainer: {
+      filter: string;
+    };
     InventorySortControls: {
-      controlsMobile: string;
       controls: string;
-      criteriaMobile: string;
+      controlsMobile: string;
       criteria: string;
+      criteriaMobile: string;
       order: string;
     };
     InventoryView: {
-      containerMobile: string;
       container: string;
+      containerMobile: string;
       controls: string;
       grid: string;
       list: string;
@@ -839,8 +839,8 @@ declare global {
       container: string;
       hidden: string;
       leaderboardTypeSelect: string;
-      loadMoreMobile: string;
       loadMore: string;
+      loadMoreMobile: string;
     };
     LicenseHeadItem: {
       licenseCode: string;
@@ -859,6 +859,9 @@ declare global {
       info: string;
       name: string;
     };
+    Loading: {
+      loader: string;
+    };
     LoadingState: {
       container: string;
       item: string;
@@ -866,8 +869,12 @@ declare global {
       text: string;
       title: string;
     };
-    Loading: {
-      loader: string;
+    LocalMarket: {
+      container: string;
+      filter: string;
+      info: string;
+      item: string;
+      list: string;
     };
     LocalMarketAd: {
       container: string;
@@ -884,13 +891,6 @@ declare global {
       container: string;
       form: string;
     };
-    LocalMarket: {
-      container: string;
-      filter: string;
-      info: string;
-      item: string;
-      list: string;
-    };
     LocalRules: {
       container: string;
       header: string;
@@ -898,6 +898,9 @@ declare global {
     };
     Logo: {
       logo: string;
+    };
+    Main: {
+      container: string;
     };
     MainState: {
       body: string;
@@ -908,16 +911,13 @@ declare global {
       sidebar: string;
       tileContainer: string;
     };
-    Main: {
-      container: string;
-    };
     MaterialIcon: {
-      containerMobile: string;
       container: string;
+      containerMobile: string;
       contextContainer: string;
       danger: string;
-      indicatorContainer: string;
       indicator: string;
+      indicatorContainer: string;
       neutral: string;
       primary: string;
       success: string;
@@ -932,56 +932,56 @@ declare global {
       typeVeryVeryLarge: string;
     };
     MaterialInformation: {
-      containerMobile: string;
       container: string;
+      containerMobile: string;
       description: string;
       duration: string;
       header: string;
       image: string;
       list: string;
       name: string;
+      recipe: string;
       recipeIcon: string;
       recipeInputs: string;
-      recipeListMobile: string;
       recipeList: string;
+      recipeListMobile: string;
       recipeMobile: string;
       recipeReactor: string;
-      recipe: string;
     };
     MaterialList: {
       container: string;
     };
     MaterialSelector: {
-      activeMobile: string;
       active: string;
+      activeMobile: string;
+      btn: string;
       btnDanger: string;
       btnNeutral: string;
       btnPrimary: string;
       btnSuccess: string;
-      btn: string;
-      cmdMobile: string;
       cmd: string;
-      containerOpen: string;
+      cmdMobile: string;
       container: string;
-      dynamicMobile: string;
+      containerOpen: string;
       dynamic: string;
-      errorMobile: string;
+      dynamicMobile: string;
       error: string;
-      formComponentMobile: string;
-      formComponent: string;
+      errorMobile: string;
       form: string;
-      headerMobile: string;
+      formComponent: string;
+      formComponentMobile: string;
       header: string;
-      inputMobile: string;
+      headerMobile: string;
       input: string;
-      passiveMobile: string;
+      inputMobile: string;
       passive: string;
-      staticMobile: string;
+      passiveMobile: string;
       static: string;
+      staticMobile: string;
+      suggestion: string;
       suggestionEntry: string;
       suggestionHighlighted: string;
       suggestionName: string;
-      suggestion: string;
       suggestionsContainer: string;
       suggestionsList: string;
     };
@@ -990,17 +990,12 @@ declare global {
       menu: string;
       selector: string;
     };
-    MessageList: {
-      loadMore: string;
-      messages: string;
-      typingUser: string;
-    };
     Message: {
-      controlsAndText: string;
       controls: string;
+      controlsAndText: string;
       date: string;
-      messageMobile: string;
       message: string;
+      messageMobile: string;
       name: string;
       system: string;
       text: string;
@@ -1008,6 +1003,11 @@ declare global {
       timestamp: string;
       unconfirmed: string;
       unread: string;
+    };
+    MessageList: {
+      loadMore: string;
+      messages: string;
+      typingUser: string;
     };
     MissionPlan: {
       container: string;
@@ -1041,15 +1041,15 @@ declare global {
       currentStack: string;
       dismiss: string;
       menu: string;
-      modalContent: string;
       modal: string;
+      modalContent: string;
     };
     Motion: {
       input: string;
     };
     NoTestServerAccess: {
-      containerMobile: string;
       container: string;
+      containerMobile: string;
       description: string;
       header: string;
       section: string;
@@ -1057,9 +1057,9 @@ declare global {
       wrapper: string;
     };
     Node: {
+      child: string;
       child1: string;
       child2: string;
-      child: string;
       horizontal: string;
       node: string;
       vertical: string;
@@ -1070,11 +1070,17 @@ declare global {
       otherContexts: string;
     };
     OrderSlot: {
-      containerMobile: string;
       container: string;
+      containerMobile: string;
       content: string;
       info: string;
       progress: string;
+    };
+    OrderStatus: {
+      error: string;
+      inProgress: string;
+      regular: string;
+      warning: string;
     };
     OrderStatusLabel: {
       CREATED: string;
@@ -1082,12 +1088,6 @@ declare global {
       FILLED: string;
       PARTIALLY_FILLED: string;
       PLACED: string;
-    };
-    OrderStatus: {
-      error: string;
-      inProgress: string;
-      regular: string;
-      warning: string;
     };
     OrderTile: {
       container: string;
@@ -1104,26 +1104,26 @@ declare global {
       children: string;
       close: string;
       container: string;
-      contentContainer: string;
       content: string;
+      contentContainer: string;
       controls: string;
-      overlayMobile: string;
       overlay: string;
+      overlayMobile: string;
     };
     PanelSelector: {
       cmd: string;
-      containerOpen: string;
       container: string;
+      containerOpen: string;
       description: string;
       divider: string;
       entry: string;
       form: string;
-      inputMobile: string;
       input: string;
+      inputMobile: string;
       params: string;
+      suggestion: string;
       suggestionFirst: string;
       suggestionHighlighted: string;
-      suggestion: string;
       suggestionsContainer: string;
       suggestionsList: string;
     };
@@ -1132,8 +1132,8 @@ declare global {
     };
     PlanetInfoMapContainer: {
       actions: string;
-      containerMobile: string;
       container: string;
+      containerMobile: string;
       shipSelect: string;
     };
     PlanetInfoPanel: {
@@ -1168,9 +1168,6 @@ declare global {
       container: string;
       shipSelect: string;
     };
-    PopulationChart: {
-      container: string;
-    };
     Population: {
       center: string;
       container: string;
@@ -1179,22 +1176,25 @@ declare global {
       margintop: string;
       table: string;
     };
+    PopulationChart: {
+      container: string;
+    };
     PreviousTerm: {
       container: string;
     };
     PriceChangeHighlight: {
-      enterNegativeActive: string;
       enterNegative: string;
-      enterPositiveActive: string;
+      enterNegativeActive: string;
       enterPositive: string;
+      enterPositiveActive: string;
     };
     ProductionFeeForm: {
       background: string;
       container: string;
     };
     ProductionLine: {
-      containerMobile: string;
       container: string;
+      containerMobile: string;
       duration: string;
       efficiencies: string;
       efficiencyCell: string;
@@ -1213,9 +1213,9 @@ declare global {
       amountAvailable: string;
       amountMissing: string;
       cancel: string;
+      figure: string;
       figureLabel: string;
       figureMobile: string;
-      figure: string;
       figures: string;
       inputoutput: string;
       largeline: string;
@@ -1230,41 +1230,41 @@ declare global {
       empty: string;
     };
     ProgressBar: {
-      containerMobile: string;
       container: string;
+      containerMobile: string;
       primary: string;
-      progressLabel: string;
       progress: string;
+      progressLabel: string;
       secondary: string;
       warning: string;
     };
     Prompt: {
-      activeMobile: string;
       active: string;
+      activeMobile: string;
+      btn: string;
       btnDanger: string;
       btnNeutral: string;
       btnPrimary: string;
       btnSuccess: string;
-      btn: string;
-      cmdMobile: string;
       cmd: string;
-      dynamicMobile: string;
+      cmdMobile: string;
       dynamic: string;
-      errorMobile: string;
+      dynamicMobile: string;
       error: string;
-      formComponentMobile: string;
-      formComponent: string;
+      errorMobile: string;
       form: string;
-      headerMobile: string;
+      formComponent: string;
+      formComponentMobile: string;
       header: string;
-      inputMobile: string;
+      headerMobile: string;
       input: string;
-      passiveMobile: string;
+      inputMobile: string;
       passive: string;
-      promptMobile: string;
+      passiveMobile: string;
       prompt: string;
-      staticMobile: string;
+      promptMobile: string;
       static: string;
+      staticMobile: string;
     };
     RadioGroup: {
       container: string;
@@ -1272,27 +1272,27 @@ declare global {
     };
     RadioItem: {
       active: string;
-      containerHorizontal: string;
       container: string;
+      containerHorizontal: string;
       disabled: string;
-      indicatorHorizontal: string;
       indicator: string;
+      indicatorHorizontal: string;
+      value: string;
       valueDisabled: string;
       valueHorizontal: string;
-      value: string;
     };
     RangeBar: {
       container: string;
       green: string;
       inner: string;
-      leftBorder: string;
       left: string;
+      leftBorder: string;
       min: string;
       primary: string;
       progress: string;
       red: string;
-      rightBorder: string;
       right: string;
+      rightBorder: string;
       secondary: string;
     };
     RatingIcon: {
@@ -1317,8 +1317,15 @@ declare global {
       container: string;
     };
     ResourceTable: {
-      gridContainerMobile: string;
       gridContainer: string;
+      gridContainerMobile: string;
+    };
+    Restriction: {
+      headline: string;
+      message: string;
+      overlay: string;
+      restriction: string;
+      restrictionMobile: string;
     };
     RestrictionBanner: {
       headline: string;
@@ -1326,13 +1333,6 @@ declare global {
       overlay: string;
       restrictionMobile: string;
       unavailable: string;
-    };
-    Restriction: {
-      headline: string;
-      message: string;
-      overlay: string;
-      restrictionMobile: string;
-      restriction: string;
     };
     Satellites: {
       name: string;
@@ -1352,22 +1352,22 @@ declare global {
     ScrollView: {
       thumbHorizontal: string;
       thumbVertical: string;
+      track: string;
       trackHorizontal: string;
       trackVertical: string;
-      track: string;
-      viewMobile: string;
       view: string;
+      viewMobile: string;
     };
     SectionHeader: {
-      containerMobile: string;
       container: string;
+      containerMobile: string;
     };
     SectionList: {
       button: string;
       container: string;
       data: string;
-      descriptionTableData: string;
       description: string;
+      descriptionTableData: string;
       divider: string;
       image: string;
       item: string;
@@ -1383,8 +1383,8 @@ declare global {
     Selections: {
       category: string;
       container: string;
-      selectionContainer: string;
       selection: string;
+      selectionContainer: string;
     };
     Sender: {
       container: string;
@@ -1420,17 +1420,28 @@ declare global {
     ShareholderNoCorporation: {
       header: string;
     };
-    ShipFuelInventory: {
-      column: string;
-      containerMobile: string;
+    Ship: {
       container: string;
-      sectionHead: string;
-      store: string;
+      containerMobile: string;
+      header: string;
+      image: string;
+      input: string;
+      name: string;
+      registration: string;
+      rename: string;
+      subheader: string;
     };
     ShipFuel: {
-      containerMobile: string;
       container: string;
+      containerMobile: string;
       pointer: string;
+    };
+    ShipFuelInventory: {
+      column: string;
+      container: string;
+      containerMobile: string;
+      sectionHead: string;
+      store: string;
     };
     ShipInformation: {
       container: string;
@@ -1444,48 +1455,37 @@ declare global {
       pointer: string;
       store: string;
     };
-    Ship: {
-      containerMobile: string;
+    Shipyard: {
       container: string;
-      header: string;
-      image: string;
-      input: string;
-      name: string;
-      registration: string;
-      rename: string;
-      subheader: string;
+      info: string;
     };
     ShipyardProjects: {
-      activeMobile: string;
       active: string;
+      activeMobile: string;
+      btn: string;
       btnDanger: string;
       btnNeutral: string;
       btnPrimary: string;
       btnSuccess: string;
-      btn: string;
-      cmdMobile: string;
       cmd: string;
+      cmdMobile: string;
       container: string;
-      dynamicMobile: string;
       dynamic: string;
-      errorMobile: string;
+      dynamicMobile: string;
       error: string;
-      formComponentMobile: string;
-      formComponent: string;
+      errorMobile: string;
       form: string;
-      headerMobile: string;
+      formComponent: string;
+      formComponentMobile: string;
       header: string;
+      headerMobile: string;
       info: string;
-      inputMobile: string;
       input: string;
-      passiveMobile: string;
+      inputMobile: string;
       passive: string;
-      staticMobile: string;
+      passiveMobile: string;
       static: string;
-    };
-    Shipyard: {
-      container: string;
-      info: string;
+      staticMobile: string;
     };
     Sidebar: {
       amount: string;
@@ -1493,8 +1493,8 @@ declare global {
       cash: string;
       companyName: string;
       container: string;
-      contractId: string;
       contract: string;
+      contractId: string;
       currencyCode: string;
       ownCurrency: string;
       sectionContent: string;
@@ -1502,18 +1502,26 @@ declare global {
       sidebarLine: string;
       title: string;
     };
+    Site: {
+      container: string;
+      header: string;
+      info: string;
+      infoHeader: string;
+      workforces: string;
+      workforcesHeader: string;
+    };
     SiteBuildOption: {
       button: string;
       data: string;
+      description: string;
       descriptionMobile: string;
       descriptionTableData: string;
-      description: string;
       fertilityMissing: string;
       heading: string;
       image: string;
       name: string;
-      optionMobile: string;
       option: string;
+      optionMobile: string;
       table: string;
       wfCapacity: string;
       wfName: string;
@@ -1527,40 +1535,32 @@ declare global {
       site: string;
     };
     SiteProductionLines: {
-      columnBase: string;
       column: string;
-      columnsPane: string;
+      columnBase: string;
       columns: string;
-      containerMobile: string;
+      columnsPane: string;
       container: string;
+      containerMobile: string;
       empty: string;
       grid: string;
+      header: string;
       headerActions: string;
       headerName: string;
-      header: string;
       slotDivider: string;
     };
     SitePublicInformationPanel: {
       container: string;
     };
-    Site: {
-      container: string;
-      header: string;
-      infoHeader: string;
-      info: string;
-      workforcesHeader: string;
-      workforces: string;
-    };
     Sites: {
       empty: string;
     };
     SliderView: {
-      containerMobile: string;
       container: string;
+      containerMobile: string;
     };
     Stack: {
-      borderError: string;
       border: string;
+      borderError: string;
       commandMenuBtn: string;
       commandSubTitle: string;
       commandSuggestions: string;
@@ -1568,8 +1568,8 @@ declare global {
       commandsContainer: string;
       edit: string;
       emptyStack: string;
-      stackForm: string;
       stack: string;
+      stackForm: string;
     };
     Stacks: {
       edit: string;
@@ -1586,14 +1586,14 @@ declare global {
       planets: string;
     };
     StaticInput: {
-      staticMobile: string;
       static: string;
-    };
-    StationInfrastructure: {
-      list: string;
+      staticMobile: string;
     };
     Station: {
       container: string;
+    };
+    StationInfrastructure: {
+      list: string;
     };
     SteamReviewPanel: {
       actions: string;
@@ -1630,10 +1630,10 @@ declare global {
       capacity: string;
       centered: string;
       column: string;
-      containerMobile: string;
       container: string;
-      inventoryTransferWrapper: string;
+      containerMobile: string;
       inventory: string;
+      inventoryTransferWrapper: string;
       name: string;
       row: string;
     };
@@ -1653,8 +1653,8 @@ declare global {
     SystemMap: {
       container: string;
       controls: string;
-      helpMobile: string;
       help: string;
+      helpMobile: string;
     };
     SystemSearch: {
       selector: string;
@@ -1664,15 +1664,15 @@ declare global {
     };
     Tabs: {
       button: string;
-      componentMobile: string;
       component: string;
+      componentMobile: string;
       content: string;
       header: string;
-      tabActive: string;
       tab: string;
+      tabActive: string;
       tabs: string;
-      toggleIndicatorActive: string;
       toggleIndicator: string;
+      toggleIndicatorActive: string;
     };
     TaskListItem: {
       blocked: string;
@@ -1681,10 +1681,10 @@ declare global {
       content: string;
       description: string;
       fulfilled: string;
+      indicator: string;
       indicatorBlocked: string;
       indicatorComplete: string;
       indicatorIncomplete: string;
-      indicator: string;
       subtask: string;
     };
     TemplateSelection: {
@@ -1697,6 +1697,13 @@ declare global {
       container: string;
       inputMobile: string;
       textarea: string;
+    };
+    Tile: {
+      controls: string;
+      hovered: string;
+      selector: string;
+      tile: string;
+      warning: string;
     };
     TileContextHelp: {
       container: string;
@@ -1725,21 +1732,14 @@ declare global {
       header: string;
       title: string;
     };
-    Tile: {
-      controls: string;
-      hovered: string;
-      selector: string;
-      tile: string;
-      warning: string;
-    };
     Tooltip: {
       container: string;
     };
     Tour: {
       container: string;
       content: string;
-      footerElement: string;
       footer: string;
+      footerElement: string;
       header: string;
     };
     Transmissions: {
@@ -1757,48 +1757,48 @@ declare global {
       container: string;
     };
     UserList: {
-      containerMobile: string;
       container: string;
+      containerMobile: string;
       header: string;
       list: string;
+      user: string;
       userActive: string;
       userInactive: string;
-      user: string;
     };
     UserOffices: {
       list: string;
     };
     UserSelector: {
-      activeMobile: string;
       active: string;
+      activeMobile: string;
+      btn: string;
       btnDanger: string;
       btnNeutral: string;
       btnPrimary: string;
       btnSuccess: string;
-      btn: string;
-      cmdMobile: string;
       cmd: string;
-      containerOpen: string;
+      cmdMobile: string;
       container: string;
-      dynamicMobile: string;
+      containerOpen: string;
       dynamic: string;
-      errorMobile: string;
+      dynamicMobile: string;
       error: string;
-      formComponentMobile: string;
-      formComponent: string;
+      errorMobile: string;
       form: string;
-      headerMobile: string;
+      formComponent: string;
+      formComponentMobile: string;
       header: string;
-      inputMobile: string;
+      headerMobile: string;
       input: string;
-      passiveMobile: string;
+      inputMobile: string;
       passive: string;
-      staticMobile: string;
+      passiveMobile: string;
       static: string;
+      staticMobile: string;
+      suggestion: string;
       suggestionEntry: string;
       suggestionHighlighted: string;
       suggestionName: string;
-      suggestion: string;
       suggestionsContainer: string;
       suggestionsList: string;
     };
@@ -1831,18 +1831,18 @@ declare global {
       info: string;
       missing: string;
       name: string;
-      requiredValue: string;
       required: string;
-      satisfactionBarMobile: string;
-      satisfactionBar: string;
+      requiredValue: string;
       satisfaction: string;
-      sizeValue: string;
+      satisfactionBar: string;
+      satisfactionBarMobile: string;
       size: string;
+      sizeValue: string;
       stats: string;
       supplied: string;
       table: string;
-      totalSatisfactionValue: string;
       totalSatisfaction: string;
+      totalSatisfactionValue: string;
       warning: string;
     };
     colors: {
@@ -1873,8 +1873,8 @@ declare global {
     };
     figures: {
       container: string;
-      figureMobile: string;
       figure: string;
+      figureMobile: string;
       label: string;
     };
     fonts: {
@@ -1884,30 +1884,30 @@ declare global {
       fontSmoothing: string;
     };
     forms: {
-      activeMobile: string;
       active: string;
+      activeMobile: string;
+      btn: string;
       btnDanger: string;
       btnNeutral: string;
       btnPrimary: string;
       btnSuccess: string;
-      btn: string;
-      cmdMobile: string;
       cmd: string;
-      dynamicMobile: string;
+      cmdMobile: string;
       dynamic: string;
-      errorMobile: string;
+      dynamicMobile: string;
       error: string;
-      formComponentMobile: string;
-      formComponent: string;
+      errorMobile: string;
       form: string;
-      headerMobile: string;
+      formComponent: string;
+      formComponentMobile: string;
       header: string;
-      inputMobile: string;
+      headerMobile: string;
       input: string;
-      passiveMobile: string;
+      inputMobile: string;
       passive: string;
-      staticMobile: string;
+      passiveMobile: string;
       static: string;
+      staticMobile: string;
     };
     links: {
       textLink: string;
@@ -1921,16 +1921,16 @@ declare global {
       hidden: string;
       hint: string;
       section: string;
-      tagContainer: string;
       tag: string;
+      tagContainer: string;
     };
     suggestions: {
-      containerOpen: string;
       container: string;
+      containerOpen: string;
       sectionContainer: string;
       sectionTitle: string;
-      suggestionHighlighted: string;
       suggestion: string;
+      suggestionHighlighted: string;
       suggestionsContainer: string;
       suggestionsList: string;
     };

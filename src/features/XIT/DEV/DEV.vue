@@ -35,9 +35,9 @@ function downloadCssDefinition() {
   let definition = `export {};\n`;
   definition += `declare global {\n`;
   definition += `  interface PrunCssClasses {\n`;
-  for (const key of Object.keys(C)) {
+  for (const key of Object.keys(C).sort()) {
     definition += `    ${key}: {\n`;
-    for (const childKey of Object.keys(C[key])) {
+    for (const childKey of Object.keys(C[key]).sort()) {
       definition += `      ${childKey}: string;\n`;
     }
     definition += `    };\n`;
