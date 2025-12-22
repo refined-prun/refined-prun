@@ -5,7 +5,9 @@
 ### Fixed
 
 - `XIT ACT`: Fix the CX Buy action failing to execute due to number formatting in some localizations
+- `bs-hide-zero-workforce`: Fix the broken tooltip in the "Current Workforce" column header
 - `cxpo-auto-price`: Fix localized number formatting
+- `hide-system-chat-messages`: Fix the vertical indicator not being visible after the gateway update
 
 ## 25.11.16
 

@@ -11,6 +11,7 @@ import fa from '@src/utils/font-awesome.module.css';
 import Tooltip from '@src/components/Tooltip.vue';
 import NumberInput from '@src/components/forms/NumberInput.vue';
 import { objectId } from '@src/utils/object-id';
+import InlineFlex from '@src/components/InlineFlex.vue';
 
 const $style = useCssModule();
 
@@ -121,12 +122,12 @@ const draggableOptions = {
       <tr>
         <th />
         <th>
-          <div :class="$style.header">
+          <InlineFlex>
             Command
             <Tooltip
               position="right"
               tooltip="Can be a full command, a part of it, or a regular expression. Case-insensitive." />
-          </div>
+          </InlineFlex>
         </th>
         <th>Width</th>
         <th>Height</th>
@@ -209,12 +210,6 @@ const draggableOptions = {
 
 .inline {
   display: inline-block;
-}
-
-.header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
 }
 
 .gripCell {
