@@ -64,10 +64,15 @@ declare global {
       static: string;
       staticMobile: string;
       suggestion: string;
+      suggestionContent: string;
       suggestionHighlighted: string;
       suggestionsContainer: string;
       suggestionsContainerMobile: string;
+      suggestionsContainerOpen: string;
       suggestionsList: string;
+    };
+    AddressTypeIcon: {
+      icon: string;
     };
     AdminCenter: {
       container: string;
@@ -252,6 +257,9 @@ declare global {
     };
     CashBookings: {
       number: string;
+    };
+    Centered: {
+      centered: string;
     };
     Channel: {
       container: string;
@@ -485,6 +493,9 @@ declare global {
       container: string;
       empty: string;
     };
+    Costs: {
+      container: string;
+    };
     Country: {
       agentList: string;
       image: string;
@@ -703,6 +714,14 @@ declare global {
       toggleLabel: string;
       uiToggles: string;
     };
+    Gateway: {
+      centered: string;
+      incomingLinks: string;
+      list: string;
+    };
+    GatewayReachableSystems: {
+      container: string;
+    };
     GridItemView: {
       container: string;
       image: string;
@@ -782,12 +801,27 @@ declare global {
       number: string;
       totals: string;
     };
+    IncrementalNumberInput: {
+      container: string;
+      disabled: string;
+      number: string;
+    };
     Indicator: {
       container: string;
       enabled: string;
       indicator: string;
       indicatorActive: string;
       value: string;
+    };
+    InfrastructureUpkeep: {
+      green: string;
+      pills: string;
+      red: string;
+      upkeep: string;
+      upkeepPill: string;
+    };
+    InlineFlex: {
+      inlineFlex: string;
     };
     InputsOutputsView: {
       amount: string;
@@ -829,6 +863,9 @@ declare global {
       grid: string;
       list: string;
       scrollbars: string;
+    };
+    ItemsRow: {
+      container: string;
     };
     LanguageSelector: {
       container: string;
@@ -1016,6 +1053,7 @@ declare global {
       stats: string;
       table: string;
       vertical: string;
+      warning: string;
     };
     MobileFrame: {
       container: string;
@@ -1143,10 +1181,6 @@ declare global {
     PlanetSearch: {
       selector: string;
     };
-    PlanetaryInfrastructure: {
-      container: string;
-      row: string;
-    };
     PlanetaryProject: {
       container: string;
       description: string;
@@ -1162,6 +1196,10 @@ declare global {
       entry: string;
       image: string;
       name: string;
+    };
+    PlanetaryProjectsList: {
+      container: string;
+      row: string;
     };
     PlotSelectionMapContainer: {
       actions: string;
@@ -1277,6 +1315,7 @@ declare global {
       disabled: string;
       indicator: string;
       indicatorHorizontal: string;
+      indicatorVertical: string;
       value: string;
       valueDisabled: string;
       valueHorizontal: string;
@@ -1313,12 +1352,23 @@ declare global {
     RatingSelection: {
       container: string;
     };
+    RecentJumps: {
+      error: string;
+      textBright: string;
+      textDanger: string;
+      textDisabled: string;
+      textRegular: string;
+      textSuccess: string;
+      textWarning: string;
+      warning: string;
+    };
     RecommendedStarterBuildings: {
       container: string;
     };
     ResourceTable: {
       gridContainer: string;
       gridContainerMobile: string;
+      yield: string;
     };
     Restriction: {
       headline: string;
@@ -1333,6 +1383,9 @@ declare global {
       overlay: string;
       restrictionMobile: string;
       unavailable: string;
+    };
+    RoutePreferencesSelect: {
+      container: string;
     };
     Satellites: {
       name: string;
