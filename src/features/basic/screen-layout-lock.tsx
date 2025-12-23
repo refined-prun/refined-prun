@@ -2,7 +2,7 @@ import $style from './screen-layout-lock.module.css';
 import { userData } from '@src/store/user-data';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
-import { screenHash } from '@src/infrastructure/prun-api/data/screens.ts';
+import { screensStore } from '@src/infrastructure/prun-api/data/screens.ts';
 
 function onListReady(list: HTMLElement) {
   subscribe($$(list, C.ScreenControls.screen), onScreenItemReady);
@@ -42,7 +42,7 @@ function onFrameReady(frame: HTMLElement) {
   watchEffectWhileNodeAlive(frame, () => {
     frame.classList.toggle(
       $style.lockedScreen,
-      userData.tabs.locked.includes(screenHash.value ?? ''),
+      userData.tabs.locked.includes(screensStore.current.value?.id ?? ''),
     );
   });
 }

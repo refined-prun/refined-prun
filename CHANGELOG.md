@@ -15,6 +15,7 @@
 - `cxpo-auto-price`: Fix localized number formatting
 - `hide-system-chat-messages`: Fix the vertical indicator not being visible after the gateway update
 - `other-context-notification-count`: Fix ghost INFRASTRUCTURE_UPGRADE_COMPLETED notifications
+- `screen-layout-lock`: Fix the feature not working when the game URL does not contain a screen id
 
 ## 25.11.16
 
