@@ -5,6 +5,7 @@
 ### Changed
 
 - `nots-notification-type-label`: Add labels for the new notification types
+- `nots-notification-type-label`: Adjust the colors to improve readability
 
 ### Fixed
 

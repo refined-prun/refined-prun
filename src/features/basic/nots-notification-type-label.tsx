@@ -70,17 +70,17 @@ const labels: NotificationTypeLabel[] = [
   {
     types: ['COMEX_ORDER_FILLED', 'FOREX_ORDER_FILLED'],
     label: 'ORDER',
-    color: '#cc2929',
+    color: '#ff7070',
   },
   {
     types: ['COMEX_TRADE', 'FOREX_TRADE'],
     label: 'TRADE',
-    color: '#008000',
+    color: '#00d16a',
   },
   {
     types: ['PRODUCTION_ORDER_FINISHED'],
     label: 'PRODUCED',
-    color: '#3fa2de',
+    color: '#00b0ff',
   },
   {
     types: ['SITE_EXPERT_DROPPED'],
@@ -90,27 +90,27 @@ const labels: NotificationTypeLabel[] = [
   {
     types: ['COGC_PROGRAM_CHANGED', 'COGC_STATUS_CHANGED', 'COGC_UPKEEP_STARTED'],
     label: 'COGC',
-    color: '#8f52cc',
+    color: '#c084fc',
   },
   {
     types: ['SHIP_FLIGHT_ENDED'],
     label: 'ARRIVAL',
-    color: '#b336b3',
+    color: '#ff5fd7',
   },
   {
     types: ['POPULATION_REPORT_AVAILABLE'],
     label: 'POPR',
-    color: '#00aa77',
+    color: '#00c9b7',
   },
   {
     types: ['LOCAL_MARKET_AD_ACCEPTED', 'LOCAL_MARKET_AD_EXPIRED'],
     label: 'ADVERT',
-    color: '#449c57',
+    color: '#9adf00',
   },
   {
     types: ['POPULATION_PROJECT_UPGRADED'],
     label: 'POPI',
-    color: '#8f52cc',
+    color: '#c084fc',
   },
   {
     types: [
@@ -125,7 +125,7 @@ const labels: NotificationTypeLabel[] = [
   {
     types: ['WORKFORCE_LOW_SUPPLIES', 'WORKFORCE_OUT_OF_SUPPLIES', 'WORKFORCE_UNSATISFIED'],
     label: 'SUPPLIES',
-    color: '#b37b32',
+    color: '#d1913c',
   },
   {
     types: [
@@ -137,7 +137,7 @@ const labels: NotificationTypeLabel[] = [
       'CORPORATION_SHAREHOLDER_INVITE_RECEIVED',
     ],
     label: 'CORP',
-    color: '#8f52cc',
+    color: '#f472b6',
   },
   {
     types: [
@@ -148,7 +148,7 @@ const labels: NotificationTypeLabel[] = [
       'INFRASTRUCTURE_UPKEEP_PHASE_STARTED',
     ],
     label: 'INFRA',
-    color: '#8f52cc',
+    color: '#c084fc',
   },
   {
     types: [
@@ -162,22 +162,22 @@ const labels: NotificationTypeLabel[] = [
       'GATEWAY_LINK_UNLINKED',
     ],
     label: 'GATEWAY',
-    color: '#334aaf',
+    color: '#6c9cff',
   },
   {
     types: ['SHIPYARD_PROJECT_FINISHED'],
     label: 'SHIP',
-    color: '#8f52cc',
+    color: '#ff8a00',
   },
   {
     types: ['WAREHOUSE_STORE_LOCKED_INSUFFICIENT_FUNDS', 'WAREHOUSE_STORE_UNLOCKED'],
     label: 'WAR',
-    color: '#cc2929',
+    color: '#d1913c',
   },
   {
     types: ['TUTORIAL_TASK_FINISHED'],
     label: 'HELLO',
-    color: '#8f52cc',
+    color: '#f0abfc',
   },
   {
     types: [
@@ -189,7 +189,7 @@ const labels: NotificationTypeLabel[] = [
       'USER_STEAM_REVIEW',
     ],
     label: 'APEX',
-    color: '#8f52cc',
+    color: '#f0abfc',
   },
 ];
 
