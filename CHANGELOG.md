@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `cxpc-default-1y`: Selects the 1y chart on open
+
 ### Changed
 
 - `nots-notification-type-label`: Add labels for the new notification types
