@@ -51,6 +51,16 @@ const labels: NotificationTypeLabel[] = [
   },
   {
     types: [
+      'ADMIN_CENTER_ELECTION_STARTED',
+      'ADMIN_CENTER_GOVERNOR_ELECTED',
+      'ADMIN_CENTER_NO_GOVERNOR_ELECTED',
+      'ADMIN_CENTER_RUN_SUCCEEDED',
+    ],
+    label: 'ELECTION',
+    color: '#ffda94',
+  },
+  {
+    types: [
       'CONTRACT_CONDITION_FULFILLED',
       'CONTRACT_CONTRACT_BREACHED',
       'CONTRACT_CONTRACT_CANCELLED',
@@ -88,8 +98,29 @@ const labels: NotificationTypeLabel[] = [
     color: '#ff8a00',
   },
   {
+    types: ['SHIPYARD_PROJECT_FINISHED'],
+    label: 'SHIP',
+    color: '#ff8a00',
+  },
+  {
     types: ['COGC_PROGRAM_CHANGED', 'COGC_STATUS_CHANGED', 'COGC_UPKEEP_STARTED'],
     label: 'COGC',
+    color: '#c084fc',
+  },
+  {
+    types: ['POPULATION_PROJECT_UPGRADED'],
+    label: 'POPI',
+    color: '#c084fc',
+  },
+  {
+    types: [
+      'PLANETARY_PROJECT_FINISHED',
+      'INFRASTRUCTURE_OPERATIONAL_STATE_CHANGED',
+      'INFRASTRUCTURE_PROJECT_COMPLETED',
+      'INFRASTRUCTURE_UPGRADE_COMPLETED',
+      'INFRASTRUCTURE_UPKEEP_PHASE_STARTED',
+    ],
+    label: 'INFRA',
     color: '#c084fc',
   },
   {
@@ -108,23 +139,13 @@ const labels: NotificationTypeLabel[] = [
     color: '#9adf00',
   },
   {
-    types: ['POPULATION_PROJECT_UPGRADED'],
-    label: 'POPI',
-    color: '#c084fc',
-  },
-  {
-    types: [
-      'ADMIN_CENTER_ELECTION_STARTED',
-      'ADMIN_CENTER_GOVERNOR_ELECTED',
-      'ADMIN_CENTER_NO_GOVERNOR_ELECTED',
-      'ADMIN_CENTER_RUN_SUCCEEDED',
-    ],
-    label: 'ELECTION',
-    color: '#ffda94',
-  },
-  {
     types: ['WORKFORCE_LOW_SUPPLIES', 'WORKFORCE_OUT_OF_SUPPLIES', 'WORKFORCE_UNSATISFIED'],
     label: 'SUPPLIES',
+    color: '#d1913c',
+  },
+  {
+    types: ['WAREHOUSE_STORE_LOCKED_INSUFFICIENT_FUNDS', 'WAREHOUSE_STORE_UNLOCKED'],
+    label: 'WAR',
     color: '#d1913c',
   },
   {
@@ -141,17 +162,6 @@ const labels: NotificationTypeLabel[] = [
   },
   {
     types: [
-      'PLANETARY_PROJECT_FINISHED',
-      'INFRASTRUCTURE_OPERATIONAL_STATE_CHANGED',
-      'INFRASTRUCTURE_PROJECT_COMPLETED',
-      'INFRASTRUCTURE_UPGRADE_COMPLETED',
-      'INFRASTRUCTURE_UPKEEP_PHASE_STARTED',
-    ],
-    label: 'INFRA',
-    color: '#c084fc',
-  },
-  {
-    types: [
       'GATEWAY_JUMP_ABORTED_LINK_CHANGED',
       'GATEWAY_JUMP_ABORTED_LINK_NOT_ESTABLISHED',
       'GATEWAY_JUMP_ABORTED_MISSING_FUNDS',
@@ -163,16 +173,6 @@ const labels: NotificationTypeLabel[] = [
     ],
     label: 'GATEWAY',
     color: '#6c9cff',
-  },
-  {
-    types: ['SHIPYARD_PROJECT_FINISHED'],
-    label: 'SHIP',
-    color: '#ff8a00',
-  },
-  {
-    types: ['WAREHOUSE_STORE_LOCKED_INSUFFICIENT_FUNDS', 'WAREHOUSE_STORE_UNLOCKED'],
-    label: 'WAR',
-    color: '#d1913c',
   },
   {
     types: ['TUTORIAL_TASK_FINISHED'],
