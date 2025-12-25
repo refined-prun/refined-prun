@@ -4,7 +4,14 @@ import { migrateVersionedUserData } from '@src/store/user-data-versioned-migrati
 type Migration = [id: string, migration: (userData: any) => void];
 
 // New migrations should be added to the top of the list.
-const migrations: Migration[] = [];
+const migrations: Migration[] = [
+  [
+    '25.12.2025 Add audio volume',
+    userData => {
+      userData.settings.audioVolume = 0.4;
+    },
+  ],
+];
 
 export function migrateUserData(userData: any) {
   // The migrations are ordered from newest to oldest, but we want to run them in order.

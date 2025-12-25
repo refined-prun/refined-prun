@@ -4,12 +4,14 @@
 
 ### Added
 
+- `audio-volume-slider`: Adds a volume slider to the game settings in the top-right corner of the screen
 - `cxpc-default-1y`: Selects the 1y chart on open
 
 ### Changed
 
 - `nots-notification-type-label`: Add labels for the new notification types
 - `nots-notification-type-label`: Adjust the colors to improve readability
+- Decrease the default audio volume to 40%
 
 ### Fixed
 
