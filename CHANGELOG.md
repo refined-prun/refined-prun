@@ -20,6 +20,7 @@
 - `co-base-count`: Fix the feature not working after the gateway update
 - `cxpo-auto-price`: Fix localized number formatting
 - `hide-system-chat-messages`: Fix the vertical indicator not being visible after the gateway update
+- `inv-compress-inventory-info`: Fix the feature not working in `SHPI`
 - `other-context-notification-count`: Fix ghost INFRASTRUCTURE_UPGRADE_COMPLETED notifications
 - `screen-layout-lock`: Fix the feature not working when the game URL does not contain a screen id
 
