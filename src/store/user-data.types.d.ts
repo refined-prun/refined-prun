@@ -26,6 +26,11 @@ declare namespace UserData {
     materials: string[];
   }
 
+  interface TileScroll {
+    top: number | undefined;
+    left: number | undefined;
+  }
+
   type TileState = Record<string, unknown>;
 
   interface Note {
