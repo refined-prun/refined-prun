@@ -31,7 +31,7 @@ const migrations: Migration[] = [
 
 export function migrateUserData(userData: any) {
   // The migrations are ordered from newest to oldest, but we want to run them in order.
-  const orderedMigrations = migrations.toReversed();
+  const orderedMigrations = migrations.slice().reverse();
   if (userData.version !== undefined) {
     migrateVersionedUserData(userData);
     delete userData.version;
