@@ -6,6 +6,22 @@ type Migration = [id: string, migration: (userData: any) => void];
 // New migrations should be added to the top of the list.
 const migrations: Migration[] = [
   [
+    '25.12.2025 Rename features',
+    userData => {
+      renameFeature('custom-item-sorting', 'inv-custom-item-sorting');
+      renameFeature('item-markers', 'inv-item-markers');
+      renameFeature('show-space-remaining', 'inv-show-space-remaining');
+
+      function renameFeature(oldName: string, newName: string) {
+        const disabled = userData.settings.disabled;
+        const index = disabled.indexOf(oldName);
+        if (index !== -1) {
+          disabled[index] = newName;
+        }
+      }
+    },
+  ],
+  [
     '25.12.2025 Add audio volume',
     userData => {
       userData.settings.audioVolume = 0.4;
