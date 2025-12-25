@@ -75,22 +75,22 @@ const labels: NotificationTypeLabel[] = [
       'COMEX_PICKUP_CONTRACT_CREATED',
     ],
     label: 'CONTRACT',
-    color: '#f7a600',
+    color: '#f0ad4e',
   },
   {
     types: ['COMEX_ORDER_FILLED', 'FOREX_ORDER_FILLED'],
     label: 'ORDER',
-    color: '#ff7070',
+    color: '#e85c5c',
   },
   {
     types: ['COMEX_TRADE', 'FOREX_TRADE'],
     label: 'TRADE',
-    color: '#00d16a',
+    color: '#5cb85c',
   },
   {
     types: ['PRODUCTION_ORDER_FINISHED'],
     label: 'PRODUCED',
-    color: '#00b0ff',
+    color: '#9cbcff',
   },
   {
     types: ['SITE_EXPERT_DROPPED'],
@@ -105,12 +105,12 @@ const labels: NotificationTypeLabel[] = [
   {
     types: ['COGC_PROGRAM_CHANGED', 'COGC_STATUS_CHANGED', 'COGC_UPKEEP_STARTED'],
     label: 'COGC',
-    color: '#c084fc',
+    color: '#3fa2de',
   },
   {
     types: ['POPULATION_PROJECT_UPGRADED'],
     label: 'POPI',
-    color: '#c084fc',
+    color: '#3fa2de',
   },
   {
     types: [
@@ -121,44 +121,7 @@ const labels: NotificationTypeLabel[] = [
       'INFRASTRUCTURE_UPKEEP_PHASE_STARTED',
     ],
     label: 'INFRA',
-    color: '#c084fc',
-  },
-  {
-    types: ['SHIP_FLIGHT_ENDED'],
-    label: 'ARRIVAL',
-    color: '#ff5fd7',
-  },
-  {
-    types: ['POPULATION_REPORT_AVAILABLE'],
-    label: 'POPR',
-    color: '#00c9b7',
-  },
-  {
-    types: ['LOCAL_MARKET_AD_ACCEPTED', 'LOCAL_MARKET_AD_EXPIRED'],
-    label: 'ADVERT',
-    color: '#9adf00',
-  },
-  {
-    types: ['WORKFORCE_LOW_SUPPLIES', 'WORKFORCE_OUT_OF_SUPPLIES', 'WORKFORCE_UNSATISFIED'],
-    label: 'SUPPLIES',
-    color: '#d1913c',
-  },
-  {
-    types: ['WAREHOUSE_STORE_LOCKED_INSUFFICIENT_FUNDS', 'WAREHOUSE_STORE_UNLOCKED'],
-    label: 'WAR',
-    color: '#d1913c',
-  },
-  {
-    types: [
-      'CORPORATION_MANAGER_INVITE_ACCEPTED',
-      'CORPORATION_MANAGER_INVITE_REJECTED',
-      'CORPORATION_MANAGER_SHAREHOLDER_LEFT',
-      'CORPORATION_PROJECT_FINISHED',
-      'CORPORATION_SHAREHOLDER_DIVIDEND_RECEIVED',
-      'CORPORATION_SHAREHOLDER_INVITE_RECEIVED',
-    ],
-    label: 'CORP',
-    color: '#f472b6',
+    color: '#3fa2de',
   },
   {
     types: [
@@ -172,12 +135,49 @@ const labels: NotificationTypeLabel[] = [
       'GATEWAY_LINK_UNLINKED',
     ],
     label: 'GATEWAY',
-    color: '#6c9cff',
+    color: '#3fa2de',
+  },
+  {
+    types: ['SHIP_FLIGHT_ENDED'],
+    label: 'ARRIVAL',
+    color: '#c084fc',
+  },
+  {
+    types: ['POPULATION_REPORT_AVAILABLE'],
+    label: 'POPR',
+    color: '#00c9b7',
+  },
+  {
+    types: ['LOCAL_MARKET_AD_ACCEPTED', 'LOCAL_MARKET_AD_EXPIRED'],
+    label: 'ADVERT',
+    color: '#00bd29',
+  },
+  {
+    types: ['WORKFORCE_LOW_SUPPLIES', 'WORKFORCE_OUT_OF_SUPPLIES', 'WORKFORCE_UNSATISFIED'],
+    label: 'SUPPLIES',
+    color: '#ff3f3f',
+  },
+  {
+    types: ['WAREHOUSE_STORE_LOCKED_INSUFFICIENT_FUNDS', 'WAREHOUSE_STORE_UNLOCKED'],
+    label: 'WAR',
+    color: '#ff3f3f',
+  },
+  {
+    types: [
+      'CORPORATION_MANAGER_INVITE_ACCEPTED',
+      'CORPORATION_MANAGER_INVITE_REJECTED',
+      'CORPORATION_MANAGER_SHAREHOLDER_LEFT',
+      'CORPORATION_PROJECT_FINISHED',
+      'CORPORATION_SHAREHOLDER_DIVIDEND_RECEIVED',
+      'CORPORATION_SHAREHOLDER_INVITE_RECEIVED',
+    ],
+    label: 'CORP',
+    color: '#ea698f',
   },
   {
     types: ['TUTORIAL_TASK_FINISHED'],
     label: 'HELLO',
-    color: '#f0abfc',
+    color: '#eeeeee',
   },
   {
     types: [
@@ -189,7 +189,7 @@ const labels: NotificationTypeLabel[] = [
       'USER_STEAM_REVIEW',
     ],
     label: 'APEX',
-    color: '#f0abfc',
+    color: '#eeeeee',
   },
 ];
 

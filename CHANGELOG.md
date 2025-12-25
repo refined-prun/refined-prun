@@ -10,7 +10,7 @@
 ### Changed
 
 - `nots-notification-type-label`: Add labels for the new notification types
-- `nots-notification-type-label`: Adjust the colors to improve readability
+- `nots-notification-type-label`: Adjust the colors to improve readability and consistency with the game's UI
 - Decrease the default audio volume to 40%
 
 ### Fixed
