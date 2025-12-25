@@ -28,6 +28,7 @@ export interface PlanetBurn {
   planetName: string;
   naturalId: string;
   burn: BurnValues;
+  notStoppedBurn: BurnValues | undefined;
 }
 
 const burnBySiteId = computed(() => {
@@ -53,6 +54,7 @@ const burnBySiteId = computed(() => {
           planetName: getEntityNameFromAddress(site.address),
           naturalId: getEntityNaturalIdFromAddress(site.address),
           burn: calculatePlanetBurn(production, workforce, storage ?? []),
+          notStoppedBurn: calculatePlanetBurn(production, workforce, storage ?? [], false),
         } as PlanetBurn;
       }),
     );
@@ -73,6 +75,7 @@ export function calculatePlanetBurn(
   production: PrunApi.ProductionLine[] | undefined,
   workforces: PrunApi.Workforce[] | undefined,
   storage: PrunApi.Store[] | undefined,
+  includeStopped: boolean = true,
 ) {
   const burnValues: BurnValues = {};
 
@@ -94,7 +97,12 @@ export function calculatePlanetBurn(
   if (production) {
     for (const line of production) {
       const capacity = line.capacity;
-      const burnOrders = getRecurringOrders(line);
+      let burnOrders = getRecurringOrders(line);
+
+      if (!includeStopped) {
+        burnOrders = transformStoppedOrders(burnOrders, storage);
+      }
+
       let totalDuration = sumBy(burnOrders, x => x.duration?.millis ?? Infinity);
       // Convert to days
       totalDuration /= 86400000;
@@ -166,4 +174,65 @@ export function calculatePlanetBurn(
   }
 
   return burnValues;
+}
+
+function transformStoppedOrders(
+  orders: PrunApi.ProductionOrder[],
+  storage: PrunApi.Store[] | undefined,
+): PrunApi.ProductionOrder[] {
+  let output = orders;
+
+  const materialAmounts = new Map<string, number>();
+
+  if (storage) {
+    // Get total material stockpiles for each material
+    for (const inventory of storage) {
+      for (const item of inventory.items) {
+        const quantity = item.quantity;
+        if (!quantity) {
+          continue;
+        }
+        materialAmounts.set(
+          quantity.material.ticker,
+          (materialAmounts.get(quantity.material.ticker) ?? 0) + quantity.amount,
+        );
+      }
+    }
+  }
+
+  // Set stopped orders to 0% time, input, output
+  output = output.map(order => {
+    let outputOrder = order;
+    const inputStocks = outputOrder.inputs.map(
+      input => materialAmounts.get(input.material.ticker) ?? 0,
+    );
+    if (inputStocks.some((stock, idx) => stock < outputOrder.inputs[idx].amount)) {
+      outputOrder = {
+        ...outputOrder,
+        halted: true,
+        duration: {
+          millis: 0,
+        },
+        inputs: outputOrder.inputs.map(input => {
+          return {
+            ...input,
+            amount: 0.0000001,
+          };
+        }),
+        outputs: outputOrder.outputs.map(output => {
+          return {
+            ...output,
+            amount: 0,
+            value: {
+              ...output.value,
+              amount: 0,
+            },
+          };
+        }),
+      };
+    }
+    return outputOrder;
+  });
+
+  return output;
 }
