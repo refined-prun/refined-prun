@@ -1,7 +1,6 @@
 import { deepFreeze } from '@src/utils/deep-freeze';
 
 export const initialUserData = deepFreeze({
-  version: 0,
   firstLoad: Date.now(),
   tileState: {} as Record<string, UserData.TileState | undefined>,
   settings: {
@@ -68,6 +67,9 @@ export const initialUserData = deepFreeze({
     locked: [] as string[],
   },
   commandLists: [] as UserData.CommandList[],
+
+  // Used in user-data-migrations.ts
+  migrations: undefined,
 });
 
 export const userData = reactive({} as typeof initialUserData);
