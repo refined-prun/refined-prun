@@ -13,6 +13,7 @@ import {
   getEntityNameFromAddress,
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
+import { userData } from '@src/store/user-data.ts';
 
 act.addMaterialGroup<Config>({
   type: 'Resupply',
@@ -57,11 +58,13 @@ act.addMaterialGroup<Config>({
       );
     }
     const stores = storagesStore.getByAddressableId(site.siteId);
+    const upkeeps = userData.upkeeps[site.siteId];
 
     const planetBurn = calculatePlanetBurn(
       data.consumablesOnly ? undefined : production.value,
       workforce.value,
       (data.useBaseInv ?? true) ? stores : undefined,
+      data.useCustomUpkeeps ? upkeeps : undefined,
     );
 
     const parsedGroup = {};
