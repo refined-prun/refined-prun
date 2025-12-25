@@ -1,5 +1,3 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
-
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.MessageList.messages), messages => {
     subscribe($$(messages, C.Link.link), processLink);

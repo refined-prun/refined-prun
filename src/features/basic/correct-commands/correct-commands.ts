@@ -18,7 +18,14 @@ const transformers = [
 async function onSelectorReady(selector: HTMLElement) {
   const input: HTMLInputElement = await $(selector, C.PanelSelector.input);
   const form = input.form!;
+  let skipCorrection = false;
+
   form.addEventListener('submit', ev => {
+    if (skipCorrection) {
+      skipCorrection = false;
+      return;
+    }
+
     const parts = input.value.split(' ');
     for (const transform of transformers) {
       transform(parts);
@@ -33,6 +40,7 @@ async function onSelectorReady(selector: HTMLElement) {
     ev.preventDefault();
     changeInputValue(input, command);
     setTimeout(() => form.requestSubmit(), 0);
+    skipCorrection = true;
   });
 }
 

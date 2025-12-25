@@ -5,7 +5,6 @@ import { cxpcStore } from '@src/infrastructure/prun-api/data/cxpc';
 import { COMEX_BROKER_PRICES } from '@src/infrastructure/prun-api/client-messages';
 import { dispatchClientPrunMessage } from '@src/infrastructure/prun-api/prun-api-listener';
 import { userData } from '@src/store/user-data';
-import { applyCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import SettingsGroup from '@src/features/basic/cxpc-chart-types/SettingsGroup.vue';
 import { computedTileState } from '@src/store/user-data-tiles';
 import { getTileState } from '@src/features/basic/cxpc-chart-types/tile-state';

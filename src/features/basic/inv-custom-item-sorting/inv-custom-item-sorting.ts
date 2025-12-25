@@ -1,5 +1,5 @@
 import css from '@src/utils/css-utils.module.css';
-import $style from './custom-item-sorting.module.css';
+import $style from './inv-custom-item-sorting.module.css';
 import { BurnValues, getPlanetBurn } from '@src/core/burn';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import CategoryHeader from './CategoryHeader.vue';
@@ -7,12 +7,12 @@ import InventorySortControls from './InventorySortControls.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import GridMaterialIcon from '@src/components/GridMaterialIcon.vue';
 import SORT from '@src/features/XIT/SORT/SORT.vue';
-import { createFragmentApp, FragmentAppScope } from '@src/utils/vue-fragment-app';
+import { FragmentAppScope } from '@src/utils/vue-fragment-app';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { sortByMaterial, sortMaterials } from '@src/core/sort-materials';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { isEmpty } from 'ts-extras';
-import SortCriteria from '@src/features/basic/custom-item-sorting/SortCriteria.vue';
+import SortCriteria from '@src/features/basic/inv-custom-item-sorting/SortCriteria.vue';
 import { getSortingData } from '@src/store/user-data-sorting';
 import { getInvStore } from '@src/core/store-id';
 
@@ -263,4 +263,4 @@ function init() {
   });
 }
 
-features.add(import.meta.url, init, 'Adds custom sorting modes to inventories.');
+features.add(import.meta.url, init, 'INV/SHPI: Adds custom sorting modes to inventories.');

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SortCriteria from '@src/features/basic/custom-item-sorting/SortCriteria.vue';
+import SortCriteria from './SortCriteria.vue';
 import { objectId } from '@src/utils/object-id';
 
 defineProps<{

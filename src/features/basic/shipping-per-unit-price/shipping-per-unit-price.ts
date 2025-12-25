@@ -1,4 +1,3 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import PpuLabel from './PpuLabel.vue';
 import { refValue } from '@src/utils/reactive-dom';
 import { fixed2 } from '@src/utils/format';

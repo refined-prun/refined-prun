@@ -1,7 +1,7 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import Edit from '@src/features/XIT/ACT/actions/mtra/Edit.vue';
 import Configure from '@src/features/XIT/ACT/actions/mtra/Configure.vue';
-import { TRANSFER_MATERIALS } from '@src/features/XIT/ACT/action-steps/TRANSFER_MATERIALS';
+import { MTRA_TRANSFER } from '@src/features/XIT/ACT/action-steps/MTRA_TRANSFER';
 import { atSameLocation, deserializeStorage } from '@src/features/XIT/ACT/actions/utils';
 import { Config } from '@src/features/XIT/ACT/actions/mtra/config';
 import { AssertFn, configurableValue } from '@src/features/XIT/ACT/shared-types';
@@ -54,7 +54,7 @@ act.addAction<Config>({
 
     for (const ticker of Object.keys(materials)) {
       emitStep(
-        TRANSFER_MATERIALS({
+        MTRA_TRANSFER({
           from: origin.id,
           to: dest.id,
           ticker,

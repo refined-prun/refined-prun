@@ -2,14 +2,55 @@
 
 ## Unreleased
 
+### Added
+
+- `audio-volume-slider`: Adds a volume slider to the game settings in the top-right corner of the screen
+- `cxpc-default-1y`: Selects the 1y chart on open
+
 ### Changed
 
-- `XIT SET`: Add a confirmation popup for restore from backup
+- `nots-notification-type-label`: Add labels for the new notification types
+- `nots-notification-type-label`: Adjust the colors to improve readability and consistency with the game's UI
+- Decrease the default audio volume to 40%
 
 ### Fixed
 
+- `XIT ACT`: Fix the CX Buy action failing to execute due to number formatting in some localizations
+- `bs-hide-zero-workforce`: Fix the broken tooltip in the "Current Workforce" column header
+- `co-base-count`: Fix the feature not working after the gateway update
+- `cxpo-auto-price`: Fix localized number formatting
+- `hide-system-chat-messages`: Fix the vertical indicator not being visible after the gateway update
+- `inv-compress-inventory-info`: Fix the feature not working in `SHPI`
+- `other-context-notification-count`: Fix ghost INFRASTRUCTURE_UPGRADE_COMPLETED notifications
+- `screen-layout-lock`: Fix the feature not working when the game URL does not contain a screen id
+
+## 25.11.16
+
+### Added
+
+- `screen-layout-lock`: Adds screen locking
+- `cxos-hide-delete-filled`: Hides the "Delete Filled" button when filters are hidden
+
+### Changed
+
+- `XIT ACT`: Make the action package list reorderable
+- `XIT ACT`: Add an "Allow Unfilled" option to the CX Buy action
+- `XIT ACT`: Remove the Help button
+- `XIT SET`: Add a confirmation popup for restore from backup
+- `XIT SORT`: Add copy/paste buttons to sorting modes
+- `item-icons`: Add icons for colony-ship-related materials
+- `screen-tab-bar`: Make tab bar scrollable to allow offscreen tabs
+
+### Fixed
+
+- `XIT ACT`: Fix MTRA action getting stuck when the material amount is zero
+- `XIT ACT`: Fix CX Buy action getting stuck when the material amount is zero
 - `XIT CONTS`: Fix government partner display in contracts
+- `XIT CONTS`: Fix the display text of the "Construct Ship" condition
+- `XIT NOTE`: Fix material tickers being changed to the first one in the note
+- `correct-commands`: Fix url correction for links without http:// or https:// in XIT WEB
 - `sidebar-contracts-details`: Fix government partner display in contracts
+- Fix the color of materials in the "Infrastructure" category
 
 ## 25.8.16
 

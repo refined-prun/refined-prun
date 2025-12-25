@@ -12,6 +12,7 @@ import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { isEmpty } from 'ts-extras';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { countDays } from '@src/features/XIT/BURN/utils';
+import InlineFlex from '@src/components/InlineFlex.vue';
 
 const parameters = useXitParameters();
 const isBurnOverall = !isEmpty(parameters) && parameters[0].toLowerCase() == 'overall';
@@ -132,18 +133,18 @@ function onExpandAllClick() {
           <th v-else />
           <th>Inv</th>
           <th>
-            <div :class="$style.header">
+            <InlineFlex>
               Burn
               <Tooltip position="bottom" tooltip="How much of a material is consumed per day." />
-            </div>
+            </InlineFlex>
           </th>
           <th>
-            <div :class="$style.header">
+            <InlineFlex>
               Need
               <Tooltip
                 position="bottom"
                 tooltip="How much of a material needs to be delivered to be fully supplied." />
-            </div>
+            </InlineFlex>
           </th>
           <th>Days</th>
           <th>CMD</th>
@@ -164,12 +165,6 @@ function onExpandAllClick() {
 <style module>
 .fakeRow {
   visibility: collapse;
-}
-
-.header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
 }
 
 .expand {

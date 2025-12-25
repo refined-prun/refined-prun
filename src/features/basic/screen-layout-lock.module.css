@@ -1,0 +1,17 @@
+.lockButton {
+  width: 26px;
+  text-align: center;
+}
+
+.handle {
+  .lockedScreen & {
+    pointer-events: none;
+  }
+}
+
+.tileControl {
+  .lockedScreen & {
+    display: none;
+  }
+}
+

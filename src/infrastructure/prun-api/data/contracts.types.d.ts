@@ -59,6 +59,7 @@ declare namespace PrunApi {
   type ContractConditionType =
     | 'BASE_CONSTRUCTION'
     | 'COMEX_PURCHASE_PICKUP'
+    | 'CONSTRUCT_SHIP'
     | 'CONTRIBUTION'
     | 'DELIVERY'
     | 'DELIVERY_SHIPMENT'

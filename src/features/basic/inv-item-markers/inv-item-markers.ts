@@ -1,4 +1,3 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import IconMarker from './IconMarker.vue';
 import { computedTileState } from '@src/store/user-data-tiles';
 import { refTextContent } from '@src/utils/reactive-dom';
@@ -71,4 +70,4 @@ function init() {
   tiles.observe(['INV', 'SHPI'], onTileReady);
 }
 
-features.add(import.meta.url, init, 'Adds bottom-left item markers.');
+features.add(import.meta.url, init, 'INV/SHPI: Adds bottom-left item markers.');
