@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { migrateVersionedUserData } from '@src/store/user-data-versioned-migrations.ts';
+import { migrateVersionedUserData } from '@src/store/user-data-versioned-migrations';
 
 type Migration = [id: string, migration: (userData: any) => void];
 

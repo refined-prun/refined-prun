@@ -2,7 +2,7 @@ import $style from './screen-layout-lock.module.css';
 import { userData } from '@src/store/user-data';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
-import { screensStore } from '@src/infrastructure/prun-api/data/screens.ts';
+import { screensStore } from '@src/infrastructure/prun-api/data/screens';
 
 function onListReady(list: HTMLElement) {
   subscribe($$(list, C.ScreenControls.screen), onScreenItemReady);

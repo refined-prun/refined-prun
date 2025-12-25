@@ -1,6 +1,6 @@
-import { setAudioVolume } from '@src/infrastructure/prun-ui/audio-interceptor.ts';
-import { userData } from '@src/store/user-data.ts';
-import { createFragmentApp } from '@src/utils/vue-fragment-app.ts';
+import { setAudioVolume } from '@src/infrastructure/prun-ui/audio-interceptor';
+import { userData } from '@src/store/user-data';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import AudioVolume from '@src/features/basic/audio-volume-slider/AudioVolume.vue';
 
 function init() {

@@ -3,7 +3,7 @@ import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { isEmpty } from 'ts-extras';
-import { PrunI18N } from '@src/infrastructure/prun-ui/i18n.ts';
+import { PrunI18N } from '@src/infrastructure/prun-ui/i18n';
 
 function onTileReady(tile: PrunTile) {
   // Only process BS {base} tiles

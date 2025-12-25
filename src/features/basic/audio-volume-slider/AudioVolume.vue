@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import RangeInput from '@src/components/forms/RangeInput.vue';
-import { percent0 } from '@src/utils/format.ts';
-import { userData } from '@src/store/user-data.ts';
-import { playAudio } from '@src/infrastructure/prun-ui/audio-interceptor.ts';
+import { percent0 } from '@src/utils/format';
+import { userData } from '@src/store/user-data';
+import { playAudio } from '@src/infrastructure/prun-ui/audio-interceptor';
 
 const inputText = ref(userData.settings.audioVolume);
 watch(inputText, x => {
