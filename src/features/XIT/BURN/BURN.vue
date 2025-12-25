@@ -16,11 +16,21 @@ import InlineFlex from '@src/components/InlineFlex.vue';
 
 const parameters = useXitParameters();
 const isBurnOverall = !isEmpty(parameters) && parameters[0].toLowerCase() == 'overall';
+const isBurnSome = !isEmpty(parameters) && parameters[0].toLowerCase() == 'not';
 const isBurnAll = isEmpty(parameters) || isBurnOverall || parameters[0].toLowerCase() == 'all';
 
 const sites = computed(() => {
   if (isBurnAll) {
     return sitesStore.all.value;
+  }
+  if (isBurnSome) {
+    const excluded = new Set(parameters.slice(1).map(p => p.toLowerCase()));
+    return sitesStore.all.value?.filter(
+      x =>
+        x !== undefined &&
+        !excluded.has(x.address.lines[1].entity.name.toLowerCase()) &&
+        !excluded.has(x.address.lines[1].entity.naturalId.toLowerCase()),
+    );
   }
 
   return parameters.map(x => sitesStore.getByPlanetNaturalIdOrName(x)).filter(x => x !== undefined);
