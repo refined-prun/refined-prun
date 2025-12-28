@@ -141,10 +141,10 @@ export const CXPO_BUY = act.addActionStep<Data>({
 
       if (data.allowUnfilled) {
         changeInputValue(quantityInput, data.amount.toString());
-        changeInputValue(priceInput, data.priceLimit.toString());
+        changeInputValue(priceInput, fixed02(data.priceLimit));
       } else {
         changeInputValue(quantityInput, filled.amount.toString());
-        changeInputValue(priceInput, filled.priceLimit.toString());
+        changeInputValue(priceInput, fixed02(filled.priceLimit));
       }
 
       // Cache description before clicking the buy button because

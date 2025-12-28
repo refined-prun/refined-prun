@@ -41,5 +41,5 @@ function init() {
 features.add(
   import.meta.url,
   init,
-  'Shows the remaining weight and volume capacity of the selected store in INV and SHPI',
+  'INV/SHPI: Shows the remaining weight and volume capacity of the selected store in INV and SHPI',
 );
