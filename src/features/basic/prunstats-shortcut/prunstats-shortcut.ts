@@ -1,4 +1,5 @@
 import CoPrunstatsShortcut from '@src/features/basic/prunstats-shortcut/CoPrunstatsShortcut.vue';
+import UsrPrunstatsShortcut from '@src/features/basic/prunstats-shortcut/UsrPrunstatsShortcut.vue';
 
 function onCoReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.FormComponent.containerPassive), row => {
@@ -17,9 +18,23 @@ function onCoReady(tile: PrunTile) {
   });
 }
 
+function onUsrReady(tile: PrunTile) {
+  const username = tile.parameter?.trim();
+  if (username) {
+    subscribe($$(tile.frame, C.ContextControls.container), contextControls => {
+      createFragmentApp(
+        UsrPrunstatsShortcut,
+        reactive({
+          username,
+        }),
+      ).appendTo(contextControls);
+    });
+  }
+}
+
 function init() {
   tiles.observe(['CO'], onCoReady);
-  tiles.observe(['USR'], () => {});
+  tiles.observe(['USR'], onUsrReady);
 }
 
 features.add(
