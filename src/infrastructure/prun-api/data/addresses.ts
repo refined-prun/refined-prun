@@ -57,7 +57,7 @@ export const getEntityNameFromAddress = (address?: PrunApi.Address | undefined) 
   return location.entity.name.replace(system.entity.naturalId, `${system.entity.name} `);
 };
 
-const getSystemLineFromAddress = (address?: PrunApi.Address | undefined) => {
+export const getSystemLineFromAddress = (address?: PrunApi.Address | undefined) => {
   if (!address) {
     return undefined;
   }

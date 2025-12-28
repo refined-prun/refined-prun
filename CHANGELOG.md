@@ -10,6 +10,8 @@
 ### Changed
 
 - `XIT BURN`: Add support for a `NOT` filter, for example `XIT BURN NOT MALAHAT`
+- `correct-commands`: Add support for planets in system commands, for example `SYSI PROMITOR`
+- `correct-commands`: Add support for stations in system commands, for example `SYSI ANT`
 - `nots-notification-type-label`: Add labels for the new notification types
 - `nots-notification-type-label`: Adjust the colors to improve readability and consistency with the game's UI
 - Decrease the default audio volume to 40%
