@@ -22,11 +22,16 @@ export function getStarName(star: PrunApi.Star) {
 
 const getByNaturalId = createMapGetter(state.all, getStarNaturalId);
 const getByName = createMapGetter(state.all, getStarName);
+
+const find = (naturalIdOrName?: string | null) =>
+  getByNaturalId(naturalIdOrName) ?? getByName(naturalIdOrName);
+
 const getByPlanetNaturalId = (id?: string | null) => getByNaturalId(id?.slice(0, -1));
 
 export const starsStore = {
   ...state,
   getByNaturalId,
   getByName,
+  find,
   getByPlanetNaturalId,
 };

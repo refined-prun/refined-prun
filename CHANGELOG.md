@@ -9,6 +9,7 @@
 
 ### Changed
 
+- `XIT BURN`: Add support for a `NOT` filter, for example `XIT BURN NOT MALAHAT`
 - `nots-notification-type-label`: Add labels for the new notification types
 - `nots-notification-type-label`: Adjust the colors to improve readability and consistency with the game's UI
 - Decrease the default audio volume to 40%
