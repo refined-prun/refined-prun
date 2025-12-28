@@ -11,14 +11,13 @@ function sliderTableBulkMinMax(tile: PrunTile) {
   subscribe($$(tile.anchor, 'table'), table => {
     const headerRow = _$(table, 'thead')?.firstElementChild;
     if (!headerRow) return;
-    const sliderViews = _$$(table, C.SliderView.container);
-    if (sliderViews.length > 0) {
+    const sliders = _$$(table, 'rc-slider');
+    if (sliders.length > 0) {
       const sliderColumns = new Map<number, HTMLElement[]>();
-      sliderViews.forEach(sliderView => {
-        const cell = sliderView.closest('td');
+      sliders.forEach(slider => {
+        const cell = slider.closest('td');
         const columnIndex = Array.prototype.slice.call(cell?.parentElement?.children).indexOf(cell);
         const column = sliderColumns.get(columnIndex);
-        const slider = _$(sliderView, 'rc-slider')!;
         if (!column) {
           sliderColumns.set(columnIndex, [slider]);
         } else {
