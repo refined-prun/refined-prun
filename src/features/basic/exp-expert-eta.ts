@@ -4,8 +4,6 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { timestampEachMinute } from '@src/utils/dayjs';
 import { formatEta } from '@src/utils/format';
 import { createReactiveDiv } from '@src/utils/reactive-element';
-import { getRecurringOrders } from '@src/core/orders';
-import { sumBy } from '@src/utils/sum-by';
 
 const orderedExpertiseRows = [
   'AGRICULTURE',
@@ -82,7 +80,7 @@ function onExpertRowReady(row: HTMLTableRowElement, expertise: string, siteId: s
     }
 
     if (eta.value.type === 'estimate') {
-      return `~${(eta.value.ms / MS_IN_DAY).toFixed(1)}d`;
+      return isFinite(eta.value.ms) ? `~${(eta.value.ms / MS_IN_DAY).toFixed(1)}d` : '∞';
     }
 
     return '--';
@@ -131,16 +129,7 @@ function calculateEta(entry: PrunApi.ExpertFieldEntry, lines: PrunApi.Production
   // Otherwise, estimate the remaining number of days.
   let experiencePerMs = 0;
   for (const line of lines) {
-    const recurringOrders = getRecurringOrders(line);
-    if (recurringOrders.length === 0) {
-      continue;
-    }
-    const totalDuration = sumBy(
-      recurringOrders,
-      x => x.duration?.millis ?? Number.POSITIVE_INFINITY,
-    );
-    const totalExperience = sumBy(recurringOrders, x => getExperience(x, line));
-    experiencePerMs += (line.capacity * totalExperience) / totalDuration;
+    experiencePerMs += line.capacity * line.efficiency;
   }
 
   return {

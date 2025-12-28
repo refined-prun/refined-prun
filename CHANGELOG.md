@@ -22,6 +22,7 @@
 - `bs-hide-zero-workforce`: Fix the broken tooltip in the "Current Workforce" column header
 - `co-base-count`: Fix the feature not working after the gateway update
 - `cxpo-auto-price`: Fix localized number formatting
+- `exp-expert-eta`: Fix the Infinityd bug for production lines without recurring orders
 - `hide-system-chat-messages`: Fix the vertical indicator not being visible after the gateway update
 - `inv-compress-inventory-info`: Fix the feature not working in `SHPI`
 - `other-context-notification-count`: Fix ghost INFRASTRUCTURE_UPGRADE_COMPLETED notifications
