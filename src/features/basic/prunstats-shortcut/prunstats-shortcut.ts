@@ -1,25 +1,16 @@
-import { usersStore } from '@src/infrastructure/prun-api/data/users.ts';
 import CoPrunstatsShortcut from '@src/features/basic/prunstats-shortcut/CoPrunstatsShortcut.vue';
 
 function onCoReady(tile: PrunTile) {
-  const coArg = tile.parameter?.toLowerCase();
-  if (!coArg) {
-    return;
-  }
   subscribe($$(tile.anchor, C.FormComponent.containerPassive), row => {
     const staticInput = _$(row, C.StaticInput.static);
     const value = staticInput?.textContent.trim();
-    const user = usersStore.getByUsername(value);
-    // User exists and is the correct user for tile command
-    console.log(value, coArg, user);
-    if (
-      user &&
-      (user.company.code.toLowerCase() == coArg || user.company.id.toLowerCase() == coArg)
-    ) {
+    // 'Managing Director' field is the eighth child (as of 12/28/2025)
+    const is8thChild = row.parentElement?.children[7] === row;
+    if (is8thChild && value) {
       createFragmentApp(
         CoPrunstatsShortcut,
         reactive({
-          username: user.username,
+          username: value,
         }),
       ).appendTo(staticInput!);
     }
