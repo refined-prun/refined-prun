@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `cxpc-default-1y`: Fix the 1y chart showing only 30d of data if opened not from `CXM`
+
 ## 25.12.28
 
 ### Added
