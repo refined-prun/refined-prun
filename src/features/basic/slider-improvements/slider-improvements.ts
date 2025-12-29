@@ -66,32 +66,28 @@ function sliderTableBulkMinMax(tile: PrunTile) {
 }
 
 function sliderMinMaxButtons(tile: PrunTile) {
-  subscribe($$(tile.anchor, C.SliderView.container), sliderView => {
-    const cell = sliderView.parentElement;
-    sliderView.classList.add($style.sliderView);
-    cell?.classList.add($style.sliderCell);
-    subscribe($$(sliderView, 'rc-slider'), slider => {
-      const disabled = slider.classList.contains('rc-slider-disabled');
-      const markContainer = _$(slider, 'rc-slider-mark');
-      const minSlider = () => clickElement(markContainer?.firstElementChild as HTMLElement);
-      const maxSlider = () => clickElement(markContainer?.lastElementChild as HTMLElement);
-      createFragmentApp(
-        SliderButton,
-        reactive({
-          onClick: minSlider,
-          label: '<',
-          disabled,
-        }),
-      ).before(slider);
-      createFragmentApp(
-        SliderButton,
-        reactive({
-          onClick: maxSlider,
-          label: '>',
-          disabled,
-        }),
-      ).after(slider);
-    });
+  subscribe($$(tile.anchor, 'rc-slider'), slider => {
+    slider.parentElement?.classList.add($style.sliderView);
+    const disabled = slider.classList.contains('rc-slider-disabled');
+    const markContainer = _$(slider, 'rc-slider-mark');
+    const minSlider = () => clickElement(markContainer?.firstElementChild as HTMLElement);
+    const maxSlider = () => clickElement(markContainer?.lastElementChild as HTMLElement);
+    createFragmentApp(
+      SliderButton,
+      reactive({
+        onClick: minSlider,
+        label: '<',
+        disabled,
+      }),
+    ).before(slider);
+    createFragmentApp(
+      SliderButton,
+      reactive({
+        onClick: maxSlider,
+        label: '>',
+        disabled,
+      }),
+    ).after(slider);
   });
 }
 
