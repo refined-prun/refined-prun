@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Open `XIT CMDS` in the parameterless `XIT` command
+
 ### Fixed
 
 - `cxpc-default-1y`: Fix the 1y chart showing only 30d of data if opened not from `CXM`
