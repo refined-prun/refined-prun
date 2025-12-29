@@ -28,10 +28,10 @@ export function matchBufferSize(command: string): [number, number] | undefined {
     // PLI and SYSI without parameters have the default buffer size.
     return defaultSize.slice() as [number, number];
   }
-  let keyword = commandUpper.split(' ')[0];
-  if (keyword === 'XIT') {
-    keyword = commandUpper.split(' ')[1];
-    keyword = keyword.split('_')[0];
+  const commandParts = commandUpper.split(' ');
+  let keyword = commandParts[0];
+  if (keyword === 'XIT' && commandParts.length > 1) {
+    keyword = commandParts[1].split('_')[0];
     return defaultXitBufferSizes[keyword];
   }
   return defaultBufferSizes[keyword];

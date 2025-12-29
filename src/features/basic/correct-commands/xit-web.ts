@@ -2,8 +2,12 @@ import { isValidUrl } from '@src/utils/is-valid-url';
 import { prunBtoa } from '@src/infrastructure/prun-ui/base64';
 
 export function correctXitWeb(parts: string[]) {
+  if (parts.length !== 3) {
+    return;
+  }
+
   const isXitWeb = parts[0].toUpperCase() === 'XIT' && parts[1].toUpperCase() === 'WEB';
-  if (!isXitWeb || parts.length >= 4) {
+  if (!isXitWeb) {
     return;
   }
 
