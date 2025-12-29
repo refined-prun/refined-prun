@@ -3,14 +3,21 @@ const {
   max = 100,
   min = 0,
   step = 1,
-} = defineProps<{ max?: number; min?: number; step?: number }>();
+} = defineProps<{ max?: number; min?: number; step?: number; onChange?: () => void }>();
 
 const model = defineModel<number>();
 </script>
 
 <template>
   <div>
-    <input v-model="model" :class="$style.input" type="range" :min="min" :max="max" :step="step" />
+    <input
+      v-model="model"
+      :class="$style.input"
+      type="range"
+      :min="min"
+      :max="max"
+      :step="step"
+      @change="onChange" />
   </div>
 </template>
 

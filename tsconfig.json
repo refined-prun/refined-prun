@@ -6,6 +6,7 @@
     "outDir": "dist",
     "allowJs": true,
     "noEmit": true,
+    "allowImportingTsExtensions": false,
     "downlevelIteration": true,
     "isolatedModules": true,
     "strict": true,
@@ -25,16 +26,7 @@
       "@src/*": ["src/*"],
       "~/*": ["src/assets/*"]
     },
-    "lib": [
-      "DOM",
-      "WebWorker",
-      "ESNext"
-    ]
+    "lib": ["DOM", "WebWorker", "ESNext"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.vue",
-    "vite.config.mts"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "vite.config.mts"]
 }

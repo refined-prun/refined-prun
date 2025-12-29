@@ -41,7 +41,7 @@ async function onFormReady(form: HTMLElement, parameter?: string) {
   buy.addEventListener('mouseleave', () => (isBuyFocused.value = false));
   buy.addEventListener('click', e => {
     if (showAutoValues.value) {
-      changeInputValue(priceInput, priceBuy.value.toString());
+      changeInputValue(priceInput, fixed02(priceBuy.value));
       e.stopPropagation();
       e.preventDefault();
     }
@@ -53,7 +53,7 @@ async function onFormReady(form: HTMLElement, parameter?: string) {
   sell.addEventListener('mouseleave', () => (isSellFocused.value = false));
   sell.addEventListener('click', e => {
     if (showAutoValues.value) {
-      changeInputValue(priceInput, priceSell.value.toString());
+      changeInputValue(priceInput, fixed02(priceSell.value));
       e.stopPropagation();
       e.preventDefault();
     }

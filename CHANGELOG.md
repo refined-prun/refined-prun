@@ -1,5 +1,33 @@
 # Changelog
 
+## 25.12.28
+
+### Added
+
+- `audio-volume-slider`: Adds a volume slider to the game settings in the top-right corner of the screen
+- `cxpc-default-1y`: Selects the 1y chart on open
+
+### Changed
+
+- `XIT BURN`: Add support for a `NOT` filter, for example `XIT BURN NOT MALAHAT`
+- `correct-commands`: Add support for planets in system commands, for example `SYSI PROMITOR`
+- `correct-commands`: Add support for stations in system commands, for example `SYSI ANT`
+- `nots-notification-type-label`: Add labels for the new notification types
+- `nots-notification-type-label`: Adjust the colors to improve readability and consistency with the game's UI
+- Decrease the default audio volume to 40%
+
+### Fixed
+
+- `XIT ACT`: Fix the CX Buy action failing to execute due to number formatting in some localizations
+- `bs-hide-zero-workforce`: Fix the broken tooltip in the "Current Workforce" column header
+- `co-base-count`: Fix the feature not working after the gateway update
+- `cxpo-auto-price`: Fix localized number formatting
+- `exp-expert-eta`: Fix the Infinityd bug for production lines without recurring orders
+- `hide-system-chat-messages`: Fix the vertical indicator not being visible after the gateway update
+- `inv-compress-inventory-info`: Fix the feature not working in `SHPI`
+- `other-context-notification-count`: Fix ghost INFRASTRUCTURE_UPGRADE_COMPLETED notifications
+- `screen-layout-lock`: Fix the feature not working when the game URL does not contain a screen id
+
 ## 25.11.16
 
 ### Added

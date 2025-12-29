@@ -14,6 +14,7 @@ const barClass = computed(() => [
   C.RadioItem.indicator,
   {
     [C.RadioItem.indicatorHorizontal]: horizontal,
+    [C.RadioItem.indicatorVertical]: !horizontal,
     [C.RadioItem.active]: model.value,
     [C.effects.shadowPrimary]: model.value,
   },
