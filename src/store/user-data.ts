@@ -54,7 +54,6 @@ export const initialUserData = deepFreeze({
     audioVolume: 0.4,
   },
   sorting: {} as Record<string, UserData.StoreSortingData>,
-  scroll: {} as Record<string, UserData.TileScroll>,
   balanceHistory: {
     v1: [],
     v2: [],
