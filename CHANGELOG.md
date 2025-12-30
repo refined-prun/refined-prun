@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `XIT SET`: Display the 12h/24h time format in the Default option
+
 ## 25.12.30
 
 ### Changed

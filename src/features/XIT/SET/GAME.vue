@@ -23,22 +23,29 @@ import {
   getUserDataBackups,
   UserDataBackup,
 } from '@src/infrastructure/storage/user-data-backup';
-import { ddmmyyyy, hhmm } from '@src/utils/format';
+import { ddmmyyyy, hhForXitSet, hhmm } from '@src/utils/format';
+import dayjs from 'dayjs';
 
-const timeFormats: { label: string; value: UserData.TimeFormat }[] = [
-  {
-    label: 'Default',
-    value: 'DEFAULT',
-  },
-  {
-    label: '24h',
-    value: '24H',
-  },
-  {
-    label: '12h',
-    value: '12H',
-  },
-];
+const isDefault24 = computed(() => {
+  return hhForXitSet.value(dayjs.duration(12, 'hours').asMilliseconds()) === '13';
+});
+
+const timeFormats = computed(() => {
+  return [
+    {
+      label: isDefault24.value ? 'Default (24h)' : 'Default (12h)',
+      value: 'DEFAULT',
+    },
+    {
+      label: '24h',
+      value: '24H',
+    },
+    {
+      label: '12h',
+      value: '12H',
+    },
+  ] as { label: string; value: UserData.TimeFormat }[];
+});
 
 const exchangeChartTypes: { label: string; value: UserData.ExchangeChartType }[] = [
   {
@@ -160,7 +167,7 @@ function confirmResetAllData(ev: Event) {
 <template>
   <SectionHeader>Appearance</SectionHeader>
   <form>
-    <Active label="Time">
+    <Active label="Time format">
       <SelectInput v-model="userData.settings.time" :options="timeFormats" />
     </Active>
     <Active label="Default CX Chart Type">
