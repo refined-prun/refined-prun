@@ -1,34 +1,22 @@
-function updateTabTitleFromActiveComponent() {
-  const activeElement = document.querySelector(`.${C.HeadItem.indicatorPrimaryActive}`);
-  if (!activeElement) {
-    return;
-  }
+function updateTabTitleFromHeadItem() {
+  const headItemContainer = document.querySelector(`.${C.HeadItem.container}`);
+  if (!headItemContainer) return;
 
-  const labelElement = activeElement
-    .closest(`.${C.HeadItem.container}`)
-    ?.querySelector(`.${C.HeadItem.label}`);
-  if (!labelElement) {
-    return;
-  }
+  const screenNameElement = headItemContainer.querySelector(
+    `.${C.ScreenControls.currentScreenName}`,
+  );
+  const screenName = screenNameElement?.textContent?.trim();
 
-  const screenName = labelElement.textContent?.trim();
-
-  if (screenName) {
-    document.title = `${screenName} - Prosperous Universe`;
-  } else {
-    document.title = 'Prosperous Universe';
-  }
+  document.title = screenName ? `${screenName} - Prosperous Universe` : 'Prosperous Universe';
 }
 
 function init() {
-  const observer = new MutationObserver(() => {
-    updateTabTitleFromActiveComponent();
-  });
-
-  const targetNode = document.querySelector(`.${C.Head.contextAndScreens}`);
-  if (targetNode) {
-    observer.observe(targetNode, { childList: true, subtree: true });
+  const headItemContainer = document.querySelector(`.${C.HeadItem.container}`);
+  if (headItemContainer) {
+    const observer = new MutationObserver(updateTabTitleFromHeadItem);
+    observer.observe(headItemContainer, { childList: true, subtree: true });
   }
+  updateTabTitleFromHeadItem();
 }
 
-features.add(import.meta.url, init, 'Rename browser tab based on the active screen component.');
+features.add(import.meta.url, init, 'Rename browser tab based on the HeadItem component.');
