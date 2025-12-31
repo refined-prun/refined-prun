@@ -8,6 +8,7 @@ import './bbl-sticky-dividers';
 import './better-item-colors';
 import './bigger-item-count-font';
 import './blck-item-destination';
+import './browser-tab-name';
 import './bs-building-list/bs-building-list';
 import './bs-merge-area-stats';
 import './bs-satisfaction-percentage';

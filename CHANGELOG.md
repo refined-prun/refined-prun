@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `browser-tab-name`: Renames the browser tab based on the current screen
+
 ### Changed
 
 - `XIT SET`: Display the 12h/24h time format in the Default option
