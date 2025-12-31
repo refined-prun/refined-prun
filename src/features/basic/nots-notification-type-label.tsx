@@ -131,6 +131,7 @@ const labels: NotificationTypeLabel[] = [
       'GATEWAY_JUMP_ABORTED_NO_CAPACITY',
       'GATEWAY_JUMP_ABORTED_NO_FUEL',
       'GATEWAY_JUMP_ABORTED_NOT_OPERATIONAL',
+      'GATEWAY_LINK_ESTABLISHED',
       'GATEWAY_LINK_REQUEST_RECEIVED',
       'GATEWAY_LINK_UNLINKED',
     ],
@@ -175,7 +176,7 @@ const labels: NotificationTypeLabel[] = [
     color: '#ea698f',
   },
   {
-    types: ['TUTORIAL_TASK_FINISHED'],
+    types: ['TUTORIAL_TASK_FINISHED', 'WELCOME'],
     label: 'HELLO',
     color: '#eeeeee',
   },
