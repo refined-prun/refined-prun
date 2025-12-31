@@ -15,4 +15,4 @@ function init() {
   updateTabTitle();
 }
 
-features.add(import.meta.url, init, 'Rename browser tab based on the current screen');
+features.add(import.meta.url, init, 'Renames browser tab based on the current screen');
