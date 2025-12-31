@@ -10,6 +10,10 @@
 
 - `XIT SET`: Display the 12h/24h time format in the Default option
 
+### Fixed
+
+- `nots-notification-type-label`: Add labels for the missing notification types
+
 ## 25.12.30
 
 ### Changed
