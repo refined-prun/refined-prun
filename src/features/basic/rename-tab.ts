@@ -2,7 +2,11 @@ function updateTabTitle() {
 import { screensStore } from '@src/infrastructure/prun-api/data/screens';
 
   const screenName = screensStore.current.value?.name;
-  document.title = screenName ? `${screenName} - Prosperous Universe` : 'Prosperous Universe';
+  watchEffect(() => {
+    const screenName = screensStore.current.value?.name;
+    const notificationCount = alertsStore.all.value?.count ?? 0;
+    document.title = // do your logic here;
+  });
 }
 
 function init() {
