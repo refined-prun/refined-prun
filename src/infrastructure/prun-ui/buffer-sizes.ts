@@ -32,7 +32,8 @@ export function matchBufferSize(command: string): [number, number] | undefined {
   let keyword = commandParts[0];
   if (keyword === 'XIT' && commandParts.length > 1) {
     keyword = commandParts[1].split('_')[0];
-    return defaultXitBufferSizes[keyword];
+    const xitCommand = xit.get(keyword);
+    return xitCommand?.bufferSize;
   }
   return defaultBufferSizes[keyword];
 }
@@ -97,11 +98,4 @@ const defaultBufferSizes: Record<string, [number, number]> = {
   SYSI: [600, 600],
   WAR: [400, 580],
   WF: [710, 300],
-};
-
-const defaultXitBufferSizes = {
-  CALC: [275, 326],
-  YAPT: [1100, 700],
-  PRUNSTAT: [830, 680],
-  PRUNSTATS: [830, 680],
 };
