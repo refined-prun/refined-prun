@@ -13,6 +13,10 @@ import EditAction from '@src/features/XIT/ACT/EditAction.vue';
 import { downloadJson } from '@src/utils/json-file';
 import { deepToRaw } from '@src/utils/deep-to-raw';
 import RenameActionPackage from '@src/features/XIT/ACT/RenameActionPackage.vue';
+import { vDraggable } from 'vue-draggable-plus';
+import { useGrip } from '@src/components/grip/use-grip';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
+import GripCell from '@src/components/grip/GripCell.vue';
 
 const { pkg } = defineProps<{ pkg: UserData.ActionPackageData }>();
 
@@ -88,6 +92,9 @@ function onExportClick() {
   const json = deepToRaw(pkg);
   downloadJson(json, `${pkg.global.name.replace(' ', '_')}-${Date.now()}.json`);
 }
+
+const materialsGrip = useGrip();
+const actionsGrip = useGrip();
 </script>
 
 <template>
@@ -96,6 +103,7 @@ function onExportClick() {
   <table>
     <thead>
       <tr>
+        <GripHeaderCell />
         <th>Type</th>
         <th>Name</th>
         <th>Content</th>
@@ -107,8 +115,12 @@ function onExportClick() {
         <td colspan="4" :class="$style.emptyRow">No groups yet.</td>
       </tr>
     </tbody>
-    <tbody v-else>
+    <tbody
+      v-else
+      v-draggable="[pkg.groups, materialsGrip.draggable]"
+      :class="materialsGrip.rootClass">
       <tr v-for="group in pkg.groups" :key="objectId(group)">
+        <GripCell />
         <td>{{ group.type }}</td>
         <td>{{ group.name || '--' }}</td>
         <td>{{ getMaterialGroupDescription(group) }}</td>
@@ -132,6 +144,7 @@ function onExportClick() {
   <table>
     <thead>
       <tr>
+        <GripHeaderCell />
         <th>Type</th>
         <th>Name</th>
         <th>Content</th>
@@ -143,8 +156,9 @@ function onExportClick() {
         <td colspan="4" :class="$style.emptyRow">No actions yet.</td>
       </tr>
     </tbody>
-    <tbody v-else>
+    <tbody v-else v-draggable="[pkg.actions, actionsGrip.draggable]" :class="actionsGrip.rootClass">
       <tr v-for="action in pkg.actions" :key="objectId(action)">
+        <GripCell />
         <td>{{ action.type }}</td>
         <td>{{ action.name || '--' }}</td>
         <td>{{ getActionDescription(action) }}</td>
