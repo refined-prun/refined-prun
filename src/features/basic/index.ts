@@ -1,6 +1,7 @@
 import './align-chat-delete-button';
 import './audio-volume-slider/audio-volume-slider';
 import './auto-resize-buffers';
+import './bbc-building-count';
 import './bbl-condition-progress-bar';
 import './bbl-dangerous-demolish';
 import './bbl-dangerous-repair';

@@ -4,6 +4,7 @@
 
 ### Added
 
+- `bbc-building-count`: Adds a building count label to the building icons
 - `browser-tab-name`: Renames the browser tab based on the current screen
 
 ### Changed
