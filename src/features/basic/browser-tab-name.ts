@@ -1,18 +1,26 @@
 import { screensStore } from '@src/infrastructure/prun-api/data/screens';
 import { alertsStore } from '@src/infrastructure/prun-api/data/alerts';
+import { refTextContent } from '@src/utils/reactive-dom';
 
-function init() {
-  watchEffect(() => {
+async function init() {
+  const title = await $(document, 'title');
+  const titleText = refTextContent(title);
+  const newTitleText = computed(() => {
     const screenName = screensStore.current.value?.name;
     const notificationCount = alertsStore.all.value?.filter(x => !x.seen).length ?? 0;
     let title = 'Prosperous Universe';
-    if (screenName) {
+    if (screenName !== undefined) {
       title = `${screenName} - ${title}`;
     }
     if (notificationCount > 0) {
       title = `(${notificationCount}) ${title}`;
     }
-    document.title = title;
+    return title;
+  });
+  watchEffect(() => {
+    if (titleText.value !== newTitleText.value) {
+      title.textContent = newTitleText.value;
+    }
   });
 }
 
