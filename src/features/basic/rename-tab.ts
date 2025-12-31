@@ -1,7 +1,7 @@
 function updateTabTitle() {
-  const screenName = document
-    .querySelector(`.${C.ScreenControls.currentScreenName}`)
-    ?.textContent?.trim();
+import { screensStore } from '@src/infrastructure/prun-api/data/screens';
+
+  const screenName = screensStore.current.value?.name;
   document.title = screenName ? `${screenName} - Prosperous Universe` : 'Prosperous Universe';
 }
 
