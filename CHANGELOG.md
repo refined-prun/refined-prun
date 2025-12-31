@@ -9,6 +9,7 @@
 ### Changed
 
 - `XIT SET`: Display the 12h/24h time format in the Default option
+- `inv-compress-inventory-info`: Add a small right padding to the unload button
 
 ### Fixed
 
