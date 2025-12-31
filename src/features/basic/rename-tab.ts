@@ -1,18 +1,15 @@
-function updateTabTitle() {
 import { screensStore } from '@src/infrastructure/prun-api/data/screens';
-
-  const screenName = screensStore.current.value?.name;
-  watchEffect(() => {
-    const screenName = screensStore.current.value?.name;
-    const notificationCount = alertsStore.all.value?.count ?? 0;
-    document.title = // do your logic here;
-  });
-}
+import { alertsStore } from '@src/infrastructure/prun-api/data/alerts';
 
 function init() {
-  // Listen for URL changes using the hashchange event
-  window.addEventListener('hashchange', updateTabTitle);
-  updateTabTitle();
+  watchEffect(() => {
+    const screenName = screensStore.current.value?.name;
+    const notificationCount = alertsStore.all.value?.filter(alert => !alert.seen).length ?? 0;
+    document.title = `${screenName} - Prosperous Universe`;
+    if (notificationCount > 0) {
+      document.title = `(${notificationCount}) ${document.title}`;
+    }
+  });
 }
 
 features.add(import.meta.url, init, 'Renames browser tab based on the current screen');
