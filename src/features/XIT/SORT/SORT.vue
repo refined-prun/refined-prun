@@ -9,6 +9,10 @@ import { isEmpty } from 'ts-extras';
 import { objectId } from '@src/utils/object-id';
 import { getSortingData } from '@src/store/user-data-sorting';
 import removeArrayElement from '@src/utils/remove-array-element';
+import { vDraggable } from 'vue-draggable-plus';
+import { useGrip } from '@src/components/grip/use-grip';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
+import GripCell from '@src/components/grip/GripCell.vue';
 
 const parameters = useXitParameters();
 const storeId = parameters[0];
@@ -58,6 +62,8 @@ async function pasteSortingMode(ev: Event) {
     onSave: sorting => sortingData.value.modes.push(sorting),
   });
 }
+
+const grip = useGrip();
 </script>
 
 <template>
@@ -70,13 +76,18 @@ async function pasteSortingMode(ev: Event) {
     <table>
       <thead>
         <tr>
+          <GripHeaderCell />
           <th>Name</th>
           <th>Categories</th>
           <th />
         </tr>
       </thead>
-      <tbody v-if="!isEmpty(sortingData.modes)">
+      <tbody
+        v-if="!isEmpty(sortingData.modes)"
+        v-draggable="[sortingData.modes, grip.draggable]"
+        :class="grip.rootClass">
         <tr v-for="mode in sortingData.modes" :key="objectId(mode)">
+          <GripCell />
           <td>{{ mode.label }}</td>
           <td>{{ mode.categories.map(x => x.name).join(', ') }}</td>
           <td>
