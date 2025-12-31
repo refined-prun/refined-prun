@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import grip from '@src/utils/grip.module.css';
-import fa from '@src/utils/font-awesome.module.css';
+import { useGrip } from '@src/components/grip/use-grip';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
+import GripCell from '@src/components/grip/GripCell.vue';
 import { showTileOverlay, showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import PrunButton from '@src/components/PrunButton.vue';
 import ActionBar from '@src/components/ActionBar.vue';
@@ -54,14 +55,7 @@ function getDueDate(list: UserData.TaskList) {
   return ddmmyyyy(dates[0]);
 }
 
-const dragging = ref(false);
-
-const draggableOptions = {
-  animation: 150,
-  handle: `.${grip.grip}`,
-  onStart: () => (dragging.value = true),
-  onEnd: () => (dragging.value = false),
-};
+const grip = useGrip();
 </script>
 
 <template>
@@ -71,20 +65,17 @@ const draggableOptions = {
   <table>
     <thead>
       <tr>
+        <GripHeaderCell />
         <th>Name</th>
         <th>Tasks</th>
         <th>Due Date</th>
         <th />
       </tr>
     </thead>
-    <tbody
-      v-draggable="[userData.todo, draggableOptions]"
-      :class="dragging ? $style.dragging : null">
+    <tbody v-draggable="[userData.todo, grip.draggable]" :class="grip.rootClass">
       <tr v-for="list in userData.todo" :key="list.id">
+        <GripCell />
         <td>
-          <span :class="[grip.grip, fa.solid, $style.grip]">
-            {{ '\uf58e' }}
-          </span>
           <PrunLink inline :command="`XIT TODO ${list.id.substring(0, 8)}`">
             {{ list.name }}
           </PrunLink>
@@ -102,20 +93,3 @@ const draggableOptions = {
     </tbody>
   </table>
 </template>
-
-<style module>
-.grip {
-  cursor: move;
-  transition: opacity 0.2s ease-in-out;
-  opacity: 0;
-  margin-right: 5px;
-}
-
-tr:hover .grip {
-  opacity: 1;
-}
-
-.dragging td .grip {
-  opacity: 0;
-}
-</style>

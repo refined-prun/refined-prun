@@ -7,8 +7,9 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 import { createNote, deleteNote } from '@src/store/notes';
 import { vDraggable } from 'vue-draggable-plus';
-import grip from '@src/utils/grip.module.css';
-import fa from '@src/utils/font-awesome.module.css';
+import { useGrip } from '@src/components/grip/use-grip';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
+import GripCell from '@src/components/grip/GripCell.vue';
 import PrunLink from '@src/components/PrunLink.vue';
 
 function createNewNote(ev: Event) {
@@ -26,14 +27,7 @@ function confirmDelete(ev: Event, note: UserData.Note) {
   });
 }
 
-const dragging = ref(false);
-
-const draggableOptions = {
-  animation: 150,
-  handle: `.${grip.grip}`,
-  onStart: () => (dragging.value = true),
-  onEnd: () => (dragging.value = false),
-};
+const grip = useGrip();
 </script>
 
 <template>
@@ -43,19 +37,16 @@ const draggableOptions = {
   <table>
     <thead>
       <tr>
+        <GripHeaderCell />
         <th>Name</th>
         <th>Length</th>
         <th />
       </tr>
     </thead>
-    <tbody
-      v-draggable="[userData.notes, draggableOptions]"
-      :class="dragging ? $style.dragging : null">
+    <tbody v-draggable="[userData.notes, grip.draggable]" :class="grip.rootClass">
       <tr v-for="note in userData.notes" :key="note.id">
+        <GripCell />
         <td>
-          <span :class="[grip.grip, fa.solid, $style.grip]">
-            {{ '\uf58e' }}
-          </span>
           <PrunLink inline :command="`XIT NOTE ${note.id.substring(0, 8)}`">
             {{ note.name }}
           </PrunLink>
@@ -72,20 +63,3 @@ const draggableOptions = {
     </tbody>
   </table>
 </template>
-
-<style module>
-.grip {
-  cursor: move;
-  transition: opacity 0.2s ease-in-out;
-  opacity: 0;
-  margin-right: 5px;
-}
-
-tr:hover .grip {
-  opacity: 1;
-}
-
-.dragging td .grip {
-  opacity: 0;
-}
-</style>

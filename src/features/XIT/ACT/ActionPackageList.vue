@@ -11,19 +11,14 @@ import PrunLink from '@src/components/PrunLink.vue';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { objectId } from '@src/utils/object-id';
 import { vDraggable } from 'vue-draggable-plus';
-import grip from '@src/utils/grip.module.css';
-import fa from '@src/utils/font-awesome.module.css';
+import { useGrip } from '@src/components/grip/use-grip';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
+import GripCell from '@src/components/grip/GripCell.vue';
 
 const actionPackages = computed(() => userData.actionPackages);
 const showQuickstart = computed(() => userData.actionPackages.length === 0);
 
-const dragging = ref(false);
-const draggableOptions = {
-  animation: 150,
-  handle: `.${grip.grip}`,
-  onStart: () => (dragging.value = true),
-  onEnd: () => (dragging.value = false),
-};
+const grip = useGrip();
 
 function onQuickstartClick(ev: Event) {
   showTileOverlay(ev, Quickstart);
@@ -83,7 +78,7 @@ function paramName(pkg: UserData.ActionPackageData) {
   <table>
     <thead>
       <tr>
-        <th :class="$style.dragHeaderCell"></th>
+        <GripHeaderCell />
         <th>Name</th>
         <th>Execute</th>
         <th>Edit</th>
@@ -95,16 +90,9 @@ function paramName(pkg: UserData.ActionPackageData) {
         <td colspan="5">No action packages.</td>
       </tr>
     </tbody>
-    <tbody
-      v-else
-      v-draggable="[actionPackages, draggableOptions]"
-      :class="dragging ? $style.dragging : null">
+    <tbody v-else v-draggable="[actionPackages, grip.draggable]" :class="grip.rootClass">
       <tr v-for="pkg in actionPackages" :key="objectId(pkg)">
-        <td :class="$style.dragCell">
-          <span :class="[grip.grip, fa.solid, $style.grip]">
-            {{ '\uf58e' }}
-          </span>
-        </td>
+        <GripCell />
         <td>
           <PrunLink inline :command="`XIT ACT_${paramName(pkg)}`">
             {{ friendlyName(pkg) }}
@@ -127,29 +115,3 @@ function paramName(pkg: UserData.ActionPackageData) {
     </tbody>
   </table>
 </template>
-
-<style module>
-.dragHeaderCell {
-  padding: 0;
-}
-
-.dragCell {
-  width: 14px;
-  padding: 0;
-  text-align: center;
-}
-
-.grip {
-  cursor: move;
-  transition: opacity 0.2s ease-in-out;
-  opacity: 0;
-}
-
-tr:hover .grip {
-  opacity: 1;
-}
-
-.dragging td .grip {
-  opacity: 0;
-}
-</style>

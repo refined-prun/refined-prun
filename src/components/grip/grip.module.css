@@ -1,0 +1,8 @@
+.grip { }
+
+.gripRoot {
+  .grip {
+    /* !important is needed to override a more specific selector in GripCell */
+    opacity: 0 !important;
+  }
+}
