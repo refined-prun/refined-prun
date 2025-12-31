@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { useGrip } from '@src/components/grip/use-grip';
-import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
-import GripCell from '@src/components/grip/GripCell.vue';
 import { showTileOverlay, showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import PrunButton from '@src/components/PrunButton.vue';
 import ActionBar from '@src/components/ActionBar.vue';
@@ -14,6 +11,9 @@ import removeArrayElement from '@src/utils/remove-array-element';
 import { sumBy } from '@src/utils/sum-by';
 import PrunLink from '@src/components/PrunLink.vue';
 import { ddmmyyyy } from '@src/utils/format';
+import { grip } from '@src/components/grip';
+import GripCell from '@src/components/grip/GripCell.vue';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
 
 function createNewList(ev: Event) {
   showTileOverlay(ev, CreateTaskList, {
@@ -54,8 +54,6 @@ function getDueDate(list: UserData.TaskList) {
   dates.sort();
   return ddmmyyyy(dates[0]);
 }
-
-const grip = useGrip();
 </script>
 
 <template>
@@ -72,7 +70,7 @@ const grip = useGrip();
         <th />
       </tr>
     </thead>
-    <tbody v-draggable="[userData.todo, grip.draggable]" :class="grip.rootClass">
+    <tbody v-draggable="[userData.todo, grip.draggable]">
       <tr v-for="list in userData.todo" :key="list.id">
         <GripCell />
         <td>

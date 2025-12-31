@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import grip from './grip.module.css';
+import { grip } from './index';
 import GripChar from '@src/components/grip/GripChar.vue';
 </script>
 
 <template>
-  <td :class="[grip.grip, $style.gripCell]">
+  <td :class="[grip.class, $style.gripCell]">
     <GripChar :class="$style.grip" />
   </td>
 </template>

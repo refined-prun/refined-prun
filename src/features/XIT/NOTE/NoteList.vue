@@ -7,9 +7,9 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 import { createNote, deleteNote } from '@src/store/notes';
 import { vDraggable } from 'vue-draggable-plus';
-import { useGrip } from '@src/components/grip/use-grip';
-import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
+import { grip } from '@src/components/grip';
 import GripCell from '@src/components/grip/GripCell.vue';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
 import PrunLink from '@src/components/PrunLink.vue';
 
 function createNewNote(ev: Event) {
@@ -26,8 +26,6 @@ function confirmDelete(ev: Event, note: UserData.Note) {
     message: `Are you sure you want to delete the note "${note.name}"?`,
   });
 }
-
-const grip = useGrip();
 </script>
 
 <template>
@@ -43,7 +41,7 @@ const grip = useGrip();
         <th />
       </tr>
     </thead>
-    <tbody v-draggable="[userData.notes, grip.draggable]" :class="grip.rootClass">
+    <tbody v-draggable="[userData.notes, grip.draggable]">
       <tr v-for="note in userData.notes" :key="note.id">
         <GripCell />
         <td>

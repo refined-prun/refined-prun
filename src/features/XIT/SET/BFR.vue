@@ -6,9 +6,9 @@ import { userData } from '@src/store/user-data';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { vDraggable } from 'vue-draggable-plus';
 import TextInput from '@src/components/forms/TextInput.vue';
-import { useGrip } from '@src/components/grip/use-grip';
-import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
+import { grip } from '@src/components/grip';
 import GripCell from '@src/components/grip/GripCell.vue';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
 import Tooltip from '@src/components/Tooltip.vue';
 import NumberInput from '@src/components/forms/NumberInput.vue';
 import { objectId } from '@src/utils/object-id';
@@ -87,8 +87,6 @@ function addNewRule() {
 function deleteRule(rule: [string, number, number]) {
   removeArrayElement(userData.settings.buffers, rule);
 }
-
-const grip = useGrip();
 </script>
 
 <template>
@@ -135,7 +133,7 @@ const grip = useGrip();
       </tr>
     </tbody>
     <template v-else>
-      <tbody v-draggable="[userData.settings.buffers, grip.draggable]" :class="grip.rootClass">
+      <tbody v-draggable="[userData.settings.buffers, grip.draggable]">
         <tr v-for="rule in userData.settings.buffers" :key="objectId(rule)">
           <GripCell />
           <td :class="$style.commandCell">

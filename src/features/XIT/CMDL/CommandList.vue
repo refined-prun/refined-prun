@@ -5,9 +5,9 @@ import { createId } from '@src/store/create-id';
 import PrunLink from '@src/components/PrunLink.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
 import { vDraggable } from 'vue-draggable-plus';
-import { useGrip } from '@src/components/grip/use-grip';
-import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
+import { grip } from '@src/components/grip';
 import GripCell from '@src/components/grip/GripCell.vue';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
 
 const { list } = defineProps<{ list: UserData.CommandList }>();
 
@@ -24,8 +24,6 @@ function addCommand() {
 function deleteCommand(command: UserData.Command) {
   list.commands = list.commands.filter(x => x !== command);
 }
-
-const grip = useGrip();
 </script>
 
 <template>
@@ -71,7 +69,7 @@ const grip = useGrip();
         </tbody>
       </template>
       <template v-else>
-        <tbody v-draggable="[list.commands, grip.draggable]" :class="grip.rootClass">
+        <tbody v-draggable="[list.commands, grip.draggable]">
           <tr v-for="command in list.commands" :key="command.id">
             <GripCell />
             <td>

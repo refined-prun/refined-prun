@@ -11,14 +11,12 @@ import PrunLink from '@src/components/PrunLink.vue';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { objectId } from '@src/utils/object-id';
 import { vDraggable } from 'vue-draggable-plus';
-import { useGrip } from '@src/components/grip/use-grip';
-import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
+import { grip } from '@src/components/grip';
 import GripCell from '@src/components/grip/GripCell.vue';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
 
 const actionPackages = computed(() => userData.actionPackages);
 const showQuickstart = computed(() => userData.actionPackages.length === 0);
-
-const grip = useGrip();
 
 function onQuickstartClick(ev: Event) {
   showTileOverlay(ev, Quickstart);
@@ -90,7 +88,7 @@ function paramName(pkg: UserData.ActionPackageData) {
         <td colspan="5">No action packages.</td>
       </tr>
     </tbody>
-    <tbody v-else v-draggable="[actionPackages, grip.draggable]" :class="grip.rootClass">
+    <tbody v-else v-draggable="[actionPackages, grip.draggable]">
       <tr v-for="pkg in actionPackages" :key="objectId(pkg)">
         <GripCell />
         <td>

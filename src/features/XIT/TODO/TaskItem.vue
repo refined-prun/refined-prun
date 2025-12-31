@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import GripChar from '@src/components/grip/GripChar.vue';
-import grip from '@src/components/grip/grip.module.css';
 import Checkmark from '@src/features/XIT/TODO/Checkmark.vue';
 import dayjs from 'dayjs';
 import { showTileOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
@@ -8,6 +6,8 @@ import { ddmmyyyy } from '@src/utils/format';
 import TaskEditor from '@src/features/XIT/TODO/EditTask.vue';
 import removeArrayElement from '@src/utils/remove-array-element';
 import TaskText from '@src/features/XIT/TODO/TaskText.vue';
+import { grip } from '@src/components/grip';
+import GripChar from '@src/components/grip/GripChar.vue';
 
 const { list, subtask, task } = defineProps<{
   list: UserData.TaskList;
@@ -53,7 +53,7 @@ function onCheckmarkClick() {
 <template>
   <div>
     <div :class="taskClass">
-      <div v-if="!subtask" :class="[$style.grip, grip.grip]">
+      <div v-if="!subtask" :class="[$style.grip, grip.class]">
         <GripChar />
       </div>
       <Checkmark :task="task" :class="$style.checkmark" @click.stop="onCheckmarkClick" />
