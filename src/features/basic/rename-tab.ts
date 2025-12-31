@@ -1,22 +1,14 @@
-function updateTabTitleFromHeadItem() {
-  const headItemContainer = document.querySelector(`.${C.HeadItem.container}`);
-  if (!headItemContainer) return;
-
-  const screenNameElement = headItemContainer.querySelector(
-    `.${C.ScreenControls.currentScreenName}`,
-  );
-  const screenName = screenNameElement?.textContent?.trim();
-
+function updateTabTitle() {
+  const screenName = document
+    .querySelector(`.${C.ScreenControls.currentScreenName}`)
+    ?.textContent?.trim();
   document.title = screenName ? `${screenName} - Prosperous Universe` : 'Prosperous Universe';
 }
 
 function init() {
-  const headItemContainer = document.querySelector(`.${C.HeadItem.container}`);
-  if (headItemContainer) {
-    const observer = new MutationObserver(updateTabTitleFromHeadItem);
-    observer.observe(headItemContainer, { childList: true, subtree: true });
-  }
-  updateTabTitleFromHeadItem();
+  // Listen for URL changes using the hashchange event
+  window.addEventListener('hashchange', updateTabTitle);
+  updateTabTitle();
 }
 
-features.add(import.meta.url, init, 'Rename browser tab based on the HeadItem component.');
+features.add(import.meta.url, init, 'Rename browser tab based on the current screen');
