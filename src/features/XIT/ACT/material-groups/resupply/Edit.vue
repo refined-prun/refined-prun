@@ -33,6 +33,8 @@ const exclusions = ref(group.exclusions?.join(', ') ?? '');
 
 const useBaseInventory = ref(group.useBaseInv ?? true);
 
+const useCustomUpkeeps = ref(group.useCustomUpkeeps ?? false);
+
 const workforceOnly = ref(group.consumablesOnly ?? false);
 
 function validate() {
@@ -52,6 +54,7 @@ function save() {
     .map(x => materialsStore.getByTicker(x.trim())?.ticker)
     .filter(x => x !== undefined);
   group.useBaseInv = useBaseInventory.value;
+  group.useCustomUpkeeps = useCustomUpkeeps.value;
   group.consumablesOnly = workforceOnly.value;
 }
 
@@ -77,6 +80,11 @@ defineExpose({ validate, save });
     label="Use Base Inv"
     tooltip="Whether to count the materials currently in the base towards the totals.">
     <RadioItem v-model="useBaseInventory">use base inv</RadioItem>
+  </Active>
+  <Active
+    label="Use Custom Upkeep"
+    tooltip="Whether to consider custom upkeeps as defined in XIT UPKEEP.">
+    <RadioItem v-model="useCustomUpkeeps">use custom upkeep</RadioItem>
   </Active>
   <Active
     label="Workforce Only"

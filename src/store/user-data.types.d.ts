@@ -28,6 +28,14 @@ declare namespace UserData {
 
   type TileState = Record<string, unknown>;
 
+  interface Upkeep {
+    id: string;
+    siteId: string;
+    name: string;
+    duration: PrunApi.TimeSpan;
+    matAmounts: PrunApi.MaterialAmount[];
+  }
+
   interface Note {
     id: string;
     name: string;
@@ -57,6 +65,7 @@ declare namespace UserData {
     advanceDays?: number | string;
     planet?: string;
     useBaseInv?: boolean;
+    useCustomUpkeeps?: boolean;
     materials?: Record<string, number>;
     exclusions?: string[];
     consumablesOnly?: boolean;

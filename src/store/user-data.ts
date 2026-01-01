@@ -58,6 +58,7 @@ export const initialUserData = deepFreeze({
     v1: [],
     v2: [],
   } as UserData.BalanceHistory,
+  upkeeps: {} as Record<string, UserData.Upkeep[]>,
   notes: [] as UserData.Note[],
   actionPackages: [] as UserData.ActionPackageData[],
   systemMessages: [] as UserData.SystemMessages[],
