@@ -22,5 +22,6 @@ import './REP/REP';
 import './SET/SET';
 import './START';
 import './TODO/TODO';
+import './VAR/VAR';
 import './WEB/WEB';
 import './xit-commands';
