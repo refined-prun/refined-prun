@@ -5,9 +5,12 @@ interface KeyFigure {
   name: string;
   value: string;
   tooltip?: string;
+  hidden?: boolean;
 }
 
-defineProps<{ figures: KeyFigure[] }>();
+const { figures } = defineProps<{ figures: KeyFigure[] }>();
+
+const visibleFigures = computed(() => figures.filter(x => !x.hidden));
 
 const containerClasses = [C.FinanceOverviewPanel.data, C.figures.container];
 const figureClasses = [C.FinanceOverviewPanel.info, C.figures.figure, C.type.typeLarge];
@@ -21,7 +24,7 @@ const labelClasses = [
 
 <template>
   <div :class="containerClasses">
-    <div v-for="figure in figures" :key="figure.name" :class="figureClasses">
+    <div v-for="figure in visibleFigures" :key="figure.name" :class="figureClasses">
       <span>{{ figure.value }}</span>
       <div :class="labelClasses">
         {{ figure.name }}

@@ -6,6 +6,12 @@ type Migration = [id: string, migration: (userData: any) => void];
 // New migrations should be added to the top of the list.
 const migrations: Migration[] = [
   [
+    '02.02.2026 Add full equity mode',
+    userData => {
+      userData.fullEquityMode = true;
+    },
+  ],
+  [
     '25.12.2025 Rename features',
     userData => {
       renameFeature('custom-item-sorting', 'inv-custom-item-sorting');

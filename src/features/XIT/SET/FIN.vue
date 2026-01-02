@@ -15,6 +15,7 @@ import {
 import Active from '@src/components/forms/Active.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
 import { objectId } from '@src/utils/object-id';
+import RadioItem from '@src/components/forms/RadioItem.vue';
 
 const sortedData = computed(() => balanceHistory.value.slice().reverse());
 
@@ -62,6 +63,14 @@ function onIgnoredMaterialsSubmit() {
 </script>
 
 <template>
+  <SectionHeader>Equity Mode</SectionHeader>
+  <Active
+    label="Equity Mode"
+    tooltip="In this mode, equity includes the market value of all assets,
+     including ships, HQ upgrades, and ARC. Not recommended for beginners,
+     as starter ships have a disproportionate value compared to starting resources.">
+    <RadioItem v-model="userData.fullEquityMode">full equity</RadioItem>
+  </Active>
   <SectionHeader>Price Settings</SectionHeader>
   <Active
     label="MM Materials"

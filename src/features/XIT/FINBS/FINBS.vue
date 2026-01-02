@@ -5,6 +5,7 @@ import { SectionData } from '@src/features/XIT/FINBS/balance-section';
 import { liveBalanceSheet } from '@src/core/balance/balance-sheet-live';
 import { ddmmyyyy } from '@src/utils/format';
 import { lastBalance, previousBalance } from '@src/store/user-data-balance';
+import { userData } from '@src/store/user-data';
 
 const currentAssets = computed<SectionData>(() => ({
   name: 'Current Assets',
@@ -151,6 +152,7 @@ const nonCurrentAssets = computed<SectionData>(() => ({
     {
       name: 'Ships, net',
       value: summary.calcTotalShips,
+      hidden: !userData.fullEquityMode,
       children: [
         {
           name: 'Market Value',
@@ -188,6 +190,7 @@ const nonCurrentAssets = computed<SectionData>(() => ({
     {
       name: 'Intangible Assets',
       value: summary.calcTotalIntangibleAssets,
+      hidden: !userData.fullEquityMode,
       children: [
         {
           name: 'HQ Upgrades',

@@ -12,6 +12,8 @@ const { current, last, previous, section } = defineProps<{
   section: SectionData;
 }>();
 
+const visibleChildren = computed(() => section.children.filter(x => !x.hidden));
+
 function calculate(
   sheet: PartialBalanceSheet | undefined,
   selector: (x: PartialBalanceSheet) => number | undefined,
@@ -50,7 +52,7 @@ const totalClass = computed(() => {
       <th colspan="5">{{ section.name }}</th>
     </tr>
     <BalanceSheetRow
-      v-for="row in section.children"
+      v-for="row in visibleChildren"
       :key="row.name"
       :current="current"
       :last="last"

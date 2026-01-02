@@ -12,11 +12,13 @@
 - `XIT ACT`: Make the material group and action lists reorderable
 - `XIT SET`: Display the 12h/24h time format in the Default option
 - `XIT SET`: Make the sidebar button list reorderable
+- `XIT SET FIN`: Add an "Equity mode" toggle to switch between full and partial equity
 - `XIT SORT`: Make the sorting mode list reorderable
 - `inv-compress-inventory-info`: Add a small right padding to the unload button in `SHPI`
 - `inv-shorten-storage-types`: Use the short type labels from the base game instead of custom ones
 - `inv-shorten-storage-types`: Shorten storage types in the filter bar
 - Ignore planetary infrastructure inventories in all features
+- Disable the full equity mode for new Refined PrUn users that are less than 90 days old
 
 ### Fixed
 
