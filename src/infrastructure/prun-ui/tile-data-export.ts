@@ -84,6 +84,8 @@ function getTileData(command: string): object {
     }
     return {
       sites: sitesStore.all.value,
+      workforce: workforcesStore.all.value,
+      production: productionStore.all.value,
     };
   }
 
@@ -201,6 +203,13 @@ function getTileData(command: string): object {
     }
     return {
       projects: shipyardProjectsStore.all.value,
+    };
+  }
+
+  if (command.startsWith('WF')) {
+    const id = command.replace('WF', '').trim();
+    return {
+      workforce: workforcesStore.getById(id),
     };
   }
 
