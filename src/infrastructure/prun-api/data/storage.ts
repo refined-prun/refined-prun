@@ -31,8 +31,13 @@ const getByAddressableId = createGroupMapGetter(state.all, x => x.addressableId)
 
 const getByName = createGroupMapGetter(state.all, x => x.name ?? '');
 
+// The features only work with personal storages, so
+// filter out the infrastructure construction stores.
+const personal = computed(() => state.all.value?.filter(x => x.type !== 'CONSTRUCTION_STORE'));
+
 export const storagesStore = {
   ...state,
+  all: personal,
   getById,
   getByAddressableId,
   getByName,
