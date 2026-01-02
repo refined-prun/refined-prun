@@ -17,6 +17,7 @@
 
 ### Fixed
 
+- `cxpc-default-1y`: Fix the 1y chart not opening after it has been opened once
 - `nots-notification-type-label`: Add labels for the missing notification types
 
 ## 25.12.30

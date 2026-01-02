@@ -1,5 +1,6 @@
 import { cxpcStore } from '@src/infrastructure/prun-api/data/cxpc';
 import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
+import { watchWhile } from '@src/utils/watch';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.ChartContainer.settings), async settings => {
@@ -22,15 +23,10 @@ function onTileReady(tile: PrunTile) {
 // The 1y request will not be sent if the initial response has not arrived yet.
 async function waitInitialCxpcResponse(ticker: string) {
   const broker = computed(() => cxobStore.getByTicker(ticker));
-  await new Promise<void>(resolve => {
-    const check = (data: PrunApi.CXBrokerPrices) => {
-      if (data.brokerId === broker.value?.id) {
-        resolve();
-        cxpcStore.offPricesReceived(check);
-      }
-    };
-    cxpcStore.onPricesReceived(check);
-  });
+  const cxpc = computed(() => cxpcStore.getById(broker.value?.id));
+  if (!cxpc.value) {
+    await watchWhile(() => cxpc.value === undefined);
+  }
 }
 
 function init() {
