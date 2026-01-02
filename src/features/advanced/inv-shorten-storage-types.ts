@@ -3,18 +3,47 @@ import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { PrunI18N } from '@src/infrastructure/prun-ui/i18n';
 
-function onTileReady(tile: PrunTile) {
-  // Only shorten names in the main INV tile
-  if (tile.parameter) {
-    return;
-  }
+const storeTypes = [
+  'STORE',
+  'SHIP_STORE',
+  'STL_FUEL_STORE',
+  'FTL_FUEL_STORE',
+  'WAREHOUSE_STORE',
+  'CONSTRUCTION_STORE',
+  'UPKEEP_STORE',
+  'VORTEX_FUEL_STORE',
+];
 
-  // Shorten storage types
+function onTileReady(tile: PrunTile) {
+  shortenFilterLabels(tile);
+  shortenTableLabels(tile);
+}
+
+function shortenFilterLabels(tile: PrunTile) {
+  const map = new Map<string, string>();
+  for (const type of storeTypes) {
+    map.set(getFullName(type), getShortName(type));
+  }
+  subscribe($$(tile.anchor, C.InventoriesListContainer.filter), async filter => {
+    for (const label of _$$(filter, C.RadioItem.value)) {
+      const type = label.textContent;
+      if (type) {
+        label.textContent = map.get(type) ?? type;
+      }
+    }
+  });
+}
+
+function shortenTableLabels(tile: PrunTile) {
+  const map = new Map<string, string>();
+  for (const type of storeTypes) {
+    map.set(type, getShortName(type));
+  }
   subscribe($$(tile.anchor, 'tr'), row => {
     const id = refPrunId(row);
     const name = computed(() => {
       const storage = storagesStore.getById(id.value);
-      return PrunI18N[`StoreTypeLabel.${storage?.type}_SHORT`]?.[0]?.value;
+      return storage ? map.get(storage?.type) : undefined;
     });
     watchEffectWhileNodeAlive(row, () => {
       // tr -> td -> span
@@ -26,12 +55,16 @@ function onTileReady(tile: PrunTile) {
   });
 }
 
+function getFullName(type: string) {
+  return PrunI18N[`StoreTypeLabel.${type}`]?.[0]?.value ?? type;
+}
+
+function getShortName(type: string) {
+  return PrunI18N[`StoreTypeLabel.${type}_SHORT`]?.[0]?.value ?? type;
+}
+
 function init() {
   tiles.observe('INV', onTileReady);
 }
 
-features.add(
-  import.meta.url,
-  init,
-  'INV: Shortens storage type names in the first column of the main INV command.',
-);
+features.add(import.meta.url, init, 'INV: Shortens storage type names in the table and filters.');

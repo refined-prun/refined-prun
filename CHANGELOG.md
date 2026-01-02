@@ -15,6 +15,7 @@
 - `XIT SORT`: Make the sorting mode list reorderable
 - `inv-compress-inventory-info`: Add a small right padding to the unload button
 - `inv-shorten-storage-types`: Use the short type labels from the base game instead of custom ones
+- `inv-shorten-storage-types`: Shorten storage types in the filter bar
 - Ignore planetary infrastructure inventories in all features
 
 ### Fixed
