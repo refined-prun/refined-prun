@@ -1,6 +1,7 @@
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
+import { PrunI18N } from '@src/infrastructure/prun-ui/i18n';
 
 function onTileReady(tile: PrunTile) {
   // Only shorten names in the main INV tile
@@ -13,20 +14,7 @@ function onTileReady(tile: PrunTile) {
     const id = refPrunId(row);
     const name = computed(() => {
       const storage = storagesStore.getById(id.value);
-      switch (storage?.type) {
-        case 'STORE':
-          return 'Base';
-        case 'WAREHOUSE_STORE':
-          return 'WAR';
-        case 'SHIP_STORE':
-          return 'Ship';
-        case 'STL_FUEL_STORE':
-          return 'STL';
-        case 'FTL_FUEL_STORE':
-          return 'FTL';
-        default:
-          return undefined;
-      }
+      return PrunI18N[`StoreTypeLabel.${storage?.type}_SHORT`]?.[0]?.value;
     });
     watchEffectWhileNodeAlive(row, () => {
       // tr -> td -> span
