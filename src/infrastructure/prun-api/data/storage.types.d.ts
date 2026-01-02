@@ -24,10 +24,12 @@ declare namespace PrunApi {
   }
 
   type StoreType =
-    | 'CONSTRUCTION_STORE'
-    | 'FTL_FUEL_STORE'
+    | 'STORE'
     | 'SHIP_STORE'
     | 'STL_FUEL_STORE'
-    | 'STORE'
-    | 'WAREHOUSE_STORE';
+    | 'FTL_FUEL_STORE'
+    | 'WAREHOUSE_STORE'
+    | 'CONSTRUCTION_STORE'
+    | 'UPKEEP_STORE'
+    | 'VORTEX_FUEL_STORE';
 }

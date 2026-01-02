@@ -33,7 +33,11 @@ const getByName = createGroupMapGetter(state.all, x => x.name ?? '');
 
 // The features only work with personal storages, so
 // filter out the infrastructure construction stores.
-const personal = computed(() => state.all.value?.filter(x => x.type !== 'CONSTRUCTION_STORE'));
+const personal = computed(() => state.all.value?.filter(isPersonalStorage));
+
+function isPersonalStorage(storage: PrunApi.Store) {
+  return storage.type !== 'CONSTRUCTION_STORE' && storage.type !== 'UPKEEP_STORE';
+}
 
 export const storagesStore = {
   ...state,

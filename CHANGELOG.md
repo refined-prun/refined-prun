@@ -14,7 +14,7 @@
 - `XIT SET`: Make the sidebar button list reorderable
 - `XIT SORT`: Make the sorting mode list reorderable
 - `inv-compress-inventory-info`: Add a small right padding to the unload button
-- Ignore planetary infrastructure construction inventories in all features
+- Ignore planetary infrastructure inventories in all features
 
 ### Fixed
 
