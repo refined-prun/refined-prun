@@ -31,6 +31,8 @@ const getByAddressableId = createGroupMapGetter(state.all, x => x.addressableId)
 
 const getByName = createGroupMapGetter(state.all, x => x.name ?? '');
 
+const getByType = createGroupMapGetter(state.all, x => x.type);
+
 // The features only work with personal storages, so
 // filter out the infrastructure construction stores.
 const personal = computed(() => state.all.value?.filter(isPersonalStorage));
@@ -39,10 +41,21 @@ function isPersonalStorage(storage: PrunApi.Store) {
   return storage.type !== 'CONSTRUCTION_STORE' && storage.type !== 'UPKEEP_STORE';
 }
 
+const fuelStores = computed(() => personal.value?.filter(isFuelStore));
+
+const nonFuelStores = computed(() => personal.value?.filter(x => !isFuelStore(x)));
+
+function isFuelStore(storage: PrunApi.Store) {
+  return storage.type === 'STL_FUEL_STORE' || storage.type === 'FTL_FUEL_STORE';
+}
+
 export const storagesStore = {
   ...state,
   all: personal,
+  fuelStores,
+  nonFuelStores,
   getById,
   getByAddressableId,
   getByName,
+  getByType,
 };

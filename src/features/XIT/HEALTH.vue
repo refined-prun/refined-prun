@@ -27,9 +27,9 @@ const bases = computed(() => {
 const otherData = computed(() => [
   ['Base Sites', sitesStore.all.value?.length],
   ['Warehouse Sites', warehousesStore.all.value?.length],
-  ['Base Stores', storagesStore.all.value?.filter(x => x.type === 'STORE').length],
-  ['Warehouse Stores', storagesStore.all.value?.filter(x => x.type === 'WAREHOUSE_STORE').length],
-  ['Ship Stores', storagesStore.all.value?.filter(x => x.type === 'SHIP_STORE').length],
+  ['Base Stores', storagesStore.getByType('STORE')?.length],
+  ['Warehouse Stores', storagesStore.getByType('WAREHOUSE_STORE')?.length],
+  ['Ship Stores', storagesStore.getByType('SHIP_STORE')?.length],
   ['Workforces', workforcesStore.all.value?.length],
   ['Production Sites', productionStore.all.value?.length],
   ['Contracts', contractsStore.all.value?.length],
