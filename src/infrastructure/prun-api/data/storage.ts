@@ -37,16 +37,20 @@ const getByType = createGroupMapGetter(state.all, x => x.type);
 // filter out the infrastructure construction stores.
 const personal = computed(() => state.all.value?.filter(isPersonalStorage));
 
+const nonPersonalTypes = new Set(['CONSTRUCTION_STORE', 'UPKEEP_STORE']);
+
 function isPersonalStorage(storage: PrunApi.Store) {
-  return storage.type !== 'CONSTRUCTION_STORE' && storage.type !== 'UPKEEP_STORE';
+  return !nonPersonalTypes.has(storage.type);
 }
 
 const fuelStores = computed(() => personal.value?.filter(isFuelStore));
 
 const nonFuelStores = computed(() => personal.value?.filter(x => !isFuelStore(x)));
 
+const fuelTypes = new Set(['STL_FUEL_STORE', 'FTL_FUEL_STORE', 'VORTEX_FUEL_STORE']);
+
 function isFuelStore(storage: PrunApi.Store) {
-  return storage.type === 'STL_FUEL_STORE' || storage.type === 'FTL_FUEL_STORE';
+  return fuelTypes.has(storage.type);
 }
 
 export const storagesStore = {
