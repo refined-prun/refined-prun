@@ -1,0 +1,34 @@
+.sliderView {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  padding: 1em 0 2em;
+}
+
+.sliderColumnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+.rcSliderDotFixes {
+  transform: none !important; /* This fixes a bug(?) that stretches the dots weirdly */
+  cursor: inherit; /* The dots aren't actually clickable (previously was 'pointer')*/
+}
+
+.rcSliderHandleFixes {
+  cursor: grab; /* this is a click-and-drag thing not a button */
+}
+
+.rcSliderHandleDisabledFixes {
+  cursor: not-allowed;
+}
+
+.rcSliderStepFixes {
+  cursor: pointer; /* previously no indication that you could click this */
+}
+
+.rcSliderStepDisabledFixes {
+  cursor: not-allowed;
+}
