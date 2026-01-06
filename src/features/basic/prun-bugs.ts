@@ -46,6 +46,9 @@ function init() {
   // Adds text centering to GridItemView name.
   applyCssRule(`.${C.GridItemView.name}`, $style.gridItemName);
 
+  // Fixes hidden scrollbars sometimes becoming visible.
+  applyCssRule(`.${C.ScrollView.view}`, $style.scrollview);
+
   // The overlay stops materials from being clickable.
   applyCssRule(['PROD', 'PRODQ'], `.${C.OrderTile.overlay}`, $style.disablePointerEvents);
 
