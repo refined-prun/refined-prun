@@ -68,7 +68,8 @@ function onIgnoredMaterialsSubmit() {
     label="Equity Mode"
     tooltip="In this mode, equity includes the market value of all assets,
      including ships, HQ upgrades, and ARC. Not recommended for beginners,
-     as starter ships have a disproportionate value compared to starting resources.">
+     as starter ships have a disproportionate value compared to starting resources."
+    tooltip-position="bottom">
     <RadioItem v-model="userData.fullEquityMode">full equity</RadioItem>
   </Active>
   <SectionHeader>Price Settings</SectionHeader>
