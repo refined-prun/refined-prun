@@ -15,6 +15,7 @@
 - `XIT SET`: Make the sidebar button list reorderable
 - `XIT SET FIN`: Add an "Equity mode" toggle to switch between full and partial equity
 - `XIT SORT`: Make the sorting mode list reorderable
+- `flt-flight-status-icons`: Add icons for new status types and make the JUMP icon more distinctive
 - `inv-compress-inventory-info`: Add a small right padding to the unload button in `SHPI`
 - `inv-shorten-storage-types`: Use the short type labels from the base game instead of custom ones
 - `inv-shorten-storage-types`: Shorten storage types in the filter bar

@@ -10,14 +10,18 @@ function onTileReady(tile: PrunTile) {
     const ship = computed(() => shipsStore.getById(id.value));
     const flight = computed(() => flightsStore.getById(ship.value?.flightId));
 
-    const labels = {
+    const labels: Record<PrunApi.SegmentType, string> = {
       TAKE_OFF: '↑',
       DEPARTURE: '↗',
-      CHARGE: '±',
-      JUMP: '⟿',
       TRANSIT: '⟶',
+      CHARGE: '±',
+      JUMP: '➾',
+      FLOAT: '↑',
       APPROACH: '↘',
       LANDING: '↓',
+      LOCK: '⟴',
+      DECAY: '⟴',
+      JUMP_GATEWAY: '⟴',
     };
 
     const statusLabel = computed(() => {

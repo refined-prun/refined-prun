@@ -38,10 +38,14 @@ declare namespace PrunApi {
 
   type SegmentType =
     | 'TAKE_OFF'
-    | 'LANDING'
     | 'DEPARTURE'
-    | 'APPROACH'
     | 'TRANSIT'
+    | 'CHARGE'
     | 'JUMP'
-    | 'CHARGE';
+    | 'FLOAT'
+    | 'APPROACH'
+    | 'LANDING'
+    | 'LOCK'
+    | 'DECAY'
+    | 'JUMP_GATEWAY';
 }
