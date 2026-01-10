@@ -12,6 +12,8 @@ export interface PlatformProduction {
   id: string;
   reactorTicker: string;
   capacity: number;
+  activeCapacity: number;
+  inactiveCapacity: number;
   condition: number;
   efficiency: number;
   efficiencyFactors: PrunApi.EfficiencyFactor[];
@@ -51,6 +53,8 @@ const productionMap = computed<Record<string, PlanetProduction>>(() => {
           id: line.id,
           reactorTicker: platform?.module.reactorTicker ?? line.type,
           capacity: line.capacity,
+          activeCapacity: activeOrders.length,
+          inactiveCapacity: Math.max(0, line.capacity - activeOrders.length),
           condition: line.condition,
           efficiency: line.efficiency,
           efficiencyFactors: line.efficiencyFactors,

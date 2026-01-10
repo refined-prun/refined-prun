@@ -30,14 +30,11 @@ const stackedActive = computed(() => {
   const results = Object.values(groups);
 
   // Unused Capacity logic
-  const totalSlots = productionLine.capacity || 1;
-  const busySlots = productionLine.orders.length;
-  const inactiveCount = Math.max(0, totalSlots - busySlots);
 
-  if (inactiveCount > 0) {
+  if (productionLine.inactiveCapacity > 0) {
     results.push({
       ticker: 'N/A',
-      count: inactiveCount,
+      count: productionLine.inactiveCapacity,
       amount: 0,
       label: 'Inactive',
       isPlaceholder: true,
@@ -65,7 +62,7 @@ const stackedQueued = computed(() => {
   const results = Object.values(groups);
 
   // Missing Queue logic
-  if (results.length === 0) {
+  if (productionLine.queuedOrders.length === 0) {
     results.push({
       ticker: 'N/A',
       count: 0,

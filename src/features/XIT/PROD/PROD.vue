@@ -98,69 +98,35 @@ const planetProduction = computed<PlanetProduction[]>(() => {
     return [];
   }
 
-  return queryResult.value.sites
+  var productions: PlanetProduction[] = queryResult.value.sites
     .filter(site => site !== overall)
     .map(site => {
       return getPlanetProduction(site);
     })
-    .filter(x => x !== undefined);
+    .filter(x => x !== undefined) as PlanetProduction[];
+
+  productions = productions.sort((a, b) => {
+    // Sum up capacity for planet A
+    const totalCapacityA = a.production.reduce((sum, p) => sum + p.capacity, 0);
+
+    // Sum up capacity for planet B
+    const totalCapacityB = b.production.reduce((sum, p) => sum + p.capacity, 0);
+
+    // Descending order (highest capacity first)
+    return totalCapacityB - totalCapacityA;
+  });
+
+  productions.filter(p => {
+    return false;
+  });
+
+  return productions;
 });
 
-const planetBurn = computed<PlanetBurn[] | undefined>(() => {
-  if (queryResult.value === undefined) {
-    return undefined;
-  }
-
-  const filtered = queryResult.value.sites
-    .filter(x => x !== overall)
-    .map(getPlanetBurn)
-    .filter(x => x !== undefined);
-  if (filtered.length <= 1) {
-    return filtered;
-  }
-
-  const overallBurn = {};
-  for (const burn of filtered) {
-    for (const mat of Object.keys(burn.burn)) {
-      if (overallBurn[mat]) {
-        overallBurn[mat].dailyAmount += burn.burn[mat].dailyAmount;
-        overallBurn[mat].inventory += burn.burn[mat].inventory;
-      } else {
-        overallBurn[mat] = {};
-        overallBurn[mat].dailyAmount = burn.burn[mat].dailyAmount;
-        overallBurn[mat].inventory = burn.burn[mat].inventory;
-      }
-    }
-  }
-
-  for (const mat of Object.keys(overallBurn)) {
-    if (overallBurn[mat].dailyAmount >= 0) {
-      overallBurn[mat].daysLeft = 1000;
-    } else {
-      overallBurn[mat].daysLeft = -overallBurn[mat].inventory / overallBurn[mat].dailyAmount;
-    }
-  }
-
-  const overallSection: PlanetBurn = {
-    burn: overallBurn,
-    planetName: 'Overall',
-    naturalId: '',
-    storeId: '',
-  };
-  if (queryResult.value.overallOnly) {
-    return [overallSection];
-  }
-
-  if (queryResult.value.includeOverall) {
-    filtered.push(overallSection);
-  }
-  return filtered;
-});
-
-const red = useTileState('red');
-const yellow = useTileState('yellow');
-const green = useTileState('green');
-const inf = useTileState('inf');
+const production = useTileState('production');
+const queue = useTileState('queue');
+const inactive = useTileState('inactive');
+const notqueued = useTileState('notqueued');
 const headers = useTileState('headers');
 
 const fakeBurn: MaterialBurn = {
@@ -173,66 +139,50 @@ const fakeBurn: MaterialBurn = {
   workforce: 0,
 };
 
-const rat = materialsStore.getByTicker('RAT')!;
-
 const expand = useTileState('expand');
 
 const anyExpanded = computed(() => expand.value.length > 0);
-
-function onExpandAllClick() {
-  if (expand.value.length > 0) {
-    expand.value = [];
-  } else {
-    expand.value = planetBurn.value?.map(x => x.naturalId) ?? [];
-  }
-}
 </script>
 
 <template>
-  <LoadingSpinner v-if="planetBurn === undefined" />
-  <template v-else>
-    <div :class="C.ComExOrdersPanel.filter">
-      <RadioItem v-model="headers" horizontal>Headers</RadioItem>
-      <RadioItem v-model="red" horizontal>RED</RadioItem>
-      <RadioItem v-model="yellow" horizontal>YELLOW</RadioItem>
-      <RadioItem v-model="green" horizontal>GREEN</RadioItem>
-      <RadioItem v-model="inf" horizontal>INF</RadioItem>
-    </div>
-    <table :class="[$style.fixedWidthTable]">
-      <colgroup>
-        <col style="width: 32px" />
-        <col />
-        <col />
-        <col />
-        <col style="width: 65px" />
-      </colgroup>
-      <thead>
-        <tr v-if="headers">
-          <th v-if="planetBurn.length > 1" :class="$style.expand" @click="onExpandAllClick">
-            {{ anyExpanded ? '-' : '+' }}
-          </th>
-          <th v-else />
-          <th>Planet</th>
+  <div :class="C.ComExOrdersPanel.filter">
+    <RadioItem v-model="headers" horizontal>Headers</RadioItem>
+    <RadioItem v-model="production" horizontal>Production</RadioItem>
+    <RadioItem v-model="inactive" horizontal>Inactive</RadioItem>
+    <RadioItem v-model="queue" horizontal>Queue</RadioItem>
+    <RadioItem v-model="notqueued" horizontal>Not Queued</RadioItem>
+  </div>
+  <table :class="[$style.fixedWidthTable]">
+    <colgroup>
+      <col style="width: 32px" />
+      <col />
+      <col />
+      <col />
+      <col style="width: 65px" />
+    </colgroup>
+    <thead>
+      <tr v-if="headers">
+        <th> </th>
+        <th>Planet</th>
 
-          <th>
-            <InlineFlex>
-              Efficiency
-              <Tooltip position="bottom" tooltip="How much of a material is consumed per day." />
-            </InlineFlex>
-          </th>
+        <th>
+          <InlineFlex>
+            Efficiency
+            <Tooltip position="bottom" tooltip="How much of a material is consumed per day." />
+          </InlineFlex>
+        </th>
 
-          <th>Slots</th>
-          <th>CMD</th>
-        </tr>
-      </thead>
-      <ProdSection
-        v-for="production in planetProduction"
-        :can-minimize="planetProduction.length > 1"
-        :key="production.site.siteId"
-        :production="production"
-        :headers="headers" />
-    </table>
-  </template>
+        <th>Slots</th>
+        <th>CMD</th>
+      </tr>
+    </thead>
+    <ProdSection
+      v-for="production in planetProduction"
+      :can-minimize="planetProduction.length > 1"
+      :key="production.site.siteId"
+      :production="production"
+      :headers="headers" />
+  </table>
 </template>
 
 <style module>
