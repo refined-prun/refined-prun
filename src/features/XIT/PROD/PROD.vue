@@ -93,41 +93,63 @@ const defaultBurnValues: PlanetBurn = {
   burn: {},
 };
 
-const planetProduction = computed<PlanetProduction[]>(() => {
-  if (!queryResult.value) {
-    return [];
-  }
-
-  var productions: PlanetProduction[] = queryResult.value.sites
-    .filter(site => site !== overall)
-    .map(site => {
-      return getPlanetProduction(site);
-    })
-    .filter(x => x !== undefined) as PlanetProduction[];
-
-  productions = productions.sort((a, b) => {
-    // Sum up capacity for planet A
-    const totalCapacityA = a.production.reduce((sum, p) => sum + p.capacity, 0);
-
-    // Sum up capacity for planet B
-    const totalCapacityB = b.production.reduce((sum, p) => sum + p.capacity, 0);
-
-    // Descending order (highest capacity first)
-    return totalCapacityB - totalCapacityA;
-  });
-
-  productions.filter(p => {
-    return false;
-  });
-
-  return productions;
-});
-
 const production = useTileState('production');
 const queue = useTileState('queue');
 const inactive = useTileState('inactive');
 const notqueued = useTileState('notqueued');
 const headers = useTileState('headers');
+
+const planetProduction = computed<PlanetProduction[]>(() => {
+  if (!queryResult.value) {
+    return [];
+  }
+
+  return queryResult.value.sites
+    .filter(site => site !== overall)
+    .map(site => {
+      return getPlanetProduction(site);
+    })
+    .filter(x => x !== undefined)
+    .sort((a, b) => {
+      // Sum up capacity for planet A
+      const totalCapacityA = a.production.reduce((sum, p) => sum + p.capacity, 0);
+
+      // Sum up capacity for planet B
+      const totalCapacityB = b.production.reduce((sum, p) => sum + p.capacity, 0);
+
+      // Descending order (highest capacity first)
+      return totalCapacityB - totalCapacityA;
+    })
+    .filter(p => {
+      const productionLines = p.production;
+      if (
+        productionLines.reduce((sum, line) => sum + line.activeCapacity, 0) > 0 &&
+        production.value
+      ) {
+        return true;
+      }
+      if (
+        productionLines.reduce((sum, line) => sum + line.inactiveCapacity, 0) > 0 &&
+        inactive.value
+      ) {
+        return true;
+      }
+      if (
+        productionLines.reduce((sum, line) => sum + line.queuedOrders.length, 0) > 0 &&
+        queue.value
+      ) {
+        return true;
+      }
+      if (
+        productionLines.reduce((sum, line) => sum + line.queuedOrders.length, 0) == 0 &&
+        notqueued.value
+      ) {
+        return true;
+      }
+
+      return false;
+    });
+});
 
 const fakeBurn: MaterialBurn = {
   dailyAmount: -100000,
