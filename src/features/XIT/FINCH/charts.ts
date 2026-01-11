@@ -1,5 +1,6 @@
 import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
 import * as summary from '@src/core/balance/balance-sheet-summary';
+import { userData } from '@src/store/user-data';
 
 export type ChartDef = {
   value: string;
@@ -10,7 +11,11 @@ export type ChartDef = {
 
 export const charts = computed<ChartDef[]>(() => {
   return [
-    { value: 'EQUITY', label: 'Equity', getValue: summary.calcEquity },
+    {
+      value: 'EQUITY',
+      label: userData.fullEquityMode ? 'Equity' : 'Equity (Partial)',
+      getValue: summary.calcEquity,
+    },
 
     // =========================
     // Assets

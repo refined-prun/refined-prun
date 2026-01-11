@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `XIT FINCH`: Add a "(Partial)" suffix to the equity chart if the full equity mode is disabled
+
 ## 26.1.11
 
 ### Added
