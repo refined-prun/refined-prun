@@ -4,7 +4,7 @@ xit.add({
   command: ['FINCH'],
   name: 'Financial Charts',
   description: 'Financial charts for equity and assets.',
-  optionalParameters: 'EQUITY, ASSETS, LOCATIONS',
+  optionalParameters: 'Chart Identifier',
   contextItems: () => [
     { cmd: 'XIT FIN' },
     { cmd: 'XIT FINBS' },
