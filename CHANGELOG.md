@@ -11,6 +11,8 @@
 
 - `XIT ACT`: Make the material group and action lists reorderable
 - `XIT FINBS`: Add vortex fuel stores to the "Fuel tanks" total
+- `XIT FINBS`: Add a button to each row to open `XIT FINCH` with the selected chart
+- `XIT FINCH`: Add charts to all entries from the balance sheet
 - `XIT SET`: Display the 12h/24h time format in the Default option
 - `XIT SET`: Make the sidebar button list reorderable
 - `XIT SET FIN`: Add an "Equity mode" toggle to switch between full and partial equity

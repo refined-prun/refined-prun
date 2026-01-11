@@ -4,16 +4,11 @@ type ValueGetter = (x: PartialBalanceSheet) => number | undefined;
 
 export interface SectionData {
   name: string;
-  coloredTotal?: boolean;
-  total: ValueGetter;
-  children: RowData[];
-}
-
-export interface RowData {
-  name: string;
+  chartId: string;
+  coloredChange?: boolean;
   tooltip?: string;
   less?: boolean;
-  hidden?: boolean;
+  excluded?: boolean;
   value: ValueGetter;
-  children?: RowData[];
+  children?: SectionData[];
 }
