@@ -20,7 +20,7 @@ function onTileReady(tile: PrunTile) {
     }
 
     const count = computed(() => totals.value.get(ticker) ?? 0);
-    const isVisible = computed(() => count.value > 1);
+    const isVisible = computed(() => count.value > 0);
     const hiddenClass = computed(() => (isVisible.value ? undefined : css.hidden));
 
     createFragmentApp(() => (
