@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import RadioItem from '@src/components/forms/RadioItem.vue';
-import { MaterialBurn } from '@src/core/burn';
 import { getPlanetProduction, PlanetProduction } from '@src/core/production';
 import ProdSection from './ProdSection.vue';
 import { useTileState } from './tile-state';
@@ -80,7 +79,7 @@ function findSites(term: string, parts: string[]) {
   return sitesStore.getByPlanetNaturalId(naturalId);
 }
 
-const production = useTileState('production');
+const displayProduction = useTileState('production');
 const queue = useTileState('queue');
 const inactive = useTileState('inactive');
 const notqueued = useTileState('notqueued');
@@ -111,7 +110,7 @@ const planetProduction = computed<PlanetProduction[]>(() => {
       const productionLines = p.production;
       if (
         productionLines.reduce((sum, line) => sum + line.activeCapacity, 0) > 0 &&
-        production.value
+        displayProduction.value
       ) {
         return true;
       }
@@ -142,7 +141,7 @@ const planetProduction = computed<PlanetProduction[]>(() => {
 <template>
   <div :class="C.ComExOrdersPanel.filter">
     <RadioItem v-model="headers" horizontal>Headers</RadioItem>
-    <RadioItem v-model="production" horizontal>Production</RadioItem>
+    <RadioItem v-model="displayProduction" horizontal>Production</RadioItem>
     <RadioItem v-model="inactive" horizontal>Inactive</RadioItem>
     <RadioItem v-model="queue" horizontal>Queue</RadioItem>
     <RadioItem v-model="notqueued" horizontal>Not Queued</RadioItem>
@@ -173,8 +172,8 @@ const planetProduction = computed<PlanetProduction[]>(() => {
     </thead>
     <ProdSection
       v-for="production in planetProduction"
-      :can-minimize="planetProduction.length > 1"
       :key="production.site.siteId"
+      :can-minimize="planetProduction.length > 1"
       :production="production"
       :headers="headers" />
   </table>

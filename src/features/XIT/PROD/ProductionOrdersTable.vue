@@ -7,8 +7,18 @@ const { productionLine, headers } = defineProps<{
   headers?: boolean;
 }>();
 
+interface StackedOrderGroup {
+  ticker: string;
+  count: number;
+  amount: number;
+  ts?: number;
+  label?: string;
+  isPlaceholder?: boolean;
+  isQueued?: boolean;
+}
+
 const stackedActive = computed(() => {
-  const groups: Record<string, any> = {};
+  const groups: Record<string, StackedOrderGroup> = {};
   const BUCKET_MS = 10 * 60 * 1000;
 
   // Group existing orders
@@ -45,7 +55,7 @@ const stackedActive = computed(() => {
 });
 
 const stackedQueued = computed(() => {
-  const groups: Record<string, any> = {};
+  const groups: Record<string, StackedOrderGroup> = {};
 
   productionLine.queuedOrders.forEach(order => {
     const output = order.outputs[0];
@@ -124,7 +134,7 @@ const formatTime = (ts: number) => {
               {{ group.label }}
             </template>
             <template v-else>
-              {{ group.isQueued ? 'Queued' : formatTime(group.ts) }}
+              {{ group.isQueued ? 'Queued' : group.ts ? formatTime(group.ts) : 'Error' }}
             </template>
           </td>
         </tr>
