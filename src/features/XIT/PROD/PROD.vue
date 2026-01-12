@@ -13,66 +13,10 @@ import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
 const parameters = useXitParameters();
 
 // Fake site for overall burn.
-const overall: PrunApi.Site = {} as PrunApi.Site;
-export interface SiteData {
-  sites: PrunApi.Site[];
-  includeOverall: boolean;
-  overallOnly: boolean;
-}
-
-const sites = computed<SiteData | undefined>(() => {
-  if (!sitesStore.all.value) {
-    return undefined;
-  }
-
-  const allSites = sitesStore.all.value;
-  if (parameters.length === 0) {
-    return {
-      sites: allSites,
-      includeOverall: true,
-      overallOnly: false,
-    };
-  }
-  const result = findWithQuery(parameters, findSites);
-  let matches = result.include;
-  if (result.includeAll) {
-    matches = allSites;
-  }
-  if (result.excludeAll) {
-    matches = [];
-  }
-  matches = matches.filter(x => !result.exclude.has(x));
-  const nonOverallMatches = matches.filter(x => x !== overall);
-  const overallIncluded =
-    nonOverallMatches.length > 1 ||
-    matches.length !== nonOverallMatches.length ||
-    result.includeAll;
-  const overallExcluded = result.exclude.has(overall) || result.excludeAll;
-
-  let includeOverall = overallIncluded && !overallExcluded;
-  let overallOnly = false;
-  let overallOnlySites = allSites;
-  if (matches.length === 1 && matches[0] === overall && !overallExcluded) {
-    // `XIT BURN OVERALL`,
-    overallOnlySites = allSites.filter(x => !result.exclude.has(x));
-    includeOverall = true;
-    overallOnly = true;
-  }
-
-  return {
-    sites: overallOnly ? overallOnlySites : nonOverallMatches,
-    includeOverall,
-    overallOnly,
-  };
-});
 
 function findSites(term: string, parts: string[]) {
   if (term === 'all') {
     return sitesStore.all.value;
-  }
-
-  if (term === 'overall') {
-    return overall;
   }
 
   const naturalId = convertToPlanetNaturalId(term, parts);
@@ -86,12 +30,12 @@ const notqueued = useTileState('notqueued');
 const headers = useTileState('headers');
 
 const planetProduction = computed<PlanetProduction[]>(() => {
-  if (!sites.value) {
-    return [];
+  let sites = findWithQuery(parameters, findSites).include;
+  if (sites.length === 0) {
+    sites = sitesStore.all.value ?? [];
   }
 
-  return sites.value.sites
-    .filter(site => site !== overall)
+  return sites
     .map(site => {
       return getPlanetProduction(site);
     })
