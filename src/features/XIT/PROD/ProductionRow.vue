@@ -2,7 +2,6 @@
 import { useTileState } from './tile-state';
 import PrunButton from '@src/components/PrunButton.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import { userData } from '@src/store/user-data';
 import BuildingIcon from '@src/components/BuildingIcon.vue';
 import { PlatformProduction } from '@src/core/production';
 import { percent0, percent2 } from '@src/utils/format';
@@ -23,7 +22,7 @@ const activeOrders = computed(() => productionLine.orders.length);
 const condition = computed(() => productionLine.condition);
 const expandInfo = useTileState('expandInfo');
 const id = computed(() => productionLine.id);
-const displayInfo = computed(() => expandInfo.value.includes(id.value));
+const displayInfo = computed(() => expandInfo.value.includes(id.value) || alwaysVisible);
 
 const onHeaderClick = () => {
   if (displayInfo.value) {

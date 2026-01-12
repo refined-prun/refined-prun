@@ -24,13 +24,13 @@ const stackedActive = computed(() => {
   // Group existing orders
   productionLine.orders.forEach(order => {
     const output = order.outputs[0];
-    if (!output) return;
+    if (output === null || output === undefined) return;
 
     const ts = order.completion ? new Date(order.completion.timestamp).getTime() : 0;
     const bucket = Math.round(ts / BUCKET_MS);
     const key = `${order.recipeId}-${bucket}`;
 
-    if (!groups[key]) {
+    if (groups[key] === undefined) {
       groups[key] = { ticker: output.material.ticker, count: 0, amount: 0, ts };
     }
     groups[key].count += 1;
@@ -59,10 +59,10 @@ const stackedQueued = computed(() => {
 
   productionLine.queuedOrders.forEach(order => {
     const output = order.outputs[0];
-    if (!output) return;
+    if (output === null || output === undefined) return;
 
     const key = order.recipeId;
-    if (!groups[key]) {
+    if (groups[key] === undefined) {
       groups[key] = { ticker: output.material.ticker, count: 0, amount: 0 };
     }
     groups[key].count += 1;
