@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTileState } from '@src/features/XIT/BURN/tile-state';
+import { useTileState } from './tile-state';
 import PrunButton from '@src/components/PrunButton.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
@@ -22,27 +22,11 @@ const efficiency = computed(() => productionLine.efficiency ?? 0);
 const activeOrders = computed(() => productionLine.orders.length);
 const condition = computed(() => productionLine.condition);
 
-const isRed = computed(() => condition.value <= userData.settings.burn.red);
-const isYellow = computed(() => condition.value <= userData.settings.burn.yellow);
-const isGreen = computed(() => condition.value > userData.settings.burn.yellow);
-
-const red = useTileState('red');
-const yellow = useTileState('yellow');
-const green = useTileState('green');
-const inf = useTileState('inf');
-
-const isVisible = computed(() => {
-  if (alwaysVisible) {
-    return true;
-  }
-  return (
-    (isRed.value && red.value) || (isYellow.value && yellow.value) || (isGreen.value && green.value)
-  );
-});
+const isVisible = computed(() => alwaysVisible);
 
 const isInvisible = computed(() => !isVisible.value);
 
-const expand = useTileState('expand');
+const expand = useTileState('expandInfo');
 
 const id = computed(() => productionLine.id);
 const isMinimized = computed(() => !expand.value.includes(id.value));
@@ -95,37 +79,39 @@ const tooltipText = computed(() => {
 </script>
 
 <template>
-  <tr v-if="isVisible" :class="[!isMinimized && $style.row]">
-    <td :class="[$style.buildingContainer, $style.noPadding, $style.flex]">
-      <BuildingIcon size="inline-table" :ticker="productionLine.reactorTicker" />
-    </td>
+  <div>
+    <tr :class="[$style.row]">
+      <td :class="[$style.buildingContainer, $style.noPadding, $style.flex]">
+        <BuildingIcon size="inline-table" :ticker="productionLine.reactorTicker" />
+      </td>
 
-    <td @click="onHeaderClick" :class="$style.trigger">
-      <span :class="[$style.caret, !isMinimized && $style.expanded]">▶</span>
-      <span :class="$style.collapseText">INFO</span>
-    </td>
-    <td>
-      <InlineFlex>
-        {{ percent0(efficiency) }}
-        <Tooltip position="bottom" :tooltip="tooltipText" />
-      </InlineFlex>
-    </td>
-    <FracCell :numerator="activeOrders" :denominator="capacity" />
-    <td>
-      <div :class="[$style.flex, $style.buttons]">
-        <PrunButton dark inline @click="showBuffer(`PRODCO ${productionLine.id}`)">CO</PrunButton>
-        <PrunButton dark inline @click="showBuffer(`PRODQ ${productionLine.id}`)">Q</PrunButton>
-      </div>
-    </td>
-  </tr>
-  <tr v-if="!isMinimized">
-    <td colspan="1">
-      <div></div>
-    </td>
-    <td colspan="4" :class="$style.noPadding">
-      <ProductionOrdersTable :production-line="productionLine" :headers="headers" />
-    </td>
-  </tr>
+      <td @click="onHeaderClick" :class="$style.trigger">
+        <span :class="[$style.caret, !isMinimized && $style.expanded]">▶</span>
+        <span :class="$style.collapseText">INFO</span>
+      </td>
+      <td>
+        <InlineFlex>
+          {{ percent0(efficiency) }}
+          <Tooltip position="bottom" :tooltip="tooltipText" />
+        </InlineFlex>
+      </td>
+      <FracCell :numerator="activeOrders" :denominator="capacity" />
+      <td>
+        <div :class="[$style.flex, $style.buttons]">
+          <PrunButton dark inline @click="showBuffer(`PRODCO ${productionLine.id}`)">CO</PrunButton>
+          <PrunButton dark inline @click="showBuffer(`PRODQ ${productionLine.id}`)">Q</PrunButton>
+        </div>
+      </td>
+    </tr>
+    <tr v-if="!isMinimized">
+      <td colspan="1">
+        <div></div>
+      </td>
+      <td colspan="4" :class="$style.noPadding">
+        <ProductionOrdersTable :production-line="productionLine" :headers="headers" />
+      </td>
+    </tr>
+  </div>
 </template>
 
 <style module>

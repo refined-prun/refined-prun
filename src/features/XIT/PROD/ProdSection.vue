@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTileState } from '@src/features/XIT/BURN/tile-state';
+import { useTileState } from './tile-state';
 import ProductionList from './ProductionList.vue';
 import { PlanetProduction } from '@src/core/production';
 import PlanetHeader from './PlanetHeader.vue';
@@ -9,7 +9,7 @@ const { production, canMinimize, headers } = defineProps<{
   headers?: boolean;
 }>();
 
-const expand = useTileState('expand');
+const expand = useTileState('expandPlanets');
 
 const naturalId = computed(() => production.naturalId);
 const isMinimized = computed(() => canMinimize && !expand.value.includes(naturalId.value));

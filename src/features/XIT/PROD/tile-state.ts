@@ -6,5 +6,6 @@ export const useTileState = createTileStateHook({
   inactive: true,
   notqueued: true,
   headers: true,
-  expand: [] as string[],
+  expandPlanets: [] as string[],
+  expandInfo: [] as string[],
 });
