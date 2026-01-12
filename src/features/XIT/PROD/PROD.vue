@@ -1,18 +1,12 @@
 <script setup lang="ts">
 import RadioItem from '@src/components/forms/RadioItem.vue';
-import { getPlanetBurn, MaterialBurn, PlanetBurn } from '@src/core/burn';
+import { MaterialBurn, PlanetBurn } from '@src/core/burn';
 import { getPlanetProduction, PlanetProduction } from '@src/core/production';
-import { comparePlanets } from '@src/util';
-import BurnSection from '@src/features/XIT/BURN/BurnSection.vue';
 import ProdSection from './ProdSection.vue';
 import { useTileState } from './tile-state';
 import Tooltip from '@src/components/Tooltip.vue';
-import LoadingSpinner from '@src/components/LoadingSpinner.vue';
-import MaterialRow from '@src/features/XIT/BURN/MaterialRow.vue';
-import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { countDays } from '@src/features/XIT/BURN/utils';
 import InlineFlex from '@src/components/InlineFlex.vue';
 import { findWithQuery } from '@src/utils/find-with-query';
 import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
@@ -27,7 +21,7 @@ export interface SiteData {
   overallOnly: boolean;
 }
 
-const queryResult = computed<SiteData | undefined>(() => {
+const sites = computed<SiteData | undefined>(() => {
   if (!sitesStore.all.value) {
     return undefined;
   }
@@ -86,13 +80,6 @@ function findSites(term: string, parts: string[]) {
   return sitesStore.getByPlanetNaturalId(naturalId);
 }
 
-const defaultBurnValues: PlanetBurn = {
-  storeId: '',
-  planetName: '',
-  naturalId: '',
-  burn: {},
-};
-
 const production = useTileState('production');
 const queue = useTileState('queue');
 const inactive = useTileState('inactive');
@@ -100,11 +87,11 @@ const notqueued = useTileState('notqueued');
 const headers = useTileState('headers');
 
 const planetProduction = computed<PlanetProduction[]>(() => {
-  if (!queryResult.value) {
+  if (!sites.value) {
     return [];
   }
 
-  return queryResult.value.sites
+  return sites.value.sites
     .filter(site => site !== overall)
     .map(site => {
       return getPlanetProduction(site);
@@ -160,10 +147,6 @@ const fakeBurn: MaterialBurn = {
   output: 0,
   workforce: 0,
 };
-
-const expand = useTileState('expand');
-
-const anyExpanded = computed(() => expand.value.length > 0);
 </script>
 
 <template>

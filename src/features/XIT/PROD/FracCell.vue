@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { userData } from '@src/store/user-data';
-
 const { numerator, denominator } = defineProps<{ numerator: number; denominator: number }>();
 
-const flooredDays = computed(() => Math.floor(numerator));
 const burnClass = computed(() => ({
   [C.Workforces.daysMissing]: numerator < denominator,
   [C.Workforces.daysSupplied]: numerator >= denominator,

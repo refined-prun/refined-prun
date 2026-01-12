@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import PrunButton from '@src/components/PrunButton.vue';
-import { PlanetBurn } from '@src/core/burn';
-import { countDays } from '@src/features/XIT/BURN/utils';
 import { PlanetProduction } from '@src/core/production';
 import FracCell from './FracCell.vue';
 

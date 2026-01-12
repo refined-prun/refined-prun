@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { PlanetBurn } from '@src/core/burn';
-import { sortMaterials } from '@src/core/sort-materials';
 import ProductionRow from './ProductionRow.vue';
 import { PlanetProduction, PlatformProduction } from '@src/core/production';
 import { useTileState } from './tile-state';

@@ -1,7 +1,6 @@
 import { computed } from 'vue';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
-import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import {
   getEntityNameFromAddress,

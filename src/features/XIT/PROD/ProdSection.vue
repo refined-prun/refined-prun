@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { PlanetBurn } from '@src/core/burn';
-
-import MaterialList from '@src/features/XIT/BURN/MaterialList.vue';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
 import ProductionList from './ProductionList.vue';
 import { PlanetProduction } from '@src/core/production';

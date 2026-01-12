@@ -1,15 +1,11 @@
 <script setup lang="ts">
-import { MaterialBurn } from '@src/core/burn';
-import MaterialIcon from '@src/components/MaterialIcon.vue';
-import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
-import { fixed0, fixed1, fixed2 } from '@src/utils/format';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
 import PrunButton from '@src/components/PrunButton.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 import BuildingIcon from '@src/components/BuildingIcon.vue';
 import { PlatformProduction } from '@src/core/production';
-import { percent0, percent1, percent2 } from '@src/utils/format';
+import { percent0, percent2 } from '@src/utils/format';
 import FracCell from './FracCell.vue';
 import InlineFlex from '@src/components/InlineFlex.vue';
 import Tooltip from '@src/components/Tooltip.vue';
