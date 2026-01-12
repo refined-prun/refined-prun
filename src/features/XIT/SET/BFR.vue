@@ -113,7 +113,6 @@ function deleteRule(rule: [string, number, number]) {
     <thead>
       <tr>
         <GripHeaderCell />
-        <th />
         <th>
           <InlineFlex>
             Command

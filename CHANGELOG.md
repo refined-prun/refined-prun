@@ -6,6 +6,10 @@
 
 - `XIT FINCH`: Add a "(Partial)" suffix to the equity chart if the full equity mode is disabled
 
+### Fixed
+
+- `XIT SET BFR`: Fix the table header row misalignment
+
 ## 26.1.11
 
 ### Added
