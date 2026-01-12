@@ -21,57 +21,54 @@ const capacity = computed(() => productionLine.capacity);
 const efficiency = computed(() => productionLine.efficiency ?? 0);
 const activeOrders = computed(() => productionLine.orders.length);
 const condition = computed(() => productionLine.condition);
-
-const isVisible = computed(() => alwaysVisible);
-
-const isInvisible = computed(() => !isVisible.value);
-
-const expand = useTileState('expandInfo');
-
+const expandInfo = useTileState('expandInfo');
 const id = computed(() => productionLine.id);
-const isMinimized = computed(() => !expand.value.includes(id.value));
+const displayInfo = computed(() => expandInfo.value.includes(id.value));
 
 const onHeaderClick = () => {
-  if (isMinimized.value) {
-    expand.value = [...expand.value, id.value];
+  if (displayInfo.value) {
+    expandInfo.value = expandInfo.value.filter(x => x !== id.value);
   } else {
-    expand.value = expand.value.filter(x => x !== id.value);
+    expandInfo.value = [...expandInfo.value, id.value];
   }
 };
 
 const tooltipText = computed(() => {
   const lines = [`Condition: ${percent0(condition.value)}`];
 
-  if (productionLine.efficiencyFactors?.length) {
-    lines.push(''); // Add a spacer
-
-    productionLine.efficiencyFactors.forEach(factor => {
-      // Only map labels that aren't a simple capitalization of the key
-      const labels: Partial<Record<PrunApi.EfficiencyFactorType, string>> = {
-        COGC_PROGRAM: 'COGC',
-        COMPANY_HEADQUARTERS: 'HQ',
-        PRODUCTION_LINE_CONDITION: 'Condition',
-      };
-
-      const capitalize = (str: string) => {
-        return str
-          .split('_')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-          .join(' ');
-      };
-
-      // Use the mapped label if it exists; otherwise, capitalize the raw type
-      const rawLabel = labels[factor.type] || factor.type;
-      const label = capitalize(rawLabel);
-
-      // Fix capitalization for the expertise category as well
-      const category = factor.expertiseCategory ? ` (${capitalize(factor.expertiseCategory)})` : '';
-
-      lines.push(`${label}${category}: ${percent2(factor.value)}`);
-      lines.push(''); // Add a spacer
-    });
+  if (productionLine.efficiencyFactors.length in [0, NaN]) {
+    return lines.join(' ');
   }
-  const fixedWidth = 22;
+
+  lines.push(''); // Add a spacer
+
+  productionLine.efficiencyFactors.forEach(factor => {
+    // Only map labels that aren't a simple capitalization of the key
+    const labels: Partial<Record<PrunApi.EfficiencyFactorType, string>> = {
+      COGC_PROGRAM: 'COGC',
+      COMPANY_HEADQUARTERS: 'HQ',
+      PRODUCTION_LINE_CONDITION: 'Condition',
+    };
+
+    const capitalize = (str: string) => {
+      return str
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+    };
+
+    // Use the mapped label if it exists; otherwise, capitalize the raw type
+    const rawLabel = labels[factor.type] || factor.type;
+    const label = capitalize(rawLabel);
+
+    // Fix capitalization for the expertise category as well
+    const category = factor.expertiseCategory ? ` (${capitalize(factor.expertiseCategory)})` : '';
+
+    lines.push(`${label}${category}: ${percent2(factor.value)}`);
+    lines.push(''); // Add a spacer
+  });
+
+  //const fixedWidth = 22;
   //\u00A0
   //return lines.map(line => line.padEnd(fixedWidth, '-')).join('\n');
   return lines.join(' ');
@@ -79,39 +76,37 @@ const tooltipText = computed(() => {
 </script>
 
 <template>
-  <div>
-    <tr :class="[$style.row]">
-      <td :class="[$style.buildingContainer, $style.noPadding, $style.flex]">
-        <BuildingIcon size="inline-table" :ticker="productionLine.reactorTicker" />
-      </td>
+  <tr :class="[$style.row]">
+    <td :class="[$style.buildingContainer, $style.noPadding, $style.flex]">
+      <BuildingIcon size="inline-table" :ticker="productionLine.reactorTicker" />
+    </td>
 
-      <td @click="onHeaderClick" :class="$style.trigger">
-        <span :class="[$style.caret, !isMinimized && $style.expanded]">▶</span>
-        <span :class="$style.collapseText">INFO</span>
-      </td>
-      <td>
-        <InlineFlex>
-          {{ percent0(efficiency) }}
-          <Tooltip position="bottom" :tooltip="tooltipText" />
-        </InlineFlex>
-      </td>
-      <FracCell :numerator="activeOrders" :denominator="capacity" />
-      <td>
-        <div :class="[$style.flex, $style.buttons]">
-          <PrunButton dark inline @click="showBuffer(`PRODCO ${productionLine.id}`)">CO</PrunButton>
-          <PrunButton dark inline @click="showBuffer(`PRODQ ${productionLine.id}`)">Q</PrunButton>
-        </div>
-      </td>
-    </tr>
-    <tr v-if="!isMinimized">
-      <td colspan="1">
-        <div></div>
-      </td>
-      <td colspan="4" :class="$style.noPadding">
-        <ProductionOrdersTable :production-line="productionLine" :headers="headers" />
-      </td>
-    </tr>
-  </div>
+    <td :class="$style.trigger" @click="onHeaderClick">
+      <span :class="[$style.caret, displayInfo && $style.expanded]">▶</span>
+      <span :class="$style.collapseText">INFO</span>
+    </td>
+    <td>
+      <InlineFlex>
+        {{ percent0(efficiency) }}
+        <Tooltip position="bottom" :tooltip="tooltipText" />
+      </InlineFlex>
+    </td>
+    <FracCell :numerator="activeOrders" :denominator="capacity" />
+    <td>
+      <div :class="[$style.flex, $style.buttons]">
+        <PrunButton dark inline @click="showBuffer(`PRODCO ${productionLine.id}`)">CO</PrunButton>
+        <PrunButton dark inline @click="showBuffer(`PRODQ ${productionLine.id}`)">Q</PrunButton>
+      </div>
+    </td>
+  </tr>
+  <tr v-if="displayInfo">
+    <td colspan="1">
+      <div></div>
+    </td>
+    <td colspan="4" :class="$style.noPadding">
+      <ProductionOrdersTable :production-line="productionLine" :headers="headers" />
+    </td>
+  </tr>
 </template>
 
 <style module>
