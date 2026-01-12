@@ -9,6 +9,7 @@
 ### Fixed
 
 - `XIT SET BFR`: Fix the table header row misalignment
+- `browser-tab-name`: Fix ghost notification counter for deleted notifications
 
 ## 26.1.11
 
