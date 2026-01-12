@@ -10,10 +10,6 @@ const inactive = useTileState('inactive');
 const notqueued = useTileState('notqueued');
 
 const filteredproduction = computed<PlatformProduction[]>(() => {
-  if (!production) {
-    return [];
-  }
-
   return production.production
     .filter(x => x !== undefined)
     .sort((a, b) => {

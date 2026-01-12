@@ -28,7 +28,7 @@ const totalCapacity = computed(() =>
       </span>
       <span></span>
     </td>
-    <td 2 colspan="2" :class="$style.cell">
+    <td colspan="2" :class="$style.cell">
       {{ production.planetName }}
     </td>
     <FracCell :numerator="totalOrders" :denominator="totalCapacity" />

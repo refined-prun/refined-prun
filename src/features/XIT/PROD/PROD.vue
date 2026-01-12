@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import RadioItem from '@src/components/forms/RadioItem.vue';
-import { MaterialBurn, PlanetBurn } from '@src/core/burn';
+import { MaterialBurn } from '@src/core/burn';
 import { getPlanetProduction, PlanetProduction } from '@src/core/production';
 import ProdSection from './ProdSection.vue';
 import { useTileState } from './tile-state';
@@ -137,16 +137,6 @@ const planetProduction = computed<PlanetProduction[]>(() => {
       return false;
     });
 });
-
-const fakeBurn: MaterialBurn = {
-  dailyAmount: -100000,
-  daysLeft: 10,
-  inventory: 100000,
-  type: 'input',
-  input: 100000,
-  output: 0,
-  workforce: 0,
-};
 </script>
 
 <template>
