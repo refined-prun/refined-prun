@@ -1,6 +1,8 @@
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { getInvStore } from '@src/core/store-id';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
+import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import $style from './inventory-breakdow.module.css';
@@ -98,4 +100,8 @@ function init() {
   tiles.observe(['FLT'], onTileReady);
 }
 
-features.add(import.meta.url, init, 'FLT: Shows a more detailed inventory breakdown in the Cargo column.');
+features.add(
+  import.meta.url,
+  init,
+  'FLT: Shows a more detailed inventory breakdown in the Cargo column.',
+);
