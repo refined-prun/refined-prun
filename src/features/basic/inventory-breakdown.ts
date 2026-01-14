@@ -80,8 +80,11 @@ function onRowReady(row: HTMLTableRowElement) {
       fill.classList.add('rp-category-' + name);
 
       const itemValue = useVolume ? item.volume : item.weight;
-      const divisor = isMiniMode ? activeLoad : activeCapacity;
-      const percentage = (itemValue * 100) / (divisor || 1);
+      let divisor = isMiniMode ? activeLoad : activeCapacity;
+      if (divisor === 0) {
+      	divisor = 1;
+      }
+      const percentage = (itemValue * 100) / divisor;
 
       fill.style.width = `${percentage}%`;
       fill.title = `${item.quantity.material.ticker}: ${useVolume ? item.volume.toFixed(2) + 'm³' : item.weight.toFixed(2) + 't'}`;
