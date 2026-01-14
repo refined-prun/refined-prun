@@ -2,6 +2,7 @@ import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
 import { isEmpty } from 'ts-extras';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 function onTileReady(tile: PrunTile) {
   // Shorten flight status
@@ -49,6 +50,15 @@ function onTileReady(tile: PrunTile) {
       if (statusCell === undefined) {
         return;
       }
+
+      statusCell.style.cursor = 'pointer';
+      statusCell.title = `SFC ${ship.value!.registration}`;
+
+      statusCell.onclick = e => {
+        e.preventDefault();
+        e.stopPropagation();
+        showBuffer(`SFC ${ship.value!.registration}`);
+      };
 
       const nodes = Array.from(statusCell.childNodes).filter(
         x => x.nodeType === Node.TEXT_NODE || x.nodeType === Node.ELEMENT_NODE,
