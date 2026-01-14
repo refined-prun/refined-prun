@@ -69,7 +69,9 @@ function onRowReady(row: HTMLTableRowElement) {
     }
 
     for (const item of items) {
-      if (!item.quantity) return;
+      if (!item.quantity) {
+        return;
+      }
 
       const fill = document.createElement('div');
       const material = materialsStore.getByTicker(item.quantity.material.ticker);
@@ -79,7 +81,6 @@ function onRowReady(row: HTMLTableRowElement) {
       }
 
       fill.classList.add($style.fill);
-      fill.classList.add('rp-category-' + name);
 
       const itemValue = useVolume ? item.volume : item.weight;
       let divisor = isMiniMode ? activeLoad : activeCapacity;
