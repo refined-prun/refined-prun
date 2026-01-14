@@ -4,6 +4,7 @@ import { SectionData } from '@src/features/XIT/FINBS/balance-section';
 import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
 import BalanceSheetRow from '@src/features/XIT/FINBS/BalanceSheetRow.vue';
 import { formatCurrency } from '@src/utils/format';
+import ChartButtonCell from '@src/features/XIT/FINBS/ChartButtonCell.vue';
 
 const { current, last, previous, section } = defineProps<{
   current: PartialBalanceSheet;
@@ -11,8 +12,6 @@ const { current, last, previous, section } = defineProps<{
   previous?: PartialBalanceSheet;
   section: SectionData;
 }>();
-
-const visibleChildren = computed(() => section.children.filter(x => !x.hidden));
 
 function calculate(
   sheet: PartialBalanceSheet | undefined,
@@ -31,10 +30,10 @@ function calculateChange(selector: (x: PartialBalanceSheet) => number | undefine
 }
 
 const totalClass = computed(() => {
-  if (!section.coloredTotal) {
+  if (!section.coloredChange) {
     return undefined;
   }
-  const change = calculateChange(section.total);
+  const change = calculateChange(section.value);
   if (change === undefined) {
     return undefined;
   }
@@ -52,19 +51,21 @@ const totalClass = computed(() => {
       <th colspan="5">{{ section.name }}</th>
     </tr>
     <BalanceSheetRow
-      v-for="row in visibleChildren"
+      v-for="row in section.children"
       :key="row.name"
       :current="current"
       :last="last"
       :previous="previous"
       :row="row"
-      :indent="0" />
+      :indent="0"
+      :excluded="row.excluded" />
     <tr :class="C.IncomeStatementPanel.totals">
       <td :class="C.IncomeStatementPanel.number">Total</td>
-      <td>{{ formatCurrency(calculate(current, section.total)) }}</td>
-      <td>{{ formatCurrency(calculate(last, section.total)) }}</td>
-      <td>{{ formatCurrency(calculate(previous, section.total)) }}</td>
-      <td :class="totalClass">{{ formatChange(calculateChange(section.total)) }}</td>
+      <td>{{ formatCurrency(calculate(current, section.value)) }}</td>
+      <td>{{ formatCurrency(calculate(last, section.value)) }}</td>
+      <td>{{ formatCurrency(calculate(previous, section.value)) }}</td>
+      <td :class="totalClass">{{ formatChange(calculateChange(section.value)) }}</td>
+      <ChartButtonCell :chart-id="section.chartId" />
     </tr>
   </tbody>
 </template>
