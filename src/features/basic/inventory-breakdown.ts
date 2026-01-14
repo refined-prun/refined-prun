@@ -23,9 +23,7 @@ function onRowReady(row: HTMLTableRowElement) {
   if (!storageCell || !storageProgress) return;
 
   const newBar = document.createElement('div');
-  // Use CSS Module class for the container
   newBar.classList.add($style.container);
-  // Add the base game progress bar class via the C object
   newBar.classList.add(C.ProgressBar.progress);
 
   newBar.addEventListener('click', e => {
@@ -92,8 +90,6 @@ function onRowReady(row: HTMLTableRowElement) {
 }
 
 function init() {
-  // We use standard C object classes if we were overriding existing game elements,
-  // but since we are creating new elements here, we apply classes directly.
   tiles.observe(['FLT'], onTileReady);
 }
 
