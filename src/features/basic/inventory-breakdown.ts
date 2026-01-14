@@ -20,7 +20,9 @@ function onRowReady(row: HTMLTableRowElement) {
   const storageCell = row.querySelector('td:nth-child(3)');
   const storageProgress = storageCell?.querySelector('progress');
 
-  if (!storageCell || !storageProgress) return;
+  if (!storageCell || !storageProgress) {
+    return;
+  }
 
   const newBar = document.createElement('div');
   newBar.classList.add($style.container);
