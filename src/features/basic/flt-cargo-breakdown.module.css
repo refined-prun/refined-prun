@@ -2,6 +2,7 @@
   cursor: pointer;
   display: flex;
   width: 100%;
+  min-width: 30px;
   height: 12px;
   align-items: flex-end;
   justify-content: flex-start;
