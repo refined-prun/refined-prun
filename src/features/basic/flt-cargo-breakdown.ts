@@ -56,7 +56,7 @@ function onRowReady(row: HTMLTableRowElement) {
     const activeLoad = useVolume ? vLoad : wLoad;
     const activeCapacity = useVolume ? vCap : wCap;
 
-    newBar.innerHTML = '';
+    newBar.replaceChildren();
     let segmentTarget: HTMLElement = newBar;
 
     if (isMiniMode) {
