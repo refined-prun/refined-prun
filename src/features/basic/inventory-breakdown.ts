@@ -98,4 +98,4 @@ function init() {
   tiles.observe(['FLT'], onTileReady);
 }
 
-features.add(import.meta.url, init, 'Shows a more detailed inventory breakdown in ship lists.');
+features.add(import.meta.url, init, 'FLT: Shows a more detailed inventory breakdown in the Cargo column.');
