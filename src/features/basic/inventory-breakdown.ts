@@ -82,7 +82,7 @@ function onRowReady(row: HTMLTableRowElement) {
       const itemValue = useVolume ? item.volume : item.weight;
       let divisor = isMiniMode ? activeLoad : activeCapacity;
       if (divisor === 0) {
-      	divisor = 1;
+        divisor = 1;
       }
       const percentage = (itemValue * 100) / divisor;
 
@@ -90,7 +90,7 @@ function onRowReady(row: HTMLTableRowElement) {
       fill.title = `${item.quantity.material.ticker}: ${useVolume ? item.volume.toFixed(2) + 'm³' : item.weight.toFixed(2) + 't'}`;
 
       segmentTarget.appendChild(fill);
-    });
+    }
   });
 }
 
