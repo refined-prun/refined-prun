@@ -5,7 +5,7 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
-import $style from './inventory-breakdow.module.css';
+import $style from './flt-cargo-breakdown.module.css';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'tr'), onRowReady);
