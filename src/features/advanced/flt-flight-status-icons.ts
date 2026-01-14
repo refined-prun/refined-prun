@@ -25,21 +25,24 @@ function onTileReady(tile: PrunTile) {
       JUMP_GATEWAY: '⟴',
     };
 
+    const currentSegment = computed(() => {
+      if (!flight.value) return undefined;
+      return flight.value.segments[flight.value.currentSegmentIndex];
+    });
+
     const statusLabel = computed(() => {
-      if (!ship.value) {
-        return undefined;
-      }
+      if (!ship.value) return undefined;
+      if (!flight.value) return '⦁';
 
-      if (!flight.value) {
-        return '⦁';
-      }
+      const segment = currentSegment.value;
+      return segment ? labels[segment.type] : undefined;
+    });
 
-      const segment = flight.value.segments[flight.value.currentSegmentIndex];
-      if (segment === undefined) {
-        return undefined;
-      }
-
-      return labels[segment.type] ?? undefined;
+    const tooltipName = computed(() => {
+      if (!ship.value) return undefined;
+      const segment = currentSegment.value;
+      if (!flight.value || !segment) return `SFC ${ship.value.registration}`;
+      return `${segment.type.replace('_', ' ')}: SFC ${ship.value.registration}`;
     });
 
     function replaceStatus() {
@@ -52,7 +55,7 @@ function onTileReady(tile: PrunTile) {
       }
 
       statusCell.style.cursor = 'pointer';
-      statusCell.title = `SFC ${ship.value!.registration}`;
+      statusCell.title = tooltipName.value ?? '';
 
       statusCell.onclick = e => {
         e.preventDefault();
