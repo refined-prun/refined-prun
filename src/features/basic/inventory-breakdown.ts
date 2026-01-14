@@ -70,11 +70,11 @@ function onRowReady(row: HTMLTableRowElement) {
       if (!item.quantity) return;
 
       const fill = document.createElement('div');
-      const category = materialCategoriesStore.getCategoryByMaterialIdentifier(
-        item.quantity.material.ticker,
-      );
-      const name =
-        category?.name.toLowerCase().replace(/\s+/g, '-').replace(/[()]/g, '') ?? 'unknown';
+      const material = materialsStore.getByTicker(item.quantity.material.ticker);
+      const category = materialCategoriesStore.getById(material?.category);
+      if (category) {
+        fill.classList.add('rp-category-' + sanitizeCategoryName(category.name));
+      }
 
       fill.classList.add($style.fill);
       fill.classList.add('rp-category-' + name);
