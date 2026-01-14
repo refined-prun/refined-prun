@@ -43,7 +43,7 @@ function appendStylesheet() {
   const gradientEnd = defaultColor.brighten(10).toHexString();
   const fontColor = defaultColor.brighten(40).toHexString();
   const defaultStyle =
-    `.${C.ColoredIcon.container} {\n` +
+    `.${C.ColoredIcon.container}, .rp-category-none {\n` +
     `  background: linear-gradient(135deg, ${gradientStart}, ${gradientEnd});\n` +
     `  color: ${fontColor};\n` +
     '}\n\n';
@@ -62,6 +62,20 @@ function createCssRule<T extends keyof typeof categoryColors>(category: T) {
     `  color: ${fontColor};\n` +
     '}'
   );
+}
+
+export function getStoreItemCategoryCssClass(item: PrunApi.StoreItem) {
+  if (item.type === 'SHIPMENT') {
+    return 'rp-category-none';
+  }
+
+  if (!item.quantity) {
+    return undefined;
+  }
+
+  const material = materialsStore.getByTicker(item.quantity.material.ticker);
+  const category = materialCategoriesStore.getById(material?.category);
+  return category ? 'rp-category-' + sanitizeCategoryName(category.name) : undefined;
 }
 
 export function sanitizeCategoryName(name: string) {

@@ -1,8 +1,6 @@
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { getInvStore } from '@src/core/store-id';
-import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
-import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
+import { getStoreItemCategoryCssClass } from '@src/infrastructure/prun-ui/item-tracker';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import $style from './flt-cargo-breakdown.module.css';
@@ -71,15 +69,15 @@ function onRowReady(row: HTMLTableRowElement) {
     }
 
     for (const item of inv.items) {
-      if (!item.quantity) {
-        return;
+      let ticker = item.quantity?.material.ticker;
+      if (item.type === 'SHIPMENT') {
+        ticker = 'SHPT';
       }
 
       const fill = document.createElement('div');
-      const material = materialsStore.getByTicker(item.quantity.material.ticker);
-      const category = materialCategoriesStore.getById(material?.category);
-      if (category) {
-        fill.classList.add('rp-category-' + sanitizeCategoryName(category.name));
+      const categoryCssClass = getStoreItemCategoryCssClass(item);
+      if (categoryCssClass) {
+        fill.classList.add(categoryCssClass);
       }
 
       fill.classList.add($style.fill);
@@ -92,7 +90,7 @@ function onRowReady(row: HTMLTableRowElement) {
       const percentage = (itemValue * 100) / divisor;
 
       fill.style.width = `${percentage}%`;
-      fill.title = `${item.quantity.material.ticker}: ${useVolume ? item.volume.toFixed(2) + 'm³' : item.weight.toFixed(2) + 't'}`;
+      fill.title = `${ticker}: ${useVolume ? item.volume.toFixed(2) + 'm³' : item.weight.toFixed(2) + 't'}`;
 
       segmentTarget.appendChild(fill);
     }
