@@ -54,8 +54,9 @@ function onTileReady(tile: PrunTile) {
         return;
       }
 
-      statusCell.style.cursor = 'pointer';
+      statusCell.style.display = 'table-cell';
       statusCell.title = tooltipName.value ?? '';
+      statusCell.classList.add(C.Link.link);
 
       statusCell.onclick = e => {
         e.preventDefault();
