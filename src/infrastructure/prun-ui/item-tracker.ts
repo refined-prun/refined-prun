@@ -64,18 +64,8 @@ function createCssRule<T extends keyof typeof categoryColors>(category: T) {
   );
 }
 
-export function getStoreItemCategoryCssClass(item: PrunApi.StoreItem) {
-  if (item.type === 'SHIPMENT') {
-    return 'rp-category-none';
-  }
-
-  if (!item.quantity) {
-    return undefined;
-  }
-
-  const material = materialsStore.getByTicker(item.quantity.material.ticker);
-  const category = materialCategoriesStore.getById(material?.category);
-  return category ? 'rp-category-' + sanitizeCategoryName(category.name) : undefined;
+export function getMaterialCategoryCssClass(category: PrunApi.MaterialCategory) {
+  return 'rp-category-' + sanitizeCategoryName(category.name);
 }
 
 export function sanitizeCategoryName(name: string) {
