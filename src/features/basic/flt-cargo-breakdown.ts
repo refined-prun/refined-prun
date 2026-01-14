@@ -39,13 +39,16 @@ function onRowReady(row: HTMLTableRowElement) {
   storageCell.prepend(newBar);
 
   watchEffectWhileNodeAlive(row, () => {
+    newBar.replaceChildren();
     const inv = inventory.value;
-    const items = inv?.items ?? [];
+    if (!inv) {
+      return;
+    }
 
-    const wCap = inv?.weightCapacity ?? 1;
-    const vCap = inv?.volumeCapacity ?? 1;
-    const wLoad = inv?.weightLoad ?? 0;
-    const vLoad = inv?.volumeLoad ?? 0;
+    const wCap = inv.weightCapacity;
+    const vCap = inv.volumeCapacity;
+    const wLoad = inv.weightLoad;
+    const vLoad = inv.volumeLoad;
 
     const weightRatio = wLoad / wCap;
     const volumeRatio = vLoad / vCap;
@@ -56,7 +59,6 @@ function onRowReady(row: HTMLTableRowElement) {
     const activeLoad = useVolume ? vLoad : wLoad;
     const activeCapacity = useVolume ? vCap : wCap;
 
-    newBar.replaceChildren();
     let segmentTarget: HTMLElement = newBar;
 
     if (isMiniMode) {
@@ -68,7 +70,7 @@ function onRowReady(row: HTMLTableRowElement) {
       segmentTarget = miniBar;
     }
 
-    for (const item of items) {
+    for (const item of inv.items) {
       if (!item.quantity) {
         return;
       }
