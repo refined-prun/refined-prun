@@ -66,7 +66,7 @@ function onRowReady(row: HTMLTableRowElement) {
       segmentTarget = miniBar;
     }
 
-    items.forEach(item => {
+    for (const item of items) {
       if (!item.quantity) return;
 
       const fill = document.createElement('div');
