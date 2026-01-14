@@ -84,10 +84,5 @@ export function getPlanetProduction(
   const siteId = typeof siteOrId === 'string' ? siteOrId : siteOrId?.siteId;
 
   if (!siteId) return undefined;
-
-  const production = productionMap.value[siteId] ?? undefined;
-
-  console.log('getPlanetProduction', siteId, production);
-
-  return production;
+  return productionMap.value[siteId] ?? undefined;
 }
