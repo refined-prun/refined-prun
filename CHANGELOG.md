@@ -5,6 +5,7 @@
 ### Fixed
 
 - `XIT FINCH`: Fix the Y axis labels fraction digits
+- `XIT GIF`: Fix pillarboxing
 
 ## 26.1.15
 

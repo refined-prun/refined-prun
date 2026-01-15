@@ -21,14 +21,52 @@ function onLoad() {
   isLoading.value = false;
 }
 
+const container = useTemplateRef<HTMLDivElement>('container');
+const wrap = useTemplateRef<HTMLDivElement>('wrap');
+const image = useTemplateRef<HTMLImageElement>('image');
+
 onMounted(() => void load());
+
+watchEffect(() => image.value?.addEventListener('load', layout));
+watchEffect(() => {
+  if (container.value) {
+    new ResizeObserver(layout).observe(container.value);
+  }
+});
+
+function layout() {
+  const maxW = container.value!.clientWidth;
+  const maxH = container.value!.clientHeight;
+
+  let nw = image.value!.naturalWidth;
+  if (nw === 0) {
+    nw = 1;
+  }
+  let nh = image.value!.naturalHeight;
+  if (nh === 0) {
+    nh = 1;
+  }
+  const ar = nw / nh;
+
+  let w = maxW;
+  let h = w / ar;
+
+  if (h > maxH) {
+    h = maxH;
+    w = h * ar;
+  }
+
+  wrap.value!.style.width = `${w}px`;
+  wrap.value!.style.height = `${h}px`;
+}
 </script>
 
 <template>
   <LoadingSpinner v-if="isLoading" />
-  <div :class="$style.container">
-    <div :class="$style.imageWrapper">
+  <div ref="container" :class="$style.container">
+    <div ref="wrap" :class="$style.wrap">
       <img
+        ref="image"
         :class="$style.image"
         :src="url"
         alt="gif"
@@ -52,18 +90,14 @@ onMounted(() => void load());
   align-items: center;
 }
 
-.imageWrapper {
+.wrap {
   position: relative;
-  max-width: 100%;
-  max-height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .image {
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  display: block;
   cursor: pointer;
 }
 
@@ -73,5 +107,6 @@ onMounted(() => void load());
   left: 4px;
   width: 40px;
   opacity: 75%;
+  pointer-events: none;
 }
 </style>
