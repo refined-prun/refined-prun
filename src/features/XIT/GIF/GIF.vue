@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
+import { getGifUrl } from '@src/features/XIT/GIF/gif-provider';
 
 const parameters = useXitParameters();
 const tag = parameters.join(' ');
@@ -13,18 +14,7 @@ async function load() {
     return;
   }
   isLoading.value = true;
-  url.value = undefined;
-  let rawUrl = 'https://api.giphy.com/v1/gifs/random?api_key=c92SYJwV9J9MYJ33WGRdux4mNxAipq9y';
-  if (tag) {
-    rawUrl += '&tag=' + tag;
-  }
-  try {
-    const response = await (await fetch(encodeURI(rawUrl))).json();
-    url.value = response.data.images.original.webp;
-  } catch (e) {
-    console.error(e);
-    url.value = '';
-  }
+  url.value = (await getGifUrl(tag)) ?? '';
 }
 
 function onLoad() {
@@ -37,7 +27,19 @@ onMounted(() => void load());
 <template>
   <LoadingSpinner v-if="isLoading" />
   <div :class="$style.container">
-    <img :class="$style.image" :src="url" alt="gif" @click="load" @load="onLoad" @error="onLoad" />
+    <div :class="$style.imageWrapper">
+      <img
+        :class="$style.image"
+        :src="url"
+        alt="gif"
+        @click="load"
+        @load="onLoad"
+        @error="onLoad" />
+      <img
+        src="https://refined-prun.github.io/assets/klipy.png"
+        alt="Klipy"
+        :class="$style.watermark" />
+    </div>
   </div>
 </template>
 
@@ -50,9 +52,26 @@ onMounted(() => void load());
   align-items: center;
 }
 
+.imageWrapper {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .image {
   max-width: 100%;
   max-height: 100%;
   cursor: pointer;
+}
+
+.watermark {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  width: 40px;
+  opacity: 75%;
 }
 </style>

@@ -5,6 +5,7 @@
 ### Changed
 
 - `XIT FINCH`: Add a "(Partial)" suffix to the equity chart if the full equity mode is disabled
+- `XIT GIF`: Switch from Giphy to Klipy
 
 ### Fixed
 
