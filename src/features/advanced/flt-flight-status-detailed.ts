@@ -175,7 +175,8 @@ function onRowReady(row: HTMLTableRowElement) {
       unloadBtn.style.height = '20px';
       unloadBtn.style.width = unloadBtn.style.height;
       unloadBtn.style.cursor = 'pointer';
-      unloadBtn.style.padding = '1px';
+      unloadBtn.style.padding = '1px 5px 1px 1px';
+      //unloadBtn.style.border = '1px solid #999'
       flightBtn.style.margin = unloadBtn.style.margin;
       flightBtn.style.fontSize = '16px';
       flightBtn.style.paddingLeft = unloadBtn.style.paddingLeft;
@@ -184,9 +185,9 @@ function onRowReady(row: HTMLTableRowElement) {
       flightBtn.style.cursor = unloadBtn.style.cursor;
       flightBtn.textContent = '✈';
       flightBtn.title = `SFC ${ship.value!.registration}`;
-      flightBtn.style.color = '#00f7a6';
-      flightBtn.style.backgroundColor = '#003e29';
-      flightBtn.style.padding = '2px';
+      flightBtn.style.color = '#ffffff';
+      flightBtn.style.backgroundColor = '#5cb85c';
+      flightBtn.style.padding = '2px 2px 1px 1px';
 
       flightBtn.style.height = unloadBtn.style.height;
       flightBtn.style.width = unloadBtn.style.height;
@@ -197,14 +198,14 @@ function onRowReady(row: HTMLTableRowElement) {
       const unload = inventory.value?.items.length ?? 0 > 0;
 
       if (unload) {
-        unloadBtn.style.color = '#f7a600';
-        unloadBtn.style.backgroundColor = '#3e2900';
-        unloadBtn.textContent = '[⭱]';
+        unloadBtn.style.color = '#ffff';
+        unloadBtn.style.backgroundColor = '#f7a600';
+        unloadBtn.textContent = '⭱';
         unloadBtn.title = 'Unload';
       } else {
-        unloadBtn.style.color = '#00a6f7';
-        unloadBtn.style.backgroundColor = '#00293e';
-        unloadBtn.textContent = '[⭳]';
+        unloadBtn.style.color = '#ffff';
+        unloadBtn.style.backgroundColor = '#43a4df';
+        unloadBtn.textContent = '⭳';
         unloadBtn.title = `SHPI ${ship.value!.registration}`;
       }
 
@@ -232,6 +233,25 @@ function onRowReady(row: HTMLTableRowElement) {
       rightSubFlex.style.flexDirection = 'row';
     }
     container.appendChild(rightSubFlex);
+
+    const nativeButtonCell = row.children[8] as HTMLElement;
+    if (nativeButtonCell) {
+      // Direct table cell manipulation
+      nativeButtonCell.style.width = '1px';
+      nativeButtonCell.style.whiteSpace = 'nowrap';
+
+      const nativeContainer = nativeButtonCell.querySelector(`.${C.Fleet.buttons}`) as HTMLElement;
+      if (nativeContainer) {
+        // Direct Javascript style injection to override the game's layout
+        nativeContainer.style.display = 'flex';
+        nativeContainer.style.flexDirection = 'row';
+        nativeContainer.style.flexWrap = 'nowrap';
+        nativeContainer.style.flexShrink = '0';
+        nativeContainer.style.width = 'max-content';
+        nativeContainer.style.minWidth = 'max-content';
+        nativeContainer.style.justifyContent = 'flex-start';
+      }
+    }
   });
 
   function updateStatusCell() {}
