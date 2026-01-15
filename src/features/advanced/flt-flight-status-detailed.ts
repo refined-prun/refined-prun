@@ -175,7 +175,7 @@ function onRowReady(row: HTMLTableRowElement) {
       unloadBtn.style.height = '20px';
       unloadBtn.style.width = unloadBtn.style.height;
       unloadBtn.style.cursor = 'pointer';
-      unloadBtn.style.padding = '1px 5px 1px 1px';
+      unloadBtn.style.padding = '1.5px 5.5px 1px 1px';
       //unloadBtn.style.border = '1px solid #999'
       flightBtn.style.margin = unloadBtn.style.margin;
       flightBtn.style.fontSize = '16px';
