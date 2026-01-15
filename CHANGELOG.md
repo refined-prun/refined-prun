@@ -2,6 +2,12 @@
 
 ## 26.1.15
 
+### Fixed
+
+- `XIT FINCH`: Fix the Y axis labels fraction digits
+
+## 26.1.15
+
 ### Changed
 
 - `XIT FINCH`: Add a "(Partial)" suffix to the equity chart if the full equity mode is disabled
