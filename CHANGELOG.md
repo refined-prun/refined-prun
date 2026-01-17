@@ -1,6 +1,6 @@
 # Changelog
 
-## 26.1.15
+## Unreleased
 
 ### Added
 
@@ -10,6 +10,7 @@
 
 - `XIT FINCH`: Fix the Y axis labels fraction digits
 - `XIT GIF`: Fix pillarboxing
+- `other-context-notification-count`: Fix ghost notifications (once and for all, I hope)
 
 ## 26.1.15
 
