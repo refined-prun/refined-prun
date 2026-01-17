@@ -4,6 +4,7 @@ import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { getMaterialCategoryCssClass } from '@src/infrastructure/prun-ui/item-tracker';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
 import { fixed02, percent0 } from '@src/utils/format';
+import { ref, watch, computed } from 'vue';
 
 const { shipId } = defineProps<{
   shipId: string | null;
@@ -172,10 +173,29 @@ function getInventorySummary(store: PrunApi.Store) {
 const miniBarClass = computed(() => ({
   [$style.miniBar]: cargoBar.value.miniMode,
 }));
+
+const isAnimating = ref(false);
+let animationTimeout: ReturnType<typeof setTimeout> | null = null;
+
+watch(
+  () => cargoBar.value.segments,
+  () => {
+    if (animationTimeout) clearTimeout(animationTimeout);
+
+    isAnimating.value = true;
+
+    animationTimeout = setTimeout(() => {
+      isAnimating.value = false;
+    }, 1000);
+  },
+  { deep: true },
+);
 </script>
 
 <template>
-  <div :class="[C.ProgressBar.progress, $style.container]" @click="onClick">
+  <div
+    :class="[C.ProgressBar.progress, $style.container, { [$style.isUpdating]: isAnimating }]"
+    @click="onClick">
     <div :class="[$style.bar, miniBarClass]">
       <div
         v-for="segment in cargoBar.segments"
@@ -200,6 +220,31 @@ const miniBarClass = computed(() => ({
   height: 12px;
   align-items: flex-end;
   justify-content: flex-start;
+  background-color: #2a2a2a;
+  --stripe-width: 10px;
+  --hypotenuse: calc(var(--stripe-width) * sqrt(2));
+
+  background-image: repeating-linear-gradient(
+    45deg,
+    #2a2a2a,
+    #2a2a2a calc(var(--stripe-width) / 2),
+    #252525 calc(var(--stripe-width) / 2),
+    #252525 var(--stripe-width)
+  );
+  background-size: var(--hypotenuse) var(--hypotenuse);
+}
+
+.isUpdating {
+  animation: move-stripes 0.5s linear infinite;
+}
+
+@keyframes move-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: var(--hypotenuse) 0;
+  }
 }
 
 .bar {
