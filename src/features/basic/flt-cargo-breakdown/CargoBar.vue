@@ -203,25 +203,39 @@ const totalLoadRatio = computed(() => {
 const stripeAlertColor = computed(() => {
   const ratio = totalLoadRatio.value;
 
-  // No alert below 70%
-  if (ratio < 0.7) return '#252525';
+  const start = { r: 37, g: 37, b: 37 };
+  const target = { r: 100, g: 100, b: 100 };
 
-  // Normalize ratio from [0.7 - 1.0] to [0 - 1]
+  if (ratio < 0.7) return `rgb(${start.r}, ${start.g}, ${start.b})`;
+
   const normalized = (ratio - 0.7) / 0.3;
 
-  // Linear Interpolation (Lerp) between #252525 (37, 37, 37) and #FFFFFF (255, 255, 255)
-  const r = Math.round(37 + (255 - 37) * normalized);
-  const g = Math.round(37 + (255 - 37) * normalized);
-  const b = Math.round(37 + (255 - 37) * normalized);
+  const r = Math.round(start.r + (target.r - start.r) * normalized);
+  const g = Math.round(start.g + (target.g - start.g) * normalized);
+  const b = Math.round(start.b + (target.b - start.b) * normalized);
 
   return `rgb(${r}, ${g}, ${b})`;
+});
+const stripeWidth = computed(() => {
+  const ratio = totalLoadRatio.value;
+
+  const startWidth = 10;
+  const smallWidth = 2;
+
+  if (ratio < 0.7) return `${startWidth}px`;
+
+  const normalized = (ratio - 0.7) / 0.3;
+
+  const width = startWidth - (startWidth - smallWidth) * normalized;
+
+  return `${width}px`;
 });
 </script>
 
 <template>
   <div
     :class="[C.ProgressBar.progress, $style.container, { [$style.isUpdating]: isAnimating }]"
-    :style="{ '--stripe-color': stripeAlertColor }"
+    :style="{ '--stripe-color': stripeAlertColor, '--stripe-width': stripeWidth }"
     @click="onClick">
     <div :class="[$style.bar, miniBarClass]">
       <div
