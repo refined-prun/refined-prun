@@ -203,7 +203,7 @@ const totalLoadRatio = computed(() => {
 const stripeAlertColor = computed(() => {
   const ratio = totalLoadRatio.value;
 
-  const start = { r: 37, g: 37, b: 37 };
+  const start = { r: 50, g: 50, b: 50 };
   const target = { r: 100, g: 100, b: 100 };
 
   if (ratio < 0.7) return `rgb(${start.r}, ${start.g}, ${start.b})`;
@@ -254,6 +254,7 @@ const stripeWidth = computed(() => {
 
 <style module>
 .container {
+  margin: 0px;
   cursor: pointer;
   display: flex;
   width: 100%;
@@ -303,6 +304,7 @@ const stripeWidth = computed(() => {
 
 .segment {
   height: 100%;
+  /*background: #2a2a2a !important;*/
 }
 
 .borderLeft {
