@@ -190,11 +190,38 @@ watch(
   },
   { deep: true },
 );
+
+// Inside <script setup>
+
+const totalLoadRatio = computed(() => {
+  const ship = shipsStore.getById(shipId);
+  const inv = storagesStore.getById(ship?.idShipStore);
+  if (!inv) return 0;
+  return Math.max(inv.weightLoad / inv.weightCapacity, inv.volumeLoad / inv.volumeCapacity);
+});
+
+const stripeAlertColor = computed(() => {
+  const ratio = totalLoadRatio.value;
+
+  // No alert below 70%
+  if (ratio < 0.7) return '#252525';
+
+  // Normalize ratio from [0.7 - 1.0] to [0 - 1]
+  const normalized = (ratio - 0.7) / 0.3;
+
+  // Linear Interpolation (Lerp) between #252525 (37, 37, 37) and #FFFFFF (255, 255, 255)
+  const r = Math.round(37 + (255 - 37) * normalized);
+  const g = Math.round(37 + (255 - 37) * normalized);
+  const b = Math.round(37 + (255 - 37) * normalized);
+
+  return `rgb(${r}, ${g}, ${b})`;
+});
 </script>
 
 <template>
   <div
     :class="[C.ProgressBar.progress, $style.container, { [$style.isUpdating]: isAnimating }]"
+    :style="{ '--stripe-color': stripeAlertColor }"
     @click="onClick">
     <div :class="[$style.bar, miniBarClass]">
       <div
@@ -228,8 +255,8 @@ watch(
     45deg,
     #2a2a2a,
     #2a2a2a calc(var(--stripe-width) / 2),
-    #252525 calc(var(--stripe-width) / 2),
-    #252525 var(--stripe-width)
+    var(--stripe-color) calc(var(--stripe-width) / 2),
+    var(--stripe-color) var(--stripe-width)
   );
   background-size: var(--hypotenuse) var(--hypotenuse);
 }
