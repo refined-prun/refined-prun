@@ -68,6 +68,7 @@ function onRowReady(row: HTMLTableRowElement) {
       name: name,
       location: getLocationLineFromAddress(address),
       command: command,
+      invCommand: `INV ${location?.entity.naturalId}`,
     };
     console.log(state);
     return state;
@@ -116,7 +117,20 @@ function onRowReady(row: HTMLTableRowElement) {
     leftSubFlex.style.display = 'flex';
     leftSubFlex.style.flexDirection = 'column';
     leftSubFlex.style.alignItems = 'flex-start';
-
+    const iconContainer = document.createElement('div');
+    iconContainer.style.display = 'flex';
+    iconContainer.style.gap = '4px';
+    const invSpan = document.createElement('span');
+    invSpan.textContent = `☒`;
+    invSpan.style.color = '#3fa2de';
+    invSpan.classList.add(C.Link.link);
+    invSpan.onclick = e => {
+      e.preventDefault();
+      e.stopPropagation();
+      showBuffer(posData.value.invCommand);
+    };
+    invSpan.title = posData.value.invCommand;
+    iconContainer.appendChild(invSpan);
     const iconSpan = document.createElement('span');
     iconSpan.textContent = statusIcon.value;
     iconSpan.style.color = '#3fa2de';
@@ -127,8 +141,10 @@ function onRowReady(row: HTMLTableRowElement) {
       showBuffer(`SFC ${ship.value!.registration}`);
     };
     iconSpan.title = `SFC ${ship.value!.registration}`;
-    leftSubFlex.appendChild(iconSpan);
+    iconContainer.appendChild(iconSpan);
+    leftSubFlex.appendChild(iconContainer);
 
+    const destDiv = document.createElement('div');
     const destSpan = document.createElement('span');
     destSpan.textContent = posData.value.name;
     destSpan.style.color = '#3fa2de';
@@ -139,7 +155,9 @@ function onRowReady(row: HTMLTableRowElement) {
       showBuffer(posData.value.command);
     };
     destSpan.title = posData.value.command;
-    leftSubFlex.appendChild(destSpan);
+    destDiv.appendChild(destSpan);
+
+    leftSubFlex.appendChild(destDiv);
     container.appendChild(leftSubFlex);
     const rightSubFlex = document.createElement('div');
     rightSubFlex.style.display = 'flex';
@@ -153,6 +171,7 @@ function onRowReady(row: HTMLTableRowElement) {
         e.stopPropagation();
         showBuffer(`SFC ${ship.value!.registration}`);
       };
+      rightSubFlex.title = `SFC ${ship.value!.registration}`;
 
       const relativeSpan = document.createElement('span');
       relativeSpan.textContent = timeData.value.relative;
