@@ -260,7 +260,7 @@ const stripeWidth = computed(() => {
   margin: 0px;
   cursor: pointer;
   min-width: 30px;
-  min-height: 10px;
+  min-height: 9px;
   align-items: flex-end;
   justify-content: flex-start;
   background-color: #2a2a2a;
