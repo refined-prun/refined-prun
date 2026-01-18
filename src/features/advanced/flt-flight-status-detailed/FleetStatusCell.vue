@@ -126,13 +126,12 @@ const handleUnloadAction = () => {
 .mainContainer {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
   width: 100%;
-  cursor: pointer;
 }
 .columnContainer {
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 }
 .alignLeft {
   align-items: flex-start;
@@ -144,10 +143,6 @@ const handleUnloadAction = () => {
 .gapContainer {
   display: flex;
   gap: 4px;
-}
-.timer {
-  display: flex;
-  flex-direction: column;
 }
 .actionBtn {
   font-size: 15px;
