@@ -11,19 +11,16 @@ const $style = useCssModule();
 
 const primary = computed(() => !good && !warning && !danger);
 
-const classes = computed(() => {
-  return {
-    [C.ProgressBar.progress]: true,
-    [C.ProgressBar.primary]: primary.value,
-    [$style.good]: good,
-    [$style.warning]: warning,
-    [$style.danger]: danger,
-  };
-});
+const progressClass = computed(() => ({
+  [C.ProgressBar.primary]: primary.value,
+  [$style.good]: good,
+  [$style.warning]: warning,
+  [$style.danger]: danger,
+}));
 </script>
 
 <template>
-  <progress :class="classes" :value="value" :max="max" />
+  <progress :class="[C.ProgressBar.progress, progressClass]" :value="value" :max="max" />
 </template>
 
 <style module>
