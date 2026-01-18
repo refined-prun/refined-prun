@@ -2,4 +2,8 @@
 {
   padding: 2px;
   padding-bottom: 0px;
+  & span > div:nth-child(3) 
+  {
+    height: '12px';
+  }
 }
