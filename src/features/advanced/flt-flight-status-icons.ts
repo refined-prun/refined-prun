@@ -4,6 +4,10 @@ import $style from './flt-flight-status-icons.module.css';
 function init() {
   const replacements = [
     {
+      key: 'ships.status.stationary',
+      icon: '⦁',
+    },
+    {
       key: 'ShipStatus.takeoff',
       icon: '↑',
     },
