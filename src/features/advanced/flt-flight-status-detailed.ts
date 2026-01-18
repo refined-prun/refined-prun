@@ -26,7 +26,8 @@ const STATUS_ICONS: Record<string, string> = {
 };
 
 function getLocationName(address: PrunApi.Address | undefined): string {
-  if (!address || !address.lines) return '';
+  if (address == undefined) return '';
+  if (address.lines.length === 0) return '';
   const location = getLocationLineFromAddress(address);
   if (location?.type === 'STATION') {
     return location.entity.naturalId || location.entity.name;
@@ -54,14 +55,17 @@ function onRowReady(row: HTMLTableRowElement) {
     if (!ship.value) return '';
     if (!flight.value) return '⦁';
     const segment = flight.value.segments[flight.value.currentSegmentIndex];
-    return segment ? STATUS_ICONS[segment.type] || '?' : '⦁';
+    if (segment == null) {
+      return '⦁';
+    }
+    return STATUS_ICONS[segment.type] || '?';
   });
 
   const posData = computed(() => {
     const address = flight.value?.destination ?? ship.value?.address ?? undefined;
     const location = getLocationLineFromAddress(address);
     const name = getLocationName(address);
-    var prefix = location?.type === 'STATION' ? 'STNS' : 'PLI';
+    const prefix = location?.type === 'STATION' ? 'STNS' : 'PLI';
     const command = `${prefix} ${location?.entity.naturalId}`;
     const state = {
       address: address,
@@ -76,7 +80,7 @@ function onRowReady(row: HTMLTableRowElement) {
 
   const timeData = computed(() => {
     const arrival = flight.value?.arrival.timestamp;
-    if (!arrival) return undefined;
+    if (arrival === undefined || Number.isNaN(arrival)) return undefined;
 
     return {
       relative: displaytimeBetween(timestampEachMinute.value, arrival),
@@ -99,7 +103,7 @@ function onRowReady(row: HTMLTableRowElement) {
     statusCell.classList.remove(C.Link.link);
 
     let container = statusCell.querySelector('.custom-status-container') as HTMLElement;
-    if (!container) {
+    if (container == null) {
       statusCell.replaceChildren();
       container = document.createElement('div');
       container.className = 'custom-status-container';
@@ -210,11 +214,11 @@ function onRowReady(row: HTMLTableRowElement) {
 
       flightBtn.style.height = unloadBtn.style.height;
       flightBtn.style.width = unloadBtn.style.height;
-      flightBtn.onclick = e => {
+      flightBtn.onclick = () => {
         showBuffer(`SFC ${ship.value!.registration}`);
       };
 
-      const unload = inventory.value?.items.length ?? 0 > 0;
+      const unload = (inventory.value?.items.length ?? 0) > 0;
 
       if (unload) {
         unloadBtn.style.color = '#ffff';
@@ -230,14 +234,14 @@ function onRowReady(row: HTMLTableRowElement) {
 
       unloadBtn.onclick = e => {
         const actionCell = row.children[8] as HTMLElement;
-        if (actionCell) {
+        if (actionCell != null) {
           // Find all button-like elements or specifically 'button' tags
           const buttons = actionCell.querySelectorAll('button, .button, [role="button"]');
 
           // Target the 4th button (index 3)
           const targetButton = buttons[3] as HTMLElement;
 
-          if (targetButton && unload) {
+          if (targetButton != null && unload) {
             targetButton.click();
           } else {
             // Fallback if the button isn't found
@@ -254,13 +258,13 @@ function onRowReady(row: HTMLTableRowElement) {
     container.appendChild(rightSubFlex);
 
     const nativeButtonCell = row.children[8] as HTMLElement;
-    if (nativeButtonCell) {
+    if (nativeButtonCell != null) {
       // Direct table cell manipulation
       nativeButtonCell.style.width = '1px';
       nativeButtonCell.style.whiteSpace = 'nowrap';
 
       const nativeContainer = nativeButtonCell.querySelector(`.${C.Fleet.buttons}`) as HTMLElement;
-      if (nativeContainer) {
+      if (nativeContainer != null) {
         // Direct Javascript style injection to override the game's layout
         nativeContainer.style.display = 'flex';
         nativeContainer.style.flexDirection = 'row';
@@ -273,7 +277,6 @@ function onRowReady(row: HTMLTableRowElement) {
     }
   });
 
-  function updateStatusCell() {}
   //const observer = new MutationObserver(() => updateStatusCell());
   //observer.observe(row, { childList: true, subtree: true, characterData: true });
   //updateStatusCell();
