@@ -77,9 +77,9 @@ const handleUnloadAction = () => {
 </script>
 
 <template>
-  <div :class="$style.container">
-    <div :class="$style.subFlex">
-      <div :class="$style.iconRow">
+  <div :class="$style.mainContainer">
+    <div :class="[$style.columnContainer, $style.alignLeft]">
+      <div :class="$style.gapContainer">
         <span
           @click.stop="showBuffer(posData.invCommand)"
           :class="C.Link.link"
@@ -97,15 +97,15 @@ const handleUnloadAction = () => {
       </div>
     </div>
 
-    <div :class="[$style.subFlex, $style.alignRight]">
+    <div :class="[$style.columnContainer, $style.alignRight]">
       <template v-if="timeData">
-        <div @click.stop="showBuffer(`SFC ${ship?.registration}`)" :class="$style.timer">
+        <div @click.stop="showBuffer(`SFC ${ship?.registration}`)" :class="$style.columnContainer">
           <span style="color: #99d5ff">{{ timeData.relative }}</span>
-          <span style="color: #888; font-size: 9px">({{ timeData.absolute }})</span>
+          <span style="color: #888">({{ timeData.absolute }})</span>
         </div>
       </template>
       <template v-else>
-        <div :class="$style.btnRow">
+        <div :class="[$style.gapContainer, $style.columnContainer]">
           <span
             :class="[$style.actionBtn, hasItems ? $style.bgOrange : $style.bgBlue]"
             @click.stop="handleUnloadAction">
@@ -123,41 +123,37 @@ const handleUnloadAction = () => {
 </template>
 
 <style module>
-.container {
+.mainContainer {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
+  cursor: pointer;
 }
-.subFlex {
+.columnContainer {
   display: flex;
   flex-direction: column;
+}
+.alignLeft {
   align-items: flex-start;
 }
 .alignRight {
   align-items: flex-end;
   text-align: right;
 }
-.iconRow {
+.gapContainer {
   display: flex;
   gap: 4px;
 }
 .timer {
   display: flex;
   flex-direction: column;
-  cursor: pointer;
-}
-.btnRow {
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
 }
 .actionBtn {
   font-size: 15px;
   height: 20px;
   width: 20px;
   cursor: pointer;
-  display: flex;
   align-items: center;
   justify-content: center;
   color: white;
