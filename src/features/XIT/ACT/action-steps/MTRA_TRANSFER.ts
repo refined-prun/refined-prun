@@ -93,9 +93,14 @@ export const MTRA_TRANSFER = act.addActionStep<Data>({
       Number(x.textContent ?? 0),
     );
     const maxAmount = Math.max(...sliderNumbers);
-    const allInputs = _$$(tile.anchor, 'input');
-    const amountInput = allInputs[1];
-    assert(amountInput !== undefined, 'Amount input not found');
+    // Alternatively:
+    // const allInputs = _$$(tile.anchor, 'input');
+    // const amountInput = allInputs.find(x => x.name === 'amount');
+    // assert(amountInput !== undefined, 'Amount input not found');
+    const amountInput = tile.anchor.querySelector(
+      'input[name="amount"]',
+    ) as HTMLInputElement | null;
+    assert(amountInput !== null, 'Amount input not found');
     if (amount > maxAmount) {
       const leftover = amount - maxAmount;
       log.warning(
@@ -109,7 +114,15 @@ export const MTRA_TRANSFER = act.addActionStep<Data>({
     }
     changeInputValue(amountInput, Math.min(amount, maxAmount).toString());
 
-    const transferButton = await $(tile.anchor, C.Button.btn);
+    const transferButton = tile.anchor.querySelector(
+      `.${C.FormComponent.containerCommand} button`,
+    ) as HTMLButtonElement | null;
+    assert(transferButton !== null, 'Transfer button not found');
+    // Alternatively:
+    // const cmdContainer = _$(tile.anchor, C.FormComponent.containerCommand);
+    // assert(cmdContainer !== undefined, 'Command container not found');
+    // const transferButton = _$(cmdContainer, 'button');
+    // assert(transferButton !== undefined, 'Transfer button not found');
 
     await waitAct();
     const destinationAmount = computed(() => {
