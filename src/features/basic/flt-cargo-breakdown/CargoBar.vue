@@ -105,7 +105,7 @@ function enhanceSegmentVisibility(segments: Segment[], loadRatio: number) {
   if (segments.length === 1 && isAlmostFull) {
     const segment = segments[0];
     if (lowContrastCategories.has(segment.name)) {
-      segment.load = percent0(loadRatio);
+      //segment.load = percent0(loadRatio);
     }
     return;
   }
