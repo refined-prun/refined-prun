@@ -1,4 +1,4 @@
-import GIF from '@src/features/XIT/GIF.vue';
+import GIF from '@src/features/XIT/GIF/GIF.vue';
 
 xit.add({
   command: 'GIF',

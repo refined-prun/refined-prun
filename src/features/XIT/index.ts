@@ -12,7 +12,7 @@ import './FIN/FIN';
 import './FIN/FINPR';
 import './FINBS/FINBS';
 import './FINCH/FINCH';
-import './GIF';
+import './GIF/GIF';
 import './HEALTH';
 import './HELP';
 import './HQUC';

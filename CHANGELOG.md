@@ -2,9 +2,22 @@
 
 ## Unreleased
 
+### Added
+
+- `mat-refined-prun-price`: Adds a "Refined PrUn Price" row
+
+### Fixed
+
+- `XIT FINCH`: Fix the Y axis labels fraction digits
+- `XIT GIF`: Fix pillarboxing
+- `other-context-notification-count`: Fix ghost notifications (once and for all, I hope)
+
+## 26.1.15
+
 ### Changed
 
 - `XIT FINCH`: Add a "(Partial)" suffix to the equity chart if the full equity mode is disabled
+- `XIT GIF`: Switch from Giphy to Klipy
 
 ### Fixed
 

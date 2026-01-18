@@ -19,7 +19,7 @@ watch(
     }
     if (logElement.value) {
       nextTick(() =>
-        logElement.value.scrollTo({ top: logElement.value.scrollHeight, behavior: 'smooth' }),
+        logElement.value?.scrollTo({ top: logElement.value.scrollHeight, behavior: 'smooth' }),
       );
     }
   },
