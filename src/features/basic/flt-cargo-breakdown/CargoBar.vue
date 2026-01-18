@@ -191,8 +191,6 @@ watch(
   { deep: true },
 );
 
-// Inside <script setup>
-
 const totalLoadRatio = computed(() => {
   const ship = shipsStore.getById(shipId);
   const inv = storagesStore.getById(ship?.idShipStore);
@@ -234,7 +232,12 @@ const stripeWidth = computed(() => {
 
 <template>
   <div
-    :class="[C.ProgressBar.progress, $style.container, { [$style.isUpdating]: isAnimating }]"
+    :class="[
+      C.ProgressBar.progress,
+      $style.container,
+      $style.bar,
+      { [$style.isUpdating]: isAnimating },
+    ]"
     :style="{ '--stripe-color': stripeAlertColor, '--stripe-width': stripeWidth }"
     @click="onClick">
     <div :class="[$style.bar, miniBarClass]">
@@ -256,10 +259,8 @@ const stripeWidth = computed(() => {
 .container {
   margin: 0px;
   cursor: pointer;
-  display: flex;
-  width: 100%;
   min-width: 30px;
-  height: 12px;
+  min-height: 10px;
   align-items: flex-end;
   justify-content: flex-start;
   background-color: #2a2a2a;
