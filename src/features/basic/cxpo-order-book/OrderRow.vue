@@ -21,7 +21,6 @@ const isOwnOrder = computed(
 );
 const amount = computed(() => ((order.amount ?? 0) > 0 ? fixed0(order.amount!) : '∞'));
 const amountClass = computed(() => ({
-  [$style.value]: true,
   [$style.valueHighlight]: highlightAmount,
   [link.link]: isOwnOrder.value,
 }));
@@ -64,7 +63,7 @@ function onPriceClick() {
 <template>
   <tr>
     <td
-      :class="[C.ComExOrderBookPanel.amount, amountClass]"
+      :class="[C.ComExOrderBookPanel.amount, $style.value, amountClass]"
       @mouseenter="onAmountMouseEnter"
       @mouseleave="onValueMouseLeave"
       @click="onAmountClick">

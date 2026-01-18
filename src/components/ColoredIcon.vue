@@ -18,8 +18,7 @@ const {
 
 const $style = useCssModule();
 
-const classes = computed(() => ({
-  [C.ColoredIcon.container]: true,
+const containerClass = computed(() => ({
   [$style.large]: size === 'large',
   [$style.medium]: size === 'medium',
   [$style.small]: size === 'small',
@@ -39,7 +38,10 @@ const subLabelClasses = [
 </script>
 
 <template>
-  <div :class="classes" :style="{ background, color }" :title="title">
+  <div
+    :class="[C.ColoredIcon.container, containerClass]"
+    :style="{ background, color }"
+    :title="title">
     <div :class="C.ColoredIcon.labelContainer">
       <span :class="C.ColoredIcon.label">{{ label }}</span>
       <span v-if="isSubLabelVisible" :class="subLabelClasses">{{ subLabel }}</span>
