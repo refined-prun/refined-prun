@@ -53,10 +53,12 @@ function init() {
     },
   ];
   for (const { key, icon } of replacements) {
-    const localized = PrunI18N[key]?.[0];
-    if (localized) {
-      localized.value = icon;
-    }
+    PrunI18N[key] = [
+      {
+        type: 0,
+        value: icon,
+      },
+    ];
   }
   applyCssRule(['FLT', 'FLTS', 'FLTP'], `td:nth-child(4)`, $style.status);
 }
