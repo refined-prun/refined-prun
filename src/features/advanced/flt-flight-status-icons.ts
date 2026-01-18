@@ -1,82 +1,60 @@
-import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
-import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
-import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
-import { isEmpty } from 'ts-extras';
-
-function onTileReady(tile: PrunTile) {
-  // Shorten flight status
-  subscribe($$(tile.anchor, 'tr'), row => {
-    const id = refPrunId(row);
-    const ship = computed(() => shipsStore.getById(id.value));
-    const flight = computed(() => flightsStore.getById(ship.value?.flightId));
-
-    const labels: Record<PrunApi.SegmentType, string> = {
-      TAKE_OFF: '↑',
-      DEPARTURE: '↗',
-      TRANSIT: '⟶',
-      CHARGE: '±',
-      JUMP: '➾',
-      FLOAT: '↑',
-      APPROACH: '↘',
-      LANDING: '↓',
-      LOCK: '⟴',
-      DECAY: '⟴',
-      JUMP_GATEWAY: '⟴',
-    };
-
-    const statusLabel = computed(() => {
-      if (!ship.value) {
-        return undefined;
-      }
-
-      if (!flight.value) {
-        return '⦁';
-      }
-
-      const segment = flight.value.segments[flight.value.currentSegmentIndex];
-      if (segment === undefined) {
-        return undefined;
-      }
-
-      return labels[segment.type] ?? undefined;
-    });
-
-    function replaceStatus() {
-      if (statusLabel.value === undefined) {
-        return;
-      }
-      const statusCell = row.children[3] as HTMLTableCellElement;
-      if (statusCell === undefined) {
-        return;
-      }
-
-      const nodes = Array.from(statusCell.childNodes).filter(
-        x => x.nodeType === Node.TEXT_NODE || x.nodeType === Node.ELEMENT_NODE,
-      );
-      if (isEmpty(nodes)) {
-        return;
-      }
-      if (statusCell.style.textAlign !== 'center') {
-        statusCell.style.textAlign = 'center';
-      }
-      if (nodes[0].textContent !== statusLabel.value) {
-        nodes[0].textContent = statusLabel.value;
-      }
-      for (const node of nodes.slice(1)) {
-        if (node.textContent) {
-          node.textContent = '';
-        }
-      }
-    }
-
-    replaceStatus();
-    const observer = new MutationObserver(replaceStatus);
-    observer.observe(row, { childList: true, subtree: true, characterData: true });
-  });
-}
+import { PrunI18N } from '@src/infrastructure/prun-ui/i18n';
+import $style from './flt-flight-status-icons.module.css';
 
 function init() {
-  tiles.observe(['FLT', 'FLTS', 'FLTP'], onTileReady);
+  const replacements = [
+    {
+      key: 'ShipStatus.takeoff',
+      icon: '↑',
+    },
+    {
+      key: 'ShipStatus.departure',
+      icon: '↗',
+    },
+    {
+      key: 'ShipStatus.transit',
+      icon: '⟶',
+    },
+    {
+      key: 'ShipStatus.charge',
+      icon: '±',
+    },
+    {
+      key: 'ShipStatus.jump',
+      icon: '➾',
+    },
+    {
+      key: 'ShipStatus.float',
+      icon: '↑',
+    },
+    {
+      key: 'ShipStatus.approach',
+      icon: '↘',
+    },
+    {
+      key: 'ShipStatus.landing',
+      icon: '↓',
+    },
+    {
+      key: 'ShipStatus.lock',
+      icon: '⟴',
+    },
+    {
+      key: 'ShipStatus.decay',
+      icon: '⟴',
+    },
+    {
+      key: 'ShipStatus.jumpgateway',
+      icon: '⟴',
+    },
+  ];
+  for (const { key, icon } of replacements) {
+    const localized = PrunI18N[key]?.[0];
+    if (localized) {
+      localized.value = icon;
+    }
+  }
+  applyCssRule(['FLT', 'FLTS', 'FLTP'], `td:nth-child(4)`, $style.status);
 }
 
 features.add(import.meta.url, init, 'FLT: Replaces the flight status text with arrow icons.');
