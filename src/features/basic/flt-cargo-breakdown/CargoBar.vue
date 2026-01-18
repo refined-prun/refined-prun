@@ -3,7 +3,7 @@ import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { getMaterialCategoryCssClass } from '@src/infrastructure/prun-ui/item-tracker';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
-import { fixed02, percent0 } from '@src/utils/format';
+import { fixed02 } from '@src/utils/format';
 import { ref, watch, computed } from 'vue';
 
 const { shipId } = defineProps<{
