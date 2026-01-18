@@ -4,6 +4,6 @@
   padding-bottom: 0px;
   & span > div:nth-child(3) 
   {
-    height: '12px';
+    height: 10px;
   }
 }
