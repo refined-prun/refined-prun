@@ -232,7 +232,7 @@ function onRowReady(row: HTMLTableRowElement) {
         unloadBtn.title = `SHPI ${ship.value!.registration}`;
       }
 
-      unloadBtn.onclick = e => {
+      unloadBtn.onclick = () => {
         const actionCell = row.children[8] as HTMLElement;
         if (actionCell != null) {
           // Find all button-like elements or specifically 'button' tags
