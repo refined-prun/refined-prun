@@ -4,6 +4,7 @@ import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { getMaterialCategoryCssClass } from '@src/infrastructure/prun-ui/item-tracker';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
 import { fixed02, percent0 } from '@src/utils/format';
+import { ref, watch, computed } from 'vue';
 
 const { shipId } = defineProps<{
   shipId: string | null;
@@ -104,7 +105,7 @@ function enhanceSegmentVisibility(segments: Segment[], loadRatio: number) {
   if (segments.length === 1 && isAlmostFull) {
     const segment = segments[0];
     if (lowContrastCategories.has(segment.name)) {
-      segment.load = percent0(loadRatio);
+      //segment.load = percent0(loadRatio);
     }
     return;
   }
@@ -172,10 +173,73 @@ function getInventorySummary(store: PrunApi.Store) {
 const miniBarClass = computed(() => ({
   [$style.miniBar]: cargoBar.value.miniMode,
 }));
+
+const isAnimating = ref(false);
+let animationTimeout: ReturnType<typeof setTimeout> | null = null;
+
+watch(
+  () => cargoBar.value.segments,
+  () => {
+    if (animationTimeout) clearTimeout(animationTimeout);
+
+    isAnimating.value = true;
+
+    animationTimeout = setTimeout(() => {
+      isAnimating.value = false;
+    }, 1000);
+  },
+  { deep: true },
+);
+
+const totalLoadRatio = computed(() => {
+  const ship = shipsStore.getById(shipId);
+  const inv = storagesStore.getById(ship?.idShipStore);
+  if (!inv) return 0;
+  return Math.max(inv.weightLoad / inv.weightCapacity, inv.volumeLoad / inv.volumeCapacity);
+});
+
+const stripeAlertColor = computed(() => {
+  const ratio = totalLoadRatio.value;
+
+  const start = { r: 50, g: 50, b: 50 };
+  const target = { r: 100, g: 100, b: 100 };
+
+  if (ratio < 0.7) return `rgb(${start.r}, ${start.g}, ${start.b})`;
+
+  const normalized = (ratio - 0.7) / 0.3;
+
+  const r = Math.round(start.r + (target.r - start.r) * normalized);
+  const g = Math.round(start.g + (target.g - start.g) * normalized);
+  const b = Math.round(start.b + (target.b - start.b) * normalized);
+
+  return `rgb(${r}, ${g}, ${b})`;
+});
+const stripeWidth = computed(() => {
+  const ratio = totalLoadRatio.value;
+
+  const startWidth = 10;
+  const smallWidth = 2;
+
+  if (ratio < 0.7) return `${startWidth}px`;
+
+  const normalized = (ratio - 0.7) / 0.3;
+
+  const width = startWidth - (startWidth - smallWidth) * normalized;
+
+  return `${width}px`;
+});
 </script>
 
 <template>
-  <div :class="[C.ProgressBar.progress, $style.container]" @click="onClick">
+  <div
+    :class="[
+      C.ProgressBar.progress,
+      $style.container,
+      $style.bar,
+      { [$style.isUpdating]: isAnimating },
+    ]"
+    :style="{ '--stripe-color': stripeAlertColor, '--stripe-width': stripeWidth }"
+    @click="onClick">
     <div :class="[$style.bar, miniBarClass]">
       <div
         v-for="segment in cargoBar.segments"
@@ -193,13 +257,37 @@ const miniBarClass = computed(() => ({
 
 <style module>
 .container {
+  margin: 0px;
   cursor: pointer;
-  display: flex;
-  width: 100%;
   min-width: 30px;
-  height: 12px;
+  min-height: 9px;
   align-items: flex-end;
   justify-content: flex-start;
+  background-color: #2a2a2a;
+  --stripe-width: 10px;
+  --hypotenuse: calc(var(--stripe-width) * sqrt(2));
+
+  background-image: repeating-linear-gradient(
+    45deg,
+    #2a2a2a,
+    #2a2a2a calc(var(--stripe-width) / 2),
+    var(--stripe-color) calc(var(--stripe-width) / 2),
+    var(--stripe-color) var(--stripe-width)
+  );
+  background-size: var(--hypotenuse) var(--hypotenuse);
+}
+
+.isUpdating {
+  animation: move-stripes 0.5s linear infinite;
+}
+
+@keyframes move-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: var(--hypotenuse) 0;
+  }
 }
 
 .bar {
@@ -217,6 +305,7 @@ const miniBarClass = computed(() => ({
 
 .segment {
   height: 100%;
+  /*background: #2a2a2a !important;*/
 }
 
 .borderLeft {

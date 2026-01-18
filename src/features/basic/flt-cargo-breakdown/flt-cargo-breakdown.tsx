@@ -1,6 +1,7 @@
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import CargoBar from '@src/features/basic/flt-cargo-breakdown/CargoBar.vue';
+import $style from './flt-cargo-breakdown.module.css';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'tr'), onRowReady);
@@ -31,6 +32,7 @@ function onRowReady(row: HTMLTableRowElement) {
 
 function init() {
   tiles.observe(['FLT'], onTileReady);
+  applyCssRule(['FLT'], `td:nth-child(3)`, $style.barBox);
 }
 
 features.add(

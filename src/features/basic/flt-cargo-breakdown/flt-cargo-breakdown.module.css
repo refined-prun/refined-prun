@@ -1,22 +1,9 @@
-.container {
-  cursor: pointer;
-  display: flex;
-  width: 100%;
-  min-width: 30px;
-  height: 12px;
-  align-items: flex-end;
-  justify-content: flex-start;
-}
-
-.miniBar {
-  width: 25%;
-  height: 4px;
-  display: flex;
-  margin: 0;
-  border-bottom-width: 0;
-  border-left-width: 0;
-}
-
-.fill {
-  height: 100%;
+.barBox
+{
+  padding: 2px;
+  padding-bottom: 0px;
+  & span > div:nth-child(3) 
+  {
+    height: '12px';
+  }
 }
