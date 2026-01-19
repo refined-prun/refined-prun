@@ -1,5 +1,8 @@
 import { startRelay } from '@src/infrastructure/prun-api/relay';
-import { listenPrunApi } from '@src/infrastructure/prun-api/prun-api-listener';
+import {
+  initialApiLoadingComplete,
+  listenPrunApi,
+} from '@src/infrastructure/prun-api/prun-api-listener';
 import { loadFallbackPlanetData, preloadFioResponses } from '@src/infrastructure/fio/fio-api';
 import { watchUntil } from '@src/utils/watch';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
@@ -40,4 +43,8 @@ export async function initializeApi() {
       startupStores.every(x => x.fetched.value),
   );
   await loadFallbackPlanetData();
+}
+
+export function finishApiInitialization() {
+  initialApiLoadingComplete.value = true;
 }

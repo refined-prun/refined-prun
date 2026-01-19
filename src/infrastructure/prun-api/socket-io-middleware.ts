@@ -4,7 +4,7 @@ import { castArray } from '@src/utils/cast-array';
 
 export type Middleware<T> = {
   onOpen: () => void;
-  onMessage: (payload: T) => boolean;
+  onMessage: (payload: T) => Promise<boolean>;
   dispatchClientMessage: Ref<((payload: T) => void) | undefined>;
 };
 
@@ -20,8 +20,8 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
             middleware.dispatchClientMessage.value = message => {
               value(new MessageEvent('message', { data: encodeMessage(message) }));
             };
-            target.onmessage = e => {
-              const data = processMessage(e.data, middleware);
+            target.onmessage = async e => {
+              const data = await processMessage(e.data, middleware);
               if (data !== e.data) {
                 e = new Proxy(e, {
                   get(target, prop) {
@@ -76,9 +76,9 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
         },
         set(target, prop, value) {
           if (prop === 'onreadystatechange') {
-            target.onreadystatechange = () => {
+            target.onreadystatechange = async () => {
               if (target.readyState === 4 && target.status === 200) {
-                data = processMessage(target.responseText, middleware);
+                data = await processMessage(target.responseText, middleware);
               }
               value();
             };
@@ -91,44 +91,51 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
   });
 }
 
-function processMessage<T>(data: string, middleware: Middleware<T>) {
+async function processMessage<T>(data: string, middleware: Middleware<T>) {
   const engineIOPackets = decodePayload(data);
-  let rewriteMessage = false;
-  for (const engineIOPacket of engineIOPackets) {
-    if (engineIOPacket.type !== 'message') {
-      continue;
-    }
-    const decoder = new Decoder();
-    decoder.on('decoded', decodedPacket => {
-      const data = decodedPacket.data;
-      if (decodedPacket.type === 0) {
-        try {
-          middleware.onOpen();
-        } catch (error) {
-          console.error(error);
-        }
-        return;
-      }
-      const payload = data[1];
-      if (decodedPacket.type !== 2 || data[0] !== 'event' || payload === undefined) {
-        return;
-      }
+  const rewrite = await Promise.all(
+    engineIOPackets.map(packet => processEngineIOPacket(packet, middleware)),
+  );
+  return rewrite.some(x => x) ? encodeEIOPacket(engineIOPackets) : data;
+}
 
-      let rewrite: boolean;
-      try {
-        rewrite = middleware.onMessage(payload);
-      } catch (error) {
-        console.error(error);
-        rewrite = false;
-      }
-      if (rewrite) {
-        engineIOPacket.data = encodeSIOPacket(decodedPacket);
-        rewriteMessage = true;
-      }
-    });
-    decoder.add(engineIOPacket.data);
+async function processEngineIOPacket<T>(packet: EIOPacket, middleware: Middleware<T>) {
+  if (packet.type !== 'message') {
+    return false;
   }
-  return rewriteMessage ? encodeEIOPacket(engineIOPackets) : data;
+
+  const decodedPacket = decodeSIOPacket(packet.data);
+  if (!decodedPacket) {
+    console.error(`Failed to decode packet: ${packet.data}`);
+    return false;
+  }
+
+  const data = decodedPacket.data;
+  if (decodedPacket.type === 0) {
+    try {
+      middleware.onOpen();
+    } catch (error) {
+      console.error(error);
+    }
+    return false;
+  }
+
+  const payload = data[1];
+  if (decodedPacket.type !== 2 || data[0] !== 'event' || payload === undefined) {
+    return false;
+  }
+
+  let rewrite: boolean;
+  try {
+    rewrite = await middleware.onMessage(payload);
+  } catch (error) {
+    console.error(error);
+    rewrite = false;
+  }
+  if (rewrite) {
+    packet.data = encodeSIOPacket(decodedPacket);
+  }
+  return rewrite;
 }
 
 function encodeMessage<T>(message: T) {
@@ -145,6 +152,14 @@ function encodeMessage<T>(message: T) {
 function encodeSIOPacket(packet: SIOPacket) {
   const encoder = new Encoder();
   return encoder.encode(packet)[0];
+}
+
+function decodeSIOPacket(data: unknown) {
+  const decoder = new Decoder();
+  let decodedPacket: SIOPacket | undefined;
+  decoder.on('decoded', x => (decodedPacket = x));
+  decoder.add(data);
+  return decodedPacket;
 }
 
 function encodeEIOPacket(packet: Arrayable<EIOPacket>) {
