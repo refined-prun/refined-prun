@@ -21,8 +21,10 @@ function onTileReady(tile: PrunTile) {
     }
 
     categoryField.classList.add(C.Link.link);
-    categoryField.addEventListener('click', () => {
+    categoryField.addEventListener('click', e => {
       showBuffer('XIT MATS ' + toSerializableCategoryName(category.name));
+      e.preventDefault();
+      e.stopPropagation();
     });
   });
 }

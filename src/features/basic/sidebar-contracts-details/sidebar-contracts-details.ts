@@ -6,7 +6,11 @@ import { refTextContent } from '@src/utils/reactive-dom';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 function onContractIdReady(id: HTMLElement) {
-  id.addEventListener('click', () => showBuffer(`CONT ${id.textContent}`));
+  id.addEventListener('click', e => {
+    void showBuffer(`CONT ${id.textContent}`);
+    e.preventDefault();
+    e.stopPropagation();
+  });
   createFragmentApp(
     ContractPartnerName,
     reactive({

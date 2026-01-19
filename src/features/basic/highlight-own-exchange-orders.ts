@@ -24,13 +24,15 @@ function onTileReady(tile: PrunTile, getOwnOrders: GetOwnOrders, orderCommand: s
   subscribe($$(tile.anchor, 'tr'), tr => {
     const id = refPrunId(tr);
     const ownOrder = computed(() => ownOrders.value.get(id.value ?? ''));
-    const amountColumn = tr.children[1];
+    const amountColumn = tr.children[1] as HTMLElement;
     if (amountColumn === undefined) {
       return;
     }
-    amountColumn.addEventListener('click', () => {
+    amountColumn.addEventListener('click', e => {
       if (ownOrder.value) {
         void showBuffer(`${orderCommand} ${ownOrder.value.id.substring(0, 8)}`);
+        e.preventDefault();
+        e.stopPropagation();
       }
     });
     watchEffectWhileNodeAlive(tr, () => {
