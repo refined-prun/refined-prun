@@ -244,7 +244,7 @@ const stripeWidth = computed(() => {
       <div
         v-for="segment in cargoBar.segments"
         :key="segment.name"
-        :class="[$style.segment, segment.class, segment.borderClasses]"
+        :class="[segment.class, segment.borderClasses]"
         :style="{ width: segment.width }"
         :title="segment.title">
         <div v-if="segment.load" :class="$style.full">
@@ -301,11 +301,6 @@ const stripeWidth = computed(() => {
   height: 50%;
   border-top: 1px solid #999;
   border-right: 1px solid #999;
-}
-
-.segment {
-  height: 100%;
-  /*background: #2a2a2a !important;*/
 }
 
 .borderLeft {
