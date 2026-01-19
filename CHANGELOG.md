@@ -6,6 +6,10 @@
 
 - `mat-refined-prun-price`: Adds a "Refined PrUn Price" row
 
+### Changed
+
+- `flt-ship-condition`: Move the yellow condition threshold to 80% and remove the red one
+
 ### Fixed
 
 - `XIT FINCH`: Fix the Y axis labels fraction digits
