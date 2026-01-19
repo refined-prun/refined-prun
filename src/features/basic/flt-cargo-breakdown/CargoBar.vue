@@ -232,12 +232,7 @@ const stripeWidth = computed(() => {
 
 <template>
   <div
-    :class="[
-      C.ProgressBar.progress,
-      $style.container,
-      $style.bar,
-      { [$style.isUpdating]: isAnimating },
-    ]"
+    :class="[C.ProgressBar.progress, $style.container, { [$style.isUpdating]: isAnimating }]"
     :style="{ '--stripe-color': stripeAlertColor, '--stripe-width': stripeWidth }"
     @click="onClick">
     <div :class="[$style.bar, miniBarClass]">
@@ -259,7 +254,9 @@ const stripeWidth = computed(() => {
 .container {
   margin: 0px;
   cursor: pointer;
+  display: flex;
   min-width: 30px;
+  width: 100%;
   min-height: 9px;
   align-items: flex-end;
   justify-content: flex-start;
