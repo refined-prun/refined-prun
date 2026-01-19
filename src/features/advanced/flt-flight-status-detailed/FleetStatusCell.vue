@@ -105,9 +105,10 @@ const handleUnloadAction = () => {
         </div>
       </template>
       <template v-else>
-        <div :class="[$style.gapContainer, $style.columnContainer]">
+        <div :class="[$style.gapContainer, $style.rowContainer]">
           <span
             :class="[$style.actionBtn, hasItems ? $style.bgOrange : $style.bgBlue]"
+            :style="{ paddingRight: '5px' }"
             @click.stop="handleUnloadAction">
             {{ hasItems ? '⭱' : '⭳' }}
           </span>
@@ -133,6 +134,10 @@ const handleUnloadAction = () => {
   flex-direction: column;
   cursor: pointer;
 }
+.rowContainer {
+  display: flex;
+  flex-direction: row;
+}
 .alignLeft {
   align-items: flex-start;
 }
@@ -148,6 +153,7 @@ const handleUnloadAction = () => {
   font-size: 15px;
   height: 20px;
   width: 20px;
+  padding: 2px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
