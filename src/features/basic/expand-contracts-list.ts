@@ -39,4 +39,4 @@ function init() {
   subscribe($$(document, C.Sidebar.container), onSidebarReady);
 }
 
-features.add(import.meta.url, init, 'Adjust the height of the Pending Contracts scroll area.');
+features.add(import.meta.url, init, 'Fully expands the contracts list in the sidebar.');
