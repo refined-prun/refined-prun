@@ -1,4 +1,4 @@
-import $style from './expand-contracts-list.module.css';
+import $style from './expand-sidebar-contract-list.module.css';
 import { PrunI18N } from '@src/infrastructure/prun-ui/i18n';
 import { clickElement } from '@src/util';
 
