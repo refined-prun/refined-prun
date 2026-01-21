@@ -30,6 +30,7 @@ import './cxpo-auto-price';
 import './cxpo-bigger-buttons';
 import './cxpo-order-book/cxpo-order-book';
 import './exp-expert-eta';
+import './expand-sidebar-contract-list';
 import './finla-more-columns';
 import './flt-arrival-eta';
 import './flt-ship-condition/flt-ship-condition';
