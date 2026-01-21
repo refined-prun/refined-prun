@@ -4,6 +4,7 @@
 
 ### Added
 
+- `expand-sidebar-contract-list`: Fully expands the contracts list in the sidebar
 - `mat-refined-prun-price`: Adds a "Refined PrUn Price" row
 
 ### Changed
