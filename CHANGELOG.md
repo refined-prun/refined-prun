@@ -18,6 +18,10 @@
 - `browser-tab-name`: Fix ghost notifications
 - `other-context-notification-count`: Fix ghost notifications (once and for all, I hope)
 
+## Removed
+
+- `cxpc-default-1y`: This feature had too many edge cases
+
 ## 26.1.15
 
 ### Changed

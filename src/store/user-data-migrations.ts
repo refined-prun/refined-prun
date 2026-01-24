@@ -1,10 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { migrateVersionedUserData } from '@src/store/user-data-versioned-migrations';
+import removeArrayElement from '@src/utils/remove-array-element';
 
 type Migration = [id: string, migration: (userData: any) => void];
 
 // New migrations should be added to the top of the list.
 const migrations: Migration[] = [
+  [
+    '24.01.2026 Remove cxpc-default-1y',
+    userData => {
+      removeArrayElement(userData.settings.disabled, 'cxpc-default-1y');
+    },
+  ],
   [
     '02.02.2026 Add full equity mode',
     userData => {
