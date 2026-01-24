@@ -1,16 +1,11 @@
 import $style from './other-context-notification-count.module.css';
-import { alertsStore } from '@src/infrastructure/prun-api/data/alerts';
 import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { createReactiveSpan } from '@src/utils/reactive-element';
-import { userDataStore } from '@src/infrastructure/prun-api/data/user-data';
+import { reachableAlerts } from '@src/core/alerts';
 
 function init() {
-  const otherContextIds = computed(() => {
-    const ids = userDataStore.contexts.map(x => x.id).filter(x => x !== companyStore.value?.id);
-    return new Set(ids);
-  });
   const countLabel = computed(() => {
-    const alerts = alertsStore.all.value;
+    const alerts = reachableAlerts.value;
     if (!alerts) {
       return undefined;
     }
@@ -19,7 +14,7 @@ function init() {
       if (alert.seen) {
         continue;
       }
-      if (otherContextIds.value.has(alert.contextId)) {
+      if (alert.contextId !== companyStore.value?.id) {
         count++;
       }
     }

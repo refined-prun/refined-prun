@@ -15,6 +15,7 @@
 
 - `XIT FINCH`: Fix the Y axis labels fraction digits
 - `XIT GIF`: Fix pillarboxing
+- `browser-tab-name`: Fix ghost notifications
 - `other-context-notification-count`: Fix ghost notifications (once and for all, I hope)
 
 ## 26.1.15
