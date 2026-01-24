@@ -33,3 +33,4 @@ import './prodq-shorten-material-links';
 import './shorten-shpt-blck-address';
 import './shpf-hide-sort-options';
 import './wf-workforce-filters/wf-workforce-filters';
+import './remember-scroll/remember-scroll.ts';
