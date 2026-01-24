@@ -13,6 +13,7 @@
 
 ### Fixed
 
+- `XIT ACT`: Fix errors related to orbiting ships
 - `XIT FINCH`: Fix the Y axis labels fraction digits
 - `XIT GIF`: Fix pillarboxing
 - `browser-tab-name`: Fix ghost notifications

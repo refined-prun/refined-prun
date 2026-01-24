@@ -3,11 +3,38 @@ declare namespace PrunApi {
     lines: AddressLine[];
   }
 
-  interface AddressLine {
-    entity: AddressEntity;
-    type: AddressLineType;
+  interface UnknownAddressLine {
+    type: string;
+    entity?: AddressEntity;
     orbit?: AddressOrbit;
   }
+
+  interface SystemAddressLine extends UnknownAddressLine {
+    type: 'SYSTEM';
+    entity: AddressEntity;
+  }
+
+  interface StationAddressLine extends UnknownAddressLine {
+    type: 'STATION';
+    entity: AddressEntity;
+  }
+
+  interface PlanetAddressLine extends UnknownAddressLine {
+    type: 'PLANET';
+    entity: AddressEntity;
+  }
+
+  interface OrbitAddressLine extends UnknownAddressLine {
+    type: 'ORBIT';
+    orbit: AddressOrbit;
+  }
+
+  type AddressLine =
+    | SystemAddressLine
+    | StationAddressLine
+    | PlanetAddressLine
+    | OrbitAddressLine
+    | UnknownAddressLine;
 
   interface AddressEntity {
     id: string;
@@ -22,6 +49,4 @@ declare namespace PrunApi {
     rightAscension: number;
     periapsis: number;
   }
-
-  type AddressLineType = 'SYSTEM' | 'STATION' | 'PLANET' | 'ORBIT';
 }

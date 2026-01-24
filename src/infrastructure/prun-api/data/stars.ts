@@ -13,11 +13,11 @@ onApiMessage({
 });
 
 export function getStarNaturalId(star: PrunApi.Star) {
-  return star.address.lines[0].entity.naturalId;
+  return star.address.lines[0].entity!.naturalId;
 }
 
 export function getStarName(star: PrunApi.Star) {
-  return star.address.lines[0].entity.name;
+  return star.address.lines[0].entity!.name;
 }
 
 const getByNaturalId = createMapGetter(state.all, getStarNaturalId);
