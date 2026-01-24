@@ -65,3 +65,9 @@
     border-right-color: #c48400;
   }
 }
+
+.scrollview {
+  margin-bottom: 0px !important;
+  margin-right: 0px !important;
+  scrollbar-width: none;
+}
