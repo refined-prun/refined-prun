@@ -27,6 +27,7 @@ import './lm-hide-rating';
 import './mat-clean-info';
 import './minimize-headers/minimize-headers';
 import './nots-clean-notifications';
+import './prod-collapse-orders/prod-collapse-orders';
 import './prod-hide-percent';
 import './prodq-hide-government-links';
 import './prodq-shorten-material-links';
