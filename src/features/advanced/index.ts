@@ -12,6 +12,7 @@ import './cxos-hide-exchange';
 import './cxpo-shorten-fields';
 import './finla-hide-ecd';
 import './flt-flight-status-icons';
+import './flt-flight-status-detailed/flt-flight-status-detailed';
 import './flt-hide-transponder';
 import './flt-shorten-addresses';
 import './flt-shorten-cargo-capacity';

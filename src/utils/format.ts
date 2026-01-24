@@ -119,6 +119,23 @@ export function formatEta(from: number, to: number) {
   return ret;
 }
 
+export function displaytimeBetween(from: number, to: number) {
+  const diffMs = to - from;
+  if (diffMs <= 0) return '0m';
+
+  const totalSeconds = Math.floor(diffMs / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+  const parts: string[] = [];
+  if (days > 0) parts.push(`${days}d`);
+  if (hours > 0) parts.push(`${hours}h`);
+  if (minutes > 0 || parts.length === 0) parts.push(`${minutes}m`);
+
+  return parts.join(' ');
+}
+
 export function formatCurrency(currency?: number | null, format?: (value: number) => string) {
   if (!isPresent(currency)) {
     return '--';
