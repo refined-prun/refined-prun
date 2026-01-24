@@ -39,6 +39,18 @@ export const getEntityNaturalIdFromAddress = (address?: PrunApi.Address | undefi
   return getLocationLineFromAddress(address)?.entity.naturalId;
 };
 
+const getSystemNameFromAddress = (address?: PrunApi.Address | undefined) => {
+  const location = getSystemLineFromAddress(address);
+  return location?.entity.name;
+};
+
+export const getEntityFullNameFromAddress = (address?: PrunApi.Address | undefined) => {
+  const systemName = getSystemNameFromAddress(address);
+  const entityName = getEntityNameFromAddress(address);
+  if (systemName) return `${systemName} - ${entityName}`;
+  return entityName;
+};
+
 export const getEntityNameFromAddress = (address?: PrunApi.Address | undefined) => {
   const location = getLocationLineFromAddress(address);
   if (!location) {
