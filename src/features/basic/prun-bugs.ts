@@ -55,6 +55,9 @@ function init() {
   // User search results box in GIFT is too big to fit in the tile.
   applyCssRule('GIFT', `.${C.UserSelector.suggestionsContainer}`, $style.giftSearchResults);
 
+  // Fixes the green dot in system info being left skewed
+  applyCssRule('SYSI', `.${C.EnvironmentTable.gridContainer} .${C.ColoredValue.positive}`, $style.centerText);
+
   // Fix the tooltip arrow position.
   applyCssRule('[data-tooltip-position="bottom"]', $style.tooltipBottom);
   applyCssRule('[data-tooltip-position="right"]', $style.tooltipRight);
