@@ -18,4 +18,4 @@ function init() {
   tiles.observe('SYSI', onTileReady);
 }
 
-features.add(import.meta.url, init, 'Makes lower negative planet values blue instead of red.');
+features.add(import.meta.url, init, 'SYSI: Makes lower negative planet values blue instead of red.');
