@@ -56,7 +56,7 @@ function init() {
   applyCssRule('GIFT', `.${C.UserSelector.suggestionsContainer}`, $style.giftSearchResults);
 
   // Fixes the green dot in system info being left skewed
-  applyCssRule('SYSI', `.${C.ColoredValue.positive}`, $style.centerText);
+  applyCssRule('SYSI', `.${C.EnvironmentTable.gridContainer} .${C.ColoredValue.positive}`, $style.centerText);
 
   // Fix the tooltip arrow position.
   applyCssRule('[data-tooltip-position="bottom"]', $style.tooltipBottom);
