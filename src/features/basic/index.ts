@@ -70,6 +70,7 @@ import './prod-order-eta';
 import './prodco-order-eta';
 import './prodq-order-eta';
 import './prodq-queue-load';
+import './sysi-blue-negative-value.ts';
 import './prun-bugs';
 import './rprun-version-label';
 import './screen-layout-lock';
