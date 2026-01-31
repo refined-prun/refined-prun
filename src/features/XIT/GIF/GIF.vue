@@ -3,11 +3,17 @@ import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { getGifUrl } from '@src/features/XIT/GIF/gif-provider';
 
+const $style = useCssModule();
+
 const parameters = useXitParameters();
 const tag = parameters.join(' ');
 
 const isLoading = ref(false);
 const url = ref<string | undefined>();
+
+const containerClass = computed(() => ({
+  [$style.containerClickable]: !isLoading.value,
+}));
 
 async function load() {
   if (isLoading.value) {
@@ -63,16 +69,9 @@ function layout() {
 
 <template>
   <LoadingSpinner v-if="isLoading" />
-  <div ref="container" :class="$style.container">
+  <div ref="container" :class="[$style.container, containerClass]" @click="load">
     <div ref="wrap" :class="$style.wrap">
-      <img
-        ref="image"
-        :class="$style.image"
-        :src="url"
-        alt="gif"
-        @click="load"
-        @load="onLoad"
-        @error="onLoad" />
+      <img ref="image" :class="$style.image" :src="url" alt="gif" @load="onLoad" @error="onLoad" />
       <img
         src="https://refined-prun.github.io/assets/klipy.png"
         alt="Klipy"
@@ -88,6 +87,11 @@ function layout() {
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
+}
+
+.containerClickable {
+  cursor: pointer;
 }
 
 .wrap {
@@ -98,7 +102,6 @@ function layout() {
   width: 100%;
   height: 100%;
   display: block;
-  cursor: pointer;
 }
 
 .watermark {
