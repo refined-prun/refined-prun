@@ -41,6 +41,10 @@ watchEffect(() => {
 });
 
 function layout() {
+  if (!container.value || !wrap.value || !image.value) {
+    return;
+  }
+
   const maxW = container.value!.clientWidth;
   const maxH = container.value!.clientHeight;
 
