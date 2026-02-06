@@ -21,7 +21,12 @@ function calcSectionTotal<T extends BalanceSheetSection>(
     return section.total;
   }
 
-  return section.total ?? mapSum(...args.map(x => x(section)));
+  const calculated = args.map(x => x(section))
+  if (calculated.every(x => x === undefined)) {
+    return undefined;
+  }
+
+  return section.total ?? mapSum(...calculated.map(x => x ?? 0));
 }
 
 function less(value: number | undefined) {
