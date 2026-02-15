@@ -23,5 +23,13 @@ declare namespace PrunApi {
     volume: number;
   }
 
-  type StoreType = 'STORE' | 'WAREHOUSE_STORE' | 'SHIP_STORE' | 'STL_FUEL_STORE' | 'FTL_FUEL_STORE';
+  type StoreType =
+    | 'STORE'
+    | 'SHIP_STORE'
+    | 'STL_FUEL_STORE'
+    | 'FTL_FUEL_STORE'
+    | 'WAREHOUSE_STORE'
+    | 'CONSTRUCTION_STORE'
+    | 'UPKEEP_STORE'
+    | 'VORTEX_FUEL_STORE';
 }

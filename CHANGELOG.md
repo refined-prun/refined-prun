@@ -1,6 +1,81 @@
 # Changelog
 
-## Unreleased
+## 26.1.24
+
+### Added
+
+- `expand-sidebar-contract-list`: Fully expands the contracts list in the sidebar
+- `mat-refined-prun-price`: Adds a "Refined PrUn Price" row
+
+### Changed
+
+- `flt-ship-condition`: Move the yellow condition threshold to 80% and remove the red one
+
+### Fixed
+
+- `XIT ACT`: Fix errors related to orbiting ships
+- `XIT FINCH`: Fix the Y axis labels fraction digits
+- `XIT GIF`: Fix pillarboxing
+- `browser-tab-name`: Fix ghost notifications
+- `other-context-notification-count`: Fix ghost notifications (once and for all, I hope)
+
+## Removed
+
+- `cxpc-default-1y`: This feature had too many edge cases
+
+## 26.1.15
+
+### Changed
+
+- `XIT FINCH`: Add a "(Partial)" suffix to the equity chart if the full equity mode is disabled
+- `XIT GIF`: Switch from Giphy to Klipy
+
+### Fixed
+
+- `XIT SET BFR`: Fix the table header row misalignment
+- `browser-tab-name`: Fix ghost notification counter for deleted notifications
+
+## 26.1.11
+
+### Added
+
+- `bbc-building-count`: Adds a building count label to the building icons
+- `browser-tab-name`: Renames the browser tab based on the current screen
+
+### Changed
+
+- `XIT ACT`: Make the material group and action lists reorderable
+- `XIT FINBS`: Add vortex fuel stores to the "Fuel tanks" total
+- `XIT FINBS`: Add a button to each row to open `XIT FINCH` with the selected chart
+- `XIT FINCH`: Add charts to all entries from the balance sheet
+- `XIT SET`: Display the 12h/24h time format in the Default option
+- `XIT SET`: Make the sidebar button list reorderable
+- `XIT SET FIN`: Add an "Equity mode" toggle to switch between full and partial equity
+- `XIT SORT`: Make the sorting mode list reorderable
+- `flt-flight-status-icons`: Add icons for new status types and make the JUMP icon more distinctive
+- `inv-compress-inventory-info`: Add a small right padding to the unload button in `SHPI`
+- `inv-shorten-storage-types`: Use the short type labels from the base game instead of custom ones
+- `inv-shorten-storage-types`: Shorten storage types in the filter bar
+- Ignore planetary infrastructure inventories in all features
+- Disable the full equity mode for new Refined PrUn users that are less than 90 days old
+
+### Fixed
+
+- `cxpc-default-1y`: Fix the 1y chart not opening after it has been opened once
+- `nots-notification-type-label`: Add labels for the missing notification types
+
+## 25.12.30
+
+### Changed
+
+- Open `XIT CMDS` in the parameterless `XIT` command
+
+### Fixed
+
+- `cxpc-default-1y`: Fix the 1y chart showing only 30d of data if opened not from `CXM`
+- Fix the `XIT` command with no parameters breaking all later `XIT` commands
+
+## 25.12.28
 
 ### Added
 
@@ -9,6 +84,9 @@
 
 ### Changed
 
+- `XIT BURN`: Add support for a `NOT` filter, for example `XIT BURN NOT MALAHAT`
+- `correct-commands`: Add support for planets in system commands, for example `SYSI PROMITOR`
+- `correct-commands`: Add support for stations in system commands, for example `SYSI ANT`
 - `nots-notification-type-label`: Add labels for the new notification types
 - `nots-notification-type-label`: Adjust the colors to improve readability and consistency with the game's UI
 - Decrease the default audio volume to 40%
@@ -19,6 +97,7 @@
 - `bs-hide-zero-workforce`: Fix the broken tooltip in the "Current Workforce" column header
 - `co-base-count`: Fix the feature not working after the gateway update
 - `cxpo-auto-price`: Fix localized number formatting
+- `exp-expert-eta`: Fix the Infinityd bug for production lines without recurring orders
 - `hide-system-chat-messages`: Fix the vertical indicator not being visible after the gateway update
 - `inv-compress-inventory-info`: Fix the feature not working in `SHPI`
 - `other-context-notification-count`: Fix ghost INFRASTRUCTURE_UPGRADE_COMPLETED notifications

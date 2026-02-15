@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';
-import EquityHistoryChart from '@src/features/XIT/FINCH/EquityHistoryChart.vue';
+import HistoryChart from '@src/features/XIT/FINCH/HistoryChart.vue';
 import AssetPieChart from '@src/features/XIT/FINCH/AssetPieChart.vue';
 import LocationsPieChart from '@src/features/XIT/FINCH/LocationsPieChart.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import SectionHeader from '@src/components/SectionHeader.vue';
+import { charts } from '@src/features/XIT/FINCH/charts';
 
 const parameters = useXitParameters();
-const parameter = parameters[0]?.toUpperCase();
+const parameter = parameters.join(' ');
 
 const finch = ref(Math.random() < 0.01);
+
+const chartDef = computed(() => charts.value.find(x => x.value === parameter));
 </script>
 
 <template>
@@ -24,11 +27,8 @@ const finch = ref(Math.random() < 0.01);
         @click="finch = false" />
     </template>
     <template v-else-if="!parameter">
-      <FinHeader>Equity History</FinHeader>
       <div :style="{ marginTop: '5px' }" :class="$style.clickable">
-        <EquityHistoryChart
-          maintain-aspect-ratio
-          :on-chart-click="() => showBuffer('XIT FINCH EQUITY')" />
+        <HistoryChart />
       </div>
       <FinHeader>Asset Breakdown</FinHeader>
       <div :style="{ marginTop: '5px' }">
@@ -38,9 +38,11 @@ const finch = ref(Math.random() < 0.01);
           @click="() => showBuffer('XIT FINCH LOCATIONS')" />
       </div>
     </template>
+    <template v-else-if="chartDef">
+      <HistoryChart :chart-def="chartDef" />
+    </template>
     <template v-else>
-      <EquityHistoryChart v-if="parameter === 'EQUITY'" pan zoom />
-      <AssetPieChart v-else-if="parameter === 'ASSETS'" />
+      <AssetPieChart v-if="parameter === 'ASSETS'" />
       <LocationsPieChart v-else-if="parameter === 'LOCATIONS'" />
       <span v-else>Error: Not a valid chart type</span>
     </template>

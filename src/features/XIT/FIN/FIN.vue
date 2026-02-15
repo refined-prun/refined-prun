@@ -12,6 +12,7 @@ import {
   percent2,
 } from '@src/utils/format';
 import { liveBalanceSummary } from '@src/core/balance/balance-sheet-live';
+import { userData } from '@src/store/user-data';
 
 const locations = computed(() => calculateLocationAssets());
 
@@ -89,6 +90,7 @@ const figures = computed(() => {
     },
     {
       name: 'Liquidation Value',
+      hidden: !userData.fullEquityMode,
       value: formatCurrency(liveBalanceSummary.liquidationValue),
       tooltip:
         'The market value of all company’s assets that can be converted to cash directly. ' +
