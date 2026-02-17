@@ -62,7 +62,7 @@ declare namespace UserData {
     consumablesOnly?: boolean;
   }
 
-  type ActionType = 'CX Buy' | 'MTRA' | 'Refuel';
+  type ActionType = 'CX Buy' | 'MTRA' | 'Refuel' | 'CONT';
 
   interface ActionData {
     type: ActionType;
@@ -80,6 +80,14 @@ declare namespace UserData {
 
     origin?: string;
     dest?: string;
+
+    // CONT specific
+    currency?: string;
+    contractNote?: string;
+    paymentPerTon?: number;
+    daysToFulfill?: number;
+    contOrigin?: string;
+    contDest?: string;
   }
 
   interface TaskList {

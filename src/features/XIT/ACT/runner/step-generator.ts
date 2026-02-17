@@ -36,6 +36,7 @@ export class StepGenerator {
         await info.generateSteps({
           data: action,
           config: actionConfig,
+          packageName: pkg.global.name,
           log,
           fail: message => {
             if (message) {

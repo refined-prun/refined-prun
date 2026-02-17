@@ -26,6 +26,7 @@ export type AssertFn = (condition: any, message: string) => asserts condition;
 export interface ActionStepGenerateContext<TConfig>
   extends ActionRunnerContext<UserData.ActionData> {
   config: TConfig;
+  packageName: string;
   fail: (message?: string) => void;
   assert: AssertFn;
   getMaterialGroup: (name: string | undefined) => Promise<Record<string, number> | undefined>;
