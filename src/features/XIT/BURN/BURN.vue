@@ -87,7 +87,8 @@ const planetBurn = computed(() => {
   const filtered = queryResult.value.sites
     .filter(x => x !== overall)
     .map(getPlanetBurn)
-    .filter(x => x !== undefined);
+    .filter(x => x !== undefined)
+    .map(p => ({ ...p, burn: applyProductionToggle(applyWorkforceToggle(p.burn)) }));
   if (filtered.length <= 1) {
     return filtered;
   }
@@ -138,6 +139,47 @@ const red = useTileState('red');
 const yellow = useTileState('yellow');
 const green = useTileState('green');
 const inf = useTileState('inf');
+const workforce = useTileState('workforce');
+const production = useTileState('production');
+
+function applyWorkforceToggle(burn: BurnValues): BurnValues {
+  if (workforce.value) {
+    return burn;
+  }
+  const result: BurnValues = {};
+  for (const ticker of Object.keys(burn)) {
+    const b = burn[ticker];
+    const dailyAmount = b.output - b.input;
+    if (dailyAmount === 0 && b.workforce > 0) {
+      // Only consumed by workers, nothing to show without workforce.
+      continue;
+    }
+    const type =
+      dailyAmount > 0 ? 'output' : b.input > 0 ? 'input' : b.workforce > 0 ? 'workforce' : 'output';
+    const daysLeft =
+      dailyAmount >= 0 ? 1000 : b.inventory === 0 ? 0 : Math.floor(-b.inventory / dailyAmount);
+    result[ticker] = { ...b, workforce: 0, dailyAmount, type, daysLeft };
+  }
+  return result;
+}
+
+function applyProductionToggle(burn: BurnValues): BurnValues {
+  if (production.value) {
+    return burn;
+  }
+  const result: BurnValues = {};
+  for (const ticker of Object.keys(burn)) {
+    const b = burn[ticker];
+    if (b.workforce === 0) {
+      continue;
+    }
+    const dailyAmount = -b.workforce;
+    const daysLeft =
+      dailyAmount >= 0 ? 1000 : b.inventory === 0 ? 0 : Math.floor(-b.inventory / dailyAmount);
+    result[ticker] = { ...b, input: 0, output: 0, dailyAmount, type: 'workforce', daysLeft };
+  }
+  return result;
+}
 
 const fakeBurn: MaterialBurn = {
   dailyAmount: -100000,
@@ -172,6 +214,8 @@ function onExpandAllClick() {
       <RadioItem v-model="yellow" horizontal>YELLOW</RadioItem>
       <RadioItem v-model="green" horizontal>GREEN</RadioItem>
       <RadioItem v-model="inf" horizontal>INF</RadioItem>
+      <RadioItem v-model="workforce" horizontal>WRK</RadioItem>
+      <RadioItem v-model="production" horizontal>PROD</RadioItem>
     </div>
     <table>
       <thead>
