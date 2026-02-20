@@ -1,6 +1,6 @@
-import ScrollButton from '@src/features/advanced/remember-scroll/ScrollButton.vue';
-import { getTileState, Scroll } from '@src/features/advanced/remember-scroll/tile-state';
 import { computedTileState } from '@src/store/user-data-tiles';
+import { getTileState } from './tile-state';
+import TileControlsButton from '@src/components/TileControlsButton.vue';
 
 function onTileReady(tile: PrunTile) {
   addScrollLockButton(tile);
@@ -20,9 +20,9 @@ async function applyInitialScroll(tile: PrunTile) {
         behavior: 'instant',
       });
     };
-    // In case tile does not need to load (like XIT BURN) scroll immediately
+    // In case tile does not need to load (like XIT BURN) scroll immediately.
     scrollToSaved();
-    // Scroll when scrollable content is loaded for the first time if there is no loader
+    // Scroll when scrollable content is loaded for the first time if there is no loader.
     const observer = new MutationObserver((_, observer) => {
       const loader = _$(scrollView, C.Loading.loader);
       if (loader !== undefined) {
@@ -65,33 +65,76 @@ async function addScrollLockButton(tile: PrunTile) {
     maxScroll.value = getMaxScroll();
     canNotScroll.value = getCanNotScroll();
   });
+  resizeObserver.observe(scrollView);
   // This indirectly observes changes in scrollHeight/Width.
   const mutationObserver = new MutationObserver(() => {
     maxScroll.value = getMaxScroll();
     canNotScroll.value = getCanNotScroll();
   });
-  resizeObserver.observe(scrollView);
   mutationObserver.observe(scrollView, { childList: true, subtree: true });
 
+  const scrollState: ComputedRef<'FORGET' | 'SAVE' | 'RETURN'> = computed(() => {
+    if (savedScroll.value == undefined) {
+      // If there is no saved scroll, scroll can be saved.
+      return 'SAVE';
+    }
+    if (
+      (approximateEquality(currentScroll.value.top, maxScroll.value.top) &&
+        savedScroll.value.top > currentScroll.value.top) ||
+      (approximateEquality(currentScroll.value.left, maxScroll.value.left) &&
+        savedScroll.value.left > currentScroll.value.left)
+    ) {
+      // If at scroll bound and saved scroll is unreachable, scroll can be forgotten.
+      return 'FORGET';
+    }
+    if (
+      approximateEquality(savedScroll.value.left, currentScroll.value.left) &&
+      approximateEquality(savedScroll.value.top, currentScroll.value.top)
+    ) {
+      // If at saved scroll, scroll can be forgotten.
+      return 'FORGET';
+    } else {
+      // If the scroll is saved but not at saved scroll, can scroll to saved scroll.
+      return 'RETURN';
+    }
+  });
+  const icon = computed(() => {
+    switch (scrollState.value) {
+      case 'SAVE':
+        return '\uf8cc';
+      case 'RETURN':
+        return '\uf3c5';
+      case 'FORGET':
+        return '\ue51f';
+    }
+  });
+  const onClick = computed(() => {
+    switch (scrollState.value) {
+      case 'SAVE':
+        return () => (savedScroll.value = currentScroll.value);
+      case 'RETURN':
+        return () =>
+          scrollView.scrollTo({
+            top: savedScroll.value?.top ?? currentScroll.value.top,
+            left: savedScroll.value?.left ?? currentScroll.value.left,
+            behavior: 'smooth',
+          });
+      case 'FORGET':
+        return () => (savedScroll.value = undefined);
+    }
+  });
   createFragmentApp(
-    ScrollButton,
+    TileControlsButton,
     reactive({
-      savedScroll,
-      currentScroll,
-      maxScroll,
+      icon,
+      onClick,
       hidden: canNotScroll,
-      saveScroll: (scroll: Scroll | undefined) => {
-        savedScroll.value = scroll;
-      },
-      scrollTo: (scroll: Scroll) => {
-        scrollView.scrollTo({
-          top: scroll.top,
-          left: scroll.left,
-          behavior: 'smooth',
-        });
-      },
     }),
   ).prependTo(tileControls);
+}
+
+function approximateEquality(a: number, b: number, within: number = 1) {
+  return Math.abs(a - b) < within;
 }
 
 function init() {
