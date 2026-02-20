@@ -34,8 +34,7 @@ watch(inputText, x => {
 }
 
 .slider {
-  margin-top: -6px;
-  margin-bottom: -10px;
+  padding-top: 5px;
   padding-right: 6px;
 }
 </style>

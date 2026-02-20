@@ -4,47 +4,51 @@ import { isEmpty } from 'ts-extras';
 
 export const shortcuts = new Map<string, (parameters: string[]) => string | undefined>();
 
-function shortcut(
-  commands: string | string[],
-  name: string,
-  description: string,
-  url: (parameters: string[]) => string | undefined,
-  mandatoryParameters?: string,
-  optionalParameters?: string,
-) {
+interface Shortcut {
+  command: string | string[];
+  name: string;
+  description: string;
+  url: (parameters: string[]) => string | undefined;
+  mandatoryParameters?: string;
+  optionalParameters?: string;
+  bufferSize?: [number, number];
+}
+
+function shortcut(shortcut: Shortcut) {
   xit.add({
-    command: commands,
-    name,
-    description,
-    optionalParameters,
-    mandatoryParameters,
+    ...shortcut,
     component: () => WEB,
   });
-  for (const command of castArray(commands)) {
-    shortcuts.set(command.toUpperCase(), url);
+  for (const command of castArray(shortcut.command)) {
+    shortcuts.set(command.toUpperCase(), shortcut.url);
   }
 }
 
-shortcut(
-  'PRUN',
-  'PRUN-CEPTION',
-  'Opens PrUn... in PrUn!',
-  () => 'https://apex.prosperousuniverse.com/',
-);
-
-shortcut('PROSPERITY', 'PROSPERITY', 'Prosperity map.', parameters => {
-  let url = 'https://prosperity-prun.netlify.app/';
-  if (parameters.length == 2) {
-    url += `?from=${parameters[0]}&to=${parameters[1]}`;
-  }
-  return url;
+shortcut({
+  command: 'PRUN',
+  name: 'PRUN-CEPTION',
+  description: 'Opens PrUn... in PrUn!',
+  url: () => 'https://apex.prosperousuniverse.com/',
 });
 
-shortcut(
-  ['SHEET', 'SHEETS'],
-  'GOOGLE SHEETS',
-  'Opens Google Sheets.',
-  parameters => {
+shortcut({
+  command: 'PROSPERITY',
+  name: 'PROSPERITY',
+  description: 'Prosperity map.',
+  url: parameters => {
+    let url = 'https://prosperity-prun.netlify.app/';
+    if (parameters.length == 2) {
+      url += `?from=${parameters[0]}&to=${parameters[1]}`;
+    }
+    return url;
+  },
+});
+
+shortcut({
+  command: ['SHEET', 'SHEETS'],
+  name: 'GOOGLE SHEETS',
+  description: 'Opens Google Sheets.',
+  url: parameters => {
     if (isEmpty(parameters)) {
       return undefined;
     }
@@ -69,28 +73,39 @@ shortcut(
     }
     return url;
   },
-  'Document ID',
-  'Sheet ID',
-);
-
-shortcut(['PLANNER', 'PLAN', 'PRUN PLANNER'], 'PRUN PLANNER', 'PrUn Planner.', parameters => {
-  return 'https://prunplanner.org/' + parameters.join('/');
+  mandatoryParameters: 'Document ID',
+  optionalParameters: 'Sheet ID',
 });
 
-shortcut('MAP', "Taiyi's Map", "Taiyi's map.", () => 'https://universemap.duckdns.org/');
+shortcut({
+  command: ['PLANNER', 'PLAN', 'PRUN PLANNER'],
+  name: 'PRUN PLANNER',
+  description: 'PrUn Planner.',
+  url: parameters => {
+    return 'https://prunplanner.org/' + parameters.join('/');
+  },
+});
 
-shortcut(
-  'YAPT',
-  'Yet another PrUn tool',
-  'Opens the Yet Another PrUn Tool website.',
-  () => 'https://aeryen23.github.io/yapt/',
-);
+shortcut({
+  command: 'MAP',
+  name: "Taiyi's Map",
+  description: "Taiyi's map.",
+  url: () => 'https://universemap.duckdns.org/',
+});
 
-shortcut(
-  ['PRUNSTATS', 'PRUNSTAT'],
-  'PrUn Financial Report',
-  'Opens the PrUn Financial Report website.',
-  parameters => {
+shortcut({
+  command: 'YAPT',
+  name: 'Yet another PrUn tool',
+  description: 'Opens the Yet Another PrUn Tool website.',
+  url: () => 'https://aeryen23.github.io/yapt/',
+  bufferSize: [1100, 700],
+});
+
+shortcut({
+  command: ['PRUNSTATS', 'PRUNSTAT'],
+  name: 'PrUn Financial Report',
+  description: 'Opens the PrUn Financial Report website.',
+  url: parameters => {
     let url =
       'https://pmmg-products.github.io/reports/?' +
       parameters.map(param => param.replace('-', '=')).join('&');
@@ -100,4 +115,5 @@ shortcut(
     url += 'cb=' + Date.now();
     return url;
   },
-);
+  bufferSize: [830, 680],
+});
