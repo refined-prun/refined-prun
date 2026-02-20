@@ -30,9 +30,18 @@ function fixZOrder() {
   applyCssRule(`.${C.ScrollView.track}`, $style.scrollTrack);
 }
 
+function fixSliders() {
+  applyCssRule('.rc-slider-dot', $style.rcSliderDotFixes);
+  applyCssRule('.rc-slider-handle', $style.rcSliderHandleFixes);
+  applyCssRule('.rc-slider-disabled .rc-slider-handle', $style.rcSliderHandleDisabledFixes);
+  applyCssRule('.rc-slider-step', $style.rcSliderStepFixes);
+  applyCssRule('.rc-slider-disabled  .rc-slider-step', $style.rcSliderStepDisabledFixes);
+}
+
 function init() {
   removeMobileCssRules();
   fixZOrder();
+  fixSliders();
 
   // Prevents top-right user info from shrinking.
   applyCssRule(`.${C.Head.container}`, $style.head);

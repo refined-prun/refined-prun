@@ -65,3 +65,24 @@
     border-right-color: #c48400;
   }
 }
+
+.rcSliderDotFixes {
+  transform: none !important; /* This fixes a bug(?) that stretches the dots weirdly */
+  cursor: inherit; /* The dots aren't actually clickable (previously was 'pointer')*/
+}
+
+.rcSliderHandleFixes {
+  cursor: grab; /* this is a click-and-drag thing not a button */
+}
+
+.rcSliderHandleDisabledFixes {
+  cursor: not-allowed;
+}
+
+.rcSliderStepFixes {
+  cursor: pointer; /* previously no indication that you could click this */
+}
+
+.rcSliderStepDisabledFixes {
+  cursor: not-allowed;
+}
