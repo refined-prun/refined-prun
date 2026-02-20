@@ -4,7 +4,7 @@ import fa from '@src/utils/font-awesome.module.css';
 
 function onCoReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.FormComponent.containerPassive), async row => {
-    // Return if the field is not the 'Managing Director' (8th) Field
+    // Return if the field is not the 'Managing Director' (8th) Field.
     if (row.parentElement?.children[7] != row) {
       return;
     }
