@@ -1,5 +1,6 @@
 import { prunCssStylesheets } from '@src/infrastructure/prun-ui/prun-css';
 import $style from './prun-bugs.module.css';
+import { clickElement } from '@src/util';
 
 function removeMobileCssRules() {
   for (const style of prunCssStylesheets) {
@@ -16,6 +17,35 @@ function removeMobileCssRules() {
       console.log(`Could not modify stylesheet: ${styleSheet.href}, Error: ${e}`);
     }
   }
+}
+
+function disableInvalidPopidSliders(tile: PrunTile) {
+  subscribe($$(tile.anchor, 'tr'), row => {
+    subscribe($$(row, 'rc-slider'), async slider => {
+      const sliderMarks = Array.from((await $(slider, 'rc-slider-mark')).children);
+      const sliderMaxMark = sliderMarks[sliderMarks.length - 1];
+      const sliderMax = parseFloat(sliderMaxMark.textContent);
+      const sliderValueMark = sliderMarks.findLast(x =>
+        x.classList.contains('rc-slider-mark-text-active'),
+      );
+      if (!sliderValueMark) {
+        return;
+      }
+      const sliderValue = parseFloat(sliderValueMark.textContent);
+      const reserveCell = row.children[3];
+      if (reserveCell == undefined) {
+        return;
+      }
+      const reserveBar = await $(reserveCell, 'progress');
+      if (reserveBar.value - sliderValue + sliderMax > reserveBar.max) {
+        // If the slider is filled, disabling it could lock it in an invalid position.
+        // So, we first minimize the slider value by clicking the min mark.
+        clickElement(sliderMarks[0] as HTMLElement);
+        slider.classList.add('rc-slider-disabled');
+        slider.style.pointerEvents = 'none';
+      }
+    });
+  });
 }
 
 function fixZOrder() {
@@ -67,6 +97,8 @@ function init() {
   // Fix the tooltip arrow position.
   applyCssRule('[data-tooltip-position="bottom"]', $style.tooltipBottom);
   applyCssRule('[data-tooltip-position="right"]', $style.tooltipRight);
+
+  tiles.observe('POPID', disableInvalidPopidSliders);
 }
 
 features.add(import.meta.url, init, 'Fixes PrUn bugs.');
