@@ -2,16 +2,12 @@ import { clickElement } from '@src/util';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'table'), table => {
-    const sliders = _$$(table, 'rc-slider');
-    if (sliders.length === 0) {
-      return;
-    }
-    for (const slider of sliders) {
+    subscribe($$(table, 'rc-slider'), slider => {
       if (slider.classList.contains('rc-slider-disabled')) {
-        continue;
+        return;
       }
       $(slider, 'rc-slider-mark').then(x => clickElement(x.lastElementChild as HTMLElement));
-    }
+    });
   });
 }
 
