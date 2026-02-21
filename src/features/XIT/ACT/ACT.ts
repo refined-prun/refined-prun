@@ -1,11 +1,13 @@
 import './actions/cx-buy/cx-buy';
 import './actions/mtra/mtra';
 import './actions/refuel/refuel';
-import './actions/cont/cont';
+import './actions/cont-ship/cont-ship';
+import './actions/cont-trade/cont-trade';
 
 import './material-groups/repair/repair';
 import './material-groups/resupply/resupply';
 import './material-groups/manual/manual';
+import './material-groups/paste/paste';
 
 import ACT from '@src/features/XIT/ACT/ACT.vue';
 

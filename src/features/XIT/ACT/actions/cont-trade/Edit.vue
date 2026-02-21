@@ -7,6 +7,7 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { comparePlanets } from '@src/util';
+import { configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
 
 const { action, pkg } = defineProps<{
   action: UserData.ActionData;
@@ -16,7 +17,19 @@ const { action, pkg } = defineProps<{
 const materialGroups = computed(() => pkg.groups.map(x => x.name!).filter(x => x));
 const materialGroup = ref(action.group ?? materialGroups.value[0]);
 
-const locations = computed(() => {
+const tradeTypes = ['Buy', 'Sell'];
+const tradeTypeToValue: Record<string, 'BUYING' | 'SELLING'> = {
+  Buy: 'BUYING',
+  Sell: 'SELLING',
+};
+const valueToTradeType: Record<string, string> = {
+  BUYING: 'Buy',
+  SELLING: 'Sell',
+};
+
+const tradeType = ref(valueToTradeType[action.contTradeType ?? 'BUYING'] ?? 'Buy');
+
+const staticLocations = computed(() => {
   const seen = new Set<string>();
   const result: string[] = [];
   for (const store of storagesStore.nonFuelStores.value ?? []) {
@@ -37,12 +50,25 @@ const locations = computed(() => {
   return result.sort(comparePlanets);
 });
 
+const groupTargetOptions = computed(() =>
+  pkg.groups
+    .filter(x => x.name)
+    .map(x => ({
+      label: `[${x.name}] target`,
+      value: `${groupTargetPrefix}${x.name}`,
+    })),
+);
+
+const locationOptions = computed(() => [
+  configurableValue,
+  ...groupTargetOptions.value,
+  ...staticLocations.value,
+]);
+
 const currencies = ['NCC', 'CIS', 'AIC', 'ICA'];
 
-const contOrigin = ref(action.contOrigin ?? locations.value[0] ?? '');
-const contDest = ref(action.contDest ?? locations.value[0] ?? '');
+const contLocation = ref(action.contLocation ?? staticLocations.value[0] ?? '');
 const currency = ref(action.currency ?? 'NCC');
-const paymentPerTon = ref(action.paymentPerTon ?? 0);
 const daysToFulfill = ref(action.daysToFulfill ?? 3);
 
 function validate() {
@@ -52,20 +78,15 @@ function validate() {
   if (daysToFulfill.value < 1) {
     return false;
   }
-  if (paymentPerTon.value < 0) {
-    return false;
-  }
   return true;
 }
 
 function save() {
   action.group = materialGroup.value;
-  action.contOrigin = contOrigin.value;
-  action.contDest = contDest.value;
+  action.contTradeType = tradeTypeToValue[tradeType.value];
+  action.contLocation = contLocation.value;
   action.currency = currency.value;
-  action.paymentPerTon = paymentPerTon.value;
   action.daysToFulfill = daysToFulfill.value;
-  delete action.contractNote;
 }
 
 defineExpose({ validate, save });
@@ -76,20 +97,16 @@ defineExpose({ validate, save });
     <SelectInput v-model="materialGroup" :options="materialGroups" />
   </Active>
 
-  <Active label="Origin">
-    <SelectInput v-model="contOrigin" :options="locations" />
+  <Active label="Trade Type">
+    <SelectInput v-model="tradeType" :options="tradeTypes" />
   </Active>
 
-  <Active label="Destination">
-    <SelectInput v-model="contDest" :options="locations" />
+  <Active label="Location">
+    <SelectInput v-model="contLocation" :options="locationOptions" />
   </Active>
 
   <Active label="Currency">
     <SelectInput v-model="currency" :options="currencies" />
-  </Active>
-
-  <Active label="Payment per Ton">
-    <NumericInput v-model="paymentPerTon" :min="0" :step="1" placeholder="0" />
   </Active>
 
   <Active label="Days to Fulfill">

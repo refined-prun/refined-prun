@@ -1,4 +1,8 @@
-import { ActionPackageConfig, ActionStep } from '@src/features/XIT/ACT/shared-types';
+import {
+  ActionPackageConfig,
+  ActionStep,
+  configurableValue,
+} from '@src/features/XIT/ACT/shared-types';
 import { Logger } from '@src/features/XIT/ACT/runner/logger';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { exchangesStore } from '@src/infrastructure/prun-api/data/exchanges';
@@ -19,7 +23,10 @@ export class StepGenerator {
     return this.options.log;
   }
 
+  private groupPrices = new Map<string, Record<string, number>>();
+
   async generateSteps(pkg: UserData.ActionPackageData, config: ActionPackageConfig) {
+    this.groupPrices.clear();
     const state = generateState();
     const steps = [] as ActionStep[];
     let fail = false;
@@ -52,6 +59,8 @@ export class StepGenerator {
           },
           emitStep: step => steps.push(step),
           getMaterialGroup: async name => await this.getMaterialGroup(pkg, config, name),
+          getMaterialGroupPrices: name => (name ? this.groupPrices.get(name) : undefined),
+          getMaterialGroupPlanet: name => this.getMaterialGroupPlanet(pkg, config, name),
           state,
         });
       } catch (e) {
@@ -70,6 +79,37 @@ export class StepGenerator {
       fail = true;
     }
     return { steps, fail };
+  }
+
+  private getMaterialGroupPlanet(
+    pkg: UserData.ActionPackageData,
+    config: ActionPackageConfig,
+    name: string | undefined,
+  ): string | undefined {
+    if (!name) {
+      this.log.error('Missing material group');
+      return undefined;
+    }
+    const group = pkg.groups.find(x => x.name === name);
+    if (!group) {
+      this.log.error('Unrecognized material group');
+      return undefined;
+    }
+    const planet = group.planet;
+    if (!planet) {
+      this.log.error(`Material group [${name}] has no planet configured`);
+      return undefined;
+    }
+    if (planet === configurableValue) {
+      const groupConfig = config.materialGroups[name] ?? {};
+      const configuredPlanet = (groupConfig as { planet?: string }).planet;
+      if (!configuredPlanet) {
+        this.log.error(`Material group [${name}] planet not configured`);
+        return undefined;
+      }
+      return configuredPlanet;
+    }
+    return planet;
   }
 
   private async getMaterialGroup(
@@ -99,6 +139,7 @@ export class StepGenerator {
       config: groupConfig,
       log: new Logger((tag, message) => this.log.logMessage(tag, `[${group.name}] ${message}`)),
       setStatus: status => this.options.onStatusChanged(status),
+      setPrices: prices => this.groupPrices.set(name!, prices),
     });
   }
 }
