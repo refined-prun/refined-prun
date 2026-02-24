@@ -1,0 +1,15 @@
+export function useClipboard() {
+  const copied = ref(false);
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+
+  async function copy(text: string) {
+    await navigator.clipboard.writeText(text);
+    copied.value = true;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      copied.value = false;
+    }, 1000);
+  }
+
+  return { copied, copy };
+}
