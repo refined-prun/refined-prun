@@ -42,18 +42,23 @@ export const CONT_SEND = act.addActionStep<Data>({
 
     setStatus('Creating new contract draft...');
 
-    const createBtnReady = await waitFor(
-      () => _$$(listTile.anchor, C.Button.btn).some(btn => btn.textContent?.includes('Create New')),
-      5000,
-    );
+    const isCreateNew = (btn: Element) => btn.textContent?.trim().toLowerCase() === 'create new';
+
+    const findContdButton = () => {
+      for (const tile of tiles.find('CONTD', true)) {
+        const btn = _$$(tile.anchor, C.Button.btn).find(isCreateNew);
+        if (btn) return { tile, btn };
+      }
+      return undefined;
+    };
+
+    const createBtnReady = await waitFor(() => !!findContdButton(), 10000);
     if (!createBtnReady) {
       fail('Could not find "Create New" button');
       return;
     }
 
-    const createBtn = _$$(listTile.anchor, C.Button.btn).find(btn =>
-      btn.textContent?.includes('Create New'),
-    )!;
+    const { btn: createBtn } = findContdButton()!;
 
     const beforeIds = new Set((contractDraftsStore.all.value ?? []).map(d => d.naturalId));
     await clickElement(createBtn);
