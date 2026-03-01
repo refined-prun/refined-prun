@@ -106,7 +106,7 @@ export function atSameLocation(storageA: PrunApi.Store, storageB: PrunApi.Store)
   return isSameAddress(addressA, addressB);
 }
 
-function getStoreAddress(store: PrunApi.Store) {
+export function getStoreAddress(store: PrunApi.Store) {
   switch (store.type) {
     case 'STORE': {
       const site = sitesStore.getById(store.addressableId);
