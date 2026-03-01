@@ -7,6 +7,7 @@ import { AssertFn } from '@src/features/XIT/ACT/shared-types';
 
 act.addAction({
   type: 'CX Buy',
+  shortDescription: 'Buy materials from a commodity exchange',
   description: action => {
     if (!action.group || !action.exchange) {
       return '--';

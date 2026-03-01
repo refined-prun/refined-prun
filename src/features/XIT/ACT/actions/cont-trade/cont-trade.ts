@@ -32,6 +32,7 @@ function displayLocation(value: string) {
 
 act.addAction<Config>({
   type: 'CONT Trade',
+  shortDescription: 'Create a buy/sell trade contract draft for a material group',
   description: (action, config) => {
     if (!action.group || !action.contLocation) {
       return '--';

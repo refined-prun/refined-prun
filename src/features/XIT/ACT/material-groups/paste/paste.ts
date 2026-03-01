@@ -9,25 +9,15 @@ interface ParseResult {
   prices?: Record<string, number>;
 }
 
-function hasAtMost3SignificantDigits(n: number): boolean {
-  if (n === 0) {
-    return true;
-  }
-  // Normalize to 3 significant digits and check if value is unchanged.
-  const magnitude = Math.floor(Math.log10(Math.abs(n)));
-  const factor = Math.pow(10, magnitude - 2);
-  return Math.abs(n - Math.round(n / factor) * factor) < 1e-9;
-}
-
 function isValidPrice(n: number): boolean {
   if (n <= 0 || !isFinite(n)) {
     return false;
   }
-  // At most 3 fractional digits.
-  if (Math.round(n * 1000) !== n * 1000) {
+  // At most 2 fractional digits.
+  if (Math.round(n * 100) !== n * 100) {
     return false;
   }
-  return hasAtMost3SignificantDigits(n);
+  return true;
 }
 
 export function parseMaterials(input: string | undefined): ParseResult | undefined {
