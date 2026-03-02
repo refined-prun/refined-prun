@@ -248,16 +248,20 @@ export const CONT_SEND = act.addActionStep<Data>({
       }
     }
 
-    // The SHIP template has a single price field for the whole contract.
-    if (data.payment > 0) {
+    // The SHIP template price field is per-commodity — the game charges this
+    // amount for each commodity row. Divide total payment by number of commodities.
+    if (data.payment > 0 && materialDetails.length > 0) {
+      const pricePerCommodity = Math.round(data.payment / materialDetails.length);
       const priceInput = draftTile.anchor.querySelector(
         'input[name="price"]',
       ) as HTMLInputElement | null;
       if (priceInput) {
         focusElement(priceInput);
         priceInput.select();
-        changeInputValue(priceInput, String(data.payment));
-        log.info(`Price set: ${data.payment} ${data.currency}`);
+        changeInputValue(priceInput, String(pricePerCommodity));
+        log.info(
+          `Price set: ${pricePerCommodity} ${data.currency}/commodity x${materialDetails.length} = ${pricePerCommodity * materialDetails.length} ${data.currency} total`,
+        );
       } else {
         log.warning('Could not find price input');
       }
