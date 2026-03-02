@@ -57,12 +57,17 @@ act.addAction<Config>({
   editComponent: Edit,
   configureComponent: Configure,
   needsConfigure: data => {
-    return data.contOrigin === configurableValue || data.contDest === configurableValue;
+    return (
+      data.contOrigin === configurableValue ||
+      data.contDest === configurableValue ||
+      !!data.autoProvision
+    );
   },
   isValidConfig: (data, config) => {
     return (
       (data.contOrigin !== configurableValue || config.origin !== undefined) &&
-      (data.contDest !== configurableValue || config.destination !== undefined)
+      (data.contDest !== configurableValue || config.destination !== undefined) &&
+      (!data.autoProvision || config.autoProvisionStoreId !== undefined)
     );
   },
   generateSteps: async ctx => {
@@ -99,6 +104,7 @@ act.addAction<Config>({
         daysToFulfill,
         contOrigin,
         contDest,
+        autoProvisionStoreId: data.autoProvision ? config?.autoProvisionStoreId : undefined,
       }),
     );
   },

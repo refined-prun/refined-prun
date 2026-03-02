@@ -9,6 +9,7 @@ import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { comparePlanets } from '@src/util';
 import { configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
+import { serializeStorage } from '@src/features/XIT/ACT/actions/utils';
 
 const { data, config } = defineProps<{ data: UserData.ActionData; config: Config }>();
 
@@ -61,6 +62,52 @@ watchEffect(() => {
   }
 });
 
+const resolvedOrigin = computed(() => {
+  if (data.contOrigin === configurableValue) {
+    return config.origin;
+  }
+  return data.contOrigin;
+});
+
+const storeOptions = computed(() => {
+  const origin = resolvedOrigin.value;
+  if (!origin || !data.autoProvision) {
+    return [];
+  }
+  const result: { label: string; value: string }[] = [];
+  for (const store of storagesStore.nonFuelStores.value ?? []) {
+    let address: PrunApi.Address | undefined;
+    if (store.type === 'STORE') {
+      address = sitesStore.getById(store.addressableId)?.address;
+    } else if (store.type === 'WAREHOUSE_STORE') {
+      address = warehousesStore.getById(store.addressableId)?.address;
+    } else {
+      continue;
+    }
+    const name = getEntityNameFromAddress(address);
+    if (name === origin) {
+      result.push({ label: serializeStorage(store), value: store.id });
+    }
+  }
+  return result;
+});
+
+if (data.autoProvision && !config.autoProvisionStoreId && storeOptions.value.length > 0) {
+  config.autoProvisionStoreId = storeOptions.value[0].value;
+}
+
+watchEffect(() => {
+  if (data.autoProvision) {
+    const ids = new Set(storeOptions.value.map(o => o.value));
+    if (config.autoProvisionStoreId && !ids.has(config.autoProvisionStoreId)) {
+      config.autoProvisionStoreId = undefined;
+    }
+    if (!config.autoProvisionStoreId && storeOptions.value.length > 0) {
+      config.autoProvisionStoreId = storeOptions.value[0].value;
+    }
+  }
+});
+
 function displayValue(value: string | undefined) {
   if (!value) {
     return '--';
@@ -85,6 +132,12 @@ function displayValue(value: string | undefined) {
     </Active>
     <Passive v-else label="To">
       <span>{{ displayValue(data.contDest) }}</span>
+    </Passive>
+    <Active v-if="data.autoProvision" label="Auto-provision">
+      <SelectInput v-model="config.autoProvisionStoreId" :options="storeOptions" />
+    </Active>
+    <Passive v-else label="Auto-provision">
+      <span>Disabled</span>
     </Passive>
   </form>
 </template>
