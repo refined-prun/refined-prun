@@ -25,6 +25,7 @@ interface Data {
   daysToFulfill: number;
   contOrigin?: string;
   contDest?: string;
+  autoProvisionStoreId?: string;
 }
 
 export const CONT_SEND = act.addActionStep<Data>({
@@ -283,6 +284,29 @@ export const CONT_SEND = act.addActionStep<Data>({
         log.info(`Destination set: ${data.contDest}`);
       } else {
         log.warning(`Could not select destination: ${data.contDest}`);
+      }
+    }
+
+    if (data.autoProvisionStoreId) {
+      setStatus('Setting auto-provision store...');
+      const storeSelectReady = await waitFor(() => {
+        const sel = _$(draftTile.anchor, C.StoreSelect.container) as HTMLSelectElement | null;
+        return !!sel && sel.options.length > 1;
+      }, 5000);
+      if (storeSelectReady) {
+        const storeSelect = _$(draftTile.anchor, C.StoreSelect.container) as HTMLSelectElement;
+        const normalizedId = data.autoProvisionStoreId!.replaceAll('-', '');
+        const optionIndex = Array.from(storeSelect.options).findIndex(
+          o => o.value === data.autoProvisionStoreId || o.value === normalizedId,
+        );
+        if (optionIndex >= 0) {
+          changeSelectIndex(storeSelect, optionIndex);
+          log.info(`Auto-provision store set: ${storeSelect.options[optionIndex].text}`);
+        } else {
+          log.warning(`Could not find auto-provision store option: ${data.autoProvisionStoreId}`);
+        }
+      } else {
+        log.warning('Auto-provision store select did not appear');
       }
     }
 

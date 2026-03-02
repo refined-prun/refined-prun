@@ -88,6 +88,7 @@ declare namespace UserData {
     daysToFulfill?: number;
     contOrigin?: string;
     contDest?: string;
+    autoProvision?: boolean;
 
     // CONT Trade specific
     contTradeType?: 'BUYING' | 'SELLING';
