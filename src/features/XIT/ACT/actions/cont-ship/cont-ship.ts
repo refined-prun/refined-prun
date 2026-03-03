@@ -56,13 +56,7 @@ act.addAction<Config>({
   },
   editComponent: Edit,
   configureComponent: Configure,
-  needsConfigure: data => {
-    return (
-      data.contOrigin === configurableValue ||
-      data.contDest === configurableValue ||
-      !!data.autoProvision
-    );
-  },
+  needsConfigure: () => true,
   isValidConfig: (data, config) => {
     return (
       (data.contOrigin !== configurableValue || config.origin !== undefined) &&
