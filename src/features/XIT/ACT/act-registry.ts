@@ -7,6 +7,7 @@ import {
 
 interface MaterialGroupInfo<TConfig> {
   type: UserData.MaterialGroupType;
+  shortDescription?: string;
   description: (data: UserData.MaterialGroupData, config?: TConfig) => string;
   editComponent: Component;
   configureComponent?: Component;

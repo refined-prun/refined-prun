@@ -67,6 +67,7 @@ export function parseMaterials(input: string | undefined): ParseResult | undefin
 
 act.addMaterialGroup<Config>({
   type: 'Paste',
+  shortDescription: 'Paste materials from clipboard at execution time',
   description: () => {
     return 'Paste materials at execution time';
   },
