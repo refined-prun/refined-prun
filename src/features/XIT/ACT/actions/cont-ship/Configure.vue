@@ -136,8 +136,5 @@ function displayValue(value: string | undefined) {
     <Active v-if="data.autoProvision" label="Auto-provision">
       <SelectInput v-model="config.autoProvisionStoreId" :options="storeOptions" />
     </Active>
-    <Passive v-else label="Auto-provision">
-      <span>Disabled</span>
-    </Passive>
   </form>
 </template>
