@@ -193,7 +193,7 @@ export async function saveDraftDetails(ctx: ContDraftContext): Promise<void> {
  * template type <select> element.
  */
 export async function openTemplate(ctx: ContDraftContext): Promise<HTMLSelectElement | undefined> {
-  const { draftTile, log, setStatus, fail } = ctx;
+  const { draftTile, setStatus, fail } = ctx;
 
   setStatus('Opening template selection...');
 
