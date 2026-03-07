@@ -40,18 +40,6 @@ export const CONT_SEND = act.addActionStep<Data>({
   execute: async ctx => {
     const { data, log, setStatus, requestTile, waitAct, complete, fail } = ctx;
 
-    const listTile = await requestTile('CONTD');
-    if (!listTile) return;
-
-    const draftCtx: ContDraftContext = { draftTile: listTile, log, setStatus, fail };
-
-    const newDraft = await createNewDraft(draftCtx);
-    if (!newDraft) return;
-
-    setStatus(`Loading draft ${newDraft.naturalId}...`);
-    const draftTile = await requestTile(`CONTD ${newDraft.naturalId}`);
-    if (!draftTile) return;
-
     // Calculate total tonnage for the preamble and payment logging.
     // material.weight is in the same unit as weightCapacity (tonnes).
     let totalTonnage = 0;
@@ -76,6 +64,20 @@ export const CONT_SEND = act.addActionStep<Data>({
       );
     }
 
+    // Step 1: Create new draft
+    await waitAct('Create new draft?');
+    const listTile = await requestTile('CONTD');
+    if (!listTile) return;
+
+    const draftCtx: ContDraftContext = { draftTile: listTile, log, setStatus, fail };
+
+    const newDraft = await createNewDraft(draftCtx);
+    if (!newDraft) return;
+
+    setStatus(`Loading draft ${newDraft.naturalId}...`);
+    const draftTile = await requestTile(`CONTD ${newDraft.naturalId}`);
+    if (!draftTile) return;
+
     // Update context to point at the actual draft tile.
     const ctx2: ContDraftContext = { draftTile, log, setStatus, fail };
 
@@ -94,6 +96,9 @@ export const CONT_SEND = act.addActionStep<Data>({
         (data.daysToFulfill > 0 ? `Delivery within ${data.daysToFulfill} days` : '');
 
     await setDraftNameAndPreamble(ctx2, contractName, preambleText);
+
+    // Step 2: Save draft details (name/preamble)
+    await waitAct('Save draft details?');
     await saveDraftDetails(ctx2);
 
     const templateSelect = await openTemplate(ctx2);
@@ -126,9 +131,11 @@ export const CONT_SEND = act.addActionStep<Data>({
       }
     }
 
+    // Step 3: Set origin address
     const addressContainers = _$$(draftTile.anchor, C.AddressSelector.container) as HTMLElement[];
 
     if (addressContainers.length >= 1 && data.contOrigin) {
+      await waitAct(`Set origin to ${data.contOrigin}?`);
       const ok = await selectLocation(addressContainers[0], data.contOrigin);
       if (ok) {
         log.info(`Origin set: ${data.contOrigin}`);
@@ -136,7 +143,10 @@ export const CONT_SEND = act.addActionStep<Data>({
         log.warning(`Could not select origin: ${data.contOrigin}`);
       }
     }
+
+    // Step 4: Set destination address
     if (addressContainers.length >= 2 && data.contDest) {
+      await waitAct(`Set destination to ${data.contDest}?`);
       const ok = await selectLocation(addressContainers[1], data.contDest);
       if (ok) {
         log.info(`Destination set: ${data.contDest}`);
@@ -170,9 +180,12 @@ export const CONT_SEND = act.addActionStep<Data>({
 
     setDeadline(ctx2, data.daysToFulfill);
 
+    // Step 5: Apply template
+    await waitAct('Apply template?');
     const applied = await applyTemplate(ctx2);
     if (!applied) return;
 
+    // Step 6: Save conditions
     await saveConditions(ctx2, waitAct);
 
     log.success(`Contract draft ${newDraft.naturalId} ready to send`);
