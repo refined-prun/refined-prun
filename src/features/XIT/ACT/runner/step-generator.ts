@@ -119,6 +119,7 @@ export class StepGenerator {
   ) {
     if (!name) {
       this.log.error('Missing material group');
+      return undefined;
     }
     const group = pkg.groups.find(x => x.name === name);
     if (!group) {

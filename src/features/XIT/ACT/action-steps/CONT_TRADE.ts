@@ -36,11 +36,12 @@ export const CONT_TRADE = act.addActionStep<Data>({
   execute: async ctx => {
     const { data, log, setStatus, requestTile, waitAct, complete, fail } = ctx;
 
-    // Step 1: Open the CONTD tile.
+    const typeLabel = data.tradeType === 'BUYING' ? 'Buy' : 'Sell';
+
+    // Step 1: Create new draft
+    await waitAct('Create new draft?');
     const listTile = await requestTile('CONTD');
     if (!listTile) return;
-
-    await waitAct('Press ACT to create new draft');
 
     const draftCtx: ContDraftContext = { draftTile: listTile, log, setStatus, fail };
 
@@ -54,7 +55,6 @@ export const CONT_TRADE = act.addActionStep<Data>({
     const ctx2: ContDraftContext = { draftTile, log, setStatus, fail };
 
     // Set contract name.
-    const typeLabel = data.tradeType === 'BUYING' ? 'Buy' : 'Sell';
     const now = new Date();
     const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     const contractName = `${data.packageName} - ${typeLabel} - ${dateStr}`;
@@ -74,6 +74,9 @@ export const CONT_TRADE = act.addActionStep<Data>({
       (data.daysToFulfill > 0 ? `Fulfill within ${data.daysToFulfill} days` : '');
 
     await setDraftNameAndPreamble(ctx2, contractName, preambleText);
+
+    // Step 2: Save draft details (name/preamble)
+    await waitAct('Save draft details?');
     await saveDraftDetails(ctx2);
 
     const templateSelect = await openTemplate(ctx2);
@@ -104,9 +107,10 @@ export const CONT_TRADE = act.addActionStep<Data>({
       },
     });
 
-    // Set location (single address field for Buy/Sell).
+    // Step 3: Set location address
     const addressContainers = _$$(draftTile.anchor, C.AddressSelector.container) as HTMLElement[];
     if (addressContainers.length >= 1 && data.location) {
+      await waitAct(`Set location to ${data.location}?`);
       const ok = await selectLocation(addressContainers[0], data.location);
       if (ok) {
         log.info(`Location set: ${data.location}`);
@@ -117,9 +121,12 @@ export const CONT_TRADE = act.addActionStep<Data>({
 
     setDeadline(ctx2, data.daysToFulfill);
 
+    // Step 4: Apply template
+    await waitAct('Apply template?');
     const applied = await applyTemplate(ctx2);
     if (!applied) return;
 
+    // Step 5: Save conditions
     await saveConditions(ctx2, waitAct);
 
     log.success(`Contract draft ${newDraft.naturalId} ready to send`);
