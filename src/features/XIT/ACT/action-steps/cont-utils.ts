@@ -223,6 +223,12 @@ export async function openTemplate(ctx: ContDraftContext): Promise<HTMLSelectEle
   return templateSelect;
 }
 
+// Map stored action values to the game's <select> option values.
+const templateValueMap: Record<string, string> = {
+  BUYING: 'BUY',
+  SELLING: 'SELL',
+};
+
 /**
  * Selects a template type (e.g. 'SHIP', 'BUYING', 'SELLING') in the template dropdown.
  */
@@ -231,7 +237,8 @@ export function selectTemplateType(
   templateSelect: HTMLSelectElement,
   templateValue: string,
 ): void {
-  const idx = Array.from(templateSelect.options).findIndex(o => o.value === templateValue);
+  const mapped = templateValueMap[templateValue] ?? templateValue;
+  const idx = Array.from(templateSelect.options).findIndex(o => o.value === mapped);
   if (idx >= 0) {
     changeSelectIndex(templateSelect, idx);
   }

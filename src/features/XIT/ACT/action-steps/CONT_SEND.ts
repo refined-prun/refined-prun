@@ -116,9 +116,15 @@ export const CONT_SEND = act.addActionStep<Data>({
     // amount for each commodity row. Divide total payment by number of commodities.
     if (data.payment > 0 && materialDetails.length > 0) {
       const pricePerCommodity = Math.round(data.payment / materialDetails.length);
-      const priceInput = draftTile.anchor.querySelector(
-        'input[name="price"]',
-      ) as HTMLInputElement | null;
+      // The SHIP template has a single price field outside the commodity groups.
+      // Try name="price" first, then fall back to the decimal input outside groups.
+      const priceInput = (draftTile.anchor.querySelector('input[name="price"]') ??
+        (() => {
+          const groups = new Set(_$$(draftTile.anchor, C.TemplateSelection.group));
+          return _$$(draftTile.anchor, 'input[inputmode="decimal"]').find(
+            el => !Array.from(groups).some(g => g.contains(el)),
+          );
+        })()) as HTMLInputElement | null;
       if (priceInput) {
         focusElement(priceInput);
         priceInput.select();

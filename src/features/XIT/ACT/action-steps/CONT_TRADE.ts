@@ -94,7 +94,9 @@ export const CONT_TRADE = act.addActionStep<Data>({
       setPrice: (group, ticker) => {
         const price = data.prices[ticker];
         if (price !== undefined && price > 0) {
-          const priceInput = group.querySelector('input[name="price"]') as HTMLInputElement | null;
+          const priceInput = group.querySelector(
+            'input[inputmode="decimal"]',
+          ) as HTMLInputElement | null;
           if (priceInput) {
             focusElement(priceInput);
             priceInput.select();
