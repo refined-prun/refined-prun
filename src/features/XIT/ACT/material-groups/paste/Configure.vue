@@ -21,7 +21,7 @@ watch(text, value => {
       <textarea
         v-model="text"
         :class="$style.textarea"
-        placeholder="Paste materials (ticker, amount [, price])"
+        :placeholder="`Paste from spreadsheet or type manually\nTICKER  AMOUNT  PRICE\nRAT     100     50.25\n\nPrice column is optional.\nSupports tab or comma separated values.`"
         spellcheck="false" />
     </Active>
   </form>
