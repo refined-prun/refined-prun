@@ -17,3 +17,4 @@
 .idea
 **/.turbo
 vite.config.mts.timestamp-*.mjs
+.tmp
