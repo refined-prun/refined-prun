@@ -3,9 +3,20 @@ import { migrateVersionedUserData } from '@src/store/user-data-versioned-migrati
 import removeArrayElement from '@src/utils/remove-array-element';
 
 type Migration = [id: string, migration: (userData: any) => void];
+// A checkpoint marks that all migrations before it are applied.
+// If a user's data contains a checkpoint ID, preceding individual IDs can be pruned.
+// New checkpoints subsume older ones.
+type Checkpoint = [id: string];
+type MigrationEntry = Migration | Checkpoint;
+
+function isCheckpoint(entry: MigrationEntry): entry is Checkpoint {
+  return entry.length === 1;
+}
 
 // New migrations should be added to the top of the list.
-const migrations: Migration[] = [
+// The date is for reference only, and it does not affect migration order.
+const migrations: MigrationEntry[] = [
+  ['10.03.2026 Checkpoint'],
   [
     '10.03.2026 Remove funny-rations',
     userData => {
@@ -19,7 +30,6 @@ const migrations: Migration[] = [
     },
   ],
   [
-    // Whoops, it should be 02.01.2026 lol. Doesn't matter, though.
     '02.02.2026 Add full equity mode',
     userData => {
       userData.fullEquityMode = true;
@@ -65,14 +75,82 @@ export function migrateUserData(userData: any) {
   }
   if (userData.migrations === undefined) {
     // The initial user data is already migrated, so just add all migrations to the list.
-    userData.migrations = orderedMigrations.map(x => x[0]);
+    userData.migrations = compactIds(
+      orderedMigrations,
+      orderedMigrations.map(x => x[0]),
+    );
+    return userData;
   }
-  const performed = new Set(userData.migrations);
-  for (const [id, migration] of orderedMigrations) {
-    if (!performed.has(id)) {
-      migration(userData);
-      userData.migrations.push(id);
+
+  const performed = new Set<string>(userData.migrations);
+  for (let i = orderedMigrations.length - 1; i >= 0; i--) {
+    const entry = orderedMigrations[i];
+    if (isCheckpoint(entry) && performed.has(entry[0])) {
+      for (let j = 0; j < i; j++) {
+        performed.add(orderedMigrations[j][0]);
+      }
+      break;
     }
   }
+
+  for (const entry of orderedMigrations) {
+    const id = entry[0];
+    if (performed.has(id)) {
+      continue;
+    }
+    if (!isCheckpoint(entry)) {
+      entry[1](userData);
+    }
+    performed.add(id);
+    userData.migrations.push(id);
+  }
+
+  userData.migrations = compactIds(orderedMigrations, userData.migrations);
   return userData;
+}
+
+function compactIds(orderedEntries: MigrationEntry[], appliedIds: string[]): string[] {
+  const applied = new Set(appliedIds);
+
+  // Find the latest checkpoint where all preceding entries are applied.
+  // An applied older checkpoint means everything before it is implicitly applied.
+  let latestCheckpointIndex = -1;
+  for (let i = orderedEntries.length - 1; i >= 0; i--) {
+    const entry = orderedEntries[i];
+    if (!isCheckpoint(entry) || !applied.has(entry[0])) {
+      continue;
+    }
+    let complete = true;
+    for (let j = i - 1; j >= 0; j--) {
+      if (isCheckpoint(orderedEntries[j]) && applied.has(orderedEntries[j][0])) {
+        break;
+      }
+      if (!applied.has(orderedEntries[j][0])) {
+        complete = false;
+        break;
+      }
+    }
+    if (complete) {
+      latestCheckpointIndex = i;
+      break;
+    }
+  }
+
+  if (latestCheckpointIndex === -1) {
+    return appliedIds;
+  }
+
+  const removable = new Set<string>();
+  for (let i = 0; i < latestCheckpointIndex; i++) {
+    removable.add(orderedEntries[i][0]);
+  }
+
+  const checkpointId = orderedEntries[latestCheckpointIndex][0];
+  const result: string[] = [checkpointId];
+  for (const id of appliedIds) {
+    if (!removable.has(id) && id !== checkpointId) {
+      result.push(id);
+    }
+  }
+  return result;
 }
