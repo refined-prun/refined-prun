@@ -7,5 +7,5 @@ function init() {
 features.add(
   import.meta.url,
   init,
-  'FLT: Allows the fuel column layout to better use available space',
+  'FLT: Allows the fuel column layout to better use available space.',
 );
