@@ -53,6 +53,10 @@
   }
 }
 
+.centerText {
+  text-align: center;
+}
+
 .tooltipRight {
   &:before {
     margin-left: 6px;

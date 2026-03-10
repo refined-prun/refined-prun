@@ -7,6 +7,10 @@
 - `flt-flex-fuel`: Allows the fuel column layout to better use available space
 - `sysi-blue-negative-value`: Makes lower negative planet values blue instead of red
 
+### Fixed
+
+- `prun-bugs`: Fix the dot / arrow in system info being left skewed
+
 ## 26.1.24
 
 ### Added
