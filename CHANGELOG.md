@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `flt-flex-fuel`: Allows the fuel column layout to better use available space
+- `sysi-blue-negative-value`: Makes lower negative planet values blue instead of red
+
 ## 26.1.24
 
 ### Added
@@ -19,7 +26,7 @@
 - `browser-tab-name`: Fix ghost notifications
 - `other-context-notification-count`: Fix ghost notifications (once and for all, I hope)
 
-## Removed
+### Removed
 
 - `cxpc-default-1y`: This feature had too many edge cases
 
