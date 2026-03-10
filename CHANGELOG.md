@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `sysi-blue-negative-value`: Makes lower negative planet values blue instead of red
+
 ## 26.1.24
 
 ### Added
