@@ -51,6 +51,15 @@ Single-param lambdas: use `x`. Saves naming time, reads clearly. Use full names 
 const disabled = sliders.every(x => x.classList.contains('rc-slider-disabled'));
 ```
 
+**Exception — `subscribe` callbacks:** When subscribing to elements from `C.X.className`, use `className` as the parameter name. Avoids name collisions in nested subscribes and keeps the selector self-documenting.
+
+```ts
+// subscribe to C.ColoredValue.negative → param is "negative"
+subscribe($$(tile.anchor, C.ColoredValue.negative), negative => {
+  negative.classList.add($style.lowValue);
+});
+```
+
 ### Type Annotations
 
 Don't add type definitions where TypeScript can infer the type.
@@ -117,7 +126,7 @@ const x = foo;
 
 ### Unicode
 
-Prefer unicode values over unicode characters — easier to search for.
+Prefer unicode escape values over characters for non-standard or font-awesome codepoints — easier to search for.
 
 ```ts
 // Bad
@@ -126,6 +135,8 @@ Prefer unicode values over unicode characters — easier to search for.
 // Good
 '\uf070'  // font-awesome eye-slash
 ```
+
+Standard unicode symbols (arrows, geometric shapes, etc.) are fine as literal characters.
 
 ### CSS Values
 
