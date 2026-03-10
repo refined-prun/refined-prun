@@ -35,7 +35,7 @@ import './finla-more-columns';
 import './flt-arrival-eta';
 import './flt-ship-condition/flt-ship-condition';
 import './focus-buffers-on-click';
-import './funny-rations';
+import './funny-materials';
 import './header-calculator-button';
 import './header-duplicate-button';
 import './header-hide-controls-button';

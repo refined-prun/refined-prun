@@ -7,6 +7,12 @@ type Migration = [id: string, migration: (userData: any) => void];
 // New migrations should be added to the top of the list.
 const migrations: Migration[] = [
   [
+    '10.03.2026 Remove funny-rations',
+    userData => {
+      removeFeature(userData, 'funny-rations');
+    },
+  ],
+  [
     '24.01.2026 Remove cxpc-default-1y',
     userData => {
       removeFeature(userData, 'cxpc-default-1y');
