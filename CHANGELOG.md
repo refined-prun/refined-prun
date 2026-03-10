@@ -4,13 +4,30 @@
 
 ### Added
 
+- `sysi-blue-negative-value`: Makes lower negative planet values blue instead of red
+
+## 26.1.24
+
+### Added
+
+- `expand-sidebar-contract-list`: Fully expands the contracts list in the sidebar
 - `mat-refined-prun-price`: Adds a "Refined PrUn Price" row
+
+### Changed
+
+- `flt-ship-condition`: Move the yellow condition threshold to 80% and remove the red one
 
 ### Fixed
 
+- `XIT ACT`: Fix errors related to orbiting ships
 - `XIT FINCH`: Fix the Y axis labels fraction digits
 - `XIT GIF`: Fix pillarboxing
+- `browser-tab-name`: Fix ghost notifications
 - `other-context-notification-count`: Fix ghost notifications (once and for all, I hope)
+
+### Removed
+
+- `cxpc-default-1y`: This feature had too many edge cases
 
 ## 26.1.15
 

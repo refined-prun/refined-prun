@@ -9,7 +9,6 @@ import './cxob-depth-bars';
 import './cxob-hide-section-headers';
 import './cxos-hide-delete-filled';
 import './cxos-hide-exchange';
-import './cxpc-default-1y';
 import './cxpo-shorten-fields';
 import './finla-hide-ecd';
 import './flt-flight-status-icons';

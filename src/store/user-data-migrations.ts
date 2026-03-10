@@ -1,11 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { migrateVersionedUserData } from '@src/store/user-data-versioned-migrations';
+import removeArrayElement from '@src/utils/remove-array-element';
 
 type Migration = [id: string, migration: (userData: any) => void];
 
 // New migrations should be added to the top of the list.
 const migrations: Migration[] = [
   [
+    '24.01.2026 Remove cxpc-default-1y',
+    userData => {
+      removeFeature(userData, 'cxpc-default-1y');
+    },
+  ],
+  [
+    // Whoops, it should be 02.01.2026 lol. Doesn't matter, though.
     '02.02.2026 Add full equity mode',
     userData => {
       userData.fullEquityMode = true;
@@ -14,17 +22,9 @@ const migrations: Migration[] = [
   [
     '25.12.2025 Rename features',
     userData => {
-      renameFeature('custom-item-sorting', 'inv-custom-item-sorting');
-      renameFeature('item-markers', 'inv-item-markers');
-      renameFeature('show-space-remaining', 'inv-show-space-remaining');
-
-      function renameFeature(oldName: string, newName: string) {
-        const disabled = userData.settings.disabled;
-        const index = disabled.indexOf(oldName);
-        if (index !== -1) {
-          disabled[index] = newName;
-        }
-      }
+      renameFeature(userData, 'custom-item-sorting', 'inv-custom-item-sorting');
+      renameFeature(userData, 'item-markers', 'inv-item-markers');
+      renameFeature(userData, 'show-space-remaining', 'inv-show-space-remaining');
     },
   ],
   [
@@ -34,6 +34,18 @@ const migrations: Migration[] = [
     },
   ],
 ];
+
+function removeFeature(userData: any, feature: string) {
+  removeArrayElement(userData.settings.disabled, feature);
+}
+
+function renameFeature(userData: any, oldName: string, newName: string) {
+  const disabled = userData.settings.disabled;
+  const index = disabled.indexOf(oldName);
+  if (index !== -1) {
+    disabled[index] = newName;
+  }
+}
 
 export function migrateUserData(userData: any) {
   // The migrations are ordered from newest to oldest, but we want to run them in order.
