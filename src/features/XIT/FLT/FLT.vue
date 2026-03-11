@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { getInvStore } from '@src/core/store-id';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { useTileState } from '@src/store/user-data-tiles';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import FleetStatusCell from './FleetStatusCell.vue';
 import CargoBar from './CargoBar.vue';
@@ -13,8 +14,8 @@ import { fixed0 } from '@src/utils/format';
 type SortKey = 'name' | 'cargo' | 'status' | 'fuel' | 'command';
 type SortDirection = 'asc' | 'desc';
 
-const sortKey = ref<SortKey>('name');
-const sortDirection = ref<SortDirection>('asc');
+const sortKey = useTileState<SortKey>('sortKey', 'name');
+const sortDirection = useTileState<SortDirection>('sortDirection', 'asc');
 
 const rawRows = computed(() => {
   const ships = shipsStore.all.value;
@@ -49,9 +50,11 @@ const rawRows = computed(() => {
       : 0;
     const fuelRatio = Math.max(stlFuelRatio ?? 0, ftlFuelRatio ?? 0);
     const now = Date.now();
-    const statusSortValue = flight?.arrival.timestamp
-      ? Math.max(0, flight.arrival.timestamp - now)
-      : 0;
+    const arrivalTimestamp = flight?.arrival.timestamp;
+    const statusSortValue =
+      arrivalTimestamp != null && !Number.isNaN(arrivalTimestamp)
+        ? Math.max(0, arrivalTimestamp - now)
+        : 0;
 
     return {
       ship,
