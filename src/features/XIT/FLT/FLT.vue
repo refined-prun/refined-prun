@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
@@ -8,8 +8,15 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import FleetStatusCell from './FleetStatusCell.vue';
 import CargoBar from './CargoBar.vue';
+import { fixed0 } from '@src/utils/format';
 
-const rows = computed(() => {
+type SortKey = 'name' | 'cargo' | 'status' | 'fuel' | 'command';
+type SortDirection = 'asc' | 'desc';
+
+const sortKey = ref<SortKey>('name');
+const sortDirection = ref<SortDirection>('asc');
+
+const rawRows = computed(() => {
   const ships = shipsStore.all.value;
   if (!ships) {
     return undefined;
@@ -34,25 +41,106 @@ const rows = computed(() => {
         : undefined;
 
     const condition = ship.condition <= 1 ? ship.condition * 100 : ship.condition;
+    const cargoRatio = inventory
+      ? Math.max(
+          inventory.weightCapacity > 0 ? inventory.weightLoad / inventory.weightCapacity : 0,
+          inventory.volumeCapacity > 0 ? inventory.volumeLoad / inventory.volumeCapacity : 0,
+        )
+      : 0;
+    const fuelRatio = Math.max(stlFuelRatio ?? 0, ftlFuelRatio ?? 0);
+    const now = Date.now();
+    const statusSortValue = flight?.arrival.timestamp
+      ? Math.max(0, flight.arrival.timestamp - now)
+      : 0;
 
     return {
       ship,
       flight,
+      inventory,
       hasItems: (inventory?.items.length ?? 0) > 0,
       stlFuelRatio,
       ftlFuelRatio,
+      cargoRatio,
+      fuelRatio,
+      statusSortValue,
       conditionText: `${Math.round(condition)}%`,
+      cargoSizeText: getCargoSizeText(inventory),
       primaryLabel: flight ? 'view' : 'fly',
     };
   });
 });
 
-function onPrimary(registration: string) {
-  showBuffer(`SFC ${registration}`);
+const rows = computed(() => {
+  const source = rawRows.value;
+  if (!source) {
+    return undefined;
+  }
+
+  const sign = sortDirection.value === 'asc' ? 1 : -1;
+  const sorted = [...source];
+
+  sorted.sort((a, b) => {
+    switch (sortKey.value) {
+      case 'name': {
+        return (
+          sign *
+          (a.ship.name || a.ship.registration).localeCompare(b.ship.name || b.ship.registration)
+        );
+      }
+      case 'cargo': {
+        return sign * (a.cargoRatio - b.cargoRatio);
+      }
+      case 'status': {
+        return sign * (a.statusSortValue - b.statusSortValue);
+      }
+      case 'fuel': {
+        return sign * (a.fuelRatio - b.fuelRatio);
+      }
+      case 'command': {
+        const aScore = (a.flight ? 1 : 0) + (a.hasItems ? 1 : 0);
+        const bScore = (b.flight ? 1 : 0) + (b.hasItems ? 1 : 0);
+        return sign * (aScore - bScore);
+      }
+    }
+  });
+
+  return sorted;
+});
+
+function setSort(key: SortKey) {
+  if (sortKey.value === key) {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+    return;
+  }
+
+  sortKey.value = key;
+  sortDirection.value = 'asc';
 }
 
-function onCargo(registration: string) {
-  showBuffer(`SHPI ${registration}`);
+function getSortLabel(key: SortKey) {
+  if (sortKey.value !== key) {
+    return '';
+  }
+  return sortDirection.value === 'asc' ? ' ▲' : ' ▼';
+}
+
+function getCargoSizeText(inventory: PrunApi.Store | undefined) {
+  if (!inventory) {
+    return '--/--';
+  }
+
+  return `${toCompactK(inventory.weightCapacity)}/${toCompactK(inventory.volumeCapacity)}`;
+}
+
+function toCompactK(value: number) {
+  if (value >= 1000) {
+    return `${Math.round(value / 1000)}k`;
+  }
+  return fixed0(value);
+}
+
+function onPrimary(registration: string) {
+  showBuffer(`SFC ${registration}`);
 }
 
 function onFuel(registration: string) {
@@ -69,11 +157,21 @@ function onUnload(registration: string) {
   <table v-else :class="$style.table">
     <thead>
       <tr>
-        <th :class="$style.headerCell">Name</th>
-        <th :class="$style.headerCell">Cargo</th>
-        <th :class="$style.headerCell">Status</th>
-        <th :class="$style.headerCell">Fuel</th>
-        <th :class="$style.headerCell">Command</th>
+        <th :class="[$style.headerCell, $style.sortable]" @click="setSort('name')">
+          Name{{ getSortLabel('name') }}
+        </th>
+        <th :class="[$style.headerCell, $style.sortable]" @click="setSort('cargo')">
+          Cargo{{ getSortLabel('cargo') }}
+        </th>
+        <th :class="[$style.headerCell, $style.sortable]" @click="setSort('status')">
+          Status{{ getSortLabel('status') }}
+        </th>
+        <th :class="[$style.headerCell, $style.sortable]" @click="setSort('fuel')">
+          Fuel{{ getSortLabel('fuel') }}
+        </th>
+        <th :class="[$style.headerCell, $style.sortable]" @click="setSort('command')">
+          Command{{ getSortLabel('command') }}
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -87,14 +185,19 @@ function onUnload(registration: string) {
 
         <td :class="[$style.bodyCell, $style.cargoCell]">
           <CargoBar :ship-id="x.ship.id" />
+          <div :class="[C.ShipStore.pointer, C.ShipStore.store, $style.cargoSize]">
+            {{ x.cargoSizeText }}
+          </div>
         </td>
 
         <td :class="$style.bodyCell">
           <FleetStatusCell :ship-id="x.ship.id" />
         </td>
 
-        <td :class="$style.bodyCell">
-          <div :class="[C.ShipFuel.container, C.ShipFuel.pointer]">
+        <td :class="[$style.bodyCell, $style.fuelCell]">
+          <div
+            :class="[C.ShipFuel.container, C.ShipFuel.pointer, $style.fuelBars]"
+            @click="onFuel(x.ship.registration)">
             <div :class="C.ProgressBar.container">
               <progress
                 :class="[C.ProgressBar.primary, C.ProgressBar.progress]"
@@ -119,26 +222,9 @@ function onUnload(registration: string) {
               {{ x.primaryLabel }}
             </button>
             <button
+              v-if="x.hasItems"
               type="button"
               :class="[C.Button.darkInline, C.Button.dark, C.Button.btn, C.Button.inline]"
-              @click="onCargo(x.ship.registration)">
-              cargo
-            </button>
-            <button
-              type="button"
-              :class="[C.Button.darkInline, C.Button.dark, C.Button.btn, C.Button.inline]"
-              @click="onFuel(x.ship.registration)">
-              fuel
-            </button>
-            <button
-              type="button"
-              :disabled="!x.hasItems"
-              :class="[
-                x.hasItems ? C.Button.darkInline : C.Button.disabledInline,
-                x.hasItems ? C.Button.dark : C.Button.disabled,
-                C.Button.btn,
-                C.Button.inline,
-              ]"
               @click="onUnload(x.ship.registration)">
               unload
             </button>
@@ -160,6 +246,10 @@ function onUnload(registration: string) {
   padding: 4px 6px;
 }
 
+.sortable {
+  cursor: pointer;
+}
+
 .bodyCell {
   padding: 4px 6px;
   vertical-align: middle;
@@ -171,10 +261,31 @@ function onUnload(registration: string) {
   padding-bottom: 0px;
 }
 
+.cargoSize {
+  margin-top: 2px;
+}
+
 .commandCell {
   white-space: nowrap;
   padding: 4px 6px;
   vertical-align: middle;
+}
+
+.fuelCell {
+  min-width: 120px;
+}
+
+.fuelBars {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.fuelBars > div {
+  flex: 1 1 0;
+  min-width: 44px;
 }
 
 .buttons {
