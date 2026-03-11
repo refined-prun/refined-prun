@@ -15,7 +15,11 @@ function onRowReady(row: HTMLTableRowElement) {
 
   statusCell.style.display = 'table-cell';
   statusCell.classList.remove(C.Link.link);
-  statusCell.replaceChildren();
+  for (const child of Array.from(statusCell.childNodes)) {
+    if (child.nodeType === Node.TEXT_NODE) {
+      child.textContent = '';
+    }
+  }
 
   createFragmentApp(FleetStatusCell, {
     shipId: id.value,
@@ -42,6 +46,9 @@ function onRowReady(row: HTMLTableRowElement) {
 function init() {
   const selectors = ['FLT', 'FLTS', 'FLTP'];
   tiles.observe(selectors, onTileReady);
+
+  // Hide game-managed content inside the status cell, keeping our Vue wrapper visible
+  applyCssRule(selectors, 'tr > :nth-child(4) > :not([data-rp])', css.hidden);
 
   // Hide unnecessary original columns to make room for our custom cell
   applyCssRule(selectors, 'tr > :nth-child(1)', css.hidden); // Transponder
