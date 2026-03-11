@@ -38,7 +38,7 @@ const statusIcon = computed(() => {
   if (!ship.value) return '';
   if (!flight.value) return '⦁';
   const segment = flight.value.segments[flight.value.currentSegmentIndex];
-  return segment ? STATUS_ICONS[segment.type] || '?' : '⦁';
+  return segment != null ? STATUS_ICONS[segment.type] || '?' : '⦁';
 });
 
 const posData = computed(() => {
@@ -54,7 +54,7 @@ const posData = computed(() => {
 
 const timeData = computed(() => {
   const arrival = flight.value?.arrival.timestamp;
-  if (!arrival || Number.isNaN(arrival)) return null;
+  if (arrival == null || Number.isNaN(arrival)) return null;
   return {
     relative: displaytimeBetween(timestampEachMinute.value, arrival),
     absolute: hhmm(arrival),
@@ -67,8 +67,8 @@ const handleUnloadAction = () => {
   const buttons = props.rowElement.children[8]?.querySelectorAll(
     'button, .button, [role="button"]',
   );
-  const unloadButton = buttons?.[3] as HTMLElement;
-  if (unloadButton && hasItems.value) {
+  const unloadButton = buttons?.[3] as HTMLElement | undefined;
+  if (unloadButton != null && hasItems.value) {
     unloadButton.click();
   } else {
     showBuffer(`SHPI ${ship.value?.registration}`);
@@ -81,25 +81,25 @@ const handleUnloadAction = () => {
     <div :class="[$style.columnContainer, $style.alignLeft]">
       <div :class="$style.gapContainer">
         <span
-          @click.stop="showBuffer(posData.invCommand)"
           :class="C.Link.link"
           style="color: #3fa2de"
+          @click.stop="showBuffer(posData.invCommand)"
           >☒</span
         >
         <span
-          @click.stop="showBuffer(`SFC ${ship?.registration}`)"
           style="color: #3fa2de; cursor: pointer"
+          @click.stop="showBuffer(`SFC ${ship?.registration}`)"
           >{{ statusIcon }}</span
         >
       </div>
-      <div @click.stop="showBuffer(posData.command)" :class="C.Link.link" style="color: #3fa2de">
+      <div :class="C.Link.link" style="color: #3fa2de" @click.stop="showBuffer(posData.command)">
         {{ posData.name }}
       </div>
     </div>
 
     <div :class="[$style.columnContainer, $style.alignRight]">
       <template v-if="timeData">
-        <div @click.stop="showBuffer(`SFC ${ship?.registration}`)" :class="$style.columnContainer">
+        <div :class="$style.columnContainer" @click.stop="showBuffer(`SFC ${ship?.registration}`)">
           <span style="color: #99d5ff">{{ timeData.relative }}</span>
           <span style="color: #888">({{ timeData.absolute }})</span>
         </div>
