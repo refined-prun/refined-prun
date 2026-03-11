@@ -11,23 +11,23 @@ const ships = computed(() => shipsStore.all.value);
 
 <template>
   <LoadingSpinner v-if="!ships" />
-  <table v-else :class="[C.Table.table, C.Table.fixed]">
+  <table v-else :class="[C.tables.table, $style.table]">
     <thead>
       <tr>
-        <th :class="C.Table.header">Ship</th>
-        <th :class="C.Table.header">Status</th>
-        <th :class="C.Table.header">Cargo</th>
+        <th :class="$style.headerCell">Ship</th>
+        <th :class="$style.headerCell">Status</th>
+        <th :class="$style.headerCell">Cargo</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="ship in ships" :key="ship.id">
-        <td :class="[C.Table.cell, C.Link.link]" @click="showBuffer(`SFC ${ship.registration}`)">
+        <td :class="[$style.bodyCell, C.Link.link]" @click="showBuffer(`SFC ${ship.registration}`)">
           {{ ship.name || ship.registration }}
         </td>
-        <td :class="C.Table.cell">
+        <td :class="$style.bodyCell">
           <FleetStatusCell :ship-id="ship.id" />
         </td>
-        <td :class="[C.Table.cell, $style.cargoCell]">
+        <td :class="[$style.bodyCell, $style.cargoCell]">
           <CargoBar :ship-id="ship.id" />
         </td>
       </tr>
@@ -36,6 +36,20 @@ const ships = computed(() => shipsStore.all.value);
 </template>
 
 <style module>
+.table {
+  width: 100%;
+}
+
+.headerCell {
+  text-align: left;
+  padding: 4px 6px;
+}
+
+.bodyCell {
+  padding: 4px 6px;
+  vertical-align: middle;
+}
+
 .cargoCell {
   padding: 2px;
   padding-bottom: 0px;
