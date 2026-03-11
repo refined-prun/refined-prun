@@ -268,7 +268,8 @@ function onClick() {
   display: flex;
   min-width: 30px;
   width: 100%;
-  min-height: 9px;
+  min-height: 13px;
+  height: 13px;
   align-items: flex-end;
   justify-content: flex-start;
   background-color: #2a2a2a;
