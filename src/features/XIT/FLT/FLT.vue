@@ -11,7 +11,7 @@ import FleetStatusCell from './FleetStatusCell.vue';
 import CargoBar from './CargoBar.vue';
 import { fixed0 } from '@src/utils/format';
 
-type SortKey = 'name' | 'cargo' | 'status' | 'fuel' | 'command';
+type SortKey = 'name' | 'cargo' | 'status' | 'fuel';
 type SortDirection = 'asc' | 'desc';
 
 const sortKey = useTileState<SortKey>('sortKey', 'name');
@@ -60,7 +60,6 @@ const rawRows = computed(() => {
       ship,
       flight,
       inventory,
-      hasItems: (inventory?.items.length ?? 0) > 0,
       stlFuelRatio,
       ftlFuelRatio,
       cargoRatio,
@@ -68,7 +67,6 @@ const rawRows = computed(() => {
       statusSortValue,
       conditionText: `${Math.round(condition)}%`,
       cargoSizeText: getCargoSizeText(inventory),
-      primaryLabel: flight ? 'view' : 'fly',
     };
   });
 });
@@ -98,11 +96,6 @@ const rows = computed(() => {
       }
       case 'fuel': {
         return sign * (a.fuelRatio - b.fuelRatio);
-      }
-      case 'command': {
-        const aScore = (a.flight ? 1 : 0) + (a.hasItems ? 1 : 0);
-        const bScore = (b.flight ? 1 : 0) + (b.hasItems ? 1 : 0);
-        return sign * (aScore - bScore);
       }
     }
   });
@@ -142,16 +135,8 @@ function toCompactK(value: number) {
   return fixed0(value);
 }
 
-function onPrimary(registration: string) {
-  showBuffer(`SFC ${registration}`);
-}
-
 function onFuel(registration: string) {
   showBuffer(`SHPF ${registration}`);
-}
-
-function onUnload(registration: string) {
-  showBuffer(`SHPI ${registration}`);
 }
 </script>
 
@@ -171,9 +156,6 @@ function onUnload(registration: string) {
         </th>
         <th :class="[$style.headerCell, $style.sortable]" @click="setSort('fuel')">
           Fuel{{ getSortLabel('fuel') }}
-        </th>
-        <th :class="[$style.headerCell, $style.sortable]" @click="setSort('command')">
-          Command{{ getSortLabel('command') }}
         </th>
       </tr>
     </thead>
@@ -215,24 +197,6 @@ function onUnload(registration: string) {
             </div>
           </div>
         </td>
-
-        <td :class="$style.commandCell">
-          <div :class="$style.buttons">
-            <button
-              type="button"
-              :class="[C.Button.darkInline, C.Button.dark, C.Button.btn, C.Button.inline]"
-              @click="onPrimary(x.ship.registration)">
-              {{ x.primaryLabel }}
-            </button>
-            <button
-              v-if="x.hasItems"
-              type="button"
-              :class="[C.Button.darkInline, C.Button.dark, C.Button.btn, C.Button.inline]"
-              @click="onUnload(x.ship.registration)">
-              unload
-            </button>
-          </div>
-        </td>
       </tr>
     </tbody>
   </table>
@@ -268,34 +232,20 @@ function onUnload(registration: string) {
   margin-top: 2px;
 }
 
-.commandCell {
-  white-space: nowrap;
-  padding: 4px 6px;
-  vertical-align: middle;
-}
-
 .fuelCell {
   min-width: 120px;
 }
 
 .fuelBars {
   display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  gap: 4px;
+  flex-flow: row wrap;
+  align-items: stretch;
+  gap: 2px;
   width: 100%;
 }
 
 .fuelBars > div {
-  flex: 1 1 0;
-  min-width: 44px;
-}
-
-.buttons {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: flex-start;
-  width: max-content;
+  width: 40px;
+  flex: 0 0 40px;
 }
 </style>
