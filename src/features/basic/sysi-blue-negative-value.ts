@@ -2,7 +2,7 @@ import $style from './sysi-blue-negative-value.module.css';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.ColoredValue.negative), negative => {
-    if (negative.innerText?.includes('▼')) {
+    if (negative.textContent?.includes('▼')) {
       negative.classList.add($style.lowValue);
     }
   });
