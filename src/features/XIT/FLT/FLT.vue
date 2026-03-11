@@ -58,8 +58,6 @@ const rawRows = computed(() => {
 
     return {
       ship,
-      flight,
-      inventory,
       stlFuelRatio,
       ftlFuelRatio,
       cargoRatio,
@@ -81,21 +79,25 @@ const rows = computed(() => {
   const sorted = [...source];
 
   sorted.sort((a, b) => {
+    const nameCompare = (a.ship.name || a.ship.registration).localeCompare(
+      b.ship.name || b.ship.registration,
+    );
+
     switch (sortKey.value) {
       case 'name': {
-        return (
-          sign *
-          (a.ship.name || a.ship.registration).localeCompare(b.ship.name || b.ship.registration)
-        );
+        return sign * nameCompare;
       }
       case 'cargo': {
-        return sign * (a.cargoRatio - b.cargoRatio);
+        const primary = a.cargoRatio - b.cargoRatio;
+        return primary !== 0 ? sign * primary : nameCompare;
       }
       case 'status': {
-        return sign * (a.statusSortValue - b.statusSortValue);
+        const primary = a.statusSortValue - b.statusSortValue;
+        return primary !== 0 ? sign * primary : nameCompare;
       }
       case 'fuel': {
-        return sign * (a.fuelRatio - b.fuelRatio);
+        const primary = a.fuelRatio - b.fuelRatio;
+        return primary !== 0 ? sign * primary : nameCompare;
       }
     }
   });
