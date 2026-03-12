@@ -10,6 +10,7 @@
 ### Changed
 
 - `XIT CONTS`: Add missing condition labels
+- `XIT CONTC`: Add missing condition descriptions
 
 ### Fixed
 

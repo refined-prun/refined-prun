@@ -24,6 +24,11 @@ declare namespace PrunApi {
     quantity?: MaterialAmount | null;
     address?: Address;
     blockId?: string | null;
+    infrastructureType?: string;
+    infrastructureId?: ContractConditionEntity;
+    gatewayId?: ContractConditionEntity;
+    phaseNaturalId?: number;
+    serviceLevelObjective?: number;
     type: ContractConditionType;
     id: string;
     party: ContractParty;
@@ -44,6 +49,12 @@ declare namespace PrunApi {
     interest?: CurrencyAmount;
     repayment?: CurrencyAmount;
     total?: CurrencyAmount;
+  }
+
+  interface ContractConditionEntity {
+    id: string;
+    naturalId: string;
+    name: string;
   }
 
   type ContractParty = 'CUSTOMER' | 'PROVIDER';

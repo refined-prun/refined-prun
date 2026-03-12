@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { fixed02 } from '@src/utils/format';
 import AddressLink from '@src/features/XIT/CONTC/AddressLink.vue';
+import PrunLink from '@src/components/PrunLink.vue';
 
 defineProps<{ condition: PrunApi.ContractCondition }>();
 </script>
@@ -57,6 +58,35 @@ defineProps<{ condition: PrunApi.ContractCondition }>();
   <template v-else-if="condition.type === 'POWER'">Become Governor</template>
   <template v-else-if="condition.type === 'REPAIR_SHIP'">Repair Ship</template>
   <template v-else-if="condition.type === 'CONTRIBUTION'">Contribution</template>
+  <template v-else-if="condition.type === 'CONSTRUCT_SHIP'">Construct Ship</template>
+  <template v-else-if="condition.type === 'GATEWAY_FUEL'">
+    Refuel
+    <PrunLink inline :command="`GTW ${condition.gatewayId?.naturalId}`">{{
+      condition.gatewayId?.name
+    }}</PrunLink>
+  </template>
+  <template v-else-if="condition.type === 'INFRASTRUCTURE_CONSTRUCTION_FINISH'">
+    Finish Building Infrastructure
+  </template>
+  <template v-else-if="condition.type === 'INFRASTRUCTURE_CONSTRUCTION_START'">
+    Start Building Infrastructure
+  </template>
+  <template v-else-if="condition.type === 'INFRASTRUCTURE_UPGRADE_FINISH'">
+    Finish Upgrading Infrastructure
+  </template>
+  <template v-else-if="condition.type === 'INFRASTRUCTURE_UPGRADE_START'">
+    Start Upgrading Infrastructure
+  </template>
+  <template v-else-if="condition.type === 'INFRASTRUCTURE_UPKEEP'">
+    Upkeep
+    <PrunLink inline :command="`INFU ${condition.infrastructureId?.naturalId}`">{{
+      condition.infrastructureId?.name
+    }}</PrunLink>
+  </template>
+  <template v-else-if="condition.type === 'PICKUP'">Pickup</template>
+  <template v-else-if="condition.type === 'WORKFORCE_PROGRAM_PAYMENT'">
+    Pay {{ fixed02(condition.amount!.amount) }} {{ condition.amount!.currency }}
+  </template>
   <template v-else>
     {{ condition.type }}
   </template>
