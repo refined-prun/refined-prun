@@ -16,6 +16,20 @@ import { fixed0 } from '@src/utils/format';
 
 type SortKey = 'name' | 'cargo' | 'status' | 'fuel';
 type SortDirection = 'asc' | 'desc';
+type FuelAlertThreshold = '75' | '50' | '35' | '25' | '10';
+
+type SortColumn = {
+  key: SortKey;
+  label: string;
+};
+
+type MultiOptionFilterGroup = {
+  key: string;
+  title: string;
+  options: string[];
+  selected: string[];
+  onToggle: (option: string) => void;
+};
 
 const primarySortKey = useTileState<SortKey>('primarySortKey', 'name');
 const secondarySortKey = useTileState<SortKey>('secondarySortKey', 'status');
@@ -44,6 +58,13 @@ const fuelAlertFilter = useTileState<'any' | '75' | '50' | '35' | '25' | '10'>(
 const conditionOptions = ['100-90', '90-80', '80-0'];
 const etaOptions = ['DOCKED', '<1H', '1-6H', '6-12H', '12-24H', '>24H'];
 const cargoStateOptions = ['EMPTY', 'PARTIAL', 'FULL'];
+const fuelAlertOptions: FuelAlertThreshold[] = ['75', '50', '35', '25', '10'];
+const sortColumns: SortColumn[] = [
+  { key: 'name', label: 'Name' },
+  { key: 'cargo', label: 'Cargo' },
+  { key: 'status', label: 'Status' },
+  { key: 'fuel', label: 'Fuel' },
+];
 
 const cxCodes = computed(() => {
   const exchanges = exchangesStore.all.value ?? [];
@@ -283,6 +304,44 @@ const activeFilterCount = computed(() => {
 
 const filterSymbol = computed(() => (showFilters.value ? '-' : '+'));
 
+const optionFilterGroups = computed<MultiOptionFilterGroup[]>(() => [
+  {
+    key: 'ship-class',
+    title: 'Ship class',
+    options: shipClassOptions.value,
+    selected: shipClassFilters.value,
+    onToggle: onShipClassClick,
+  },
+  {
+    key: 'eta-bucket',
+    title: 'ETA bucket',
+    options: etaOptions,
+    selected: etaFilters.value,
+    onToggle: onEtaClick,
+  },
+  {
+    key: 'inventory-size',
+    title: 'Inventory size',
+    options: inventorySizeOptions.value,
+    selected: inventorySizeFilters.value,
+    onToggle: onInventorySizeClick,
+  },
+  {
+    key: 'cargo-state',
+    title: 'Cargo state',
+    options: cargoStateOptions,
+    selected: cargoStateFilters.value,
+    onToggle: onCargoStateClick,
+  },
+  {
+    key: 'condition',
+    title: 'Condition',
+    options: conditionOptions,
+    selected: conditionFilters.value,
+    onToggle: onConditionClick,
+  },
+]);
+
 function setSort(key: SortKey) {
   if (primarySortKey.value === key) {
     const nextDirection = getSortDirection(key) === 'asc' ? 'desc' : 'asc';
@@ -430,6 +489,10 @@ function onConditionClick(band: string) {
   toggleOptionFilter(conditionFilters, conditionOptions, band);
 }
 
+function onFuelAlertToggle(threshold: FuelAlertThreshold, enabled: boolean | undefined) {
+  fuelAlertFilter.value = enabled === true ? threshold : 'any';
+}
+
 function clearFilters() {
   showStlShips.value = true;
   showFtlShips.value = true;
@@ -540,20 +603,6 @@ function getCargoState(cargoRatio: number) {
       </div>
 
       <div :class="$style.filterGroup">
-        <div :class="$style.filterTitle">Ship class</div>
-        <div :class="C.ComExOrdersPanel.filter">
-          <RadioItem
-            v-for="shipClass in shipClassOptions"
-            :key="shipClass"
-            :model-value="isOptionSelected(shipClassFilters, shipClass)"
-            horizontal
-            @update:model-value="onShipClassClick(shipClass)">
-            {{ shipClass }}
-          </RadioItem>
-        </div>
-      </div>
-
-      <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Flight state</div>
         <div :class="C.ComExOrdersPanel.filter">
           <RadioItem v-model="showInFlightShips" horizontal>IN FLIGHT</RadioItem>
@@ -561,58 +610,16 @@ function getCargoState(cargoRatio: number) {
         </div>
       </div>
 
-      <div :class="$style.filterGroup">
-        <div :class="$style.filterTitle">ETA bucket</div>
+      <div v-for="group in optionFilterGroups" :key="group.key" :class="$style.filterGroup">
+        <div :class="$style.filterTitle">{{ group.title }}</div>
         <div :class="C.ComExOrdersPanel.filter">
           <RadioItem
-            v-for="eta in etaOptions"
-            :key="eta"
-            :model-value="isOptionSelected(etaFilters, eta)"
+            v-for="option in group.options"
+            :key="`${group.key}-${option}`"
+            :model-value="isOptionSelected(group.selected, option)"
             horizontal
-            @update:model-value="onEtaClick(eta)">
-            {{ eta }}
-          </RadioItem>
-        </div>
-      </div>
-
-      <div :class="$style.filterGroup">
-        <div :class="$style.filterTitle">Inventory size</div>
-        <div :class="C.ComExOrdersPanel.filter">
-          <RadioItem
-            v-for="size in inventorySizeOptions"
-            :key="size"
-            :model-value="isOptionSelected(inventorySizeFilters, size)"
-            horizontal
-            @update:model-value="onInventorySizeClick(size)">
-            {{ size }}
-          </RadioItem>
-        </div>
-      </div>
-
-      <div :class="$style.filterGroup">
-        <div :class="$style.filterTitle">Cargo state</div>
-        <div :class="C.ComExOrdersPanel.filter">
-          <RadioItem
-            v-for="cargoState in cargoStateOptions"
-            :key="cargoState"
-            :model-value="isOptionSelected(cargoStateFilters, cargoState)"
-            horizontal
-            @update:model-value="onCargoStateClick(cargoState)">
-            {{ cargoState }}
-          </RadioItem>
-        </div>
-      </div>
-
-      <div :class="$style.filterGroup">
-        <div :class="$style.filterTitle">Condition</div>
-        <div :class="C.ComExOrdersPanel.filter">
-          <RadioItem
-            v-for="band in conditionOptions"
-            :key="band"
-            :model-value="isOptionSelected(conditionFilters, band)"
-            horizontal
-            @update:model-value="onConditionClick(band)">
-            {{ band }}
+            @update:model-value="group.onToggle(option)">
+            {{ option }}
           </RadioItem>
         </div>
       </div>
@@ -628,34 +635,12 @@ function getCargoState(cargoRatio: number) {
         <div :class="$style.filterTitle">Fuel warning</div>
         <div :class="C.ComExOrdersPanel.filter">
           <RadioItem
-            :model-value="fuelAlertFilter === '75'"
+            v-for="threshold in fuelAlertOptions"
+            :key="threshold"
+            :model-value="fuelAlertFilter === threshold"
             horizontal
-            @update:model-value="fuelAlertFilter = $event ? '75' : 'any'">
-            ≤75%
-          </RadioItem>
-          <RadioItem
-            :model-value="fuelAlertFilter === '50'"
-            horizontal
-            @update:model-value="fuelAlertFilter = $event ? '50' : 'any'">
-            ≤50%
-          </RadioItem>
-          <RadioItem
-            :model-value="fuelAlertFilter === '35'"
-            horizontal
-            @update:model-value="fuelAlertFilter = $event ? '35' : 'any'">
-            ≤35%
-          </RadioItem>
-          <RadioItem
-            :model-value="fuelAlertFilter === '25'"
-            horizontal
-            @update:model-value="fuelAlertFilter = $event ? '25' : 'any'">
-            ≤25%
-          </RadioItem>
-          <RadioItem
-            :model-value="fuelAlertFilter === '10'"
-            horizontal
-            @update:model-value="fuelAlertFilter = $event ? '10' : 'any'">
-            ≤10%
+            @update:model-value="onFuelAlertToggle(threshold, $event)">
+            ≤{{ threshold }}%
           </RadioItem>
         </div>
       </div>
@@ -664,44 +649,18 @@ function getCargoState(cargoRatio: number) {
     <table :class="$style.table">
       <thead>
         <tr>
-          <th :class="[$style.headerCell, $style.sortable]" @click="setSort('name')">
-            Name
+          <th
+            v-for="column in sortColumns"
+            :key="column.key"
+            :class="[$style.headerCell, $style.sortable]"
+            @click="setSort(column.key)">
+            {{ column.label }}
             <span
               :class="{
-                [$style.sortPrimary]: isPrimarySort('name'),
-                [$style.sortSecondary]: isSecondarySort('name'),
+                [$style.sortPrimary]: isPrimarySort(column.key),
+                [$style.sortSecondary]: isSecondarySort(column.key),
               }">
-              {{ getSortIndicator('name') }}
-            </span>
-          </th>
-          <th :class="[$style.headerCell, $style.sortable]" @click="setSort('cargo')">
-            Cargo
-            <span
-              :class="{
-                [$style.sortPrimary]: isPrimarySort('cargo'),
-                [$style.sortSecondary]: isSecondarySort('cargo'),
-              }">
-              {{ getSortIndicator('cargo') }}
-            </span>
-          </th>
-          <th :class="[$style.headerCell, $style.sortable]" @click="setSort('status')">
-            Status
-            <span
-              :class="{
-                [$style.sortPrimary]: isPrimarySort('status'),
-                [$style.sortSecondary]: isSecondarySort('status'),
-              }">
-              {{ getSortIndicator('status') }}
-            </span>
-          </th>
-          <th :class="[$style.headerCell, $style.sortable]" @click="setSort('fuel')">
-            Fuel
-            <span
-              :class="{
-                [$style.sortPrimary]: isPrimarySort('fuel'),
-                [$style.sortSecondary]: isSecondarySort('fuel'),
-              }">
-              {{ getSortIndicator('fuel') }}
+              {{ getSortIndicator(column.key) }}
             </span>
           </th>
         </tr>
