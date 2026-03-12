@@ -46,10 +46,6 @@ onApiMessage({
   },
 });
 
-const getByShortId = createMapGetter(state.all, x => x.siteId.substring(0, 8));
-
-const getById = (value?: string | null) => state.getById(value) ?? getByShortId(value);
-
 const getByPlanetNaturalId = createMapGetter(
   state.all,
   x => getEntityNaturalIdFromAddress(x.address)!,
@@ -65,7 +61,6 @@ export const getBuildingLastRepair = (building: PrunApi.Platform) =>
 
 export const sitesStore = {
   ...state,
-  getById,
   getByPlanetNaturalId,
   getByPlanetName,
   getByPlanetNaturalIdOrName,
