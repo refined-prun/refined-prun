@@ -1,11 +1,11 @@
 ---
 name: review-pr
-description: Review the currently checked-out GitHub pull request against project guidelines. Creates pr-review.md with findings. Triggers on "review pr", "review pull request", "pr review", "check pr". Do NOT use for reviewing code outside a PR context.
+description: Review a GitHub pull request against project guidelines. Creates pr-review.md with findings. Accepts PR number as argument. Triggers on "review pr", "review pull request", "pr review", "check pr". Do NOT use for reviewing code outside a PR context.
 ---
 
 # Review GitHub Pull Request
 
-Analyze the currently checked-out PR and produce a structured review in `pr-review.md`.
+Analyze a PR and produce a structured review in `pr-review.md`.
 
 **Principle:** Report everything. The only code change this skill makes is running prettier.
 
@@ -14,24 +14,46 @@ Analyze the currently checked-out PR and produce a structured review in `pr-revi
 ## Phase 1: Pre-flight
 
 ```bash
+git status --porcelain
+```
+
+**If output is non-empty:** Stop. Tell the user: there are uncommitted changes. Commit or stash them first.
+
+```bash
 which gh || echo "GH_MISSING"
 ```
 
 **If GH_MISSING:** Stop. Tell the user: `gh` CLI is required. Install from https://cli.github.com.
 
+## Phase 2: Setup
+
+The PR number comes from the skill argument. If no argument was provided, ask the user for the PR number.
+
+```bash
+git fetch origin main
+```
+
+```bash
+gh pr checkout <number>
+```
+
+```bash
+git merge origin/main --no-edit
+```
+
+**If merge conflict:** Stop. Tell the user: merge conflict with main. Resolve manually.
+
 ```bash
 gh pr view --json number,title,body,baseRefName,headRefName,author,labels,files 2>&1
 ```
 
-**If error (not a PR branch):** Stop. Tell the user: this branch is not associated with a PR. Check out a PR first with `gh pr checkout <number>`.
-
-**If success:** Save the JSON output. Extract `number`, `title`, `baseRefName` for later use.
+Save the JSON output. Extract `number`, `title`, `baseRefName` for later use.
 
 ```bash
 mkdir -p .tmp
 ```
 
-## Phase 2: Prettier + Commit
+## Phase 3: Prettier + Commit
 
 ```bash
 pnpm prettier
@@ -51,7 +73,7 @@ git diff --name-only | xargs git add && git commit -m "prettier"
 
 **If no changes:** Skip — working tree is already formatted.
 
-## Phase 3: Gather Context
+## Phase 4: Gather Context
 
 Run all three in parallel:
 
@@ -86,7 +108,7 @@ Read based on changed paths:
 
 Now read `.tmp/pr-diff.txt`. If it exceeds 800 lines, read in 500-line chunks, processing each chunk before moving on.
 
-## Phase 4: ESLint
+## Phase 5: ESLint
 
 ```bash
 pnpm lint 2>&1 | head -200 > .tmp/eslint-output.txt; echo "EXIT:${PIPESTATUS[0]}" >> .tmp/eslint-output.txt
@@ -94,7 +116,7 @@ pnpm lint 2>&1 | head -200 > .tmp/eslint-output.txt; echo "EXIT:${PIPESTATUS[0]}
 
 Read `.tmp/eslint-output.txt`. Note exit code and any errors/warnings.
 
-## Phase 5: Analyze
+## Phase 6: Analyze
 
 Review the diff against **every rule in the docs you read in Phase 3**. The docs contain Good/Bad examples — use those as the reference. Only flag items that actually appear in the diff. Do not invent issues.
 
@@ -110,7 +132,7 @@ Check these categories. For each, the source of truth is the doc file, not this 
 - **PR Quality** — descriptive title, body explains "why", focused scope
 - **Code Quality** — no over-engineering, no security issues, resources cleaned up
 
-## Phase 6: Write Review
+## Phase 7: Write Review
 
 Create `pr-review.md` in the repo root with this structure:
 
@@ -160,7 +182,7 @@ Create `pr-review.md` in the repo root with this structure:
 - **Suggestion:** Could be cleaner, missing pattern usage, eslint warnings, minor style issues
 - **Observation:** Questions, ambiguities, things worth discussing
 
-## Phase 7: Report
+## Phase 8: Report
 
 Tell the user:
 
