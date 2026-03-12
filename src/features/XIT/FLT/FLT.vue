@@ -17,6 +17,7 @@ import { fixed0 } from '@src/utils/format';
 type SortKey = 'name' | 'cargo' | 'status' | 'fuel';
 type SortDirection = 'asc' | 'desc';
 type FuelAlertThreshold = '75' | '50' | '35' | '25' | '10';
+type FuelAlertFilter = 'any' | FuelAlertThreshold;
 
 type SortColumn = {
   key: SortKey;
@@ -50,15 +51,20 @@ const shipClassFilters = useTileState<string[]>('shipClassFilters', []);
 const conditionFilters = useTileState<string[]>('conditionFilters', []);
 const cargoStateFilters = useTileState<string[]>('cargoStateFilters', []);
 const etaFilters = useTileState<string[]>('etaFilters', []);
-const fuelAlertFilter = useTileState<'any' | '75' | '50' | '35' | '25' | '10'>(
-  'fuelAlertFilter',
-  'any',
-);
+const fuelAlertFilter = useTileState<FuelAlertFilter>('fuelAlertFilter', 'any');
 
 const conditionOptions = ['100-90', '90-80', '80-0'];
 const etaOptions = ['DOCKED', '<1H', '1-6H', '6-12H', '12-24H', '>24H'];
 const cargoStateOptions = ['EMPTY', 'PARTIAL', 'FULL'];
 const fuelAlertOptions: FuelAlertThreshold[] = ['75', '50', '35', '25', '10'];
+const fuelAlertThresholdMap: Record<FuelAlertFilter, number> = {
+  any: 1,
+  '75': 0.75,
+  '50': 0.5,
+  '35': 0.35,
+  '25': 0.25,
+  '10': 0.1,
+};
 const sortColumns: SortColumn[] = [
   { key: 'name', label: 'Name' },
   { key: 'cargo', label: 'Cargo' },
@@ -148,15 +154,7 @@ const shipClassOptions = computed(() => {
     return [];
   }
 
-  const seen = new Set<string>();
-  const options: string[] = [];
-  for (const row of source) {
-    if (!seen.has(row.shipClass)) {
-      seen.add(row.shipClass);
-      options.push(row.shipClass);
-    }
-  }
-  return options;
+  return uniqueOptionValues(source, x => x.shipClass);
 });
 
 const inventorySizeOptions = computed(() => {
@@ -165,15 +163,7 @@ const inventorySizeOptions = computed(() => {
     return [];
   }
 
-  const seen = new Set<string>();
-  const options: string[] = [];
-  for (const row of source) {
-    if (!seen.has(row.cargoSizeText)) {
-      seen.add(row.cargoSizeText);
-      options.push(row.cargoSizeText);
-    }
-  }
-  return options;
+  return uniqueOptionValues(source, x => x.cargoSizeText);
 });
 
 const filteredRows = computed(() => {
@@ -212,15 +202,7 @@ const filteredRows = computed(() => {
       return false;
     }
 
-    const thresholdMap = {
-      any: 1,
-      '75': 0.75,
-      '50': 0.5,
-      '35': 0.35,
-      '25': 0.25,
-      '10': 0.1,
-    };
-    const threshold = thresholdMap[fuelAlertFilter.value];
+    const threshold = fuelAlertThresholdMap[fuelAlertFilter.value];
     if (threshold < 1 && x.warningFuelRatio > threshold) {
       return false;
     }
@@ -440,6 +422,21 @@ function toggleFilters() {
 
 function isOptionSelected(selected: string[], option: string) {
   return selected.length === 0 || selected.includes(option);
+}
+
+function uniqueOptionValues<T>(source: T[], getValue: (x: T) => string) {
+  const seen = new Set<string>();
+  const options: string[] = [];
+
+  for (const x of source) {
+    const value = getValue(x);
+    if (!seen.has(value)) {
+      seen.add(value);
+      options.push(value);
+    }
+  }
+
+  return options;
 }
 
 function toggleOptionFilter(
