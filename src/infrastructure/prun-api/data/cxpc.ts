@@ -1,7 +1,7 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 
-const store = createEntityStore<PrunApi.CXBrokerPrices>(x => x.brokerId);
+const store = createEntityStore<PrunApi.CXBrokerPrices>({ selectId: x => x.brokerId });
 const state = store.state;
 
 onApiMessage({

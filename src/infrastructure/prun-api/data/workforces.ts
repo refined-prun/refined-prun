@@ -7,7 +7,7 @@ interface Entity {
   workforces: PrunApi.Workforce[];
 }
 
-const store = createEntityStore<Entity>(x => x.siteId);
+const store = createEntityStore<Entity>({ selectId: x => x.siteId });
 const state = store.state;
 
 onApiMessage({

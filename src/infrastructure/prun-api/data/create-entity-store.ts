@@ -1,18 +1,16 @@
 import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { PrefixStore } from '@src/utils/prefix-store';
 
-type EntityId = number | string;
-type IdSelector<T, Id extends EntityId> = (model: T) => Id;
+interface EntityStoreOptions<T> {
+  selectId?: (model: T) => string;
+  transformId?: (id: string) => string;
+  preserveOnConnectionOpen?: boolean;
+}
 
-export function createEntityStore<T>(
-  selectId?: IdSelector<T, string>,
-  options?: {
-    preserveOnConnectionOpen?: boolean;
-  },
-) {
+export function createEntityStore<T>(options?: EntityStoreOptions<T>) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  selectId = selectId ?? ((model: any) => model.id);
-  const transformId = (s: string) => s.toUpperCase();
+  const selectId = options?.selectId ?? ((model: any) => model.id);
+  const transformId = options?.transformId ?? ((s: string) => s.toUpperCase());
 
   let entities = shallowReactive({} as Record<string, T>);
   const prefixStoreRef = shallowRef(new PrefixStore<T>());

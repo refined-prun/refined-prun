@@ -2,7 +2,7 @@ import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 
-const store = createEntityStore<PrunApi.Star>(x => x.systemId);
+const store = createEntityStore<PrunApi.Star>({ selectId: x => x.systemId });
 const state = store.state;
 
 onApiMessage({
