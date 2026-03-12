@@ -6,6 +6,7 @@ import { displaytimeBetween, hhmm } from '@src/utils/format';
 import { timestampEachMinute } from '@src/utils/dayjs';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { getInvStore } from '@src/core/store-id';
+import { getShipStatusIcon, stationaryShipStatusIcon } from '@src/core/ship-status-icons';
 import {
   getEntityNameFromAddress,
   getLocationLineFromAddress,
@@ -14,20 +15,6 @@ import {
 const props = defineProps<{
   shipId: string;
 }>();
-
-const STATUS_ICONS: Record<string, string> = {
-  TAKE_OFF: '↑',
-  DEPARTURE: '↗',
-  TRANSIT: '⟶',
-  CHARGE: '±',
-  JUMP: '➾',
-  FLOAT: '↑',
-  APPROACH: '↘',
-  LANDING: '↓',
-  LOCK: '⟴',
-  DECAY: '⟴',
-  JUMP_GATEWAY: '⟴',
-};
 
 const ship = computed(() => shipsStore.getById(props.shipId));
 const flight = computed(() => flightsStore.getById(ship.value?.flightId));
@@ -38,10 +25,10 @@ const statusIcon = computed(() => {
     return '';
   }
   if (!flight.value) {
-    return '⦁';
+    return stationaryShipStatusIcon;
   }
   const segment = flight.value.segments[flight.value.currentSegmentIndex];
-  return segment != null ? STATUS_ICONS[segment.type] || '?' : '⦁';
+  return segment != null ? getShipStatusIcon(segment.type) : stationaryShipStatusIcon;
 });
 
 const posData = computed(() => {
