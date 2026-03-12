@@ -322,6 +322,26 @@ For collapsible filter/config menus, use the same passive form row pattern as th
 - Keep plus/minus behavior: `+` means hidden, `-` means visible.
 - Keep state in `useTileState(...)` so the collapsed state persists per tile.
 
+## Filter Button Groups
+
+Inside collapsible filter panels, use PrUn-style button rows instead of custom chip styles.
+
+```vue
+<div :class="C.ComExOrdersPanel.filter">
+  <RadioItem v-model="someBoolean" horizontal>LABEL</RadioItem>
+  <RadioItem
+    :model-value="isOptionSelected(filters, option)"
+    horizontal
+    @update:model-value="onOptionClick(option)">
+    {{ option }}
+  </RadioItem>
+</div>
+```
+
+- Prefer `C.ComExOrdersPanel.filter` + `RadioItem horizontal` for all filter groups.
+- Keep styling consistent between groups (Ship list, Flight state, and all other groups).
+- Avoid introducing custom chip CSS unless there is a strong UX reason.
+
 ---
 
 ## Reactively Mutating DOM Attributes
