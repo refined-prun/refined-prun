@@ -192,6 +192,7 @@ Write `.tmp/pr-review.md` in the repo root with this structure:
 
 Each finding ends with:
 
+**Basis:** <why this was flagged — cite the specific source>
 **Resolution:**
 
 ### Suggestions
@@ -200,6 +201,7 @@ Each finding ends with:
 
 Each finding ends with:
 
+**Basis:** <why this was flagged>
 **Resolution:**
 
 ### Observations
@@ -208,6 +210,7 @@ Each finding ends with:
 
 Each item ends with:
 
+**Basis:** <why this was flagged>
 **Resolution:**
 
 ## Files Reviewed
@@ -227,6 +230,16 @@ Each item ends with:
 - **Critical:** Breaks architecture/dependency rules, introduces bugs, security issues, wrong game assumptions, eslint errors
 - **Suggestion:** Could be cleaner, missing pattern usage, eslint warnings, minor style issues
 - **Observation:** Questions, ambiguities, things worth discussing
+
+**Basis guide** — every finding must cite why it was flagged. This is a breadcrumb for `/resolve-review` to know what to read and how to fix. Use one of these forms:
+- **Doc rule:** `contributing.md > Code Style > Nullish Checks` — cite doc file, section, subsection
+- **Doc rule with quote:** `feature-patterns.md > CSS > Scoping: "always use scoped CSS rules"` — when the exact wording matters
+- **Code observation:** `parseFloat(null) returns NaN; NaN > x is always false` — TypeScript/JS behavior
+- **PR comment:** `maintainer comment: "match C.Contribution.contribute and traverse .previousElementSibling"` — cite the commenter
+- **Architecture:** `architecture.md > Dependency Layers: features → core → infrastructure → utils`
+- **Game knowledge:** `docs/game/commands.csv` or `no doc found — flagged as assumption`
+
+Be specific enough that someone reading only the Basis can understand the fix without re-reading the full doc.
 
 ## Phase 8: Report
 
