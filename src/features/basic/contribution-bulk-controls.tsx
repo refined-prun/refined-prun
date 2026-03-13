@@ -25,11 +25,11 @@ function onTileReady(tile: PrunTile) {
       }
     };
     const disabled = sliders.every(x => x.classList.contains('rc-slider-disabled'));
-    createFragmentApp(
+    createFragmentApp(() => (
       <PrunButton primary disabled={disabled} onClick={maxSliders}>
         ALL
-      </PrunButton>,
-    ).prependTo(contributeContainer);
+      </PrunButton>
+    )).prependTo(contributeContainer);
     createFragmentApp(() => (
       <PrunButton primary disabled={disabled} onClick={minSliders}>
         NONE
