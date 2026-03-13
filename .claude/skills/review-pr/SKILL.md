@@ -1,11 +1,11 @@
 ---
 name: review-pr
-description: Review a GitHub pull request against project guidelines. Creates pr-review.md with findings. Accepts PR number as argument. Triggers on "review pr", "review pull request", "pr review", "check pr". Do NOT use for reviewing code outside a PR context.
+description: Review a GitHub pull request against project guidelines. Creates .tmp/pr-review.md with findings. Accepts PR number as argument. Triggers on "review pr", "review pull request", "pr review", "check pr". Do NOT use for reviewing code outside a PR context.
 ---
 
 # Review GitHub Pull Request
 
-Analyze a PR and produce a structured review in `pr-review.md`.
+Analyze a PR and produce a structured review in `.tmp/pr-review.md`.
 
 **Principle:** Report everything. The only code change this skill makes is running prettier.
 
@@ -27,11 +27,28 @@ which gh || echo "GH_MISSING"
 
 ## Phase 2: Setup
 
-The PR number comes from the skill argument. If no argument was provided, ask the user for the PR number.
-
 ```bash
 git fetch origin main
 ```
+
+Detect the current branch's PR:
+
+```bash
+gh pr view --json number --jq '.number' 2>/dev/null
+```
+
+Determine the target PR number and whether to checkout:
+
+- **No argument provided:** If `.tmp/pr-review.md` exists, read the `#` heading (e.g., `# PR Review: #139`) and extract the PR number from it. Otherwise, if the current branch has a PR, use that number. Otherwise, ask the user for the PR number.
+- **Argument provided:** Use the argument as the PR number.
+
+**If the current branch's PR number matches the target PR number:**
+
+```bash
+git merge origin/main --no-edit
+```
+
+**Otherwise:**
 
 ```bash
 gh pr checkout <number>
@@ -52,6 +69,13 @@ Save the JSON output. Extract `number`, `title`, `baseRefName` for later use.
 ```bash
 mkdir -p .tmp
 ```
+
+### Existing Review Detection
+
+If `.tmp/pr-review.md` exists, read it. Check whether the `#` heading contains the target PR number (e.g., `# PR Review: #139`).
+
+- **Same PR:** This is an incremental re-review. Keep the file contents in memory — existing findings and their resolutions will be preserved in Phase 7.
+- **Different PR or file missing:** This is a fresh review. Ignore any existing file.
 
 ## Phase 3: Prettier + Commit
 
@@ -134,7 +158,11 @@ Check these categories. For each, the source of truth is the doc file, not this 
 
 ## Phase 7: Write Review
 
-Create `pr-review.md` in the repo root with this structure:
+**Incremental mode** (existing `.tmp/pr-review.md` for the same PR): Read the existing file. Keep all existing findings and their resolutions exactly as-is. Append any newly discovered findings that are not already covered. Do not duplicate findings. Do not remove or reword existing entries. Update the ESLint section and review date. Add new files to "Files Reviewed" if not already listed. If the file has a `## Dismissed` section, do not re-flag any finding whose title matches a dismissed entry.
+
+**Fresh mode** (no existing file, or different PR): Create `.tmp/pr-review.md` from scratch.
+
+Write `.tmp/pr-review.md` in the repo root with this structure:
 
 ```markdown
 # PR Review: #<number> — <title>
@@ -162,17 +190,38 @@ Create `pr-review.md` in the repo root with this structure:
 
 <issues that must be fixed before merge, or "None.">
 
+Each finding ends with:
+
+**Basis:** <why this was flagged — cite the specific source>
+**Resolution:**
+
 ### Suggestions
 
 <improvements that would be nice but aren't blocking>
+
+Each finding ends with:
+
+**Basis:** <why this was flagged>
+**Resolution:**
 
 ### Observations
 
 <neutral notes — things the reviewer noticed, questions for the author>
 
+Each item ends with:
+
+**Basis:** <why this was flagged>
+**Resolution:**
+
 ## Files Reviewed
 
 <bulleted list of changed files with a one-line note each>
+
+## Artifacts
+
+- `.tmp/pr-diff.txt` — full PR diff
+- `.tmp/pr-comments.txt` — PR comments and reviews
+- `.tmp/eslint-output.txt` — ESLint output
 ```
 
 **If no findings in a section:** Write "None." — do not omit the section.
@@ -182,13 +231,40 @@ Create `pr-review.md` in the repo root with this structure:
 - **Suggestion:** Could be cleaner, missing pattern usage, eslint warnings, minor style issues
 - **Observation:** Questions, ambiguities, things worth discussing
 
+**Basis guide** — every finding must cite why it was flagged. This is a breadcrumb for `/resolve-review` to know what to read and how to fix. Use one of these forms:
+- **Doc rule:** `contributing.md > Code Style > Nullish Checks` — cite doc file, section, subsection
+- **Doc rule with quote:** `feature-patterns.md > CSS > Scoping: "always use scoped CSS rules"` — when the exact wording matters
+- **Code observation:** `parseFloat(null) returns NaN; NaN > x is always false` — TypeScript/JS behavior
+- **PR comment:** `maintainer comment: "match C.Contribution.contribute and traverse .previousElementSibling"` — cite the commenter
+- **Architecture:** `architecture.md > Dependency Layers: features → core → infrastructure → utils`
+- **Game knowledge:** `docs/game/commands.csv` or `no doc found — flagged as assumption`
+
+Be specific enough that someone reading only the Basis can understand the fix without re-reading the full doc.
+
+**Pre-filled resolutions** — If a finding has exactly one unambiguous mechanical fix derivable from the Basis alone (no design judgment), pre-fill the `**Resolution:**` field with a short instruction. This lets `/resolve-review` batch-process trivial fixes without manual editing.
+
+Examples of pre-fillable fixes:
+- Import reordering → `**Resolution:** Reorder alphabetically.`
+- `==` → `===` → `**Resolution:** Use strict equality.`
+- Missing `await` → `**Resolution:** Add await.`
+- Null guard on `textContent` → `**Resolution:** Add ! assertion.`
+
+Do NOT pre-fill if the fix requires:
+- Restructuring code or changing approach
+- Choosing between multiple valid alternatives
+- Game knowledge or domain understanding
+- Design judgment about UX or feature behavior
+
+When in doubt, leave `**Resolution:**` empty — a wrong pre-fill is worse than none.
+
 ## Phase 8: Report
 
 Tell the user:
 
-> PR review written to `pr-review.md`.
+> PR review written to `.tmp/pr-review.md`.
 >
 > **Critical:** <count> | **Suggestions:** <count> | **Observations:** <count>
+> **Auto-resolvable:** <count> (run `/resolve-review` to apply)
 > **ESLint:** <pass/fail> (<error count> errors, <warning count> warnings)
 > **Prettier:** <committed/no changes>
 
