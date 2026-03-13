@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { PlatformProduction } from '@src/core/production';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
+import { timestampEachMinute } from '@src/utils/dayjs';
 
 const { productionLine, headers } = defineProps<{
   productionLine: PlatformProduction;
@@ -93,7 +94,7 @@ const allStackedOrders = computed(() => {
 });
 
 const formatTime = (ts: number) => {
-  const mins = Math.max(0, Math.floor((ts - Date.now()) / 60000));
+  const mins = Math.max(0, Math.floor((ts - timestampEachMinute.value) / 60000));
   if (mins === 0) return 'Finishing...';
   return mins > 60 ? `in ${Math.floor(mins / 60)}h ${mins % 60}m` : `in ${mins}m`;
 };
