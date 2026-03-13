@@ -81,6 +81,8 @@ function init() {
 
   // Removes GridItemView background color.
   applyCssRule(`.${C.GridItemView.container}`, $style.gridItem);
+  // Prevent layout shifts when items become selected by making the border consistent width.
+  applyCssRule(`.${C.GridItemView.selected}`, $style.gridItemSelected);
 
   // Adds text centering to GridItemView name.
   applyCssRule(`.${C.GridItemView.name}`, $style.gridItemName);
@@ -93,6 +95,18 @@ function init() {
 
   // User search results box in GIFT is too big to fit in the tile.
   applyCssRule('GIFT', `.${C.UserSelector.suggestionsContainer}`, $style.giftSearchResults);
+
+  // Fixes the dot / arrow in system info being left skewed
+  applyCssRule(
+    'SYSI',
+    `.${C.EnvironmentTable.gridContainer} .${C.ColoredValue.positive}`,
+    $style.centerText,
+  );
+  applyCssRule(
+    'SYSI',
+    `.${C.EnvironmentTable.gridContainer} .${C.ColoredValue.negative}`,
+    $style.centerText,
+  );
 
   // Fix the tooltip arrow position.
   applyCssRule('[data-tooltip-position="bottom"]', $style.tooltipBottom);

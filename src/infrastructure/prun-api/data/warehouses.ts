@@ -6,7 +6,7 @@ import {
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
 
-const store = createEntityStore<PrunApi.Warehouse>(x => x.warehouseId);
+const store = createEntityStore<PrunApi.Warehouse>({ selectId: x => x.warehouseId });
 const state = store.state;
 
 onApiMessage({
