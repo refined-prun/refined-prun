@@ -8,10 +8,22 @@ const burnClass = computed(() => ({
 </script>
 
 <template>
-  <td :style="{ position: 'relative' }">
-    <div
-      :style="{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%' }"
-      :class="burnClass" />
-    <span>{{ numerator.toString() + '/' + denominator.toString() }}</span>
+  <td :class="$style.cell">
+    <div :class="[burnClass, $style.overlay]" />
+    <span>{{ numerator }}/{{ denominator }}</span>
   </td>
 </template>
+
+<style module>
+.cell {
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+</style>

@@ -16,7 +16,7 @@ xit.add({
 
     return 'ENHANCED PRODUCTION';
   },
-  description: 'Provides an in-game production.',
+  description: 'Dense cross-base production overview.',
   component: () => PROD,
   bufferSize: [275, 326],
 });

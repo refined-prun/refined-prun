@@ -63,9 +63,6 @@ const tooltipText = computed(() => {
     lines.push('');
   }
 
-  //const fixedWidth = 22;
-  //\u00A0
-  //return lines.map(line => line.padEnd(fixedWidth, '-')).join('\n');
   return lines.join(' ');
 });
 </script>
