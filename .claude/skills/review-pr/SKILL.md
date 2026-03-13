@@ -168,8 +168,11 @@ Write `.tmp/pr-review.md` in the repo root with this structure:
 # PR Review: #<number> — <title>
 
 **Branch:** <headRefName> → <baseRefName>
+
 **Author:** <author>
+
 **Files changed:** <count>
+
 **Review date:** <today>
 
 ## Summary
@@ -193,6 +196,7 @@ Write `.tmp/pr-review.md` in the repo root with this structure:
 Each finding ends with:
 
 **Basis:** <why this was flagged — cite the specific source>
+
 **Resolution:**
 
 ### Suggestions
@@ -202,6 +206,7 @@ Each finding ends with:
 Each finding ends with:
 
 **Basis:** <why this was flagged>
+
 **Resolution:**
 
 ### Observations
@@ -211,6 +216,7 @@ Each finding ends with:
 Each item ends with:
 
 **Basis:** <why this was flagged>
+
 **Resolution:**
 
 ## Files Reviewed
