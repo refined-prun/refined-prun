@@ -39,7 +39,7 @@ gh pr view --json number --jq '.number' 2>/dev/null
 
 Determine the target PR number and whether to checkout:
 
-- **No argument provided:** If the current branch has a PR, use that number. Otherwise, ask the user for the PR number.
+- **No argument provided:** If `.tmp/pr-review.md` exists, read the `#` heading (e.g., `# PR Review: #139`) and extract the PR number from it. Otherwise, if the current branch has a PR, use that number. Otherwise, ask the user for the PR number.
 - **Argument provided:** Use the argument as the PR number.
 
 **If the current branch's PR number matches the target PR number:**
