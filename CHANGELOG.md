@@ -11,6 +11,7 @@
 
 - `XIT CONTS`: Add missing condition labels
 - `XIT CONTC`: Add missing condition descriptions
+- `flt-ship-condition`: Restore red/yellow thresholds; red at 79%, yellow at 81%
 
 ### Fixed
 
