@@ -10,10 +10,12 @@
 ### Changed
 
 - `XIT CONTS`: Add missing condition labels
+- `XIT CONTC`: Add missing condition descriptions
 
 ### Fixed
 
 - `prun-bugs`: Fix the dot / arrow in system info being left skewed
+- Fix financial data collection failure when the user has no warehouses
 
 ## 26.1.24
 
