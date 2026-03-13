@@ -33,7 +33,7 @@ function disableInvalidPopidSliders(tile: PrunTile) {
       }
       const sliderValue = parseFloat(sliderValueMark.textContent);
       const reserveCell = row.children[3];
-      if (reserveCell == undefined) {
+      if (reserveCell === undefined) {
         return;
       }
       const reserveBar = await $(reserveCell, 'progress');
