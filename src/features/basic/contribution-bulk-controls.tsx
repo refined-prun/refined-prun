@@ -1,4 +1,5 @@
 import { clickElement } from '@src/util';
+import { refAnimationFrame } from '@src/utils/reactive-dom';
 import PrunButton from '@src/components/PrunButton.vue';
 
 function onTileReady(tile: PrunTile) {
@@ -29,14 +30,19 @@ function onTileReady(tile: PrunTile) {
         await clickElement(mark.firstElementChild as HTMLElement);
       }
     };
-    const disabled = sliders.every(x => x.classList.contains('rc-slider-disabled'));
+    const allSliders = table.getElementsByClassName('rc-slider');
+    const disabledSliders = table.getElementsByClassName('rc-slider-disabled');
+    const disabled = refAnimationFrame(
+      table,
+      () => allSliders.length > 0 && allSliders.length === disabledSliders.length,
+    );
     createFragmentApp(() => (
-      <PrunButton primary disabled={disabled} onClick={maxSliders}>
+      <PrunButton primary disabled={disabled.value} onClick={maxSliders}>
         ALL
       </PrunButton>
     )).prependTo(contribute);
     createFragmentApp(() => (
-      <PrunButton primary disabled={disabled} onClick={minSliders}>
+      <PrunButton primary disabled={disabled.value} onClick={minSliders}>
         NONE
       </PrunButton>
     )).prependTo(contribute);
