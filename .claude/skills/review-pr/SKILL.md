@@ -1,11 +1,11 @@
 ---
 name: review-pr
-description: Review a GitHub pull request against project guidelines. Creates .tmp/pr-review.md with findings. Accepts PR number as argument. Triggers on "review pr", "review pull request", "pr review", "check pr". Do NOT use for reviewing code outside a PR context.
+description: Review a GitHub pull request against project guidelines. Creates .tmp/pr/<number>/pr-review.md with findings. Accepts PR number as argument. Triggers on "review pr", "review pull request", "pr review", "check pr". Do NOT use for reviewing code outside a PR context.
 ---
 
 # Review GitHub Pull Request
 
-Analyze a PR and produce a structured review in `.tmp/pr-review.md`.
+Analyze a PR and produce a structured review in `.tmp/pr/<number>/pr-review.md`.
 
 **Principle:** Report everything. The only code change this skill makes is running prettier.
 
@@ -39,7 +39,7 @@ gh pr view --json number --jq '.number' 2>/dev/null
 
 Determine the target PR number and whether to checkout:
 
-- **No argument provided:** If `.tmp/pr-review.md` exists, read the `#` heading (e.g., `# PR Review: #139`) and extract the PR number from it. Otherwise, if the current branch has a PR, use that number. Otherwise, ask the user for the PR number.
+- **No argument provided:** If `.tmp/pr/current.txt` exists, read the PR number from it. Otherwise, if the current branch has a PR, use that number. Otherwise, ask the user for the PR number.
 - **Argument provided:** Use the argument as the PR number.
 
 **If the current branch's PR number matches the target PR number:**
@@ -67,15 +67,20 @@ gh pr view --json number,title,body,baseRefName,headRefName,author,labels,files 
 Save the JSON output. Extract `number`, `title`, `baseRefName` for later use.
 
 ```bash
-mkdir -p .tmp
+mkdir -p .tmp/pr/<number>
+```
+
+Write the PR number to `.tmp/pr/current.txt`:
+
+```bash
+echo <number> > .tmp/pr/current.txt
 ```
 
 ### Existing Review Detection
 
-If `.tmp/pr-review.md` exists, read it. Check whether the `#` heading contains the target PR number (e.g., `# PR Review: #139`).
+If `.tmp/pr/<number>/pr-review.md` exists, this is an incremental re-review. Read it and keep the file contents in memory — existing findings and their resolutions will be preserved in Phase 7.
 
-- **Same PR:** This is an incremental re-review. Keep the file contents in memory — existing findings and their resolutions will be preserved in Phase 7.
-- **Different PR or file missing:** This is a fresh review. Ignore any existing file.
+If the file does not exist, this is a fresh review.
 
 ## Phase 3: Prettier + Commit
 
@@ -102,11 +107,11 @@ git diff --name-only | xargs git add && git commit -m "prettier"
 Run all three in parallel:
 
 ```bash
-gh pr diff > .tmp/pr-diff.txt
+gh pr diff > .tmp/pr/<number>/pr-diff.txt
 ```
 
 ```bash
-gh pr view --json comments,reviews --jq '.comments[].body, .reviews[].body' > .tmp/pr-comments.txt 2>/dev/null
+gh pr view --json comments,reviews --jq '.comments[].body, .reviews[].body' > .tmp/pr/<number>/pr-comments.txt 2>/dev/null
 ```
 
 ```bash
@@ -130,15 +135,15 @@ Read based on changed paths:
 | `src/core/` or `src/store/` | `docs/architecture.md` (dependency layers) |
 | `docs/game/` | Verify against existing `docs/game/` files |
 
-Now read `.tmp/pr-diff.txt`. If it exceeds 800 lines, read in 500-line chunks, processing each chunk before moving on.
+Now read `.tmp/pr/<number>/pr-diff.txt`. If it exceeds 800 lines, read in 500-line chunks, processing each chunk before moving on.
 
 ## Phase 5: ESLint
 
 ```bash
-pnpm lint 2>&1 | head -200 > .tmp/eslint-output.txt; echo "EXIT:${PIPESTATUS[0]}" >> .tmp/eslint-output.txt
+pnpm lint 2>&1 | head -200 > .tmp/pr/<number>/eslint-output.txt; echo "EXIT:${PIPESTATUS[0]}" >> .tmp/pr/<number>/eslint-output.txt
 ```
 
-Read `.tmp/eslint-output.txt`. Note exit code and any errors/warnings.
+Read `.tmp/pr/<number>/eslint-output.txt`. Note exit code and any errors/warnings.
 
 ## Phase 6: Analyze
 
@@ -158,11 +163,11 @@ Check these categories. For each, the source of truth is the doc file, not this 
 
 ## Phase 7: Write Review
 
-**Incremental mode** (existing `.tmp/pr-review.md` for the same PR): Read the existing file. Keep all existing findings and their resolutions exactly as-is. Append any newly discovered findings that are not already covered. Do not duplicate findings. Do not remove or reword existing entries. Update the ESLint section and review date. Add new files to "Files Reviewed" if not already listed. If the file has a `## Dismissed` section, do not re-flag any finding whose title matches a dismissed entry.
+**Incremental mode** (existing `.tmp/pr/<number>/pr-review.md`): Read the existing file. Keep all existing findings and their resolutions exactly as-is. Append any newly discovered findings that are not already covered. Do not duplicate findings. Do not remove or reword existing entries. Update the ESLint section and review date. Add new files to "Files Reviewed" if not already listed. If the file has a `## Dismissed` section, do not re-flag any finding whose title matches a dismissed entry.
 
-**Fresh mode** (no existing file, or different PR): Create `.tmp/pr-review.md` from scratch.
+**Fresh mode** (file does not exist): Create `.tmp/pr/<number>/pr-review.md` from scratch.
 
-Write `.tmp/pr-review.md` in the repo root with this structure:
+Write `.tmp/pr/<number>/pr-review.md` with this structure:
 
 ```markdown
 # PR Review: #<number> — <title>
@@ -225,9 +230,9 @@ Each item ends with:
 
 ## Artifacts
 
-- `.tmp/pr-diff.txt` — full PR diff
-- `.tmp/pr-comments.txt` — PR comments and reviews
-- `.tmp/eslint-output.txt` — ESLint output
+- `.tmp/pr/<number>/pr-diff.txt` — full PR diff
+- `.tmp/pr/<number>/pr-comments.txt` — PR comments and reviews
+- `.tmp/pr/<number>/eslint-output.txt` — ESLint output
 ```
 
 **If no findings in a section:** Write "None." — do not omit the section.
@@ -267,7 +272,7 @@ When in doubt, leave `**Resolution:**` empty — a wrong pre-fill is worse than 
 
 Tell the user:
 
-> PR review written to `.tmp/pr-review.md`.
+> PR review written to `.tmp/pr/<number>/pr-review.md`.
 >
 > **Critical:** <count> | **Suggestions:** <count> | **Observations:** <count>
 > **Auto-resolvable:** <count> (run `/resolve-review` to apply)
@@ -286,7 +291,7 @@ If not authenticated: `gh auth login`.
 
 ### Diff too large to process
 
-If `.tmp/pr-diff.txt` exceeds 3000 lines, focus on files matching `src/features/` and `src/infrastructure/` first. Note skipped files in the review under a "Skipped (large diff)" section.
+If `.tmp/pr/<number>/pr-diff.txt` exceeds 3000 lines, focus on files matching `src/features/` and `src/infrastructure/` first. Note skipped files in the review under a "Skipped (large diff)" section.
 
 ### PR has no diff
 
