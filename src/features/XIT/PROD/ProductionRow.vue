@@ -120,7 +120,7 @@ const tooltipText = computed(() => {
 }
 
 .noPadding {
-  padding: 0px;
+  padding: 0;
 }
 
 .buildingContainer {

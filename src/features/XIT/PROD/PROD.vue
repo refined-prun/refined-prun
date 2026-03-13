@@ -71,7 +71,7 @@ const planetProduction = computed<PlanetProduction[]>(() => {
         return true;
       }
       if (
-        productionLines.reduce((sum, line) => sum + line.queuedOrders.length, 0) == 0 &&
+        productionLines.reduce((sum, line) => sum + line.queuedOrders.length, 0) === 0 &&
         notqueued.value
       ) {
         return true;

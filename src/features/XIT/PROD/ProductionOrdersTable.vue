@@ -155,7 +155,7 @@ const formatTime = (ts: number) => {
 }
 
 .noPadding {
-  padding: 0px;
+  padding: 0;
 }
 
 .buildingContainer {
@@ -170,7 +170,7 @@ const formatTime = (ts: number) => {
 .orderTable {
   width: 100%;
   font-size: 11px;
-  padding: 0px;
+  padding: 0;
 }
 
 .headerRow th {

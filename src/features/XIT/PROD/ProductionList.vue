@@ -26,7 +26,7 @@ const filteredproduction = computed<PlatformProduction[]>(() => {
       if (productionLines.queuedOrders.length > 0 && queue.value) {
         return true;
       }
-      if (productionLines.queuedOrders.length == 0 && notqueued.value) {
+      if (productionLines.queuedOrders.length === 0 && notqueued.value) {
         return true;
       }
 
