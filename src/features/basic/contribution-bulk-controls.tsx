@@ -8,20 +8,22 @@ function onTileReady(tile: PrunTile) {
     if (sliders.length === 0 || !contributeContainer) {
       return;
     }
-    const maxSliders = () => {
+    const maxSliders = async () => {
       for (const slider of sliders) {
         if (slider.classList.contains('rc-slider-disabled')) {
           continue;
         }
-        $(slider, 'rc-slider-mark').then(x => clickElement(x.lastElementChild as HTMLElement));
+        const mark = await $(slider, 'rc-slider-mark');
+        await clickElement(mark.lastElementChild as HTMLElement);
       }
     };
-    const minSliders = () => {
+    const minSliders = async () => {
       for (const slider of sliders) {
         if (slider.classList.contains('rc-slider-disabled')) {
           continue;
         }
-        $(slider, 'rc-slider-mark').then(x => clickElement(x.firstElementChild as HTMLElement));
+        const mark = await $(slider, 'rc-slider-mark');
+        await clickElement(mark.firstElementChild as HTMLElement);
       }
     };
     const disabled = sliders.every(x => x.classList.contains('rc-slider-disabled'));

@@ -2,11 +2,12 @@ import { clickElement } from '@src/util';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'table'), table => {
-    subscribe($$(table, 'rc-slider'), slider => {
+    subscribe($$(table, 'rc-slider'), async slider => {
       if (slider.classList.contains('rc-slider-disabled')) {
         return;
       }
-      $(slider, 'rc-slider-mark').then(x => clickElement(x.lastElementChild as HTMLElement));
+      const mark = await $(slider, 'rc-slider-mark');
+      await clickElement(mark.lastElementChild as HTMLElement);
     });
   });
 }
