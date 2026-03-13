@@ -2,9 +2,56 @@
 
 ## Unreleased
 
+### Added
+
+- `contribution-bulk-controls`: Adds NONE/ALL buttons to contribution sections
+- `contribution-maxed`: Automatically maxes contribution sliders in CoGC and population upkeep tiles
+- `flt-flex-fuel`: Allows the fuel column layout to better use available space
+- `sysi-blue-negative-value`: Makes lower negative planet values blue instead of red
+
+### Changed
+
+- `XIT CONTS`: Add missing condition labels
+- `XIT CONTC`: Add missing condition descriptions
+- `flt-ship-condition`: Restore red/yellow thresholds; red at 79%, yellow at 81%
+
+### Fixed
+
+- `prun-bugs`: Fix the dot / arrow in system info being left skewed
+- `prun-bugs`: Fix layout shift when selecting inventory grid items
+- `prun-bugs`: Fix slider dot stretching and cursor styles
+- `prun-bugs`: Disable POPID sliders that can't be filled due to full reserves
+- Fix financial data collection failure when the user has no warehouses
+
+## 26.1.24
+
+### Added
+
+- `expand-sidebar-contract-list`: Fully expands the contracts list in the sidebar
+- `mat-refined-prun-price`: Adds a "Refined PrUn Price" row
+
+### Changed
+
+- `flt-ship-condition`: Move the yellow condition threshold to 80% and remove the red one
+
+### Fixed
+
+- `XIT ACT`: Fix errors related to orbiting ships
+- `XIT FINCH`: Fix the Y axis labels fraction digits
+- `XIT GIF`: Fix pillarboxing
+- `browser-tab-name`: Fix ghost notifications
+- `other-context-notification-count`: Fix ghost notifications (once and for all, I hope)
+
+### Removed
+
+- `cxpc-default-1y`: This feature had too many edge cases
+
+## 26.1.15
+
 ### Changed
 
 - `XIT FINCH`: Add a "(Partial)" suffix to the equity chart if the full equity mode is disabled
+- `XIT GIF`: Switch from Giphy to Klipy
 
 ### Fixed
 
