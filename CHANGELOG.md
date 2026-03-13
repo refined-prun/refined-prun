@@ -15,6 +15,7 @@
 ### Fixed
 
 - `prun-bugs`: Fix the dot / arrow in system info being left skewed
+- `prun-bugs`: Fix layout shift when selecting inventory grid items
 - Fix financial data collection failure when the user has no warehouses
 
 ## 26.1.24
