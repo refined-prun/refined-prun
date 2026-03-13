@@ -110,30 +110,30 @@ const formatTime = (ts: number) => {
       <thead>
         <tr v-if="headers" :class="$style.headerRow">
           <th colspan="2">Order</th>
-          <th :class="$style.right">Qty</th>
-          <th :class="$style.right">Status / ETA</th>
+          <th :class="$style.numericColumn">Qty</th>
+          <th :class="$style.numericColumn">Status / ETA</th>
         </tr>
       </thead>
       <tbody>
         <tr
           v-for="(group, index) in allStackedOrders"
           :key="(group.isQueued ? 'q-' : 'a-') + group.ticker + (group.ts || index)">
-          <td :class="[$style.noPadding, $style.buildingContainer]">
+          <td :class="[$style.iconCell, $style.buildingContainer]">
             <MaterialIcon :ticker="group.ticker" size="inline-table" />
           </td>
           <td>
             <span v-if="group.count > 1" :class="$style.stackCount">x{{ group.count }}</span>
           </td>
-          <td :class="$style.right">{{ group.isPlaceholder ? '-' : group.amount }}</td>
+          <td :class="$style.numericColumn">{{ group.isPlaceholder ? '-' : group.amount }}</td>
 
           <td
             :class="[
-              $style.right,
+              $style.numericColumn,
               group.isPlaceholder
-                ? $style.dangerText
+                ? $style.placeholderStatus
                 : group.isQueued
-                  ? $style.muted
-                  : $style.activeText,
+                  ? $style.queuedStatus
+                  : $style.activeStatus,
             ]">
             <template v-if="group.isPlaceholder">
               {{ group.label }}
@@ -149,13 +149,13 @@ const formatTime = (ts: number) => {
 </template>
 
 <style module>
-.dangerText {
+.placeholderStatus {
   /* Standard red for warnings/missing items. */
   color: #d9534f;
   font-weight: bold;
 }
 
-.noPadding {
+.iconCell {
   padding: 0;
 }
 
@@ -183,7 +183,7 @@ const formatTime = (ts: number) => {
   border-bottom: 1px solid inherit;
 }
 
-.right {
+.numericColumn {
   text-align: right;
 }
 
@@ -195,11 +195,11 @@ const formatTime = (ts: number) => {
 }
 
 /* Orange for running orders. */
-.activeText {
+.activeStatus {
   color: #f0ad4e;
 }
 
-.muted {
+.queuedStatus {
   color: var(--font-color-disabled);
   opacity: 0.7;
 }

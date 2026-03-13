@@ -69,7 +69,7 @@ const tooltipText = computed(() => {
 
 <template>
   <tr :class="[$style.row]">
-    <td :class="[$style.buildingContainer, $style.noPadding, $style.flex]">
+    <td :class="$style.buildingContainer">
       <BuildingIcon size="inline-table" :ticker="productionLine.reactorTicker" />
     </td>
 
@@ -85,7 +85,7 @@ const tooltipText = computed(() => {
     </td>
     <FracCell :numerator="activeOrders" :denominator="capacity" />
     <td>
-      <div :class="[$style.flex, $style.buttons]">
+      <div :class="$style.buttons">
         <PrunButton dark inline @click="showBuffer(`PRODCO ${productionLine.id}`)">CO</PrunButton>
         <PrunButton dark inline @click="showBuffer(`PRODQ ${productionLine.id}`)">Q</PrunButton>
       </div>
@@ -95,7 +95,7 @@ const tooltipText = computed(() => {
     <td colspan="1">
       <div></div>
     </td>
-    <td colspan="4" :class="$style.noPadding">
+    <td colspan="4" :class="$style.ordersCell">
       <ProductionOrdersTable :production-line="productionLine" :headers="headers" />
     </td>
   </tr>
@@ -107,30 +107,25 @@ const tooltipText = computed(() => {
 }
 
 .buttons {
+  display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   column-gap: 0.25rem;
 }
 
-.flex {
-  display: flex;
-}
-
-.noPadding {
+.ordersCell {
   padding: 0;
 }
 
 .buildingContainer {
+  display: flex;
   width: 32px;
   height: 18px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   line-height: 0;
-}
-
-.spacer {
-  flex-grow: 1;
+  padding: 0;
 }
 
 .trigger {
