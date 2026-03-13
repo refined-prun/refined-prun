@@ -34,48 +34,47 @@ const productionMap = computed<Record<string, PlanetProduction>>(() => {
   const allSites = sitesStore.all.value;
   if (!allSites) return {};
 
-  return allSites.reduce(
-    (acc, site) => {
-      const id = site.siteId;
-      const lines = productionStore.getBySiteId(id) ?? [];
-      const storage = storagesStore.getByAddressableId(id);
+  const result: Record<string, PlanetProduction> = {};
 
-      const production: PlatformProduction[] = lines.map(line => {
-        const platform = site.platforms.find(
-          p => p.module.id === line.id || p.module.reactorName === line.type,
-        );
+  for (const site of allSites) {
+    const id = site.siteId;
+    const lines = productionStore.getBySiteId(id) ?? [];
+    const storage = storagesStore.getByAddressableId(id);
 
-        const activeOrders = line.orders.filter(o => o.started !== null && !o.halted);
-        const queuedOrders = line.orders.filter(o => o.started === null || o.halted);
+    const production: PlatformProduction[] = lines.map(line => {
+      const platform = site.platforms.find(
+        p => p.module.id === line.id || p.module.reactorName === line.type,
+      );
 
-        return {
-          id: line.id,
-          reactorTicker: platform?.module.reactorTicker ?? line.type,
-          capacity: line.capacity,
-          activeCapacity: activeOrders.length,
-          inactiveCapacity: Math.max(0, line.capacity - activeOrders.length),
-          condition: line.condition,
-          efficiency: line.efficiency,
-          efficiencyFactors: line.efficiencyFactors,
-          orders: activeOrders,
-          queuedOrders: queuedOrders,
-        };
-      });
+      const activeOrders = line.orders.filter(o => o.started !== null && !o.halted);
+      const queuedOrders = line.orders.filter(o => o.started === null || o.halted);
 
-      acc[id] = {
-        storeId: storage?.[0]?.id ?? '',
-        planetName: getEntityNameFromAddress(site.address) || '',
-        naturalId: getEntityNaturalIdFromAddress(site.address) || '',
-        site: site,
-        platforms: site.platforms,
-        lines: lines,
-        production: production,
+      return {
+        id: line.id,
+        reactorTicker: platform?.module.reactorTicker ?? line.type,
+        capacity: line.capacity,
+        activeCapacity: activeOrders.length,
+        inactiveCapacity: Math.max(0, line.capacity - activeOrders.length),
+        condition: line.condition,
+        efficiency: line.efficiency,
+        efficiencyFactors: line.efficiencyFactors,
+        orders: activeOrders,
+        queuedOrders,
       };
+    });
 
-      return acc;
-    },
-    {} as Record<string, PlanetProduction>,
-  );
+    result[id] = {
+      storeId: storage?.[0]?.id ?? '',
+      planetName: getEntityNameFromAddress(site.address) || '',
+      naturalId: getEntityNaturalIdFromAddress(site.address) || '',
+      site,
+      platforms: site.platforms,
+      lines,
+      production,
+    };
+  }
+
+  return result;
 });
 
 export function getPlanetProduction(
