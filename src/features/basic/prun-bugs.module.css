@@ -77,12 +77,15 @@
 }
 
 .rcSliderDotFixes {
-  transform: none !important; /* This fixes a bug(?) that stretches the dots weirdly */
-  cursor: inherit; /* The dots aren't actually clickable (previously was 'pointer')*/
+  /* Fixes a bug(?) that stretches the dots weirdly. */
+  transform: none !important;
+  /* The dots aren't actually clickable (previously was 'pointer'). */
+  cursor: inherit;
 }
 
 .rcSliderHandleFixes {
-  cursor: grab; /* this is a click-and-drag thing not a button */
+  /* This is a click-and-drag thing, not a button. */
+  cursor: grab;
 }
 
 .rcSliderHandleDisabledFixes {
@@ -90,7 +93,8 @@
 }
 
 .rcSliderStepFixes {
-  cursor: pointer; /* previously no indication that you could click this */
+  /* Previously no indication that you could click this. */
+  cursor: pointer;
 }
 
 .rcSliderStepDisabledFixes {
