@@ -18,5 +18,5 @@ function init() {
 features.add(
   import.meta.url,
   init,
-  'COGCU, POPID: Automatically maxes the contribution sliders in CoGC and population upkeep tiles.',
+  'Automatically maxes the contribution sliders in CoGC and population upkeep tiles.',
 );

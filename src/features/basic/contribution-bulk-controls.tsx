@@ -45,5 +45,5 @@ function init() {
 features.add(
   import.meta.url,
   init,
-  'COGCU, POPID: Adds bulk controls (NONE, ALL) to contribution menus in CoGC and population upkeep tiles.',
+  'Adds bulk controls (NONE, ALL) to contribution menus in CoGC and population upkeep tiles.',
 );
