@@ -41,31 +41,27 @@ const tooltipText = computed(() => {
 
   lines.push(''); // Add a spacer
 
-  productionLine.efficiencyFactors.forEach(factor => {
-    // Only map labels that aren't a simple capitalization of the key
-    const labels: Partial<Record<PrunApi.EfficiencyFactorType, string>> = {
-      COGC_PROGRAM: 'COGC',
-      COMPANY_HEADQUARTERS: 'HQ',
-      PRODUCTION_LINE_CONDITION: 'Condition',
-    };
+  const labels: Partial<Record<PrunApi.EfficiencyFactorType, string>> = {
+    COGC_PROGRAM: 'COGC',
+    COMPANY_HEADQUARTERS: 'HQ',
+    PRODUCTION_LINE_CONDITION: 'Condition',
+  };
 
-    const capitalize = (str: string) => {
-      return str
-        .split('_')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(' ');
-    };
+  const capitalize = (str: string) => {
+    return str
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
 
-    // Use the mapped label if it exists; otherwise, capitalize the raw type
+  for (const factor of productionLine.efficiencyFactors) {
     const rawLabel = labels[factor.type] || factor.type;
     const label = capitalize(rawLabel);
-
-    // Fix capitalization for the expertise category as well
     const category = factor.expertiseCategory ? ` (${capitalize(factor.expertiseCategory)})` : '';
 
     lines.push(`${label}${category}: ${percent2(factor.value)}`);
-    lines.push(''); // Add a spacer
-  });
+    lines.push('');
+  }
 
   //const fixedWidth = 22;
   //\u00A0
