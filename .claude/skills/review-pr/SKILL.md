@@ -158,7 +158,7 @@ Check these categories. For each, the source of truth is the doc file, not this 
 
 ## Phase 7: Write Review
 
-**Incremental mode** (existing `.tmp/pr-review.md` for the same PR): Read the existing file. Keep all existing findings and their resolutions exactly as-is. Append any newly discovered findings that are not already covered. Do not duplicate findings. Do not remove or reword existing entries. Update the ESLint section and review date. Add new files to "Files Reviewed" if not already listed.
+**Incremental mode** (existing `.tmp/pr-review.md` for the same PR): Read the existing file. Keep all existing findings and their resolutions exactly as-is. Append any newly discovered findings that are not already covered. Do not duplicate findings. Do not remove or reword existing entries. Update the ESLint section and review date. Add new files to "Files Reviewed" if not already listed. If the file has a `## Dismissed` section, do not re-flag any finding whose title matches a dismissed entry.
 
 **Fresh mode** (no existing file, or different PR): Create `.tmp/pr-review.md` from scratch.
 
@@ -241,6 +241,22 @@ Each item ends with:
 
 Be specific enough that someone reading only the Basis can understand the fix without re-reading the full doc.
 
+**Pre-filled resolutions** — If a finding has exactly one unambiguous mechanical fix derivable from the Basis alone (no design judgment), pre-fill the `**Resolution:**` field with a short instruction. This lets `/resolve-review` batch-process trivial fixes without manual editing.
+
+Examples of pre-fillable fixes:
+- Import reordering → `**Resolution:** Reorder alphabetically.`
+- `==` → `===` → `**Resolution:** Use strict equality.`
+- Missing `await` → `**Resolution:** Add await.`
+- Null guard on `textContent` → `**Resolution:** Add ! assertion.`
+
+Do NOT pre-fill if the fix requires:
+- Restructuring code or changing approach
+- Choosing between multiple valid alternatives
+- Game knowledge or domain understanding
+- Design judgment about UX or feature behavior
+
+When in doubt, leave `**Resolution:**` empty — a wrong pre-fill is worse than none.
+
 ## Phase 8: Report
 
 Tell the user:
@@ -248,6 +264,7 @@ Tell the user:
 > PR review written to `.tmp/pr-review.md`.
 >
 > **Critical:** <count> | **Suggestions:** <count> | **Observations:** <count>
+> **Auto-resolvable:** <count> (run `/resolve-review` to apply)
 > **ESLint:** <pass/fail> (<error count> errors, <warning count> warnings)
 > **Prettier:** <committed/no changes>
 

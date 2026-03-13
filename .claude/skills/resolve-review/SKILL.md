@@ -87,11 +87,21 @@ Process each actionable finding in order (Critical first, then Suggestions, then
 
 For each finding:
 
-### 4a: Apply the Fix
+### 4a: Apply the Resolution
 
-Use the `**Basis:**` to understand the rule and the `**Resolution:**` to understand what the user wants done. Apply the code changes.
+Use the `**Basis:**` to understand the rule and the `**Resolution:**` to understand what the user wants done. Apply code changes if the resolution calls for them.
 
-### 4b: Format and Verify
+### 4b: Check for Changes
+
+```bash
+git diff --stat
+```
+
+**If changes exist** → this is a **fix**. Continue to 4c.
+
+**If no changes** → this is a **dismissal** (the user's resolution was an explanation, not a fix instruction). Skip to 4d.
+
+### 4c: Format, Verify, and Commit (fixes only)
 
 ```bash
 pnpm prettier
@@ -102,8 +112,6 @@ pnpm lint 2>&1 | tail -20
 ```
 
 **If lint fails on the changed file:** Fix the lint error before proceeding.
-
-### 4c: Commit
 
 Stage all changed source files (including prettier changes, but not `.tmp/pr-review.md`) and commit:
 
@@ -117,9 +125,16 @@ Commit message should describe the code change, not the review finding. Examples
 - `Fix import order in basic/index.ts`
 - `Use === instead of == for undefined check`
 
-### 4d: Remove Finding from Review
+### 4d: Update Review File
 
-After a successful commit, remove the entire finding block from `.tmp/pr-review.md` — from the bold title through the `---` separator (inclusive). If the section (Critical/Suggestions/Observations) becomes empty after removal, replace its content with "None."
+**If fix (4c completed):** Remove the entire finding block from `.tmp/pr-review.md` — from the bold title through the `---` separator (inclusive). If the section (Critical/Suggestions/Observations) becomes empty after removal, replace its content with "None."
+
+**If dismissal (no code changes):** Remove the finding block from its section (same as above). Then append a one-liner to the `## Dismissed` section at the bottom of the file (create the section before `## Files Reviewed` if it doesn't exist):
+
+```markdown
+## Dismissed
+- <finding title> — <resolution text, truncated to ~80 chars>
+```
 
 Do NOT commit the `.tmp/pr-review.md` changes — just keep the file updated on disk as a running tracker.
 
@@ -128,17 +143,18 @@ Do NOT commit the `.tmp/pr-review.md` changes — just keep the file updated on 
 Tell the user:
 
 > **Resolved:** N findings (N commits)
+> **Dismissed:** N findings (no code changes)
 > **Skipped:** N findings (no resolution notes)
 >
-> Updated `.tmp/pr-review.md` — resolved findings removed.
+> Updated `.tmp/pr-review.md` — resolved findings removed, dismissed findings compacted.
 
 **If skipped findings remain:**
 
 > Run `/resolve-review` again after adding resolution notes to the remaining findings.
 
-**If all findings resolved:**
+**If all findings resolved or dismissed:**
 
-> All findings resolved. Consider running `/review-pr` to check for new issues introduced by the fixes.
+> All findings addressed. Consider running `/review-pr` to check for new issues introduced by the fixes.
 
 ## Troubleshooting
 
