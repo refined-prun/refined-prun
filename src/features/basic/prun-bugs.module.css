@@ -86,17 +86,17 @@
 .rcSliderHandleFixes {
   /* This is a click-and-drag thing, not a button. */
   cursor: grab;
-}
 
-.rcSliderHandleDisabledFixes {
-  cursor: not-allowed;
+  .rc-slider-disabled & {
+    cursor: not-allowed;
+  }
 }
 
 .rcSliderStepFixes {
   /* Previously no indication that you could click this. */
   cursor: pointer;
-}
 
-.rcSliderStepDisabledFixes {
-  cursor: not-allowed;
+  .rc-slider-disabled & {
+    cursor: not-allowed;
+  }
 }

@@ -63,9 +63,7 @@ function fixZOrder() {
 function fixSliders() {
   applyCssRule('.rc-slider-dot', $style.rcSliderDotFixes);
   applyCssRule('.rc-slider-handle', $style.rcSliderHandleFixes);
-  applyCssRule('.rc-slider-disabled .rc-slider-handle', $style.rcSliderHandleDisabledFixes);
   applyCssRule('.rc-slider-step', $style.rcSliderStepFixes);
-  applyCssRule('.rc-slider-disabled .rc-slider-step', $style.rcSliderStepDisabledFixes);
 }
 
 function init() {
