@@ -2,10 +2,13 @@ import { clickElement } from '@src/util';
 import PrunButton from '@src/components/PrunButton.vue';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, 'table'), table => {
+  subscribe($$(tile.anchor, C.Contribution.contribute), contribute => {
+    const table = contribute.previousElementSibling;
+    if (!table) {
+      return;
+    }
     const sliders = _$$(table, 'rc-slider');
-    const contributeContainer = table.nextSibling as HTMLDivElement | null;
-    if (sliders.length === 0 || !contributeContainer) {
+    if (sliders.length === 0) {
       return;
     }
     const maxSliders = async () => {
@@ -31,12 +34,12 @@ function onTileReady(tile: PrunTile) {
       <PrunButton primary disabled={disabled} onClick={maxSliders}>
         ALL
       </PrunButton>
-    )).prependTo(contributeContainer);
+    )).prependTo(contribute);
     createFragmentApp(() => (
       <PrunButton primary disabled={disabled} onClick={minSliders}>
         NONE
       </PrunButton>
-    )).prependTo(contributeContainer);
+    )).prependTo(contribute);
   });
 }
 

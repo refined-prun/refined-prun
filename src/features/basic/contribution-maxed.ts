@@ -1,7 +1,11 @@
 import { clickElement } from '@src/util';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, 'table'), table => {
+  subscribe($$(tile.anchor, C.Contribution.contribute), async contribute => {
+    const table = contribute.previousElementSibling;
+    if (!table) {
+      return;
+    }
     subscribe($$(table, 'rc-slider'), async slider => {
       if (slider.classList.contains('rc-slider-disabled')) {
         return;
