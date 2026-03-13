@@ -4,6 +4,8 @@
 
 ### Added
 
+- `contribution-bulk-controls`: Adds NONE/ALL buttons to contribution sections
+- `contribution-maxed`: Automatically maxes contribution sliders in CoGC and population upkeep tiles
 - `flt-flex-fuel`: Allows the fuel column layout to better use available space
 - `sysi-blue-negative-value`: Makes lower negative planet values blue instead of red
 
@@ -17,6 +19,8 @@
 
 - `prun-bugs`: Fix the dot / arrow in system info being left skewed
 - `prun-bugs`: Fix layout shift when selecting inventory grid items
+- `prun-bugs`: Fix slider dot stretching and cursor styles
+- `prun-bugs`: Disable POPID sliders that can't be filled due to full reserves
 - Fix financial data collection failure when the user has no warehouses
 
 ## 26.1.24
