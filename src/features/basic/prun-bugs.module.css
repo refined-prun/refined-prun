@@ -18,6 +18,12 @@
 
 .gridItem {
   background-color: unset;
+  border: 1px solid rgba(63, 162, 222, 0.0);
+}
+
+.gridItemSelected {
+  background-color: rgba(63, 162, 222, 0.15);
+  border: 1px solid rgba(63, 162, 222, 0.5);
 }
 
 .gridItemName {
