@@ -150,7 +150,8 @@ const formatTime = (ts: number) => {
 
 <style module>
 .dangerText {
-  color: #d9534f; /* Standard red for warnings/missing items */
+  /* Standard red for warnings/missing items. */
+  color: #d9534f;
   font-weight: bold;
 }
 
@@ -187,17 +188,17 @@ const formatTime = (ts: number) => {
 }
 
 .stackCount {
+  /* FIO primary blue. */
   color: #3faabf;
-  /* FIO Primary-ish blue */
   font-weight: bold;
   margin-left: 4px;
 }
 
+/* Orange for running orders. */
 .activeText {
   color: #f0ad4e;
 }
 
-/* Orange for running orders */
 .muted {
   color: var(--font-color-disabled);
   opacity: 0.7;

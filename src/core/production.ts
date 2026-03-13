@@ -69,7 +69,7 @@ const productionMap = computed<Record<string, PlanetProduction>>(() => {
         site: site,
         platforms: site.platforms,
         lines: lines,
-        production: production, // The structured data
+        production: production,
       };
 
       return acc;
