@@ -40,7 +40,7 @@ function disableInvalidPopidSliders(tile: PrunTile) {
       if (reserveBar.value - sliderValue + sliderMax > reserveBar.max) {
         // If the slider is filled, disabling it could lock it in an invalid position.
         // So, we first minimize the slider value by clicking the min mark.
-        clickElement(sliderMarks[0] as HTMLElement);
+        await clickElement(sliderMarks[0] as HTMLElement);
         slider.classList.add('rc-slider-disabled');
         slider.style.pointerEvents = 'none';
       }
