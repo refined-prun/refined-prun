@@ -14,18 +14,8 @@ function updateSidebarLine(
   }
 
   const amount = balances.find(x => x.currency === currencyCode)?.amount;
-  const amountText = _$(sidebarLine, C.Sidebar.amount)?.textContent?.trim() ?? '';
-  const isZero = amount === 0 || isDisplayedZeroAmount(amountText);
+  const isZero = amount === 0;
   sidebarLine.classList.toggle(css.hidden, isZero);
-}
-
-function isDisplayedZeroAmount(text: string) {
-  const compact = text.replaceAll('\u00A0', '').replaceAll(' ', '');
-  const normalized = compact.replaceAll(',', '');
-  if (normalized === '') {
-    return false;
-  }
-  return Number(normalized) === 0;
 }
 
 function updateSidebarLines() {
