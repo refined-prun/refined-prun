@@ -1,7 +1,7 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 
-const store = createEntityStore<PrunApi.FlightPlan>(x => x.missionId);
+const store = createEntityStore<PrunApi.FlightPlan>({ selectId: x => x.missionId });
 const state = store.state;
 
 onApiMessage({
