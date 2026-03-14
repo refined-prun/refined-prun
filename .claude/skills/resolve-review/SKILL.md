@@ -102,17 +102,24 @@ For each finding:
 
 Use the `**Basis:**` to understand the rule and the `**Resolution:**` to understand what the user wants done. Apply code changes if the resolution calls for them.
 
-### 4b: Check for Changes
+### 4b: Classify the Resolution
+
+Determine the resolution type from the user's text:
+
+- **Dismissal** — resolution says "dismiss", "ignore", "its okay", "not applicable", or similar language indicating the finding should be dropped without code changes.
+- **Fix** — resolution contains instructions for code changes. Apply the fix.
+
+### 4c: Apply Fix (fixes only)
+
+Apply the code changes described in the resolution.
 
 ```bash
 git diff --stat
 ```
 
-**If changes exist** → this is a **fix**. Continue to 4c.
+**If no changes after applying:** The resolution may reference another finding that handles it (e.g., "will be fixed in suggestion 1"). This is still a fix, not a dismissal — just skip the commit.
 
-**If no changes** → this is a **dismissal** (the user's resolution was an explanation, not a fix instruction). Skip to 4d.
-
-### 4c: Format, Verify, and Commit (fixes only)
+**If changes exist:**
 
 ```bash
 pnpm prettier
@@ -138,9 +145,9 @@ Commit message should describe the code change, not the review finding. Examples
 
 ### 4d: Update Review File
 
-**If fix (4c completed):** Remove the entire finding block from `.tmp/pr/<number>/pr-review.md` — from the bold title through the `---` separator (inclusive). If the section (Critical/Suggestions/Observations) becomes empty after removal, replace its content with "None."
+**If fix (4c):** Remove the entire finding block from `.tmp/pr/<number>/pr-review.md` — from the bold title through the `---` separator (inclusive). If the section (Critical/Suggestions/Observations) becomes empty after removal, replace its content with "None."
 
-**If dismissal (no code changes):** Remove the finding block from its section (same as above). Then append a one-liner to the `## Dismissed` section at the bottom of the file (create the section before `## Files Reviewed` if it doesn't exist):
+**If dismissal (4b):** Remove the finding block from its section (same as above). Then append a one-liner to the `## Dismissed` section at the bottom of the file (create the section before `## Files Reviewed` if it doesn't exist):
 
 ```markdown
 ## Dismissed
