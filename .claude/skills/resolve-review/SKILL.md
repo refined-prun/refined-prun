@@ -156,6 +156,10 @@ Commit message should describe the code change, not the review finding. Examples
 
 Do NOT commit the `.tmp/pr/<number>/pr-review.md` changes — just keep the file updated on disk as a running tracker.
 
+## Phase 4e: Renumber Findings
+
+After all actionable findings have been resolved or dismissed, renumber the remaining findings in `.tmp/pr/<number>/pr-review.md` sequentially starting from 1. Numbering is continuous across sections (Critical, then Suggestions, then Observations). This eliminates gaps left by removed findings.
+
 ## Phase 5: Report
 
 Tell the user:

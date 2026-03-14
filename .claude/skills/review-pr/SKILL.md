@@ -11,6 +11,8 @@ Analyze a PR and produce a structured review in `.tmp/pr/<number>/pr-review.md`.
 
 **Principle:** Never assume how the game works. Flag any change that assumes game mechanics without doc backing.
 
+**Principle:** Only review code that appears in the diff. Do not review unchanged code in changed files. Do not suggest improvements to code outside the PR's scope unless it has a direct connection to the changed code.
+
 ## Phase 1: Pre-flight
 
 ```bash
@@ -191,6 +193,10 @@ Write `.tmp/pr/<number>/pr-review.md` with this structure:
 <If fail: list errors and warnings grouped by file. Brief — path + message only.>
 
 <If pass: "No errors or warnings.">
+
+## Strengths
+
+<1-3 brief bullet points noting what the PR does well — e.g., clean decomposition, good use of existing patterns, solid data modeling. Only include genuinely notable positives. If nothing stands out, write "None." Do not pad with generic praise.>
 
 ## Findings
 
