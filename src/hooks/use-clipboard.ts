@@ -3,7 +3,12 @@ export function useClipboard() {
   let timeout: ReturnType<typeof setTimeout> | undefined;
 
   async function copy(text: string) {
-    await navigator.clipboard.writeText(text);
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (e) {
+      console.error('Failed to copy to clipboard', e);
+      return;
+    }
     copied.value = true;
     clearTimeout(timeout);
     timeout = setTimeout(() => {
