@@ -9,14 +9,12 @@ import { useTileState } from '@src/features/XIT/BURN/tile-state';
 import Tooltip from '@src/components/Tooltip.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import MaterialRow from '@src/features/XIT/BURN/MaterialRow.vue';
-import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { countDays } from '@src/features/XIT/BURN/utils';
+import { countDays, getSortedTickers } from '@src/features/XIT/BURN/utils';
 import InlineFlex from '@src/components/InlineFlex.vue';
 import { findWithQuery } from '@src/utils/find-with-query';
 import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
-import { sortMaterials } from '@src/core/sort-materials';
 import { useClipboard } from '@src/hooks/use-clipboard';
 
 const parameters = useXitParameters();
@@ -167,11 +165,8 @@ function onExpandAllClick() {
   }
 }
 
-function getSortedTickers(burn: PlanetBurn) {
-  const materials = Object.keys(burn.burn).map(materialsStore.getByTicker);
-  return sortMaterials(materials.filter(x => x !== undefined));
-}
-
+// Exports all materials regardless of active color filters (RED/YELLOW/GREEN/INF)
+// so spreadsheet users always get the complete dataset.
 function formatBurnTable(burns: PlanetBurn[]) {
   const lines = ['Planet\tTicker\tInv\tBurn/day\tDays'];
   for (const planet of burns) {

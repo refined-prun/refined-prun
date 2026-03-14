@@ -13,6 +13,7 @@ import { vDraggable } from 'vue-draggable-plus';
 import { grip } from '@src/components/grip';
 import GripCell from '@src/components/grip/GripCell.vue';
 import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
+import { useClipboard } from '@src/hooks/use-clipboard';
 
 const parameters = useXitParameters();
 const storeId = parameters[0];
@@ -47,9 +48,10 @@ function deleteSortingMode(ev: Event, sorting: UserData.SortingMode) {
   );
 }
 
+const { copy } = useClipboard();
+
 async function copySortingMode(sorting: UserData.SortingMode) {
-  const json = JSON.stringify(sorting);
-  await navigator.clipboard.writeText(json);
+  await copy(JSON.stringify(sorting));
 }
 
 async function pasteSortingMode(ev: Event) {
