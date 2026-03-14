@@ -2,6 +2,11 @@ import js from '@eslint/js';
 import ts from 'typescript-eslint';
 import vue from 'eslint-plugin-vue';
 import prettier from 'eslint-plugin-prettier/recommended';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default ts.config(
   // js
@@ -61,7 +66,9 @@ export default ts.config(
   {
     languageOptions: {
       parserOptions: {
-        project: './tsconfig.json',
+        project: ['./tsconfig.json'],
+        tsconfigRootDir: __dirname,
+        extraFileExtensions: ['.vue'],
         ecmaVersion: 'latest',
       },
     },

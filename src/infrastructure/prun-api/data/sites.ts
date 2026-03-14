@@ -6,7 +6,7 @@ import { createEntityStore } from '@src/infrastructure/prun-api/data/create-enti
 import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 
-const store = createEntityStore<PrunApi.Site>(x => x.siteId);
+const store = createEntityStore<PrunApi.Site>({ selectId: x => x.siteId });
 const state = store.state;
 
 onApiMessage({
@@ -46,10 +46,6 @@ onApiMessage({
   },
 });
 
-const getByShortId = createMapGetter(state.all, x => x.siteId.substring(0, 8));
-
-const getById = (value?: string | null) => state.getById(value) ?? getByShortId(value);
-
 const getByPlanetNaturalId = createMapGetter(
   state.all,
   x => getEntityNaturalIdFromAddress(x.address)!,
@@ -65,7 +61,6 @@ export const getBuildingLastRepair = (building: PrunApi.Platform) =>
 
 export const sitesStore = {
   ...state,
-  getById,
   getByPlanetNaturalId,
   getByPlanetName,
   getByPlanetNaturalIdOrName,

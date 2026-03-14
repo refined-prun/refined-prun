@@ -36,10 +36,6 @@ const isDefault24 = computed(() => {
 const timeFormats = computed(() => {
   return [
     {
-      label: isDefault24.value ? 'Default (24h)' : 'Default (12h)',
-      value: 'DEFAULT',
-    },
-    {
       label: '24h',
       value: '24H',
     },
@@ -48,6 +44,17 @@ const timeFormats = computed(() => {
       value: '12H',
     },
   ] as { label: string; value: UserData.TimeFormat }[];
+});
+
+const timeFormat = computed({
+  get: () => {
+    const format = userData.settings.time;
+    if (format === 'DEFAULT') {
+      return isDefault24.value ? '24H' : '12H';
+    }
+    return format;
+  },
+  set: value => (userData.settings.time = value),
 });
 
 const exchangeChartTypes: { label: string; value: UserData.ExchangeChartType }[] = [
@@ -171,7 +178,7 @@ function confirmResetAllData(ev: Event) {
   <SectionHeader>Appearance</SectionHeader>
   <form>
     <Active label="Time format">
-      <SelectInput v-model="userData.settings.time" :options="timeFormats" />
+      <SelectInput v-model="timeFormat" :options="timeFormats" />
     </Active>
     <Active label="Default CX Chart Type">
       <SelectInput v-model="userData.settings.defaultChartType" :options="exchangeChartTypes" />
