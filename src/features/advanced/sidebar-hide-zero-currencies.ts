@@ -20,21 +20,13 @@ function updateSidebarLines() {
   }
 }
 
-function onSidebarLineReady(sidebarLine: HTMLElement) {
-  sidebarLines.add(sidebarLine);
-  updateSidebarLines();
-}
-
 function init() {
-  subscribe($$(document, C.Sidebar.sidebarLine), onSidebarLineReady);
+  subscribe($$(document, C.Sidebar.sidebarLine), sidebarLine => {
+    sidebarLines.add(sidebarLine);
+    updateSidebarLines();
+  });
 
-  watch(
-    () => balancesStore.all.value,
-    () => {
-      updateSidebarLines();
-    },
-    { deep: true },
-  );
+  watch(() => balancesStore.all.value, updateSidebarLines, { deep: true });
 }
 
 features.add(import.meta.url, init, 'Hides currencies with zero balance in the right sidebar.');
