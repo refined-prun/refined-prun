@@ -38,7 +38,7 @@ export const CONT_TRADE = act.addActionStep<Data>({
 
     const typeLabel = data.tradeType === 'BUYING' ? 'Buy' : 'Sell';
 
-    // Step 1: Create new draft
+    // Step 1: Create new draft.
     await waitAct('Create new draft?');
     const listTile = await requestTile('CONTD');
     if (!listTile) {
@@ -81,7 +81,7 @@ export const CONT_TRADE = act.addActionStep<Data>({
 
     await setDraftNameAndPreamble(ctx2, contractName, preambleText);
 
-    // Step 2: Save draft details (name/preamble)
+    // Step 2: Save draft details (name/preamble).
     await waitAct('Save draft details?');
     await saveDraftDetails(ctx2);
 
@@ -117,7 +117,7 @@ export const CONT_TRADE = act.addActionStep<Data>({
       },
     });
 
-    // Step 3: Set location address
+    // Step 3: Set location address.
     const addressContainers = _$$(draftTile.anchor, C.AddressSelector.container) as HTMLElement[];
     if (addressContainers.length >= 1 && data.location) {
       await waitAct(`Set location to ${data.location}?`);
@@ -131,14 +131,14 @@ export const CONT_TRADE = act.addActionStep<Data>({
 
     setDeadline(ctx2, data.daysToFulfill);
 
-    // Step 4: Apply template
+    // Step 4: Apply template.
     await waitAct('Apply template?');
     const applied = await applyTemplate(ctx2);
     if (!applied) {
       return;
     }
 
-    // Step 5: Save conditions
+    // Step 5: Save conditions.
     await saveConditions(ctx2, waitAct);
 
     log.success(`Contract draft ${newDraft.naturalId} ready to send`);

@@ -45,8 +45,8 @@ export async function selectLocation(container: Element, locationName: string): 
   }
 
   const suggestions = _$$(portal, C.AddressSelector.suggestionContent) as HTMLElement[];
-  const match = suggestions.find(s =>
-    s.textContent?.trim().toLowerCase().includes(locationName.toLowerCase()),
+  const match = suggestions.find(x =>
+    x.textContent?.trim().toLowerCase().includes(locationName.toLowerCase()),
   );
 
   if (!match) {
@@ -72,7 +72,7 @@ export async function selectMaterial(container: Element, ticker: string) {
   suggestionsContainer.style.display = 'none';
 
   const match = _$$(suggestionsList, C.MaterialSelector.suggestionEntry).find(
-    entry => _$(entry, C.ColoredIcon.label)?.textContent === ticker,
+    x => _$(x, C.ColoredIcon.label)?.textContent === ticker,
   );
 
   if (!match) {
@@ -86,7 +86,7 @@ export async function selectMaterial(container: Element, ticker: string) {
   return true;
 }
 
-// --- Shared contract draft helpers ---
+// Shared contract draft helpers.
 
 export interface ContDraftContext {
   draftTile: { anchor: Element };
@@ -106,12 +106,14 @@ export async function createNewDraft(
 
   setStatus('Looking for Create New button...');
 
-  const isCreateNew = (btn: Element) => btn.textContent?.trim().toLowerCase() === 'create new';
+  const isCreateNew = (x: Element) => x.textContent?.trim().toLowerCase() === 'create new';
 
   const findContdButton = () => {
     for (const tile of tiles.find('CONTD', true)) {
       const btn = _$$(tile.anchor, C.Button.btn).find(isCreateNew);
-      if (btn) return { tile, btn };
+      if (btn) {
+        return { tile, btn };
+      }
     }
     return undefined;
   };
@@ -124,12 +126,12 @@ export async function createNewDraft(
 
   const { btn: createBtn } = findContdButton()!;
 
-  const beforeIds = new Set((contractDraftsStore.all.value ?? []).map(d => d.naturalId));
+  const beforeIds = new Set((contractDraftsStore.all.value ?? []).map(x => x.naturalId));
   await clickElement(createBtn);
 
   setStatus('Waiting for draft to be created...');
   const draftAppeared = await waitFor(
-    () => (contractDraftsStore.all.value ?? []).some(d => !beforeIds.has(d.naturalId)),
+    () => (contractDraftsStore.all.value ?? []).some(x => !beforeIds.has(x.naturalId)),
     8000,
   );
   if (!draftAppeared) {
@@ -137,7 +139,7 @@ export async function createNewDraft(
     return undefined;
   }
 
-  const newDraft = (contractDraftsStore.all.value ?? []).find(d => !beforeIds.has(d.naturalId))!;
+  const newDraft = (contractDraftsStore.all.value ?? []).find(x => !beforeIds.has(x.naturalId))!;
   log.info(`New draft created: ${newDraft.naturalId}`);
   return newDraft;
 }
@@ -181,7 +183,7 @@ export async function saveDraftDetails(ctx: ContDraftContext): Promise<void> {
   setStatus('Saving draft details...');
 
   const saveBtn = _$$(draftTile.anchor, C.Button.btn).find(
-    (btn: HTMLElement) => btn.textContent?.trim().toLowerCase() === 'save',
+    (x: HTMLElement) => x.textContent?.trim().toLowerCase() === 'save',
   ) as HTMLElement | undefined;
   if (saveBtn) {
     await clickElement(saveBtn);
@@ -203,7 +205,7 @@ export async function openTemplate(ctx: ContDraftContext): Promise<HTMLSelectEle
   const selectTemplateBtnReady = await waitFor(
     () =>
       _$$(draftTile.anchor, 'button').some(
-        btn => btn.textContent?.trim().toLowerCase() === 'select template',
+        x => x.textContent?.trim().toLowerCase() === 'select template',
       ),
     5000,
   );
@@ -212,7 +214,7 @@ export async function openTemplate(ctx: ContDraftContext): Promise<HTMLSelectEle
     return undefined;
   }
   const selectTemplateBtn = _$$(draftTile.anchor, 'button').find(
-    btn => btn.textContent?.trim().toLowerCase() === 'select template',
+    x => x.textContent?.trim().toLowerCase() === 'select template',
   )!;
   await clickElement(selectTemplateBtn);
 
@@ -226,7 +228,7 @@ export async function openTemplate(ctx: ContDraftContext): Promise<HTMLSelectEle
   return templateSelect;
 }
 
-// Map stored action values to the game's <select> option values.
+// Maps stored action values to the game's select option values.
 const templateValueMap: Record<string, string> = {
   BUYING: 'BUY',
   SELLING: 'SELL',
@@ -241,7 +243,7 @@ export function selectTemplateType(
   templateValue: string,
 ): void {
   const mapped = templateValueMap[templateValue] ?? templateValue;
-  const idx = Array.from(templateSelect.options).findIndex(o => o.value === mapped);
+  const idx = Array.from(templateSelect.options).findIndex(x => x.value === mapped);
   if (idx >= 0) {
     changeSelectIndex(templateSelect, idx);
     ctx.log.info(`Selected "${templateValue}" template`);
@@ -258,15 +260,15 @@ export async function setCurrency(ctx: ContDraftContext, currency: string): Prom
 
   const currencySelectFound = await waitFor(() => {
     const selects = _$$(draftTile.anchor, 'select') as HTMLSelectElement[];
-    return selects.some(s => Array.from(s.options).some(o => o.value === currency));
+    return selects.some(x => Array.from(x.options).some(opt => opt.value === currency));
   }, 3000);
 
   if (currencySelectFound) {
     const selects = _$$(draftTile.anchor, 'select') as HTMLSelectElement[];
-    const currencySelect = selects.find(s =>
-      Array.from(s.options).some(o => o.value === currency),
+    const currencySelect = selects.find(x =>
+      Array.from(x.options).some(opt => opt.value === currency),
     )!;
-    const currencyIndex = Array.from(currencySelect.options).findIndex(o => o.value === currency);
+    const currencyIndex = Array.from(currencySelect.options).findIndex(x => x.value === currency);
     if (currencyIndex >= 0) {
       changeSelectIndex(currencySelect, currencyIndex);
     }
@@ -303,8 +305,8 @@ export async function addMaterials(
     const mat = materials[i];
 
     if (i > 0) {
-      const addBtn = _$$(draftTile.anchor, 'button').find(btn => {
-        const t = btn.textContent?.trim().toLowerCase();
+      const addBtn = _$$(draftTile.anchor, 'button').find(x => {
+        const t = x.textContent?.trim().toLowerCase();
         return t === 'add shipment' || t === 'add commodity';
       });
       if (!addBtn) {
@@ -378,7 +380,7 @@ export async function applyTemplate(ctx: ContDraftContext): Promise<boolean> {
   const applyBtnReady = await waitFor(
     () =>
       _$$(draftTile.anchor, 'button').some(
-        btn => btn.textContent?.trim().toLowerCase() === 'apply template',
+        x => x.textContent?.trim().toLowerCase() === 'apply template',
       ),
     5000,
   );
@@ -387,7 +389,7 @@ export async function applyTemplate(ctx: ContDraftContext): Promise<boolean> {
     return false;
   }
   const applyBtn = _$$(draftTile.anchor, 'button').find(
-    btn => btn.textContent?.trim().toLowerCase() === 'apply template',
+    x => x.textContent?.trim().toLowerCase() === 'apply template',
   )!;
 
   await clickElement(applyBtn);
@@ -410,7 +412,7 @@ export async function saveConditions(
   setStatus('Saving conditions...');
 
   const condSaveBtn = _$$(draftTile.anchor, C.Button.btn).findLast(
-    (btn: HTMLElement) => btn.textContent?.trim().toLowerCase() === 'save',
+    (x: HTMLElement) => x.textContent?.trim().toLowerCase() === 'save',
   ) as HTMLElement | undefined;
   if (condSaveBtn && !condSaveBtn.classList.contains(C.Button.disabled)) {
     await clickElement(condSaveBtn);

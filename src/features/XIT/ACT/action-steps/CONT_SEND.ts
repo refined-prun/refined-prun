@@ -40,8 +40,8 @@ export const CONT_SEND = act.addActionStep<Data>({
   execute: async ctx => {
     const { data, log, setStatus, requestTile, waitAct, complete, fail } = ctx;
 
-    // Calculate total tonnage for the preamble and payment logging.
-    // material.weight is in the same unit as weightCapacity (tonnes).
+    // Calculate total tonnage for preamble and payment logging.
+    // The material.weight field is in the same unit as weightCapacity (tonnes).
     let totalTonnage = 0;
     const materialDetails: Array<{ ticker: string; amount: number; tonnage: number }> = [];
 
@@ -66,7 +66,7 @@ export const CONT_SEND = act.addActionStep<Data>({
       );
     }
 
-    // Step 1: Create new draft
+    // Step 1: Create new draft.
     await waitAct('Create new draft?');
     const listTile = await requestTile('CONTD');
     if (!listTile) {
@@ -93,7 +93,7 @@ export const CONT_SEND = act.addActionStep<Data>({
     const dateStr = now.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
     const contractName = `${data.packageName} - ${data.contDest ?? ''} - ${dateStr}`;
 
-    const materialsList = materialDetails.map(m => `${m.ticker} x${m.amount}`).join(', ');
+    const materialsList = materialDetails.map(x => `${x.ticker} x${x.amount}`).join(', ');
     const preambleText =
       data.contractNote ||
       `Shipping contract for ${totalTonnage.toFixed(2)}t.\n` +
@@ -105,7 +105,7 @@ export const CONT_SEND = act.addActionStep<Data>({
 
     await setDraftNameAndPreamble(ctx2, contractName, preambleText);
 
-    // Step 2: Save draft details (name/preamble)
+    // Step 2: Save draft details (name/preamble).
     await waitAct('Save draft details?');
     await saveDraftDetails(ctx2);
 
@@ -119,21 +119,21 @@ export const CONT_SEND = act.addActionStep<Data>({
 
     await addMaterials(
       ctx2,
-      materialDetails.map(m => ({ ticker: m.ticker, amount: m.amount })),
+      materialDetails.map(x => ({ ticker: x.ticker, amount: x.amount })),
     );
 
-    // The SHIP template price field is per-commodity — the game charges this
-    // amount for each commodity row. Divide total payment by number of commodities.
+    // The SHIP template price field is per-commodity. The game charges this
+    // amount for each commodity row, so divide total payment by number of commodities.
     if (data.payment > 0 && materialDetails.length > 0) {
       const pricePerCommodity = Math.round(data.payment / materialDetails.length);
       // The SHIP template has a single price field outside the commodity groups.
-      // Try name="price" first, then fall back to the decimal input outside groups.
+      // Try name="price" first, then fall back to decimal input outside groups.
       const priceInput = (draftTile.anchor.querySelector('input[name="price"]') ??
         (() => {
           const groups = new Set(_$$(draftTile.anchor, C.TemplateSelection.group));
           return Array.from(
             draftTile.anchor.querySelectorAll<HTMLInputElement>('input[inputmode="decimal"]'),
-          ).find(el => !Array.from(groups).some(g => g.contains(el)));
+          ).find(x => !Array.from(groups).some(g => g.contains(x)));
         })()) as HTMLInputElement | null;
       if (priceInput) {
         focusElement(priceInput);
@@ -147,7 +147,7 @@ export const CONT_SEND = act.addActionStep<Data>({
       }
     }
 
-    // Step 3: Set origin address
+    // Step 3: Set origin address.
     const addressContainers = _$$(draftTile.anchor, C.AddressSelector.container) as HTMLElement[];
 
     if (addressContainers.length >= 1 && data.contOrigin) {
@@ -160,7 +160,7 @@ export const CONT_SEND = act.addActionStep<Data>({
       }
     }
 
-    // Step 4: Set destination address
+    // Step 4: Set destination address.
     if (addressContainers.length >= 2 && data.contDest) {
       await waitAct(`Set destination to ${data.contDest}?`);
       const ok = await selectLocation(addressContainers[1], data.contDest);
@@ -181,7 +181,7 @@ export const CONT_SEND = act.addActionStep<Data>({
         const storeSelect = _$(draftTile.anchor, C.StoreSelect.container) as HTMLSelectElement;
         const normalizedId = data.autoProvisionStoreId!.replaceAll('-', '');
         const optionIndex = Array.from(storeSelect.options).findIndex(
-          o => o.value === data.autoProvisionStoreId || o.value === normalizedId,
+          x => x.value === data.autoProvisionStoreId || x.value === normalizedId,
         );
         if (optionIndex >= 0) {
           changeSelectIndex(storeSelect, optionIndex);
@@ -196,14 +196,14 @@ export const CONT_SEND = act.addActionStep<Data>({
 
     setDeadline(ctx2, data.daysToFulfill);
 
-    // Step 5: Apply template
+    // Step 5: Apply template.
     await waitAct('Apply template?');
     const applied = await applyTemplate(ctx2);
     if (!applied) {
       return;
     }
 
-    // Step 6: Save conditions
+    // Step 6: Save conditions.
     await saveConditions(ctx2, waitAct);
 
     log.success(`Contract draft ${newDraft.naturalId} ready to send`);
