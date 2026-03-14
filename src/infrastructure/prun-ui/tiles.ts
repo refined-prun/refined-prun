@@ -157,11 +157,16 @@ function findByContainer(container?: HTMLElement | null) {
   return activeTiles.filter(tile => tile.container === container);
 }
 
+function getActiveTiles() {
+  return [...activeTiles];
+}
+
 const tiles = {
   observe: observeTiles,
   observeAll: observeAllTiles,
   find: findTiles,
   findByContainer,
+  getActiveTiles: getActiveTiles,
 };
 
 export default tiles;
