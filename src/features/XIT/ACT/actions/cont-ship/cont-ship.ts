@@ -5,6 +5,7 @@ import { CONT_SEND } from '@src/features/XIT/ACT/action-steps/CONT_SEND';
 import { Config } from '@src/features/XIT/ACT/actions/cont-ship/config';
 import { AssertFn, configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import { displayLocationValue } from '@src/features/XIT/ACT/actions/cont-locations';
 
 function resolveLocation(
   value: string | undefined,
@@ -25,13 +26,6 @@ function resolveLocation(
   return value;
 }
 
-function displayLocation(value: string) {
-  if (value.startsWith(groupTargetPrefix)) {
-    return `[${value.slice(groupTargetPrefix.length)}] target`;
-  }
-  return value;
-}
-
 act.addAction<Config>({
   type: 'CONT Ship',
   shortDescription: 'Create a shipping contract draft for a material group',
@@ -43,11 +37,11 @@ act.addAction<Config>({
     const origin =
       action.contOrigin === configurableValue
         ? (config?.origin ?? 'configured location')
-        : displayLocation(action.contOrigin);
+        : displayLocationValue(action.contOrigin);
     const dest =
       action.contDest === configurableValue
         ? (config?.destination ?? 'configured location')
-        : displayLocation(action.contDest);
+        : displayLocationValue(action.contDest);
 
     const payment = action.paymentPerTon ?? 0;
     const paymentStr = payment > 0 ? ` @ ${payment}/t` : '';

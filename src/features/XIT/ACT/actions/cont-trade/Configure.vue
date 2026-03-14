@@ -3,35 +3,15 @@ import Active from '@src/components/forms/Active.vue';
 import Passive from '@src/components/forms/Passive.vue';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import { Config } from '@src/features/XIT/ACT/actions/cont-trade/config';
-import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
-import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
-import { comparePlanets } from '@src/util';
-import { configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
+import { configurableValue } from '@src/features/XIT/ACT/shared-types';
+import {
+  useContLocations,
+  displayLocationValue,
+} from '@src/features/XIT/ACT/actions/cont-locations';
 
 const { data, config } = defineProps<{ data: UserData.ActionData; config: Config }>();
 
-const locations = computed(() => {
-  const seen = new Set<string>();
-  const result: string[] = [];
-  for (const store of storagesStore.nonFuelStores.value ?? []) {
-    let address: PrunApi.Address | undefined;
-    if (store.type === 'STORE') {
-      address = sitesStore.getById(store.addressableId)?.address;
-    } else if (store.type === 'WAREHOUSE_STORE') {
-      address = warehousesStore.getById(store.addressableId)?.address;
-    } else {
-      continue;
-    }
-    const name = getEntityNameFromAddress(address);
-    if (name && !seen.has(name)) {
-      seen.add(name);
-      result.push(name);
-    }
-  }
-  return result.sort(comparePlanets);
-});
+const locations = useContLocations();
 
 if (data.contLocation === configurableValue && !config.location && locations.value.length > 0) {
   config.location = locations.value[0];
@@ -47,16 +27,6 @@ watchEffect(() => {
     }
   }
 });
-
-function displayValue(value: string | undefined) {
-  if (!value) {
-    return '--';
-  }
-  if (value.startsWith(groupTargetPrefix)) {
-    return `[${value.slice(groupTargetPrefix.length)}] target`;
-  }
-  return value;
-}
 </script>
 
 <template>
@@ -65,7 +35,7 @@ function displayValue(value: string | undefined) {
       <SelectInput v-model="config.location" :options="locations" />
     </Active>
     <Passive v-else label="Location">
-      <span>{{ displayValue(data.contLocation) }}</span>
+      <span>{{ displayLocationValue(data.contLocation) }}</span>
     </Passive>
   </form>
 </template>

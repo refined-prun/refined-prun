@@ -4,6 +4,7 @@ import Configure from '@src/features/XIT/ACT/actions/cont-trade/Configure.vue';
 import { CONT_TRADE } from '@src/features/XIT/ACT/action-steps/CONT_TRADE';
 import { Config } from '@src/features/XIT/ACT/actions/cont-trade/config';
 import { AssertFn, configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
+import { displayLocationValue } from '@src/features/XIT/ACT/actions/cont-locations';
 
 function resolveLocation(
   value: string | undefined,
@@ -23,13 +24,6 @@ function resolveLocation(
   return value;
 }
 
-function displayLocation(value: string) {
-  if (value.startsWith(groupTargetPrefix)) {
-    return `[${value.slice(groupTargetPrefix.length)}] target`;
-  }
-  return value;
-}
-
 act.addAction<Config>({
   type: 'CONT Trade',
   shortDescription: 'Create a buy/sell trade contract draft for a material group',
@@ -42,7 +36,7 @@ act.addAction<Config>({
     const location =
       action.contLocation === configurableValue
         ? (config?.location ?? 'configured location')
-        : displayLocation(action.contLocation);
+        : displayLocationValue(action.contLocation);
 
     return `${tradeLabel} contract for [${action.group}] at ${location}`;
   },

@@ -41,22 +41,28 @@ export const CONT_TRADE = act.addActionStep<Data>({
     // Step 1: Create new draft
     await waitAct('Create new draft?');
     const listTile = await requestTile('CONTD');
-    if (!listTile) return;
+    if (!listTile) {
+      return;
+    }
 
     const draftCtx: ContDraftContext = { draftTile: listTile, log, setStatus, fail };
 
     const newDraft = await createNewDraft(draftCtx);
-    if (!newDraft) return;
+    if (!newDraft) {
+      return;
+    }
 
     setStatus(`Loading draft ${newDraft.naturalId}...`);
     const draftTile = await requestTile(`CONTD ${newDraft.naturalId}`);
-    if (!draftTile) return;
+    if (!draftTile) {
+      return;
+    }
 
     const ctx2: ContDraftContext = { draftTile, log, setStatus, fail };
 
     // Set contract name.
     const now = new Date();
-    const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const dateStr = now.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
     const contractName = `${data.packageName} - ${typeLabel} - ${dateStr}`;
 
     // Set preamble.
@@ -80,7 +86,9 @@ export const CONT_TRADE = act.addActionStep<Data>({
     await saveDraftDetails(ctx2);
 
     const templateSelect = await openTemplate(ctx2);
-    if (!templateSelect) return;
+    if (!templateSelect) {
+      return;
+    }
 
     selectTemplateType(ctx2, templateSelect, data.tradeType);
     await setCurrency(ctx2, data.currency);
@@ -126,7 +134,9 @@ export const CONT_TRADE = act.addActionStep<Data>({
     // Step 4: Apply template
     await waitAct('Apply template?');
     const applied = await applyTemplate(ctx2);
-    if (!applied) return;
+    if (!applied) {
+      return;
+    }
 
     // Step 5: Save conditions
     await saveConditions(ctx2, waitAct);

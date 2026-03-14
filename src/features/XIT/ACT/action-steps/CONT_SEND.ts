@@ -47,7 +47,9 @@ export const CONT_SEND = act.addActionStep<Data>({
 
     for (const [ticker, rawAmount] of Object.entries(data.materials)) {
       const qty = rawAmount as number;
-      if (qty <= 0) continue;
+      if (qty <= 0) {
+        continue;
+      }
       const material = materialsStore.getByTicker(ticker);
       if (!material) {
         log.warning(`Material ${ticker} not found, skipping`);
@@ -67,22 +69,28 @@ export const CONT_SEND = act.addActionStep<Data>({
     // Step 1: Create new draft
     await waitAct('Create new draft?');
     const listTile = await requestTile('CONTD');
-    if (!listTile) return;
+    if (!listTile) {
+      return;
+    }
 
     const draftCtx: ContDraftContext = { draftTile: listTile, log, setStatus, fail };
 
     const newDraft = await createNewDraft(draftCtx);
-    if (!newDraft) return;
+    if (!newDraft) {
+      return;
+    }
 
     setStatus(`Loading draft ${newDraft.naturalId}...`);
     const draftTile = await requestTile(`CONTD ${newDraft.naturalId}`);
-    if (!draftTile) return;
+    if (!draftTile) {
+      return;
+    }
 
     // Update context to point at the actual draft tile.
     const ctx2: ContDraftContext = { draftTile, log, setStatus, fail };
 
     const now = new Date();
-    const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const dateStr = now.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
     const contractName = `${data.packageName} - ${data.contDest ?? ''} - ${dateStr}`;
 
     const materialsList = materialDetails.map(m => `${m.ticker} x${m.amount}`).join(', ');
@@ -102,7 +110,9 @@ export const CONT_SEND = act.addActionStep<Data>({
     await saveDraftDetails(ctx2);
 
     const templateSelect = await openTemplate(ctx2);
-    if (!templateSelect) return;
+    if (!templateSelect) {
+      return;
+    }
 
     selectTemplateType(ctx2, templateSelect, 'SHIP');
     await setCurrency(ctx2, data.currency);
@@ -121,9 +131,9 @@ export const CONT_SEND = act.addActionStep<Data>({
       const priceInput = (draftTile.anchor.querySelector('input[name="price"]') ??
         (() => {
           const groups = new Set(_$$(draftTile.anchor, C.TemplateSelection.group));
-          return _$$(draftTile.anchor, 'input[inputmode="decimal"]').find(
-            el => !Array.from(groups).some(g => g.contains(el)),
-          );
+          return Array.from(
+            draftTile.anchor.querySelectorAll<HTMLInputElement>('input[inputmode="decimal"]'),
+          ).find(el => !Array.from(groups).some(g => g.contains(el)));
         })()) as HTMLInputElement | null;
       if (priceInput) {
         focusElement(priceInput);
@@ -189,7 +199,9 @@ export const CONT_SEND = act.addActionStep<Data>({
     // Step 5: Apply template
     await waitAct('Apply template?');
     const applied = await applyTemplate(ctx2);
-    if (!applied) return;
+    if (!applied) {
+      return;
+    }
 
     // Step 6: Save conditions
     await saveConditions(ctx2, waitAct);

@@ -16,7 +16,9 @@ export async function waitFor(
 ): Promise<boolean> {
   const deadline = Date.now() + timeout;
   while (Date.now() < deadline) {
-    if (condition()) return true;
+    if (condition()) {
+      return true;
+    }
     await sleep(interval);
   }
   return false;
@@ -25,11 +27,11 @@ export async function waitFor(
 // AddressSelector suggestions are rendered in #autosuggest-portal outside the tile DOM.
 // Only one portal can be open at a time, so we search it directly.
 export async function selectLocation(container: Element, locationName: string): Promise<boolean> {
-  const input = (await $(container, C.AddressSelector.input)) as HTMLInputElement | null;
-  if (!input) return false;
-
+  const input = (await $(container, C.AddressSelector.input)) as HTMLInputElement;
   const portal = document.getElementById('autosuggest-portal');
-  if (!portal) return false;
+  if (!portal) {
+    return false;
+  }
 
   focusElement(input);
   changeInputValue(input, locationName);
@@ -38,47 +40,48 @@ export async function selectLocation(container: Element, locationName: string): 
     () => _$$(portal, C.AddressSelector.suggestionContent).length > 0,
     5000,
   );
-  if (!appeared) return false;
+  if (!appeared) {
+    return false;
+  }
 
   const suggestions = _$$(portal, C.AddressSelector.suggestionContent) as HTMLElement[];
-  const match =
-    suggestions.find(s =>
-      s.textContent?.trim().toLowerCase().includes(locationName.toLowerCase()),
-    ) ?? suggestions.at(0);
+  const match = suggestions.find(s =>
+    s.textContent?.trim().toLowerCase().includes(locationName.toLowerCase()),
+  );
 
-  if (!match) return false;
+  if (!match) {
+    return false;
+  }
 
   await clickElement(match);
   return true;
 }
 
 export async function selectMaterial(container: Element, ticker: string) {
-  const input = (await $(container, C.MaterialSelector.input)) as HTMLInputElement | null;
-  if (!input) return false;
-
+  const input = (await $(container, C.MaterialSelector.input)) as HTMLInputElement;
   const suggestionsContainer = (await $(
     container,
     C.MaterialSelector.suggestionsContainer,
-  )) as HTMLElement | null;
+  )) as HTMLElement;
 
   focusElement(input);
   changeInputValue(input, ticker);
 
   const suggestionsList = await $(container, C.MaterialSelector.suggestionsList);
 
-  if (suggestionsContainer) suggestionsContainer.style.display = 'none';
+  suggestionsContainer.style.display = 'none';
 
   const match = _$$(suggestionsList, C.MaterialSelector.suggestionEntry).find(
     entry => _$(entry, C.ColoredIcon.label)?.textContent === ticker,
   );
 
   if (!match) {
-    if (suggestionsContainer) suggestionsContainer.style.display = '';
+    suggestionsContainer.style.display = '';
     return false;
   }
 
   await clickElement(match as HTMLElement);
-  if (suggestionsContainer) suggestionsContainer.style.display = '';
+  suggestionsContainer.style.display = '';
   await sleep(200);
   return true;
 }
@@ -241,8 +244,10 @@ export function selectTemplateType(
   const idx = Array.from(templateSelect.options).findIndex(o => o.value === mapped);
   if (idx >= 0) {
     changeSelectIndex(templateSelect, idx);
+    ctx.log.info(`Selected "${templateValue}" template`);
+  } else {
+    ctx.log.warning(`Template "${templateValue}" not found in select`);
   }
-  ctx.log.info(`Selected "${templateValue}" template`);
 }
 
 /**
@@ -346,7 +351,9 @@ export async function addMaterials(
 export function setDeadline(ctx: ContDraftContext, days: number): void {
   const { draftTile, log } = ctx;
 
-  if (days <= 0) return;
+  if (days <= 0) {
+    return;
+  }
 
   const deadlineInput = draftTile.anchor.querySelector(
     'input[name="deadline"]',
