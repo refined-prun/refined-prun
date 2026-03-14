@@ -270,6 +270,78 @@ Auto-unmounts when the parent node disconnects from the DOM.
 
 Extract external DOM handling from Vue components into the feature `.ts` file. Vue components handle rendering; feature files handle DOM wiring and game data access. Use callback props to communicate values from Vue to the feature.
 
+## Hidable Menus (Minimize Row Pattern)
+
+For optional filter/menu blocks that should be hidden under a `+` control, use the same `FormComponent` passive row structure used in PrUn tiles:
+
+```vue
+<div :class="[C.FormComponent.containerPassive, C.forms.passive, C.forms.formComponent]">
+  <label :class="[C.FormComponent.label, C.fonts.fontRegular, C.type.typeRegular]">
+    Minimize
+  </label>
+  <div :class="[C.FormComponent.input, C.forms.input]">
+    <div>
+      <div @click="toggle">{{ expanded ? '-' : '+' }}</div>
+    </div>
+  </div>
+</div>
+
+<div v-if="expanded">
+  <!-- hidden menu content -->
+</div>
+```
+
+Guidelines:
+- Keep hidden content directly below the Minimize row.
+- Persist expanded/collapsed state with `useTileState`.
+- Keep default state collapsed unless always-on visibility is required.
+- Reuse existing PrUn classes (`C.FormComponent.*`, `C.forms.*`) instead of custom wrappers.
+
+## Hidable Menus (Minimize Row)
+
+For collapsible filter/config menus, use the same passive form row pattern as the game and existing extension features.
+
+```vue
+<div :class="[C.FormComponent.containerPassive, C.forms.passive, C.forms.formComponent]">
+  <label :class="[C.FormComponent.label, C.fonts.fontRegular, C.type.typeRegular]">
+    Minimize
+  </label>
+  <div :class="[C.FormComponent.input, C.forms.input]">
+    <div>
+      <div :class="$style.minimize" @click="toggle">{{ isMinimized ? '+' : '-' }}</div>
+    </div>
+  </div>
+</div>
+
+<div v-if="!isMinimized">
+  <!-- Hidden menu content -->
+</div>
+```
+
+- Keep the label text as `Minimize`.
+- Keep plus/minus behavior: `+` means hidden, `-` means visible.
+- Keep state in `useTileState(...)` so the collapsed state persists per tile.
+
+## Filter Button Groups
+
+Inside collapsible filter panels, use PrUn-style button rows instead of custom chip styles.
+
+```vue
+<div :class="C.ComExOrdersPanel.filter">
+  <RadioItem v-model="someBoolean" horizontal>LABEL</RadioItem>
+  <RadioItem
+    :model-value="isOptionSelected(filters, option)"
+    horizontal
+    @update:model-value="onOptionClick(option)">
+    {{ option }}
+  </RadioItem>
+</div>
+```
+
+- Prefer `C.ComExOrdersPanel.filter` + `RadioItem horizontal` for all filter groups.
+- Keep styling consistent between groups (Ship list, Flight state, and all other groups).
+- Avoid introducing custom chip CSS unless there is a strong UX reason.
+
 ---
 
 ## Reactively Mutating DOM Attributes

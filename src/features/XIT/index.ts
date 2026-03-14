@@ -12,6 +12,7 @@ import './FIN/FIN';
 import './FIN/FINPR';
 import './FINBS/FINBS';
 import './FINCH/FINCH';
+import './FLT/FLEET';
 import './GIF/GIF';
 import './HEALTH';
 import './HELP';
