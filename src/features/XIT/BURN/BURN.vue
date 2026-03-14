@@ -142,6 +142,10 @@ const inf = useTileState('inf');
 const workforce = useTileState('workforce');
 const production = useTileState('production');
 
+function computeDaysLeft(dailyAmount: number, inventory: number) {
+  return dailyAmount >= 0 ? 1000 : inventory === 0 ? 0 : Math.floor(-inventory / dailyAmount);
+}
+
 function applyWorkforceToggle(burn: BurnValues): BurnValues {
   if (workforce.value) {
     return burn;
@@ -154,11 +158,16 @@ function applyWorkforceToggle(burn: BurnValues): BurnValues {
       // Only consumed by workers, nothing to show without workforce.
       continue;
     }
+    // Re-derive type since workforce is excluded from the burn calculation.
     const type =
       dailyAmount > 0 ? 'output' : b.input > 0 ? 'input' : b.workforce > 0 ? 'workforce' : 'output';
-    const daysLeft =
-      dailyAmount >= 0 ? 1000 : b.inventory === 0 ? 0 : Math.floor(-b.inventory / dailyAmount);
-    result[ticker] = { ...b, workforce: 0, dailyAmount, type, daysLeft };
+    result[ticker] = {
+      ...b,
+      workforce: 0,
+      dailyAmount,
+      type,
+      daysLeft: computeDaysLeft(dailyAmount, b.inventory),
+    };
   }
   return result;
 }
@@ -174,12 +183,27 @@ function applyProductionToggle(burn: BurnValues): BurnValues {
       continue;
     }
     const dailyAmount = -b.workforce;
-    const daysLeft =
-      dailyAmount >= 0 ? 1000 : b.inventory === 0 ? 0 : Math.floor(-b.inventory / dailyAmount);
-    result[ticker] = { ...b, input: 0, output: 0, dailyAmount, type: 'workforce', daysLeft };
+    result[ticker] = {
+      ...b,
+      input: 0,
+      output: 0,
+      dailyAmount,
+      type: 'workforce',
+      daysLeft: computeDaysLeft(dailyAmount, b.inventory),
+    };
   }
   return result;
 }
+
+const allFiltered = computed(() => {
+  if (!planetBurn.value || planetBurn.value.length === 0) {
+    return false;
+  }
+  if (!red.value && !yellow.value && !green.value && !inf.value) {
+    return true;
+  }
+  return planetBurn.value.every(p => Object.keys(p.burn).length === 0);
+});
 
 const fakeBurn: MaterialBurn = {
   dailyAmount: -100000,
@@ -214,8 +238,18 @@ function onExpandAllClick() {
       <RadioItem v-model="yellow" horizontal>YELLOW</RadioItem>
       <RadioItem v-model="green" horizontal>GREEN</RadioItem>
       <RadioItem v-model="inf" horizontal>INF</RadioItem>
-      <RadioItem v-model="workforce" horizontal>WRK</RadioItem>
-      <RadioItem v-model="production" horizontal>PROD</RadioItem>
+      <RadioItem
+        v-model="workforce"
+        horizontal
+        data-tooltip="Toggle workforce consumption. When off, burn rates exclude workforce needs.">
+        WRK
+      </RadioItem>
+      <RadioItem
+        v-model="production"
+        horizontal
+        data-tooltip="Toggle production I/O. When off, only workforce consumption is shown.">
+        PROD
+      </RadioItem>
     </div>
     <table>
       <thead>
@@ -245,6 +279,11 @@ function onExpandAllClick() {
       </thead>
       <tbody :class="$style.fakeRow">
         <MaterialRow always-visible :burn="fakeBurn" :material="rat" />
+      </tbody>
+      <tbody v-if="allFiltered">
+        <tr>
+          <td colspan="6">All materials filtered out by current toggle settings.</td>
+        </tr>
       </tbody>
       <BurnSection
         v-for="burn in planetBurn"
