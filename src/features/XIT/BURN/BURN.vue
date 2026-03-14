@@ -88,7 +88,7 @@ const planetBurn = computed(() => {
     .filter(x => x !== overall)
     .map(getPlanetBurn)
     .filter(x => x !== undefined)
-    .map(p => ({ ...p, burn: applyProductionToggle(applyWorkforceToggle(p.burn)) }));
+    .map(x => ({ ...x, burn: applyProductionToggle(applyWorkforceToggle(x.burn)) }));
   if (filtered.length <= 1) {
     return filtered;
   }
@@ -202,7 +202,7 @@ const allFiltered = computed(() => {
   if (!red.value && !yellow.value && !green.value && !inf.value) {
     return true;
   }
-  return planetBurn.value.every(p => Object.keys(p.burn).length === 0);
+  return planetBurn.value.every(x => Object.keys(x.burn).length === 0);
 });
 
 const fakeBurn: MaterialBurn = {
