@@ -74,6 +74,7 @@ import './prodq-order-eta';
 import './prodq-queue-load';
 import './sysi-blue-negative-value';
 import './prun-bugs';
+import './reduce-padding';
 import './rprun-version-label';
 import './screen-layout-lock';
 import './screen-tab-bar/screen-tab-bar';
