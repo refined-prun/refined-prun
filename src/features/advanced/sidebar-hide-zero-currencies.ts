@@ -4,26 +4,19 @@ import '@src/utils/set-trim-disconnected';
 
 const sidebarLines = new Set<HTMLElement>();
 
-function updateSidebarLine(
-  sidebarLine: HTMLElement,
-  balances: readonly { currency: string; amount: number }[],
-) {
-  const currencyCode = _$(sidebarLine, C.Sidebar.currencyCode)?.textContent?.trim();
-  if (!currencyCode) {
-    return;
-  }
-
-  const amount = balances.find(x => x.currency === currencyCode)?.amount;
-  const isZero = amount === 0;
-  sidebarLine.classList.toggle(css.hidden, isZero);
-}
-
 function updateSidebarLines() {
   sidebarLines.trimDisconnected();
   const balances = balancesStore.all.value ?? [];
 
   for (const sidebarLine of sidebarLines) {
-    updateSidebarLine(sidebarLine, balances);
+    const currencyCode = _$(sidebarLine, C.Sidebar.currencyCode)?.textContent?.trim();
+    if (!currencyCode) {
+      continue;
+    }
+
+    const amount = balances.find(x => x.currency === currencyCode)?.amount;
+    const isZero = amount === 0;
+    sidebarLine.classList.toggle(css.hidden, isZero);
   }
 }
 
