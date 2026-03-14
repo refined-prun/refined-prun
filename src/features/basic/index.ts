@@ -20,6 +20,8 @@ import './cmds-clickable-commands';
 import './co-base-count';
 import './contd-condition-address-placeholder';
 import './contd-upward-search-results';
+import './contribution-bulk-controls';
+import './contribution-maxed';
 import './correct-commands/correct-commands';
 import './custom-left-sidebar/custom-left-sidebar';
 import './cx-search-bar';
