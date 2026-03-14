@@ -2,12 +2,8 @@
 import Active from '@src/components/forms/Active.vue';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import NumericInput from '@src/components/forms/NumericInput.vue';
-import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
-import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
-import { comparePlanets } from '@src/util';
 import { configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
+import { useContLocations } from '@src/features/XIT/ACT/actions/cont-locations';
 
 const { action, pkg } = defineProps<{
   action: UserData.ActionData;
@@ -29,26 +25,7 @@ const valueToTradeType: Record<string, string> = {
 
 const tradeType = ref(valueToTradeType[action.contTradeType ?? 'BUYING'] ?? 'Buy');
 
-const staticLocations = computed(() => {
-  const seen = new Set<string>();
-  const result: string[] = [];
-  for (const store of storagesStore.nonFuelStores.value ?? []) {
-    let address: PrunApi.Address | undefined;
-    if (store.type === 'STORE') {
-      address = sitesStore.getById(store.addressableId)?.address;
-    } else if (store.type === 'WAREHOUSE_STORE') {
-      address = warehousesStore.getById(store.addressableId)?.address;
-    } else {
-      continue;
-    }
-    const name = getEntityNameFromAddress(address);
-    if (name && !seen.has(name)) {
-      seen.add(name);
-      result.push(name);
-    }
-  }
-  return result.sort(comparePlanets);
-});
+const staticLocations = useContLocations();
 
 const groupTargetOptions = computed(() =>
   pkg.groups
