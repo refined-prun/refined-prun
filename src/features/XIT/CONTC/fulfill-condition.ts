@@ -18,7 +18,13 @@ const FULFILLABLE_TYPES: ReadonlySet<PrunApi.ContractConditionType> = new Set([
   'WORKFORCE_PROGRAM_PAYMENT',
 ]);
 
-export function isFulfillable(condition: PrunApi.ContractCondition): boolean {
+export function isFulfillable(
+  contract: PrunApi.Contract,
+  condition: PrunApi.ContractCondition,
+): boolean {
+  if (contract.status === 'OPEN') {
+    return false;
+  }
   return FULFILLABLE_TYPES.has(condition.type);
 }
 
