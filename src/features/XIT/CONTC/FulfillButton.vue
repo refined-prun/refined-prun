@@ -8,14 +8,19 @@ const { contract, condition } = defineProps<{
 }>();
 
 const fulfilling = ref(false);
+const error = ref<string>();
 
 async function onClick() {
   if (fulfilling.value) {
     return;
   }
+  error.value = undefined;
   fulfilling.value = true;
   try {
-    await fulfillCondition(contract, condition);
+    const result = await fulfillCondition(contract, condition);
+    if (!result.success) {
+      error.value = result.error;
+    }
   } finally {
     fulfilling.value = false;
   }
@@ -25,10 +30,13 @@ async function onClick() {
 <template>
   <PrunButton
     v-if="isFulfillable(condition)"
-    :class="$style.button"
-    success
+    :class="[$style.button, error ? $style.error : undefined]"
+    :success="!error"
+    :danger="!!error"
     inline
     :disabled="fulfilling"
+    :data-tooltip="error"
+    :data-tooltip-position="error ? 'left' : undefined"
     @click="onClick">
     fulfill
   </PrunButton>
@@ -37,5 +45,15 @@ async function onClick() {
 <style module>
 .button {
   margin-left: 4px;
+}
+
+.error {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.25) 3px,
+    rgba(0, 0, 0, 0.25) 6px
+  );
 }
 </style>
