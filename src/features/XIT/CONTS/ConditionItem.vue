@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import fa from '@src/utils/font-awesome.module.css';
 import { friendlyConditionText } from '@src/features/XIT/CONTS/utils';
+import FulfillButton from '@src/features/XIT/CONTC/FulfillButton.vue';
 
 const { condition, contract } = defineProps<{
   condition: PrunApi.ContractCondition;
@@ -39,6 +40,10 @@ const icon = computed(() => (condition.status === 'FULFILLED' ? '\uf00c' : '\uf0
       <span :class="[fa.solid]">{{ icon }}</span
       >&nbsp;{{ friendlyConditionText(condition.type) }}
     </span>
+    <FulfillButton
+      v-if="condition.status !== 'FULFILLED'"
+      :contract="contract"
+      :condition="condition" />
   </div>
 </template>
 
