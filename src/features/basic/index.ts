@@ -18,6 +18,7 @@ import './chat-images';
 import './clickable-apex-logo';
 import './cmds-clickable-commands';
 import './co-base-count';
+import './cont-fulfill-next/cont-fulfill-next';
 import './contd-condition-address-placeholder';
 import './contd-upward-search-results';
 import './contribution-bulk-controls';
