@@ -29,7 +29,7 @@ async function onClick() {
 
 <template>
   <PrunButton
-    v-if="isFulfillable(condition)"
+    v-if="isFulfillable(condition) && contract.status !== 'OPEN'"
     :class="[$style.button, error ? $style.error : undefined]"
     :success="!error"
     :danger="!!error"
