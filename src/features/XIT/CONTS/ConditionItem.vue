@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import fa from '@src/utils/font-awesome.module.css';
-import { friendlyConditionText } from '@src/features/XIT/CONTS/utils';
+import { friendlyConditionText, isSelfCondition } from '@src/features/XIT/CONTS/utils';
 import FulfillButton from '@src/features/XIT/CONTC/FulfillButton.vue';
 
 const { condition, contract } = defineProps<{
@@ -41,7 +41,7 @@ const icon = computed(() => (condition.status === 'FULFILLED' ? '\uf00c' : '\uf0
       >&nbsp;{{ friendlyConditionText(condition.type) }}
     </span>
     <FulfillButton
-      v-if="condition.status !== 'FULFILLED'"
+      v-if="condition.status !== 'FULFILLED' && isSelfCondition(contract, condition)"
       :contract="contract"
       :condition="condition" />
   </div>
