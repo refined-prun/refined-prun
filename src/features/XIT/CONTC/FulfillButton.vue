@@ -25,6 +25,7 @@ async function onClick() {
 <template>
   <PrunButton
     v-if="isFulfillable(condition)"
+    :class="$style.button"
     success
     inline
     :disabled="fulfilling"
@@ -32,3 +33,9 @@ async function onClick() {
     fulfill
   </PrunButton>
 </template>
+
+<style module>
+.button {
+  margin-left: 4px;
+}
+</style>
