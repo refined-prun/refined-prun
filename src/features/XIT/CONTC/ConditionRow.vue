@@ -3,6 +3,7 @@ import ContractLink from '@src/features/XIT/CONTC/ContractLink.vue';
 import { timestampEachSecond } from '@src/utils/dayjs';
 import dayjs from 'dayjs';
 import ConditionText from '@src/features/XIT/CONTC/ConditionText.vue';
+import FulfillButton from '@src/features/XIT/CONTC/FulfillButton.vue';
 
 const { deadline } = defineProps<{
   condition: PrunApi.ContractCondition;
@@ -48,6 +49,9 @@ const eta = computed(() => {
     </td>
     <td>
       <ConditionText :condition="condition" />
+    </td>
+    <td>
+      <FulfillButton :contract="contract" :condition="condition" />
     </td>
   </tr>
 </template>
