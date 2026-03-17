@@ -36,12 +36,12 @@ export async function fulfillCondition(
   const done = ref(false);
   try {
     const command = `CONT ${contract.localId}`;
-    const window = (await showBuffer(command, {
+    await showBuffer(command, {
       force: true,
       autoSubmit: true,
       autoClose: true,
       closeWhen: done,
-    })) as HTMLElement | undefined;
+    });
 
     // Find the tile that was just opened.
     const tile = tiles.find(command, true)[0];
@@ -76,10 +76,11 @@ export async function fulfillCondition(
     }
 
     // Replace display:none with offscreen positioning so React processes events.
-    if (window) {
-      window.classList.remove(css.hidden);
-      window.style.position = 'fixed';
-      window.style.left = '-9999px';
+    const bufferWindow = tile.frame.closest(`.${C.Window.window}`) as HTMLElement | null;
+    if (bufferWindow) {
+      bufferWindow.classList.remove(css.hidden);
+      bufferWindow.style.position = 'fixed';
+      bufferWindow.style.left = '-9999px';
     }
     await clickElement(fulfillBtn as HTMLElement);
 
