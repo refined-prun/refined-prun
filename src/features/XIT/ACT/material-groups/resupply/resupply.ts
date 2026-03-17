@@ -6,7 +6,8 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { configurableValue } from '@src/features/XIT/ACT/shared-types';
+import { configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
+import { resolveGroupPlanet } from '@src/features/XIT/ACT/reference-utils';
 import { calculatePlanetBurn } from '@src/core/burn';
 import { watchWhile } from '@src/utils/watch';
 import {
@@ -21,13 +22,16 @@ act.addMaterialGroup<Config>({
       return '--';
     }
 
-    return `Resupply ${data.planet} with ${data.days} day${data.days == 1 ? '' : 's'} of supplies`;
+    const planetLabel = data.planet.startsWith(groupTargetPrefix)
+      ? `Same as: ${data.planet.slice(groupTargetPrefix.length)}`
+      : data.planet;
+    return `Resupply ${planetLabel} with ${data.days} day${data.days == 1 ? '' : 's'} of supplies`;
   },
   editComponent: Edit,
   configureComponent: Configure,
   needsConfigure: data => data.planet === configurableValue,
   isValidConfig: (data, config) => data.planet !== configurableValue || config.planet !== undefined,
-  generateMaterialBill: async ({ data, config, log, setStatus }) => {
+  generateMaterialBill: async ({ data, config, pkg, fullConfig, log, setStatus }) => {
     if (!data.planet) {
       log.error('Missing resupply planet');
     }
@@ -36,7 +40,18 @@ act.addMaterialGroup<Config>({
     }
 
     const exclusions = data.exclusions ?? [];
-    const planet = data.planet === configurableValue ? config.planet : data.planet;
+    let planet: string | undefined;
+    if (data.planet === configurableValue) {
+      planet = config.planet;
+    } else if (data.planet?.startsWith(groupTargetPrefix)) {
+      planet = resolveGroupPlanet(data.planet, pkg, fullConfig);
+      if (!planet) {
+        log.error(`Failed to resolve planet reference: ${data.planet}`);
+        return undefined;
+      }
+    } else {
+      planet = data.planet;
+    }
     const site = sitesStore.getByPlanetNaturalIdOrName(planet);
     if (!site) {
       log.error(`Base is not present on ${data.planet}`);

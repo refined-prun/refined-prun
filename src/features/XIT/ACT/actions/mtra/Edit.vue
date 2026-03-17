@@ -3,26 +3,48 @@ import Active from '@src/components/forms/Active.vue';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { serializeStorage, storageSort } from '@src/features/XIT/ACT/actions/utils';
-import { configurableValue } from '@src/features/XIT/ACT/shared-types';
+import { actionTargetPrefix, configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 const { action, pkg } = defineProps<{
   action: UserData.ActionData;
   pkg: UserData.ActionPackageData;
 }>();
 
+type Option = string | { label: string; value: string };
+
 const materialGroups = computed(() => pkg.groups.map(x => x.name!).filter(x => x));
 const materialGroup = ref(action.group ?? materialGroups.value[0]);
 
 const storages = computed(() => {
-  const storages = [...(storagesStore.nonFuelStores.value ?? [])]
+  const storages: Option[] = [...(storagesStore.nonFuelStores.value ?? [])]
     .sort(storageSort)
     .map(serializeStorage);
   storages.unshift(configurableValue);
   return storages;
 });
 
-const origin = ref(action.origin ?? storages.value[0]);
-const destination = ref(action.dest ?? storages.value[0]);
+const destinationOptions = computed(() => {
+  const options: Option[] = [...storages.value];
+
+  // Add reference options for MTRA actions above this one.
+  const currentIndex = pkg.actions.indexOf(action);
+  let insertAt = 1;
+  for (let i = 0; i < currentIndex; i++) {
+    const other = pkg.actions[i];
+    if (!other.name || other.type !== 'MTRA' || !other.dest) {
+      continue;
+    }
+    options.splice(insertAt++, 0, {
+      label: `Same as: ${other.name} dest`,
+      value: actionTargetPrefix + other.name,
+    });
+  }
+
+  return options;
+});
+
+const origin = ref(action.origin ?? (storages.value[0] as string));
+const destination = ref(action.dest ?? (storages.value[0] as string));
 
 function validate() {
   return true;
@@ -45,6 +67,6 @@ defineExpose({ validate, save });
     <SelectInput v-model="origin" :options="storages" />
   </Active>
   <Active label="Destination">
-    <SelectInput v-model="destination" :options="storages" />
+    <SelectInput v-model="destination" :options="destinationOptions" />
   </Active>
 </template>

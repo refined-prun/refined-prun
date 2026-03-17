@@ -4,7 +4,8 @@ import Configure from '@src/features/XIT/ACT/material-groups/repair/Configure.vu
 import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { isRepairableBuilding } from '@src/core/buildings';
 import { Config } from '@src/features/XIT/ACT/material-groups/repair/config';
-import { configurableValue } from '@src/features/XIT/ACT/shared-types';
+import { configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
+import { resolveGroupPlanet } from '@src/features/XIT/ACT/reference-utils';
 
 act.addMaterialGroup<Config>({
   type: 'Repair',
@@ -13,22 +14,36 @@ act.addMaterialGroup<Config>({
       return '--';
     }
 
+    const planetLabel = data.planet.startsWith(groupTargetPrefix)
+      ? `Same as: ${data.planet.slice(groupTargetPrefix.length)}`
+      : data.planet;
     const days = data.days;
     const daysPart = days !== undefined ? `older than ${days} day${days == 1 ? '' : 's'}` : '';
     const advanceDays = data.advanceDays ?? 0;
-    return `Repair buildings on ${data.planet} ${daysPart} in ${advanceDays} day${advanceDays == 1 ? '' : 's'}`;
+    return `Repair buildings on ${planetLabel} ${daysPart} in ${advanceDays} day${advanceDays == 1 ? '' : 's'}`;
   },
   editComponent: Edit,
   configureComponent: Configure,
   needsConfigure: data => data.planet === configurableValue,
   isValidConfig: (data, config) => data.planet !== configurableValue || config.planet !== undefined,
-  generateMaterialBill: async ({ data, config, log }) => {
+  generateMaterialBill: async ({ data, config, pkg, fullConfig, log }) => {
     if (!data.planet) {
       log.error('Resupply planet is not configured');
       return undefined;
     }
 
-    const planet = data.planet === configurableValue ? config.planet : data.planet;
+    let planet: string | undefined;
+    if (data.planet === configurableValue) {
+      planet = config.planet;
+    } else if (data.planet.startsWith(groupTargetPrefix)) {
+      planet = resolveGroupPlanet(data.planet, pkg, fullConfig);
+      if (!planet) {
+        log.error(`Failed to resolve planet reference: ${data.planet}`);
+        return undefined;
+      }
+    } else {
+      planet = data.planet;
+    }
     const site = sitesStore.getByPlanetNaturalIdOrName(planet);
     if (!site?.platforms) {
       log.error('Missing data on repair planet');

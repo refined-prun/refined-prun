@@ -8,20 +8,40 @@ import { comparePlanets } from '@src/util';
 import TextInput from '@src/components/forms/TextInput.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { configurableValue } from '@src/features/XIT/ACT/shared-types';
+import { configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
 
-const { group } = defineProps<{ group: UserData.MaterialGroupData }>();
+const { group, pkg } = defineProps<{
+  group: UserData.MaterialGroupData;
+  pkg: UserData.ActionPackageData;
+}>();
+
+type Option = string | { label: string; value: string };
 
 const planets = computed(() => {
-  const planets = (sitesStore.all.value ?? [])
+  const planets: Option[] = (sitesStore.all.value ?? [])
     .map(x => getEntityNameFromAddress(x.address))
     .filter(x => x !== undefined)
     .sort(comparePlanets);
   planets.unshift(configurableValue);
+
+  // Add reference options for groups above this one.
+  const currentIndex = pkg.groups.indexOf(group);
+  let insertAt = 1;
+  for (let i = 0; i < currentIndex; i++) {
+    const other = pkg.groups[i];
+    if (!other.name || (other.type !== 'Resupply' && other.type !== 'Repair') || !other.planet) {
+      continue;
+    }
+    planets.splice(insertAt++, 0, {
+      label: `Same as: ${other.name}`,
+      value: groupTargetPrefix + other.name,
+    });
+  }
+
   return planets;
 });
 
-const planet = ref(group.planet ?? planets.value[0]);
+const planet = ref(group.planet ?? (planets.value[0] as string));
 const planetError = ref(false);
 
 const days = ref(
