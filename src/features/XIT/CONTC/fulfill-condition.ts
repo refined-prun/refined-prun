@@ -1,6 +1,7 @@
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { clickElement } from '@src/util';
 import { waitActionFeedback } from '@src/utils/action-feedback';
+import css from '@src/utils/css-utils.module.css';
 
 const FULFILLABLE_TYPES: ReadonlySet<PrunApi.ContractConditionType> = new Set([
   'PROVISION',
@@ -35,7 +36,12 @@ export async function fulfillCondition(
   const done = ref(false);
   try {
     const command = `CONT ${contract.localId}`;
-    await showBuffer(command, { force: true, autoSubmit: true, autoClose: true, closeWhen: done });
+    const window = await showBuffer(command, {
+      force: true,
+      autoSubmit: true,
+      autoClose: true,
+      closeWhen: done,
+    });
 
     // Find the tile that was just opened.
     const tile = tiles.find(command, true)[0];
@@ -69,7 +75,11 @@ export async function fulfillCondition(
       return { success: false, error: 'Cannot fulfill this condition right now.' };
     }
 
+    // Temporarily show the window so React processes click events.
+    window?.classList.remove(css.hidden);
     await clickElement(fulfillBtn as HTMLElement);
+    window?.classList.add(css.hidden);
+
     const error = await waitActionFeedback(tile.frame);
     if (error) {
       return { success: false, error };
