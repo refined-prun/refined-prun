@@ -43,21 +43,30 @@ export async function fulfillCondition(
       return { success: false, error: 'Failed to open contract buffer.' };
     }
 
-    // Wait for sections to render.
-    await $(tile.anchor, C.SectionList.section);
+    // Wait for the conditions table to render.
+    await $(tile.anchor, 'tbody');
 
-    const sections = _$$(tile.anchor, C.SectionList.section);
+    // Find the row matching our condition's index.
+    // Conditions are sorted by index in the CONT table.
     const sorted = [...contract.conditions].sort((a, b) => a.index - b.index);
     const idx = sorted.findIndex(x => x.id === condition.id);
-    if (idx < 0 || idx >= sections.length) {
-      return { success: false, error: 'Could not find condition section.' };
+    if (idx < 0) {
+      return { success: false, error: 'Could not find condition in contract.' };
     }
 
-    const section = sections[idx];
-    const buttons = _$$(section, C.SectionList.button);
-    const fulfillBtn = buttons.find(x => x.textContent?.trim().toLowerCase() === 'fulfill');
+    const rows = _$$(tile.anchor, 'tr');
+    // Skip the header row.
+    const dataRows = rows.filter(x => _$$(x, 'td').length > 0);
+    if (idx >= dataRows.length) {
+      return { success: false, error: 'Could not find condition row.' };
+    }
+
+    const row = dataRows[idx];
+    const fulfillBtn = _$$(row, C.Button.success).find(
+      x => x.textContent?.trim().toLowerCase() === 'fulfill',
+    );
     if (fulfillBtn === undefined) {
-      return { success: false, error: 'Fulfill button not found in condition section.' };
+      return { success: false, error: 'Cannot fulfill this condition right now.' };
     }
 
     await clickElement(fulfillBtn as HTMLElement);
