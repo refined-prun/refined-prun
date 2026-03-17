@@ -36,12 +36,12 @@ export async function fulfillCondition(
   const done = ref(false);
   try {
     const command = `CONT ${contract.localId}`;
-    const window = await showBuffer(command, {
+    const window = (await showBuffer(command, {
       force: true,
       autoSubmit: true,
       autoClose: true,
       closeWhen: done,
-    });
+    })) as HTMLElement | undefined;
 
     // Find the tile that was just opened.
     const tile = tiles.find(command, true)[0];
@@ -75,10 +75,13 @@ export async function fulfillCondition(
       return { success: false, error: 'Cannot fulfill this condition right now.' };
     }
 
-    // Temporarily show the window so React processes click events.
-    window?.classList.remove(css.hidden);
+    // Replace display:none with offscreen positioning so React processes events.
+    if (window) {
+      window.classList.remove(css.hidden);
+      window.style.position = 'fixed';
+      window.style.left = '-9999px';
+    }
     await clickElement(fulfillBtn as HTMLElement);
-    window?.classList.add(css.hidden);
 
     const error = await waitActionFeedback(tile.frame);
     if (error) {
