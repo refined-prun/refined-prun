@@ -15,7 +15,7 @@ import CargoBar from './CargoBar.vue';
 import { fixed0 } from '@src/utils/format';
 
 type SortKey = 'name' | 'cargo' | 'status' | 'fuel';
-type SortDirection = 'asc' | 'desc';
+type SortDirection = 'asc' | 'desc' | 'none';
 type FuelAlertThreshold = '75' | '50' | '35' | '25' | '10';
 type FuelAlertFilter = 'any' | FuelAlertThreshold;
 
@@ -36,9 +36,9 @@ const primarySortKey = useTileState<SortKey>('primarySortKey', 'name');
 const secondarySortKey = useTileState<SortKey>('secondarySortKey', 'status');
 const sortDirectionByKey = useTileState<Record<SortKey, SortDirection>>('sortDirectionByKey', {
   name: 'asc',
-  cargo: 'asc',
-  status: 'asc',
-  fuel: 'asc',
+  cargo: 'none',
+  status: 'none',
+  fuel: 'none',
 });
 const showFilters = useTileState('showFilters', false);
 const showStlShips = useTileState('showStlShips', true);
@@ -225,23 +225,43 @@ const rows = computed(() => {
   const sorted = [...source];
 
   const primaryKey = primarySortKey.value;
+  const primaryDirection = getSortDirection(primaryKey);
   let secondaryKey = secondarySortKey.value;
-  if (secondaryKey === primaryKey) {
-    secondaryKey = 'name';
+  const secondaryDirection = getSortDirection(secondaryKey);
+
+  // If primary sort is disabled, use secondary as primary
+  let activePrimaryKey = primaryKey;
+  let activePrimaryDirection = primaryDirection;
+  let activeSecondaryKey: SortKey | undefined;
+  let activeSecondaryDirection: SortDirection = 'asc';
+
+  if (primaryDirection === 'none') {
+    if (secondaryDirection !== 'none') {
+      activePrimaryKey = secondaryKey;
+      activePrimaryDirection = secondaryDirection;
+      activeSecondaryKey = undefined;
+    }
+  } else {
+    if (secondaryDirection !== 'none' && secondaryKey !== primaryKey) {
+      activeSecondaryKey = secondaryKey;
+      activeSecondaryDirection = secondaryDirection;
+    }
   }
 
-  const primaryDirection = getSortDirection(primaryKey) === 'asc' ? 1 : -1;
-  const secondaryDirection = getSortDirection(secondaryKey) === 'asc' ? 1 : -1;
+  const primaryDirMultiplier = activePrimaryDirection === 'asc' ? 1 : -1;
+  const secondaryDirMultiplier = activeSecondaryDirection === 'asc' ? 1 : -1;
 
   sorted.sort((a, b) => {
-    const primary = compareByKey(a, b, primaryKey) * primaryDirection;
+    const primary = compareByKey(a, b, activePrimaryKey) * primaryDirMultiplier;
     if (primary !== 0) {
       return primary;
     }
 
-    const secondary = compareByKey(a, b, secondaryKey) * secondaryDirection;
-    if (secondary !== 0) {
-      return secondary;
+    if (activeSecondaryKey) {
+      const secondary = compareByKey(a, b, activeSecondaryKey) * secondaryDirMultiplier;
+      if (secondary !== 0) {
+        return secondary;
+      }
     }
 
     return compareByKey(a, b, 'name');
@@ -326,7 +346,15 @@ const optionFilterGroups = computed<MultiOptionFilterGroup[]>(() => [
 
 function setSort(key: SortKey) {
   if (primarySortKey.value === key) {
-    const nextDirection = getSortDirection(key) === 'asc' ? 'desc' : 'asc';
+    const currentDirection = getSortDirection(key);
+    let nextDirection: SortDirection;
+    if (currentDirection === 'asc') {
+      nextDirection = 'desc';
+    } else if (currentDirection === 'desc') {
+      nextDirection = 'none';
+    } else {
+      nextDirection = 'asc';
+    }
     sortDirectionByKey.value = {
       ...sortDirectionByKey.value,
       [key]: nextDirection,
@@ -336,24 +364,37 @@ function setSort(key: SortKey) {
 
   secondarySortKey.value = primarySortKey.value;
   primarySortKey.value = key;
+  sortDirectionByKey.value = {
+    ...sortDirectionByKey.value,
+    [key]: 'asc',
+  };
 }
 
 function getSortIndicator(key: SortKey) {
+  const direction = getSortDirection(key);
+  if (direction === 'none') {
+    return undefined;
+  }
+
   if (primarySortKey.value === key) {
-    return getSortDirection(key) === 'asc' ? '▲' : '▼';
+    return direction === 'asc' ? '▲' : '▼';
   }
   if (secondarySortKey.value === key && primarySortKey.value !== key) {
-    return getSortDirection(key) === 'asc' ? '▲' : '▼';
+    return direction === 'asc' ? '▲' : '▼';
   }
   return undefined;
 }
 
 function isPrimarySort(key: SortKey) {
-  return primarySortKey.value === key;
+  return primarySortKey.value === key && getSortDirection(key) !== 'none';
 }
 
 function isSecondarySort(key: SortKey) {
-  return secondarySortKey.value === key && primarySortKey.value !== key;
+  return (
+    secondarySortKey.value === key &&
+    primarySortKey.value !== key &&
+    getSortDirection(key) !== 'none'
+  );
 }
 
 function getSortDirection(key: SortKey) {
@@ -502,6 +543,14 @@ function clearFilters() {
   cargoStateFilters.value = [];
   etaFilters.value = [];
   fuelAlertFilter.value = 'any';
+  primarySortKey.value = 'name';
+  secondarySortKey.value = 'status';
+  sortDirectionByKey.value = {
+    name: 'asc',
+    cargo: 'none',
+    status: 'none',
+    fuel: 'none',
+  };
 }
 
 function getShipClass(ship: PrunApi.Ship) {
