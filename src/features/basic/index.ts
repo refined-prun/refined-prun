@@ -50,6 +50,7 @@ import './inv-custom-item-sorting/inv-custom-item-sorting';
 import './inv-item-markers/inv-item-markers';
 import './inv-search';
 import './inv-show-space-remaining';
+import './inv-unused-item-stripes';
 import './item-icons';
 import './item-ticker-shadow';
 import './lead-per-day-column';
