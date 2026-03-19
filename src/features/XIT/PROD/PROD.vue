@@ -12,8 +12,6 @@ import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
 
 const parameters = useXitParameters();
 
-// Fake site for overall burn.
-
 function findSites(term: string, parts: string[]) {
   if (term === 'all') {
     return sitesStore.all.value;
@@ -36,9 +34,7 @@ const planetProduction = computed<PlanetProduction[]>(() => {
   }
 
   return sites
-    .map(site => {
-      return getPlanetProduction(site);
-    })
+    .map(x => getPlanetProduction(x))
     .filter(x => x !== undefined)
     .sort((a, b) => {
       // Sum up capacity for planet A
@@ -90,7 +86,7 @@ const planetProduction = computed<PlanetProduction[]>(() => {
     <RadioItem v-model="queue" horizontal>Queue</RadioItem>
     <RadioItem v-model="notqueued" horizontal>Not Queued</RadioItem>
   </div>
-  <table :class="[$style.fixedWidthTable]">
+  <table>
     <colgroup>
       <col style="width: 32px" />
       <col />
@@ -122,19 +118,3 @@ const planetProduction = computed<PlanetProduction[]>(() => {
       :headers="headers" />
   </table>
 </template>
-
-<style module>
-.fixed-width-table {
-  /* Forces the browser to use the specified widths and ignore content size */
-  table-layout: fixed;
-}
-
-.expand {
-  text-align: center;
-  cursor: pointer;
-  user-select: none;
-  font-size: 12px;
-  padding-left: 18px;
-  font-weight: bold;
-}
-</style>
