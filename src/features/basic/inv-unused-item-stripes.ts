@@ -10,7 +10,8 @@ function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.StoreView.container), container => {
     subscribe($$(container, C.GridItemView.container), gridItem => {
       const label = _$(gridItem, C.ColoredIcon.label);
-      if (!label) {
+      const icon = _$(gridItem, C.ColoredIcon.container);
+      if (!label || !icon) {
         return;
       }
       const ticker = refTextContent(label);
@@ -24,7 +25,17 @@ function onTileReady(tile: PrunTile) {
           gridItem.classList.remove($style.unused);
           return;
         }
-        gridItem.classList.toggle($style.unused, burn.burn[ticker.value] === undefined);
+        const isUnused = burn.burn[ticker.value] === undefined;
+        gridItem.classList.toggle($style.unused, isUnused);
+        if (isUnused) {
+          const originalTitle = icon.getAttribute('title') ?? '';
+          if (!originalTitle.includes('Not used by')) {
+            icon.setAttribute(
+              'title',
+              `${originalTitle}\n(Not used by any production order or workforce)`,
+            );
+          }
+        }
       });
     });
   });
@@ -34,4 +45,8 @@ function init() {
   tiles.observe('INV', onTileReady);
 }
 
-features.add(import.meta.url, init, 'INV: Highlights unused materials with danger stripes.');
+features.add(
+  import.meta.url,
+  init,
+  'INV: Highlights materials not used by base production or workforce with danger stripes.',
+);
