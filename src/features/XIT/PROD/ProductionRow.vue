@@ -35,11 +35,12 @@ const onHeaderClick = () => {
 const tooltipText = computed(() => {
   const lines = [`Condition: ${percent0(condition.value)}`];
 
-  if (productionLine.efficiencyFactors.length in [0, NaN]) {
+  if (productionLine.efficiencyFactors.length === 0) {
     return lines.join(' ');
   }
 
-  lines.push(''); // Add a spacer
+  // Add a spacer.
+  lines.push('');
 
   const labels: Partial<Record<PrunApi.EfficiencyFactorType, string>> = {
     COGC_PROGRAM: 'COGC',
