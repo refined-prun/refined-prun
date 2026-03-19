@@ -135,10 +135,14 @@ Stage all changed source files (including prettier changes, but not `.tmp/pr/<nu
 
 ```bash
 git add <changed files>
-git commit -m "<concise message describing the fix>"
+git commit -m "<concise message describing the fix>
+
+Co-Authored-By: <model name> <noreply@anthropic.com>"
 ```
 
-Commit message should describe the code change, not the review finding. Examples:
+Where `<model name>` is your current model identity (e.g., "Claude Opus 4.6 (1M context)"). Use whatever model name and context size (if available) you were introduced with in the system prompt.
+
+Commit message should describe the code change, not the review finding. Always include the `Co-Authored-By` trailer. Examples:
 - `Add null guard to parseFloat calls in disableInvalidPopidSliders`
 - `Fix import order in basic/index.ts`
 - `Use === instead of == for undefined check`
