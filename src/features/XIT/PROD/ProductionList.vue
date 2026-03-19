@@ -4,12 +4,12 @@ import { PlanetProduction, PlatformProduction } from '@src/core/production';
 import { useTileState } from './tile-state';
 const { production, headers } = defineProps<{ production: PlanetProduction; headers?: boolean }>();
 
-const displayproduction = useTileState('production');
+const displayProduction = useTileState('production');
 const queue = useTileState('queue');
 const inactive = useTileState('inactive');
 const notqueued = useTileState('notqueued');
 
-const filteredproduction = computed<PlatformProduction[]>(() => {
+const filteredProduction = computed<PlatformProduction[]>(() => {
   return production.production
     .filter(x => x !== undefined)
     .sort((a, b) => {
@@ -17,7 +17,7 @@ const filteredproduction = computed<PlatformProduction[]>(() => {
     })
     .filter(p => {
       const productionLines = p;
-      if (productionLines.activeCapacity > 0 && displayproduction.value) {
+      if (productionLines.activeCapacity > 0 && displayProduction.value) {
         return true;
       }
       if (productionLines.inactiveCapacity > 0 && inactive.value) {
@@ -37,7 +37,7 @@ const filteredproduction = computed<PlatformProduction[]>(() => {
 
 <template>
   <ProductionRow
-    v-for="line in filteredproduction"
+    v-for="line in filteredProduction"
     :key="line.id"
     :production-line="line"
     :headers="headers" />
