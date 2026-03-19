@@ -32,7 +32,9 @@ export interface PlanetProduction {
 
 const productionMap = computed<Record<string, PlanetProduction>>(() => {
   const allSites = sitesStore.all.value;
-  if (!allSites) return {};
+  if (!allSites) {
+    return {};
+  }
 
   const result: Record<string, PlanetProduction> = {};
 
@@ -82,6 +84,8 @@ export function getPlanetProduction(
 ): PlanetProduction | undefined {
   const siteId = typeof siteOrId === 'string' ? siteOrId : siteOrId?.siteId;
 
-  if (!siteId) return undefined;
+  if (!siteId) {
+    return undefined;
+  }
   return productionMap.value[siteId] ?? undefined;
 }
