@@ -30,7 +30,7 @@
     "math-expression-evaluator": "^2.0.7",
     "one-mutation": "^3.0.1",
     "onetime": "^7.0.0",
-    "socket.io-parser": "^4.2.4",
+    "socket.io-parser": "^4.2.6",
     "tinycolor2": "^1.6.0",
     "ts-extras": "^0.15.0",
     "type-fest": "^4.41.0",
