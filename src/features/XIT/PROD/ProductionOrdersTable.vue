@@ -42,7 +42,7 @@ const stackedActive = computed(() => {
 
   const results = Object.values(groups);
 
-  // Unused Capacity logic
+  // Unused Capacity logic.
 
   if (productionLine.inactiveCapacity > 0) {
     results.push({
@@ -76,7 +76,7 @@ const stackedQueued = computed(() => {
 
   const results = Object.values(groups);
 
-  // Missing Queue logic
+  // Missing Queue logic.
   if (productionLine.queuedOrders.length === 0) {
     results.push({
       ticker: 'N/A',
@@ -117,7 +117,7 @@ const formatTime = (ts: number) => {
       <tbody>
         <tr
           v-for="(group, index) in allStackedOrders"
-          :key="(group.isQueued ? 'q-' : 'a-') + group.ticker + (group.ts || index)">
+          :key="(group.isQueued ? 'q-' : 'a-') + group.ticker + (group.ts ?? index)">
           <td :class="[$style.iconCell, $style.buildingContainer]">
             <MaterialIcon :ticker="group.ticker" size="inline-table" />
           </td>
@@ -151,7 +151,7 @@ const formatTime = (ts: number) => {
 <style module>
 .placeholderStatus {
   /* Standard red for warnings/missing items. */
-  color: #d9534f;
+  color: var(--rp-color-red);
   font-weight: bold;
 }
 
@@ -180,7 +180,6 @@ const formatTime = (ts: number) => {
   font-weight: normal;
   text-transform: uppercase;
   font-size: 9px;
-  border-bottom: 1px solid inherit;
 }
 
 .numericColumn {
@@ -188,7 +187,7 @@ const formatTime = (ts: number) => {
 }
 
 .stackCount {
-  /* FIO primary blue. */
+  /* FIO primary blue — no CSS variable exists yet. */
   color: #3faabf;
   font-weight: bold;
   margin-left: 4px;
@@ -196,7 +195,7 @@ const formatTime = (ts: number) => {
 
 /* Orange for running orders. */
 .activeStatus {
-  color: #f0ad4e;
+  color: var(--rp-color-orange);
 }
 
 .queuedStatus {
