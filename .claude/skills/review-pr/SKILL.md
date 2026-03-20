@@ -165,7 +165,7 @@ Check these categories. For each, the source of truth is the doc file, not this 
 
 ## Phase 7: Write Review
 
-**Incremental mode** (existing `.tmp/pr/<number>/pr-review.md`): Read the existing file. Keep all existing findings and their resolutions exactly as-is. Append any newly discovered findings that are not already covered. Do not duplicate findings. Do not remove or reword existing entries. Update the ESLint section and review date. Add new files to "Files Reviewed" if not already listed. If the file has a `## Dismissed` section, do not re-flag any finding whose title matches a dismissed entry.
+**Incremental mode** (existing `.tmp/pr/<number>/pr-review.md`): Read the existing file. Keep all existing findings and their resolutions exactly as-is. Append any newly discovered findings that are not already covered. Do not duplicate findings. Do not remove or reword existing entries. Update the ESLint section and review date. Add new files to "Files Reviewed" if not already listed. If the file has a `## Dismissed` section, do not re-flag any finding whose title matches a dismissed entry. After merging existing and new findings, renumber all findings sequentially starting from 1, continuous across sections (Critical, then Suggestions, then Observations).
 
 **Fresh mode** (file does not exist): Create `.tmp/pr/<number>/pr-review.md` from scratch.
 
