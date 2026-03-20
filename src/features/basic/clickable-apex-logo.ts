@@ -5,7 +5,11 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 function init() {
   applyCssRule(`.${C.Frame.logo}`, $style.logo);
   subscribe($$(document, C.Frame.logo), logo => {
-    logo.addEventListener('click', () => showBuffer(`CO ${companyStore.value?.code}`));
+    logo.addEventListener('click', e => {
+      void showBuffer(`CO ${companyStore.value?.code}`);
+      e.preventDefault();
+      e.stopPropagation();
+    });
   });
 }
 
