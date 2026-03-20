@@ -3,10 +3,8 @@ import RadioItem from '@src/components/forms/RadioItem.vue';
 import { getPlanetProduction, PlanetProduction } from '@src/core/production';
 import ProdSection from './ProdSection.vue';
 import { useTileState } from './tile-state';
-import Tooltip from '@src/components/Tooltip.vue';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import InlineFlex from '@src/components/InlineFlex.vue';
 import { findWithQuery } from '@src/utils/find-with-query';
 import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
 
@@ -98,14 +96,7 @@ const planetProduction = computed<PlanetProduction[]>(() => {
       <tr v-if="headers">
         <th> </th>
         <th>Planet</th>
-
-        <th>
-          <InlineFlex>
-            Efficiency
-            <Tooltip position="bottom" tooltip="How much of a material is consumed per day." />
-          </InlineFlex>
-        </th>
-
+        <th>Efficiency</th>
         <th>Slots</th>
         <th>CMD</th>
       </tr>
