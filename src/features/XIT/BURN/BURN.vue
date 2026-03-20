@@ -195,6 +195,7 @@ function applyProductionToggle(burn: BurnValues): BurnValues {
   return result;
 }
 
+// Covers all-color-filters-off and both-toggles-off (empty burns after toggle filtering).
 const allFiltered = computed(() => {
   if (!planetBurn.value || planetBurn.value.length === 0) {
     return false;
