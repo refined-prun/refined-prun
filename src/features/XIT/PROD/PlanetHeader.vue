@@ -26,7 +26,6 @@ const totalCapacity = computed(() =>
       <span v-if="hasMinimize" :class="$style.center">
         {{ minimized ? '+' : '-' }}
       </span>
-      <span></span>
     </td>
     <td colspan="2" :class="$style.cell">
       {{ production.planetName }}
