@@ -10,6 +10,7 @@ import Tooltip from '@src/components/Tooltip.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import MaterialRow from '@src/features/XIT/BURN/MaterialRow.vue';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
+import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { countDays, getSortedTickers } from '@src/features/XIT/BURN/utils';
 import InlineFlex from '@src/components/InlineFlex.vue';
@@ -173,10 +174,10 @@ function formatBurnTable(burns: PlanetBurn[]) {
     const sorted = getSortedTickers(planet);
     for (const material of sorted) {
       const mat = planet.burn[material.ticker];
+      // Floor needed here: per-planet burns are pre-floored, but overall burn is not.
       const days = mat.dailyAmount >= 0 ? '' : Math.floor(mat.daysLeft).toString();
-      lines.push(
-        `${planet.planetName}\t${material.ticker}\t${mat.inventory}\t${mat.dailyAmount}\t${days}`,
-      );
+      const burn = parseFloat(mat.dailyAmount.toFixed(3));
+      lines.push(`${planet.planetName}\t${material.ticker}\t${mat.inventory}\t${burn}\t${days}`);
     }
   }
   return lines.join('\n');

@@ -2,6 +2,8 @@ export function useClipboard() {
   const copied = ref(false);
   let timeout: ReturnType<typeof setTimeout> | undefined;
 
+  onScopeDispose(() => clearTimeout(timeout));
+
   async function copy(text: string) {
     try {
       await navigator.clipboard.writeText(text);
