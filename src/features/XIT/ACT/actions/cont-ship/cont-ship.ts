@@ -5,26 +5,10 @@ import { CONT_SEND } from '@src/features/XIT/ACT/action-steps/CONT_SEND';
 import { Config } from '@src/features/XIT/ACT/actions/cont-ship/config';
 import { AssertFn, configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { displayLocationValue } from '@src/features/XIT/ACT/actions/cont-locations';
-
-function resolveLocation(
-  value: string | undefined,
-  config: Config | undefined,
-  field: 'origin' | 'destination',
-  getMaterialGroupPlanet: (name: string | undefined) => string | undefined,
-): string | undefined {
-  if (!value) {
-    return undefined;
-  }
-  if (value === configurableValue) {
-    return config?.[field];
-  }
-  if (value.startsWith(groupTargetPrefix)) {
-    const groupName = value.slice(groupTargetPrefix.length);
-    return getMaterialGroupPlanet(groupName);
-  }
-  return value;
-}
+import {
+  displayLocationValue,
+  resolveLocation,
+} from '@src/features/XIT/ACT/actions/cont-locations';
 
 act.addAction<Config>({
   type: 'CONT Ship',
@@ -65,10 +49,12 @@ act.addAction<Config>({
     const materials = await getMaterialGroup(data.group);
     assert(materials, 'Invalid material group');
 
-    const contOrigin = resolveLocation(data.contOrigin, config, 'origin', getMaterialGroupPlanet);
+    assert(data.contOrigin, 'Missing origin');
+    const contOrigin = resolveLocation(data.contOrigin, config?.origin, getMaterialGroupPlanet);
     assert(contOrigin, 'Invalid origin');
 
-    const contDest = resolveLocation(data.contDest, config, 'destination', getMaterialGroupPlanet);
+    assert(data.contDest, 'Missing destination');
+    const contDest = resolveLocation(data.contDest, config?.destination, getMaterialGroupPlanet);
     assert(contDest, 'Invalid destination');
 
     const paymentPerTon = Number(data.paymentPerTon ?? 0);

@@ -3,7 +3,7 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { comparePlanets } from '@src/util';
-import { groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
+import { configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
 
 export function useContLocations() {
   return computed(() => {
@@ -26,6 +26,20 @@ export function useContLocations() {
     }
     return result.sort(comparePlanets);
   });
+}
+
+export function resolveLocation(
+  value: string,
+  configValue: string | undefined,
+  getMaterialGroupPlanet: (name: string) => string | undefined,
+): string | undefined {
+  if (value === configurableValue) {
+    return configValue;
+  }
+  if (value.startsWith(groupTargetPrefix)) {
+    return getMaterialGroupPlanet(value.slice(groupTargetPrefix.length));
+  }
+  return value;
 }
 
 export function displayLocationValue(value: string | undefined) {

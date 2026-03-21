@@ -46,7 +46,7 @@ export const CONT_SEND = act.addActionStep<Data>({
     const materialDetails: Array<{ ticker: string; amount: number; tonnage: number }> = [];
 
     for (const [ticker, rawAmount] of Object.entries(data.materials)) {
-      const qty = rawAmount as number;
+      const qty = rawAmount;
       if (qty <= 0) {
         continue;
       }

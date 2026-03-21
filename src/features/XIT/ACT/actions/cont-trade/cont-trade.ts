@@ -4,25 +4,10 @@ import Configure from '@src/features/XIT/ACT/actions/cont-trade/Configure.vue';
 import { CONT_TRADE } from '@src/features/XIT/ACT/action-steps/CONT_TRADE';
 import { Config } from '@src/features/XIT/ACT/actions/cont-trade/config';
 import { AssertFn, configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
-import { displayLocationValue } from '@src/features/XIT/ACT/actions/cont-locations';
-
-function resolveLocation(
-  value: string | undefined,
-  config: Config | undefined,
-  getMaterialGroupPlanet: (name: string | undefined) => string | undefined,
-): string | undefined {
-  if (!value) {
-    return undefined;
-  }
-  if (value === configurableValue) {
-    return config?.location;
-  }
-  if (value.startsWith(groupTargetPrefix)) {
-    const groupName = value.slice(groupTargetPrefix.length);
-    return getMaterialGroupPlanet(groupName);
-  }
-  return value;
-}
+import {
+  displayLocationValue,
+  resolveLocation,
+} from '@src/features/XIT/ACT/actions/cont-locations';
 
 act.addAction<Config>({
   type: 'CONT Trade',
@@ -69,7 +54,8 @@ act.addAction<Config>({
       `Material group [${data.group}] has no prices. Use a Paste group with 3 columns (ticker, amount, price).`,
     );
 
-    const location = resolveLocation(data.contLocation, config, getMaterialGroupPlanet);
+    assert(data.contLocation, 'Missing location');
+    const location = resolveLocation(data.contLocation, config?.location, getMaterialGroupPlanet);
     assert(location, 'Invalid location');
 
     const tradeType = data.contTradeType ?? 'BUYING';
