@@ -206,7 +206,7 @@ background-color: rgb(217, 83, 79);
 
 ### Tooltips
 
-Use `data-tooltip` attribute for instant tooltips (PrUn-style). Don't use `title` attribute — browser tooltips have a ~2 second delay, and most players will never see them.
+Use `data-tooltip` attribute for instant tooltips (PrUn-style). Don't use `title` attribute — browser tooltips have a ~2 second delay, and most players will never see them. Exception: the game's own `ColoredIcon` component uses `title` natively — when modifying tooltips on elements that already use `title`, keep using `title` to avoid layout breakage.
 
 ### Server Communication & ToS
 
