@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import RadioItem from '@src/components/forms/RadioItem.vue';
-import { getPlanetBurn, MaterialBurn } from '@src/core/burn';
+import { computeDaysLeft, getPlanetBurn, MaterialBurn } from '@src/core/burn';
 import { comparePlanets } from '@src/util';
 import BurnSection from '@src/features/XIT/BURN/BurnSection.vue';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
@@ -142,10 +142,6 @@ const inf = useTileState('inf');
 const workforce = useTileState('workforce');
 const production = useTileState('production');
 
-function computeDaysLeft(dailyAmount: number, inventory: number) {
-  return dailyAmount >= 0 ? 1000 : inventory === 0 ? 0 : Math.floor(-inventory / dailyAmount);
-}
-
 function applyWorkforceToggle(burn: BurnValues): BurnValues {
   if (workforce.value) {
     return burn;
@@ -159,8 +155,7 @@ function applyWorkforceToggle(burn: BurnValues): BurnValues {
       continue;
     }
     // Re-derive type since workforce is excluded from the burn calculation.
-    const type =
-      dailyAmount > 0 ? 'output' : b.input > 0 ? 'input' : b.workforce > 0 ? 'workforce' : 'output';
+    const type = b.input > 0 && dailyAmount <= 0 ? 'input' : 'output';
     result[ticker] = {
       ...b,
       workforce: 0,
@@ -242,13 +237,15 @@ function onExpandAllClick() {
       <RadioItem
         v-model="workforce"
         horizontal
-        data-tooltip="Toggle workforce consumption. When off, burn rates exclude workforce needs.">
+        data-tooltip="Toggle workforce consumption. When off, burn rates exclude workforce needs."
+        data-tooltip-position="bottom">
         WRK
       </RadioItem>
       <RadioItem
         v-model="production"
         horizontal
-        data-tooltip="Toggle production I/O. When off, only workforce consumption is shown.">
+        data-tooltip="Toggle production I/O. When off, only workforce consumption is shown."
+        data-tooltip-position="bottom">
         PROD
       </RadioItem>
     </div>
