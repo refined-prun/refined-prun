@@ -15,26 +15,28 @@ function onTileReady(tile: PrunTile) {
         return;
       }
       const ticker = refTextContent(label);
+      const originalTitle = icon.getAttribute('title') ?? '';
       watchEffectWhileNodeAlive(gridItem, () => {
         if (store.value?.type !== 'STORE') {
           gridItem.classList.remove($style.unused);
+          icon.setAttribute('title', originalTitle);
           return;
         }
         const burn = getPlanetBurn(store.value.addressableId);
         if (!burn || !ticker.value) {
           gridItem.classList.remove($style.unused);
+          icon.setAttribute('title', originalTitle);
           return;
         }
         const isUnused = burn.burn[ticker.value] === undefined;
         gridItem.classList.toggle($style.unused, isUnused);
         if (isUnused) {
-          const originalTitle = icon.getAttribute('title') ?? '';
-          if (!originalTitle.includes('Not used by')) {
-            icon.setAttribute(
-              'title',
-              `${originalTitle}\n(Not used by any production order or workforce)`,
-            );
-          }
+          icon.setAttribute(
+            'title',
+            `${originalTitle}\n(Not used by any production order or workforce)`,
+          );
+        } else {
+          icon.setAttribute('title', originalTitle);
         }
       });
     });

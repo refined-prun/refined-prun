@@ -1,10 +1,9 @@
 .unused {
-  background:
-    repeating-linear-gradient(
-      45deg,
-      rgba(204, 170, 0, 0.3),
-      rgba(204, 170, 0, 0.3) 3px,
-      rgba(0, 0, 0, 0.3) 3px,
-      rgba(0, 0, 0, 0.3) 6px
-    );
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(204, 170, 0, 0.3),
+    rgba(204, 170, 0, 0.3) 3px,
+    rgba(0, 0, 0, 0.3) 3px,
+    rgba(0, 0, 0, 0.3) 6px
+  );
 }
