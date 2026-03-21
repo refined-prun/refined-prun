@@ -8,17 +8,19 @@ import { comparePlanets } from '@src/util';
 import TextInput from '@src/components/forms/TextInput.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
+import {
+  configurableValue,
+  groupTargetPrefix,
+  DropdownOption,
+} from '@src/features/XIT/ACT/shared-types';
 
 const { group, pkg } = defineProps<{
   group: UserData.MaterialGroupData;
   pkg: UserData.ActionPackageData;
 }>();
 
-type Option = string | { label: string; value: string };
-
 const planets = computed(() => {
-  const planets: Option[] = (sitesStore.all.value ?? [])
+  const planets: DropdownOption[] = (sitesStore.all.value ?? [])
     .map(x => getEntityNameFromAddress(x.address))
     .filter(x => x !== undefined)
     .sort(comparePlanets);
@@ -41,7 +43,7 @@ const planets = computed(() => {
   return planets;
 });
 
-const planet = ref(group.planet ?? (planets.value[0] as string));
+const planet = ref(group.planet ?? configurableValue);
 const planetError = ref(false);
 
 const days = ref(

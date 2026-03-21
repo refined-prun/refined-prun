@@ -3,20 +3,22 @@ import Active from '@src/components/forms/Active.vue';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { serializeStorage, storageSort } from '@src/features/XIT/ACT/actions/utils';
-import { actionTargetPrefix, configurableValue } from '@src/features/XIT/ACT/shared-types';
+import {
+  actionTargetPrefix,
+  configurableValue,
+  DropdownOption,
+} from '@src/features/XIT/ACT/shared-types';
 
 const { action, pkg } = defineProps<{
   action: UserData.ActionData;
   pkg: UserData.ActionPackageData;
 }>();
 
-type Option = string | { label: string; value: string };
-
 const materialGroups = computed(() => pkg.groups.map(x => x.name!).filter(x => x));
 const materialGroup = ref(action.group ?? materialGroups.value[0]);
 
 const storages = computed(() => {
-  const storages: Option[] = [...(storagesStore.nonFuelStores.value ?? [])]
+  const storages: DropdownOption[] = [...(storagesStore.nonFuelStores.value ?? [])]
     .sort(storageSort)
     .map(serializeStorage);
   storages.unshift(configurableValue);
@@ -24,7 +26,7 @@ const storages = computed(() => {
 });
 
 const destinationOptions = computed(() => {
-  const options: Option[] = [...storages.value];
+  const options: DropdownOption[] = [...storages.value];
 
   // Add reference options for MTRA actions above this one.
   const currentIndex = pkg.actions.indexOf(action);
@@ -43,8 +45,8 @@ const destinationOptions = computed(() => {
   return options;
 });
 
-const origin = ref(action.origin ?? (storages.value[0] as string));
-const destination = ref(action.dest ?? (storages.value[0] as string));
+const origin = ref(action.origin ?? configurableValue);
+const destination = ref(action.dest ?? configurableValue);
 
 function validate() {
   return true;

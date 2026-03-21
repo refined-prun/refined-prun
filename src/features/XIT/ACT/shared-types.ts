@@ -55,6 +55,8 @@ export interface ActionStepExecuteContext<T> extends ActionRunnerContext<T> {
   requestTile: (Command: string) => Promise<PrunTile | undefined>;
 }
 
+export type DropdownOption = string | { label: string; value: string };
+
 export const configurableValue = 'Configure on Execution';
 export const groupTargetPrefix = 'group:';
 export const actionTargetPrefix = 'action:';
