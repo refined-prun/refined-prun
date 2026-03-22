@@ -106,6 +106,8 @@ function groupKey(group: StackedOrderGroup, index: number) {
   return (group.isQueued ? 'q-' : 'a-') + group.ticker + (group.ts ?? index);
 }
 
+const hasStacks = computed(() => allStackedOrders.value.some(x => x.count > 1));
+
 const formatTime = (ts: number) => {
   const mins = Math.max(0, Math.floor((ts - timestampEachMinute.value) / 60000));
   if (mins === 0) {
@@ -120,7 +122,8 @@ const formatTime = (ts: number) => {
     <table :class="$style.orderTable">
       <thead>
         <tr v-if="headers" :class="$style.headerRow">
-          <th colspan="2">Order</th>
+          <th />
+          <th v-if="hasStacks" />
           <th :class="$style.numericColumn">Qty</th>
           <th :class="$style.numericColumn">Status / ETA</th>
         </tr>
@@ -130,8 +133,8 @@ const formatTime = (ts: number) => {
           <IconCell>
             <MaterialIcon :ticker="group.ticker" size="inline-table" />
           </IconCell>
-          <td>
-            <span v-if="group.count > 1" :class="$style.stackCount">x{{ group.count }}</span>
+          <td v-if="hasStacks" :class="$style.stackColumn">
+            <div v-if="group.count > 1" :class="$style.stackCount">x{{ group.count }}</div>
           </td>
           <td :class="$style.numericColumn">{{ group.isPlaceholder ? '-' : group.amount }}</td>
           <td :class="[$style.numericColumn, statusClass(group)]">
@@ -172,11 +175,14 @@ const formatTime = (ts: number) => {
   text-align: right;
 }
 
+.stackColumn {
+  width: 32px;
+}
+
 .stackCount {
   /* FIO primary blue. */
   color: #3faabf;
   font-weight: bold;
-  margin-left: 4px;
 }
 
 .activeStatus {
