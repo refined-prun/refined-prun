@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { PlatformProduction } from '@src/core/production';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
+import IconCell from './IconCell.vue';
 import { timestampEachMinute } from '@src/utils/dayjs';
 
 const { productionLine, headers } = defineProps<{
@@ -120,9 +121,9 @@ const formatTime = (ts: number) => {
         <tr
           v-for="(group, index) in allStackedOrders"
           :key="(group.isQueued ? 'q-' : 'a-') + group.ticker + (group.ts ?? index)">
-          <td :class="[$style.iconCell, $style.buildingContainer]">
+          <IconCell>
             <MaterialIcon :ticker="group.ticker" size="inline-table" />
-          </td>
+          </IconCell>
           <td>
             <span v-if="group.count > 1" :class="$style.stackCount">x{{ group.count }}</span>
           </td>
@@ -155,19 +156,6 @@ const formatTime = (ts: number) => {
   /* Standard red for warnings/missing items. */
   color: var(--rp-color-red);
   font-weight: bold;
-}
-
-.iconCell {
-  padding: 0;
-}
-
-.buildingContainer {
-  width: 32px;
-  height: 18px;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  line-height: 0;
 }
 
 .orderTable {

@@ -9,6 +9,7 @@ import FracCell from './FracCell.vue';
 import InlineFlex from '@src/components/InlineFlex.vue';
 import Tooltip from '@src/components/Tooltip.vue';
 import ProductionOrdersTable from './ProductionOrdersTable.vue';
+import IconCell from './IconCell.vue';
 
 const { productionLine, headers } = defineProps<{
   productionLine: PlatformProduction;
@@ -69,9 +70,9 @@ const tooltipText = computed(() => {
 
 <template>
   <tr :class="[$style.row]">
-    <td :class="$style.buildingContainer">
+    <IconCell>
       <BuildingIcon size="inline-table" :ticker="productionLine.reactorTicker" />
-    </td>
+    </IconCell>
 
     <td :class="$style.trigger" @click="onHeaderClick">
       <span :class="[$style.caret, displayInfo && $style.expanded]">▶</span>
@@ -114,17 +115,6 @@ const tooltipText = computed(() => {
 }
 
 .ordersCell {
-  padding: 0;
-}
-
-.buildingContainer {
-  display: flex;
-  width: 32px;
-  height: 18px;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  line-height: 0;
   padding: 0;
 }
 
