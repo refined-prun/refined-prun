@@ -151,7 +151,6 @@ const formatTime = (ts: number) => {
 
 <style module>
 .placeholderStatus {
-  /* Standard red for warnings/missing items. */
   color: var(--rp-color-red);
   font-weight: bold;
 }
@@ -181,7 +180,6 @@ const formatTime = (ts: number) => {
   margin-left: 4px;
 }
 
-/* Orange for running orders. */
 .activeStatus {
   color: var(--rp-color-orange);
 }
