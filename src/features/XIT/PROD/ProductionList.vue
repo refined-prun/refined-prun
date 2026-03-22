@@ -8,7 +8,7 @@ const { production, headers } = defineProps<{ production: PlanetProduction; head
 const displayProduction = useTileState('production');
 const queue = useTileState('queue');
 const inactive = useTileState('inactive');
-const notqueued = useTileState('notqueued');
+const notQueued = useTileState('notQueued');
 
 const filteredProduction = computed(() => {
   return production.production
@@ -18,7 +18,7 @@ const filteredProduction = computed(() => {
         production: displayProduction.value,
         inactive: inactive.value,
         queue: queue.value,
-        notQueued: notqueued.value,
+        notQueued: notQueued.value,
       }),
     );
 });

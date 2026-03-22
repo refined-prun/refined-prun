@@ -23,7 +23,7 @@ function findSites(term: string, parts: string[]) {
 const displayProduction = useTileState('production');
 const queue = useTileState('queue');
 const inactive = useTileState('inactive');
-const notqueued = useTileState('notqueued');
+const notQueued = useTileState('notQueued');
 const headers = useTileState('headers');
 
 const planetProduction = computed<PlanetProduction[]>(() => {
@@ -50,7 +50,7 @@ const planetProduction = computed<PlanetProduction[]>(() => {
         production: displayProduction.value,
         inactive: inactive.value,
         queue: queue.value,
-        notQueued: notqueued.value,
+        notQueued: notQueued.value,
       }),
     );
 });
@@ -62,7 +62,7 @@ const planetProduction = computed<PlanetProduction[]>(() => {
     <RadioItem v-model="displayProduction" horizontal>Production</RadioItem>
     <RadioItem v-model="inactive" horizontal>Inactive</RadioItem>
     <RadioItem v-model="queue" horizontal>Queue</RadioItem>
-    <RadioItem v-model="notqueued" horizontal>Not Queued</RadioItem>
+    <RadioItem v-model="notQueued" horizontal>Not Queued</RadioItem>
   </div>
   <table>
     <colgroup>

@@ -4,7 +4,7 @@ export const useTileState = createTileStateHook({
   production: true,
   queue: true,
   inactive: true,
-  notqueued: true,
+  notQueued: true,
   headers: true,
   expandPlanets: [] as string[],
   expandInfo: [] as string[],
