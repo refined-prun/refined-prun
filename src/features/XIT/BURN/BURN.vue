@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ActionBar from '@src/components/ActionBar.vue';
-import PrunButton from '@src/components/PrunButton.vue';
+import CopyButton from '@src/components/CopyButton.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { getPlanetBurn, MaterialBurn, PlanetBurn } from '@src/core/burn';
 import { comparePlanets } from '@src/util';
@@ -16,7 +16,6 @@ import { countDays, getSortedTickers } from '@src/features/XIT/BURN/utils';
 import InlineFlex from '@src/components/InlineFlex.vue';
 import { findWithQuery } from '@src/utils/find-with-query';
 import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
-import { useClipboard } from '@src/hooks/use-clipboard';
 
 const parameters = useXitParameters();
 
@@ -183,13 +182,11 @@ function formatBurnTable(burns: PlanetBurn[]) {
   return lines.join('\n');
 }
 
-const { copied, copy } = useClipboard();
-
-async function onCopyClick() {
+function copyBurnTable() {
   if (!planetBurn.value) {
-    return;
+    return '';
   }
-  await copy(formatBurnTable(planetBurn.value));
+  return formatBurnTable(planetBurn.value);
 }
 </script>
 
@@ -197,9 +194,7 @@ async function onCopyClick() {
   <LoadingSpinner v-if="planetBurn === undefined" />
   <template v-else>
     <ActionBar>
-      <PrunButton :primary="!copied" :neutral="copied" @click="onCopyClick">
-        {{ copied ? 'COPIED' : 'COPY' }}
-      </PrunButton>
+      <CopyButton :copy-fn="copyBurnTable" data-tooltip-position="bottom" />
     </ActionBar>
     <div :class="C.ComExOrdersPanel.filter">
       <RadioItem v-model="red" horizontal>RED</RadioItem>
