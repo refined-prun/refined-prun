@@ -201,7 +201,6 @@ const formatTime = (ts: number) => {
 }
 
 .queuedStatus {
-  color: var(--font-color-disabled);
   opacity: 0.7;
 }
 </style>
