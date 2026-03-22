@@ -30,7 +30,7 @@ export interface PlanetProduction {
   lines: PrunApi.ProductionLine[];
 }
 
-const productionMap = computed<Record<string, PlanetProduction>>(() => {
+const productionMap = computed(() => {
   const allSites = sitesStore.all.value;
   if (!allSites) {
     return {};
@@ -77,9 +77,7 @@ const productionMap = computed<Record<string, PlanetProduction>>(() => {
   return result;
 });
 
-export function getPlanetProduction(
-  siteOrId?: PrunApi.Site | string | null,
-): PlanetProduction | undefined {
+export function getPlanetProduction(siteOrId?: PrunApi.Site | string | null) {
   const siteId = typeof siteOrId === 'string' ? siteOrId : siteOrId?.siteId;
 
   if (!siteId) {

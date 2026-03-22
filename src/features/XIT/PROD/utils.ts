@@ -11,7 +11,7 @@ interface ProductionFilters {
 export function matchesProductionFilter(
   lines: Arrayable<PlatformProduction>,
   filters: ProductionFilters,
-): boolean {
+) {
   let activeCapacity = 0;
   let inactiveCapacity = 0;
   let queuedOrders = 0;
