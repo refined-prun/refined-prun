@@ -4,7 +4,6 @@ import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addr
 
 xit.add({
   command: 'PROD',
-
   name: parameters => {
     if (parameters[0] && !parameters[1]) {
       const site = sitesStore.getByPlanetNaturalIdOrName(parameters[0]);
