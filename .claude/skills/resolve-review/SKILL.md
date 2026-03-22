@@ -78,46 +78,50 @@ Skipped (no resolution):
 
 ## Phase 3: Gather Context from Basis
 
-Do NOT read all project docs upfront. The `**Basis:**` field on each finding tells you exactly what to read.
+Batch-read everything upfront so Phase 4 never blocks on file I/O.
 
-For each actionable finding, check its Basis and read only what's needed:
+### 3a: Collect file sets
 
-- **Basis cites a doc rule** (e.g., `contributing.md > Code Style > Loops`): Read that specific doc file.
-- **Basis cites a PR comment** (e.g., `maintainer comment: "..."`): Read `.tmp/pr/<number>/pr-comments.txt` if not already loaded.
-- **Basis is a code observation** (e.g., `parseFloat(null) returns NaN`): No doc read needed — the fix is self-contained.
-- **Basis cites architecture** (e.g., `architecture.md > Dependency Layers`): Read `docs/architecture.md`.
-- **Basis cites game knowledge**: Read the referenced `docs/game/` file. If Basis says "no doc found", ask the user before proceeding.
+Scan all actionable findings and build two deduplicated lists:
 
-Deduplicate: if multiple findings cite the same doc, read it once.
+- **Source files** — every file path referenced in finding titles, code quotes, or `**Basis:**` fields.
+- **Doc files** — determined by Basis citations:
+  - Basis cites a doc rule (e.g., `contributing.md > Code Style > Loops`): add that doc file.
+  - Basis cites a PR comment: add `.tmp/pr/<number>/pr-comments.txt`.
+  - Basis cites architecture: add `docs/architecture.md`.
+  - Basis cites game knowledge: add the referenced `docs/game/` file. If Basis says "no doc found", add to a "ask user" list.
+  - Basis is a code observation: no doc needed.
 
-Read the source files referenced in actionable findings. For each finding that quotes code, read the full file so you have complete context.
+### 3b: Batch read
 
-## Phase 4: Resolve Findings
+Read all collected source files and doc files in parallel. Read full files — Phase 4 will need surrounding context for edits.
 
-Process each actionable finding in order (Critical first, then Suggestions, then Observations).
+**If any source file doesn't exist:** Note it — the finding may reference code that was already changed. Phase 4 will handle this per-finding.
 
-For each finding:
+**If "ask user" list is non-empty:** Ask the user about undocumented game mechanics before proceeding to Phase 4.
 
-### 4a: Apply the Resolution
+## Phase 4: Resolve Findings — ONE AT A TIME
 
-Use the `**Basis:**` to understand the rule and the `**Resolution:**` to understand what the user wants done. Apply code changes if the resolution calls for them.
+**CRITICAL: Process exactly one finding through ALL steps (4a→4b→4c→4d) before starting the next.** Never batch findings. Never apply multiple fixes before committing. Never defer the review file update. The loop is: pick one finding → classify → fix/dismiss → commit → update review file → pick next finding.
 
-### 4b: Classify the Resolution
+Process in order: Critical first, then Suggestions, then Observations.
+
+### 4a: Classify the Resolution
 
 Determine the resolution type from the user's text:
 
 - **Dismissal** — resolution says "dismiss", "ignore", "its okay", "not applicable", or similar language indicating the finding should be dropped without code changes.
-- **Fix** — resolution contains instructions for code changes. Apply the fix.
+- **Fix** — resolution contains instructions for code changes.
 
-### 4c: Apply Fix (fixes only)
+### 4b: Apply Fix (fixes only)
 
-Apply the code changes described in the resolution.
+Use the `**Basis:**` to understand the rule and the `**Resolution:**` to understand what the user wants done. Apply code changes.
 
 ```bash
 git diff --stat
 ```
 
-**If no changes after applying:** The resolution may reference another finding that handles it (e.g., "will be fixed in suggestion 1"). This is still a fix, not a dismissal — just skip the commit.
+**If no changes after applying:** The resolution may reference another finding that handles it (e.g., "will be fixed in suggestion 1"). This is still a fix, not a dismissal — just skip the commit and go to 4d.
 
 **If changes exist:**
 
@@ -130,6 +134,8 @@ pnpm lint 2>&1 | tail -20
 ```
 
 **If lint fails on the changed file:** Fix the lint error before proceeding.
+
+### 4c: Commit (fixes with changes only)
 
 Stage all changed source files (including prettier changes, but not `.tmp/pr/<number>/pr-review.md`) and commit:
 
@@ -149,9 +155,9 @@ Commit message should describe the code change, not the review finding. Always i
 
 ### 4d: Update Review File
 
-**If fix (4c):** Remove the entire finding block from `.tmp/pr/<number>/pr-review.md` — from the bold title through the `---` separator (inclusive). If the section (Critical/Suggestions/Observations) becomes empty after removal, replace its content with "None."
+**If fix:** Remove the entire finding block from `.tmp/pr/<number>/pr-review.md` — from the bold title through the `---` separator (inclusive). If the section (Critical/Suggestions/Observations) becomes empty after removal, replace its content with "None."
 
-**If dismissal (4b):** Remove the finding block from its section (same as above). Then append a one-liner to the `## Dismissed` section at the bottom of the file (create the section before `## Files Reviewed` if it doesn't exist):
+**If dismissal:** Remove the finding block from its section (same as above). Then append a one-liner to the `## Dismissed` section at the bottom of the file (create the section before `## Files Reviewed` if it doesn't exist):
 
 ```markdown
 ## Dismissed
@@ -160,11 +166,15 @@ Commit message should describe the code change, not the review finding. Always i
 
 Do NOT commit the `.tmp/pr/<number>/pr-review.md` changes — just keep the file updated on disk as a running tracker.
 
-## Phase 4e: Renumber Findings
+### 4e: Next Finding
 
-After all actionable findings have been resolved or dismissed, renumber the remaining findings in `.tmp/pr/<number>/pr-review.md` sequentially starting from 1. Numbering is continuous across sections (Critical, then Suggestions, then Observations). This eliminates gaps left by removed findings.
+Go back to 4a with the next actionable finding. Repeat until all actionable findings are processed.
 
-## Phase 5: Report
+## Phase 5: Renumber Findings
+
+After all actionable findings have been resolved or dismissed, renumber remaining findings in `.tmp/pr/<number>/pr-review.md` sequentially starting from 1, continuous across sections (Critical, then Suggestions, then Observations).
+
+## Phase 6: Report
 
 Tell the user:
 
