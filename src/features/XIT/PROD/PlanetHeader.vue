@@ -19,7 +19,7 @@ const totalCapacity = computed(() => sumBy(production.production, x => x.capacit
 
 <template>
   <tr :class="$style.row">
-    <td colspan="1" :class="$style.cell" @click="onClick">
+    <td :class="$style.cell" @click="onClick">
       <span v-if="hasMinimize" :class="$style.center">
         {{ minimized ? '+' : '-' }}
       </span>

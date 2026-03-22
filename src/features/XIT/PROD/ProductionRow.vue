@@ -93,7 +93,7 @@ const tooltipText = computed(() => {
     </td>
   </tr>
   <tr v-if="displayInfo">
-    <td colspan="1">
+    <td>
       <div></div>
     </td>
     <td colspan="4" :class="$style.ordersCell">
