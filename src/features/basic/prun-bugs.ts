@@ -110,9 +110,6 @@ function init() {
   applyCssRule('[data-tooltip-position="bottom"]', $style.tooltipBottom);
   applyCssRule('[data-tooltip-position="right"]', $style.tooltipRight);
 
-  // Allows newlines in tooltips.
-  applyCssRule(`[data-tooltip]`, $style.tooltip);
-
   tiles.observe('POPID', disableInvalidPopidSliders);
 }
 

@@ -77,7 +77,7 @@ const tooltipText = computed(() => tooltipLines.value.join('\n'));
     <td>
       <InlineFlex>
         {{ percent0(efficiency) }}
-        <Tooltip position="bottom" :tooltip="tooltipText" />
+        <Tooltip position="bottom" :tooltip="tooltipText" :class="$style.multilineTooltip" />
       </InlineFlex>
     </td>
     <FracCell :numerator="activeOrders" :denominator="capacity" />
@@ -134,5 +134,9 @@ const tooltipText = computed(() => tooltipLines.value.join('\n'));
 
 .expanded {
   transform: rotate(90deg);
+}
+
+.multilineTooltip {
+  white-space: pre;
 }
 </style>
