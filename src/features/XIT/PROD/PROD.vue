@@ -31,6 +31,7 @@ const queue = useTileState('queue');
 const inactive = useTileState('inactive');
 const notQueued = useTileState('notQueued');
 const headers = useTileState('headers');
+const expand = useTileState('expandPlanets');
 
 const planetProduction = computed(() => {
   let sites = findWithQuery(parameters, findSites).include;
@@ -51,6 +52,16 @@ const planetProduction = computed(() => {
       }),
     );
 });
+
+const anyExpanded = computed(() => expand.value.length > 0);
+
+function onExpandAllClick() {
+  if (expand.value.length > 0) {
+    expand.value = [];
+  } else {
+    expand.value = planetProduction.value?.map(x => x.naturalId) ?? [];
+  }
+}
 </script>
 
 <template>
@@ -64,7 +75,10 @@ const planetProduction = computed(() => {
   <table>
     <thead>
       <tr v-if="headers">
-        <th> </th>
+        <th v-if="planetProduction.length > 1" :class="$style.expand" @click="onExpandAllClick">
+          {{ anyExpanded ? '-' : '+' }}
+        </th>
+        <th v-else />
         <th>Planet</th>
         <th>Efficiency</th>
         <th>Slots</th>
@@ -80,3 +94,14 @@ const planetProduction = computed(() => {
       :headers="headers" />
   </table>
 </template>
+
+<style module>
+.expand {
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  font-size: 12px;
+  padding-left: 18px;
+  font-weight: bold;
+}
+</style>
