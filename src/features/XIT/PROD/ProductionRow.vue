@@ -52,20 +52,16 @@ const tooltipLines = computed(() => {
     return lines;
   }
 
-  lines.push('');
-
   for (const factor of productionLine.efficiencyFactors) {
     const label = labels[factor.type] ?? capitalize(factor.type);
     const category = factor.expertiseCategory ? ` (${capitalize(factor.expertiseCategory)})` : '';
-
     lines.push(`${label}${category}: ${percent2(factor.value)}`);
-    lines.push('');
   }
 
   return lines;
 });
 
-const tooltipText = computed(() => tooltipLines.value.join(' '));
+const tooltipText = computed(() => tooltipLines.value.join('\n'));
 </script>
 
 <template>
