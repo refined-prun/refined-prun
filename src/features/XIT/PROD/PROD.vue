@@ -7,6 +7,7 @@ import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { findWithQuery } from '@src/utils/find-with-query';
 import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
+import { matchesProductionFilter } from './utils';
 
 const parameters = useXitParameters();
 
@@ -44,35 +45,14 @@ const planetProduction = computed<PlanetProduction[]>(() => {
       // Descending order (highest capacity first)
       return totalCapacityB - totalCapacityA;
     })
-    .filter(p => {
-      const productionLines = p.production;
-      if (
-        productionLines.reduce((sum, line) => sum + line.activeCapacity, 0) > 0 &&
-        displayProduction.value
-      ) {
-        return true;
-      }
-      if (
-        productionLines.reduce((sum, line) => sum + line.inactiveCapacity, 0) > 0 &&
-        inactive.value
-      ) {
-        return true;
-      }
-      if (
-        productionLines.reduce((sum, line) => sum + line.queuedOrders.length, 0) > 0 &&
-        queue.value
-      ) {
-        return true;
-      }
-      if (
-        productionLines.reduce((sum, line) => sum + line.queuedOrders.length, 0) === 0 &&
-        notqueued.value
-      ) {
-        return true;
-      }
-
-      return false;
-    });
+    .filter(p =>
+      matchesProductionFilter(p.production, {
+        production: displayProduction.value,
+        inactive: inactive.value,
+        queue: queue.value,
+        notQueued: notqueued.value,
+      }),
+    );
 });
 </script>
 

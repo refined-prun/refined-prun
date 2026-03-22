@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import ProductionRow from './ProductionRow.vue';
-import { PlanetProduction, PlatformProduction } from '@src/core/production';
+import { PlanetProduction } from '@src/core/production';
 import { useTileState } from './tile-state';
+import { matchesProductionFilter } from './utils';
 const { production, headers } = defineProps<{ production: PlanetProduction; headers?: boolean }>();
 
 const displayProduction = useTileState('production');
@@ -9,29 +10,17 @@ const queue = useTileState('queue');
 const inactive = useTileState('inactive');
 const notqueued = useTileState('notqueued');
 
-const filteredProduction = computed<PlatformProduction[]>(() => {
+const filteredProduction = computed(() => {
   return production.production
-    .filter(x => x !== undefined)
-    .sort((a, b) => {
-      return b.capacity - a.capacity;
-    })
-    .filter(p => {
-      const productionLines = p;
-      if (productionLines.activeCapacity > 0 && displayProduction.value) {
-        return true;
-      }
-      if (productionLines.inactiveCapacity > 0 && inactive.value) {
-        return true;
-      }
-      if (productionLines.queuedOrders.length > 0 && queue.value) {
-        return true;
-      }
-      if (productionLines.queuedOrders.length === 0 && notqueued.value) {
-        return true;
-      }
-
-      return false;
-    });
+    .sort((a, b) => b.capacity - a.capacity)
+    .filter(p =>
+      matchesProductionFilter(p, {
+        production: displayProduction.value,
+        inactive: inactive.value,
+        queue: queue.value,
+        notQueued: notqueued.value,
+      }),
+    );
 });
 </script>
 
