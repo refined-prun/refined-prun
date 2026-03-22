@@ -99,7 +99,9 @@ const allStackedOrders = computed(() => {
 
 const formatTime = (ts: number) => {
   const mins = Math.max(0, Math.floor((ts - timestampEachMinute.value) / 60000));
-  if (mins === 0) return 'Finishing...';
+  if (mins === 0) {
+    return 'Finishing...';
+  }
   return mins > 60 ? `in ${Math.floor(mins / 60)}h ${mins % 60}m` : `in ${mins}m`;
 };
 </script>
@@ -187,7 +189,7 @@ const formatTime = (ts: number) => {
 }
 
 .stackCount {
-  /* FIO primary blue — no CSS variable exists yet. */
+  /* FIO primary blue. */
   color: #3faabf;
   font-weight: bold;
   margin-left: 4px;
