@@ -3,6 +3,7 @@ import ProductionRow from './ProductionRow.vue';
 import { PlanetProduction } from '@src/core/production';
 import { useTileState } from './tile-state';
 import { matchesProductionFilter } from './utils';
+
 const { production, headers } = defineProps<{ production: PlanetProduction; headers?: boolean }>();
 
 const displayProduction = useTileState('production');
