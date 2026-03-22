@@ -4,6 +4,7 @@
 
 ### Added
 
+- `XIT PROD`: Dense cross-base production overview
 - `contribution-bulk-controls`: Adds NONE/ALL buttons to contribution sections
 - `contribution-maxed`: Automatically maxes contribution sliders in CoGC and population upkeep tiles
 - `flt-flex-fuel`: Allows the fuel column layout to better use available space
