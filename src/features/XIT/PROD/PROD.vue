@@ -42,8 +42,8 @@ const planetProduction = computed(() => {
     .map(getPlanetProduction)
     .filter(x => x !== undefined)
     .sort(byTotalCapacityDesc)
-    .filter(p =>
-      matchesProductionFilter(p.production, {
+    .filter(x =>
+      matchesProductionFilter(x.production, {
         production: displayProduction.value,
         inactive: inactive.value,
         queue: queue.value,

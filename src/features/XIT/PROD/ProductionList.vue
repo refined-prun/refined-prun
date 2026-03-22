@@ -13,8 +13,8 @@ const notQueued = useTileState('notQueued');
 const filteredProduction = computed(() => {
   return production.production
     .toSorted((a, b) => b.capacity - a.capacity)
-    .filter(p =>
-      matchesProductionFilter(p, {
+    .filter(x =>
+      matchesProductionFilter(x, {
         production: displayProduction.value,
         inactive: inactive.value,
         queue: queue.value,

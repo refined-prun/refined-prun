@@ -44,10 +44,10 @@ const productionMap = computed<Record<string, PlanetProduction>>(() => {
     const storage = storagesStore.getByAddressableId(id);
 
     const production: PlatformProduction[] = lines.map(line => {
-      const platform = site.platforms.find(p => p.module.reactorName === line.type);
+      const platform = site.platforms.find(x => x.module.reactorName === line.type);
 
-      const activeOrders = line.orders.filter(o => o.started !== null && !o.halted);
-      const queuedOrders = line.orders.filter(o => o.started === null || o.halted);
+      const activeOrders = line.orders.filter(x => x.started !== null && !x.halted);
+      const queuedOrders = line.orders.filter(x => x.started === null || x.halted);
 
       return {
         id: line.id,
