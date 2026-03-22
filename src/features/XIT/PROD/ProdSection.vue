@@ -3,6 +3,7 @@ import { useTileState } from './tile-state';
 import ProductionList from './ProductionList.vue';
 import { PlanetProduction } from '@src/core/production';
 import PlanetHeader from './PlanetHeader.vue';
+
 const { production, canMinimize, headers } = defineProps<{
   production: PlanetProduction;
   canMinimize?: boolean;
