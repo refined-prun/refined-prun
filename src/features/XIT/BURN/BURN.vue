@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import ActionBar from '@src/components/ActionBar.vue';
 import CopyButton from '@src/components/CopyButton.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { getPlanetBurn, MaterialBurn, PlanetBurn } from '@src/core/burn';
@@ -193,14 +192,13 @@ function copyBurnTable() {
 <template>
   <LoadingSpinner v-if="planetBurn === undefined" />
   <template v-else>
-    <ActionBar>
-      <CopyButton :copy-fn="copyBurnTable" data-tooltip-position="bottom" />
-    </ActionBar>
     <div :class="C.ComExOrdersPanel.filter">
       <RadioItem v-model="red" horizontal>RED</RadioItem>
       <RadioItem v-model="yellow" horizontal>YELLOW</RadioItem>
       <RadioItem v-model="green" horizontal>GREEN</RadioItem>
       <RadioItem v-model="inf" horizontal>INF</RadioItem>
+      <div :class="$style.spacer" />
+      <CopyButton :copy-fn="copyBurnTable" data-tooltip-position="bottom" />
     </div>
     <table>
       <thead>
@@ -243,6 +241,10 @@ function copyBurnTable() {
 <style module>
 .fakeRow {
   visibility: collapse;
+}
+
+.spacer {
+  flex: 1;
 }
 
 .expand {
