@@ -102,9 +102,11 @@ Read all collected source files and doc files in parallel. Read full files — P
 
 ## Phase 4: Resolve Findings — ONE AT A TIME
 
-**CRITICAL: Process exactly one finding through ALL steps (4a→4b→4c→4d) before starting the next.** Never batch findings. Never apply multiple fixes before committing. Never defer the review file update. The loop is: pick one finding → classify → fix/dismiss → commit → update review file → pick next finding.
+**CRITICAL: Process exactly one finding through ALL steps (4a→4b→4c) before starting the next.** Never batch findings. Never apply multiple fixes before committing. The loop is: pick one finding → classify → fix/dismiss → commit → pick next finding. The review file is updated once in Phase 5 after all findings are done.
 
 Process in order: Critical first, then Suggestions, then Observations.
+
+Track each finding's outcome as you go: **fixed**, **dismissed**, or **skipped** (no changes after applying).
 
 ### 4a: Classify the Resolution
 
@@ -121,7 +123,7 @@ Use the `**Basis:**` to understand the rule and the `**Resolution:**` to underst
 git diff --stat
 ```
 
-**If no changes after applying:** The resolution may reference another finding that handles it (e.g., "will be fixed in suggestion 1"). This is still a fix, not a dismissal — just skip the commit and go to 4d.
+**If no changes after applying:** The resolution may reference another finding that handles it (e.g., "will be fixed in suggestion 1"). Record as **skipped** and go to 4d.
 
 **If changes exist:**
 
@@ -153,26 +155,26 @@ Commit message should describe the code change, not the review finding. Always i
 - `Fix import order in basic/index.ts`
 - `Use === instead of == for undefined check`
 
-### 4d: Update Review File
+### 4d: Next Finding
 
-**If fix:** Remove the entire finding block from `.tmp/pr/<number>/pr-review.md` — from the bold title through the `---` separator (inclusive). If the section (Critical/Suggestions/Observations) becomes empty after removal, replace its content with "None."
+Go back to 4a with the next actionable finding. Repeat until all actionable findings are processed.
 
-**If dismissal:** Remove the finding block from its section (same as above). Then append a one-liner to the `## Dismissed` section at the bottom of the file (create the section before `## Files Reviewed` if it doesn't exist):
+## Phase 5: Update Review File
+
+After all findings are resolved, update `.tmp/pr/<number>/pr-review.md` in a single pass:
+
+1. For each **fixed** or **skipped** finding: remove the entire finding block — from the bold title through the `---` separator (inclusive).
+2. For each **dismissed** finding: remove the finding block from its section, then append a one-liner to the `## Dismissed` section at the bottom of the file (create the section before `## Files Reviewed` if it doesn't exist):
 
 ```markdown
 ## Dismissed
 - <finding title> — <resolution text, truncated to ~80 chars>
 ```
 
-Do NOT commit the `.tmp/pr/<number>/pr-review.md` changes — just keep the file updated on disk as a running tracker.
+3. If any section (Critical/Suggestions/Observations) becomes empty after removals, replace its content with "None."
+4. Renumber remaining findings sequentially starting from 1, continuous across sections (Critical, then Suggestions, then Observations).
 
-### 4e: Next Finding
-
-Go back to 4a with the next actionable finding. Repeat until all actionable findings are processed.
-
-## Phase 5: Renumber Findings
-
-After all actionable findings have been resolved or dismissed, renumber remaining findings in `.tmp/pr/<number>/pr-review.md` sequentially starting from 1, continuous across sections (Critical, then Suggestions, then Observations).
+Do NOT commit the review file changes.
 
 ## Phase 6: Report
 
