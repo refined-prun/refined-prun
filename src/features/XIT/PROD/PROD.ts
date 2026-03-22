@@ -3,7 +3,7 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 
 xit.add({
-  command: ['PROD', 'PRODUCTION'],
+  command: 'PROD',
 
   name: parameters => {
     if (parameters[0] && !parameters[1]) {
