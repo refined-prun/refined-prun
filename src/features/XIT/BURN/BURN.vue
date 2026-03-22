@@ -176,7 +176,7 @@ function formatBurnTable(burns: PlanetBurn[]) {
       const mat = planet.burn[material.ticker];
       // Floor needed here: per-planet burns are pre-floored, but overall burn is not.
       const days = mat.dailyAmount >= 0 ? '' : Math.floor(mat.daysLeft).toString();
-      const burn = parseFloat(mat.dailyAmount.toFixed(3));
+      const burn = Math.round(mat.dailyAmount * 1000) / 1000;
       lines.push(`${planet.planetName}\t${material.ticker}\t${mat.inventory}\t${burn}\t${days}`);
     }
   }
