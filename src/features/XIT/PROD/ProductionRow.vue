@@ -55,8 +55,7 @@ const tooltipLines = computed(() => {
   lines.push('');
 
   for (const factor of productionLine.efficiencyFactors) {
-    const rawLabel = labels[factor.type] || factor.type;
-    const label = capitalize(rawLabel);
+    const label = labels[factor.type] ?? capitalize(factor.type);
     const category = factor.expertiseCategory ? ` (${capitalize(factor.expertiseCategory)})` : '';
 
     lines.push(`${label}${category}: ${percent2(factor.value)}`);
