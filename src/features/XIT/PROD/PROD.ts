@@ -17,5 +17,6 @@ xit.add({
     return 'PRODUCTION OVERVIEW';
   },
   description: 'Dense cross-base production overview.',
+  optionalParameters: 'Planet Identifier(s), OVERALL, NOT',
   component: () => PROD,
 });
