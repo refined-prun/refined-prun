@@ -23,6 +23,7 @@
 - `prun-bugs`: Fix layout shift when selecting inventory grid items
 - `prun-bugs`: Fix slider dot stretching and cursor styles
 - `prun-bugs`: Disable POPID sliders that can't be filled due to full reserves
+- `screen-tab-bar`: Fix jerky trackpad scroll and add horizontal gesture support
 - Fix financial data collection failure when the user has no warehouses
 
 ## 26.1.24
