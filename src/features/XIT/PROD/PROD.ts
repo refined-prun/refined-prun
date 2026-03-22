@@ -10,13 +10,12 @@ xit.add({
       const site = sitesStore.getByPlanetNaturalIdOrName(parameters[0]);
       if (site) {
         const name = getEntityNameFromAddress(site.address);
-        return `ENHANCED PRODUCTION - ${name}`;
+        return `PRODUCTION OVERVIEW - ${name}`;
       }
     }
 
-    return 'ENHANCED PRODUCTION';
+    return 'PRODUCTION OVERVIEW';
   },
   description: 'Dense cross-base production overview.',
   component: () => PROD,
-  bufferSize: [275, 326],
 });
