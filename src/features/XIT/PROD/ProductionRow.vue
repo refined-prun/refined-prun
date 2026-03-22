@@ -10,8 +10,7 @@ import InlineFlex from '@src/components/InlineFlex.vue';
 import Tooltip from '@src/components/Tooltip.vue';
 import ProductionOrdersTable from './ProductionOrdersTable.vue';
 
-const { alwaysVisible, productionLine, headers } = defineProps<{
-  alwaysVisible?: boolean;
+const { productionLine, headers } = defineProps<{
   productionLine: PlatformProduction;
   headers?: boolean;
 }>();
@@ -22,7 +21,7 @@ const activeOrders = computed(() => productionLine.orders.length);
 const condition = computed(() => productionLine.condition);
 const expandInfo = useTileState('expandInfo');
 const id = computed(() => productionLine.id);
-const displayInfo = computed(() => expandInfo.value.includes(id.value) || alwaysVisible);
+const displayInfo = computed(() => expandInfo.value.includes(id.value));
 
 const onHeaderClick = () => {
   if (displayInfo.value) {
