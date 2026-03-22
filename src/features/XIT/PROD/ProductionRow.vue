@@ -32,28 +32,27 @@ const onHeaderClick = () => {
   }
 };
 
-const tooltipText = computed(() => {
+const labels: Partial<Record<PrunApi.EfficiencyFactorType, string>> = {
+  COGC_PROGRAM: 'COGC',
+  COMPANY_HEADQUARTERS: 'HQ',
+  PRODUCTION_LINE_CONDITION: 'Condition',
+};
+
+const capitalize = (str: string) => {
+  return str
+    .split('_')
+    .map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase())
+    .join(' ');
+};
+
+const tooltipLines = computed(() => {
   const lines = [`Condition: ${percent0(condition.value)}`];
 
   if (productionLine.efficiencyFactors.length === 0) {
-    return lines.join(' ');
+    return lines;
   }
 
-  // Add a spacer.
   lines.push('');
-
-  const labels: Partial<Record<PrunApi.EfficiencyFactorType, string>> = {
-    COGC_PROGRAM: 'COGC',
-    COMPANY_HEADQUARTERS: 'HQ',
-    PRODUCTION_LINE_CONDITION: 'Condition',
-  };
-
-  const capitalize = (str: string) => {
-    return str
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
-  };
 
   for (const factor of productionLine.efficiencyFactors) {
     const rawLabel = labels[factor.type] || factor.type;
@@ -64,8 +63,10 @@ const tooltipText = computed(() => {
     lines.push('');
   }
 
-  return lines.join(' ');
+  return lines;
 });
+
+const tooltipText = computed(() => tooltipLines.value.join(' '));
 </script>
 
 <template>
