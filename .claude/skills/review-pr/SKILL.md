@@ -16,22 +16,12 @@ Analyze a PR and produce a structured review in `.tmp/pr/<number>/pr-review.md`.
 ## Phase 1: Pre-flight
 
 ```bash
-git status --porcelain
+.claude/skills/review-pr/scripts/preflight.sh
 ```
 
-**If output is non-empty:** Stop. Tell the user: there are uncommitted changes. Commit or stash them first.
-
-```bash
-which gh || echo "GH_MISSING"
-```
-
-**If GH_MISSING:** Stop. Tell the user: `gh` CLI is required. Install from https://cli.github.com.
+**If exit code is non-zero:** Stop. The script prints the blocking issue (dirty worktree or missing `gh`). Tell the user.
 
 ## Phase 2: Setup
-
-```bash
-git fetch origin main
-```
 
 Detect the current branch's PR:
 
@@ -47,36 +37,18 @@ Determine the target PR number and whether to checkout:
 **If the current branch's PR number matches the target PR number:**
 
 ```bash
-git merge origin/main --no-edit
+.claude/skills/review-pr/scripts/setup-pr.sh <number>
 ```
 
-**Otherwise:**
+**Otherwise (need to checkout):**
 
 ```bash
-gh pr checkout <number>
+.claude/skills/review-pr/scripts/setup-pr.sh <number> --checkout
 ```
 
-```bash
-git merge origin/main --no-edit
-```
+**If the script exits non-zero:** It prints `ERROR: MERGE_CONFLICT`. Stop. Tell the user: merge conflict with main. Resolve manually.
 
-**If merge conflict:** Stop. Tell the user: merge conflict with main. Resolve manually.
-
-```bash
-gh pr view --json number,title,body,baseRefName,headRefName,author,labels,files 2>&1
-```
-
-Save the JSON output. Extract `number`, `title`, `baseRefName` for later use.
-
-```bash
-mkdir -p .tmp/pr/<number>
-```
-
-Write the PR number to `.tmp/pr/current.txt`:
-
-```bash
-echo <number> > .tmp/pr/current.txt
-```
+**On success:** The script prints the PR JSON metadata. Save it. Extract `number`, `title`, `baseRefName` for later use. The script also creates `.tmp/pr/<number>/` and writes `.tmp/pr/current.txt`.
 
 ### Existing Review Detection
 
@@ -86,39 +58,21 @@ If the file does not exist, this is a fresh review.
 
 ## Phase 3: Prettier + Commit
 
-```bash
-pnpm prettier
-```
-
-Check if prettier made any changes:
-
-```bash
-git diff --stat
-```
-
-**If changes exist:** Stage only prettier-touched files and commit:
-
-```bash
-git diff --name-only | xargs git add && git commit -m "prettier"
-```
-
-**If no changes:** Skip — working tree is already formatted.
-
 ## Phase 4: Gather Context
 
-Run all three in parallel:
+Run formatting, linting, and context gathering in parallel:
 
 ```bash
-gh pr diff > .tmp/pr/<number>/pr-diff.txt
+.claude/skills/review-pr/scripts/format-and-lint.sh <number>
 ```
 
 ```bash
-gh pr view --json comments,reviews --jq '.comments[].body, .reviews[].body' > .tmp/pr/<number>/pr-comments.txt 2>/dev/null
+.claude/skills/review-pr/scripts/gather-context.sh <number>
 ```
 
-```bash
-gh pr view --json files --jq '.files[].path'
-```
+The format-and-lint script runs prettier (auto-commits if needed) then eslint. It prints `PRETTIER_COMMITTED` or `PRETTIER_CLEAN`.
+
+The gather-context script writes `pr-diff.txt` and `pr-comments.txt` to `.tmp/pr/<number>/` and prints the list of changed files.
 
 ### Doc Reading Strategy
 
@@ -141,27 +95,19 @@ Now read `.tmp/pr/<number>/pr-diff.txt`. If it exceeds 800 lines, read in 500-li
 
 ## Phase 5: ESLint
 
-```bash
-pnpm lint > .tmp/pr/<number>/eslint-output.txt 2>&1; echo "EXIT:$?" >> .tmp/pr/<number>/eslint-output.txt
-```
-
-Read `.tmp/pr/<number>/eslint-output.txt`. Note exit code and any errors/warnings.
+Read `.tmp/pr/<number>/eslint-output.txt` (written by `format-and-lint.sh`). Note exit code and any errors/warnings.
 
 ## Phase 5.5: Create Worktree
 
 Create an isolated, read-only snapshot of the PR code for analysis. This protects the review from the user's concurrent edits on the main worktree.
 
 ```bash
-git worktree remove .tmp/pr/<number>/workspace --force 2>/dev/null; rm -rf .tmp/pr/<number>/workspace 2>/dev/null
+.claude/skills/review-pr/scripts/worktree.sh create <number>
 ```
 
-```bash
-git worktree add .tmp/pr/<number>/workspace HEAD --detach
-```
+The worktree is a detached HEAD snapshot of the current commit (post-merge, post-prettier).
 
-`--detach` avoids creating a branch. The worktree is a snapshot of the current commit (post-merge, post-prettier).
-
-**If worktree creation fails:** Check `git worktree list` for conflicts. Remove the conflicting entry and retry.
+**If the script exits non-zero:** It prints `git worktree list` output. Remove the conflicting entry and retry.
 
 ## Phase 6: Analyze
 
@@ -306,7 +252,7 @@ Tell the user:
 ## Phase 8.5: Cleanup Worktree
 
 ```bash
-git worktree remove .tmp/pr/<number>/workspace --force 2>/dev/null; rm -rf .tmp/pr/<number>/workspace 2>/dev/null
+.claude/skills/review-pr/scripts/worktree.sh remove <number>
 ```
 
 Idempotent. If the review was interrupted, the next run's Phase 5.5 will also clean up.
@@ -337,22 +283,8 @@ Report the state and stop.
 
 ### Worktree creation fails
 
-If `git worktree add` fails with "already checked out" or a path conflict:
-
-```bash
-git worktree list
-```
-
-Remove the conflicting worktree:
-
-```bash
-git worktree remove <path> --force
-```
+The `.claude/skills/review-pr/scripts/worktree.sh create` script auto-cleans stale worktrees before creating. If it still fails, check `git worktree list` for conflicts and remove the conflicting entry manually.
 
 ### Stale worktree from interrupted review
 
-If `.tmp/pr/<number>/workspace` exists from a previous interrupted run, Phase 5.5 will clean it up automatically. To clean up manually:
-
-```bash
-git worktree remove .tmp/pr/<number>/workspace --force; rm -rf .tmp/pr/<number>/workspace
-```
+Phase 5.5 cleans up automatically. To clean up manually: `.claude/skills/review-pr/scripts/worktree.sh remove <number>`
