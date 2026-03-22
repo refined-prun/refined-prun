@@ -20,31 +20,28 @@ function findSites(term: string, parts: string[]) {
   return sitesStore.getByPlanetNaturalId(naturalId);
 }
 
+function byTotalCapacityDesc(a: PlanetProduction, b: PlanetProduction) {
+  const totalA = a.production.reduce((sum, p) => sum + p.capacity, 0);
+  const totalB = b.production.reduce((sum, p) => sum + p.capacity, 0);
+  return totalB - totalA;
+}
+
 const displayProduction = useTileState('production');
 const queue = useTileState('queue');
 const inactive = useTileState('inactive');
 const notQueued = useTileState('notQueued');
 const headers = useTileState('headers');
 
-const planetProduction = computed<PlanetProduction[]>(() => {
+const planetProduction = computed(() => {
   let sites = findWithQuery(parameters, findSites).include;
   if (sites.length === 0) {
     sites = sitesStore.all.value ?? [];
   }
 
   return sites
-    .map(x => getPlanetProduction(x))
+    .map(getPlanetProduction)
     .filter(x => x !== undefined)
-    .sort((a, b) => {
-      // Sum up capacity for planet A
-      const totalCapacityA = a.production.reduce((sum, p) => sum + p.capacity, 0);
-
-      // Sum up capacity for planet B
-      const totalCapacityB = b.production.reduce((sum, p) => sum + p.capacity, 0);
-
-      // Descending order (highest capacity first)
-      return totalCapacityB - totalCapacityA;
-    })
+    .sort(byTotalCapacityDesc)
     .filter(p =>
       matchesProductionFilter(p.production, {
         production: displayProduction.value,
