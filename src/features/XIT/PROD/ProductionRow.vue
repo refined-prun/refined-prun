@@ -33,7 +33,7 @@ const onHeaderClick = () => {
 };
 
 const labels: Partial<Record<PrunApi.EfficiencyFactorType, string>> = {
-  COGC_PROGRAM: 'COGC',
+  COGC_PROGRAM: 'CoGC',
   COMPANY_HEADQUARTERS: 'HQ',
   PRODUCTION_LINE_CONDITION: 'Condition',
 };
