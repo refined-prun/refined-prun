@@ -70,7 +70,7 @@ const tooltipText = computed(() => tooltipLines.value.join(' '));
 </script>
 
 <template>
-  <tr :class="[$style.row]">
+  <tr :class="$style.row">
     <IconCell>
       <BuildingIcon size="inline-table" :ticker="productionLine.reactorTicker" />
     </IconCell>
