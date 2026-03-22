@@ -2,6 +2,7 @@
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import PrunButton from '@src/components/PrunButton.vue';
 import { PlanetProduction } from '@src/core/production';
+import { sumBy } from '@src/utils/sum-by';
 import FracCell from './FracCell.vue';
 
 const { production } = defineProps<{
@@ -11,13 +12,9 @@ const { production } = defineProps<{
   onClick: () => void;
 }>();
 
-const totalOrders = computed(() =>
-  production.production.reduce((acc, line) => acc + line.orders.length, 0),
-);
+const totalOrders = computed(() => sumBy(production.production, x => x.orders.length));
 
-const totalCapacity = computed(() =>
-  production.production.reduce((acc, line) => acc + line.capacity, 0),
-);
+const totalCapacity = computed(() => sumBy(production.production, x => x.capacity));
 </script>
 
 <template>

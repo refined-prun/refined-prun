@@ -8,6 +8,7 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { findWithQuery } from '@src/utils/find-with-query';
 import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
 import { matchesProductionFilter } from './utils';
+import { sumBy } from '@src/utils/sum-by';
 
 const parameters = useXitParameters();
 
@@ -21,9 +22,7 @@ function findSites(term: string, parts: string[]) {
 }
 
 function byTotalCapacityDesc(a: PlanetProduction, b: PlanetProduction) {
-  const totalA = a.production.reduce((sum, p) => sum + p.capacity, 0);
-  const totalB = b.production.reduce((sum, p) => sum + p.capacity, 0);
-  return totalB - totalA;
+  return sumBy(b.production, x => x.capacity) - sumBy(a.production, x => x.capacity);
 }
 
 const displayProduction = useTileState('production');
