@@ -3,7 +3,7 @@ import Edit from '@src/features/XIT/ACT/actions/cont-trade/Edit.vue';
 import Configure from '@src/features/XIT/ACT/actions/cont-trade/Configure.vue';
 import { CONT_TRADE } from '@src/features/XIT/ACT/action-steps/CONT_TRADE';
 import { Config } from '@src/features/XIT/ACT/actions/cont-trade/config';
-import { AssertFn, configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
+import { AssertFn, configurableValue } from '@src/features/XIT/ACT/shared-types';
 import {
   displayLocationValue,
   resolveLocation,

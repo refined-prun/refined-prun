@@ -3,7 +3,7 @@ import Edit from '@src/features/XIT/ACT/actions/cont-ship/Edit.vue';
 import Configure from '@src/features/XIT/ACT/actions/cont-ship/Configure.vue';
 import { CONT_SEND } from '@src/features/XIT/ACT/action-steps/CONT_SEND';
 import { Config } from '@src/features/XIT/ACT/actions/cont-ship/config';
-import { AssertFn, configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
+import { AssertFn, configurableValue } from '@src/features/XIT/ACT/shared-types';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import {
   displayLocationValue,
