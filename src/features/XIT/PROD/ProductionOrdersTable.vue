@@ -135,7 +135,6 @@ const formatTime = (ts: number) => {
             <span v-if="group.count > 1" :class="$style.stackCount">x{{ group.count }}</span>
           </td>
           <td :class="$style.numericColumn">{{ group.isPlaceholder ? '-' : group.amount }}</td>
-
           <td :class="[$style.numericColumn, statusClass(group)]">
             <template v-if="group.isPlaceholder">
               {{ group.label }}
