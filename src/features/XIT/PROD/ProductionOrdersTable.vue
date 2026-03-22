@@ -44,7 +44,6 @@ const stackedActive = computed(() => {
   const results = Object.values(groups);
 
   // Unused Capacity logic.
-
   if (productionLine.inactiveCapacity > 0) {
     results.push({
       ticker: 'N/A',
