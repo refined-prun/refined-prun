@@ -142,12 +142,30 @@ Now read `.tmp/pr/<number>/pr-diff.txt`. If it exceeds 800 lines, read in 500-li
 ## Phase 5: ESLint
 
 ```bash
-pnpm lint 2>&1 | head -200 > .tmp/pr/<number>/eslint-output.txt; echo "EXIT:${PIPESTATUS[0]}" >> .tmp/pr/<number>/eslint-output.txt
+pnpm lint > .tmp/pr/<number>/eslint-output.txt 2>&1; echo "EXIT:$?" >> .tmp/pr/<number>/eslint-output.txt
 ```
 
 Read `.tmp/pr/<number>/eslint-output.txt`. Note exit code and any errors/warnings.
 
+## Phase 5.5: Create Worktree
+
+Create an isolated, read-only snapshot of the PR code for analysis. This protects the review from the user's concurrent edits on the main worktree.
+
+```bash
+git worktree remove .tmp/pr/<number>/workspace --force 2>/dev/null; rm -rf .tmp/pr/<number>/workspace 2>/dev/null
+```
+
+```bash
+git worktree add .tmp/pr/<number>/workspace HEAD --detach
+```
+
+`--detach` avoids creating a branch. The worktree is a snapshot of the current commit (post-merge, post-prettier).
+
+**If worktree creation fails:** Check `git worktree list` for conflicts. Remove the conflicting entry and retry.
+
 ## Phase 6: Analyze
+
+**File reading:** When reading source files referenced in the diff, read from `.tmp/pr/<number>/workspace/<path>` (the worktree), not from the main worktree. This ensures you see the clean PR state regardless of the user's concurrent edits. Docs (`docs/`) can be read from either location. Artifacts (`pr-diff.txt`, `eslint-output.txt`) are at `.tmp/pr/<number>/` on the main worktree.
 
 Review the diff against **every rule in the docs you read in Phase 3**. The docs contain Good/Bad examples — use those as the reference. Only flag items that actually appear in the diff. Do not invent issues.
 
@@ -285,6 +303,14 @@ Tell the user:
 > **ESLint:** <pass/fail> (<error count> errors, <warning count> warnings)
 > **Prettier:** <committed/no changes>
 
+## Phase 8.5: Cleanup Worktree
+
+```bash
+git worktree remove .tmp/pr/<number>/workspace --force 2>/dev/null; rm -rf .tmp/pr/<number>/workspace 2>/dev/null
+```
+
+Idempotent. If the review was interrupted, the next run's Phase 5.5 will also clean up.
+
 ## Troubleshooting
 
 ### gh auth error
@@ -308,3 +334,25 @@ gh pr view --json state --jq '.state'
 ```
 
 Report the state and stop.
+
+### Worktree creation fails
+
+If `git worktree add` fails with "already checked out" or a path conflict:
+
+```bash
+git worktree list
+```
+
+Remove the conflicting worktree:
+
+```bash
+git worktree remove <path> --force
+```
+
+### Stale worktree from interrupted review
+
+If `.tmp/pr/<number>/workspace` exists from a previous interrupted run, Phase 5.5 will clean it up automatically. To clean up manually:
+
+```bash
+git worktree remove .tmp/pr/<number>/workspace --force; rm -rf .tmp/pr/<number>/workspace
+```
