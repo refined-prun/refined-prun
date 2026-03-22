@@ -94,6 +94,10 @@ const allStackedOrders = computed(() => {
   ];
 });
 
+function groupKey(group: StackedOrderGroup, index: number) {
+  return (group.isQueued ? 'q-' : 'a-') + group.ticker + (group.ts ?? index);
+}
+
 const formatTime = (ts: number) => {
   const mins = Math.max(0, Math.floor((ts - timestampEachMinute.value) / 60000));
   if (mins === 0) {
@@ -114,9 +118,7 @@ const formatTime = (ts: number) => {
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(group, index) in allStackedOrders"
-          :key="(group.isQueued ? 'q-' : 'a-') + group.ticker + (group.ts ?? index)">
+        <tr v-for="(group, index) in allStackedOrders" :key="groupKey(group, index)">
           <IconCell>
             <MaterialIcon :ticker="group.ticker" size="inline-table" />
           </IconCell>
