@@ -9,6 +9,7 @@ import { findWithQuery } from '@src/utils/find-with-query';
 import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
 import { matchesProductionFilter } from './utils';
 import { sumBy } from '@src/utils/sum-by';
+import FakeRow from './FakeRow.vue';
 
 const parameters = useXitParameters();
 
@@ -61,13 +62,6 @@ const planetProduction = computed(() => {
     <RadioItem v-model="notQueued" horizontal>Not Queued</RadioItem>
   </div>
   <table>
-    <colgroup>
-      <col style="width: 32px" />
-      <col />
-      <col />
-      <col />
-      <col style="width: 65px" />
-    </colgroup>
     <thead>
       <tr v-if="headers">
         <th> </th>
@@ -77,6 +71,7 @@ const planetProduction = computed(() => {
         <th>CMD</th>
       </tr>
     </thead>
+    <FakeRow />
     <ProdSection
       v-for="production in planetProduction"
       :key="production.site.siteId"
