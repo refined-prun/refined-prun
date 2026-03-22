@@ -16,23 +16,34 @@ function getScreen(id: string) {
 
 const container = useTemplateRef('container');
 
-// Trackpads emit small pixel deltas; mouse wheels emit larger discrete steps.
-const TRACKPAD_DELTA_THRESHOLD = 50;
-
 onMounted(() => {
-  container.value?.addEventListener(
+  const el = container.value!;
+
+  let target = el.scrollLeft;
+  let animating = false;
+
+  function step() {
+    const diff = target - el.scrollLeft;
+    if (Math.abs(diff) < 0.5) {
+      el.scrollLeft = target;
+      animating = false;
+      return;
+    }
+    el.scrollLeft += diff * 0.3;
+    requestAnimationFrame(step);
+  }
+
+  el.addEventListener(
     'wheel',
     e => {
       e.preventDefault();
-      // Prefer deltaX for horizontal gestures, fall back to deltaY for vertical-to-horizontal mapping.
+      // Use dominant axis: deltaX for horizontal gestures, deltaY for vertical-to-horizontal mapping.
       const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      // Trackpads fire many small events; smooth scroll queues up and causes jitter.
-      // Mouse wheels fire fewer, larger deltas where smooth scrolling feels natural.
-      const isTrackpad = Math.abs(delta) < TRACKPAD_DELTA_THRESHOLD;
-      container.value?.scrollBy({
-        left: delta,
-        behavior: isTrackpad ? 'instant' : 'smooth',
-      });
+      target = Math.max(0, Math.min(target + delta, el.scrollWidth - el.clientWidth));
+      if (!animating) {
+        animating = true;
+        requestAnimationFrame(step);
+      }
     },
     { passive: false },
   );
