@@ -73,5 +73,10 @@
   "packageManager": "pnpm@10.32.1",
   "engines": {
     "node": ">=22.16.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@laynezh/vite-plugin-lib-assets@2.1.0": "patches/@laynezh__vite-plugin-lib-assets@2.1.0.patch"
+    }
   }
 }
