@@ -19,13 +19,11 @@ const totalCapacity = computed(() => sumBy(production.production, x => x.capacit
 
 <template>
   <tr :class="$style.row">
-    <td :class="$style.cell" @click="onClick">
-      <span v-if="hasMinimize" :class="$style.center">
+    <td colspan="3" :class="$style.cell" @click="onClick">
+      <span v-if="hasMinimize" :class="$style.minimize">
         {{ minimized ? '+' : '-' }}
       </span>
-    </td>
-    <td colspan="2" :class="$style.cell">
-      {{ production.planetName }}
+      <span>{{ production.planetName }}</span>
     </td>
     <FracCell :numerator="totalOrders" :denominator="totalCapacity" />
     <td>
@@ -50,8 +48,9 @@ const totalCapacity = computed(() => sumBy(production.production, x => x.capacit
   cursor: pointer;
 }
 
-.center {
+.minimize {
   display: inline-block;
+  width: 26px;
   text-align: center;
 }
 
