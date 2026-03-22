@@ -4,6 +4,8 @@ import MaterialIcon from '@src/components/MaterialIcon.vue';
 import IconCell from './IconCell.vue';
 import { timestampEachMinute } from '@src/utils/dayjs';
 
+const $style = useCssModule();
+
 const { productionLine, headers } = defineProps<{
   productionLine: PlatformProduction;
   headers?: boolean;
@@ -94,6 +96,13 @@ const allStackedOrders = computed(() => {
   ];
 });
 
+function statusClass(group: StackedOrderGroup) {
+  if (group.isPlaceholder) {
+    return $style.placeholderStatus;
+  }
+  return group.isQueued ? $style.queuedStatus : $style.activeStatus;
+}
+
 function groupKey(group: StackedOrderGroup, index: number) {
   return (group.isQueued ? 'q-' : 'a-') + group.ticker + (group.ts ?? index);
 }
@@ -127,15 +136,7 @@ const formatTime = (ts: number) => {
           </td>
           <td :class="$style.numericColumn">{{ group.isPlaceholder ? '-' : group.amount }}</td>
 
-          <td
-            :class="[
-              $style.numericColumn,
-              group.isPlaceholder
-                ? $style.placeholderStatus
-                : group.isQueued
-                  ? $style.queuedStatus
-                  : $style.activeStatus,
-            ]">
+          <td :class="[$style.numericColumn, statusClass(group)]">
             <template v-if="group.isPlaceholder">
               {{ group.label }}
             </template>
