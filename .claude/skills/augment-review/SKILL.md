@@ -33,16 +33,16 @@ Check that `.tmp/pr/<number>/pr-review.md` exists. Read it.
 Check for working copy changes:
 
 ```bash
-git diff
+git diff > .tmp/pr/<number>/augment-diff.txt
 ```
 
-**If empty:** Stop. Tell the user:
+**If the file is empty:** Stop. Tell the user:
 
 > No working copy changes found. Add comments to source files first, then re-run.
 
 ## Phase 2: Validate — comments-only gate
 
-Parse the `git diff` output. Every change must be an added comment line. No exceptions.
+Read `.tmp/pr/<number>/augment-diff.txt`. Every change must be an added comment line. No exceptions.
 
 ### Validation rules
 
@@ -71,6 +71,16 @@ Parse the `git diff` output. Every change must be an added comment line. No exce
 > - `src/core/production.ts:12` — (removed line)
 >
 > Only add comments. Revert non-comment changes and re-run.
+
+## Phase 2.5: Reset working copy
+
+Validation passed — all changes are comment-only additions. Reset immediately so the user can continue working.
+
+```bash
+git checkout .
+```
+
+From this point forward, use `.tmp/pr/<number>/augment-diff.txt` for all diff parsing. Do NOT run `git diff` again.
 
 ## Phase 3: Extract findings
 
@@ -109,7 +119,7 @@ Examples:
 
 If multiple consecutive added comment lines appear in the same file (no non-comment lines between them), merge them into a single finding. Use the first line's location. Concatenate the comment text.
 
-## Phase 4: Deduplicate against existing findings
+## Phase 4: Deduplicate and enrich existing findings
 
 Read all existing findings from `.tmp/pr/<number>/pr-review.md`.
 
@@ -118,7 +128,11 @@ For each extracted finding, check if an existing finding already covers the same
 - Overlapping line range (within ~10 lines)
 - Similar topic (the comment's essence matches an existing finding's title or description)
 
-**If duplicate:** Skip the finding silently.
+**If duplicate with empty `**Resolution:**`:** Check whether the user's comment implies a clear, mechanical fix (e.g., `// use formatEta instead`, `// remove this`, `// add null check`). If so, fill in the existing finding's `**Resolution:**` field with the appropriate instruction. Count this as an "enriched" finding, not a new or skipped one.
+
+**If duplicate with existing resolution:** Skip the finding silently.
+
+**If not a duplicate:** Keep it for Phase 5.
 
 ## Phase 5: Append to pr-review.md
 
@@ -168,15 +182,7 @@ Do NOT pre-fill when:
 
 Write the updated file.
 
-## Phase 6: Reset working copy
-
-```bash
-git checkout .
-```
-
-Safe — Phase 2 proved every change is a comment-only addition.
-
-## Phase 7: Report
+## Phase 6: Report
 
 Tell the user:
 
@@ -184,13 +190,14 @@ Tell the user:
 >
 > **Critical:** <count> | **Suggestions:** <count> | **Observations:** <count>
 > **Auto-resolvable:** <count> (run `/resolve-review` to apply)
+> **Enriched:** <count> (added resolution to existing findings)
 > **Skipped (duplicates):** <count>
 >
-> Working copy reset. Run `/augment-review` again to add more, or write resolution notes and run `/resolve-review`.
+> Working copy was reset in Phase 2.5. Run `/augment-review` again to add more, or write resolution notes and run `/resolve-review`.
 
-**If all findings were duplicates:**
+**If all findings were duplicates (and none enriched):**
 
-> All comments matched existing findings — nothing new to add. Working copy reset.
+> All comments matched existing findings — nothing new to add.
 
 ## Troubleshooting
 
