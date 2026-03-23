@@ -297,31 +297,6 @@ Guidelines:
 - Keep default state collapsed unless always-on visibility is required.
 - Reuse existing PrUn classes (`C.FormComponent.*`, `C.forms.*`) instead of custom wrappers.
 
-## Hidable Menus (Minimize Row)
-
-For collapsible filter/config menus, use the same passive form row pattern as the game and existing extension features.
-
-```vue
-<div :class="[C.FormComponent.containerPassive, C.forms.passive, C.forms.formComponent]">
-  <label :class="[C.FormComponent.label, C.fonts.fontRegular, C.type.typeRegular]">
-    Minimize
-  </label>
-  <div :class="[C.FormComponent.input, C.forms.input]">
-    <div>
-      <div :class="$style.minimize" @click="toggle">{{ isMinimized ? '+' : '-' }}</div>
-    </div>
-  </div>
-</div>
-
-<div v-if="!isMinimized">
-  <!-- Hidden menu content -->
-</div>
-```
-
-- Keep the label text as `Minimize`.
-- Keep plus/minus behavior: `+` means hidden, `-` means visible.
-- Keep state in `useTileState(...)` so the collapsed state persists per tile.
-
 ## Filter Button Groups
 
 Inside collapsible filter panels, use PrUn-style button rows instead of custom chip styles.
