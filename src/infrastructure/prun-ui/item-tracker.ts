@@ -26,7 +26,7 @@ export function trackItemTickers() {
       const material = materialsStore.getByTicker(ticker.value);
       const category = materialCategoriesStore.getById(material?.category);
       if (category) {
-        currentClasses.push('rp-category-' + sanitizeCategoryName(category.name));
+        currentClasses.push(CATEGORY_CSS_PREFIX + sanitizeCategoryName(category.name));
       }
       for (const className of currentClasses) {
         container.classList.add(className);
@@ -43,7 +43,8 @@ function appendStylesheet() {
   const gradientEnd = defaultColor.brighten(10).toHexString();
   const fontColor = defaultColor.brighten(40).toHexString();
   const defaultStyle =
-    `.${C.ColoredIcon.container}, .rp-category-none {\n` +
+    // rp-category-none: fallback style for items without a category (see CATEGORY_CSS_PREFIX).
+    `.${C.ColoredIcon.container}, .${CATEGORY_CSS_PREFIX}none {\n` +
     `  background: linear-gradient(135deg, ${gradientStart}, ${gradientEnd});\n` +
     `  color: ${fontColor};\n` +
     '}\n\n';
@@ -57,15 +58,19 @@ function createCssRule<T extends keyof typeof categoryColors>(category: T) {
   const gradientEnd = color.brighten(10).toHexString();
   const fontColor = color.brighten(40).toHexString();
   return (
-    `.rp-category-${sanitizeCategoryName(category)} {\n` +
+    `.${CATEGORY_CSS_PREFIX}${sanitizeCategoryName(category)} {\n` +
     `  background: linear-gradient(135deg, ${gradientStart}, ${gradientEnd});\n` +
     `  color: ${fontColor};\n` +
     '}'
   );
 }
 
+// Shared CSS class prefix for material category styling.
+// Used in item-tracker, CargoBar, better-item-colors, and item-icons.
+export const CATEGORY_CSS_PREFIX = 'rp-category-';
+
 export function getMaterialCategoryCssClass(category: PrunApi.MaterialCategory) {
-  return 'rp-category-' + sanitizeCategoryName(category.name);
+  return CATEGORY_CSS_PREFIX + sanitizeCategoryName(category.name);
 }
 
 export function sanitizeCategoryName(name: string) {

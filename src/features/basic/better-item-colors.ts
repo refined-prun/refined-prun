@@ -1,5 +1,8 @@
 import $style from './better-item-colors.module.css';
-import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
+import {
+  sanitizeCategoryName,
+  CATEGORY_CSS_PREFIX,
+} from '@src/infrastructure/prun-ui/item-tracker';
 
 function init() {
   applyCategoryRule('agricultural products', $style.agriculturalProducts);
@@ -12,7 +15,7 @@ function init() {
 }
 
 function applyCategoryRule(category: string, rule: string) {
-  applyCssRule(`.rp-category-${sanitizeCategoryName(category)}`, rule);
+  applyCssRule(`.${CATEGORY_CSS_PREFIX}${sanitizeCategoryName(category)}`, rule);
 }
 
 features.add(import.meta.url, init, 'Alters item colors to be more easily recognized.');

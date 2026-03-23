@@ -22,7 +22,7 @@ declare namespace PrunApi {
     ftlFuelStoreId: string;
     operatingTimeStl: TimeSpan;
     operatingTimeFtl: TimeSpan;
-    condition: number;
+    condition: number; //0 to 1
     lastRepair: DateTime | null;
     repairMaterials: MaterialAmount[];
     status: string;
