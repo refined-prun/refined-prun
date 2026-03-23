@@ -42,16 +42,23 @@ const posData = computed(() => {
 <template>
   <div :class="$style.container">
     <div :class="$style.icons">
-      <span :class="C.Link.link" style="color: #3fa2de" @click.stop="showBuffer(posData.invCommand)"
+      <span
+        :class="[C.Link.link, $style.link]"
+        title="Open inventory"
+        @click.stop="showBuffer(posData.invCommand)"
         >☒</span
       >
       <span
-        style="color: #3fa2de; cursor: pointer"
+        :class="$style.link"
+        title="Open flight control"
         @click.stop="showBuffer(`SFC ${ship?.registration}`)"
         >{{ statusIcon }}</span
       >
     </div>
-    <div :class="C.Link.link" style="color: #3fa2de" @click.stop="showBuffer(posData.command)">
+    <div
+      :class="[C.Link.link, $style.link]"
+      title="Open location"
+      @click.stop="showBuffer(posData.command)">
       {{ posData.name }}
     </div>
   </div>
@@ -68,5 +75,10 @@ const posData = computed(() => {
 .icons {
   display: flex;
   gap: 4px;
+}
+
+.link {
+  color: #3fa2de;
+  cursor: pointer;
 }
 </style>
