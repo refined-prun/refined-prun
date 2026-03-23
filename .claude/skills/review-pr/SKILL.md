@@ -1,71 +1,78 @@
 ---
 name: review-pr
-description: Review the currently checked-out GitHub pull request against project guidelines. Creates pr-review.md with findings. Triggers on "review pr", "review pull request", "pr review", "check pr". Do NOT use for reviewing code outside a PR context.
+description: Review a GitHub pull request against project guidelines. Creates .tmp/pr/<number>/pr-review.md with findings. Accepts PR number as argument. Triggers on "review pr", "review pull request", "pr review", "check pr". Do NOT use for reviewing code outside a PR context.
 ---
 
 # Review GitHub Pull Request
 
-Analyze the currently checked-out PR and produce a structured review in `pr-review.md`.
+Analyze a PR and produce a structured review in `.tmp/pr/<number>/pr-review.md`.
 
 **Principle:** Report everything. The only code change this skill makes is running prettier.
 
 **Principle:** Never assume how the game works. Flag any change that assumes game mechanics without doc backing.
 
+**Principle:** Only review code that appears in the diff. Do not review unchanged code in changed files. Do not suggest improvements to code outside the PR's scope unless it has a direct connection to the changed code.
+
 ## Phase 1: Pre-flight
 
 ```bash
-which gh || echo "GH_MISSING"
+.claude/skills/review-pr/scripts/preflight.sh
 ```
 
-**If GH_MISSING:** Stop. Tell the user: `gh` CLI is required. Install from https://cli.github.com.
+**If exit code is non-zero:** Stop. The script prints the blocking issue (dirty worktree or missing `gh`). Tell the user.
+
+## Phase 2: Setup
+
+Detect the current branch's PR:
 
 ```bash
-gh pr view --json number,title,body,baseRefName,headRefName,author,labels,files 2>&1
+gh pr view --json number --jq '.number' 2>/dev/null
 ```
 
-**If error (not a PR branch):** Stop. Tell the user: this branch is not associated with a PR. Check out a PR first with `gh pr checkout <number>`.
+Determine the target PR number and whether to checkout:
 
-**If success:** Save the JSON output. Extract `number`, `title`, `baseRefName` for later use.
+- **No argument provided:** If `.tmp/pr/current.txt` exists, read the PR number from it. Otherwise, if the current branch has a PR, use that number. Otherwise, ask the user for the PR number.
+- **Argument provided:** Use the argument as the PR number.
+
+**If the current branch's PR number matches the target PR number:**
 
 ```bash
-mkdir -p .tmp
+.claude/skills/review-pr/scripts/setup-pr.sh <number>
 ```
 
-## Phase 2: Prettier + Commit
+**Otherwise (need to checkout):**
 
 ```bash
-pnpm prettier
+.claude/skills/review-pr/scripts/setup-pr.sh <number> --checkout
 ```
 
-Check if prettier made any changes:
+**If the script exits non-zero:** It prints `ERROR: MERGE_CONFLICT`. Stop. Tell the user: merge conflict with main. Resolve manually.
+
+**On success:** The script prints the PR JSON metadata. Save it. Extract `number`, `title`, `baseRefName` for later use. The script also creates `.tmp/pr/<number>/` and writes `.tmp/pr/current.txt`.
+
+### Existing Review Detection
+
+If `.tmp/pr/<number>/pr-review.md` exists, this is an incremental re-review. Read it and keep the file contents in memory — existing findings and their resolutions will be preserved in Phase 7.
+
+If the file does not exist, this is a fresh review.
+
+## Phase 3: Prettier + Commit
+
+## Phase 4: Gather Context
+
+Run formatting, linting, and context gathering in parallel:
 
 ```bash
-git diff --stat
-```
-
-**If changes exist:** Stage only prettier-touched files and commit:
-
-```bash
-git diff --name-only | xargs git add && git commit -m "prettier"
-```
-
-**If no changes:** Skip — working tree is already formatted.
-
-## Phase 3: Gather Context
-
-Run all three in parallel:
-
-```bash
-gh pr diff > .tmp/pr-diff.txt
-```
-
-```bash
-gh pr view --json comments,reviews --jq '.comments[].body, .reviews[].body' > .tmp/pr-comments.txt 2>/dev/null
+.claude/skills/review-pr/scripts/format-and-lint.sh <number>
 ```
 
 ```bash
-gh pr view --json files --jq '.files[].path'
+.claude/skills/review-pr/scripts/gather-context.sh <number>
 ```
+
+The format-and-lint script runs prettier (auto-commits if needed) then eslint. It prints `PRETTIER_COMMITTED` or `PRETTIER_CLEAN`.
+
+The gather-context script writes `pr-diff.txt` and `pr-comments.txt` to `.tmp/pr/<number>/` and prints the list of changed files.
 
 ### Doc Reading Strategy
 
@@ -84,17 +91,27 @@ Read based on changed paths:
 | `src/core/` or `src/store/` | `docs/architecture.md` (dependency layers) |
 | `docs/game/` | Verify against existing `docs/game/` files |
 
-Now read `.tmp/pr-diff.txt`. If it exceeds 800 lines, read in 500-line chunks, processing each chunk before moving on.
+Now read `.tmp/pr/<number>/pr-diff.txt`. If it exceeds 800 lines, read in 500-line chunks, processing each chunk before moving on.
 
-## Phase 4: ESLint
+## Phase 5: ESLint
+
+Read `.tmp/pr/<number>/eslint-output.txt` (written by `format-and-lint.sh`). Note exit code and any errors/warnings.
+
+## Phase 5.5: Create Worktree
+
+Create an isolated, read-only snapshot of the PR code for analysis. This protects the review from the user's concurrent edits on the main worktree.
 
 ```bash
-pnpm lint 2>&1 | head -200 > .tmp/eslint-output.txt; echo "EXIT:${PIPESTATUS[0]}" >> .tmp/eslint-output.txt
+.claude/skills/review-pr/scripts/worktree.sh create <number>
 ```
 
-Read `.tmp/eslint-output.txt`. Note exit code and any errors/warnings.
+The worktree is a detached HEAD snapshot of the current commit (post-merge, post-prettier).
 
-## Phase 5: Analyze
+**If the script exits non-zero:** It prints `git worktree list` output. Remove the conflicting entry and retry.
+
+## Phase 6: Analyze
+
+**File reading:** When reading source files referenced in the diff, read from `.tmp/pr/<number>/workspace/<path>` (the worktree), not from the main worktree. This ensures you see the clean PR state regardless of the user's concurrent edits. Docs (`docs/`) can be read from either location. Artifacts (`pr-diff.txt`, `eslint-output.txt`) are at `.tmp/pr/<number>/` on the main worktree.
 
 Review the diff against **every rule in the docs you read in Phase 3**. The docs contain Good/Bad examples — use those as the reference. Only flag items that actually appear in the diff. Do not invent issues.
 
@@ -110,16 +127,23 @@ Check these categories. For each, the source of truth is the doc file, not this 
 - **PR Quality** — descriptive title, body explains "why", focused scope
 - **Code Quality** — no over-engineering, no security issues, resources cleaned up
 
-## Phase 6: Write Review
+## Phase 7: Write Review
 
-Create `pr-review.md` in the repo root with this structure:
+**Incremental mode** (existing `.tmp/pr/<number>/pr-review.md`): Read the existing file. Keep all existing findings and their resolutions exactly as-is. Append any newly discovered findings that are not already covered. Do not duplicate findings. Do not remove or reword existing entries. Update the ESLint section and review date. Add new files to "Files Reviewed" if not already listed. If the file has a `## Dismissed` section, do not re-flag any finding whose title matches a dismissed entry. After merging existing and new findings, renumber all findings sequentially starting from 1, continuous across sections (Critical, then Suggestions, then Observations).
+
+**Fresh mode** (file does not exist): Create `.tmp/pr/<number>/pr-review.md` from scratch.
+
+Write `.tmp/pr/<number>/pr-review.md` with this structure:
 
 ```markdown
 # PR Review: #<number> — <title>
 
 **Branch:** <headRefName> → <baseRefName>
+
 **Author:** <author>
+
 **Files changed:** <count>
+
 **Review date:** <today>
 
 ## Summary
@@ -134,23 +158,51 @@ Create `pr-review.md` in the repo root with this structure:
 
 <If pass: "No errors or warnings.">
 
+## Strengths
+
+<1-3 brief bullet points noting what the PR does well — e.g., clean decomposition, good use of existing patterns, solid data modeling. Only include genuinely notable positives. If nothing stands out, write "None." Do not pad with generic praise.>
+
 ## Findings
 
 ### Critical
 
 <issues that must be fixed before merge, or "None.">
 
+Each finding ends with:
+
+**Basis:** <why this was flagged — cite the specific source>
+
+**Resolution:**
+
 ### Suggestions
 
 <improvements that would be nice but aren't blocking>
+
+Each finding ends with:
+
+**Basis:** <why this was flagged>
+
+**Resolution:**
 
 ### Observations
 
 <neutral notes — things the reviewer noticed, questions for the author>
 
+Each item ends with:
+
+**Basis:** <why this was flagged>
+
+**Resolution:**
+
 ## Files Reviewed
 
 <bulleted list of changed files with a one-line note each>
+
+## Artifacts
+
+- `.tmp/pr/<number>/pr-diff.txt` — full PR diff
+- `.tmp/pr/<number>/pr-comments.txt` — PR comments and reviews
+- `.tmp/pr/<number>/eslint-output.txt` — ESLint output
 ```
 
 **If no findings in a section:** Write "None." — do not omit the section.
@@ -160,15 +212,50 @@ Create `pr-review.md` in the repo root with this structure:
 - **Suggestion:** Could be cleaner, missing pattern usage, eslint warnings, minor style issues
 - **Observation:** Questions, ambiguities, things worth discussing
 
-## Phase 7: Report
+**Basis guide** — every finding must cite why it was flagged. This is a breadcrumb for `/resolve-review` to know what to read and how to fix. Use one of these forms:
+- **Doc rule:** `contributing.md > Code Style > Nullish Checks` — cite doc file, section, subsection
+- **Doc rule with quote:** `feature-patterns.md > CSS > Scoping: "always use scoped CSS rules"` — when the exact wording matters
+- **Code observation:** `parseFloat(null) returns NaN; NaN > x is always false` — TypeScript/JS behavior
+- **PR comment:** `maintainer comment: "match C.Contribution.contribute and traverse .previousElementSibling"` — cite the commenter
+- **Architecture:** `architecture.md > Dependency Layers: features → core → infrastructure → utils`
+- **Game knowledge:** `docs/game/commands.csv` or `no doc found — flagged as assumption`
+
+Be specific enough that someone reading only the Basis can understand the fix without re-reading the full doc.
+
+**Pre-filled resolutions** — If a finding has exactly one unambiguous mechanical fix derivable from the Basis alone (no design judgment), pre-fill the `**Resolution:**` field with a short instruction. This lets `/resolve-review` batch-process trivial fixes without manual editing.
+
+Examples of pre-fillable fixes:
+- Import reordering → `**Resolution:** Reorder alphabetically.`
+- `==` → `===` → `**Resolution:** Use strict equality.`
+- Missing `await` → `**Resolution:** Add await.`
+- Null guard on `textContent` → `**Resolution:** Add ! assertion.`
+
+Do NOT pre-fill if the fix requires:
+- Restructuring code or changing approach
+- Choosing between multiple valid alternatives
+- Game knowledge or domain understanding
+- Design judgment about UX or feature behavior
+
+When in doubt, leave `**Resolution:**` empty — a wrong pre-fill is worse than none.
+
+## Phase 8: Report
 
 Tell the user:
 
-> PR review written to `pr-review.md`.
+> PR review written to `.tmp/pr/<number>/pr-review.md`.
 >
 > **Critical:** <count> | **Suggestions:** <count> | **Observations:** <count>
+> **Auto-resolvable:** <count> (run `/resolve-review` to apply)
 > **ESLint:** <pass/fail> (<error count> errors, <warning count> warnings)
 > **Prettier:** <committed/no changes>
+
+## Phase 8.5: Cleanup Worktree
+
+```bash
+.claude/skills/review-pr/scripts/worktree.sh remove <number>
+```
+
+Idempotent. If the review was interrupted, the next run's Phase 5.5 will also clean up.
 
 ## Troubleshooting
 
@@ -182,7 +269,7 @@ If not authenticated: `gh auth login`.
 
 ### Diff too large to process
 
-If `.tmp/pr-diff.txt` exceeds 3000 lines, focus on files matching `src/features/` and `src/infrastructure/` first. Note skipped files in the review under a "Skipped (large diff)" section.
+If `.tmp/pr/<number>/pr-diff.txt` exceeds 3000 lines, focus on files matching `src/features/` and `src/infrastructure/` first. Note skipped files in the review under a "Skipped (large diff)" section.
 
 ### PR has no diff
 
@@ -193,3 +280,11 @@ gh pr view --json state --jq '.state'
 ```
 
 Report the state and stop.
+
+### Worktree creation fails
+
+The `.claude/skills/review-pr/scripts/worktree.sh create` script auto-cleans stale worktrees before creating. If it still fails, check `git worktree list` for conflicts and remove the conflicting entry manually.
+
+### Stale worktree from interrupted review
+
+Phase 5.5 cleans up automatically. To clean up manually: `.claude/skills/review-pr/scripts/worktree.sh remove <number>`
