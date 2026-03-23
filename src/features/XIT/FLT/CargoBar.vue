@@ -12,6 +12,7 @@ import { ref, watch, computed, onUnmounted } from 'vue';
 
 const props = defineProps<{
   shipId: string | null;
+  tall?: boolean;
 }>();
 
 const $style = useCssModule();
@@ -252,7 +253,11 @@ function onClick() {
 
 <template>
   <div
-    :class="[C.ProgressBar.progress, $style.container, { [$style.isUpdating]: isAnimating }]"
+    :class="[
+      C.ProgressBar.progress,
+      $style.container,
+      { [$style.isUpdating]: isAnimating, [$style.tall]: tall },
+    ]"
     :style="{ '--stripe-color': stripeAlertColor, '--stripe-width': stripeWidth }"
     @click="onClick">
     <div :class="[$style.bar, miniBarClass]">
@@ -293,6 +298,11 @@ function onClick() {
     var(--stripe-color) var(--stripe-width)
   );
   background-size: var(--hypotenuse) var(--hypotenuse);
+}
+
+.tall {
+  min-height: 24px;
+  height: 24px;
 }
 
 .isUpdating {

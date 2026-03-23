@@ -15,7 +15,7 @@ import TimeCell from './TimeCell.vue';
 import CargoBar from './CargoBar.vue';
 import { fixed0 } from '@src/utils/format';
 
-type SortKey = 'name' | 'cargo' | 'status' | 'fuel';
+type SortKey = 'name' | 'cargo' | 'status' | 'eta' | 'fuel';
 type SortDirection = 'asc' | 'desc' | 'none';
 type FuelAlertThreshold = '75' | '50' | '35' | '25' | '10';
 type FuelAlertFilter = 'any' | FuelAlertThreshold;
@@ -51,6 +51,7 @@ const DEFAULT_SORT_DIRECTION_BY_KEY: Record<SortKey, SortDirection> = {
   name: 'asc',
   cargo: 'none',
   status: 'none',
+  eta: 'none',
   fuel: 'none',
 };
 
@@ -73,6 +74,13 @@ const cargoStateFilters = useTileState<string[]>('cargoStateFilters', []);
 const etaFilters = useTileState<string[]>('etaFilters', []);
 const fuelAlertFilter = useTileState<FuelAlertFilter>('fuelAlertFilter', 'any');
 const fillTile = useTileState('fillTile', false);
+
+const showColSize = useTileState('showColSize', true);
+const showColCargo = useTileState('showColCargo', true);
+const showColCargoSize = useTileState('showColCargoSize', false);
+const showColTime = useTileState('showColTime', true);
+const showColRepair = useTileState('showColRepair', true);
+const showColFuel = useTileState('showColFuel', true);
 
 const conditionOptions = ['100-90', '90-80', '80-0'];
 const etaOptions = ['DOCKED', '<1H', '1-6H', '6-12H', '12-24H', '>24H'];
@@ -288,6 +296,18 @@ const activeFilterCount = computed(() => {
   ].filter(Boolean).length;
 });
 
+const gridTemplateColumns = computed(() => {
+  const cols = ['auto'];
+  if (showColSize.value) cols.push('auto');
+  if (showColCargo.value) cols.push('auto');
+  if (showColCargoSize.value) cols.push('auto');
+  cols.push('auto'); // Status is always shown
+  if (showColTime.value) cols.push(fillTile.value ? '1fr' : 'auto');
+  if (showColRepair.value) cols.push('auto');
+  if (showColFuel.value) cols.push('auto');
+  return cols.join(' ');
+});
+
 const filterSymbol = computed(() => (showFilters.value ? '-' : '+'));
 
 const optionFilterGroups = computed<MultiOptionFilterGroup[]>(() => [
@@ -354,6 +374,40 @@ function setSort(key: SortKey) {
   };
 }
 
+function setPrimarySort(key: SortKey) {
+  if (primarySortKey.value === key) {
+    const currentDirection = getSortDirection(key);
+    sortDirectionByKey.value = {
+      ...sortDirectionByKey.value,
+      [key]: currentDirection === 'asc' ? 'desc' : 'asc',
+    };
+  } else {
+    primarySortKey.value = key;
+    sortDirectionByKey.value = {
+      ...sortDirectionByKey.value,
+      [key]:
+        sortDirectionByKey.value[key] === 'none' ? 'asc' : sortDirectionByKey.value[key] || 'asc',
+    };
+  }
+}
+
+function setSecondarySort(key: SortKey) {
+  if (secondarySortKey.value === key) {
+    const currentDirection = getSortDirection(key);
+    sortDirectionByKey.value = {
+      ...sortDirectionByKey.value,
+      [key]: currentDirection === 'asc' ? 'desc' : 'asc',
+    };
+  } else {
+    secondarySortKey.value = key;
+    sortDirectionByKey.value = {
+      ...sortDirectionByKey.value,
+      [key]:
+        sortDirectionByKey.value[key] === 'none' ? 'asc' : sortDirectionByKey.value[key] || 'asc',
+    };
+  }
+}
+
 function getSortIndicator(key: SortKey) {
   const direction = getSortDirection(key);
   if (direction === 'none') {
@@ -397,7 +451,8 @@ function compareByKey(a: FlightRow, b: FlightRow, key: SortKey) {
       const primary = a.cargoRatio - b.cargoRatio;
       return primary !== 0 ? primary : nameCompare;
     }
-    case 'status': {
+    case 'status':
+    case 'eta': {
       const primary = a.statusSortValue - b.statusSortValue;
       return primary !== 0 ? primary : nameCompare;
     }
@@ -526,6 +581,13 @@ function clearFilters() {
   primarySortKey.value = 'name';
   secondarySortKey.value = 'status';
   sortDirectionByKey.value = { ...DEFAULT_SORT_DIRECTION_BY_KEY };
+
+  showColSize.value = true;
+  showColCargo.value = true;
+  showColCargoSize.value = false;
+  showColTime.value = true;
+  showColRepair.value = true;
+  showColFuel.value = true;
 }
 
 function getShipClass(ship: PrunApi.Ship) {
@@ -646,6 +708,57 @@ function getCargoState(cargoRatio: number) {
       </div>
 
       <div :class="$style.filterGroup">
+        <div :class="$style.filterTitle">Columns</div>
+        <div :class="C.ComExOrdersPanel.filter">
+          <RadioItem v-model="showColSize" horizontal>SIZE</RadioItem>
+          <RadioItem v-model="showColCargo" horizontal>CARGO</RadioItem>
+          <RadioItem v-model="showColCargoSize" horizontal>CARGO/SIZE</RadioItem>
+          <RadioItem v-model="showColTime" horizontal>ETA</RadioItem>
+          <RadioItem v-model="showColRepair" horizontal>REPAIR</RadioItem>
+          <RadioItem v-model="showColFuel" horizontal>FUEL</RadioItem>
+        </div>
+      </div>
+
+      <div :class="$style.filterGroup">
+        <div :class="$style.filterTitle">Reset</div>
+        <div :class="C.ComExOrdersPanel.filter">
+          <RadioItem :model-value="false" horizontal @update:model-value="clearFilters"
+            >RESET ALL FILTERS</RadioItem
+          >
+        </div>
+      </div>
+
+      <div :class="$style.filterGroup">
+        <div :class="$style.filterTitle">Primary sort</div>
+        <div :class="C.ComExOrdersPanel.filter">
+          <RadioItem
+            v-for="key in ['name', 'cargo', 'status', 'eta', 'fuel']"
+            :key="`pri-${key}`"
+            :model-value="primarySortKey === key"
+            horizontal
+            @update:model-value="setPrimarySort(key as SortKey)">
+            {{ key.toUpperCase() }}
+            {{ primarySortKey === key ? getSortIndicator(key as SortKey) : '' }}
+          </RadioItem>
+        </div>
+      </div>
+
+      <div :class="$style.filterGroup">
+        <div :class="$style.filterTitle">Secondary sort</div>
+        <div :class="C.ComExOrdersPanel.filter">
+          <RadioItem
+            v-for="key in ['name', 'cargo', 'status', 'eta', 'fuel']"
+            :key="`sec-${key}`"
+            :model-value="secondarySortKey === key"
+            horizontal
+            @update:model-value="setSecondarySort(key as SortKey)">
+            {{ key.toUpperCase() }}
+            {{ secondarySortKey === key ? getSortIndicator(key as SortKey) : '' }}
+          </RadioItem>
+        </div>
+      </div>
+
+      <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Layout</div>
         <div :class="C.ComExOrdersPanel.filter">
           <RadioItem v-model="fillTile" horizontal>FILL TILE</RadioItem>
@@ -660,7 +773,7 @@ function getCargoState(cargoRatio: number) {
       </div>
 
       <div :class="$style.filterGroup">
-        <div :class="$style.filterTitle">Fuel warning</div>
+        <div :class="$style.filterTitle">Fuel</div>
         <div :class="C.ComExOrdersPanel.filter">
           <RadioItem
             v-for="threshold in fuelAlertOptions"
@@ -674,7 +787,9 @@ function getCargoState(cargoRatio: number) {
       </div>
     </div>
 
-    <div :class="[fillTile ? $style.tableContainerFill : $style.tableContainer]">
+    <div
+      :class="[fillTile ? $style.tableContainerFill : $style.tableContainer]"
+      :style="{ gridTemplateColumns }">
       <!-- Header row -->
       <div :class="$style.headerRow">
         <div :class="[$style.headerCell, $style.sortable]" @click="setSort('name')">
@@ -687,9 +802,25 @@ function getCargoState(cargoRatio: number) {
             {{ getSortIndicator('name') }}
           </span>
         </div>
-        <div :class="[$style.headerCell, $style.colRepair]">Repair</div>
-        <div :class="[$style.headerCell, $style.sortable]" @click="setSort('cargo')">
+        <div v-if="showColSize" :class="[$style.headerCell, $style.colSize]">Size</div>
+        <div
+          v-if="showColCargo"
+          :class="[$style.headerCell, $style.sortable]"
+          @click="setSort('cargo')">
           Cargo
+          <span
+            :class="{
+              [$style.sortPrimary]: isPrimarySort('cargo'),
+              [$style.sortSecondary]: isSecondarySort('cargo'),
+            }">
+            {{ getSortIndicator('cargo') }}
+          </span>
+        </div>
+        <div
+          v-if="showColCargoSize"
+          :class="[$style.headerCell, $style.sortable]"
+          @click="setSort('cargo')">
+          Cargo/Size
           <span
             :class="{
               [$style.sortPrimary]: isPrimarySort('cargo'),
@@ -710,8 +841,24 @@ function getCargoState(cargoRatio: number) {
             {{ getSortIndicator('status') }}
           </span>
         </div>
-        <div :class="[$style.headerCell, $style.colTime]" />
-        <div :class="[$style.headerCell, $style.sortable, $style.colFuel]" @click="setSort('fuel')">
+        <div
+          v-if="showColTime"
+          :class="[$style.headerCell, $style.sortable, $style.colTime]"
+          @click="setSort('eta')">
+          ETA
+          <span
+            :class="{
+              [$style.sortPrimary]: isPrimarySort('eta'),
+              [$style.sortSecondary]: isSecondarySort('eta'),
+            }">
+            {{ getSortIndicator('eta') }}
+          </span>
+        </div>
+        <div v-if="showColRepair" :class="[$style.headerCell, $style.colRepair]">Repair</div>
+        <div
+          v-if="showColFuel"
+          :class="[$style.headerCell, $style.sortable, $style.colFuel]"
+          @click="setSort('fuel')">
           Fuel
           <span
             :class="{
@@ -731,13 +878,22 @@ function getCargoState(cargoRatio: number) {
           </span>
         </div>
 
-        <div :class="[$style.bodyCell, $style.colRepair]">
-          <span :class="C.ColoredValue.positive">{{ x.conditionText }}</span>
+        <div
+          v-if="showColSize"
+          :class="[$style.bodyCell, $style.colSize, C.ShipStore.pointer]"
+          @click="showBuffer(`SHPI ${x.ship.registration}`)">
+          {{ x.cargoSizeText }}
         </div>
 
-        <div :class="[$style.bodyCell, $style.cargoCell]">
+        <div v-if="showColCargo" :class="[$style.bodyCell, $style.cargoCell]">
+          <CargoBar :ship-id="x.ship.id" tall />
+        </div>
+
+        <div v-if="showColCargoSize" :class="[$style.bodyCell, $style.cargoCombinedCell]">
           <CargoBar :ship-id="x.ship.id" />
-          <div :class="[C.ShipStore.pointer, C.ShipStore.store, $style.cargoSize]">
+          <div
+            :class="[C.ShipStore.pointer, C.ShipStore.store, $style.cargoCombinedSize]"
+            @click="showBuffer(`SHPI ${x.ship.registration}`)">
             {{ x.cargoSizeText }}
           </div>
         </div>
@@ -746,11 +902,18 @@ function getCargoState(cargoRatio: number) {
           <StatusCell :ship-id="x.ship.id" />
         </div>
 
-        <div :class="[$style.bodyCell, $style.colTime]">
+        <div v-if="showColTime" :class="[$style.bodyCell, $style.colTime]">
           <TimeCell :ship-id="x.ship.id" />
         </div>
 
-        <div :class="[$style.bodyCell, $style.colFuel]">
+        <div v-if="showColRepair" :class="[$style.bodyCell, $style.colRepair]">
+          <span
+            :class="x.ship.condition < 0.8 ? C.ColoredValue.negative : C.ColoredValue.positive"
+            >{{ x.conditionText }}</span
+          >
+        </div>
+
+        <div v-if="showColFuel" :class="[$style.bodyCell, $style.colFuel]">
           <div
             :class="[C.ShipFuel.container, C.ShipFuel.pointer, $style.fuelBars]"
             @click="onFuel(x.ship.registration)">
@@ -853,13 +1016,11 @@ function getCargoState(cargoRatio: number) {
 /* Grid table structure */
 .tableContainer {
   display: inline-grid;
-  grid-template-columns: auto auto auto auto auto auto;
 }
 
 .tableContainerFill {
   display: grid;
   width: 100%;
-  grid-template-columns: auto auto auto auto 1fr auto;
 }
 
 .headerRow {
@@ -919,13 +1080,21 @@ function getCargoState(cargoRatio: number) {
 }
 
 .cargoCell {
+  padding: 2px 6px;
+}
+
+.cargoCombinedCell {
   flex-direction: column;
   padding: 2px;
   padding-bottom: 0;
 }
 
+.cargoCombinedSize {
+  margin-top: 2px;
+}
+
 .colRepair {
-  min-width: 30px;
+  min-width: 35px;
   justify-content: center;
 }
 
@@ -946,8 +1115,9 @@ function getCargoState(cargoRatio: number) {
   min-width: 50px;
 }
 
-.cargoSize {
-  margin-top: 2px;
+.colSize {
+  min-width: 45px;
+  justify-content: center;
 }
 
 .row:nth-child(even) > .bodyCell {
