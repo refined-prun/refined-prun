@@ -110,6 +110,7 @@ export const percent2 = numberFormat({
   maximumFractionDigits: 2,
 });
 
+// wall-clock time + day offset ("14:30 +2d"),
 export function formatEta(from: number, to: number) {
   let ret = hhmm(to);
   const days = diffDays(from, to);
@@ -119,6 +120,7 @@ export function formatEta(from: number, to: number) {
   return ret;
 }
 
+// Compact duration format ("2d 3h 15m") for dense table cells.
 export function displaytimeBetween(from: number, to: number) {
   const diffMs = to - from;
   if (diffMs <= 0) return '0m';
