@@ -1,7 +1,6 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
-import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 
 const store = createEntityStore<PrunApi.MaterialCategory>();
 const state = store.state;
@@ -26,24 +25,9 @@ export const getCategoryById = (
   return getById(id);
 };
 
-export const getCategoryByMaterialIdentifier = (
-  identifier: string | undefined | null,
-): PrunApi.MaterialCategory | undefined => {
-  if (!identifier) return undefined;
-
-  const search = identifier.toUpperCase();
-
-  const material = materialsStore.all.value?.find(
-    m => m.ticker.toUpperCase() === search || m.name.toUpperCase() === search,
-  );
-
-  return getCategoryById(material?.category);
-};
-
 export const materialCategoriesStore = {
   ...state,
   getById,
   getBySerializableName,
   getCategoryById,
-  getCategoryByMaterialIdentifier,
 };
