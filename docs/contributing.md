@@ -96,6 +96,19 @@ tile.anchor.parentElement as HTMLDivElement
 tile.anchor.parentElement!
 ```
 
+### Summation
+
+Use `sumBy` utility instead of `.reduce()` for summation.
+
+```ts
+// Bad
+const total = items.reduce((sum, x) => sum + x.amount, 0);
+
+// Good
+import { sumBy } from '@src/utils/sum-by';
+const total = sumBy(items, x => x.amount);
+```
+
 ### Nullish Checks
 
 Don't use `||` with numbers — use explicit checks.
