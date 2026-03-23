@@ -3,7 +3,6 @@ import { computed } from 'vue';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import { getInvStore } from '@src/core/store-id';
 import { getShipStatusIcon, stationaryShipStatusIcon } from '@src/core/ship-status-icons';
 import {
   getEntityNameFromAddress,
