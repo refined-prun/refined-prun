@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { getMaterialCategoryCssClass } from '@src/infrastructure/prun-ui/item-tracker';
+import {
+  getMaterialCategoryCssClass,
+  CATEGORY_CSS_PREFIX,
+} from '@src/infrastructure/prun-ui/item-tracker';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
 import { fixed02 } from '@src/utils/format';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onUnmounted } from 'vue';
 
 const props = defineProps<{
   shipId: string | null;
@@ -81,7 +84,7 @@ const cargoBar = computed<CargoBarData>(() => {
     const percentage = (value * 100) / divisor;
     segments.push({
       name: 'shipments',
-      class: 'rp-category-none',
+      class: `${CATEGORY_CSS_PREFIX}none`,
       width: `${percentage}%`,
       title: formatTitle('shipments', summary.shipments.weight, summary.shipments.volume),
     });
@@ -187,6 +190,12 @@ watch(
   },
   { deep: true },
 );
+
+onUnmounted(() => {
+  if (animationTimeout) {
+    clearTimeout(animationTimeout);
+  }
+});
 
 const totalLoadRatio = computed(() => {
   const ship = shipsStore.getById(props.shipId);
