@@ -10,7 +10,8 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { useTileState } from '@src/store/user-data-tiles';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
-import FleetStatusCell from './FleetStatusCell.vue';
+import StatusCell from './StatusCell.vue';
+import TimeCell from './TimeCell.vue';
 import CargoBar from './CargoBar.vue';
 import { fixed0 } from '@src/utils/format';
 
@@ -19,9 +20,23 @@ type SortDirection = 'asc' | 'desc' | 'none';
 type FuelAlertThreshold = '75' | '50' | '35' | '25' | '10';
 type FuelAlertFilter = 'any' | FuelAlertThreshold;
 
-type SortColumn = {
-  key: SortKey;
-  label: string;
+type FlightRow = {
+  ship: PrunApi.Ship;
+  stlFuelRatio: number | undefined;
+  ftlFuelRatio: number | undefined;
+  cargoRatio: number;
+  fuelRatio: number;
+  warningFuelRatio: number;
+  statusSortValue: number;
+  conditionText: string;
+  cargoSizeText: string;
+  isFtlCapable: boolean;
+  inFlight: boolean;
+  isReturningToCx: boolean;
+  shipClass: string;
+  conditionBand: string;
+  etaBucket: string;
+  cargoState: string;
 };
 
 type MultiOptionFilterGroup = {
@@ -32,14 +47,19 @@ type MultiOptionFilterGroup = {
   onToggle: (option: string) => void;
 };
 
-const primarySortKey = useTileState<SortKey>('primarySortKey', 'name');
-const secondarySortKey = useTileState<SortKey>('secondarySortKey', 'status');
-const sortDirectionByKey = useTileState<Record<SortKey, SortDirection>>('sortDirectionByKey', {
+const DEFAULT_SORT_DIRECTION_BY_KEY: Record<SortKey, SortDirection> = {
   name: 'asc',
   cargo: 'none',
   status: 'none',
   fuel: 'none',
-});
+};
+
+const primarySortKey = useTileState<SortKey>('primarySortKey', 'name');
+const secondarySortKey = useTileState<SortKey>('secondarySortKey', 'status');
+const sortDirectionByKey = useTileState<Record<SortKey, SortDirection>>(
+  'sortDirectionByKey',
+  DEFAULT_SORT_DIRECTION_BY_KEY,
+);
 const showFilters = useTileState('showFilters', false);
 const showStlShips = useTileState('showStlShips', true);
 const showFtlShips = useTileState('showFtlShips', true);
@@ -52,6 +72,7 @@ const conditionFilters = useTileState<string[]>('conditionFilters', []);
 const cargoStateFilters = useTileState<string[]>('cargoStateFilters', []);
 const etaFilters = useTileState<string[]>('etaFilters', []);
 const fuelAlertFilter = useTileState<FuelAlertFilter>('fuelAlertFilter', 'any');
+const fillTile = useTileState('fillTile', false);
 
 const conditionOptions = ['100-90', '90-80', '80-0'];
 const etaOptions = ['DOCKED', '<1H', '1-6H', '6-12H', '12-24H', '>24H'];
@@ -65,19 +86,12 @@ const fuelAlertThresholdMap: Record<FuelAlertFilter, number> = {
   '25': 0.25,
   '10': 0.1,
 };
-const sortColumns: SortColumn[] = [
-  { key: 'name', label: 'Name' },
-  { key: 'cargo', label: 'Cargo' },
-  { key: 'status', label: 'Status' },
-  { key: 'fuel', label: 'Fuel' },
-];
-
 const cxCodes = computed(() => {
   const exchanges = exchangesStore.all.value ?? [];
   return new Set(exchanges.map(x => x.code.toUpperCase()));
 });
 
-const rawRows = computed(() => {
+const rawRows = computed<FlightRow[] | undefined>(() => {
   const ships = shipsStore.all.value;
   if (!ships) {
     return undefined;
@@ -88,18 +102,8 @@ const rawRows = computed(() => {
     const inventory = getInvStore(ship.idShipStore);
     const stlStore = storagesStore.getById(ship.idStlFuelStore);
     const ftlStore = storagesStore.getById(ship.idFtlFuelStore);
-
-    const stlCapacity = stlStore?.weightCapacity;
-    const ftlCapacity = ftlStore?.weightCapacity;
-
-    const stlFuelRatio =
-      stlStore != null && stlCapacity != null && stlCapacity > 0
-        ? stlStore.weightLoad / stlCapacity
-        : undefined;
-    const ftlFuelRatio =
-      ftlStore != null && ftlCapacity != null && ftlCapacity > 0
-        ? ftlStore.weightLoad / ftlCapacity
-        : undefined;
+    const stlFuelRatio = getFuelRatio(stlStore);
+    const ftlFuelRatio = getFuelRatio(ftlStore);
 
     const condition = ship.condition <= 1 ? ship.condition * 100 : ship.condition;
     const cargoRatio = inventory
@@ -115,7 +119,7 @@ const rawRows = computed(() => {
       arrivalTimestamp != null && !Number.isNaN(arrivalTimestamp)
         ? Math.max(0, arrivalTimestamp - now)
         : 0;
-    const isFtlCapable = (ftlCapacity ?? 0) > 0;
+    const isFtlCapable = (ftlStore?.weightCapacity ?? 0) > 0;
     const warningFuelRatio = isFtlCapable
       ? Math.min(stlFuelRatio ?? 0, ftlFuelRatio ?? 0)
       : (stlFuelRatio ?? 0);
@@ -226,7 +230,7 @@ const rows = computed(() => {
 
   const primaryKey = primarySortKey.value;
   const primaryDirection = getSortDirection(primaryKey);
-  let secondaryKey = secondarySortKey.value;
+  const secondaryKey = secondarySortKey.value;
   const secondaryDirection = getSortDirection(secondaryKey);
 
   // If primary sort is disabled, use secondary as primary
@@ -271,37 +275,17 @@ const rows = computed(() => {
 });
 
 const activeFilterCount = computed(() => {
-  let count = 0;
-
-  if (!showStlShips.value || !showFtlShips.value) {
-    count += 1;
-  }
-  if (!showInFlightShips.value || !showNotInFlightShips.value) {
-    count += 1;
-  }
-  if (inventorySizeFilters.value.length > 0) {
-    count += 1;
-  }
-  if (hideReturningToCx.value) {
-    count += 1;
-  }
-  if (shipClassFilters.value.length > 0) {
-    count += 1;
-  }
-  if (conditionFilters.value.length > 0) {
-    count += 1;
-  }
-  if (cargoStateFilters.value.length > 0) {
-    count += 1;
-  }
-  if (etaFilters.value.length > 0) {
-    count += 1;
-  }
-  if (fuelAlertFilter.value !== 'any') {
-    count += 1;
-  }
-
-  return count;
+  return [
+    !showStlShips.value || !showFtlShips.value,
+    !showInFlightShips.value || !showNotInFlightShips.value,
+    inventorySizeFilters.value.length > 0,
+    hideReturningToCx.value,
+    shipClassFilters.value.length > 0,
+    conditionFilters.value.length > 0,
+    cargoStateFilters.value.length > 0,
+    etaFilters.value.length > 0,
+    fuelAlertFilter.value !== 'any',
+  ].filter(Boolean).length;
 });
 
 const filterSymbol = computed(() => (showFilters.value ? '-' : '+'));
@@ -401,21 +385,7 @@ function getSortDirection(key: SortKey) {
   return sortDirectionByKey.value[key] ?? 'asc';
 }
 
-function compareByKey(
-  a: {
-    ship: PrunApi.Ship;
-    cargoRatio: number;
-    statusSortValue: number;
-    fuelRatio: number;
-  },
-  b: {
-    ship: PrunApi.Ship;
-    cargoRatio: number;
-    statusSortValue: number;
-    fuelRatio: number;
-  },
-  key: SortKey,
-) {
+function compareByKey(a: FlightRow, b: FlightRow, key: SortKey) {
   const nameCompare = (a.ship.name || a.ship.registration).localeCompare(
     b.ship.name || b.ship.registration,
   );
@@ -451,6 +421,15 @@ function toCompactK(value: number) {
     return `${Math.round(value / 1000)}k`;
   }
   return fixed0(value);
+}
+
+function getFuelRatio(store: PrunApi.Store | undefined) {
+  const capacity = store?.weightCapacity;
+  if (store == null || capacity == null || capacity <= 0) {
+    return undefined;
+  }
+
+  return store.weightLoad / capacity;
 }
 
 function onFuel(registration: string) {
@@ -543,14 +522,10 @@ function clearFilters() {
   cargoStateFilters.value = [];
   etaFilters.value = [];
   fuelAlertFilter.value = 'any';
+  fillTile.value = false;
   primarySortKey.value = 'name';
   secondarySortKey.value = 'status';
-  sortDirectionByKey.value = {
-    name: 'asc',
-    cargo: 'none',
-    status: 'none',
-    fuel: 'none',
-  };
+  sortDirectionByKey.value = { ...DEFAULT_SORT_DIRECTION_BY_KEY };
 }
 
 function getShipClass(ship: PrunApi.Ship) {
@@ -671,6 +646,13 @@ function getCargoState(cargoRatio: number) {
       </div>
 
       <div :class="$style.filterGroup">
+        <div :class="$style.filterTitle">Layout</div>
+        <div :class="C.ComExOrdersPanel.filter">
+          <RadioItem v-model="fillTile" horizontal>FILL TILE</RadioItem>
+        </div>
+      </div>
+
+      <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Route</div>
         <div :class="C.ComExOrdersPanel.filter">
           <RadioItem v-model="hideReturningToCx" horizontal>HIDE CX RETURNS</RadioItem>
@@ -692,70 +674,106 @@ function getCargoState(cargoRatio: number) {
       </div>
     </div>
 
-    <table :class="$style.table">
-      <thead>
-        <tr>
-          <th
-            v-for="column in sortColumns"
-            :key="column.key"
-            :class="[$style.headerCell, $style.sortable]"
-            @click="setSort(column.key)">
-            {{ column.label }}
-            <span
-              :class="{
-                [$style.sortPrimary]: isPrimarySort(column.key),
-                [$style.sortSecondary]: isSecondarySort(column.key),
-              }">
-              {{ getSortIndicator(column.key) }}
-            </span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="x in rows" :key="x.ship.id">
-          <td :class="$style.bodyCell">
-            <span :class="C.Link.link" @click="showBuffer(`SFC ${x.ship.registration}`)">
-              {{ x.ship.name || x.ship.registration }}
-            </span>
-            <span :class="C.ColoredValue.positive">&nbsp;{{ x.conditionText }}</span>
-          </td>
+    <div :class="[fillTile ? $style.tableContainerFill : $style.tableContainer]">
+      <!-- Header row -->
+      <div :class="$style.headerRow">
+        <div :class="[$style.headerCell, $style.sortable]" @click="setSort('name')">
+          Name
+          <span
+            :class="{
+              [$style.sortPrimary]: isPrimarySort('name'),
+              [$style.sortSecondary]: isSecondarySort('name'),
+            }">
+            {{ getSortIndicator('name') }}
+          </span>
+        </div>
+        <div :class="[$style.headerCell, $style.colRepair]">Repair</div>
+        <div :class="[$style.headerCell, $style.sortable]" @click="setSort('cargo')">
+          Cargo
+          <span
+            :class="{
+              [$style.sortPrimary]: isPrimarySort('cargo'),
+              [$style.sortSecondary]: isSecondarySort('cargo'),
+            }">
+            {{ getSortIndicator('cargo') }}
+          </span>
+        </div>
+        <div
+          :class="[$style.headerCell, $style.sortable, $style.colStatus]"
+          @click="setSort('status')">
+          Status
+          <span
+            :class="{
+              [$style.sortPrimary]: isPrimarySort('status'),
+              [$style.sortSecondary]: isSecondarySort('status'),
+            }">
+            {{ getSortIndicator('status') }}
+          </span>
+        </div>
+        <div :class="[$style.headerCell, $style.colTime]" />
+        <div :class="[$style.headerCell, $style.sortable, $style.colFuel]" @click="setSort('fuel')">
+          Fuel
+          <span
+            :class="{
+              [$style.sortPrimary]: isPrimarySort('fuel'),
+              [$style.sortSecondary]: isSecondarySort('fuel'),
+            }">
+            {{ getSortIndicator('fuel') }}
+          </span>
+        </div>
+      </div>
 
-          <td :class="[$style.bodyCell, $style.cargoCell]">
-            <CargoBar :ship-id="x.ship.id" />
-            <div :class="[C.ShipStore.pointer, C.ShipStore.store, $style.cargoSize]">
-              {{ x.cargoSizeText }}
+      <!-- Body rows -->
+      <div v-for="x in rows" :key="x.ship.id" :class="$style.row">
+        <div :class="[$style.bodyCell]">
+          <span :class="C.Link.link" @click="showBuffer(`SFC ${x.ship.registration}`)">
+            {{ x.ship.name || x.ship.registration }}
+          </span>
+        </div>
+
+        <div :class="[$style.bodyCell, $style.colRepair]">
+          <span :class="C.ColoredValue.positive">{{ x.conditionText }}</span>
+        </div>
+
+        <div :class="[$style.bodyCell, $style.cargoCell]">
+          <CargoBar :ship-id="x.ship.id" />
+          <div :class="[C.ShipStore.pointer, C.ShipStore.store, $style.cargoSize]">
+            {{ x.cargoSizeText }}
+          </div>
+        </div>
+
+        <div :class="[$style.bodyCell, $style.colStatus]">
+          <StatusCell :ship-id="x.ship.id" />
+        </div>
+
+        <div :class="[$style.bodyCell, $style.colTime]">
+          <TimeCell :ship-id="x.ship.id" />
+        </div>
+
+        <div :class="[$style.bodyCell, $style.colFuel]">
+          <div
+            :class="[C.ShipFuel.container, C.ShipFuel.pointer, $style.fuelBars]"
+            @click="onFuel(x.ship.registration)">
+            <div :class="C.ProgressBar.container">
+              <progress
+                :class="[C.ProgressBar.primary, C.ProgressBar.progress]"
+                :value="x.stlFuelRatio ?? 0"
+                max="1" />
             </div>
-          </td>
-
-          <td :class="$style.bodyCell">
-            <FleetStatusCell :ship-id="x.ship.id" />
-          </td>
-
-          <td :class="[$style.bodyCell, $style.fuelCell]">
-            <div
-              :class="[C.ShipFuel.container, C.ShipFuel.pointer, $style.fuelBars]"
-              @click="onFuel(x.ship.registration)">
-              <div :class="C.ProgressBar.container">
-                <progress
-                  :class="[C.ProgressBar.primary, C.ProgressBar.progress]"
-                  :value="x.stlFuelRatio ?? 0"
-                  max="1" />
-              </div>
-              <div :class="C.ProgressBar.container">
-                <progress
-                  :class="[
-                    C.ProgressBar.secondary,
-                    C.ProgressBar.progress,
-                    !x.isFtlCapable ? C.ProgressBar.warning : undefined,
-                  ]"
-                  :value="x.ftlFuelRatio ?? 0"
-                  max="1" />
-              </div>
+            <div :class="C.ProgressBar.container">
+              <progress
+                :class="[
+                  C.ProgressBar.secondary,
+                  C.ProgressBar.progress,
+                  !x.isFtlCapable ? C.ProgressBar.warning : undefined,
+                ]"
+                :value="x.ftlFuelRatio ?? 0"
+                max="1" />
             </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -785,7 +803,6 @@ function getCargoState(cargoRatio: number) {
 .clearFilters {
   user-select: none;
   font-size: 12px;
-  opacity: 1;
 }
 
 .activeCount {
@@ -800,9 +817,8 @@ function getCargoState(cargoRatio: number) {
 .filterPanel {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 8px;
-  margin-top: 4px;
+  gap: 8px;
+  margin: 4px 0 8px;
 }
 
 .filterMeta {
@@ -816,8 +832,9 @@ function getCargoState(cargoRatio: number) {
 .filterGroup {
   border: 1px solid rgb(70, 70, 70);
   border-radius: 3px;
-  padding: 4px 6px;
-  min-width: 180px;
+  padding: 3px 5px;
+  min-width: 0;
+  width: fit-content;
 }
 
 .filterTitle {
@@ -827,14 +844,65 @@ function getCargoState(cargoRatio: number) {
   margin-bottom: 4px;
 }
 
-.table {
+.tableContainer,
+.tableContainerFill {
+  border-bottom: 1px solid #2b485a;
+  container-type: inline-size;
+}
+
+/* Grid table structure */
+.tableContainer {
+  display: inline-grid;
+  grid-template-columns: auto auto auto auto auto auto;
+}
+
+.tableContainerFill {
+  display: grid;
   width: 100%;
-  border-collapse: collapse;
+  grid-template-columns: auto auto auto auto 1fr auto;
+}
+
+.headerRow {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  border-bottom: 1px solid #2b485a;
+  font-weight: normal;
+}
+
+.row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  font-size: 11px;
+  line-height: 1.1;
+  font-family: 'Droid Sans', sans-serif;
+}
+
+/* Header and body cell base styles */
+.headerCell,
+.bodyCell {
+  display: flex;
+  align-items: center;
+  min-width: 80px;
 }
 
 .headerCell {
-  text-align: left;
+  padding: 5px 8px 2px;
+  font-weight: normal;
+}
+
+.bodyCell {
   padding: 4px 6px;
+  border-left: 1px solid #2b485a;
+}
+
+.bodyCell:first-child {
+  border-left: none;
+}
+
+.headerCell:first-child {
+  border-left: none;
 }
 
 .sortable {
@@ -850,35 +918,51 @@ function getCargoState(cargoRatio: number) {
   color: rgb(63, 162, 222);
 }
 
-.bodyCell {
-  padding: 4px 6px;
-  vertical-align: middle;
+.cargoCell {
+  flex-direction: column;
+  padding: 2px;
+  padding-bottom: 0;
 }
 
-.cargoCell {
-  min-width: 70px;
-  padding: 2px;
-  padding-bottom: 0px;
+.colRepair {
+  min-width: 30px;
+  justify-content: center;
+}
+
+.colStatus {
+  min-width: 110px;
+  border-right: none;
+}
+
+.colTime {
+  border-left: none;
+}
+
+.tableContainerFill .colTime {
+  justify-content: flex-end;
+}
+
+.colFuel {
+  min-width: 50px;
 }
 
 .cargoSize {
   margin-top: 2px;
 }
 
-.fuelCell {
-  min-width: 120px;
+.row:nth-child(even) > .bodyCell {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.row:hover > .bodyCell {
+  background-color: rgba(255, 255, 255, 0.06);
 }
 
 .fuelBars {
   display: flex;
   flex-flow: row wrap;
   align-items: stretch;
-  gap: 2px;
+  justify-content: space-around;
   width: 100%;
-}
-
-.fuelBars > div {
-  width: 40px;
-  flex: 0 0 40px;
 }
 </style>

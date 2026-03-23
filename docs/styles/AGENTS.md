@@ -72,6 +72,14 @@ The FLT (Fleet) tile in `src/features/XIT/FLT/FLT.vue` renders a ship fleet tabl
 - Component-specific class names (`$style.headerCell`, `$style.bodyCell`, etc.)
 - Sortable header styling (bold, colored indicators)
 
+## Color Notes
+
+- `@color-border-table` = `#2b485a`
+- `@color-background-table` = `#23282b`
+- `td:nth-child(odd)` stripes **columns**, not rows
+- PrUn injects its own row striping via `tr:nth-child(2n)::after { background: rgba(255,255,255,0.02) }` — this only applies to real `<table>` elements, not div-based layouts
+- For div/grid layouts (e.g. FLT), apply `.oddRow { background-color: #23282b }` manually on alternating rows
+
 ## Color Variables
 
 The file imports:

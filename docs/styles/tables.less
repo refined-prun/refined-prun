@@ -1,6 +1,19 @@
 @import "./variables.less";
 @import "./mobile/variables.less";
 
+// Known resolved values (inspected from PrUn's live CSS):
+//   @color-border-table        → #2b485a   (borders between rows/columns)
+//   @color-background-table    → #23282b   (column stripe background)
+//   @color-hover-background    → (game-controlled, see note below)
+//
+// COLUMN vs ROW striping:
+//   td:nth-child(odd)  → #23282b on odd *columns* (not rows)
+//   tr:nth-child(2n)::after → rgba(255,255,255,0.02) overlay on even *rows*
+//     — injected by PrUn's own stylesheet, not this file
+//
+// When using div-based layouts (e.g. FLT flexbox/grid), PrUn's row
+// striping via ::after does NOT apply. Replicate manually with .oddRow.
+
 .table {
   background-color: purple;
 }
