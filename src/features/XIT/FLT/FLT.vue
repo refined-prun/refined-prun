@@ -105,7 +105,7 @@ const rawRows = computed<FlightRow[] | undefined>(() => {
     const stlFuelRatio = getFuelRatio(stlStore);
     const ftlFuelRatio = getFuelRatio(ftlStore);
 
-    const condition = ship.condition <= 1 ? ship.condition * 100 : ship.condition;
+    const conditionPercentage = ship.condition * 100;
     const cargoRatio = inventory
       ? Math.max(
           inventory.weightCapacity > 0 ? inventory.weightLoad / inventory.weightCapacity : 0,
@@ -127,7 +127,7 @@ const rawRows = computed<FlightRow[] | undefined>(() => {
     const destinationCode = getDestinationName(flight?.destination)?.toUpperCase();
     const isReturningToCx = destinationCode != null && cxCodes.value.has(destinationCode);
     const shipClass = getShipClass(ship);
-    const conditionBand = getConditionBand(condition);
+    const conditionBand = getConditionBand(conditionPercentage);
     const etaBucket = getEtaBucket(inFlight, statusSortValue);
     const cargoState = getCargoState(cargoRatio);
 
@@ -139,7 +139,7 @@ const rawRows = computed<FlightRow[] | undefined>(() => {
       fuelRatio,
       warningFuelRatio,
       statusSortValue,
-      conditionText: `${Math.round(condition)}%`,
+      conditionText: `${Math.round(conditionPercentage)}%`,
       cargoSizeText: getCargoSizeText(inventory),
       isFtlCapable,
       inFlight,
