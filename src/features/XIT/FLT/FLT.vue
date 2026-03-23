@@ -72,8 +72,10 @@ const shipClassFilters = useTileState<string[]>('shipClassFilters', []);
 const conditionFilters = useTileState<string[]>('conditionFilters', []);
 const cargoStateFilters = useTileState<string[]>('cargoStateFilters', []);
 const etaFilters = useTileState<string[]>('etaFilters', []);
+type LayoutMode = 'compact' | 'whitespace' | 'cargo';
+
 const fuelAlertFilter = useTileState<FuelAlertFilter>('fuelAlertFilter', 'any');
-const fillTile = useTileState('fillTile', false);
+const layoutMode = useTileState<LayoutMode>('layoutMode', 'compact');
 
 const showColSize = useTileState('showColSize', true);
 const showColCargo = useTileState('showColCargo', true);
@@ -299,10 +301,16 @@ const activeFilterCount = computed(() => {
 const gridTemplateColumns = computed(() => {
   const cols = ['auto'];
   if (showColSize.value) cols.push('auto');
-  if (showColCargo.value) cols.push('auto');
-  if (showColCargoSize.value) cols.push('auto');
+  if (showColCargo.value) {
+    cols.push(layoutMode.value === 'cargo' ? '1fr' : 'auto');
+  }
+  if (showColCargoSize.value) {
+    cols.push(layoutMode.value === 'cargo' ? '1fr' : 'auto');
+  }
   cols.push('auto'); // Status is always shown
-  if (showColTime.value) cols.push(fillTile.value ? '1fr' : 'auto');
+  if (showColTime.value) {
+    cols.push(layoutMode.value === 'whitespace' ? '1fr' : 'auto');
+  }
   if (showColRepair.value) cols.push('auto');
   if (showColFuel.value) cols.push('auto');
   return cols.join(' ');
@@ -577,7 +585,7 @@ function clearFilters() {
   cargoStateFilters.value = [];
   etaFilters.value = [];
   fuelAlertFilter.value = 'any';
-  fillTile.value = false;
+  layoutMode.value = 'compact';
   primarySortKey.value = 'name';
   secondarySortKey.value = 'status';
   sortDirectionByKey.value = { ...DEFAULT_SORT_DIRECTION_BY_KEY };
@@ -761,7 +769,24 @@ function getCargoState(cargoRatio: number) {
       <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Layout</div>
         <div :class="C.ComExOrdersPanel.filter">
-          <RadioItem v-model="fillTile" horizontal>FILL TILE</RadioItem>
+          <RadioItem
+            :model-value="layoutMode === 'compact'"
+            horizontal
+            @update:model-value="layoutMode = 'compact'"
+            >COMPACT</RadioItem
+          >
+          <RadioItem
+            :model-value="layoutMode === 'whitespace'"
+            horizontal
+            @update:model-value="layoutMode = 'whitespace'"
+            >WHITESPACE</RadioItem
+          >
+          <RadioItem
+            :model-value="layoutMode === 'cargo'"
+            horizontal
+            @update:model-value="layoutMode = 'cargo'"
+            >CARGO</RadioItem
+          >
         </div>
       </div>
 
@@ -788,7 +813,7 @@ function getCargoState(cargoRatio: number) {
     </div>
 
     <div
-      :class="[fillTile ? $style.tableContainerFill : $style.tableContainer]"
+      :class="[layoutMode !== 'compact' ? $style.tableContainerFill : $style.tableContainer]"
       :style="{ gridTemplateColumns }">
       <!-- Header row -->
       <div :class="$style.headerRow">
@@ -1094,7 +1119,7 @@ function getCargoState(cargoRatio: number) {
 }
 
 .colRepair {
-  min-width: 35px;
+  min-width: 50px;
   justify-content: center;
 }
 
@@ -1116,7 +1141,7 @@ function getCargoState(cargoRatio: number) {
 }
 
 .colSize {
-  min-width: 45px;
+  min-width: 50px;
   justify-content: center;
 }
 
