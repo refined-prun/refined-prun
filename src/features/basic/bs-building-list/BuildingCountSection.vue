@@ -23,6 +23,7 @@ const buildings = computed(() => {
     <BuildingIcon
       v-for="building in buildings"
       :key="building[0]"
+      size="medium"
       :ticker="building[0]"
       :amount="building[1]" />
   </div>

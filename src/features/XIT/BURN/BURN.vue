@@ -1,16 +1,17 @@
 <script setup lang="ts">
+import CopyButton from '@src/components/CopyButton.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
-import { computeDaysLeft, getPlanetBurn, MaterialBurn } from '@src/core/burn';
+import { computeDaysLeft, getPlanetBurn, MaterialBurn, PlanetBurn } from '@src/core/burn';
 import { comparePlanets } from '@src/util';
 import BurnSection from '@src/features/XIT/BURN/BurnSection.vue';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
 import Tooltip from '@src/components/Tooltip.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import MaterialRow from '@src/features/XIT/BURN/MaterialRow.vue';
-import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
+import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { countDays } from '@src/features/XIT/BURN/utils';
+import { countDays, getSortedTickers } from '@src/features/XIT/BURN/utils';
 import InlineFlex from '@src/components/InlineFlex.vue';
 import { findWithQuery } from '@src/utils/find-with-query';
 import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
@@ -224,6 +225,30 @@ function onExpandAllClick() {
     expand.value = planetBurn.value?.map(x => x.naturalId) ?? [];
   }
 }
+
+// Exports all materials regardless of active color filters (RED/YELLOW/GREEN/INF)
+// so spreadsheet users always get the complete dataset.
+function formatBurnTable(burns: PlanetBurn[]) {
+  const lines = ['Planet\tTicker\tInv\tBurn/day\tDays'];
+  for (const planet of burns) {
+    const sorted = getSortedTickers(planet);
+    for (const material of sorted) {
+      const mat = planet.burn[material.ticker];
+      // Floor needed here: per-planet burns are pre-floored, but overall burn is not.
+      const days = mat.dailyAmount >= 0 ? '' : Math.floor(mat.daysLeft).toString();
+      const burn = Math.round(mat.dailyAmount * 1000) / 1000;
+      lines.push(`${planet.planetName}\t${material.ticker}\t${mat.inventory}\t${burn}\t${days}`);
+    }
+  }
+  return lines.join('\n');
+}
+
+function copyBurnTable() {
+  if (!planetBurn.value) {
+    return '';
+  }
+  return formatBurnTable(planetBurn.value);
+}
 </script>
 
 <template>
@@ -248,6 +273,8 @@ function onExpandAllClick() {
         data-tooltip-position="bottom">
         PROD
       </RadioItem>
+      <div :class="$style.spacer" />
+      <CopyButton :copy-fn="copyBurnTable" data-tooltip-position="bottom" />
     </div>
     <table>
       <thead>
@@ -295,6 +322,10 @@ function onExpandAllClick() {
 <style module>
 .fakeRow {
   visibility: collapse;
+}
+
+.spacer {
+  flex: 1;
 }
 
 .expand {
