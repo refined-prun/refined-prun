@@ -15,7 +15,16 @@ import TimeCell from './TimeCell.vue';
 import CargoBar from './CargoBar.vue';
 import { fixed0 } from '@src/utils/format';
 
-type SortKey = 'name' | 'cargo' | 'status' | 'eta' | 'fuel';
+type SortKey =
+  | 'name'
+  | 'cargo'
+  | 'status'
+  | 'eta'
+  | 'fuel'
+  | 'none'
+  | 'repair'
+  | 'size'
+  | 'shipClass';
 type SortDirection = 'asc' | 'desc' | 'none';
 type FuelAlertThreshold = '75' | '50' | '35' | '25' | '10';
 type FuelAlertFilter = 'any' | FuelAlertThreshold;
@@ -24,6 +33,7 @@ type FlightRow = {
   ship: PrunApi.Ship;
   stlFuelRatio: number | undefined;
   ftlFuelRatio: number | undefined;
+  cargoCapacity: number;
   cargoRatio: number;
   fuelRatio: number;
   warningFuelRatio: number;
@@ -48,25 +58,49 @@ type MultiOptionFilterGroup = {
 };
 
 const DEFAULT_SORT_DIRECTION_BY_KEY: Record<SortKey, SortDirection> = {
-  name: 'asc',
+  name: 'none',
   cargo: 'none',
   status: 'none',
-  eta: 'none',
+  eta: 'asc',
   fuel: 'none',
+  none: 'none',
+  repair: 'none',
+  size: 'none',
+  shipClass: 'asc',
 };
 
-const primarySortKey = useTileState<SortKey>('primarySortKey', 'name');
-const secondarySortKey = useTileState<SortKey>('secondarySortKey', 'status');
+const DEFAULTS = {
+  primarySortKey: 'shipClass' as SortKey,
+  secondarySortKey: 'eta' as SortKey,
+  showStlShips: true,
+  showFtlShips: true,
+  showInFlightShips: true,
+  showNotInFlightShips: true,
+  hideReturningToCx: false,
+  fuelAlertFilter: 'any' as FuelAlertFilter,
+  layoutMode: 'compact' as LayoutMode,
+  showColName: false,
+  showColShipClass: true,
+  showColSize: false,
+  showColCargo: true,
+  showColCargoSize: false,
+  showColTime: true,
+  showColRepair: true,
+  showColFuel: true,
+};
+
+const primarySortKey = useTileState<SortKey>('primarySortKey', DEFAULTS.primarySortKey);
+const secondarySortKey = useTileState<SortKey>('secondarySortKey', DEFAULTS.secondarySortKey);
 const sortDirectionByKey = useTileState<Record<SortKey, SortDirection>>(
   'sortDirectionByKey',
   DEFAULT_SORT_DIRECTION_BY_KEY,
 );
 const showFilters = useTileState('showFilters', false);
-const showStlShips = useTileState('showStlShips', true);
-const showFtlShips = useTileState('showFtlShips', true);
-const showInFlightShips = useTileState('showInFlightShips', true);
-const showNotInFlightShips = useTileState('showNotInFlightShips', true);
-const hideReturningToCx = useTileState('hideReturningToCx', false);
+const showStlShips = useTileState('showStlShips', DEFAULTS.showStlShips);
+const showFtlShips = useTileState('showFtlShips', DEFAULTS.showFtlShips);
+const showInFlightShips = useTileState('showInFlightShips', DEFAULTS.showInFlightShips);
+const showNotInFlightShips = useTileState('showNotInFlightShips', DEFAULTS.showNotInFlightShips);
+const hideReturningToCx = useTileState('hideReturningToCx', DEFAULTS.hideReturningToCx);
 const inventorySizeFilters = useTileState<string[]>('inventorySizeFilters', []);
 const shipClassFilters = useTileState<string[]>('shipClassFilters', []);
 const conditionFilters = useTileState<string[]>('conditionFilters', []);
@@ -74,15 +108,17 @@ const cargoStateFilters = useTileState<string[]>('cargoStateFilters', []);
 const etaFilters = useTileState<string[]>('etaFilters', []);
 type LayoutMode = 'compact' | 'whitespace' | 'cargo';
 
-const fuelAlertFilter = useTileState<FuelAlertFilter>('fuelAlertFilter', 'any');
-const layoutMode = useTileState<LayoutMode>('layoutMode', 'compact');
+const fuelAlertFilter = useTileState<FuelAlertFilter>('fuelAlertFilter', DEFAULTS.fuelAlertFilter);
+const layoutMode = useTileState<LayoutMode>('layoutMode', DEFAULTS.layoutMode);
 
-const showColSize = useTileState('showColSize', true);
-const showColCargo = useTileState('showColCargo', true);
-const showColCargoSize = useTileState('showColCargoSize', false);
-const showColTime = useTileState('showColTime', true);
-const showColRepair = useTileState('showColRepair', true);
-const showColFuel = useTileState('showColFuel', true);
+const showColName = useTileState('showColName', DEFAULTS.showColName);
+const showColShipClass = useTileState('showColShipClass', DEFAULTS.showColShipClass);
+const showColSize = useTileState('showColSize', DEFAULTS.showColSize);
+const showColCargo = useTileState('showColCargo', DEFAULTS.showColCargo);
+const showColCargoSize = useTileState('showColCargoSize', DEFAULTS.showColCargoSize);
+const showColTime = useTileState('showColTime', DEFAULTS.showColTime);
+const showColRepair = useTileState('showColRepair', DEFAULTS.showColRepair);
+const showColFuel = useTileState('showColFuel', DEFAULTS.showColFuel);
 
 const conditionOptions = ['100-90', '90-80', '80-0'];
 const etaOptions = ['DOCKED', '<1H', '1-6H', '6-12H', '12-24H', '>24H'];
@@ -116,6 +152,9 @@ const rawRows = computed<FlightRow[] | undefined>(() => {
     const ftlFuelRatio = getFuelRatio(ftlStore);
 
     const conditionPercentage = ship.condition * 100;
+    const cargoCapacity = inventory
+      ? Math.max(inventory.weightCapacity, inventory.volumeCapacity)
+      : 0;
     const cargoRatio = inventory
       ? Math.max(
           inventory.weightCapacity > 0 ? inventory.weightLoad / inventory.weightCapacity : 0,
@@ -145,6 +184,7 @@ const rawRows = computed<FlightRow[] | undefined>(() => {
       ship,
       stlFuelRatio,
       ftlFuelRatio,
+      cargoCapacity,
       cargoRatio,
       fuelRatio,
       warningFuelRatio,
@@ -299,7 +339,9 @@ const activeFilterCount = computed(() => {
 });
 
 const gridTemplateColumns = computed(() => {
-  const cols = ['auto'];
+  const cols: string[] = [];
+  if (showColName.value) cols.push('auto');
+  if (showColShipClass.value) cols.push('auto');
   if (showColSize.value) cols.push('auto');
   if (showColCargo.value) {
     cols.push(layoutMode.value === 'cargo' ? '1fr' : 'auto');
@@ -357,6 +399,7 @@ const optionFilterGroups = computed<MultiOptionFilterGroup[]>(() => [
 ]);
 
 function setSort(key: SortKey) {
+  if (key === 'none') return;
   if (primarySortKey.value === key) {
     const currentDirection = getSortDirection(key);
     let nextDirection: SortDirection;
@@ -383,6 +426,10 @@ function setSort(key: SortKey) {
 }
 
 function setPrimarySort(key: SortKey) {
+  if (key === 'none') {
+    primarySortKey.value = 'none';
+    return;
+  }
   if (primarySortKey.value === key) {
     const currentDirection = getSortDirection(key);
     sortDirectionByKey.value = {
@@ -400,6 +447,10 @@ function setPrimarySort(key: SortKey) {
 }
 
 function setSecondarySort(key: SortKey) {
+  if (key === 'none') {
+    secondarySortKey.value = 'none';
+    return;
+  }
   if (secondarySortKey.value === key) {
     const currentDirection = getSortDirection(key);
     sortDirectionByKey.value = {
@@ -453,6 +504,8 @@ function compareByKey(a: FlightRow, b: FlightRow, key: SortKey) {
   );
 
   switch (key) {
+    case 'none':
+      return 0;
     case 'name':
       return nameCompare;
     case 'cargo': {
@@ -462,6 +515,18 @@ function compareByKey(a: FlightRow, b: FlightRow, key: SortKey) {
     case 'status':
     case 'eta': {
       const primary = a.statusSortValue - b.statusSortValue;
+      return primary !== 0 ? primary : nameCompare;
+    }
+    case 'repair': {
+      const primary = a.ship.condition - b.ship.condition;
+      return primary !== 0 ? primary : nameCompare;
+    }
+    case 'size': {
+      const primary = a.cargoCapacity - b.cargoCapacity;
+      return primary !== 0 ? primary : nameCompare;
+    }
+    case 'shipClass': {
+      const primary = a.shipClass.localeCompare(b.shipClass);
       return primary !== 0 ? primary : nameCompare;
     }
     case 'fuel': {
@@ -574,28 +639,30 @@ function onFuelAlertToggle(threshold: FuelAlertThreshold, enabled: boolean | und
 }
 
 function clearFilters() {
-  showStlShips.value = true;
-  showFtlShips.value = true;
-  showInFlightShips.value = true;
-  showNotInFlightShips.value = true;
-  hideReturningToCx.value = false;
+  showStlShips.value = DEFAULTS.showStlShips;
+  showFtlShips.value = DEFAULTS.showFtlShips;
+  showInFlightShips.value = DEFAULTS.showInFlightShips;
+  showNotInFlightShips.value = DEFAULTS.showNotInFlightShips;
+  hideReturningToCx.value = DEFAULTS.hideReturningToCx;
   inventorySizeFilters.value = [];
   shipClassFilters.value = [];
   conditionFilters.value = [];
   cargoStateFilters.value = [];
   etaFilters.value = [];
-  fuelAlertFilter.value = 'any';
-  layoutMode.value = 'compact';
-  primarySortKey.value = 'name';
-  secondarySortKey.value = 'status';
+  fuelAlertFilter.value = DEFAULTS.fuelAlertFilter;
+  layoutMode.value = DEFAULTS.layoutMode;
+  primarySortKey.value = DEFAULTS.primarySortKey;
+  secondarySortKey.value = DEFAULTS.secondarySortKey;
   sortDirectionByKey.value = { ...DEFAULT_SORT_DIRECTION_BY_KEY };
 
-  showColSize.value = true;
-  showColCargo.value = true;
-  showColCargoSize.value = false;
-  showColTime.value = true;
-  showColRepair.value = true;
-  showColFuel.value = true;
+  showColName.value = DEFAULTS.showColName;
+  showColShipClass.value = DEFAULTS.showColShipClass;
+  showColSize.value = DEFAULTS.showColSize;
+  showColCargo.value = DEFAULTS.showColCargo;
+  showColCargoSize.value = DEFAULTS.showColCargoSize;
+  showColTime.value = DEFAULTS.showColTime;
+  showColRepair.value = DEFAULTS.showColRepair;
+  showColFuel.value = DEFAULTS.showColFuel;
 }
 
 function getShipClass(ship: PrunApi.Ship) {
@@ -718,6 +785,8 @@ function getCargoState(cargoRatio: number) {
       <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Columns</div>
         <div :class="C.ComExOrdersPanel.filter">
+          <RadioItem v-model="showColName" horizontal>NAME</RadioItem>
+          <RadioItem v-model="showColShipClass" horizontal>CLASS</RadioItem>
           <RadioItem v-model="showColSize" horizontal>SIZE</RadioItem>
           <RadioItem v-model="showColCargo" horizontal>CARGO</RadioItem>
           <RadioItem v-model="showColCargoSize" horizontal>CARGO/SIZE</RadioItem>
@@ -740,13 +809,23 @@ function getCargoState(cargoRatio: number) {
         <div :class="$style.filterTitle">Primary sort</div>
         <div :class="C.ComExOrdersPanel.filter">
           <RadioItem
-            v-for="key in ['name', 'cargo', 'status', 'eta', 'fuel']"
+            v-for="key in [
+              'none',
+              'name',
+              'shipClass',
+              'cargo',
+              'status',
+              'eta',
+              'repair',
+              'size',
+              'fuel',
+            ]"
             :key="`pri-${key}`"
             :model-value="primarySortKey === key"
             horizontal
             @update:model-value="setPrimarySort(key as SortKey)">
             {{ key.toUpperCase() }}
-            {{ primarySortKey === key ? getSortIndicator(key as SortKey) : '' }}
+            {{ primarySortKey === key && key !== 'none' ? getSortIndicator(key as SortKey) : '' }}
           </RadioItem>
         </div>
       </div>
@@ -755,13 +834,23 @@ function getCargoState(cargoRatio: number) {
         <div :class="$style.filterTitle">Secondary sort</div>
         <div :class="C.ComExOrdersPanel.filter">
           <RadioItem
-            v-for="key in ['name', 'cargo', 'status', 'eta', 'fuel']"
+            v-for="key in [
+              'none',
+              'name',
+              'shipClass',
+              'cargo',
+              'status',
+              'eta',
+              'repair',
+              'size',
+              'fuel',
+            ]"
             :key="`sec-${key}`"
             :model-value="secondarySortKey === key"
             horizontal
             @update:model-value="setSecondarySort(key as SortKey)">
             {{ key.toUpperCase() }}
-            {{ secondarySortKey === key ? getSortIndicator(key as SortKey) : '' }}
+            {{ secondarySortKey === key && key !== 'none' ? getSortIndicator(key as SortKey) : '' }}
           </RadioItem>
         </div>
       </div>
@@ -817,7 +906,10 @@ function getCargoState(cargoRatio: number) {
       :style="{ gridTemplateColumns }">
       <!-- Header row -->
       <div :class="$style.headerRow">
-        <div :class="[$style.headerCell, $style.sortable]" @click="setSort('name')">
+        <div
+          v-if="showColName"
+          :class="[$style.headerCell, $style.sortable]"
+          @click="setSort('name')">
           Name
           <span
             :class="{
@@ -827,7 +919,32 @@ function getCargoState(cargoRatio: number) {
             {{ getSortIndicator('name') }}
           </span>
         </div>
-        <div v-if="showColSize" :class="[$style.headerCell, $style.colSize]">Size</div>
+        <div
+          v-if="showColShipClass"
+          :class="[$style.headerCell, $style.sortable, $style.colShipClass]"
+          @click="setSort('shipClass')">
+          Class
+          <span
+            :class="{
+              [$style.sortPrimary]: isPrimarySort('shipClass'),
+              [$style.sortSecondary]: isSecondarySort('shipClass'),
+            }">
+            {{ getSortIndicator('shipClass') }}
+          </span>
+        </div>
+        <div
+          v-if="showColSize"
+          :class="[$style.headerCell, $style.sortable, $style.colSize]"
+          @click="setSort('size')">
+          Size
+          <span
+            :class="{
+              [$style.sortPrimary]: isPrimarySort('size'),
+              [$style.sortSecondary]: isSecondarySort('size'),
+            }">
+            {{ getSortIndicator('size') }}
+          </span>
+        </div>
         <div
           v-if="showColCargo"
           :class="[$style.headerCell, $style.sortable]"
@@ -868,7 +985,12 @@ function getCargoState(cargoRatio: number) {
         </div>
         <div
           v-if="showColTime"
-          :class="[$style.headerCell, $style.sortable, $style.colTime]"
+          :class="[
+            $style.headerCell,
+            $style.sortable,
+            $style.colTime,
+            layoutMode === 'whitespace' ? $style.colTimeExpanded : '',
+          ]"
           @click="setSort('eta')">
           ETA
           <span
@@ -879,7 +1001,19 @@ function getCargoState(cargoRatio: number) {
             {{ getSortIndicator('eta') }}
           </span>
         </div>
-        <div v-if="showColRepair" :class="[$style.headerCell, $style.colRepair]">Repair</div>
+        <div
+          v-if="showColRepair"
+          :class="[$style.headerCell, $style.sortable, $style.colRepair]"
+          @click="setSort('repair')">
+          Repair
+          <span
+            :class="{
+              [$style.sortPrimary]: isPrimarySort('repair'),
+              [$style.sortSecondary]: isSecondarySort('repair'),
+            }">
+            {{ getSortIndicator('repair') }}
+          </span>
+        </div>
         <div
           v-if="showColFuel"
           :class="[$style.headerCell, $style.sortable, $style.colFuel]"
@@ -897,10 +1031,14 @@ function getCargoState(cargoRatio: number) {
 
       <!-- Body rows -->
       <div v-for="x in rows" :key="x.ship.id" :class="$style.row">
-        <div :class="[$style.bodyCell]">
+        <div v-if="showColName" :class="[$style.bodyCell]">
           <span :class="C.Link.link" @click="showBuffer(`SFC ${x.ship.registration}`)">
             {{ x.ship.name || x.ship.registration }}
           </span>
+        </div>
+
+        <div v-if="showColShipClass" :class="[$style.bodyCell, $style.colShipClass]">
+          {{ x.shipClass }}
         </div>
 
         <div
@@ -927,7 +1065,13 @@ function getCargoState(cargoRatio: number) {
           <StatusCell :ship-id="x.ship.id" />
         </div>
 
-        <div v-if="showColTime" :class="[$style.bodyCell, $style.colTime]">
+        <div
+          v-if="showColTime"
+          :class="[
+            $style.bodyCell,
+            $style.colTime,
+            layoutMode === 'whitespace' ? $style.colTimeExpanded : '',
+          ]">
           <TimeCell :ship-id="x.ship.id" />
         </div>
 
@@ -1123,6 +1267,11 @@ function getCargoState(cargoRatio: number) {
   justify-content: center;
 }
 
+.colShipClass {
+  min-width: 40px;
+  justify-content: center;
+}
+
 .colStatus {
   min-width: 110px;
   border-right: none;
@@ -1130,10 +1279,12 @@ function getCargoState(cargoRatio: number) {
 
 .colTime {
   border-left: none;
+  min-width: 80px;
 }
 
-.tableContainerFill .colTime {
+.colTimeExpanded {
   justify-content: flex-end;
+  text-align: right;
 }
 
 .colFuel {
