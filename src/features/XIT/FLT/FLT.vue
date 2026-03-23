@@ -85,8 +85,10 @@ const DEFAULTS = {
   showColCargo: true,
   showColCargoSize: false,
   showColTime: true,
-  showColRepair: true,
-  showColFuel: true,
+  showColRepair: false,
+  showColFuel: false,
+  showColProblems: true,
+  problemFuelThreshold: '50' as FuelAlertFilter,
 };
 
 const primarySortKey = useTileState<SortKey>('primarySortKey', DEFAULTS.primarySortKey);
@@ -119,6 +121,11 @@ const showColCargoSize = useTileState('showColCargoSize', DEFAULTS.showColCargoS
 const showColTime = useTileState('showColTime', DEFAULTS.showColTime);
 const showColRepair = useTileState('showColRepair', DEFAULTS.showColRepair);
 const showColFuel = useTileState('showColFuel', DEFAULTS.showColFuel);
+const showColProblems = useTileState('showColProblems', DEFAULTS.showColProblems);
+const problemFuelThreshold = useTileState<FuelAlertFilter>(
+  'problemFuelThreshold',
+  DEFAULTS.problemFuelThreshold,
+);
 
 const conditionOptions = ['100-90', '90-80', '80-0'];
 const etaOptions = ['DOCKED', '<1H', '1-6H', '6-12H', '12-24H', '>24H'];
@@ -338,6 +345,33 @@ const activeFilterCount = computed(() => {
   ].filter(Boolean).length;
 });
 
+const problemFuelThresholdValue = computed(() => {
+  return problemFuelThreshold.value === 'any' ? 1 : Number(problemFuelThreshold.value) / 100;
+});
+
+function hasFuelProblem(row: FlightRow): boolean {
+  const threshold = problemFuelThresholdValue.value;
+  const ftlRatio = row.ftlFuelRatio ?? 1;
+  const stlRatio = row.stlFuelRatio ?? 1;
+  return ftlRatio < threshold || stlRatio < threshold;
+}
+
+function hasStlFuelProblem(row: FlightRow): boolean {
+  const threshold = problemFuelThresholdValue.value;
+  return (row.stlFuelRatio ?? 1) < threshold;
+}
+
+function hasFtlFuelProblem(row: FlightRow): boolean {
+  const threshold = problemFuelThresholdValue.value;
+  return (row.ftlFuelRatio ?? 1) < threshold;
+}
+
+const hasAnyProblems = computed(() => {
+  const source = rows.value;
+  if (!source) return false;
+  return source.some(x => x.ship.condition < 0.8 || hasFuelProblem(x));
+});
+
 const gridTemplateColumns = computed(() => {
   const cols: string[] = [];
   if (showColName.value) cols.push('auto');
@@ -355,6 +389,7 @@ const gridTemplateColumns = computed(() => {
   }
   if (showColRepair.value) cols.push('auto');
   if (showColFuel.value) cols.push('auto');
+  if (showColProblems.value && hasAnyProblems.value) cols.push('auto');
   return cols.join(' ');
 });
 
@@ -663,6 +698,8 @@ function clearFilters() {
   showColTime.value = DEFAULTS.showColTime;
   showColRepair.value = DEFAULTS.showColRepair;
   showColFuel.value = DEFAULTS.showColFuel;
+  showColProblems.value = DEFAULTS.showColProblems;
+  problemFuelThreshold.value = DEFAULTS.problemFuelThreshold;
 }
 
 function getShipClass(ship: PrunApi.Ship) {
@@ -793,6 +830,7 @@ function getCargoState(cargoRatio: number) {
           <RadioItem v-model="showColTime" horizontal>ETA</RadioItem>
           <RadioItem v-model="showColRepair" horizontal>REPAIR</RadioItem>
           <RadioItem v-model="showColFuel" horizontal>FUEL</RadioItem>
+          <RadioItem v-model="showColProblems" horizontal>PROBLEMS</RadioItem>
         </div>
       </div>
 
@@ -895,6 +933,20 @@ function getCargoState(cargoRatio: number) {
             :model-value="fuelAlertFilter === threshold"
             horizontal
             @update:model-value="onFuelAlertToggle(threshold, $event)">
+            ≤{{ threshold }}%
+          </RadioItem>
+        </div>
+      </div>
+
+      <div :class="$style.filterGroup">
+        <div :class="$style.filterTitle">Problematic fuel level</div>
+        <div :class="C.ComExOrdersPanel.filter">
+          <RadioItem
+            v-for="threshold in fuelAlertOptions"
+            :key="`prob-${threshold}`"
+            :model-value="problemFuelThreshold === threshold"
+            horizontal
+            @update:model-value="problemFuelThreshold = $event ? threshold : 'any'">
             ≤{{ threshold }}%
           </RadioItem>
         </div>
@@ -1027,6 +1079,11 @@ function getCargoState(cargoRatio: number) {
             {{ getSortIndicator('fuel') }}
           </span>
         </div>
+        <div
+          v-if="showColProblems && hasAnyProblems"
+          :class="[$style.headerCell, $style.colProblems]">
+          Problems
+        </div>
       </div>
 
       <!-- Body rows -->
@@ -1093,6 +1150,35 @@ function getCargoState(cargoRatio: number) {
                 max="1" />
             </div>
             <div :class="C.ProgressBar.container">
+              <progress
+                :class="[
+                  C.ProgressBar.secondary,
+                  C.ProgressBar.progress,
+                  !x.isFtlCapable ? C.ProgressBar.warning : undefined,
+                ]"
+                :value="x.ftlFuelRatio ?? 0"
+                max="1" />
+            </div>
+          </div>
+        </div>
+
+        <div
+          v-if="showColProblems && hasAnyProblems"
+          :class="[$style.bodyCell, $style.colProblems]">
+          <span v-if="x.ship.condition < 0.8" :class="C.ColoredValue.negative">{{
+            x.conditionText
+          }}</span>
+          <div
+            v-if="hasFuelProblem(x)"
+            :class="[C.ShipFuel.container, C.ShipFuel.pointer, $style.fuelBars]"
+            @click="onFuel(x.ship.registration)">
+            <div v-if="hasStlFuelProblem(x)" :class="C.ProgressBar.container">
+              <progress
+                :class="[C.ProgressBar.primary, C.ProgressBar.progress]"
+                :value="x.stlFuelRatio ?? 0"
+                max="1" />
+            </div>
+            <div v-if="hasFtlFuelProblem(x)" :class="C.ProgressBar.container">
               <progress
                 :class="[
                   C.ProgressBar.secondary,
@@ -1289,6 +1375,13 @@ function getCargoState(cargoRatio: number) {
 
 .colFuel {
   min-width: 50px;
+}
+
+.colProblems {
+  min-width: 50px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
 }
 
 .colSize {
