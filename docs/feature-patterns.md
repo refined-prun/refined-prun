@@ -293,6 +293,10 @@ watchEffectWhileNodeAlive(row, () => {
 
 `watchEffectWhileNodeAlive` runs immediately — don't duplicate initialization code before it.
 
+### MutationObserver Cleanup
+
+MutationObservers on `tile.anchor` don't need explicit `disconnect()`. When the tile closes and anchor is removed from the DOM, the observer becomes inert and is garbage collected with the closure. This is the established pattern across the codebase (`inv-custom-item-sorting.ts`, `reactive-dom.ts`, `mutation-observer.ts`).
+
 ---
 
 ## Appending Reactive Text to Existing Elements
