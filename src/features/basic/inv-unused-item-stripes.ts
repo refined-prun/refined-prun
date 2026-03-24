@@ -2,10 +2,12 @@ import { getInvStore } from '@src/core/store-id';
 import { getPlanetBurn } from '@src/core/burn';
 import { refTextContent } from '@src/utils/reactive-dom';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
+import { getTileState } from '@src/store/user-data-tiles';
 import $style from './inv-unused-item-stripes.module.css';
 
 function onTileReady(tile: PrunTile) {
   const store = computed(() => getInvStore(tile.parameter));
+  const tileState = getTileState(tile);
 
   subscribe($$(tile.anchor, C.StoreView.container), container => {
     subscribe($$(container, C.GridItemView.container), gridItem => {
@@ -28,7 +30,10 @@ function onTileReady(tile: PrunTile) {
           icon.setAttribute('title', originalTitle);
           return;
         }
-        const isUnused = burn.burn[ticker.value] === undefined;
+        // Suppress stripes for items the player has acknowledged with a marker.
+        const markers = tileState.markers as Record<string, number> | undefined;
+        const hasMarker = (markers?.[ticker.value] ?? 0) > 0;
+        const isUnused = burn.burn[ticker.value] === undefined && !hasMarker;
         gridItem.classList.toggle($style.unused, isUnused);
         if (isUnused) {
           icon.setAttribute(
