@@ -6,7 +6,6 @@ import {
   getEntityNameFromAddress,
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
-import { sumBy } from '@src/utils/sum-by';
 import { getRecurringOrders } from '@src/core/orders';
 
 export interface MaterialBurn {
