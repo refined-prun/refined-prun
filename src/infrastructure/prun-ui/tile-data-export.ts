@@ -53,15 +53,15 @@ function exportTileData(el: HTMLElement, command: string) {
 function getTileData(command: string): object {
   command = command.toUpperCase();
 
-  if (command.startsWith('BBL')) {
-    const id = command.replace('BBL', '').trim();
+  if (command.startsWith('BBL ')) {
+    const id = command.replace('BBL ', '').trim();
     return {
       buildings: sitesStore.getById(id)?.platforms,
     };
   }
 
-  if (command.startsWith('BLU')) {
-    const id = command.replace('BLU', '').trim();
+  if (command.startsWith('BLU ')) {
+    const id = command.replace('BLU ', '').trim();
     if (id) {
       return {
         blueprint: blueprintsStore.getByNaturalId(id),
@@ -72,8 +72,8 @@ function getTileData(command: string): object {
     };
   }
 
-  if (command.startsWith('BS')) {
-    const naturalId = command.replace('BS', '').trim();
+  if (command.startsWith('BS ')) {
+    const naturalId = command.replace('BS ', '').trim();
     if (naturalId) {
       const site = sitesStore.getByPlanetNaturalId(naturalId);
       return {
@@ -84,11 +84,13 @@ function getTileData(command: string): object {
     }
     return {
       sites: sitesStore.all.value,
+      workforce: workforcesStore.all.value,
+      production: productionStore.all.value,
     };
   }
 
-  if (command.startsWith('CONTD')) {
-    const id = command.replace('CONTD', '').trim();
+  if (command.startsWith('CONTD ')) {
+    const id = command.replace('CONTD ', '').trim();
     if (id) {
       return {
         draft: contractDraftsStore.getByNaturalId(id),
@@ -121,15 +123,15 @@ function getTileData(command: string): object {
     };
   }
 
-  if (command.startsWith('CONT')) {
-    const id = command.replace('CONT', '').trim();
+  if (command.startsWith('CONT ')) {
+    const id = command.replace('CONT ', '').trim();
     return {
       contract: contractsStore.getByLocalId(id),
     };
   }
 
-  if (command.startsWith('CXOB')) {
-    const ticker = command.replace('CXOB', '').trim();
+  if (command.startsWith('CXOB ')) {
+    const ticker = command.replace('CXOB ', '').trim();
     return {
       orderBook: cxobStore.getByTicker(ticker),
     };
@@ -141,8 +143,8 @@ function getTileData(command: string): object {
     };
   }
 
-  if (command.startsWith('CXPO')) {
-    const ticker = command.replace('CXPO', '').trim();
+  if (command.startsWith('CXPO ')) {
+    const ticker = command.replace('CXPO ', '').trim();
     return {
       orderBook: cxobStore.getByTicker(ticker),
     };
@@ -155,8 +157,8 @@ function getTileData(command: string): object {
     };
   }
 
-  if (command.startsWith('INV')) {
-    const parameter = command.replace('INV', '').trim();
+  if (command.startsWith('INV ')) {
+    const parameter = command.replace('INV ', '').trim();
     if (parameter) {
       return {
         store: getInvStore(parameter),
@@ -173,8 +175,8 @@ function getTileData(command: string): object {
     };
   }
 
-  if (command.startsWith('PROD')) {
-    const id = command.replace('PROD', '').trim();
+  if (command.startsWith('PROD ')) {
+    const id = command.replace('PROD ', '').trim();
     if (id) {
       return {
         production: productionStore.getBySiteId(id),
@@ -185,15 +187,15 @@ function getTileData(command: string): object {
     };
   }
 
-  if (command.startsWith('SHP')) {
-    const id = command.replace('SHP', '').trim();
+  if (command.startsWith('SHP ')) {
+    const id = command.replace('SHP ', '').trim();
     return {
       ship: shipsStore.getByRegistration(id),
     };
   }
 
-  if (command.startsWith('SHYP')) {
-    const id = command.replace('SHYP', '').trim();
+  if (command.startsWith('SHYP ')) {
+    const id = command.replace('SHYP ', '').trim();
     if (id) {
       return {
         project: shipyardProjectsStore.getById(id),
@@ -201,6 +203,13 @@ function getTileData(command: string): object {
     }
     return {
       projects: shipyardProjectsStore.all.value,
+    };
+  }
+
+  if (command.startsWith('WF ')) {
+    const id = command.replace('WF ', '').trim();
+    return {
+      workforce: workforcesStore.getById(id),
     };
   }
 

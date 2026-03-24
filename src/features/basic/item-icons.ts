@@ -22,7 +22,7 @@ function init() {
 }
 
 function applyIconRules(root: string, icon: Icon) {
-  const selector = `${root}:before `;
+  const selector = `.${C.ColoredIcon.container}${root}:before `;
   const rule = createRule(icon, 2.2);
   if (rule) {
     applyRawCssRule(selector + rule);

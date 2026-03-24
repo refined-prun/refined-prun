@@ -3,12 +3,15 @@ import { dispatch } from '@src/infrastructure/prun-api/data/api-messages';
 import { companyContextId } from '@src/infrastructure/prun-api/data/user-data';
 import { startMeasure, stopMeasure } from '@src/utils/performance-measure';
 import { context } from '@src/infrastructure/prun-api/data/screens';
+import { watchUntil } from '@src/utils/watch';
 
 interface Message {
   messageType?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload?: { message: Message } | any;
 }
+
+export const initialApiLoadingComplete = ref(false);
 
 const middleware: Middleware<Message> = {
   onOpen: function () {
@@ -18,9 +21,9 @@ const middleware: Middleware<Message> = {
     };
     dispatch(storeAction);
   },
-  onMessage: message => {
+  onMessage: async message => {
     if (context.value === companyContextId.value || !companyContextId.value || !context.value) {
-      return processEvent(message) ?? false;
+      return (await processEvent(message)) ?? false;
     }
     return false;
   },
@@ -34,7 +37,7 @@ export function listenPrunApi() {
 export const isRecordingPrunLog = ref(false);
 export const prunLog = ref([] as Message[]);
 
-function processEvent(message: Message | undefined) {
+async function processEvent(message: Message | undefined) {
   if (!message || !message.messageType || !message.payload) {
     return;
   }
@@ -52,7 +55,13 @@ function processEvent(message: Message | undefined) {
         type: message.messageType,
         data: message.payload,
       };
-      return dispatch(storeAction);
+      const result = dispatch(storeAction);
+      // Block the COMPANY_DATA message until the initial loading is complete
+      // so refined prun could load before the base game.
+      if (message.messageType === 'COMPANY_DATA' && !initialApiLoadingComplete.value) {
+        await watchUntil(() => initialApiLoadingComplete.value);
+      }
+      return result;
     }
   } finally {
     stopMeasure();

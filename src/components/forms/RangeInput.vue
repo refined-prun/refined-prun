@@ -25,7 +25,7 @@ const model = defineModel<number>();
 .input {
   appearance: none;
   -webkit-appearance: none;
-  margin: 18px 0;
+  padding-top: 2px;
   width: 100%;
   background: transparent;
 }

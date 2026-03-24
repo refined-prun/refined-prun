@@ -7,7 +7,8 @@ interface Planet {
   name: string;
 }
 
-const store = createEntityStore<Planet>(x => x.naturalId.toLowerCase(), {
+const store = createEntityStore<Planet>({
+  selectId: x => x.naturalId.toLowerCase(),
   preserveOnConnectionOpen: true,
 });
 const state = store.state;

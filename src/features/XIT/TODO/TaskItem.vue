@@ -17,13 +17,10 @@ const { list, subtask, task } = defineProps<{
 
 const $style = useCssModule();
 
-const taskClass = computed(() => [
-  $style.task,
-  {
-    [$style.taskCompleted]: task.completed,
-    [$style.subtask]: subtask,
-  },
-]);
+const taskClass = computed(() => ({
+  [$style.taskCompleted]: task.completed,
+  [$style.subtask]: subtask,
+}));
 
 function onContentClick(ev: Event) {
   if (subtask) {
@@ -52,7 +49,7 @@ function onCheckmarkClick() {
 
 <template>
   <div>
-    <div :class="taskClass">
+    <div :class="[$style.task, taskClass]">
       <div v-if="!subtask" :class="[$style.grip, grip.class]">
         <GripChar />
       </div>

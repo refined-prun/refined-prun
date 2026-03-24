@@ -3,6 +3,8 @@ import { migrateUserData } from '@src/store/user-data-migrations';
 import { applyInitialUserData, applyUserData, userData } from '@src/store/user-data';
 import { deepToRaw } from '@src/utils/deep-to-raw';
 import { backupUserData, getUserDataBackups } from '@src/infrastructure/storage/user-data-backup';
+import { userDataStore } from '@src/infrastructure/prun-api/data/user-data';
+import dayjs from 'dayjs';
 
 const fileType = 'rp-user-data';
 
@@ -27,8 +29,14 @@ export function loadUserData() {
   }
   if (!loaded) {
     migrateUserData(userData);
+    disableFullEquityModeForNewUsers();
   }
   watchUserData();
+}
+
+function disableFullEquityModeForNewUsers() {
+  const age = dayjs.duration(Date.now() - userDataStore.created.timestamp).asDays();
+  userData.fullEquityMode = age >= 90;
 }
 
 function watchUserData() {
