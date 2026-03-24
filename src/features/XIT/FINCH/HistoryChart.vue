@@ -52,18 +52,18 @@ const lineChartData = computed(() => {
   }
 
   for (const entry of balanceHistory.value) {
-    const equity = selectedChartDef.value.getValue(entry);
-    if (equity === undefined) {
+    const value = selectedChartDef.value.getValue(entry);
+    if (value === undefined) {
       continue;
     }
 
     const previousDay = date[date.length - 1];
     if (previousDay !== undefined && dayjs(previousDay).isSame(entry.timestamp, 'day')) {
       date[date.length - 1] = entry.timestamp;
-      equityValues[equityValues.length - 1] = equity;
+      equityValues[equityValues.length - 1] = value;
     } else {
       date.push(entry.timestamp);
-      equityValues.push(equity);
+      equityValues.push(value);
     }
   }
 

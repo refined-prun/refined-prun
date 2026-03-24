@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
-import { fixed0, hhmm, ddmm, ddmmyyyy, formatCurrency } from '@src/utils/format';
+import { fixed0, fixed01, hhmm, ddmm, ddmmyyyy, formatCurrency } from '@src/utils/format';
 
 Chart.register(
   LineController,
@@ -157,13 +157,13 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
         callback(value: string | number) {
           if (typeof value === 'number') {
             if (value >= 1_000_000_000) {
-              return `${fixed0(value / 1_000_000_000)}B`;
+              return formatY(value, 1_000_000_000, 'B');
             }
             if (value >= 1_000_000) {
-              return `${fixed0(value / 1_000_000)}M`;
+              return formatY(value, 1_000_000, 'M');
             }
             if (value >= 1_000) {
-              return `${fixed0(value / 1_000)}K`;
+              return formatY(value, 1_000, 'K');
             }
             return fixed0(value);
           }
@@ -228,6 +228,15 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
     },
   },
 }));
+
+function formatY(value: number, divisor: number, suffix: string) {
+  const divided = value / divisor;
+  if (divided >= 100) {
+    return `${fixed0(divided)}${suffix}`;
+  } else {
+    return `${fixed01(divided)}${suffix}`;
+  }
+}
 
 const outerContainer = useTemplateRef<HTMLDivElement>('outer-container');
 const chartWidth = ref(400);
