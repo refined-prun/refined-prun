@@ -17,11 +17,33 @@ function getScreen(id: string) {
 const container = useTemplateRef('container');
 
 onMounted(() => {
-  container.value?.addEventListener(
+  const el = container.value!;
+
+  let target = el.scrollLeft;
+  let animating = false;
+
+  function step() {
+    const diff = target - el.scrollLeft;
+    if (Math.abs(diff) < 0.5) {
+      el.scrollLeft = target;
+      animating = false;
+      return;
+    }
+    el.scrollLeft += diff * 0.3;
+    requestAnimationFrame(step);
+  }
+
+  el.addEventListener(
     'wheel',
     e => {
       e.preventDefault();
-      container.value?.scrollBy({ left: e.deltaY, behavior: 'smooth' });
+      // Use dominant axis: deltaX for horizontal gestures, deltaY for vertical-to-horizontal mapping.
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      target = Math.max(0, Math.min(target + delta, el.scrollWidth - el.clientWidth));
+      if (!animating) {
+        animating = true;
+        requestAnimationFrame(step);
+      }
     },
     { passive: false },
   );

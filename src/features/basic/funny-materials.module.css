@@ -1,0 +1,10 @@
+.iconBoost {
+  background-image: url('https://refined-prun.github.io/assets/rickroll.gif') !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+
+.hideIcon {
+  content: none !important;
+  display: none !important;
+}
