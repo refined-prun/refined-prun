@@ -17,11 +17,9 @@ export function getSortingData(storeId: string): UserData.StoreSortingData {
 
   let data = userData.sorting[store.id];
   let added = data !== undefined;
-  if (!data) {
-    data = reactive({
-      modes: [],
-    });
-  }
+  data ??= reactive({
+    modes: [],
+  });
   watch(
     data,
     () => {

@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface Contract {
+  interface Contract {
     id: string;
     localId: string;
     date: DateTime;
@@ -20,10 +20,15 @@ declare namespace PrunApi {
     contractType: null | string;
   }
 
-  export interface ContractCondition {
+  interface ContractCondition {
     quantity?: MaterialAmount | null;
     address?: Address;
     blockId?: string | null;
+    infrastructureType?: string;
+    infrastructureId?: ContractConditionEntity;
+    gatewayId?: ContractConditionEntity;
+    phaseNaturalId?: number;
+    serviceLevelObjective?: number;
     type: ContractConditionType;
     id: string;
     party: ContractParty;
@@ -46,9 +51,15 @@ declare namespace PrunApi {
     total?: CurrencyAmount;
   }
 
-  export type ContractParty = 'CUSTOMER' | 'PROVIDER';
+  interface ContractConditionEntity {
+    id: string;
+    naturalId: string;
+    name: string;
+  }
 
-  export type ContractConditionStatus =
+  type ContractParty = 'CUSTOMER' | 'PROVIDER';
+
+  type ContractConditionStatus =
     | 'PENDING'
     | 'IN_PROGRESS'
     | 'FULFILLED'
@@ -56,30 +67,40 @@ declare namespace PrunApi {
     | 'FULFILLMENT_ATTEMPTED'
     | 'VIOLATED';
 
-  export type ContractConditionType =
+  type ContractConditionType =
     | 'BASE_CONSTRUCTION'
     | 'COMEX_PURCHASE_PICKUP'
+    | 'CONSTRUCT_SHIP'
     | 'CONTRIBUTION'
     | 'DELIVERY'
     | 'DELIVERY_SHIPMENT'
     | 'EXPLORATION'
     | 'FINISH_FLIGHT'
+    | 'GATEWAY_FUEL'
+    | 'HEADQUARTERS_UPGRADE'
+    | 'INFRASTRUCTURE_CONSTRUCTION_FINISH'
+    | 'INFRASTRUCTURE_CONSTRUCTION_START'
+    | 'INFRASTRUCTURE_UPGRADE_FINISH'
+    | 'INFRASTRUCTURE_UPGRADE_START'
+    | 'INFRASTRUCTURE_UPKEEP'
     | 'LOAN_INSTALLMENT'
     | 'LOAN_PAYOUT'
     | 'PAYMENT'
+    | 'PICKUP'
     | 'PICKUP_SHIPMENT'
     | 'PLACE_ORDER'
+    | 'POWER'
     | 'PRODUCTION_ORDER_COMPLETED'
     | 'PRODUCTION_RUN'
     | 'PROVISION'
     | 'PROVISION_SHIPMENT'
+    | 'REPAIR_SHIP'
     | 'REPUTATION'
     | 'START_FLIGHT'
-    | 'HEADQUARTERS_UPGRADE'
-    | 'POWER'
-    | 'REPAIR_SHIP';
+    | 'WORKFORCE_PROGRAM_PAYMENT'
+    | 'WORKFORCE_PROGRAM_START';
 
-  export interface ContractPartner {
+  interface ContractPartner {
     id?: string;
     name: string;
     code?: null | string;
@@ -87,11 +108,12 @@ declare namespace PrunApi {
     countryId?: string;
     countryCode?: string;
     type?: ContractPartnerTypeEnum;
+    currency?: Currency;
   }
 
-  export type ContractPartnerTypeEnum = 'EXPLORATION' | 'GOVERNANCE' | 'LOGISTICS';
+  type ContractPartnerTypeEnum = 'EXPLORATION' | 'GOVERNANCE' | 'LOGISTICS';
 
-  export type ContractStatus =
+  type ContractStatus =
     | 'OPEN'
     | 'CLOSED'
     | 'CANCELLED'

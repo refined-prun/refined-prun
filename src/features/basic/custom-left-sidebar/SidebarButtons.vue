@@ -5,6 +5,7 @@ import { canAcceptContract } from '@src/features/XIT/CONTS/utils';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import { vDraggable } from 'vue-draggable-plus';
 import { objectId } from '@src/utils/object-id';
+import { prunStyleUpdated } from '@src/infrastructure/prun-ui/prun-css';
 
 const { comPulse } = defineProps<{ comPulse?: boolean }>();
 
@@ -25,6 +26,9 @@ function indicatorClass(command: string) {
     return activeIndicator;
   }
   if (['CONTS', 'XIT CONTS'].includes(command) && hasPendingContracts.value) {
+    return activeIndicator;
+  }
+  if (command === 'XIT DEV' && prunStyleUpdated.value) {
     return activeIndicator;
   }
   return inactiveIndicator;

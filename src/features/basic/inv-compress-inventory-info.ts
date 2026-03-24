@@ -15,10 +15,11 @@ async function onTileReady(tile: PrunTile) {
 }
 
 function init() {
-  applyCssRule('INV', `.${C.StoreView.column}`, $style.storeViewColumn);
-  applyCssRule('INV', `.${C.StoreView.container}`, $style.storeViewContainer);
-  applyCssRule('INV', `.${C.InventorySortControls.controls}`, $style.sortControls);
-  tiles.observe('INV', onTileReady);
+  applyCssRule(['INV', 'SHPI'], `.${C.StoreView.column}`, $style.storeViewColumn);
+  applyCssRule(['INV', 'SHPI'], `.${C.StoreView.container}`, $style.storeViewContainer);
+  applyCssRule(['INV', 'SHPI'], `.${C.InventorySortControls.controls}`, $style.sortControls);
+  applyCssRule(['INV', 'SHPI'], `.${C.StoreView.centered}`, $style.storeViewCentered);
+  tiles.observe(['INV', 'SHPI'], onTileReady);
 }
 
-features.add(import.meta.url, init, 'INV: Compresses specific inventory info into a row.');
+features.add(import.meta.url, init, 'INV/SHPI: Compresses specific inventory info into a row.');

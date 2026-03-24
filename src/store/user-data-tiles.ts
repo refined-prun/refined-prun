@@ -22,8 +22,12 @@ export function initializeTileListener() {
 }
 
 function pruneTileStates() {
+  const tiles = tilesStore.entities.value;
+  if (!tiles) {
+    return;
+  }
   for (const key of Object.keys(userData.tileState)) {
-    if (!tilesStore.entities.value![key]) {
+    if (!(key in tiles)) {
       removeTileState(key);
     }
   }

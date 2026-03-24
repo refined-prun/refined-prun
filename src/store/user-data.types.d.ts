@@ -62,7 +62,7 @@ declare namespace UserData {
     consumablesOnly?: boolean;
   }
 
-  type ActionType = 'CX Buy' | 'MTRA';
+  type ActionType = 'CX Buy' | 'MTRA' | 'Refuel';
 
   interface ActionData {
     type: ActionType;
@@ -70,22 +70,25 @@ declare namespace UserData {
     name?: string;
     group?: string;
 
+    allowUnfilled?: boolean;
     buyPartial?: boolean;
     exchange?: string;
     useCXInv?: boolean;
     priceLimits?: Record<string, number>;
 
+    buyMissingFuel?: boolean;
+
     origin?: string;
     dest?: string;
   }
 
-  export interface TaskList {
+  interface TaskList {
     id: string;
     name: string;
     tasks: Task[];
   }
 
-  export interface Task {
+  interface Task {
     id: string;
     type: TaskType;
     completed?: boolean;
@@ -98,9 +101,9 @@ declare namespace UserData {
     subtasks?: Task[];
   }
 
-  export type TaskType = 'Text' | 'Resupply' | 'Repair';
+  type TaskType = 'Text' | 'Resupply' | 'Repair';
 
-  export interface CommandList {
+  interface CommandList {
     id: string;
     name: string;
     commands: Command[];
@@ -111,4 +114,6 @@ declare namespace UserData {
     label: string;
     command: string;
   }
+
+  type ExchangeChartType = 'SMOOTH' | 'ALIGNED' | 'RAW';
 }

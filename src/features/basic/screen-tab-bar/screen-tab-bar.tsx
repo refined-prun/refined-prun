@@ -2,7 +2,6 @@ import $style from './screen-tab-bar.module.css';
 import TabBar from './TabBar.vue';
 import { userData } from '@src/store/user-data';
 import removeArrayElement from '@src/utils/remove-array-element';
-import { isDefined } from 'ts-extras';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { syncState } from '@src/features/basic/screen-tab-bar/sync';
 
@@ -34,7 +33,7 @@ function sortScreenList(list: HTMLElement) {
 async function onScreenItemReady(item: HTMLElement) {
   const name = (await $(item, C.ScreenControls.name)) as HTMLAnchorElement;
   const id = extractScreenId(name.href)!;
-  if (!isDefined(id)) {
+  if (id === undefined) {
     return;
   }
   const copy = await $(item, C.ScreenControls.copy);
@@ -59,16 +58,14 @@ async function onScreenItemReady(item: HTMLElement) {
   }
 
   createFragmentApp(() => (
-    <div
-      class={[C.ScreenControls.delete, C.ScreenControls.copy, C.type.typeSmall, $style.hideButton]}
-      onClick={onClick}>
+    <div class={[C.ScreenControls.delete, C.type.typeSmall, $style.hideButton]} onClick={onClick}>
       {hidden.value ? 'shw' : 'hide'}
     </div>
   )).before(copy);
 }
 
 function extractScreenId(url?: string) {
-  return url?.match(/#screen=([\w-]+)/)?.[1] ?? undefined;
+  return url?.match(/screen=([\w-]+)/)?.[1] ?? undefined;
 }
 
 function init() {
@@ -76,6 +73,7 @@ function init() {
     createFragmentApp(TabBar).appendTo(container);
   });
   subscribe($$(document, C.ScreenControls.screens), onListReady);
+  applyCssRule(`.${C.Head.contextAndScreens}`, $style.contextAndScreens);
   applyCssRule(`.${C.ScreenControls.container}`, $style.screenControls);
 }
 

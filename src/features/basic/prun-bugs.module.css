@@ -12,8 +12,18 @@
   }
 }
 
+.subLabel {
+  word-break: break-word;
+}
+
 .gridItem {
   background-color: unset;
+  border: 1px solid rgba(63, 162, 222, 0);
+}
+
+.gridItemSelected {
+  background-color: rgba(63, 162, 222, 0.15);
+  border: 1px solid rgba(63, 162, 222, 0.5);
 }
 
 .gridItemName {
@@ -29,4 +39,64 @@
 
 .containerScrollbarGutter {
   scrollbar-gutter: auto;
+}
+
+.giftSearchResults {
+  max-height: 190px;
+}
+
+.tooltipBottom {
+  &:before {
+    margin-top: 6px;
+    margin-bottom: 0;
+  }
+
+  &:after {
+    margin-top: -6px;
+    border-top-color: transparent;
+    border-bottom-width: 6px;
+    border-bottom-color: #c48400;
+  }
+}
+
+.centerText {
+  text-align: center;
+}
+
+.tooltipRight {
+  &:before {
+    margin-left: 6px;
+    margin-right: 0;
+  }
+
+  &:after {
+    margin-left: -6px;
+    border-left-color: transparent;
+    border-right-color: #c48400;
+  }
+}
+
+.rcSliderDotFixes {
+  /* Fixes a bug(?) that stretches the dots weirdly. */
+  transform: none !important;
+  /* The dots aren't actually clickable (previously was 'pointer'). */
+  cursor: inherit;
+}
+
+.rcSliderHandleFixes {
+  /* This is a click-and-drag thing, not a button. */
+  cursor: grab;
+
+  .rc-slider-disabled {
+    cursor: not-allowed;
+  }
+}
+
+.rcSliderStepFixes {
+  /* Previously no indication that you could click this. */
+  cursor: pointer;
+
+  .rc-slider-disabled {
+    cursor: not-allowed;
+  }
 }

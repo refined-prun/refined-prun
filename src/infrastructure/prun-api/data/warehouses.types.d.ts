@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface Warehouse {
+  interface Warehouse {
     warehouseId: string;
     storeId: string;
     units: number;
@@ -12,7 +12,7 @@ declare namespace PrunApi {
     address: Address;
   }
 
-  export interface FeeCollector {
+  interface FeeCollector {
     currency?: Currency;
     id?: string;
     code?: string;

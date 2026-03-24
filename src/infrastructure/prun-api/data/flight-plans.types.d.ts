@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface FlightPlan {
+  interface FlightPlan {
     missionId: string;
     segments: FlightSegment[];
     status: string;

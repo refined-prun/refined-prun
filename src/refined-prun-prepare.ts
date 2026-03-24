@@ -11,14 +11,6 @@ function prepare() {
     // are injected. The scripts will be attached back to head in the client script.
     for (const s of Array.from(document.head?.getElementsByTagName('script') ?? [])) {
       if (s.src.includes('apex.prosperousuniverse.com')) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const checkScript = (e: any) => {
-          if (e.target.src === s.src) {
-            e.preventDefault();
-            window.removeEventListener('beforescriptexecute', checkScript);
-          }
-        };
-        window.addEventListener('beforescriptexecute', checkScript);
         s.textContent = s.src;
         s.src = '';
         observer.disconnect();

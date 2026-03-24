@@ -42,6 +42,7 @@ export function streamElementsByClassNameOrTag<
 
 const tagNames = new Set<string>([
   'div',
+  'input',
   'span',
   'table',
   'thead',
@@ -52,8 +53,22 @@ const tagNames = new Set<string>([
   'button',
   'progress',
   'style',
+  'option',
+  'select',
 ]);
-const classNames = new Set<string>(['rc-slider-handle']);
+const classNames = new Set<string>([
+  'rc-slider',
+  'rc-slider-disabled',
+  'rc-slider-rail',
+  'rc-slider-track',
+  'rc-slider-step',
+  'rc-slider-dot',
+  'rc-slider-dot-active',
+  'rc-slider-mark',
+  'rc-slider-mark-text-active',
+  'rc-slider-handle',
+  'rc-slider-mark-text',
+]);
 
 export function registerClassName(className: string) {
   classNames.add(className);

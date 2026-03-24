@@ -28,7 +28,9 @@ function onRowReady(
     getFlightSegmentArrival(ship.value, firstColumn.value, planId.value),
   );
   const eta = computed(() =>
-    arrival.value ? ` (${formatEta(timestampEachMinute.value, arrival.value)})` : undefined,
+    arrival.value !== undefined
+      ? ` (${formatEta(timestampEachMinute.value, arrival.value)})`
+      : undefined,
   );
   const span = createReactiveSpan(row, eta);
   keepLast(row, () => row.children[3], span);

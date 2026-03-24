@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import grip from '@src/utils/grip.module.css';
-import fa from '@src/utils/font-awesome.module.css';
 import { showTileOverlay, showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import PrunButton from '@src/components/PrunButton.vue';
 import ActionBar from '@src/components/ActionBar.vue';
@@ -13,6 +11,9 @@ import removeArrayElement from '@src/utils/remove-array-element';
 import { sumBy } from '@src/utils/sum-by';
 import PrunLink from '@src/components/PrunLink.vue';
 import { ddmmyyyy } from '@src/utils/format';
+import { grip } from '@src/components/grip';
+import GripCell from '@src/components/grip/GripCell.vue';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
 
 function createNewList(ev: Event) {
   showTileOverlay(ev, CreateTaskList, {
@@ -37,7 +38,7 @@ function countCompletedTasks(list: UserData.TaskList) {
 function getDueDate(list: UserData.TaskList) {
   const dates: number[] = [];
   const add = (task: UserData.Task) => {
-    if (task.dueDate) {
+    if (task.dueDate !== undefined) {
       dates.push(task.dueDate);
     }
     for (const subtask of task.subtasks ?? []) {
@@ -53,15 +54,6 @@ function getDueDate(list: UserData.TaskList) {
   dates.sort();
   return ddmmyyyy(dates[0]);
 }
-
-const dragging = ref(false);
-
-const draggableOptions = {
-  animation: 150,
-  handle: `.${grip.grip}`,
-  onStart: () => (dragging.value = true),
-  onEnd: () => (dragging.value = false),
-};
 </script>
 
 <template>
@@ -71,20 +63,17 @@ const draggableOptions = {
   <table>
     <thead>
       <tr>
+        <GripHeaderCell />
         <th>Name</th>
         <th>Tasks</th>
         <th>Due Date</th>
         <th />
       </tr>
     </thead>
-    <tbody
-      v-draggable="[userData.todo, draggableOptions]"
-      :class="dragging ? $style.dragging : null">
+    <tbody v-draggable="[userData.todo, grip.draggable]">
       <tr v-for="list in userData.todo" :key="list.id">
+        <GripCell />
         <td>
-          <span :class="[grip.grip, fa.solid, $style.grip]">
-            {{ '\uf58e' }}
-          </span>
           <PrunLink inline :command="`XIT TODO ${list.id.substring(0, 8)}`">
             {{ list.name }}
           </PrunLink>
@@ -102,20 +91,3 @@ const draggableOptions = {
     </tbody>
   </table>
 </template>
-
-<style module>
-.grip {
-  cursor: move;
-  transition: opacity 0.2s ease-in-out;
-  opacity: 0;
-  margin-right: 5px;
-}
-
-tr:hover .grip {
-  opacity: 1;
-}
-
-.dragging td .grip {
-  opacity: 0;
-}
-</style>

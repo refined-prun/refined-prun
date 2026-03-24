@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface Screen {
+  interface Screen {
     id: string;
     name: string;
     hidden: boolean;

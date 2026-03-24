@@ -11,7 +11,7 @@ function onTileReady(tile: PrunTile) {
     const building = computed(() => site.value?.platforms.find(p => p.id == id.value));
     subscribe($$(tile.anchor, C.SectionList.button), buttons => {
       const repair = buttons.children[0];
-      if (!repair) {
+      if (repair === undefined) {
         return;
       }
       watchEffectWhileNodeAlive(repair, () => {

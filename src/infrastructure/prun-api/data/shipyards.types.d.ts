@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface Shipyard {
+  interface Shipyard {
     address: Address;
     operator: ShipyardOperator;
     createdProjects: number;
@@ -11,7 +11,7 @@ declare namespace PrunApi {
     id: string;
   }
 
-  export interface ShipyardOperator {
+  interface ShipyardOperator {
     currency: Currency;
   }
 }

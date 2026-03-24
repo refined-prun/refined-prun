@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
-import { fixed0, hhmm, ddmm, ddmmyyyy, formatCurrency } from '@src/utils/format';
+import { fixed0, fixed01, hhmm, ddmm, ddmmyyyy, formatCurrency } from '@src/utils/format';
 
 Chart.register(
   LineController,
@@ -33,6 +33,7 @@ const {
   pan,
   xdata,
   ydata,
+  yLabel,
   zoom,
 } = defineProps<{
   averageFactor?: number;
@@ -40,10 +41,12 @@ const {
   pan?: boolean;
   xdata: number[];
   ydata: number[];
+  yLabel?: string;
   zoom?: boolean;
 }>();
 
 const sortedYData = computed(() => ydata.slice().sort((a, b) => a - b));
+const maxY = computed(() => sortedYData.value[sortedYData.value.length - 1]);
 
 function calculateMovingAverage(data: number[], factor: number) {
   factor = Math.min(Math.max(factor, 0), 1);
@@ -94,7 +97,7 @@ const chartData = computed<ChartData<'line', number[], number | string | Date>>(
   labels: xdata,
   datasets: [
     {
-      label: 'Equity',
+      label: yLabel,
       data: ydata,
       borderColor: '#f7a600',
       fill: false,
@@ -140,7 +143,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
       type: 'linear',
       title: {
         display: true,
-        text: 'Equity',
+        text: yLabel,
         color: '#eeeeee',
         font: {
           family: '"Droid Sans", sans-serif',
@@ -153,7 +156,16 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
         color: '#999',
         callback(value: string | number) {
           if (typeof value === 'number') {
-            return `${fixed0(value / 1_000_000)}M`;
+            if (value >= 1_000_000_000) {
+              return formatY(value, 1_000_000_000, 'B');
+            }
+            if (value >= 1_000_000) {
+              return formatY(value, 1_000_000, 'M');
+            }
+            if (value >= 1_000) {
+              return formatY(value, 1_000, 'K');
+            }
+            return fixed0(value);
           }
           return value;
         },
@@ -172,7 +184,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
         title(items): string | void {
           const item = items[0];
           const timestamp = item?.parsed?.x;
-          if (!timestamp) {
+          if (timestamp === undefined) {
             return;
           }
           return `${hhmm(timestamp)} ${ddmmyyyy(timestamp)}`;
@@ -192,7 +204,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
     zoom: {
       limits: {
         x: { min: xdata[0], max: xdata[xdata.length - 1] },
-        y: { min: 0, max: sortedYData.value[sortedYData.value.length - 1] + sortedYData.value[0] },
+        y: { min: 0, max: maxY.value * 1.1 },
       },
       pan: {
         enabled: pan,
@@ -216,6 +228,15 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
     },
   },
 }));
+
+function formatY(value: number, divisor: number, suffix: string) {
+  const divided = value / divisor;
+  if (divided >= 100) {
+    return `${fixed0(divided)}${suffix}`;
+  } else {
+    return `${fixed01(divided)}${suffix}`;
+  }
+}
 
 const outerContainer = useTemplateRef<HTMLDivElement>('outer-container');
 const chartWidth = ref(400);

@@ -1,10 +1,8 @@
-import features from '@src/features/feature-registry';
-
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.ShipStore.store), div => {
     // div -> div
     const label = div.children[2];
-    if (label) {
+    if (label !== undefined) {
       label.textContent = (label.textContent || '')
         .replace(/(t|m³)/g, '')
         .replace(/(\d+)([,.]?000)/g, (_, x) => `${x}k`);

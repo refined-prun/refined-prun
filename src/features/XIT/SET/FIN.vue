@@ -15,6 +15,7 @@ import {
 import Active from '@src/components/forms/Active.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
 import { objectId } from '@src/utils/object-id';
+import RadioItem from '@src/components/forms/RadioItem.vue';
 
 const sortedData = computed(() => balanceHistory.value.slice().reverse());
 
@@ -41,7 +42,7 @@ function confirmAllDataDelete(ev: Event) {
 }
 
 function formatValue(number?: number) {
-  return number ? fixed0(number) : '--';
+  return number !== undefined ? fixed0(number) : '--';
 }
 
 const mmMaterials = ref(userData.settings.financial.mmMaterials);
@@ -62,6 +63,17 @@ function onIgnoredMaterialsSubmit() {
 </script>
 
 <template>
+  <SectionHeader>Equity Mode</SectionHeader>
+  <Active
+    label="Equity Mode"
+    tooltip="In this mode, equity includes the market value of all assets,
+     including ships, HQ upgrades, and ARC. Not recommended for beginners,
+     as starter ships have a disproportionate value compared to starting resources.
+     Note that even with this mode disabled, your financial data history is still
+     collected in full, so you can always switch to full equity mode later."
+    tooltip-position="bottom">
+    <RadioItem v-model="userData.fullEquityMode">full equity</RadioItem>
+  </Active>
   <SectionHeader>Price Settings</SectionHeader>
   <Active
     label="MM Materials"
@@ -98,7 +110,7 @@ function onIgnoredMaterialsSubmit() {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="balance in sortedData" :key="objectId(balance)">
+      <tr v-for="(balance, i) in sortedData" :key="objectId(balance)">
         <td>{{ hhmm(balance.timestamp) }} {{ ddmmyyyy(balance.timestamp) }}</td>
         <td>{{ formatValue(calcEquity(balance)) }}</td>
         <td>

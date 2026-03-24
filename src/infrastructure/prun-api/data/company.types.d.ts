@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface CompanyData {
+  interface CompanyData {
     id: string;
     name: string;
     code: string;
@@ -11,7 +11,7 @@ declare namespace PrunApi {
     representation: CompanyRepresentation;
   }
 
-  export interface CompanyHQ {
+  interface CompanyHQ {
     address: Address;
     level: number;
     basePermits: number;
@@ -25,22 +25,22 @@ declare namespace PrunApi {
     efficiencyGainsNextLevel: HQEfficiencyGain[];
   }
 
-  export interface HQEfficiencyGain {
+  interface HQEfficiencyGain {
     category: string;
     gain: number;
   }
 
-  export interface RatingReport {
+  interface RatingReport {
     overallRating: string;
     contractCount: number;
     earliestContract: EarliestContract;
   }
 
-  export interface EarliestContract {
+  interface EarliestContract {
     timestamp: number | null;
   }
 
-  export interface CompanyRepresentation {
+  interface CompanyRepresentation {
     currentLevel: number;
     costNextLevel: RepresentationLevel;
     contributedNextLevel: RepresentationLevel;
@@ -49,7 +49,7 @@ declare namespace PrunApi {
     contributors: unknown[];
   }
 
-  export interface RepresentationLevel {
+  interface RepresentationLevel {
     amount: number;
     currency: string;
   }

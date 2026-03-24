@@ -19,7 +19,7 @@ function onRowReady(row: HTMLTableRowElement, lineId: string) {
   const orderId = refPrunId(row);
   const load = computed(() => {
     const line = productionStore.getById(lineId);
-    const queue = line?.orders.filter(x => !x.started && x.duration);
+    const queue = line?.orders.filter(x => !x.started && !!x.duration);
     if (!queue) {
       return undefined;
     }

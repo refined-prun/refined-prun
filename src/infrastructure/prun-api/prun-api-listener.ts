@@ -3,12 +3,15 @@ import { dispatch } from '@src/infrastructure/prun-api/data/api-messages';
 import { companyContextId } from '@src/infrastructure/prun-api/data/user-data';
 import { startMeasure, stopMeasure } from '@src/utils/performance-measure';
 import { context } from '@src/infrastructure/prun-api/data/screens';
+import { watchUntil } from '@src/utils/watch';
 
 interface Message {
   messageType?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload?: { message: Message } | any;
 }
+
+export const initialApiLoadingComplete = ref(false);
 
 const middleware: Middleware<Message> = {
   onOpen: function () {
@@ -18,43 +21,61 @@ const middleware: Middleware<Message> = {
     };
     dispatch(storeAction);
   },
-  onMessage: message => {
+  onMessage: async message => {
     if (context.value === companyContextId.value || !companyContextId.value || !context.value) {
-      processEvent(message);
+      return (await processEvent(message)) ?? false;
     }
     return false;
   },
-  dispatchClientMessage: undefined,
+  dispatchClientMessage: ref(undefined),
 };
 
 export function listenPrunApi() {
   socketIOMiddleware<Message>(middleware);
 }
 
-function processEvent(message: Message) {
+export const isRecordingPrunLog = ref(false);
+export const prunLog = ref([] as Message[]);
+
+async function processEvent(message: Message | undefined) {
   if (!message || !message.messageType || !message.payload) {
     return;
   }
 
   startMeasure(message.messageType);
 
-  if (message.messageType === 'ACTION_COMPLETED') {
-    processEvent(message.payload.message);
-  } else {
-    const storeAction = {
-      type: message.messageType,
-      data: message.payload,
-    };
-    dispatch(storeAction);
+  try {
+    if (message.messageType === 'ACTION_COMPLETED') {
+      return processEvent(message.payload.message);
+    } else {
+      if (isRecordingPrunLog.value) {
+        prunLog.value.push(message);
+      }
+      const storeAction = {
+        type: message.messageType,
+        data: message.payload,
+      };
+      const result = dispatch(storeAction);
+      // Block the COMPANY_DATA message until the initial loading is complete
+      // so refined prun could load before the base game.
+      if (message.messageType === 'COMPANY_DATA' && !initialApiLoadingComplete.value) {
+        await watchUntil(() => initialApiLoadingComplete.value);
+      }
+      return result;
+    }
+  } finally {
+    stopMeasure();
   }
-
-  stopMeasure();
 }
 
+export const canDispatchClientPrunMessage = computed(
+  () => !!middleware.dispatchClientMessage.value,
+);
+
 export function dispatchClientPrunMessage(message: Message) {
-  if (!middleware.dispatchClientMessage) {
+  if (!middleware.dispatchClientMessage.value) {
     return false;
   }
-  middleware.dispatchClientMessage?.(message);
+  middleware.dispatchClientMessage.value(message);
   return true;
 }

@@ -1,7 +1,6 @@
 import { uploadJson } from '@src/utils/json-file';
 import { userData } from '@src/store/user-data';
 import { createId } from '@src/store/create-id';
-import { isDefined } from 'ts-extras';
 import { getInvStore } from '@src/core/store-id';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,7 +31,7 @@ function parsePmmgUserData(pmmg: any) {
     },
     sidebar: pmmg.sidebar,
     sorting: parseSortingModes(pmmg.sorting),
-    disabled: (pmmg.disabled ?? []).flatMap(mapPmmgFeature).filter(isDefined),
+    disabled: (pmmg.disabled ?? []).flatMap(mapPmmgFeature).filter(x => x !== undefined),
   };
 }
 
@@ -150,7 +149,7 @@ export function importPmmgActions() {
     if (!json) {
       return;
     }
-    const pmmg = json['PMMG-Action'] as Record<string, UserData.ActionPackageData>;
+    const pmmg = json['PMMG-Action'] as Record<string, UserData.ActionPackageData> | undefined;
     if (pmmg) {
       userData.actionPackages = Object.values(pmmg);
     }
@@ -186,11 +185,11 @@ function mapPmmgFeature(feature: string) {
     case 'HeaderMinimizer':
       return ['minimize-headers'];
     case 'IconMarkers':
-      return ['item-markers'];
+      return ['inv-item-markers'];
     case 'ImageCreator':
       return ['chat-images'];
     case 'InventoryOrganizer':
-      return ['custom-item-sorting'];
+      return ['inv-custom-item-sorting'];
     case 'InventorySearch':
       return ['inv-search'];
     case 'Notifications':
@@ -226,7 +225,7 @@ export function importPmmgCommandLists() {
     if (!json) {
       return;
     }
-    const pmmg = json['PMMG-Lists'] as Record<string, [string, string][]>;
+    const pmmg = json['PMMG-Lists'] as Record<string, [string, string][]> | undefined;
     if (pmmg) {
       for (const key of Object.keys(pmmg)) {
         const list: UserData.CommandList = {

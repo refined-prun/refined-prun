@@ -8,7 +8,7 @@ import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/mater
 export function trackItemTickers() {
   appendStylesheet();
   subscribe($$(document, C.ColoredIcon.label), label => {
-    const container = label.closest(`.${C.ColoredIcon.container}`) as HTMLElement;
+    const container = label.closest(`.${C.ColoredIcon.container}`);
     if (!container) {
       return;
     }
@@ -43,7 +43,7 @@ function appendStylesheet() {
   const gradientEnd = defaultColor.brighten(10).toHexString();
   const fontColor = defaultColor.brighten(40).toHexString();
   const defaultStyle =
-    `.rp-category- {\n` +
+    `.${C.ColoredIcon.container} {\n` +
     `  background: linear-gradient(135deg, ${gradientStart}, ${gradientEnd});\n` +
     `  color: ${fontColor};\n` +
     '}\n\n';
@@ -88,6 +88,9 @@ const categoryColors = {
   'construction prefabs': {
     color: '1c39bb',
   },
+  'consumable bundles': {
+    color: '971728',
+  },
   'consumables (basic)': {
     color: 'cd5c5c',
   },
@@ -120,6 +123,9 @@ const categoryColors = {
   },
   gases: {
     color: '00ced1',
+  },
+  infrastructure: {
+    color: '1e1e8c',
   },
   liquids: {
     color: 'bcd4e6',

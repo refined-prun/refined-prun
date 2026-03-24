@@ -1,4 +1,3 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import LMMaterialIcon from './LMMaterialIcon.vue';
 import LMShipmentIcon from './LMShipmentIcon.vue';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
@@ -19,12 +18,12 @@ async function onContainerReady(container: HTMLElement) {
   const type = ad.type;
   const quantity = ad.quantity;
   if (type === 'COMMODITY_SHIPPING') {
-    createFragmentApp(LMShipmentIcon).before(container.firstElementChild!);
+    createFragmentApp(LMShipmentIcon).prependTo(container);
   }
   if ((type === 'COMMODITY_BUYING' || type === 'COMMODITY_SELLING') && quantity) {
     const ticker = quantity.material.ticker;
     text.childNodes[1].textContent = text.childNodes[1].textContent!.replace(`(${ticker})`, '');
-    createFragmentApp(LMMaterialIcon, { ticker }).before(container.firstElementChild!);
+    createFragmentApp(LMMaterialIcon, { ticker }).prependTo(container);
   }
 }
 

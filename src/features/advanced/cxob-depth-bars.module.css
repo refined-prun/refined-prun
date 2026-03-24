@@ -1,0 +1,33 @@
+table {
+  .tbody tr {
+    --rp-market-depth: 0%;
+    position: relative;
+
+    &:after {
+      content: '';
+      width: var(--rp-market-depth);
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+    }
+
+    .bids &:after {
+      background-color: rgba(92, 184, 92, 0.08);
+    }
+
+    .asks &:after {
+      background-color: rgba(217, 83, 79, 0.08);
+    }
+
+    /*
+     This rule fixes a Firefox bug where vertical lines
+     would render thinner than expected (particularly visible in LEAD)
+    */
+
+    > td {
+      position: relative;
+    }
+  }
+}

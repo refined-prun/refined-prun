@@ -23,6 +23,7 @@ import { getPlanetBurn } from '@src/core/burn';
 import { mergeMaterialAmounts } from '@src/core/sort-materials';
 import { workInProgress } from '@src/core/balance/orders';
 import { userData } from '@src/store/user-data';
+import { isPresent } from 'ts-extras';
 
 type LocationName = string;
 
@@ -46,7 +47,7 @@ function isStationAddress(address?: PrunApi.Address) {
 
 const inventoryMarketValue = computed(() => {
   const storages = storagesStore.all.value;
-  if (storages === undefined) {
+  if (!storages) {
     return undefined;
   }
   const inventories = new Map<string, MaterialValue[]>();
@@ -73,7 +74,7 @@ const inventoryMarketValue = computed(() => {
 
 function sumStoresValue(stores: PrunApi.Store[] | undefined) {
   const marketValue = inventoryMarketValue.value;
-  if (marketValue === undefined || stores === undefined) {
+  if (!marketValue || !stores) {
     return undefined;
   }
   let total = 0;
@@ -89,7 +90,7 @@ function sumStoresValue(stores: PrunApi.Store[] | undefined) {
 
 const shipyardInventoryByLocation = computed(() => {
   const projects = shipyardProjectsStore.all.value;
-  if (projects === undefined) {
+  if (!projects) {
     return undefined;
   }
   const inventories = new Map<LocationName, number>();
@@ -116,7 +117,7 @@ const byLocation = computed(() => {
   const marketValue = inventoryMarketValue.value;
   const storages = storagesStore.all.value;
   const shipyards = shipyardInventoryByLocation.value;
-  if (marketValue === undefined || storages === undefined || shipyards === undefined) {
+  if (!marketValue || !storages || !shipyards) {
     return undefined;
   }
   const inventories = new Map<LocationName, number>();
@@ -143,13 +144,9 @@ const cxListedMaterials = computed(() => {
   return sumMaterialAmountPrice(sellOrders);
 });
 
-const cxStores = computed(() => storagesStore.all.value?.filter(isCXStore));
+const cxStores = computed(() => storagesStore.getByType('WAREHOUSE_STORE')?.filter(isCXStore));
 
 function isCXStore(store: PrunApi.Store) {
-  if (store.type !== 'WAREHOUSE_STORE') {
-    return false;
-  }
-
   const warehouse = warehousesStore.getById(store.addressableId);
   return isStationAddress(warehouse?.address);
 }
@@ -202,7 +199,7 @@ const cxInventoryTotal = computed(() => cxInventory.value?.otherMaterialsTotal);
 const baseInventory = computed(() => {
   const marketValue = inventoryMarketValue.value;
   const sites = sitesStore.all.value;
-  if (marketValue === undefined || sites === undefined) {
+  if (!marketValue || !sites) {
     return undefined;
   }
 
@@ -226,7 +223,7 @@ const baseInventory = computed(() => {
       stores.push(warehouseStore);
     }
     const amounts = mergeMaterialAmounts(
-      stores.flatMap(x => x.items.map(y => y.quantity!).filter(y => !!y)),
+      stores.flatMap(x => x.items.map(y => y.quantity).filter(isPresent)),
     );
     for (const amount of amounts) {
       const value = calcMaterialAmountPrice(amount);
@@ -234,7 +231,7 @@ const baseInventory = computed(() => {
         return undefined;
       }
       const burnEntry = burn.burn[amount.material.ticker];
-      switch (burnEntry?.Type) {
+      switch (burnEntry?.type) {
         case 'input':
           rawMaterials += value;
           break;
@@ -266,7 +263,7 @@ const workforceConsumables = computed(() => baseInventory.value?.workforceConsum
 
 const siteNaturalIds = computed(() => {
   const sites = sitesStore.all.value;
-  if (sites === undefined) {
+  if (!sites) {
     return undefined;
   }
 
@@ -282,21 +279,18 @@ const siteNaturalIds = computed(() => {
 
 const unboundWarehouseStores = computed(() => {
   const naturalIds = siteNaturalIds.value;
-  const stores = storagesStore.all.value;
-  if (naturalIds === undefined || stores === undefined) {
+  if (!naturalIds) {
     return undefined;
   }
 
-  return stores.filter(x => isUnboundWarehouseStore(x, naturalIds));
+  return storagesStore
+    .getByType('WAREHOUSE_STORE')
+    ?.filter(x => isUnboundWarehouseStore(x, naturalIds));
 });
 
 function isUnboundWarehouseStore(store: PrunApi.Store, siteNaturalIds: Set<string>) {
-  if (store.type !== 'WAREHOUSE_STORE') {
-    return false;
-  }
-
   const warehouse = warehousesStore.getById(store.addressableId);
-  if (warehouse === undefined) {
+  if (!warehouse) {
     return true;
   }
   const address = warehouse.address;
@@ -316,21 +310,9 @@ const otherItems = computed(() =>
   sum(baseInventory.value?.otherItems, shipyardInventory.value, unboundInventory.value),
 );
 
-const fuelStores = computed(() => storagesStore.all.value?.filter(isFuelStore));
+const fuelTanks = computed(() => sumStoresValue(storagesStore.fuelStores.value));
 
-function isFuelStore(store: PrunApi.Store) {
-  return store.type === 'STL_FUEL_STORE' || store.type === 'FTL_FUEL_STORE';
-}
-
-const fuelTanks = computed(() => sumStoresValue(fuelStores.value));
-
-const shipStores = computed(() => storagesStore.all.value?.filter(isShipStore));
-
-function isShipStore(store: PrunApi.Store) {
-  return store.type === 'SHIP_STORE';
-}
-
-const shipInventory = computed(() => sumStoresValue(shipStores.value));
+const shipInventory = computed(() => sumStoresValue(storagesStore.getByType('SHIP_STORE')));
 
 const materialsInTransit = computed(() =>
   sum(shipInventory.value, sumShipmentDeliveries(partnerCurrentConditions)),

@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface LocalAd {
+  interface LocalAd {
     origin?: Address;
     destination?: Address;
     cargoWeight?: number;
@@ -20,5 +20,5 @@ declare namespace PrunApi {
     id: string;
   }
 
-  export type LocalAdType = 'COMMODITY_BUYING' | 'COMMODITY_SELLING' | 'COMMODITY_SHIPPING';
+  type LocalAdType = 'COMMODITY_BUYING' | 'COMMODITY_SELLING' | 'COMMODITY_SHIPPING';
 }

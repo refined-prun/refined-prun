@@ -36,7 +36,7 @@ function onTableHeadReady(thead: HTMLTableSectionElement) {
 function onTableBodyReady(tbody: HTMLTableSectionElement) {
   subscribe($$(tbody, 'tr'), row => {
     const currencyCell = row.children[0];
-    if (!currencyCell) {
+    if (currencyCell === undefined) {
       return;
     }
     const currency = refTextContent(currencyCell);

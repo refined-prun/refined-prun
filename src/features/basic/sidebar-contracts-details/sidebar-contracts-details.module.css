@@ -1,10 +1,4 @@
 .contractId {
   flex-shrink: 0;
   width: 65px;
-  color: #3fa2de;
-  cursor: pointer;
-
-  &:hover {
-    color: #f7a600;
-  }
 }

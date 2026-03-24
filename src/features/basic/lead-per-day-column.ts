@@ -43,7 +43,7 @@ async function onTileReady(tile: PrunTile) {
         subscribe($$(tbody, 'tr'), tr => {
           const scoreColumn = tr.children[1] as HTMLTableCellElement;
           const span = scoreColumn?.children[0] as HTMLSpanElement;
-          if (!span) {
+          if (span === undefined) {
             return;
           }
 

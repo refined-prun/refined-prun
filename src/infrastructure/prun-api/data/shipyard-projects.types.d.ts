@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface ShipyardProject {
+  interface ShipyardProject {
     id: string;
     creation: DateTime;
     start: DateTime | null;
@@ -13,5 +13,5 @@ declare namespace PrunApi {
     shipId: null | string;
   }
 
-  declare type ShipyardProjectStatus = 'CREATED' | 'STARTED' | 'BUILT';
+  type ShipyardProjectStatus = 'CREATED' | 'STARTED' | 'BUILT';
 }

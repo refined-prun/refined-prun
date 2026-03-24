@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface Material {
+  interface Material {
     name: string;
     id: string;
     ticker: string;
@@ -9,32 +9,32 @@ declare namespace PrunApi {
     resource: boolean;
   }
 
-  export interface MaterialAmount {
+  interface MaterialAmount {
     material: Material;
     amount: number;
   }
 
-  export interface MaterialQuantities {
+  interface MaterialQuantities {
     quantities: MaterialAmount[];
   }
 
-  export interface MaterialAmountLimit {
+  interface MaterialAmountLimit {
     material: Material;
     amount: number;
     limit: number;
   }
 
-  export interface ProjectInventory {
+  interface ProjectInventory {
     items: MaterialAmountLimit[];
   }
 
-  export interface MaterialAmountValue {
+  interface MaterialAmountValue {
     value: CurrencyAmount;
     material: Material;
     amount: number;
   }
 
-  export interface MaterialCategory {
+  interface MaterialCategory {
     name: string;
     id: string;
     materials: Material[];

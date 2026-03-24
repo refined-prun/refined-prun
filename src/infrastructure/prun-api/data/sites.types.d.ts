@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface Site {
+  interface Site {
     siteId: string;
     address: Address;
     founded: DateTime;
@@ -10,11 +10,11 @@ declare namespace PrunApi {
     maximumPermits: number;
   }
 
-  export interface BuildOptions {
+  interface BuildOptions {
     options: BuildOption[];
   }
 
-  export interface BuildOption {
+  interface BuildOption {
     id: string;
     name: string;
     area: number;
@@ -26,7 +26,7 @@ declare namespace PrunApi {
     materials: MaterialQuantities;
   }
 
-  export declare type ExpertiseCategory =
+  type ExpertiseCategory =
     | 'AGRICULTURE'
     | 'CHEMISTRY'
     | 'CONSTRUCTION'
@@ -37,25 +37,16 @@ declare namespace PrunApi {
     | 'METALLURGY'
     | 'RESOURCE_EXTRACTION';
 
-  export declare type PlatformModuleType =
-    | 'CORE'
-    | 'HABITATION'
-    | 'PRODUCTION'
-    | 'RESOURCES'
-    | 'STORAGE';
+  type PlatformModuleType = 'CORE' | 'HABITATION' | 'PRODUCTION' | 'RESOURCES' | 'STORAGE';
 
-  export interface WorkforceCapacity {
+  interface WorkforceCapacity {
     level: WorkforceLevel;
     capacity: number;
   }
-  export declare type WorkforceLevel =
-    | 'ENGINEER'
-    | 'PIONEER'
-    | 'SCIENTIST'
-    | 'SETTLER'
-    | 'TECHNICIAN';
 
-  export interface Platform {
+  type WorkforceLevel = 'ENGINEER' | 'PIONEER' | 'SCIENTIST' | 'SETTLER' | 'TECHNICIAN';
+
+  interface Platform {
     siteId: string;
     id: string;
     module: PlatformModule;
@@ -70,7 +61,7 @@ declare namespace PrunApi {
     lastRepair: DateTime | null;
   }
 
-  export interface PlatformModule {
+  interface PlatformModule {
     id: string;
     platformId: string;
     reactorId: string;

@@ -1,4 +1,3 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContextControlsItem from '@src/components/ContextControlsItem.vue';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
@@ -14,14 +13,9 @@ async function onTileReady(tile: PrunTile) {
   }
 
   const contextBar = await $(tile.frame, C.ContextControls.container);
-  const fragmentApp = createFragmentApp(ContextControlsItem, {
+  createFragmentApp(ContextControlsItem, {
     cmd: `XIT BURN ${getEntityNaturalIdFromAddress(site.address)}`,
-  });
-  if (contextBar.children[0]) {
-    fragmentApp.before(contextBar.children[0]);
-  } else {
-    fragmentApp.appendTo(contextBar);
-  }
+  }).prependTo(contextBar);
 }
 
 function init() {

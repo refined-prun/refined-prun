@@ -30,11 +30,9 @@ function onOrderSlotReady(slot: HTMLElement, order: HTMLElement, siteId: string)
     return undefined;
   });
   const eta = computed(() => {
-    if (!completion.value) {
-      return undefined;
-    }
-
-    return `(${formatEta(timestampEachMinute.value, completion.value)})`;
+    return completion.value !== undefined
+      ? `(${formatEta(timestampEachMinute.value, completion.value)})`
+      : undefined;
   });
   const div = createReactiveDiv(slot, eta);
   keepLast(slot, () => slot, div);

@@ -6,11 +6,13 @@ import { userData } from '@src/store/user-data';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { vDraggable } from 'vue-draggable-plus';
 import TextInput from '@src/components/forms/TextInput.vue';
-import grip from '@src/utils/grip.module.css';
-import fa from '@src/utils/font-awesome.module.css';
+import { grip } from '@src/components/grip';
+import GripCell from '@src/components/grip/GripCell.vue';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
 import Tooltip from '@src/components/Tooltip.vue';
 import NumberInput from '@src/components/forms/NumberInput.vue';
 import { objectId } from '@src/utils/object-id';
+import InlineFlex from '@src/components/InlineFlex.vue';
 
 const $style = useCssModule();
 
@@ -85,15 +87,6 @@ function addNewRule() {
 function deleteRule(rule: [string, number, number]) {
   removeArrayElement(userData.settings.buffers, rule);
 }
-
-const dragging = ref(false);
-
-const draggableOptions = {
-  animation: 150,
-  handle: `.${grip.grip}`,
-  onStart: () => (dragging.value = true),
-  onEnd: () => (dragging.value = false),
-};
 </script>
 
 <template>
@@ -119,14 +112,14 @@ const draggableOptions = {
   <table>
     <thead>
       <tr>
-        <th />
+        <GripHeaderCell />
         <th>
-          <div :class="$style.header">
+          <InlineFlex>
             Command
             <Tooltip
               position="right"
               tooltip="Can be a full command, a part of it, or a regular expression. Case-insensitive." />
-          </div>
+          </InlineFlex>
         </th>
         <th>Width</th>
         <th>Height</th>
@@ -139,15 +132,9 @@ const draggableOptions = {
       </tr>
     </tbody>
     <template v-else>
-      <tbody
-        v-draggable="[userData.settings.buffers, draggableOptions]"
-        :class="dragging ? $style.dragging : null">
+      <tbody v-draggable="[userData.settings.buffers, grip.draggable]">
         <tr v-for="rule in userData.settings.buffers" :key="objectId(rule)">
-          <td :class="$style.gripCell">
-            <span :class="[grip.grip, fa.solid, $style.grip]">
-              {{ '\uf58e' }}
-            </span>
-          </td>
+          <GripCell />
           <td :class="$style.commandCell">
             <div :class="[C.forms.input, $style.inline]">
               <TextInput v-model="rule[0]" />
@@ -209,32 +196,6 @@ const draggableOptions = {
 
 .inline {
   display: inline-block;
-}
-
-.header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.gripCell {
-  width: 10px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-.grip {
-  cursor: move;
-  transition: opacity 0.2s ease-in-out;
-  opacity: 0;
-}
-
-tr:hover .grip {
-  opacity: 1;
-}
-
-.dragging td .grip {
-  opacity: 0;
 }
 
 .commandCell * {

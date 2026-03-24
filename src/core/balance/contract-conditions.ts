@@ -5,7 +5,6 @@ import { sumBy } from '@src/utils/sum-by';
 import { calcMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { binarySearch } from '@src/utils/binary-search';
 import { map } from '@src/utils/map-values';
-import { isDefined } from 'ts-extras';
 
 interface ContractCondition {
   contract: PrunApi.Contract;
@@ -17,7 +16,7 @@ interface ContractCondition {
 
 const sortedConditions = computed(() => {
   const active = contractsStore.active.value;
-  if (active === undefined) {
+  if (!active) {
     return undefined;
   }
   const conditions: ContractCondition[] = [];
@@ -31,7 +30,7 @@ const sortedConditions = computed(() => {
         deadline: calculateDeadline(contract, condition),
         dependencies: condition.dependencies
           .map(id => contract.conditions.find(x => x.id === id))
-          .filter(isDefined),
+          .filter(x => x !== undefined),
       });
     }
   }
@@ -83,7 +82,7 @@ const accountingPeriod = dayjs.duration(1, 'week').asMilliseconds();
 
 const currentSplitIndex = computed(() => {
   const sorted = sortedConditions.value;
-  if (sorted === undefined) {
+  if (!sorted) {
     return undefined;
   }
   const currentSplitDate = timestampEachMinute.value + accountingPeriod;
@@ -162,7 +161,7 @@ export function sumMaterialsPickup(conditions: MaybeConditions) {
 export function sumShipmentDeliveries(conditions: MaybeConditions) {
   let total = 0;
   const filtered = conditions.value?.filter(x => x.condition.type === 'DELIVERY_SHIPMENT');
-  if (filtered === undefined) {
+  if (!filtered) {
     return undefined;
   }
   for (const cc of filtered) {
@@ -175,7 +174,7 @@ export function sumShipmentDeliveries(conditions: MaybeConditions) {
       continue;
     }
     const value = getMaterialQuantityValue(provision);
-    if (!value) {
+    if (value === undefined) {
       return undefined;
     }
     total += value;

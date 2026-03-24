@@ -1,9 +1,6 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
-import {
-  createGroupMapGetter,
-  createMapGetter,
-} from '@src/infrastructure/prun-api/data/create-map-getter';
+import { createGroupMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 import { request } from '@src/infrastructure/prun-api/data/request-hooks';
 
 const store = createEntityStore<PrunApi.ProductionLine>();
@@ -34,16 +31,18 @@ onApiMessage({
     store.setFetched();
   },
   PRODUCTION_PRODUCTION_LINE_ADDED(data: PrunApi.ProductionLine) {
-    store.setOne(data);
+    store.addOne(data);
     store.setFetched();
   },
   PRODUCTION_PRODUCTION_LINE_UPDATED(data: PrunApi.ProductionLine) {
-    store.setOne(data);
-    store.setFetched();
+    store.updateOne(data);
+  },
+  PRODUCTION_PRODUCTION_LINE_REMOVED(data: { productionLineId: string }) {
+    store.removeOne(data.productionLineId);
   },
   PRODUCTION_ORDER_ADDED(data: PrunApi.ProductionOrder) {
     const line = state.getById(data.productionLineId);
-    if (line !== undefined) {
+    if (line !== undefined && !line.orders.some(x => x.id === data.id)) {
       store.setOne({
         ...line,
         orders: [...line.orders, data],
@@ -55,7 +54,7 @@ onApiMessage({
     if (line !== undefined) {
       store.setOne({
         ...line,
-        orders: line.orders.map(x => (x.id === data.id ? data : x)),
+        orders: line.orders.map(x => (x.id === data.id ? { ...x, ...data } : x)),
       });
     }
   },
@@ -70,14 +69,12 @@ onApiMessage({
   },
 });
 
-const getByShortId = createMapGetter(state.all, x => x.id.substring(0, 8));
+const getByShortSiteId = createGroupMapGetter(state.all, x => x.siteId.substring(0, 8));
 
-const getById = (value?: string | null) => state.getById(value) ?? getByShortId(value);
-
-const bySiteId = createGroupMapGetter(state.all, x => x.siteId);
+const getByFullSiteId = createGroupMapGetter(state.all, x => x.siteId);
 
 const getBySiteId = (value?: string | null) => {
-  const result = bySiteId(value);
+  const result = getByFullSiteId(value) ?? getByShortSiteId(value);
   if (result) {
     return result;
   }
@@ -97,6 +94,5 @@ const getBySiteId = (value?: string | null) => {
 
 export const productionStore = {
   ...state,
-  getById,
   getBySiteId,
 };

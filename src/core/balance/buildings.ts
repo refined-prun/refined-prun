@@ -14,7 +14,7 @@ interface Entry {
 
 const buildingsMarketValue = computed(() => {
   const sites = sitesStore.all.value;
-  if (sites === undefined) {
+  if (!sites) {
     return undefined;
   }
   const buildings: Entry[] = [];

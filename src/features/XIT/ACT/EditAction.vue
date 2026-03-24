@@ -22,7 +22,7 @@ const nameError = ref(false);
 const typeOptions = act.getActionTypes();
 const type = ref(action.type);
 
-const editFormComponent = computed(() => act.getActionInfo(type.value)?.editForm);
+const editFormComponent = computed(() => act.getActionInfo(type.value)?.editComponent);
 const editForm = useTemplateRef('editForm');
 
 function onSaveClick() {

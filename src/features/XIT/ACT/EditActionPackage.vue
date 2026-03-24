@@ -10,6 +10,13 @@ import { act } from '@src/features/XIT/ACT/act-registry';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import EditMaterialGroup from '@src/features/XIT/ACT/EditMaterialGroup.vue';
 import EditAction from '@src/features/XIT/ACT/EditAction.vue';
+import { downloadJson } from '@src/utils/json-file';
+import { deepToRaw } from '@src/utils/deep-to-raw';
+import RenameActionPackage from '@src/features/XIT/ACT/RenameActionPackage.vue';
+import { vDraggable } from 'vue-draggable-plus';
+import { grip } from '@src/components/grip';
+import GripCell from '@src/components/grip/GripCell.vue';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
 
 const { pkg } = defineProps<{ pkg: UserData.ActionPackageData }>();
 
@@ -70,17 +77,30 @@ function getActionDescription(action: UserData.ActionData) {
   return info ? info.description(action) : '--';
 }
 
+function onRenameClick(ev: Event) {
+  showTileOverlay(ev, RenameActionPackage, {
+    name: pkg.global.name,
+    onRename: name => (pkg.global.name = name),
+  });
+}
+
 function onExecuteClick() {
-  showBuffer(`XIT ACTION_${pkg.global.name.replace(' ', '_')}`);
+  showBuffer(`XIT ACT_${pkg.global.name.replace(' ', '_')}`);
+}
+
+function onExportClick() {
+  const json = deepToRaw(pkg);
+  downloadJson(json, `${pkg.global.name.replace(' ', '_')}-${Date.now()}.json`);
 }
 </script>
 
 <template>
-  <Header>{{ pkg.global.name }}</Header>
+  <Header v-model="pkg.global.name" editable :class="$style.header" />
   <SectionHeader>Material Groups</SectionHeader>
   <table>
     <thead>
       <tr>
+        <GripHeaderCell />
         <th>Type</th>
         <th>Name</th>
         <th>Content</th>
@@ -92,8 +112,9 @@ function onExecuteClick() {
         <td colspan="4" :class="$style.emptyRow">No groups yet.</td>
       </tr>
     </tbody>
-    <tbody v-else>
+    <tbody v-else v-draggable="[pkg.groups, grip.draggable]">
       <tr v-for="group in pkg.groups" :key="objectId(group)">
+        <GripCell />
         <td>{{ group.type }}</td>
         <td>{{ group.name || '--' }}</td>
         <td>{{ getMaterialGroupDescription(group) }}</td>
@@ -117,6 +138,7 @@ function onExecuteClick() {
   <table>
     <thead>
       <tr>
+        <GripHeaderCell />
         <th>Type</th>
         <th>Name</th>
         <th>Content</th>
@@ -128,8 +150,9 @@ function onExecuteClick() {
         <td colspan="4" :class="$style.emptyRow">No actions yet.</td>
       </tr>
     </tbody>
-    <tbody v-else>
+    <tbody v-else v-draggable="[pkg.actions, grip.draggable]">
       <tr v-for="action in pkg.actions" :key="objectId(action)">
+        <GripCell />
         <td>{{ action.type }}</td>
         <td>{{ action.name || '--' }}</td>
         <td>{{ getActionDescription(action) }}</td>
@@ -147,16 +170,23 @@ function onExecuteClick() {
   </form>
   <SectionHeader>Commands</SectionHeader>
   <form>
+    <Commands label="Remame">
+      <PrunButton primary @click="onRenameClick">RENAME</PrunButton>
+    </Commands>
     <Commands label="Execute">
       <PrunButton primary @click="onExecuteClick">EXECUTE</PrunButton>
     </Commands>
-    <Commands label="Help">
-      <PrunButton primary @click="showBuffer('XIT HELP ACTION')">HELP</PrunButton>
+    <Commands label="Export">
+      <PrunButton primary @click="onExportClick">EXPORT</PrunButton>
     </Commands>
   </form>
 </template>
 
 <style module>
+.header {
+  margin-left: 4px;
+}
+
 .emptyRow {
   text-align: center;
 }

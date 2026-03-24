@@ -5,8 +5,9 @@ import { createId } from '@src/store/create-id';
 import PrunLink from '@src/components/PrunLink.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
 import { vDraggable } from 'vue-draggable-plus';
-import grip from '@src/utils/grip.module.css';
-import fa from '@src/utils/font-awesome.module.css';
+import { grip } from '@src/components/grip';
+import GripCell from '@src/components/grip/GripCell.vue';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
 
 const { list } = defineProps<{ list: UserData.CommandList }>();
 
@@ -23,15 +24,6 @@ function addCommand() {
 function deleteCommand(command: UserData.Command) {
   list.commands = list.commands.filter(x => x !== command);
 }
-
-const dragging = ref(false);
-
-const draggableOptions = {
-  animation: 150,
-  handle: `.${grip.grip}`,
-  onStart: () => (dragging.value = true),
-  onEnd: () => (dragging.value = false),
-};
 </script>
 
 <template>
@@ -63,6 +55,7 @@ const draggableOptions = {
     <table>
       <thead>
         <tr>
+          <GripHeaderCell />
           <th>Label</th>
           <th>Command</th>
           <th />
@@ -76,14 +69,10 @@ const draggableOptions = {
         </tbody>
       </template>
       <template v-else>
-        <tbody
-          v-draggable="[list.commands, draggableOptions]"
-          :class="dragging ? $style.dragging : null">
+        <tbody v-draggable="[list.commands, grip.draggable]">
           <tr v-for="command in list.commands" :key="command.id">
+            <GripCell />
             <td>
-              <span :class="[grip.grip, fa.solid, $style.grip]">
-                {{ '\uf58e' }}
-              </span>
               <div :class="[C.forms.input, $style.inline]">
                 <TextInput v-model="command.label" />
               </div>
@@ -110,20 +99,5 @@ const draggableOptions = {
 <style module>
 .inline {
   display: inline-block;
-}
-
-.grip {
-  cursor: move;
-  transition: opacity 0.2s ease-in-out;
-  opacity: 0;
-  margin-right: 5px;
-}
-
-tr:hover .grip {
-  opacity: 1;
-}
-
-.dragging td .grip {
-  opacity: 0;
 }
 </style>

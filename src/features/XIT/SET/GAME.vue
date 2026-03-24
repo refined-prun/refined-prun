@@ -9,25 +9,66 @@ import Commands from '@src/components/forms/Commands.vue';
 import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import { initialUserData, userData } from '@src/store/user-data';
 import {
+  downloadBackup,
   exportUserData,
   importUserData,
   resetUserData,
+  restoreBackup,
+  saveUserData,
 } from '@src/infrastructure/storage/user-data-serializer';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import { objectId } from '@src/utils/object-id';
+import {
+  deleteUserDataBackup,
+  getUserDataBackups,
+  UserDataBackup,
+} from '@src/infrastructure/storage/user-data-backup';
+import { ddmmyyyy, hhForXitSet, hhmm } from '@src/utils/format';
+import dayjs from 'dayjs';
+import { vDraggable } from 'vue-draggable-plus';
+import { grip } from '@src/components/grip';
+import GripChar from '@src/components/grip/GripChar.vue';
 
-const timeFormats: { label: string; value: UserData.TimeFormat }[] = [
+const isDefault24 = computed(() => {
+  return hhForXitSet.value(dayjs.duration(12, 'hours').asMilliseconds()) === '13';
+});
+
+const timeFormats = computed(() => {
+  return [
+    {
+      label: '24h',
+      value: '24H',
+    },
+    {
+      label: '12h',
+      value: '12H',
+    },
+  ] as { label: string; value: UserData.TimeFormat }[];
+});
+
+const timeFormat = computed({
+  get: () => {
+    const format = userData.settings.time;
+    if (format === 'DEFAULT') {
+      return isDefault24.value ? '24H' : '12H';
+    }
+    return format;
+  },
+  set: value => (userData.settings.time = value),
+});
+
+const exchangeChartTypes: { label: string; value: UserData.ExchangeChartType }[] = [
   {
-    label: 'Browser Default',
-    value: 'DEFAULT',
+    label: 'Smooth',
+    value: 'SMOOTH',
   },
   {
-    label: '24h',
-    value: '24H',
+    label: 'Aligned',
+    value: 'ALIGNED',
   },
   {
-    label: '12h',
-    value: '12H',
+    label: 'Raw',
+    value: 'RAW',
   },
 ];
 
@@ -82,6 +123,8 @@ const currencySpacing: { label: string; value: UserData.CurrencySpacing }[] = [
   },
 ];
 
+const backups = computed(() => getUserDataBackups());
+
 function addSidebarButton() {
   userData.settings.sidebar.push(['SET', 'XIT SET']);
 }
@@ -96,16 +139,49 @@ function confirmResetSidebar(ev: Event) {
   });
 }
 
+function importUserDataAndReload() {
+  importUserData(async () => {
+    await saveUserData();
+    window.location.reload();
+  });
+}
+
+async function restoreBackupAndReload(ev: Event, backup: UserDataBackup) {
+  showConfirmationOverlay(
+    ev,
+    async () => {
+      restoreBackup(backup);
+      await saveUserData();
+      window.location.reload();
+    },
+    {
+      message:
+        'Are you sure you want to restore this backup? This will overwrite your current data.',
+    },
+  );
+}
+
+function confirmDeleteBackup(ev: Event, backup: UserDataBackup) {
+  showConfirmationOverlay(ev, () => deleteUserDataBackup(backup));
+}
+
 function confirmResetAllData(ev: Event) {
-  showConfirmationOverlay(ev, resetUserData);
+  showConfirmationOverlay(ev, async () => {
+    resetUserData();
+    await saveUserData();
+    window.location.reload();
+  });
 }
 </script>
 
 <template>
   <SectionHeader>Appearance</SectionHeader>
   <form>
-    <Active label="Time">
-      <SelectInput v-model="userData.settings.time" :options="timeFormats" />
+    <Active label="Time format">
+      <SelectInput v-model="timeFormat" :options="timeFormats" />
+    </Active>
+    <Active label="Default CX Chart Type">
+      <SelectInput v-model="userData.settings.defaultChartType" :options="exchangeChartTypes" />
     </Active>
   </form>
   <SectionHeader>
@@ -157,17 +233,21 @@ function confirmResetAllData(ev: Event) {
       tooltip="Create hotkeys on the left sidebar.
          The first value is what will be displayed, the second is the command." />
   </SectionHeader>
-  <form>
+  <form v-draggable="[userData.settings.sidebar, grip.draggable]">
     <Active
       v-for="(button, i) in userData.settings.sidebar"
       :key="objectId(button)"
-      :label="`Button ${i + 1}`">
+      :label="`Button ${i + 1}`"
+      :class="$style.sidebarRow">
       <div :class="$style.sidebarInputPair">
+        <GripChar :class="[$style.grip, grip.class]" />
         <TextInput v-model="button[0]" :class="$style.sidebarInput" />
         <TextInput v-model="button[1]" :class="$style.sidebarInput" />
         <PrunButton danger @click="deleteSidebarButton(i)">x</PrunButton>
       </div>
     </Active>
+  </form>
+  <form>
     <Commands>
       <PrunButton primary @click="confirmResetSidebar">RESET</PrunButton>
       <PrunButton primary @click="addSidebarButton">ADD NEW</PrunButton>
@@ -176,10 +256,27 @@ function confirmResetAllData(ev: Event) {
   <SectionHeader>Import/Export</SectionHeader>
   <form>
     <Commands>
-      <PrunButton primary @click="importUserData">Import User Data</PrunButton>
+      <PrunButton primary @click="importUserDataAndReload">Import User Data</PrunButton>
       <PrunButton primary @click="exportUserData">Export User Data</PrunButton>
     </Commands>
   </form>
+  <template v-if="backups.length > 0">
+    <SectionHeader>Backups</SectionHeader>
+    <form>
+      <Commands
+        v-for="backup in backups"
+        :key="backup.timestamp"
+        :label="ddmmyyyy(backup.timestamp) + ' ' + hhmm(backup.timestamp)">
+        <PrunButton primary @click="downloadBackup(backup.data, backup.timestamp)">
+          Export
+        </PrunButton>
+        <PrunButton primary @click="restoreBackupAndReload($event, backup.data)">
+          Restore
+        </PrunButton>
+        <PrunButton danger @click="confirmDeleteBackup($event, backup)">Delete</PrunButton>
+      </Commands>
+    </form>
+  </template>
   <SectionHeader>Danger Zone</SectionHeader>
   <form>
     <Commands>
@@ -207,5 +304,15 @@ function confirmResetAllData(ev: Event) {
 
 .sidebarInput input {
   width: 100%;
+}
+
+.grip {
+  cursor: move;
+  transition: opacity 0.2s ease-in-out;
+  opacity: 0;
+}
+
+.sidebarRow:hover .grip {
+  opacity: 1;
 }
 </style>

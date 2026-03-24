@@ -26,7 +26,7 @@ function onTileReady(tile: PrunTile) {
         warning,
         danger,
       }),
-    ).before(rows[5].children[1].firstChild!);
+    ).prependTo(rows[5].children[1]);
   });
 }
 

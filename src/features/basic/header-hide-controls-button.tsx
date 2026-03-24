@@ -1,4 +1,3 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import TileControlsButton from '@src/components/TileControlsButton.vue';
 import { computedTileState } from '@src/store/user-data-tiles';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
@@ -31,7 +30,7 @@ async function onTileReady(tile: PrunTile) {
         onClick={() => (isMinimized.value = false)}
       />
     ) : null,
-  ).before(tileControls.children[0]);
+  ).prependTo(tileControls);
 
   createFragmentApp(() => (
     <>
@@ -44,7 +43,7 @@ async function onTileReady(tile: PrunTile) {
       </div>
       <div style={{ flexGrow: '1' }} />
     </>
-  )).before(tileContextControls.children[0]);
+  )).prependTo(tileContextControls);
 }
 
 function init() {

@@ -1,8 +1,8 @@
 declare namespace FioApi {
-  export interface PlanetShort {
+  interface PlanetShort {
     PlanetNaturalId: string;
     PlanetName: string;
   }
 
-  export declare type AllPlanetsShort = PlanetShort[];
+  type AllPlanetsShort = PlanetShort[];
 }

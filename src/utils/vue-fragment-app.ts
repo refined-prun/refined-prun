@@ -43,6 +43,13 @@ export class FragmentApp {
     return instance;
   }
 
+  prependTo(parent: Node) {
+    const instance = this.mount();
+    onNodeDisconnected(parent, () => this.app.unmount());
+    parent.insertBefore(this.fragment, parent.firstChild);
+    return instance;
+  }
+
   before(sibling: Node) {
     const instance = this.mount();
     onNodeDisconnected(sibling.parentElement!, () => this.app.unmount());

@@ -16,7 +16,7 @@ function onTileReady(tile: PrunTile) {
     const areaRow = elements[0];
     areaRow.style.display = 'none';
     const areaBar = areaRow.getElementsByTagName('progress')[0];
-    if (!areaBar) {
+    if (areaBar === undefined) {
       return;
     }
 
