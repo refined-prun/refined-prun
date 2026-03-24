@@ -1,9 +1,10 @@
 # Changelog
 
-## Unreleased
+## 26.3.22
 
 ### Added
 
+- `XIT PROD`: Dense cross-base production overview
 - `contribution-bulk-controls`: Adds NONE/ALL buttons to contribution sections
 - `contribution-maxed`: Automatically maxes contribution sliders in CoGC and population upkeep tiles
 - `flt-flex-fuel`: Allows the fuel column layout to better use available space
@@ -12,6 +13,7 @@
 
 ### Changed
 
+- `XIT BURN`: Add Google Sheets-friendly copy button
 - `XIT CONTS`: Add missing condition labels
 - `XIT CONTC`: Add missing condition descriptions
 - `flt-ship-condition`: Restore red/yellow thresholds; red at 79%, yellow at 81%
@@ -22,6 +24,7 @@
 - `prun-bugs`: Fix layout shift when selecting inventory grid items
 - `prun-bugs`: Fix slider dot stretching and cursor styles
 - `prun-bugs`: Disable POPID sliders that can't be filled due to full reserves
+- `screen-tab-bar`: Fix jerky trackpad scroll and add horizontal gesture support
 - Fix financial data collection failure when the user has no warehouses
 
 ## 26.1.24
