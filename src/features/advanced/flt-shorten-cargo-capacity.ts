@@ -1,6 +1,6 @@
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.ShipStore.store), div => {
-    // div -> div
+    // DOM structure: div -> div
     const label = div.children[2];
     if (label !== undefined) {
       label.textContent = (label.textContent || '')

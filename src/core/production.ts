@@ -65,8 +65,8 @@ const productionMap = computed(() => {
 
     result[id] = {
       storeId: storage?.find(x => x.type === 'STORE')?.id ?? '',
-      planetName: getEntityNameFromAddress(site.address) || '',
-      naturalId: getEntityNaturalIdFromAddress(site.address) || '',
+      planetName: getEntityNameFromAddress(site.address) ?? '',
+      naturalId: getEntityNaturalIdFromAddress(site.address) ?? '',
       site,
       platforms: site.platforms,
       lines,

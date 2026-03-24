@@ -7,15 +7,13 @@ watch(userData, () => (matchers = null), { immediate: true, deep: true });
 const defaultSize = [450, 300];
 
 export function matchBufferSize(command: string): [number, number] | undefined {
-  if (!matchers) {
-    matchers = userData.settings.buffers
-      .filter(x => !!x[0] && typeof x[1] === 'number' && typeof x[2] === 'number')
-      .map(x => {
-        // '*' is not a valid regex.
-        const rule = x[0] === '*' ? '.*' : x[0];
-        return [new RegExp(rule.toUpperCase()), x[1], x[2]];
-      });
-  }
+  matchers ??= userData.settings.buffers
+    .filter(x => !!x[0] && typeof x[1] === 'number' && typeof x[2] === 'number')
+    .map(x => {
+      // '*' is not a valid regex.
+      const rule = x[0] === '*' ? '.*' : x[0];
+      return [new RegExp(rule.toUpperCase()), x[1], x[2]];
+    });
   const commandUpper = command.toUpperCase().trim();
   for (const matcher of matchers) {
     const match = commandUpper.match(matcher[0]);

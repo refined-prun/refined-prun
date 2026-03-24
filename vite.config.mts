@@ -54,8 +54,9 @@ export default defineConfig({
         { name: 'default', as: 'config', from: '@src/infrastructure/shell/config' },
         { name: 'createFragmentApp', from: '@src/utils/vue-fragment-app' },
         { name: 'applyCssRule', from: '@src/infrastructure/prun-ui/refined-prun-css' },
+        { name: 'sumBy', from: '@src/utils/sum-by' },
       ],
-      //dts: 'src/types/unimport.d.ts',
+      dts: 'src/types/unimport.d.ts',
       addons: {
         vueTemplate: true,
       },
@@ -127,7 +128,7 @@ function sanitizeModuleClassname(name: string, filename: string | undefined): st
   const baseFilename = lastSegment.replace(/(\.vue|\.module)?(\.\w+)$/, '');
 
   const classname = `${baseFilename}__${name}`;
-  const hash = getHash(`${classname}`);
+  const hash = getHash(classname);
 
   return `rp-${classname}___${hash}`;
 }
