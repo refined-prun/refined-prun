@@ -14,11 +14,7 @@ import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 const { data, config } = defineProps<{ data: UserData.ActionData; config: Config }>();
 
-const allStorages = computed(() => {
-  return (storagesStore.all.value ?? []).filter(
-    x => x.type !== 'STL_FUEL_STORE' && x.type !== 'FTL_FUEL_STORE',
-  );
-});
+const allStorages = computed(() => storagesStore.nonFuelStores.value ?? []);
 
 const originStorages = computed(() => {
   let storages = [...allStorages.value];

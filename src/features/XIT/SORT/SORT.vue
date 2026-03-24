@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
+import CopyButton from '@src/components/CopyButton.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import ActionBar from '@src/components/ActionBar.vue';
 import { showConfirmationOverlay, showTileOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
@@ -9,7 +10,10 @@ import { isEmpty } from 'ts-extras';
 import { objectId } from '@src/utils/object-id';
 import { getSortingData } from '@src/store/user-data-sorting';
 import removeArrayElement from '@src/utils/remove-array-element';
-
+import { vDraggable } from 'vue-draggable-plus';
+import { grip } from '@src/components/grip';
+import GripCell from '@src/components/grip/GripCell.vue';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
 const parameters = useXitParameters();
 const storeId = parameters[0];
 
@@ -43,9 +47,8 @@ function deleteSortingMode(ev: Event, sorting: UserData.SortingMode) {
   );
 }
 
-async function copySortingMode(sorting: UserData.SortingMode) {
-  const json = JSON.stringify(sorting);
-  await navigator.clipboard.writeText(json);
+function copySortingMode(sorting: UserData.SortingMode) {
+  return JSON.stringify(sorting);
 }
 
 async function pasteSortingMode(ev: Event) {
@@ -70,18 +73,20 @@ async function pasteSortingMode(ev: Event) {
     <table>
       <thead>
         <tr>
+          <GripHeaderCell />
           <th>Name</th>
           <th>Categories</th>
           <th />
         </tr>
       </thead>
-      <tbody v-if="!isEmpty(sortingData.modes)">
+      <tbody v-if="!isEmpty(sortingData.modes)" v-draggable="[sortingData.modes, grip.draggable]">
         <tr v-for="mode in sortingData.modes" :key="objectId(mode)">
+          <GripCell />
           <td>{{ mode.label }}</td>
           <td>{{ mode.categories.map(x => x.name).join(', ') }}</td>
           <td>
             <PrunButton primary @click="editSortingMode($event, mode)">edit</PrunButton>
-            <PrunButton primary @click="copySortingMode(mode)">copy</PrunButton>
+            <CopyButton :copy-fn="() => copySortingMode(mode)" />
             <PrunButton danger @click="deleteSortingMode($event, mode)">delete</PrunButton>
           </td>
         </tr>

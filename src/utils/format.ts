@@ -41,6 +41,10 @@ function numberFormat(options: Intl.NumberFormatOptions | (() => Intl.NumberForm
   return (value: number) => format.value.format(value);
 }
 
+export const hhForXitSet = computed(() => {
+  return new Intl.DateTimeFormat(locale.value, { hour: '2-digit' }).format;
+});
+
 export const hhmm = dateTimeFormat(() => ({
   hour: '2-digit',
   minute: '2-digit',

@@ -25,6 +25,9 @@ interface ShowBufferOptions {
 }
 
 export async function showBuffer(command: string, options?: ShowBufferOptions) {
+  const parts = command.split(' ');
+  correctXitArgs(parts);
+  command = parts.join(' ');
   if (!options?.force) {
     const existing = tiles.find(command).find(x => !x.docked);
     if (existing) {
@@ -132,6 +135,20 @@ async function closeWhenDone(window: HTMLDivElement, options?: ShowBufferOptions
     closeButton?.click();
   }
   await new Promise<void>(resolve => onNodeDisconnected(window, resolve));
+}
+
+export function correctXitArgs(parts: string[]) {
+  if (parts[0].toUpperCase() !== 'XIT') {
+    return;
+  }
+
+  const args = parts.slice(1);
+  if (args.length < 5 && args.every(x => x.length > 1)) {
+    return;
+  }
+
+  parts.splice(1);
+  parts.push(args.filter(x => x).join('_'));
 }
 
 export function setBufferSize(id: string, width: number, height: number) {

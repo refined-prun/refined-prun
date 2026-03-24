@@ -37,13 +37,11 @@ act.addAction<Config>({
     const exchangeCode = getExchangeCode(origin);
     const isCX = exchangeCode !== undefined;
 
-    const dockedStl = (storagesStore.all.value ?? []).filter(
-      x => x.type === 'STL_FUEL_STORE' && atSameLocation(x, origin),
-    );
+    const dockedStl =
+      storagesStore.getByType('STL_FUEL_STORE')?.filter(x => atSameLocation(x, origin)) ?? [];
 
-    const dockedFtl = (storagesStore.all.value ?? []).filter(
-      x => x.type === 'FTL_FUEL_STORE' && atSameLocation(x, origin),
-    );
+    const dockedFtl =
+      storagesStore.getByType('FTL_FUEL_STORE')?.filter(x => atSameLocation(x, origin)) ?? [];
 
     if (dockedStl.length === 0 && dockedFtl.length === 0) {
       log.warning('No ships are docked near the origin');

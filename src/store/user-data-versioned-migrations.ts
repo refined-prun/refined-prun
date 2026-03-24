@@ -41,7 +41,7 @@ export function migrateVersionedUserData(userData: any) {
   }
 
   if (userData.version < 13) {
-    removeArrayElement(userData.settings.disabled, 'hide-bfrs-button');
+    removeFeature(userData, 'hide-bfrs-button');
   }
 
   if (userData.version < 14) {
@@ -49,15 +49,15 @@ export function migrateVersionedUserData(userData: any) {
   }
 
   if (userData.version < 15) {
-    removeArrayElement(userData.settings.disabled, 'productivity-through-depression');
+    removeFeature(userData, 'productivity-through-depression');
   }
 
   if (userData.version < 16) {
-    removeArrayElement(userData.settings.disabled, 'mtra-sync-amount-slider');
+    removeFeature(userData, 'mtra-sync-amount-slider');
   }
 
   if (userData.version < 17) {
-    removeArrayElement(userData.settings.disabled, 'nots-ship-name');
+    removeFeature(userData, 'nots-ship-name');
   }
 
   if (userData.version < 18) {
@@ -93,11 +93,11 @@ export function migrateVersionedUserData(userData: any) {
   }
 
   if (userData.version < 19) {
-    removeArrayElement(userData.settings.disabled, 'contd-fill-condition-address');
+    removeFeature(userData, 'contd-fill-condition-address');
   }
 
   if (userData.version < 20) {
-    removeArrayElement(userData.settings.disabled, 'shipment-item-detail');
+    removeFeature(userData, 'shipment-item-detail');
   }
 
   if (userData.version < 21) {
@@ -115,4 +115,8 @@ export function migrateVersionedUserData(userData: any) {
       }
     }
   }
+}
+
+function removeFeature(userData: any, feature: string) {
+  removeArrayElement(userData.settings.disabled, feature);
 }
