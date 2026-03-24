@@ -6,7 +6,11 @@ function onTileReady(tile: PrunTile) {
     for (const divider of _$$(container, C.SectionList.divider)) {
       // Hide Infrastructure (which is the first category) by default
       const enabled = ref(container.firstChild !== divider);
-      divider.addEventListener('click', () => (enabled.value = !enabled.value));
+      divider.addEventListener('click', e => {
+        enabled.value = !enabled.value;
+        e.stopPropagation();
+        e.preventDefault();
+      });
       const indicatorClass = computed(() => ({
         [C.RadioItem.indicator]: true,
         [C.RadioItem.active]: enabled.value,

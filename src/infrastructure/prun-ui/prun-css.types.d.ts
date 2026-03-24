@@ -724,6 +724,7 @@ declare global {
     };
     GridItemView: {
       container: string;
+      selected: string;
       image: string;
       name: string;
     };

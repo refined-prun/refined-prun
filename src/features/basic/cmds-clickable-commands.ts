@@ -5,15 +5,17 @@ import { isPresent } from 'ts-extras';
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'tbody'), tbody => {
     subscribe($$(tbody, 'tr'), tr => {
-      const commandColumn = tr.children[0];
+      const commandColumn = tr.children[0] as HTMLElement;
       const command = commandColumn?.textContent;
       const mandatoryParameters = tr.children[2];
       if (!isPresent(command) || mandatoryParameters === undefined) {
         return;
       }
       commandColumn.classList.add(link.link);
-      commandColumn.addEventListener('click', () => {
+      commandColumn.addEventListener('click', e => {
         void showBuffer(command, { autoSubmit: (mandatoryParameters.textContent ?? '') === '' });
+        e.stopPropagation();
+        e.preventDefault();
       });
     });
   });
