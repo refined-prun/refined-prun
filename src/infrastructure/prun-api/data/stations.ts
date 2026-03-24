@@ -6,7 +6,7 @@ import { isEmpty } from 'ts-extras';
 import { defaultStations } from '@src/infrastructure/prun-api/data/stations.default';
 import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 
-const store = createEntityStore<PrunApi.Station>(x => x.id, { preserveOnConnectionOpen: true });
+const store = createEntityStore<PrunApi.Station>({ preserveOnConnectionOpen: true });
 const state = store.state;
 
 onApiMessage({

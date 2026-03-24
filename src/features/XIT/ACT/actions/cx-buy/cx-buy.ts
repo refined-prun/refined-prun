@@ -1,6 +1,6 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import Edit from '@src/features/XIT/ACT/actions/cx-buy/Edit.vue';
-import { CX_BUY } from '@src/features/XIT/ACT/action-steps/CX_BUY';
+import { CXPO_BUY } from '@src/features/XIT/ACT/action-steps/CXPO_BUY';
 import { fixed0, fixed02 } from '@src/utils/format';
 import { fillAmount } from '@src/features/XIT/ACT/actions/cx-buy/utils';
 import { AssertFn } from '@src/features/XIT/ACT/shared-types';
@@ -18,6 +18,8 @@ act.addAction({
   generateSteps: async ctx => {
     const { data, state, log, fail, getMaterialGroup, emitStep } = ctx;
     const assert: AssertFn = ctx.assert;
+    const allowUnfilled = data.allowUnfilled ?? false;
+    const buyPartial = data.buyPartial ?? false;
 
     const materials = await getMaterialGroup(data.group);
     assert(materials, 'Invalid material group');
@@ -57,9 +59,10 @@ act.addAction({
 
       const cxTicker = `${ticker}.${data.exchange}`;
       const filled = fillAmount(cxTicker, amount, priceLimit);
+      let bidAmount = amount;
 
-      if (filled && filled.amount < amount) {
-        if (!data.buyPartial) {
+      if (filled && filled.amount < amount && !allowUnfilled) {
+        if (!buyPartial) {
           let message = `Not enough materials on ${exchange} to buy ${fixed0(amount)} ${ticker}`;
           if (isFinite(priceLimit)) {
             message += ` with price limit ${fixed02(priceLimit)}/u`;
@@ -80,15 +83,18 @@ act.addAction({
         if (filled.amount === 0) {
           continue;
         }
+
+        bidAmount = filled.amount;
       }
 
       emitStep(
-        CX_BUY({
+        CXPO_BUY({
           exchange,
           ticker,
-          amount: filled?.amount ?? amount,
+          amount: bidAmount,
           priceLimit: priceLimit,
-          buyPartial: data.buyPartial ?? false,
+          buyPartial: buyPartial,
+          allowUnfilled: allowUnfilled,
         }),
       );
     }

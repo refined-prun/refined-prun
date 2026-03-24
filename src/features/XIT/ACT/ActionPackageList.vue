@@ -10,7 +10,12 @@ import { userData } from '@src/store/user-data';
 import PrunLink from '@src/components/PrunLink.vue';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { objectId } from '@src/utils/object-id';
+import { vDraggable } from 'vue-draggable-plus';
+import { grip } from '@src/components/grip';
+import GripCell from '@src/components/grip/GripCell.vue';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
 
+const actionPackages = computed(() => userData.actionPackages);
 const showQuickstart = computed(() => userData.actionPackages.length === 0);
 
 function onQuickstartClick(ev: Event) {
@@ -71,6 +76,7 @@ function paramName(pkg: UserData.ActionPackageData) {
   <table>
     <thead>
       <tr>
+        <GripHeaderCell />
         <th>Name</th>
         <th>Execute</th>
         <th>Edit</th>
@@ -79,13 +85,14 @@ function paramName(pkg: UserData.ActionPackageData) {
     </thead>
     <tbody v-if="userData.actionPackages.length === 0">
       <tr>
-        <td>No action packages.</td>
+        <td colspan="5">No action packages.</td>
       </tr>
     </tbody>
-    <tbody v-else>
-      <tr v-for="pkg in userData.actionPackages" :key="objectId(pkg)">
+    <tbody v-else v-draggable="[actionPackages, grip.draggable]">
+      <tr v-for="pkg in actionPackages" :key="objectId(pkg)">
+        <GripCell />
         <td>
-          <PrunLink :command="`XIT ACT_${paramName(pkg)}`">
+          <PrunLink inline :command="`XIT ACT_${paramName(pkg)}`">
             {{ friendlyName(pkg) }}
           </PrunLink>
         </td>

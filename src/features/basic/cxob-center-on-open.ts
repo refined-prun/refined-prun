@@ -1,5 +1,3 @@
-import features from '@src/features/feature-registry';
-
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.ScrollView.view), scroll => {
     subscribe($$(scroll, 'table'), async table => {

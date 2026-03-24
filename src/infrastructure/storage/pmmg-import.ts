@@ -185,11 +185,11 @@ function mapPmmgFeature(feature: string) {
     case 'HeaderMinimizer':
       return ['minimize-headers'];
     case 'IconMarkers':
-      return ['item-markers'];
+      return ['inv-item-markers'];
     case 'ImageCreator':
       return ['chat-images'];
     case 'InventoryOrganizer':
-      return ['custom-item-sorting'];
+      return ['inv-custom-item-sorting'];
     case 'InventorySearch':
       return ['inv-search'];
     case 'Notifications':

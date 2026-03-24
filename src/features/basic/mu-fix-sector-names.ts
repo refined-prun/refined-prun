@@ -1,4 +1,3 @@
-import features from '@src/features/feature-registry';
 import { watchUntil } from '@src/utils/watch';
 import { sectorsStore } from '@src/infrastructure/prun-api/data/sectors';
 import {

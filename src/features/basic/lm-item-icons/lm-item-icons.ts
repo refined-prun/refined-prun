@@ -1,4 +1,3 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import LMMaterialIcon from './LMMaterialIcon.vue';
 import LMShipmentIcon from './LMShipmentIcon.vue';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';

@@ -144,13 +144,9 @@ const cxListedMaterials = computed(() => {
   return sumMaterialAmountPrice(sellOrders);
 });
 
-const cxStores = computed(() => storagesStore.all.value?.filter(isCXStore));
+const cxStores = computed(() => storagesStore.getByType('WAREHOUSE_STORE')?.filter(isCXStore));
 
 function isCXStore(store: PrunApi.Store) {
-  if (store.type !== 'WAREHOUSE_STORE') {
-    return false;
-  }
-
   const warehouse = warehousesStore.getById(store.addressableId);
   return isStationAddress(warehouse?.address);
 }
@@ -283,19 +279,16 @@ const siteNaturalIds = computed(() => {
 
 const unboundWarehouseStores = computed(() => {
   const naturalIds = siteNaturalIds.value;
-  const stores = storagesStore.all.value;
-  if (!naturalIds || !stores) {
+  if (!naturalIds) {
     return undefined;
   }
 
-  return stores.filter(x => isUnboundWarehouseStore(x, naturalIds));
+  return storagesStore
+    .getByType('WAREHOUSE_STORE')
+    ?.filter(x => isUnboundWarehouseStore(x, naturalIds));
 });
 
 function isUnboundWarehouseStore(store: PrunApi.Store, siteNaturalIds: Set<string>) {
-  if (store.type !== 'WAREHOUSE_STORE') {
-    return false;
-  }
-
   const warehouse = warehousesStore.getById(store.addressableId);
   if (!warehouse) {
     return true;
@@ -317,21 +310,9 @@ const otherItems = computed(() =>
   sum(baseInventory.value?.otherItems, shipyardInventory.value, unboundInventory.value),
 );
 
-const fuelStores = computed(() => storagesStore.all.value?.filter(isFuelStore));
+const fuelTanks = computed(() => sumStoresValue(storagesStore.fuelStores.value));
 
-function isFuelStore(store: PrunApi.Store) {
-  return store.type === 'STL_FUEL_STORE' || store.type === 'FTL_FUEL_STORE';
-}
-
-const fuelTanks = computed(() => sumStoresValue(fuelStores.value));
-
-const shipStores = computed(() => storagesStore.all.value?.filter(isShipStore));
-
-function isShipStore(store: PrunApi.Store) {
-  return store.type === 'SHIP_STORE';
-}
-
-const shipInventory = computed(() => sumStoresValue(shipStores.value));
+const shipInventory = computed(() => sumStoresValue(storagesStore.getByType('SHIP_STORE')));
 
 const materialsInTransit = computed(() =>
   sum(shipInventory.value, sumShipmentDeliveries(partnerCurrentConditions)),

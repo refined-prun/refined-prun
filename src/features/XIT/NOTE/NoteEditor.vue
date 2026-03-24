@@ -31,7 +31,7 @@ function processText(text?: string) {
 
     text = text.replaceAll(
       regexp,
-      `<span class="${C.Link.link} ${$style.link}">${matches[0]}</span>`,
+      match => `<span class="${C.Link.link} ${$style.link}">${match}</span>`,
     );
 
     counter++;

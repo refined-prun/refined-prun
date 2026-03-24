@@ -1,4 +1,3 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import ContextControls from '@src/components/ContextControls.vue';
 import { tileStatePlugin } from '@src/store/user-data-tiles';
 import { startMeasure, stopMeasure } from '@src/utils/performance-measure';
@@ -10,9 +9,9 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { tileKey } from '@src/hooks/use-tile';
 
 function onTileReady(tile: PrunTile) {
-  const rawParameter = tile.parameter;
+  let rawParameter = tile.parameter;
   if (!rawParameter) {
-    return;
+    rawParameter = 'CMDS';
   }
 
   let parameters = [] as string[];

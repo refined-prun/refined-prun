@@ -2,8 +2,8 @@ import { act } from '@src/features/XIT/ACT/act-registry';
 import Edit from '@src/features/XIT/ACT/actions/refuel/Edit.vue';
 import Configure from '@src/features/XIT/ACT/actions/refuel/Configure.vue';
 import { Config } from '@src/features/XIT/ACT/actions/refuel/config';
-import { CX_BUY } from '@src/features/XIT/ACT/action-steps/CX_BUY';
-import { TRANSFER_MATERIALS } from '@src/features/XIT/ACT/action-steps/TRANSFER_MATERIALS';
+import { CXPO_BUY } from '@src/features/XIT/ACT/action-steps/CXPO_BUY';
+import { MTRA_TRANSFER } from '@src/features/XIT/ACT/action-steps/MTRA_TRANSFER';
 import { AssertFn, configurableValue } from '@src/features/XIT/ACT/shared-types';
 import { atSameLocation, deserializeStorage } from '@src/features/XIT/ACT/actions/utils';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
@@ -37,13 +37,11 @@ act.addAction<Config>({
     const exchangeCode = getExchangeCode(origin);
     const isCX = exchangeCode !== undefined;
 
-    const dockedStl = (storagesStore.all.value ?? []).filter(
-      x => x.type === 'STL_FUEL_STORE' && atSameLocation(x, origin),
-    );
+    const dockedStl =
+      storagesStore.getByType('STL_FUEL_STORE')?.filter(x => atSameLocation(x, origin)) ?? [];
 
-    const dockedFtl = (storagesStore.all.value ?? []).filter(
-      x => x.type === 'FTL_FUEL_STORE' && atSameLocation(x, origin),
-    );
+    const dockedFtl =
+      storagesStore.getByType('FTL_FUEL_STORE')?.filter(x => atSameLocation(x, origin)) ?? [];
 
     if (dockedStl.length === 0 && dockedFtl.length === 0) {
       log.warning('No ships are docked near the origin');
@@ -78,12 +76,13 @@ act.addAction<Config>({
     if (presentStlFuel < totalStlRefuel) {
       if (isCX && data.buyMissingFuel) {
         emitStep(
-          CX_BUY({
+          CXPO_BUY({
             exchange: exchangeCode,
             ticker: stlMaterial.ticker,
             amount: totalStlRefuel - presentStlFuel,
             priceLimit: Number.POSITIVE_INFINITY,
             buyPartial: false,
+            allowUnfilled: false,
           }),
         );
         presentStlFuel = totalStlRefuel;
@@ -99,12 +98,13 @@ act.addAction<Config>({
     if (presentFtlFuel < totalFtlRefuel) {
       if (isCX && data.buyMissingFuel) {
         emitStep(
-          CX_BUY({
+          CXPO_BUY({
             exchange: exchangeCode,
             ticker: ftlMaterial.ticker,
             amount: totalFtlRefuel - presentFtlFuel,
             priceLimit: Number.POSITIVE_INFINITY,
             buyPartial: false,
+            allowUnfilled: false,
           }),
         );
         presentFtlFuel = totalFtlRefuel;
@@ -119,7 +119,7 @@ act.addAction<Config>({
         continue;
       }
       emitStep(
-        TRANSFER_MATERIALS({
+        MTRA_TRANSFER({
           from: origin.id,
           to: store.id,
           ticker: stlMaterial.ticker,
@@ -135,7 +135,7 @@ act.addAction<Config>({
         continue;
       }
       emitStep(
-        TRANSFER_MATERIALS({
+        MTRA_TRANSFER({
           from: origin.id,
           to: store.id,
           ticker: ftlMaterial.ticker,

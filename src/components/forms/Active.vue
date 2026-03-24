@@ -14,7 +14,7 @@ const errorClasses = computed(() => (error ? [C.FormComponent.containerError, C.
 <template>
   <div
     :class="[C.FormComponent.containerActive, C.forms.active, C.forms.formComponent, errorClasses]">
-    <label :class="[C.FormComponent.label, C.fonts.fontRegular, C.type.typeRegular]">
+    <label>
       <span>{{ label }}</span>
       <Tooltip v-if="tooltip" :position="tooltipPosition" :tooltip="tooltip" />
     </label>

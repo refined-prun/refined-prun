@@ -14,6 +14,7 @@ interface CommandDescriptor {
   optionalParameters?: string;
   component: (parameters: string[]) => Component;
   contextItems?: (parameters: string[]) => ContextItem[];
+  bufferSize?: [number, number];
 }
 
 const registry: CommandDescriptor[] = [];

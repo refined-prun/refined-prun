@@ -13,6 +13,10 @@ import EditAction from '@src/features/XIT/ACT/EditAction.vue';
 import { downloadJson } from '@src/utils/json-file';
 import { deepToRaw } from '@src/utils/deep-to-raw';
 import RenameActionPackage from '@src/features/XIT/ACT/RenameActionPackage.vue';
+import { vDraggable } from 'vue-draggable-plus';
+import { grip } from '@src/components/grip';
+import GripCell from '@src/components/grip/GripCell.vue';
+import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
 
 const { pkg } = defineProps<{ pkg: UserData.ActionPackageData }>();
 
@@ -96,6 +100,7 @@ function onExportClick() {
   <table>
     <thead>
       <tr>
+        <GripHeaderCell />
         <th>Type</th>
         <th>Name</th>
         <th>Content</th>
@@ -107,8 +112,9 @@ function onExportClick() {
         <td colspan="4" :class="$style.emptyRow">No groups yet.</td>
       </tr>
     </tbody>
-    <tbody v-else>
+    <tbody v-else v-draggable="[pkg.groups, grip.draggable]">
       <tr v-for="group in pkg.groups" :key="objectId(group)">
+        <GripCell />
         <td>{{ group.type }}</td>
         <td>{{ group.name || '--' }}</td>
         <td>{{ getMaterialGroupDescription(group) }}</td>
@@ -132,6 +138,7 @@ function onExportClick() {
   <table>
     <thead>
       <tr>
+        <GripHeaderCell />
         <th>Type</th>
         <th>Name</th>
         <th>Content</th>
@@ -143,8 +150,9 @@ function onExportClick() {
         <td colspan="4" :class="$style.emptyRow">No actions yet.</td>
       </tr>
     </tbody>
-    <tbody v-else>
+    <tbody v-else v-draggable="[pkg.actions, grip.draggable]">
       <tr v-for="action in pkg.actions" :key="objectId(action)">
+        <GripCell />
         <td>{{ action.type }}</td>
         <td>{{ action.name || '--' }}</td>
         <td>{{ getActionDescription(action) }}</td>
@@ -170,9 +178,6 @@ function onExportClick() {
     </Commands>
     <Commands label="Export">
       <PrunButton primary @click="onExportClick">EXPORT</PrunButton>
-    </Commands>
-    <Commands label="Help">
-      <PrunButton primary @click="showBuffer('XIT HELP ACTION')">HELP</PrunButton>
     </Commands>
   </form>
 </template>

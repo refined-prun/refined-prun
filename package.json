@@ -30,7 +30,7 @@
     "math-expression-evaluator": "^2.0.7",
     "one-mutation": "^3.0.1",
     "onetime": "^7.0.0",
-    "socket.io-parser": "^4.2.4",
+    "socket.io-parser": "^4.2.6",
     "tinycolor2": "^1.6.0",
     "ts-extras": "^0.15.0",
     "type-fest": "^4.41.0",
@@ -63,15 +63,20 @@
     "typescript": "5.9.2",
     "typescript-eslint": "^8.41.0",
     "unimport": "^5.2.0",
-    "vite": "^7.1.5"
+    "vite": "^7.1.11"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,vue}": [
       "prettier --write"
     ]
   },
-  "packageManager": "pnpm@9.4.0",
+  "packageManager": "pnpm@10.32.1",
   "engines": {
     "node": ">=22.16.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@laynezh/vite-plugin-lib-assets@2.1.0": "patches/@laynezh__vite-plugin-lib-assets@2.1.0.patch"
+    }
   }
 }

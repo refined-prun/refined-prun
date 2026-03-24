@@ -1,15 +1,162 @@
 # Changelog
 
-## Unreleased
+## 26.3.22
+
+### Added
+
+- `XIT PROD`: Dense cross-base production overview
+- `contribution-bulk-controls`: Adds NONE/ALL buttons to contribution sections
+- `contribution-maxed`: Automatically maxes contribution sliders in CoGC and population upkeep tiles
+- `flt-flex-fuel`: Allows the fuel column layout to better use available space
+- `sidebar-hide-zero-currencies`: Hides currencies with zero balance in the right sidebar
+- `sysi-blue-negative-value`: Makes lower negative planet values blue instead of red
 
 ### Changed
 
-- `XIT SET`: Add a confirmation popup for restore from backup
+- `XIT BURN`: Add Google Sheets-friendly copy button
+- `XIT CONTS`: Add missing condition labels
+- `XIT CONTC`: Add missing condition descriptions
+- `flt-ship-condition`: Restore red/yellow thresholds; red at 79%, yellow at 81%
 
 ### Fixed
 
+- `prun-bugs`: Fix the dot / arrow in system info being left skewed
+- `prun-bugs`: Fix layout shift when selecting inventory grid items
+- `prun-bugs`: Fix slider dot stretching and cursor styles
+- `prun-bugs`: Disable POPID sliders that can't be filled due to full reserves
+- `screen-tab-bar`: Fix jerky trackpad scroll and add horizontal gesture support
+- Fix financial data collection failure when the user has no warehouses
+
+## 26.1.24
+
+### Added
+
+- `expand-sidebar-contract-list`: Fully expands the contracts list in the sidebar
+- `mat-refined-prun-price`: Adds a "Refined PrUn Price" row
+
+### Changed
+
+- `flt-ship-condition`: Move the yellow condition threshold to 80% and remove the red one
+
+### Fixed
+
+- `XIT ACT`: Fix errors related to orbiting ships
+- `XIT FINCH`: Fix the Y axis labels fraction digits
+- `XIT GIF`: Fix pillarboxing
+- `browser-tab-name`: Fix ghost notifications
+- `other-context-notification-count`: Fix ghost notifications (once and for all, I hope)
+
+### Removed
+
+- `cxpc-default-1y`: This feature had too many edge cases
+
+## 26.1.15
+
+### Changed
+
+- `XIT FINCH`: Add a "(Partial)" suffix to the equity chart if the full equity mode is disabled
+- `XIT GIF`: Switch from Giphy to Klipy
+
+### Fixed
+
+- `XIT SET BFR`: Fix the table header row misalignment
+- `browser-tab-name`: Fix ghost notification counter for deleted notifications
+
+## 26.1.11
+
+### Added
+
+- `bbc-building-count`: Adds a building count label to the building icons
+- `browser-tab-name`: Renames the browser tab based on the current screen
+
+### Changed
+
+- `XIT ACT`: Make the material group and action lists reorderable
+- `XIT FINBS`: Add vortex fuel stores to the "Fuel tanks" total
+- `XIT FINBS`: Add a button to each row to open `XIT FINCH` with the selected chart
+- `XIT FINCH`: Add charts to all entries from the balance sheet
+- `XIT SET`: Display the 12h/24h time format in the Default option
+- `XIT SET`: Make the sidebar button list reorderable
+- `XIT SET FIN`: Add an "Equity mode" toggle to switch between full and partial equity
+- `XIT SORT`: Make the sorting mode list reorderable
+- `flt-flight-status-icons`: Add icons for new status types and make the JUMP icon more distinctive
+- `inv-compress-inventory-info`: Add a small right padding to the unload button in `SHPI`
+- `inv-shorten-storage-types`: Use the short type labels from the base game instead of custom ones
+- `inv-shorten-storage-types`: Shorten storage types in the filter bar
+- Ignore planetary infrastructure inventories in all features
+- Disable the full equity mode for new Refined PrUn users that are less than 90 days old
+
+### Fixed
+
+- `cxpc-default-1y`: Fix the 1y chart not opening after it has been opened once
+- `nots-notification-type-label`: Add labels for the missing notification types
+
+## 25.12.30
+
+### Changed
+
+- Open `XIT CMDS` in the parameterless `XIT` command
+
+### Fixed
+
+- `cxpc-default-1y`: Fix the 1y chart showing only 30d of data if opened not from `CXM`
+- Fix the `XIT` command with no parameters breaking all later `XIT` commands
+
+## 25.12.28
+
+### Added
+
+- `audio-volume-slider`: Adds a volume slider to the game settings in the top-right corner of the screen
+- `cxpc-default-1y`: Selects the 1y chart on open
+
+### Changed
+
+- `XIT BURN`: Add support for a `NOT` filter, for example `XIT BURN NOT MALAHAT`
+- `correct-commands`: Add support for planets in system commands, for example `SYSI PROMITOR`
+- `correct-commands`: Add support for stations in system commands, for example `SYSI ANT`
+- `nots-notification-type-label`: Add labels for the new notification types
+- `nots-notification-type-label`: Adjust the colors to improve readability and consistency with the game's UI
+- Decrease the default audio volume to 40%
+
+### Fixed
+
+- `XIT ACT`: Fix the CX Buy action failing to execute due to number formatting in some localizations
+- `bs-hide-zero-workforce`: Fix the broken tooltip in the "Current Workforce" column header
+- `co-base-count`: Fix the feature not working after the gateway update
+- `cxpo-auto-price`: Fix localized number formatting
+- `exp-expert-eta`: Fix the Infinityd bug for production lines without recurring orders
+- `hide-system-chat-messages`: Fix the vertical indicator not being visible after the gateway update
+- `inv-compress-inventory-info`: Fix the feature not working in `SHPI`
+- `other-context-notification-count`: Fix ghost INFRASTRUCTURE_UPGRADE_COMPLETED notifications
+- `screen-layout-lock`: Fix the feature not working when the game URL does not contain a screen id
+
+## 25.11.16
+
+### Added
+
+- `screen-layout-lock`: Adds screen locking
+- `cxos-hide-delete-filled`: Hides the "Delete Filled" button when filters are hidden
+
+### Changed
+
+- `XIT ACT`: Make the action package list reorderable
+- `XIT ACT`: Add an "Allow Unfilled" option to the CX Buy action
+- `XIT ACT`: Remove the Help button
+- `XIT SET`: Add a confirmation popup for restore from backup
+- `XIT SORT`: Add copy/paste buttons to sorting modes
+- `item-icons`: Add icons for colony-ship-related materials
+- `screen-tab-bar`: Make tab bar scrollable to allow offscreen tabs
+
+### Fixed
+
+- `XIT ACT`: Fix MTRA action getting stuck when the material amount is zero
+- `XIT ACT`: Fix CX Buy action getting stuck when the material amount is zero
 - `XIT CONTS`: Fix government partner display in contracts
+- `XIT CONTS`: Fix the display text of the "Construct Ship" condition
+- `XIT NOTE`: Fix material tickers being changed to the first one in the note
+- `correct-commands`: Fix url correction for links without http:// or https:// in XIT WEB
 - `sidebar-contracts-details`: Fix government partner display in contracts
+- Fix the color of materials in the "Infrastructure" category
 
 ## 25.8.16
 

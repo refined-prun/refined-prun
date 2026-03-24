@@ -24,6 +24,11 @@ declare namespace PrunApi {
     quantity?: MaterialAmount | null;
     address?: Address;
     blockId?: string | null;
+    infrastructureType?: string;
+    infrastructureId?: ContractConditionEntity;
+    gatewayId?: ContractConditionEntity;
+    phaseNaturalId?: number;
+    serviceLevelObjective?: number;
     type: ContractConditionType;
     id: string;
     party: ContractParty;
@@ -46,6 +51,12 @@ declare namespace PrunApi {
     total?: CurrencyAmount;
   }
 
+  interface ContractConditionEntity {
+    id: string;
+    naturalId: string;
+    name: string;
+  }
+
   type ContractParty = 'CUSTOMER' | 'PROVIDER';
 
   type ContractConditionStatus =
@@ -59,25 +70,35 @@ declare namespace PrunApi {
   type ContractConditionType =
     | 'BASE_CONSTRUCTION'
     | 'COMEX_PURCHASE_PICKUP'
+    | 'CONSTRUCT_SHIP'
     | 'CONTRIBUTION'
     | 'DELIVERY'
     | 'DELIVERY_SHIPMENT'
     | 'EXPLORATION'
     | 'FINISH_FLIGHT'
+    | 'GATEWAY_FUEL'
+    | 'HEADQUARTERS_UPGRADE'
+    | 'INFRASTRUCTURE_CONSTRUCTION_FINISH'
+    | 'INFRASTRUCTURE_CONSTRUCTION_START'
+    | 'INFRASTRUCTURE_UPGRADE_FINISH'
+    | 'INFRASTRUCTURE_UPGRADE_START'
+    | 'INFRASTRUCTURE_UPKEEP'
     | 'LOAN_INSTALLMENT'
     | 'LOAN_PAYOUT'
     | 'PAYMENT'
+    | 'PICKUP'
     | 'PICKUP_SHIPMENT'
     | 'PLACE_ORDER'
+    | 'POWER'
     | 'PRODUCTION_ORDER_COMPLETED'
     | 'PRODUCTION_RUN'
     | 'PROVISION'
     | 'PROVISION_SHIPMENT'
+    | 'REPAIR_SHIP'
     | 'REPUTATION'
     | 'START_FLIGHT'
-    | 'HEADQUARTERS_UPGRADE'
-    | 'POWER'
-    | 'REPAIR_SHIP';
+    | 'WORKFORCE_PROGRAM_PAYMENT'
+    | 'WORKFORCE_PROGRAM_START';
 
   interface ContractPartner {
     id?: string;

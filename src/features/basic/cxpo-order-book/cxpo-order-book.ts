@@ -1,4 +1,3 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import OrderBook from './OrderBook.vue';
 import { changeInputValue } from '@src/util';
 import { increaseDefaultBufferSize } from '@src/infrastructure/prun-ui/buffer-sizes';

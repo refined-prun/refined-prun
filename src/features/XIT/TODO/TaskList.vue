@@ -1,32 +1,18 @@
 <script setup lang="ts">
-import grip from '@src/utils/grip.module.css';
+import { grip } from '@src/components/grip';
 import TaskItem from '@src/features/XIT/TODO/TaskItem.vue';
 import AddTaskItem from '@src/features/XIT/TODO/AddTaskItem.vue';
 import { vDraggable } from 'vue-draggable-plus';
 import Header from '@src/components/Header.vue';
 
 defineProps<{ list: UserData.TaskList }>();
-
-const dragging = ref(false);
-
-const draggableOptions = {
-  animation: 150,
-  handle: `.${grip.grip}`,
-  onStart: () => (dragging.value = true),
-  onEnd: () => (dragging.value = false),
-};
 </script>
 
 <template>
   <div :class="$style.root">
     <Header v-model="list.name" editable :class="$style.header" />
-    <div v-draggable="[list.tasks, draggableOptions]" :class="$style.list">
-      <TaskItem
-        v-for="task in list.tasks"
-        :key="task.id"
-        :list="list"
-        :task="task"
-        :dragging="dragging" />
+    <div v-draggable="[list.tasks, grip.draggable]" :class="$style.list">
+      <TaskItem v-for="task in list.tasks" :key="task.id" :list="list" :task="task" />
     </div>
     <AddTaskItem :list="list" />
   </div>

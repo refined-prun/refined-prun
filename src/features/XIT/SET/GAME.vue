@@ -23,22 +23,39 @@ import {
   getUserDataBackups,
   UserDataBackup,
 } from '@src/infrastructure/storage/user-data-backup';
-import { ddmmyyyy, hhmm } from '@src/utils/format';
+import { ddmmyyyy, hhForXitSet, hhmm } from '@src/utils/format';
+import dayjs from 'dayjs';
+import { vDraggable } from 'vue-draggable-plus';
+import { grip } from '@src/components/grip';
+import GripChar from '@src/components/grip/GripChar.vue';
 
-const timeFormats: { label: string; value: UserData.TimeFormat }[] = [
-  {
-    label: 'Default',
-    value: 'DEFAULT',
+const isDefault24 = computed(() => {
+  return hhForXitSet.value(dayjs.duration(12, 'hours').asMilliseconds()) === '13';
+});
+
+const timeFormats = computed(() => {
+  return [
+    {
+      label: '24h',
+      value: '24H',
+    },
+    {
+      label: '12h',
+      value: '12H',
+    },
+  ] as { label: string; value: UserData.TimeFormat }[];
+});
+
+const timeFormat = computed({
+  get: () => {
+    const format = userData.settings.time;
+    if (format === 'DEFAULT') {
+      return isDefault24.value ? '24H' : '12H';
+    }
+    return format;
   },
-  {
-    label: '24h',
-    value: '24H',
-  },
-  {
-    label: '12h',
-    value: '12H',
-  },
-];
+  set: value => (userData.settings.time = value),
+});
 
 const exchangeChartTypes: { label: string; value: UserData.ExchangeChartType }[] = [
   {
@@ -160,8 +177,8 @@ function confirmResetAllData(ev: Event) {
 <template>
   <SectionHeader>Appearance</SectionHeader>
   <form>
-    <Active label="Time">
-      <SelectInput v-model="userData.settings.time" :options="timeFormats" />
+    <Active label="Time format">
+      <SelectInput v-model="timeFormat" :options="timeFormats" />
     </Active>
     <Active label="Default CX Chart Type">
       <SelectInput v-model="userData.settings.defaultChartType" :options="exchangeChartTypes" />
@@ -216,17 +233,21 @@ function confirmResetAllData(ev: Event) {
       tooltip="Create hotkeys on the left sidebar.
          The first value is what will be displayed, the second is the command." />
   </SectionHeader>
-  <form>
+  <form v-draggable="[userData.settings.sidebar, grip.draggable]">
     <Active
       v-for="(button, i) in userData.settings.sidebar"
       :key="objectId(button)"
-      :label="`Button ${i + 1}`">
+      :label="`Button ${i + 1}`"
+      :class="$style.sidebarRow">
       <div :class="$style.sidebarInputPair">
+        <GripChar :class="[$style.grip, grip.class]" />
         <TextInput v-model="button[0]" :class="$style.sidebarInput" />
         <TextInput v-model="button[1]" :class="$style.sidebarInput" />
         <PrunButton danger @click="deleteSidebarButton(i)">x</PrunButton>
       </div>
     </Active>
+  </form>
+  <form>
     <Commands>
       <PrunButton primary @click="confirmResetSidebar">RESET</PrunButton>
       <PrunButton primary @click="addSidebarButton">ADD NEW</PrunButton>
@@ -283,5 +304,15 @@ function confirmResetAllData(ev: Event) {
 
 .sidebarInput input {
   width: 100%;
+}
+
+.grip {
+  cursor: move;
+  transition: opacity 0.2s ease-in-out;
+  opacity: 0;
+}
+
+.sidebarRow:hover .grip {
+  opacity: 1;
 }
 </style>

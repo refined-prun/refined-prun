@@ -15,7 +15,6 @@ const classes = computed(() => ({
   [C.Button.btn]: true,
   [C.Button.inline]: inline,
   [C.Button.primary]: primary,
-  // I have zero idea why this rule is triggered here.
   [C.Button.primaryInline]: primary && inline,
   [C.Button.disabled]: disabled,
   [C.Button.disabledInline]: disabled && inline,

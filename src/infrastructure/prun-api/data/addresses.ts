@@ -57,7 +57,7 @@ export const getEntityNameFromAddress = (address?: PrunApi.Address | undefined) 
     return undefined;
   }
 
-  if (location.type !== 'PLANET' || location.entity.name !== location.entity.naturalId) {
+  if (!isPlanetLine(location) || location.entity.name !== location.entity.naturalId) {
     return location.entity.name;
   }
 
@@ -69,7 +69,7 @@ export const getEntityNameFromAddress = (address?: PrunApi.Address | undefined) 
   return location.entity.name.replace(system.entity.naturalId, `${system.entity.name} `);
 };
 
-const getSystemLineFromAddress = (address?: PrunApi.Address | undefined) => {
+export const getSystemLineFromAddress = (address?: PrunApi.Address | undefined) => {
   if (!address) {
     return undefined;
   }
@@ -89,7 +89,7 @@ export function getDestinationName(destination?: PrunApi.Address) {
   }
 
   const location = getLocationLineFromAddress(destination);
-  if (location?.type === 'STATION') {
+  if (isStationLine(location)) {
     return location.entity.naturalId;
   }
 
@@ -102,18 +102,18 @@ export function getDestinationFullName(destination?: PrunApi.Address) {
   }
 
   const location = getLocationLineFromAddress(destination);
-  if (location?.type === 'STATION') {
+  if (isStationLine(location)) {
     return location.entity.name;
   }
 
   const system = destination.lines[0];
   const planet = destination.lines[1];
 
-  if (system === undefined) {
+  if (!isSystemLine(system)) {
     return undefined;
   }
 
-  if (planet === undefined) {
+  if (!isPlanetLine(planet)) {
     return system.entity.name;
   }
 
@@ -127,12 +127,22 @@ export function getDestinationFullName(destination?: PrunApi.Address) {
   return `${system.entity.name} ${planetLetter}`;
 }
 
-function isSystemLine(line?: PrunApi.AddressLine) {
+export function isSystemLine(line?: PrunApi.AddressLine): line is PrunApi.SystemAddressLine {
   return line?.type === 'SYSTEM';
 }
 
-function isLocationLine(line?: PrunApi.AddressLine) {
-  return line?.type === 'PLANET' || line?.type === 'STATION';
+export function isStationLine(line?: PrunApi.AddressLine): line is PrunApi.StationAddressLine {
+  return line?.type === 'STATION';
+}
+
+export function isPlanetLine(line?: PrunApi.AddressLine): line is PrunApi.PlanetAddressLine {
+  return line?.type === 'PLANET';
+}
+
+export function isLocationLine(
+  line?: PrunApi.AddressLine,
+): line is PrunApi.PlanetAddressLine | PrunApi.StationAddressLine {
+  return isPlanetLine(line) || isStationLine(line);
 }
 
 export function isSameAddress(
@@ -147,10 +157,14 @@ export function isSameAddress(
     return true;
   }
 
+  if (addressA.lines.length !== addressB.lines.length) {
+    return false;
+  }
+
   for (let i = 0; i < addressA.lines.length; i++) {
-    const lineA = addressA.lines[i];
-    const lineB = addressB.lines[i];
-    if (lineA === undefined || lineB === undefined || lineA.entity.id !== lineB.entity.id) {
+    const entityA = addressA.lines[i]?.entity;
+    const entityB = addressB.lines[i]?.entity;
+    if (!entityA || !entityB || entityA.id !== entityB.id) {
       return false;
     }
   }

@@ -1,4 +1,3 @@
-import features from '@src/features/feature-registry';
 import { usersStore } from '@src/infrastructure/prun-api/data/users';
 import Passive from '@src/components/forms/Passive.vue';
 

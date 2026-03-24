@@ -10,7 +10,7 @@ defineProps<{
 
 <template>
   <div :class="[C.FormComponent.containerPassive, C.forms.passive, C.forms.formComponent]">
-    <label :class="[C.FormComponent.label, C.fonts.fontRegular, C.type.typeRegular]">
+    <label>
       <span>{{ label }}</span>
       <Tooltip v-if="tooltip" :position="tooltipPosition" :tooltip="tooltip" />
     </label>
