@@ -118,11 +118,10 @@ const planetBurn = computed(() => {
   }
 
   for (const mat of Object.keys(overallBurn)) {
-    if (overallBurn[mat].dailyAmount >= 0) {
-      overallBurn[mat].daysLeft = 1000;
-    } else {
-      overallBurn[mat].daysLeft = -overallBurn[mat].inventory / overallBurn[mat].dailyAmount;
-    }
+    overallBurn[mat].daysLeft = computeDaysLeft(
+      overallBurn[mat].dailyAmount,
+      overallBurn[mat].inventory,
+    );
   }
 
   const overallSection = { burn: overallBurn, planetName: 'Overall', naturalId: '', storeId: '' };
