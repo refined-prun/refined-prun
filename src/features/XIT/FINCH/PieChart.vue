@@ -11,7 +11,6 @@ import {
   Tooltip,
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { sumBy } from '@src/utils/sum-by';
 import { percent2 } from '@src/utils/format';
 
 Chart.register(PieController, ArcElement, Tooltip, Legend, CategoryScale);

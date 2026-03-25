@@ -3,7 +3,6 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import FinHeader from '@src/features/XIT/FIN/FinHeader.vue';
 import KeyFigures from '@src/features/XIT/FIN/KeyFigures.vue';
 import { calculateSiteProfitability } from '@src/core/profitability';
-import { sumBy } from '@src/utils/sum-by';
 import { fixed0, formatCurrency, percent2 } from '@src/utils/format';
 import { map } from '@src/utils/map-values';
 

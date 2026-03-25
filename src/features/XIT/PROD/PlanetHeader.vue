@@ -2,7 +2,6 @@
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import PrunButton from '@src/components/PrunButton.vue';
 import { PlanetProduction } from '@src/core/production';
-import { sumBy } from '@src/utils/sum-by';
 import FracCell from './FracCell.vue';
 
 const { production } = defineProps<{

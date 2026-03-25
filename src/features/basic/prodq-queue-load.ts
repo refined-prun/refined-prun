@@ -1,4 +1,3 @@
-import { sumBy } from '@src/utils/sum-by';
 import { percent2 } from '@src/utils/format';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
