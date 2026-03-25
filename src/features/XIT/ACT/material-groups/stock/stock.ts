@@ -68,9 +68,9 @@ act.addMaterialGroup<Config>({
         continue;
       }
       const currentAmount = inventory.get(ticker) ?? 0;
-      const needed = targetAmount - currentAmount;
-      if (needed > 0) {
-        parsedGroup[ticker] = needed;
+      const need = targetAmount - currentAmount;
+      if (need > 0) {
+        parsedGroup[ticker] = need;
       }
     }
 
