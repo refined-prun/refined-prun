@@ -35,7 +35,7 @@ function onTileReady(tile: PrunTile) {
   };
 
   // Place after the CMD row.
-  const cmdRow = _$$(tile.anchor, C.FormComponent.containerCommand)[0] as Element | undefined;
+  const cmdRow = _$$(tile.anchor, C.FormComponent.containerCommand)[0];
   if (cmdRow === undefined) {
     return;
   }
