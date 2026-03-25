@@ -26,5 +26,5 @@ export function correctXitWeb(parts: string[]) {
   parts[2] =
     prunBtoa(url)
       .match(/.{1,200}/g)
-      ?.join(' ') || '';
+      ?.join(' ') ?? '';
 }

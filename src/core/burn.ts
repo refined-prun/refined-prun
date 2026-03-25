@@ -6,7 +6,6 @@ import {
   getEntityNameFromAddress,
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
-import { sumBy } from '@src/utils/sum-by';
 import { getRecurringOrders } from '@src/core/orders';
 
 export interface MaterialBurn {
@@ -77,17 +76,15 @@ export function calculatePlanetBurn(
   const burnValues: BurnValues = {};
 
   function getBurnValue(ticker: string) {
-    if (burnValues[ticker] === undefined) {
-      burnValues[ticker] = {
-        input: 0,
-        output: 0,
-        workforce: 0,
-        dailyAmount: 0,
-        inventory: 0,
-        daysLeft: 0,
-        type: 'output',
-      };
-    }
+    burnValues[ticker] ??= {
+      input: 0,
+      output: 0,
+      workforce: 0,
+      dailyAmount: 0,
+      inventory: 0,
+      daysLeft: 0,
+      type: 'output',
+    };
     return burnValues[ticker];
   }
 

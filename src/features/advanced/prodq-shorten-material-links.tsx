@@ -24,7 +24,7 @@ function linkifyMaterialNames(elements: HTMLCollection, resources: PrunApi.Mater
     const children = Array.from(elements[i].children) as HTMLSpanElement[];
     // In-progress orders have only one child, while queued ones have two.
     const materialName = children.length === 2 ? children[1] : children[0];
-    materialName.innerText = '';
+    materialName.textContent = '';
     const material = resources[i].material.ticker;
     createFragmentApp(() => (
       <PrunLink inline command={`MAT ${material}`}>

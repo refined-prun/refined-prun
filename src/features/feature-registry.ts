@@ -32,9 +32,11 @@ function logError(id: string, error: unknown): void {
     ['```', String(error instanceof Error ? error.stack! : error).trim(), '```'].join('\n'),
   );
 
-  // Don't change this to `throw Error` because Firefox doesn't show extensions' errors in the console
-  console.group(`❌ Refined PrUn: ${id}`); // Safari supports only one parameter
-  console.log(`📕 ${config.version}`, error); // One parameter improves Safari formatting
+  // Don't change this to `throw Error` because Firefox doesn't show extensions' errors in the console.
+  // Safari supports only one parameter.
+  console.group(`❌ Refined PrUn: ${id}`);
+  // One parameter improves Safari formatting.
+  console.log(`📕 ${config.version}`, error);
   console.log('🔍 Search issue', searchIssueUrl.href);
   console.log('🚨 Report issue', newIssueUrl.href);
   console.groupEnd();

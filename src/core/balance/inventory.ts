@@ -9,7 +9,6 @@ import {
 import { calcMaterialAmountPrice, sumMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
-import { sumBy } from '@src/utils/sum-by';
 import { sum } from '@src/utils/sum';
 import {
   partnerCurrentConditions,
