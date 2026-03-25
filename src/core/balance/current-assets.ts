@@ -1,4 +1,3 @@
-import { sumBy } from '@src/utils/sum-by';
 import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
 import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';

@@ -1,7 +1,6 @@
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { sumMaterialAmountPrice } from '@src/infrastructure/fio/cx';
-import { sumBy } from '@src/utils/sum-by';
 import { mergeMaterialAmounts } from '@src/core/sort-materials';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { calcBuildingMarketValue, isRepairableBuilding } from '@src/core/buildings';

@@ -15,14 +15,15 @@ const { add, group, onSave } = defineProps<{
 
 const emit = defineEmits<{ (e: 'close'): void }>();
 
-const name = ref(group.name || '');
+const name = ref(group.name ?? '');
 const nameError = ref(false);
 
 const typeOptions = act.getMaterialGroupTypes();
 const type = ref(group.type);
 
 const editFormComponent = computed(() => act.getMaterialGroupInfo(type.value)?.editComponent);
-const editForm = useTemplateRef('editForm');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const editForm = useTemplateRef<any>('editForm');
 
 function onSaveClick() {
   let isValid = editForm.value.validate();

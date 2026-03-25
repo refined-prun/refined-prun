@@ -8,7 +8,6 @@ import { vDraggable } from 'vue-draggable-plus';
 import CreateTaskList from '@src/features/XIT/TODO/CreateTaskList.vue';
 import { createId } from '@src/store/create-id';
 import removeArrayElement from '@src/utils/remove-array-element';
-import { sumBy } from '@src/utils/sum-by';
 import PrunLink from '@src/components/PrunLink.vue';
 import { ddmmyyyy } from '@src/utils/format';
 import { grip } from '@src/components/grip';

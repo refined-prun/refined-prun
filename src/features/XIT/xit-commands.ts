@@ -9,10 +9,7 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { tileKey } from '@src/hooks/use-tile';
 
 function onTileReady(tile: PrunTile) {
-  let rawParameter = tile.parameter;
-  if (!rawParameter) {
-    rawParameter = 'CMDS';
-  }
+  const rawParameter = tile.parameter ?? 'CMDS';
 
   let parameters = [] as string[];
   if (rawParameter[0] === '1') {
