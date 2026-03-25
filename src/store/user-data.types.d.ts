@@ -81,7 +81,7 @@ declare namespace UserData {
     origin?: string;
     dest?: string;
 
-    // CONT Ship specific
+    // CONT Ship specific.
     currency?: string;
     contractNote?: string;
     paymentPerTon?: number;
@@ -90,7 +90,7 @@ declare namespace UserData {
     contDest?: string;
     autoProvision?: boolean;
 
-    // CONT Trade specific
+    // CONT Trade specific.
     contTradeType?: 'BUYING' | 'SELLING';
     contLocation?: string;
   }

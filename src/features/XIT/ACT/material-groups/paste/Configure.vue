@@ -37,9 +37,9 @@ watch(text, value => {
   color: inherit;
   background: transparent;
   border: none;
-}
 
-.textarea:focus {
-  outline: none;
+  &:focus {
+    outline: none;
+  }
 }
 </style>
