@@ -89,9 +89,7 @@ export function parseMaterials(input: string | undefined): ParseResult | undefin
       if (!isValidPrice(price)) {
         return undefined;
       }
-      if (!prices) {
-        prices = {};
-      }
+      prices ??= {};
       prices[material.ticker] = price;
       hasPrice = true;
     } else if (hasPrice) {

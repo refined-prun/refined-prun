@@ -95,7 +95,7 @@ export const CONT_SEND = act.addActionStep<Data>({
 
     const materialsList = materialDetails.map(x => `${x.ticker} x${x.amount}`).join(', ');
     const preambleText =
-      data.contractNote ||
+      data.contractNote ??
       `Shipping contract for ${totalTonnage.toFixed(2)}t.\n` +
         `Materials: ${materialsList}\n` +
         (data.payment > 0
