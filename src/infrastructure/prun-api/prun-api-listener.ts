@@ -82,6 +82,7 @@ export function dispatchClientPrunMessage(message: Message) {
   return true;
 }
 
+// Send a message to the game server. Each call must be triggered by a user click (ToS).
 export function sendPrunMessage(message: Message) {
   if (!middleware.sendServerMessage.value) {
     return false;

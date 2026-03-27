@@ -10,14 +10,7 @@ import { sumBy } from '@src/utils/sum-by';
 import { fixed2 } from '@src/utils/format';
 import { getStoreName, getColocatedStores } from '@src/features/XIT/SHPT/store-name';
 import { transferItem } from '@src/features/XIT/SHPT/transfer';
-
-interface ShipmentItem {
-  id: string;
-  weight: number;
-  volume: number;
-  destination: string;
-  contractId: string;
-}
+import { ShipmentItem } from '@src/features/XIT/SHPT/types';
 
 // Stores that have SHPT items.
 const sourceOptions = computed(() => {
@@ -135,17 +128,34 @@ const canTransfer = computed(
 );
 
 const transferring = ref(false);
+const transferError = ref('');
 
-function onTransferOne(itemId: string) {
+async function onTransferOne(itemId: string) {
   if (!canTransfer.value || transferring.value) {
     return;
   }
+  transferError.value = '';
+  const ok = transferItem(selectedSourceId.value, selectedTargetId.value, itemId);
+  if (!ok) {
+    transferError.value = 'Not connected to server.';
+    return;
+  }
   transferring.value = true;
-  transferItem(selectedSourceId.value, selectedTargetId.value, itemId);
-  // Brief delay to let the storage update propagate.
-  setTimeout(() => {
+  // Wait for the item to disappear from the source store.
+  const timeout = setTimeout(() => {
     transferring.value = false;
-  }, 500);
+    transferError.value = 'Transfer timed out.';
+  }, 5000);
+  const stop = watch(
+    () => sourceStore.value?.items.find(x => x.id === itemId),
+    item => {
+      if (!item) {
+        clearTimeout(timeout);
+        transferring.value = false;
+        stop();
+      }
+    },
+  );
 }
 </script>
 
@@ -165,6 +175,7 @@ function onTransferOne(itemId: string) {
       {{ filteredItems.length }} boxes to {{ selectedDestination }} ({{ fixed2(totalWeight) }}t /
       {{ fixed2(totalVolume) }}m³)
     </SectionHeader>
+    <div v-if="transferError" :class="$style.error">{{ transferError }}</div>
     <table>
       <thead>
         <tr>
@@ -194,3 +205,11 @@ function onTransferOne(itemId: string) {
     </table>
   </template>
 </template>
+
+<style module>
+.error {
+  color: rgb(217, 83, 79);
+  padding: 4px 8px;
+  font-size: 12px;
+}
+</style>

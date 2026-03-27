@@ -8,29 +8,7 @@ import { sumBy } from '@src/utils/sum-by';
 import { getStoreName } from '@src/features/XIT/SHPT/store-name';
 import ShipmentGroup from '@src/features/XIT/SHPT/ShipmentGroup.vue';
 import TransferPanel from '@src/features/XIT/SHPT/TransferPanel.vue';
-
-interface ShipmentItem {
-  id: string;
-  weight: number;
-  volume: number;
-  destination: string;
-  contractId: string;
-}
-
-interface ContractSubgroup {
-  contractId: string;
-  items: ShipmentItem[];
-  totalWeight: number;
-  totalVolume: number;
-}
-
-interface ShipmentGroupData {
-  destination: string;
-  contracts: ContractSubgroup[];
-  totalWeight: number;
-  totalVolume: number;
-  totalItems: number;
-}
+import { ShipmentItem, ContractSubgroup, ShipmentGroupData } from '@src/features/XIT/SHPT/types';
 
 interface StoreGroup {
   storeName: string;

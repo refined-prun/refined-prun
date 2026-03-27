@@ -6,44 +6,46 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 
-export function getStoreName(store: PrunApi.Store): string {
-  if (store.name) {
-    return store.name;
-  }
+interface StoreInfo {
+  name: string;
+  address: PrunApi.Address | undefined;
+}
+
+function resolveStore(store: PrunApi.Store): StoreInfo {
   switch (store.type) {
     case 'STORE': {
       const site = sitesStore.getById(store.addressableId);
-      return getEntityNameFromAddress(site?.address) ?? store.id;
+      return {
+        name: store.name ?? getEntityNameFromAddress(site?.address) ?? store.id,
+        address: site?.address,
+      };
     }
     case 'WAREHOUSE_STORE': {
       const warehouses = warehousesStore.all.value ?? [];
       const warehouse = warehouses.find(x => x.storeId === store.id);
-      return getEntityNameFromAddress(warehouse?.address) ?? store.id;
+      return {
+        name: store.name ?? getEntityNameFromAddress(warehouse?.address) ?? store.id,
+        address: warehouse?.address,
+      };
     }
     case 'SHIP_STORE': {
       const ship = shipsStore.getById(store.addressableId);
-      return ship?.name ?? store.id;
+      return {
+        name: store.name ?? ship?.name ?? store.id,
+        address: ship?.address ?? undefined,
+      };
     }
     default:
-      return store.id;
+      return { name: store.name ?? store.id, address: undefined };
   }
 }
 
+export function getStoreName(store: PrunApi.Store): string {
+  return resolveStore(store).name;
+}
+
 export function getStoreAddress(store: PrunApi.Store): PrunApi.Address | undefined {
-  switch (store.type) {
-    case 'STORE':
-      return sitesStore.getById(store.addressableId)?.address;
-    case 'WAREHOUSE_STORE': {
-      const warehouses = warehousesStore.all.value ?? [];
-      return warehouses.find(x => x.storeId === store.id)?.address;
-    }
-    case 'SHIP_STORE': {
-      const ship = shipsStore.getById(store.addressableId);
-      return ship?.address ?? undefined;
-    }
-    default:
-      return undefined;
-  }
+  return resolveStore(store).address;
 }
 
 // Find stores at the same location as the given store (excluding itself).
@@ -59,7 +61,6 @@ export function getColocatedStores(
     if (x.id === sourceStore.id) {
       return false;
     }
-    const addr = getStoreAddress(x);
-    return isSameAddress(sourceAddress, addr);
+    return isSameAddress(sourceAddress, getStoreAddress(x));
   });
 }

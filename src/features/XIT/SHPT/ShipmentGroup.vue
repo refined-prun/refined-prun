@@ -1,29 +1,7 @@
 <script setup lang="ts">
 import PrunLink from '@src/components/PrunLink.vue';
 import { fixed2 } from '@src/utils/format';
-
-interface ShipmentItem {
-  id: string;
-  weight: number;
-  volume: number;
-  destination: string;
-  contractId: string;
-}
-
-interface ContractSubgroup {
-  contractId: string;
-  items: ShipmentItem[];
-  totalWeight: number;
-  totalVolume: number;
-}
-
-interface ShipmentGroupData {
-  destination: string;
-  contracts: ContractSubgroup[];
-  totalWeight: number;
-  totalVolume: number;
-  totalItems: number;
-}
+import { ShipmentGroupData } from '@src/features/XIT/SHPT/types';
 
 const { group } = defineProps<{ group: ShipmentGroupData }>();
 
