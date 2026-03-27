@@ -120,12 +120,25 @@ const filteredItems = computed<ShipmentItem[]>(() => {
 const totalWeight = computed(() => sumBy(filteredItems.value, x => x.weight));
 const totalVolume = computed(() => sumBy(filteredItems.value, x => x.volume));
 
+const targetStore = computed(() => storagesStore.getById(selectedTargetId.value));
+
 const canTransfer = computed(
   () =>
     selectedSourceId.value !== '' &&
     selectedTargetId.value !== '' &&
     filteredItems.value.length > 0,
 );
+
+// Check if an item fits in the target store.
+function itemFits(item: ShipmentItem): boolean {
+  const target = targetStore.value;
+  if (!target) {
+    return false;
+  }
+  const weightOk = target.weightCapacity - target.weightLoad >= item.weight;
+  const volumeOk = target.volumeCapacity - target.volumeLoad >= item.volume;
+  return weightOk && volumeOk;
+}
 
 const transferring = ref(false);
 const transferError = ref('');
@@ -187,7 +200,10 @@ async function onTransferOne(itemId: string) {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in filteredItems" :key="item.id">
+        <tr
+          v-for="item in filteredItems"
+          :key="item.id"
+          :class="{ [$style.noFit]: !itemFits(item) }">
           <td>{{ item.id.slice(0, 8) }}</td>
           <td>{{ fixed2(item.weight) }}t</td>
           <td>{{ fixed2(item.volume) }}m³</td>
@@ -211,5 +227,9 @@ async function onTransferOne(itemId: string) {
   color: rgb(217, 83, 79);
   padding: 4px 8px;
   font-size: 12px;
+}
+
+.noFit {
+  opacity: 0.5;
 }
 </style>
