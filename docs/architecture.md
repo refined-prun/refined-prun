@@ -78,6 +78,10 @@ Game Server → socket.io WebSocket
         → features consume via .getById(), .all, .fetched
 ```
 
+Two message directions exist in the middleware:
+- **`dispatchClientPrunMessage`** — injects fake server-to-client messages (event name `event`). Used for UI control (opening buffers, modifying chart data).
+- **`sendPrunMessage`** — sends real client-to-server messages via the WebSocket (event name `message`). Requires `contextId` from the URL hash or `companyContextId`. Used for game actions like `STORAGE_TRANSFER_ITEM`.
+
 **Entity stores** (in `data/`) are created with `createEntityStore()`. Each provides:
 - `.all` — `Ref<Entity[] | undefined>` (undefined until first fetch)
 - `.fetched` — `Ref<boolean>`

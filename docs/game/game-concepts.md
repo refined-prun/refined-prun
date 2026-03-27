@@ -192,7 +192,9 @@ Experts provide fixed bonus multipliers to production line efficiency in their i
 - A **shipment** is a special item type (not a material) that occupies cargo space in an inventory.
 - It is created when one party in a **shipping contract** provides the goods to be transported.
 - Shipments have weight and volume like regular materials, but have no ticker or material category.
+- Each shipment box corresponds to one contract condition (provision → delivery pair). Weight and volume vary per box.
 - `SHPT` is not a game tile/command — it is this item type. Do not confuse with tile command strings like `FLT`.
+- The MTRA command does **not** support SHPT items — its MaterialSelector only lists commodities. Shipments can only be transferred via drag-and-drop.
 
 ### Warehouses
 - Rented on planets and space stations (via WAR command).
