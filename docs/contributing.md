@@ -163,6 +163,8 @@ Every action that triggers server communication must require a user click. No au
 
 The extension does make some background server requests (e.g., `XIT BURN` opens invisible buffers). This is a known ToS violation with explicit developer permission — don't extend this pattern without discussion.
 
+The extension can send messages to the game server via `sendPrunMessage()`. This must only be used to replicate actions the game UI would send (e.g., `STORAGE_TRANSFER_ITEM` matches a drag-and-drop). Never fabricate messages the game UI cannot produce. Each call must be triggered by a user click.
+
 ---
 
 ## Workflow
