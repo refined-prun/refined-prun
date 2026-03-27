@@ -7,6 +7,7 @@ import { getDestinationName } from '@src/infrastructure/prun-api/data/addresses'
 import { sumBy } from '@src/utils/sum-by';
 import { getStoreName } from '@src/features/XIT/SHPT/store-name';
 import ShipmentGroup from '@src/features/XIT/SHPT/ShipmentGroup.vue';
+import TransferPanel from '@src/features/XIT/SHPT/TransferPanel.vue';
 
 interface ShipmentItem {
   id: string;
@@ -127,6 +128,7 @@ const hasShipments = computed(() => storeGroups.value.length > 0);
     <SectionHeader>No shipments found</SectionHeader>
   </template>
   <template v-else>
+    <TransferPanel />
     <template v-for="store in storeGroups" :key="store.storeId">
       <SectionHeader>{{ store.storeName }} ({{ store.totalItems }} shipments)</SectionHeader>
       <table>

@@ -6,6 +6,7 @@ export type Middleware<T> = {
   onOpen: () => void;
   onMessage: (payload: T) => Promise<boolean>;
   dispatchClientMessage: Ref<((payload: T) => void) | undefined>;
+  sendServerMessage: Ref<((payload: T) => void) | undefined>;
 };
 
 export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
@@ -13,6 +14,11 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
   window.WebSocket = new Proxy(WebSocket, {
     construct(target: typeof WebSocket, args: [string, (string | string[])?]) {
       const ws = new target(...args);
+
+      // Send a message to the game server via the WebSocket.
+      middleware.sendServerMessage.value = message => {
+        ws.send(encodeOutboundMessage(message));
+      };
 
       return new Proxy(ws, {
         set(target, prop, value) {
@@ -145,6 +151,18 @@ function encodeMessage<T>(message: T) {
       type: PacketType.EVENT,
       nsp: '/',
       data: ['event', message],
+    }),
+  });
+}
+
+// Encode a message for sending to the server (client-to-server uses 'message' event name).
+function encodeOutboundMessage<T>(message: T) {
+  return encodeEIOPacket({
+    type: 'message',
+    data: encodeSIOPacket({
+      type: PacketType.EVENT,
+      nsp: '/',
+      data: ['message', message],
     }),
   });
 }

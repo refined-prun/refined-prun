@@ -9,6 +9,7 @@ interface Message {
   messageType?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload?: { message: Message } | any;
+  contextId?: string;
 }
 
 export const initialApiLoadingComplete = ref(false);
@@ -28,6 +29,7 @@ const middleware: Middleware<Message> = {
     return false;
   },
   dispatchClientMessage: ref(undefined),
+  sendServerMessage: ref(undefined),
 };
 
 export function listenPrunApi() {
@@ -77,5 +79,13 @@ export function dispatchClientPrunMessage(message: Message) {
     return false;
   }
   middleware.dispatchClientMessage.value(message);
+  return true;
+}
+
+export function sendPrunMessage(message: Message) {
+  if (!middleware.sendServerMessage.value) {
+    return false;
+  }
+  middleware.sendServerMessage.value(message);
   return true;
 }
