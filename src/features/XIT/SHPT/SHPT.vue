@@ -16,11 +16,19 @@ interface ShipmentItem {
   contractId: string;
 }
 
-interface ShipmentGroupData {
-  destination: string;
+interface ContractSubgroup {
+  contractId: string;
   items: ShipmentItem[];
   totalWeight: number;
   totalVolume: number;
+}
+
+interface ShipmentGroupData {
+  destination: string;
+  contracts: ContractSubgroup[];
+  totalWeight: number;
+  totalVolume: number;
+  totalItems: number;
 }
 
 interface StoreGroup {
@@ -69,11 +77,32 @@ const storeGroups = computed<StoreGroup[]>(() => {
 
     const groups: ShipmentGroupData[] = [];
     for (const [destination, items] of byDest) {
+      // Sub-group by contract.
+      const byContract = new Map<string, ShipmentItem[]>();
+      for (const item of items) {
+        const key = item.contractId || 'unknown';
+        let list = byContract.get(key);
+        if (!list) {
+          list = [];
+          byContract.set(key, list);
+        }
+        list.push(item);
+      }
+      const contracts: ContractSubgroup[] = [];
+      for (const [contractId, contractItems] of byContract) {
+        contracts.push({
+          contractId,
+          items: contractItems,
+          totalWeight: sumBy(contractItems, x => x.weight),
+          totalVolume: sumBy(contractItems, x => x.volume),
+        });
+      }
       groups.push({
         destination,
-        items,
+        contracts,
         totalWeight: sumBy(items, x => x.weight),
         totalVolume: sumBy(items, x => x.volume),
+        totalItems: items.length,
       });
     }
     groups.sort((a, b) => a.destination.localeCompare(b.destination));
