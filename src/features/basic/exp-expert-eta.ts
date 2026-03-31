@@ -76,7 +76,7 @@ function onExpertRowReady(row: HTMLTableRowElement, expertise: string, siteId: s
     }
 
     if (eta.value.type === 'precise') {
-      return `${formatEta(timestampEachMinute.value, eta.value.ms)}`;
+      return formatEta(timestampEachMinute.value, eta.value.ms);
     }
 
     if (eta.value.type === 'estimate') {

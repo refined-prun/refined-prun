@@ -16,7 +16,7 @@ const { add, action, onSave, pkg } = defineProps<{
 
 const emit = defineEmits<{ (e: 'close'): void }>();
 
-const name = ref(action.name || '');
+const name = ref(action.name ?? '');
 const nameError = ref(false);
 
 const typeOptions = act.getActionTypes();
@@ -24,7 +24,8 @@ const type = ref(action.type);
 
 const shortDescription = computed(() => act.getActionInfo(type.value)?.shortDescription);
 const editFormComponent = computed(() => act.getActionInfo(type.value)?.editComponent);
-const editForm = useTemplateRef('editForm');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const editForm = useTemplateRef<any>('editForm');
 
 function onSaveClick() {
   let isValid = editForm.value.validate();

@@ -55,15 +55,8 @@ act.addAction<Config>({
     const ftlMaterial = materialsStore.getByTicker('FF');
     assert(ftlMaterial, 'FF material not found');
 
-    const totalStlRefuel = dockedStl.reduce(
-      (acc, x) => acc + calculateRefuelAmount(x, stlMaterial),
-      0,
-    );
-
-    const totalFtlRefuel = dockedFtl.reduce(
-      (acc, x) => acc + calculateRefuelAmount(x, ftlMaterial),
-      0,
-    );
+    const totalStlRefuel = sumBy(dockedStl, x => calculateRefuelAmount(x, stlMaterial));
+    const totalFtlRefuel = sumBy(dockedFtl, x => calculateRefuelAmount(x, ftlMaterial));
 
     if (totalFtlRefuel === 0 && totalStlRefuel === 0) {
       log.info('No ships need refueling');

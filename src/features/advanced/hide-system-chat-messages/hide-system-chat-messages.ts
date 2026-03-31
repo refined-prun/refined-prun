@@ -15,13 +15,11 @@ function onTileReady(tile: PrunTile) {
 
   function setState(set: (state: UserData.SystemMessages) => void) {
     let newState = state.value;
-    if (!newState) {
-      newState = {
-        chat: tile.fullCommand,
-        hideJoined: true,
-        hideDeleted: true,
-      };
-    }
+    newState ??= {
+      chat: tile.fullCommand,
+      hideJoined: true,
+      hideDeleted: true,
+    };
     set(newState);
     const shouldSave = !newState.hideJoined || !newState.hideDeleted;
     if (shouldSave && !state.value) {

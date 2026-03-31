@@ -8,7 +8,6 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { findWithQuery } from '@src/utils/find-with-query';
 import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
 import { matchesProductionFilter } from './utils';
-import { sumBy } from '@src/utils/sum-by';
 import FakeRow from './FakeRow.vue';
 
 const parameters = useXitParameters();

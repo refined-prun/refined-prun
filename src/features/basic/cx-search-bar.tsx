@@ -50,8 +50,12 @@ async function onComExPanelReady(comExPanel: HTMLElement) {
   watchEffectWhileNodeAlive(comExPanel, () => {
     const searchTerm = searchText.value.toUpperCase();
 
-    categoryOptions.forEach(resetMatches);
-    materialRows.forEach(resetMatches);
+    for (const option of categoryOptions.values()) {
+      resetMatches(option);
+    }
+    for (const row of materialRows.values()) {
+      resetMatches(row);
+    }
 
     const materials = materialsStore.all.value;
     if (searchTerm.length === 0 || !materials) {
