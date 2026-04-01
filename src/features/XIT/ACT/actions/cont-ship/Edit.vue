@@ -5,6 +5,7 @@ import NumericInput from '@src/components/forms/NumericInput.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
 import { useContLocations } from '@src/features/XIT/ACT/actions/cont-locations';
+import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
 
 const { action, pkg } = defineProps<{
   action: UserData.ActionData;
@@ -31,7 +32,7 @@ const locationOptions = computed(() => [
   ...staticLocations.value,
 ]);
 
-const currencies = ['NCC', 'CIS', 'AIC', 'ICA'];
+const currencies = computed(() => balancesStore.currencies.value ?? []);
 
 const contOrigin = ref(action.contOrigin ?? staticLocations.value[0] ?? '');
 const contDest = ref(action.contDest ?? staticLocations.value[0] ?? '');

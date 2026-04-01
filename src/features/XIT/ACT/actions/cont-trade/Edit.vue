@@ -4,6 +4,7 @@ import SelectInput from '@src/components/forms/SelectInput.vue';
 import NumericInput from '@src/components/forms/NumericInput.vue';
 import { configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
 import { useContLocations } from '@src/features/XIT/ACT/actions/cont-locations';
+import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
 
 const { action, pkg } = defineProps<{
   action: UserData.ActionData;
@@ -42,7 +43,7 @@ const locationOptions = computed(() => [
   ...staticLocations.value,
 ]);
 
-const currencies = ['NCC', 'CIS', 'AIC', 'ICA'];
+const currencies = computed(() => balancesStore.currencies.value ?? []);
 
 const contLocation = ref(action.contLocation ?? staticLocations.value[0] ?? '');
 const currency = ref(action.currency ?? 'NCC');

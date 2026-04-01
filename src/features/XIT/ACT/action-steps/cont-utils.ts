@@ -71,19 +71,21 @@ export async function selectMaterial(container: Element, ticker: string) {
 
   suggestionsContainer.style.display = 'none';
 
-  const match = _$$(suggestionsList, C.MaterialSelector.suggestionEntry).find(
-    x => _$(x, C.ColoredIcon.label)?.textContent === ticker,
-  );
+  try {
+    const match = _$$(suggestionsList, C.MaterialSelector.suggestionEntry).find(
+      x => _$(x, C.ColoredIcon.label)?.textContent === ticker,
+    );
 
-  if (!match) {
+    if (!match) {
+      return false;
+    }
+
+    await clickElement(match as HTMLElement);
+    await sleep(200);
+    return true;
+  } finally {
     suggestionsContainer.style.display = '';
-    return false;
   }
-
-  await clickElement(match as HTMLElement);
-  suggestionsContainer.style.display = '';
-  await sleep(200);
-  return true;
 }
 
 // Shared contract draft helpers.
