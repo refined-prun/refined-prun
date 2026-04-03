@@ -102,16 +102,26 @@ const planetBurn = computed(() => {
     return comparePlanets(a.naturalId, b.naturalId);
   });
 
-  const overallBurn = {};
+  const overallBurn: PlanetBurn['burn'] = {};
   for (const burn of filtered) {
     for (const mat of Object.keys(burn.burn)) {
+      const materialBurn = burn.burn[mat];
       if (overallBurn[mat]) {
-        overallBurn[mat].dailyAmount += burn.burn[mat].dailyAmount;
-        overallBurn[mat].inventory += burn.burn[mat].inventory;
+        overallBurn[mat].dailyAmount += materialBurn.dailyAmount;
+        overallBurn[mat].inventory += materialBurn.inventory;
+        overallBurn[mat].input += materialBurn.input;
+        overallBurn[mat].output += materialBurn.output;
+        overallBurn[mat].workforce += materialBurn.workforce;
       } else {
-        overallBurn[mat] = {};
-        overallBurn[mat].dailyAmount = burn.burn[mat].dailyAmount;
-        overallBurn[mat].inventory = burn.burn[mat].inventory;
+        overallBurn[mat] = {
+          input: materialBurn.input,
+          output: materialBurn.output,
+          workforce: materialBurn.workforce,
+          dailyAmount: materialBurn.dailyAmount,
+          inventory: materialBurn.inventory,
+          daysLeft: 0,
+          type: 'output',
+        };
       }
     }
   }
@@ -167,15 +177,19 @@ function onExpandAllClick() {
 // Exports all materials regardless of active color filters (RED/YELLOW/GREEN/INF)
 // so spreadsheet users always get the complete dataset.
 function formatBurnTable(burns: PlanetBurn[]) {
-  const lines = ['Planet\tTicker\tInv\tBurn/day\tDays'];
+  const lines = ['Planet\tTicker\tInv\tIn\tOut\tNet\tDays'];
   for (const planet of burns) {
     const sorted = getSortedTickers(planet);
     for (const material of sorted) {
       const mat = planet.burn[material.ticker];
       // Floor needed here: per-planet burns are pre-floored, but overall burn is not.
       const days = mat.dailyAmount >= 0 ? '' : Math.floor(mat.daysLeft).toString();
-      const burn = Math.round(mat.dailyAmount * 1000) / 1000;
-      lines.push(`${planet.planetName}\t${material.ticker}\t${mat.inventory}\t${burn}\t${days}`);
+      const inAmount = Math.round((mat.input + mat.workforce) * 1000) / 1000;
+      const outAmount = Math.round(mat.output * 1000) / 1000;
+      const netAmount = Math.round(mat.dailyAmount * 1000) / 1000;
+      lines.push(
+        `${planet.planetName}\t${material.ticker}\t${mat.inventory}\t${inAmount}\t${outAmount}\t${netAmount}\t${days}`,
+      );
     }
   }
   return lines.join('\n');
@@ -210,8 +224,22 @@ function copyBurnTable() {
           <th>Inv</th>
           <th>
             <InlineFlex>
-              Burn
-              <Tooltip position="bottom" tooltip="How much of a material is consumed per day." />
+              In
+              <Tooltip
+                position="bottom"
+                tooltip="Quantity needed for production and workforce per day." />
+            </InlineFlex>
+          </th>
+          <th>
+            <InlineFlex>
+              Out
+              <Tooltip position="bottom" tooltip="Quantity produced per day." />
+            </InlineFlex>
+          </th>
+          <th>
+            <InlineFlex>
+              Net
+              <Tooltip position="bottom" tooltip="Net production/consumption per day." />
             </InlineFlex>
           </th>
           <th>

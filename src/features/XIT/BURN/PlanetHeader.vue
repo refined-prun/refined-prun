@@ -17,7 +17,7 @@ const days = computed(() => countDays(burn.burn));
 
 <template>
   <tr :class="$style.row">
-    <td colspan="4" :class="$style.cell" @click="onClick">
+    <td colspan="6" :class="$style.cell" @click="onClick">
       <span v-if="hasMinimize" :class="$style.minimize">
         {{ minimized ? '+' : '-' }}
       </span>
