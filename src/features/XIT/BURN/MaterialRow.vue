@@ -61,6 +61,18 @@ const needAmt = computed(() => {
   need = need === 0 ? 0 : need;
   return need;
 });
+
+const displayedNeedAmt = computed(() => (isNaN(needAmt.value) ? 0 : needAmt.value));
+const grossRequiredInvAmt = computed(() =>
+  Math.ceil((burn.input + burn.workforce) * userData.settings.burn.resupply),
+);
+const requiredInvAmt = computed(() => {
+  const requiredFromNeed = invAmount.value + displayedNeedAmt.value;
+  if (displayedNeedAmt.value > 0) {
+    return requiredFromNeed;
+  }
+  return grossRequiredInvAmt.value;
+});
 </script>
 
 <template>
@@ -69,13 +81,13 @@ const needAmt = computed(() => {
       <MaterialIcon size="inline-table" :ticker="material.ticker" />
     </td>
     <td>
-      <span>{{ fixed0(invAmount) }}</span>
+      <span>{{ fixed0(invAmount) }} / {{ fixed0(requiredInvAmt) }}</span>
     </td>
     <td>
       <span :class="changeClass">{{ changeText }}</span>
     </td>
     <td>
-      <span>{{ isNaN(needAmt) ? '0' : fixed0(needAmt) }}</span>
+      <span>{{ fixed0(displayedNeedAmt) }}</span>
     </td>
     <DaysCell :days="days" />
     <td>
