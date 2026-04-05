@@ -66,10 +66,37 @@ function fixSliders() {
   applyCssRule('.rc-slider-step', $style.rcSliderStepFixes);
 }
 
+function preventDragSelection() {
+  const noSelectClass = 'rp-no-select-drag';
+  applyCssRule(`.${noSelectClass} *`, $style.noSelect);
+
+  const queueReset = () => {
+    if (!document.body.classList.contains(noSelectClass)) {
+      return;
+    }
+    requestAnimationFrame(() => {
+      document.getSelection()?.removeAllRanges();
+      document.body.classList.remove(noSelectClass);
+    });
+  };
+
+  document.addEventListener('dragstart', e => {
+    const target = e.target as Element;
+    if (target.closest('[draggable="true"]') === null) {
+      return;
+    }
+    document.body.classList.add(noSelectClass);
+  });
+
+  window.addEventListener('pointerup', queueReset);
+  window.addEventListener('blur', queueReset);
+}
+
 function init() {
   removeMobileCssRules();
   fixZOrder();
   fixSliders();
+  preventDragSelection();
 
   // Prevents top-right user info from shrinking.
   applyCssRule(`.${C.Head.container}`, $style.head);

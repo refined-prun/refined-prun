@@ -100,3 +100,8 @@
     cursor: not-allowed;
   }
 }
+
+.noSelect {
+	-webkit-user-select: none;
+	user-select: none;
+}
