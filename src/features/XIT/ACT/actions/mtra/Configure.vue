@@ -10,7 +10,7 @@ import {
   serializeStorage,
   storageSort,
 } from '@src/features/XIT/ACT/actions/utils';
-import { configurableValue } from '@src/features/XIT/ACT/shared-types';
+import { actionTargetPrefix, configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 const { data, config } = defineProps<{ data: UserData.ActionData; config: Config }>();
 
@@ -109,7 +109,10 @@ function getOptions(storages: PrunApi.Store[]) {
       <SelectInput v-model="config.destination" :options="destinationOptions" />
     </Active>
     <Passive v-else label="To">
-      <span>{{ data.dest }}</span>
+      <span v-if="data.dest?.startsWith(actionTargetPrefix)">
+        Same as {{ data.dest.slice(actionTargetPrefix.length) }}
+      </span>
+      <span v-else>{{ data.dest }}</span>
     </Passive>
   </form>
 </template>

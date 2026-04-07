@@ -36,6 +36,8 @@ export class StepGenerator {
         await info.generateSteps({
           data: action,
           config: actionConfig,
+          pkg,
+          fullConfig: config,
           log,
           fail: message => {
             if (message) {
@@ -96,6 +98,8 @@ export class StepGenerator {
     return await info.generateMaterialBill({
       data: group,
       config: groupConfig,
+      pkg,
+      fullConfig: config,
       log: new Logger((tag, message) => this.log.logMessage(tag, `[${group.name}] ${message}`)),
       setStatus: status => this.options.onStatusChanged(status),
     });
