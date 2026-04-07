@@ -5,6 +5,7 @@ import { deepToRaw } from '@src/utils/deep-to-raw';
 
 act.addMaterialGroup({
   type: 'Manual',
+  shortDescription: 'A fixed list of materials and quantities',
   description: data => {
     const materials = data.materials;
     if (!materials || Object.keys(materials).length == 0) {

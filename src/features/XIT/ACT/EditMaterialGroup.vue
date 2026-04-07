@@ -21,6 +21,7 @@ const nameError = ref(false);
 const typeOptions = act.getMaterialGroupTypes();
 const type = ref(group.type);
 
+const shortDescription = computed(() => act.getMaterialGroupInfo(type.value)?.shortDescription);
 const editFormComponent = computed(() => act.getMaterialGroupInfo(type.value)?.editComponent);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const editForm = useTemplateRef<any>('editForm');
@@ -46,6 +47,7 @@ function onSaveClick() {
 <template>
   <div :class="C.DraftConditionEditor.form">
     <SectionHeader>{{ add ? 'Add' : 'Edit' }} Material Group</SectionHeader>
+    <div v-if="shortDescription" :class="$style.description">{{ shortDescription }}</div>
     <form>
       <Active label="Type">
         <SelectInput v-model="type" :options="typeOptions" />
@@ -60,3 +62,12 @@ function onSaveClick() {
     </form>
   </div>
 </template>
+
+<style module>
+.description {
+  line-height: 13px;
+  padding: 0 4px;
+  background-color: #26353e;
+  margin-bottom: 5px;
+}
+</style>

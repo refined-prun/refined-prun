@@ -48,7 +48,7 @@ declare namespace UserData {
     };
   }
 
-  type MaterialGroupType = 'Manual' | 'Resupply' | 'Repair';
+  type MaterialGroupType = 'Manual' | 'Resupply' | 'Repair' | 'Paste';
 
   interface MaterialGroupData {
     type: MaterialGroupType;
@@ -62,7 +62,7 @@ declare namespace UserData {
     consumablesOnly?: boolean;
   }
 
-  type ActionType = 'CX Buy' | 'MTRA' | 'Refuel';
+  type ActionType = 'CX Buy' | 'MTRA' | 'Refuel' | 'CONT Ship' | 'CONT Trade';
 
   interface ActionData {
     type: ActionType;
@@ -80,6 +80,19 @@ declare namespace UserData {
 
     origin?: string;
     dest?: string;
+
+    // CONT Ship specific.
+    currency?: string;
+    contractNote?: string;
+    paymentPerTon?: number;
+    daysToFulfill?: number;
+    contOrigin?: string;
+    contDest?: string;
+    autoProvision?: boolean;
+
+    // CONT Trade specific.
+    contTradeType?: 'BUYING' | 'SELLING';
+    contLocation?: string;
   }
 
   interface TaskList {
