@@ -74,7 +74,11 @@ act.addMaterialGroup<Config>({
         continue;
       }
       const days = typeof data.days === 'number' ? data.days : parseFloat(data.days);
-      const need = Math.ceil((matBurn.daysLeft - days) * matBurn.dailyAmount);
+      let need = Math.ceil(-days * matBurn.dailyAmount - matBurn.inventory);
+      // If the daily need is less than 1, send an extra to avoid burn ticking over early
+      if (matBurn.dailyAmount < 1) {
+        need += 1;
+      }
       if (need > 0) {
         parsedGroup[ticker] = need;
       }
