@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import CopyButton from '@src/components/CopyButton.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
-import { getPlanetBurn, MaterialBurn, PlanetBurn } from '@src/core/burn';
+import { computeDaysLeft, getPlanetBurn, MaterialBurn, PlanetBurn } from '@src/core/burn';
 import { comparePlanets } from '@src/util';
 import BurnSection from '@src/features/XIT/BURN/BurnSection.vue';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
@@ -88,7 +88,8 @@ const planetBurn = computed(() => {
   const filtered = queryResult.value.sites
     .filter(x => x !== overall)
     .map(getPlanetBurn)
-    .filter(x => x !== undefined);
+    .filter(x => x !== undefined)
+    .map(x => ({ ...x, burn: applyProductionToggle(applyWorkforceToggle(x.burn)) }));
   if (filtered.length <= 1) {
     return filtered;
   }
@@ -117,11 +118,10 @@ const planetBurn = computed(() => {
   }
 
   for (const mat of Object.keys(overallBurn)) {
-    if (overallBurn[mat].dailyAmount >= 0) {
-      overallBurn[mat].daysLeft = 1000;
-    } else {
-      overallBurn[mat].daysLeft = -overallBurn[mat].inventory / overallBurn[mat].dailyAmount;
-    }
+    overallBurn[mat].daysLeft = computeDaysLeft(
+      overallBurn[mat].dailyAmount,
+      overallBurn[mat].inventory,
+    );
   }
 
   const overallSection = { burn: overallBurn, planetName: 'Overall', naturalId: '', storeId: '' };
@@ -139,6 +139,67 @@ const red = useTileState('red');
 const yellow = useTileState('yellow');
 const green = useTileState('green');
 const inf = useTileState('inf');
+const workforce = useTileState('workforce');
+const production = useTileState('production');
+
+function applyWorkforceToggle(burn: BurnValues): BurnValues {
+  if (workforce.value) {
+    return burn;
+  }
+  const result: BurnValues = {};
+  for (const ticker of Object.keys(burn)) {
+    const b = burn[ticker];
+    const dailyAmount = b.output - b.input;
+    if (dailyAmount === 0 && b.workforce > 0) {
+      // Only consumed by workers, nothing to show without workforce.
+      continue;
+    }
+    // Re-derive type since workforce is excluded from the burn calculation.
+    const type = b.input > 0 && dailyAmount <= 0 ? 'input' : 'output';
+    result[ticker] = {
+      ...b,
+      workforce: 0,
+      dailyAmount,
+      type,
+      daysLeft: computeDaysLeft(dailyAmount, b.inventory),
+    };
+  }
+  return result;
+}
+
+function applyProductionToggle(burn: BurnValues): BurnValues {
+  if (production.value) {
+    return burn;
+  }
+  const result: BurnValues = {};
+  for (const ticker of Object.keys(burn)) {
+    const b = burn[ticker];
+    if (b.workforce === 0) {
+      continue;
+    }
+    const dailyAmount = -b.workforce;
+    result[ticker] = {
+      ...b,
+      input: 0,
+      output: 0,
+      dailyAmount,
+      type: 'workforce',
+      daysLeft: computeDaysLeft(dailyAmount, b.inventory),
+    };
+  }
+  return result;
+}
+
+// Covers all-color-filters-off and both-toggles-off (empty burns after toggle filtering).
+const allFiltered = computed(() => {
+  if (!planetBurn.value || planetBurn.value.length === 0) {
+    return false;
+  }
+  if (!red.value && !yellow.value && !green.value && !inf.value) {
+    return true;
+  }
+  return planetBurn.value.every(x => Object.keys(x.burn).length === 0);
+});
 
 const fakeBurn: MaterialBurn = {
   dailyAmount: -100000,
@@ -197,6 +258,20 @@ function copyBurnTable() {
       <RadioItem v-model="yellow" horizontal>YELLOW</RadioItem>
       <RadioItem v-model="green" horizontal>GREEN</RadioItem>
       <RadioItem v-model="inf" horizontal>INF</RadioItem>
+      <RadioItem
+        v-model="workforce"
+        horizontal
+        data-tooltip="Toggle workforce consumption. When off, burn rates exclude workforce needs."
+        data-tooltip-position="bottom">
+        WRK
+      </RadioItem>
+      <RadioItem
+        v-model="production"
+        horizontal
+        data-tooltip="Toggle production I/O. When off, only workforce consumption is shown."
+        data-tooltip-position="bottom">
+        PROD
+      </RadioItem>
       <div :class="$style.spacer" />
       <CopyButton :copy-fn="copyBurnTable" data-tooltip-position="bottom" />
     </div>
@@ -228,6 +303,11 @@ function copyBurnTable() {
       </thead>
       <tbody :class="$style.fakeRow">
         <MaterialRow always-visible :burn="fakeBurn" :material="rat" />
+      </tbody>
+      <tbody v-if="allFiltered">
+        <tr>
+          <td colspan="6">All materials filtered out by current toggle settings.</td>
+        </tr>
       </tbody>
       <BurnSection
         v-for="burn in planetBurn"

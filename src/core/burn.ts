@@ -22,6 +22,17 @@ export interface BurnValues {
   [ticker: string]: MaterialBurn;
 }
 
+export function computeDaysLeft(dailyAmount: number, inventory: number) {
+  const notBurning = dailyAmount >= 0;
+  if (notBurning) {
+    return 1000;
+  }
+  if (inventory === 0) {
+    return 0;
+  }
+  return Math.floor(-inventory / dailyAmount);
+}
+
 export interface PlanetBurn {
   storeId: string;
   planetName: string;
@@ -153,10 +164,7 @@ export function calculatePlanetBurn(
         }
         materialBurn.inventory += quantity.amount;
         if (quantity.amount != 0) {
-          materialBurn.daysLeft =
-            materialBurn.dailyAmount > 0
-              ? 1000
-              : Math.floor(-materialBurn.inventory / materialBurn.dailyAmount);
+          materialBurn.daysLeft = computeDaysLeft(materialBurn.dailyAmount, materialBurn.inventory);
         }
       }
     }
