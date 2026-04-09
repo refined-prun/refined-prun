@@ -4,8 +4,7 @@ import $style from './readable-reserve-bars.module.css';
 
 function replacePOPIDReserves(tile: PrunTile) {
   subscribe($$(tile.anchor, 'tr'), async row => {
-    const slider = await $(row, 'rc-slider');
-    const sliderHandle = await $(slider, 'rc-slider-handle');
+    const sliderHandle = await $(row, 'rc-slider-handle');
     const sliderHandleClasses = refAttributeValue(sliderHandle, 'class');
     const sliderValueText = refAttributeValue(sliderHandle, 'aria-valuenow');
     // SliderValue should only be updated when the slider is released (or no value has been set).
