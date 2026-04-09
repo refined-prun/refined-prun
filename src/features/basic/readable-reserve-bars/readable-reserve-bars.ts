@@ -8,17 +8,16 @@ function replacePOPIDReserves(tile: PrunTile) {
     const sliderHandle = await $(slider, 'rc-slider-handle');
     const sliderHandleClasses = refAttributeValue(sliderHandle, 'class');
     const sliderValueText = refAttributeValue(sliderHandle, 'aria-valuenow');
-    const sliderValue = computed<number>({
-      get: oldValue => {
-        if (
-          sliderHandleClasses.value?.includes('rc-slider-handle-dragging') &&
-          oldValue != undefined
-        ) {
-          return oldValue;
-        }
-        return Number(sliderValueText.value);
-      },
-      set: () => {},
+    // SliderValue should only be updated when the slider is released (or no value has been set).
+    // Otherwise, we lose track of the stock already contributed.
+    const sliderValue = computed<number>(oldValue => {
+      if (
+        sliderHandleClasses.value?.includes('rc-slider-handle-dragging') &&
+        oldValue != undefined
+      ) {
+        return oldValue;
+      }
+      return Number(sliderValueText.value);
     });
     const reserveCell = row.children[3];
     if (reserveCell === undefined) {
