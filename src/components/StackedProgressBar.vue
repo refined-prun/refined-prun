@@ -44,10 +44,6 @@ const progressClass = computed(() => ({
   display: flex;
 }
 
-.unfilledSection {
-  background: none;
-}
-
 .stackedProgressSection {
   height: 100%;
 }
