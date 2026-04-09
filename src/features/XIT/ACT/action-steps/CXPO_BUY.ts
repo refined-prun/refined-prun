@@ -152,7 +152,18 @@ export const CXPO_BUY = act.addActionStep<Data>({
       ctx.cacheDescription();
     });
 
+    function onManualInput(event: Event) {
+      if (event.isTrusted && !shouldUnwatch) { // isTrusted is false when changeInputValue() triggers this.
+        shouldUnwatch = true;
+        log.info('Manual input detected; keeping user-entered quantity and price');
+      }
+    }
+    quantityInput.addEventListener('input', onManualInput);
+    priceInput.addEventListener('input', onManualInput);
+
     await waitAct();
+    quantityInput.removeEventListener('input', onManualInput);
+    priceInput.removeEventListener('input', onManualInput);
     unwatch();
 
     const warehouseAmount = computed(() => {
