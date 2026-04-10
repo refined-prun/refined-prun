@@ -88,7 +88,7 @@ function preventDragSelection() {
     document.body.classList.add(noSelectClass);
   });
 
-  window.addEventListener('pointerup', queueReset);
+  document.addEventListener('dragend', queueReset);
   window.addEventListener('blur', queueReset);
 }
 
