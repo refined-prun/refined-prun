@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import CopyButton from '@src/components/CopyButton.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
-import { getPlanetBurn, MaterialBurn, PlanetBurn } from '@src/core/burn';
+import { getPlanetBurn, PlanetBurn } from '@src/core/burn';
 import { comparePlanets } from '@src/util';
 import BurnSection from '@src/features/XIT/MATIO/BurnSection.vue';
 import { useTileState } from '@src/features/XIT/MATIO/tile-state';
@@ -11,7 +11,12 @@ import MaterialRow from '@src/features/XIT/MATIO/MaterialRow.vue';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { countDays, getSortedTickers } from '@src/features/XIT/MATIO/utils';
+import {
+  getSortedTickers,
+  matchesMode,
+  MatioMode,
+  MatioRowBurn,
+} from '@src/features/XIT/MATIO/utils';
 import InlineFlex from '@src/components/InlineFlex.vue';
 import { findWithQuery } from '@src/utils/find-with-query';
 import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
@@ -93,14 +98,7 @@ const planetBurn = computed(() => {
     return filtered;
   }
 
-  filtered.sort((a, b) => {
-    const daysA = countDays(a.burn);
-    const daysB = countDays(b.burn);
-    if (daysA !== daysB) {
-      return daysA - daysB;
-    }
-    return comparePlanets(a.naturalId, b.naturalId);
-  });
+  filtered.sort((a, b) => comparePlanets(a.naturalId, b.naturalId));
 
   const overallBurn: PlanetBurn['burn'] = {};
   for (const burn of filtered) {
@@ -126,14 +124,6 @@ const planetBurn = computed(() => {
     }
   }
 
-  for (const mat of Object.keys(overallBurn)) {
-    if (overallBurn[mat].dailyAmount >= 0) {
-      overallBurn[mat].daysLeft = 1000;
-    } else {
-      overallBurn[mat].daysLeft = -overallBurn[mat].inventory / overallBurn[mat].dailyAmount;
-    }
-  }
-
   const overallSection = { burn: overallBurn, planetName: 'Overall', naturalId: '', storeId: '' };
   if (queryResult.value.overallOnly) {
     return [overallSection];
@@ -145,22 +135,31 @@ const planetBurn = computed(() => {
   return filtered;
 });
 
-const red = useTileState('red');
-const yellow = useTileState('yellow');
-const green = useTileState('green');
-const inf = useTileState('inf');
-
-const fakeBurn: MaterialBurn = {
-  dailyAmount: -100000,
-  daysLeft: 10,
+const fakeBurn: MatioRowBurn = {
   inventory: 100000,
-  type: 'input',
   input: 100000,
-  output: 0,
+  output: 125000,
+  dailyAmount: 25000,
   workforce: 0,
 };
 
 const rat = materialsStore.getByTicker('RAT')!;
+const mode = useTileState('mode');
+
+function createModeModel(value: MatioMode) {
+  return computed({
+    get: () => mode.value === value,
+    set: x => {
+      if (x) {
+        mode.value = value;
+      }
+    },
+  });
+}
+
+const all = createModeModel('all');
+const production = createModeModel('production');
+const workforce = createModeModel('workforce');
 
 const expand = useTileState('expand');
 
@@ -174,21 +173,20 @@ function onExpandAllClick() {
   }
 }
 
-// Exports all materials regardless of active color filters (RED/YELLOW/GREEN/INF)
-// so spreadsheet users always get the complete dataset.
 function formatBurnTable(burns: PlanetBurn[]) {
-  const lines = ['Planet\tTicker\tInv\tIn\tOut\tNet\tDays'];
+  const lines = ['Planet\tTicker\tInv\tIn\tOut\tΔ'];
   for (const planet of burns) {
     const sorted = getSortedTickers(planet);
     for (const material of sorted) {
       const mat = planet.burn[material.ticker];
-      // Floor needed here: per-planet burns are pre-floored, but overall burn is not.
-      const days = mat.dailyAmount >= 0 ? '' : Math.floor(mat.daysLeft).toString();
+      if (!matchesMode(mat, mode.value)) {
+        continue;
+      }
       const inAmount = Math.round((mat.input + mat.workforce) * 1000) / 1000;
       const outAmount = Math.round(mat.output * 1000) / 1000;
       const netAmount = Math.round(mat.dailyAmount * 1000) / 1000;
       lines.push(
-        `${planet.planetName}\t${material.ticker}\t${mat.inventory}\t${inAmount}\t${outAmount}\t${netAmount}\t${days}`,
+        `${planet.planetName}\t${material.ticker}\t${mat.inventory}\t${inAmount}\t${outAmount}\t${netAmount}`,
       );
     }
   }
@@ -207,10 +205,9 @@ function copyBurnTable() {
   <LoadingSpinner v-if="planetBurn === undefined" />
   <template v-else>
     <div :class="C.ComExOrdersPanel.filter">
-      <RadioItem v-model="red" horizontal>RED</RadioItem>
-      <RadioItem v-model="yellow" horizontal>YELLOW</RadioItem>
-      <RadioItem v-model="green" horizontal>GREEN</RadioItem>
-      <RadioItem v-model="inf" horizontal>INF</RadioItem>
+      <RadioItem v-model="all" horizontal>All</RadioItem>
+      <RadioItem v-model="production" horizontal>Production</RadioItem>
+      <RadioItem v-model="workforce" horizontal>Workforce</RadioItem>
       <div :class="$style.spacer" />
       <CopyButton :copy-fn="copyBurnTable" data-tooltip-position="bottom" />
     </div>
@@ -242,13 +239,6 @@ function copyBurnTable() {
               <Tooltip position="bottom" tooltip="Daily net production / consumption." />
             </InlineFlex>
           </th>
-          <th>
-            <InlineFlex>
-              Need
-              <Tooltip position="bottom" tooltip="Quantity needed to be fully supplied." />
-            </InlineFlex>
-          </th>
-          <th>Days</th>
           <th>CMD</th>
         </tr>
       </thead>

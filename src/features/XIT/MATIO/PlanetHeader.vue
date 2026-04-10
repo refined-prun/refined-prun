@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import DaysCell from '@src/features/XIT/MATIO/DaysCell.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import PrunButton from '@src/components/PrunButton.vue';
 import { PlanetBurn } from '@src/core/burn';
-import { countDays } from '@src/features/XIT/MATIO/utils';
 
 const { burn } = defineProps<{
   burn: PlanetBurn;
@@ -11,19 +9,16 @@ const { burn } = defineProps<{
   minimized?: boolean;
   onClick: () => void;
 }>();
-
-const days = computed(() => countDays(burn.burn));
 </script>
 
 <template>
   <tr :class="$style.row">
-    <td colspan="6" :class="$style.cell" @click="onClick">
+    <td colspan="5" :class="$style.cell" @click="onClick">
       <span v-if="hasMinimize" :class="$style.minimize">
         {{ minimized ? '+' : '-' }}
       </span>
       <span>{{ burn.planetName }}</span>
     </td>
-    <DaysCell :days="days" />
     <td>
       <div :class="$style.buttons">
         <PrunButton dark inline @click="showBuffer(`BS ${burn.naturalId}`)">BS</PrunButton>
