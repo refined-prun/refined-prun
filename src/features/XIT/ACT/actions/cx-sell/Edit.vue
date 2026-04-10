@@ -63,7 +63,7 @@ defineExpose({ validate, save });
   <Active label="Exchange">
     <SelectInput v-model="exchange" :options="exchanges" />
   </Active>
-  <Commands label="Minimum Prices">
+  <Commands label="Price Limits">
     <PrunButton primary @click="onEditPriceLimitsClick">EDIT</PrunButton>
   </Commands>
   <Active
