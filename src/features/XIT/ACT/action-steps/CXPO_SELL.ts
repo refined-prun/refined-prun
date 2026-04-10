@@ -35,6 +35,7 @@ export const CXPO_SELL = act.addActionStep<Data>({
       let description = `Ask for ${fixed0(data.amount)} ${ticker} on ${exchange}`;
       if (priceLimit > 0) {
         description += ` at price ${fixed02(data.priceLimit)}`;
+        description += ` (${fixed0(data.amount * data.priceLimit)} total value)`;
       }
       return description;
     }
