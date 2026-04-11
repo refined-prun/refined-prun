@@ -1,48 +1,51 @@
 <script setup lang="ts">
 import MaterialIcon from '@src/components/MaterialIcon.vue';
-import { fixed0, fixed1, fixed2 } from '@src/utils/format';
+import { fixed2 } from '@src/utils/format';
 import PrunButton from '@src/components/PrunButton.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { useTileState } from '@src/features/XIT/MATIO/tile-state';
-import { matchesMode, MatioRowBurn } from '@src/features/XIT/MATIO/utils';
+import {
+  formatFlowAmount,
+  getPriceForPricing,
+  matchesMode,
+  MatioMaterialFlow,
+  MatioPricing,
+} from '@src/features/XIT/MATIO/utils';
 
-const { alwaysVisible, burn, material } = defineProps<{
+const { alwaysVisible, flow, material, pricing } = defineProps<{
   alwaysVisible?: boolean;
-  burn: MatioRowBurn;
+  flow: MatioMaterialFlow;
   material: PrunApi.Material;
+  pricing: MatioPricing;
 }>();
 
-const production = computed(() => burn.dailyAmount);
-const inAmount = computed(() => burn.input + burn.workforce);
-const outAmount = computed(() => burn.output);
-const invAmount = computed(() => burn.inventory ?? 0);
+const inAmount = computed(() => flow.input + flow.workforce);
 const mode = useTileState('mode');
 
-const isVisible = computed(() => {
-  if (alwaysVisible) {
-    return true;
-  }
-  return matchesMode(burn, mode.value);
+const isVisible = computed(() => alwaysVisible || matchesMode(flow, mode.value));
+
+const changeText = computed(() => formatFlowAmount(flow.dailyAmount));
+const inText = computed(() => formatFlowAmount(inAmount.value));
+const outText = computed(() => formatFlowAmount(flow.output));
+const valuePerDay = computed(() => {
+  const price = getPriceForPricing(material.ticker, pricing);
+  return price === undefined ? undefined : flow.dailyAmount * price;
 });
-
-function formatAmount(value: number, withSign = false) {
-  if (value === 0) {
-    return 0;
-  }
-  const abs = Math.abs(value);
-  const fixed = abs >= 1000 ? fixed0(abs) : abs >= 100 ? fixed1(abs) : fixed2(abs);
-  if (!withSign) {
-    return fixed;
-  }
-  return value > 0 ? '+' + fixed : '-' + fixed;
-}
-
-const changeText = computed(() => formatAmount(production.value, true));
-const inText = computed(() => formatAmount(inAmount.value));
-const outText = computed(() => formatAmount(outAmount.value));
+const valueText = computed(() =>
+  valuePerDay.value === undefined ? '--' : fixed2(valuePerDay.value),
+);
 
 const changeClass = computed(() => ({
-  [C.ColoredValue.positive]: production.value > 0,
+  [C.ColoredValue.positive]: flow.dailyAmount > 0,
+}));
+const inClass = computed(() => ({
+  [C.RadioItem.valueDisabled]: inAmount.value === 0,
+}));
+const outClass = computed(() => ({
+  [C.RadioItem.valueDisabled]: flow.output === 0,
+}));
+const valueClass = computed(() => ({
+  [C.ColoredValue.positive]: (valuePerDay.value ?? 0) > 0,
 }));
 </script>
 
@@ -52,16 +55,16 @@ const changeClass = computed(() => ({
       <MaterialIcon size="inline-table" :ticker="material.ticker" />
     </td>
     <td>
-      <span>{{ fixed0(invAmount) }}</span>
+      <span :class="inClass">{{ inText }}</span>
     </td>
     <td>
-      <span>{{ inText }}</span>
-    </td>
-    <td>
-      <span>{{ outText }}</span>
+      <span :class="outClass">{{ outText }}</span>
     </td>
     <td>
       <span :class="changeClass">{{ changeText }}</span>
+    </td>
+    <td>
+      <span :class="valueClass">{{ valueText }}</span>
     </td>
     <td>
       <PrunButton dark inline @click="showBuffer(`CXM ${material.ticker}`)">CXM</PrunButton>

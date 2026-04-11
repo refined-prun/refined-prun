@@ -3,7 +3,7 @@ import CopyButton from '@src/components/CopyButton.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { getPlanetBurn, PlanetBurn } from '@src/core/burn';
 import { comparePlanets } from '@src/util';
-import BurnSection from '@src/features/XIT/MATIO/BurnSection.vue';
+import MatioSection from '@src/features/XIT/MATIO/MatioSection.vue';
 import { useTileState } from '@src/features/XIT/MATIO/tile-state';
 import Tooltip from '@src/components/Tooltip.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
@@ -12,14 +12,19 @@ import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import {
+  defaultPricing,
+  formatFlowAmount,
+  getPriceForPricing,
   getSortedTickers,
   matchesMode,
+  MatioMaterialFlow,
   MatioMode,
-  MatioRowBurn,
+  normalizePricing,
 } from '@src/features/XIT/MATIO/utils';
 import InlineFlex from '@src/components/InlineFlex.vue';
 import { findWithQuery } from '@src/utils/find-with-query';
 import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
+import { fixed2, formatCurrency } from '@src/utils/format';
 
 const parameters = useXitParameters();
 
@@ -40,14 +45,8 @@ const queryResult = computed(() => {
     };
   }
   const result = findWithQuery(parameters, findSites);
-  let matches = result.include;
-  if (result.includeAll) {
-    matches = allSites;
-  }
-  if (result.excludeAll) {
-    matches = [];
-  }
-  matches = matches.filter(x => !result.exclude.has(x));
+  const included = result.excludeAll ? [] : result.includeAll ? allSites : result.include;
+  const matches = included.filter(x => !result.exclude.has(x));
   const nonOverallMatches = matches.filter(x => x !== overall);
   const overallIncluded =
     nonOverallMatches.length > 1 ||
@@ -55,19 +54,11 @@ const queryResult = computed(() => {
     result.includeAll;
   const overallExcluded = result.exclude.has(overall) || result.excludeAll;
 
-  let includeOverall = overallIncluded && !overallExcluded;
-  let overallOnly = false;
-  let overallOnlySites = allSites;
-  if (matches.length === 1 && matches[0] === overall && !overallExcluded) {
-    // `XIT MATIO OVERALL`,
-    overallOnlySites = allSites.filter(x => !result.exclude.has(x));
-    includeOverall = true;
-    overallOnly = true;
-  }
+  const overallOnly = matches.length === 1 && matches[0] === overall && !overallExcluded;
 
   return {
-    sites: overallOnly ? overallOnlySites : nonOverallMatches,
-    includeOverall,
+    sites: overallOnly ? allSites.filter(x => !result.exclude.has(x)) : nonOverallMatches,
+    includeOverall: overallOnly || (overallIncluded && !overallExcluded),
     overallOnly,
   };
 });
@@ -85,12 +76,13 @@ function findSites(term: string, parts: string[]) {
   return sitesStore.getByPlanetNaturalId(naturalId);
 }
 
-const planetBurn = computed(() => {
-  if (queryResult.value === undefined) {
+const sections = computed(() => {
+  const query = queryResult.value;
+  if (query === undefined) {
     return undefined;
   }
 
-  const filtered = queryResult.value.sites
+  const filtered = query.sites
     .filter(x => x !== overall)
     .map(getPlanetBurn)
     .filter(x => x !== undefined);
@@ -101,17 +93,17 @@ const planetBurn = computed(() => {
   filtered.sort((a, b) => comparePlanets(a.naturalId, b.naturalId));
 
   const overallBurn: PlanetBurn['burn'] = {};
-  for (const burn of filtered) {
-    for (const mat of Object.keys(burn.burn)) {
-      const materialBurn = burn.burn[mat];
-      if (overallBurn[mat]) {
-        overallBurn[mat].dailyAmount += materialBurn.dailyAmount;
-        overallBurn[mat].inventory += materialBurn.inventory;
-        overallBurn[mat].input += materialBurn.input;
-        overallBurn[mat].output += materialBurn.output;
-        overallBurn[mat].workforce += materialBurn.workforce;
+  for (const section of filtered) {
+    for (const [ticker, materialBurn] of Object.entries(section.burn)) {
+      const existing = overallBurn[ticker];
+      if (existing) {
+        existing.dailyAmount += materialBurn.dailyAmount;
+        existing.inventory += materialBurn.inventory;
+        existing.input += materialBurn.input;
+        existing.output += materialBurn.output;
+        existing.workforce += materialBurn.workforce;
       } else {
-        overallBurn[mat] = {
+        overallBurn[ticker] = {
           input: materialBurn.input,
           output: materialBurn.output,
           workforce: materialBurn.workforce,
@@ -125,18 +117,17 @@ const planetBurn = computed(() => {
   }
 
   const overallSection = { burn: overallBurn, planetName: 'Overall', naturalId: '', storeId: '' };
-  if (queryResult.value.overallOnly) {
+  if (query.overallOnly) {
     return [overallSection];
   }
 
-  if (queryResult.value.includeOverall) {
+  if (query.includeOverall) {
     filtered.push(overallSection);
   }
   return filtered;
 });
 
-const fakeBurn: MatioRowBurn = {
-  inventory: 100000,
+const fakeFlow: MatioMaterialFlow = {
   input: 100000,
   output: 125000,
   dailyAmount: 25000,
@@ -145,6 +136,8 @@ const fakeBurn: MatioRowBurn = {
 
 const rat = materialsStore.getByTicker('RAT')!;
 const mode = useTileState('mode');
+const pricingByPlanet = useTileState('pricingByPlanet');
+const currencySymbol = computed(() => formatCurrency(0, () => '').trim());
 
 function createModeModel(value: MatioMode) {
   return computed({
@@ -166,27 +159,25 @@ const expand = useTileState('expand');
 const anyExpanded = computed(() => expand.value.length > 0);
 
 function onExpandAllClick() {
-  if (expand.value.length > 0) {
-    expand.value = [];
-  } else {
-    expand.value = planetBurn.value?.map(x => x.naturalId) ?? [];
-  }
+  expand.value = expand.value.length > 0 ? [] : (sections.value?.map(x => x.naturalId) ?? []);
 }
 
-function formatBurnTable(burns: PlanetBurn[]) {
-  const lines = ['Planet\tTicker\tInv\tIn\tOut\tΔ'];
-  for (const planet of burns) {
-    const sorted = getSortedTickers(planet);
-    for (const material of sorted) {
+function formatFlowTable(sections: PlanetBurn[]) {
+  const lines = [`Planet\tTicker\tIn\tOut\tNet\t${currencySymbol.value}/day`];
+  for (const planet of sections) {
+    const pricing = normalizePricing(pricingByPlanet.value[planet.naturalId || 'overall']);
+    for (const material of getSortedTickers(planet)) {
       const mat = planet.burn[material.ticker];
       if (!matchesMode(mat, mode.value)) {
         continue;
       }
-      const inAmount = Math.round((mat.input + mat.workforce) * 1000) / 1000;
-      const outAmount = Math.round(mat.output * 1000) / 1000;
-      const netAmount = Math.round(mat.dailyAmount * 1000) / 1000;
+      const inAmount = formatFlowAmount(mat.input + mat.workforce);
+      const outAmount = formatFlowAmount(mat.output);
+      const netAmount = formatFlowAmount(mat.dailyAmount);
+      const price = getPriceForPricing(material.ticker, pricing);
+      const valuePerDay = price === undefined ? '--' : fixed2(mat.dailyAmount * price);
       lines.push(
-        `${planet.planetName}\t${material.ticker}\t${mat.inventory}\t${inAmount}\t${outAmount}\t${netAmount}`,
+        `${planet.planetName}\t${material.ticker}\t${inAmount}\t${outAmount}\t${netAmount}\t${valuePerDay}`,
       );
     }
   }
@@ -194,15 +185,12 @@ function formatBurnTable(burns: PlanetBurn[]) {
 }
 
 function copyBurnTable() {
-  if (!planetBurn.value) {
-    return '';
-  }
-  return formatBurnTable(planetBurn.value);
+  return sections.value ? formatFlowTable(sections.value) : '';
 }
 </script>
 
 <template>
-  <LoadingSpinner v-if="planetBurn === undefined" />
+  <LoadingSpinner v-if="sections === undefined" />
   <template v-else>
     <div :class="C.ComExOrdersPanel.filter">
       <RadioItem v-model="all" horizontal>All</RadioItem>
@@ -214,11 +202,10 @@ function copyBurnTable() {
     <table>
       <thead>
         <tr>
-          <th v-if="planetBurn.length > 1" :class="$style.expand" @click="onExpandAllClick">
+          <th v-if="sections.length > 1" :class="$style.expand" @click="onExpandAllClick">
             {{ anyExpanded ? '-' : '+' }}
           </th>
           <th v-else />
-          <th>Inv</th>
           <th>
             <InlineFlex>
               In
@@ -235,21 +222,27 @@ function copyBurnTable() {
           </th>
           <th>
             <InlineFlex>
-              Δ
+              Net
               <Tooltip position="bottom" tooltip="Daily net production / consumption." />
+            </InlineFlex>
+          </th>
+          <th>
+            <InlineFlex>
+              {{ currencySymbol }}/day
+              <Tooltip position="bottom" tooltip="Daily revenue / cost." />
             </InlineFlex>
           </th>
           <th>CMD</th>
         </tr>
       </thead>
       <tbody :class="$style.fakeRow">
-        <MaterialRow always-visible :burn="fakeBurn" :material="rat" />
+        <MaterialRow always-visible :flow="fakeFlow" :material="rat" :pricing="defaultPricing" />
       </tbody>
-      <BurnSection
-        v-for="burn in planetBurn"
-        :key="burn.planetName"
-        :can-minimize="planetBurn.length > 1"
-        :burn="burn" />
+      <MatioSection
+        v-for="section in sections"
+        :key="section.planetName"
+        :can-minimize="sections.length > 1"
+        :section="section" />
     </table>
   </template>
 </template>

@@ -15,7 +15,7 @@ xit.add({
 
     return 'MATERIALS IN/OUT';
   },
-  description: 'Shows inventory and daily material input/output flow.',
+  description: 'Daily material input/output flow.',
   optionalParameters: 'Planet Identifier(s), OVERALL, NOT',
   component: () => MATIO,
 });
