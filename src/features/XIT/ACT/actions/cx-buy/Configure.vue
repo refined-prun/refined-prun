@@ -7,9 +7,7 @@ const { config } = defineProps<{ data: UserData.ActionData; config: Config }>();
 
 const exchanges = ['AI1', 'CI1', 'IC1', 'NC1', 'CI2', 'NC2'];
 
-if (!config.exchange) {
-  config.exchange = exchanges[0];
-}
+config.exchange ??= exchanges[0];
 </script>
 
 <template>

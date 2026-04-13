@@ -21,7 +21,8 @@ act.addMaterialGroup<Config>({
       return '--';
     }
 
-    return `Resupply ${data.planet} with ${data.days} day${data.days == 1 ? '' : 's'} of supplies`;
+    const daysLabel = data.days === configurableValue ? '?' : data.days;
+    return `Resupply ${data.planet} with ${daysLabel} day${data.days == 1 ? '' : 's'} of supplies`;
   },
   editComponent: Edit,
   configureComponent: Configure,

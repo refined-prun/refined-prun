@@ -4,7 +4,6 @@ import ExecuteActionPackage from '@src/features/XIT/ACT/ExecuteActionPackage.vue
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { configurableValue } from '@src/features/XIT/ACT/shared-types';
-import { userData } from '@src/store/user-data';
 
 // Join all parameters in case a naturalId was split on underscores by the XIT router.
 const parameters = useXitParameters();
