@@ -32,13 +32,13 @@ const limitTooltip = computed(() => {
 
 <template>
   <tr :class="$style.row">
-    <td :class="$style.planet" @click="onClick">
+    <td :class="[$style.planet, $style.clickable]" @click="onClick">
       <span v-if="hasMinimize" :class="$style.minimize">
         {{ minimized ? '+' : '-' }}
       </span>
       <span>{{ analysis.planetName }}</span>
     </td>
-    <td :style="{ position: 'relative' }">
+    <td :class="$style.clickable" :style="{ position: 'relative' }" @click="onClick">
       <div
         :style="{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%' }"
         :class="fillClass" />
@@ -46,8 +46,12 @@ const limitTooltip = computed(() => {
         {{ percent0(fill) }}
       </span>
     </td>
-    <td>{{ formatDays(analysis.daysUntilFull) }}</td>
-    <td :data-tooltip="limitTooltip" data-tooltip-position="bottom">
+    <td :class="$style.clickable" @click="onClick">{{ formatDays(analysis.daysUntilFull) }}</td>
+    <td
+      :class="$style.clickable"
+      :data-tooltip="limitTooltip"
+      data-tooltip-position="bottom"
+      @click="onClick">
       {{ analysis.bindingLimit ?? '—' }}
     </td>
     <td>
@@ -69,6 +73,9 @@ const limitTooltip = computed(() => {
 .planet {
   font-weight: bold;
   font-size: 12px;
+}
+
+.clickable {
   cursor: pointer;
 }
 
