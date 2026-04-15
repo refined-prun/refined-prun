@@ -39,6 +39,14 @@ export interface BaseStorageAnalysis {
   // Max of the two — the color driver.
   needFillRatio: number;
 
+  // Headroom after shipping out produced goods but BEFORE any delivery.
+  // Used to compute "how many days of supplies would fit?"
+  availableAfterShipOutWeight: number;
+  availableAfterShipOutVolume: number;
+  // Days of import consumption that fit in the post-ship-out headroom. Infinity
+  // if the base doesn't consume anything.
+  daysOfSuppliesFit: number;
+
   // Days-until-full at net production rate. Infinity when net flow ≤ 0.
   daysUntilFull: number;
   bindingLimit: 't' | 'm³' | undefined;
@@ -76,6 +84,10 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
   let infVolume = 0;
   let addedWeight = 0;
   let addedVolume = 0;
+  // Weight/volume of current inventory for strictly-producing (dailyAmount > 0)
+  // materials — these get shipped out during rotation.
+  let shippedOutWeight = 0;
+  let shippedOutVolume = 0;
 
   if (planetBurn) {
     for (const ticker of Object.keys(planetBurn.burn)) {
@@ -92,11 +104,16 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
         importWeight += consumption * mat.weight;
         importVolume += consumption * mat.volume;
       } else {
-        // Net-positive / infinity material.
+        // Net-positive or zero material.
         exportWeight += daily * mat.weight;
         exportVolume += daily * mat.volume;
         infWeight += mb.inventory * mat.weight;
         infVolume += mb.inventory * mat.volume;
+      }
+
+      if (daily > 0) {
+        shippedOutWeight += mb.inventory * mat.weight;
+        shippedOutVolume += mb.inventory * mat.volume;
       }
 
       const need = computeNeed(mb, resupplyDays);
@@ -132,6 +149,20 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
   const bindingLimit: 't' | 'm³' | undefined =
     daysUntilFull === Infinity ? undefined : daysW < daysV ? 't' : 'm³';
 
+  // Headroom after a ship-out: capacity minus current load plus the weight of
+  // producing materials that will leave.
+  const availableAfterShipOutWeight = Math.max(
+    store.weightCapacity - store.weightLoad + shippedOutWeight,
+    0,
+  );
+  const availableAfterShipOutVolume = Math.max(
+    store.volumeCapacity - store.volumeLoad + shippedOutVolume,
+    0,
+  );
+  const daysFitW = importWeight > 0 ? availableAfterShipOutWeight / importWeight : Infinity;
+  const daysFitV = importVolume > 0 ? availableAfterShipOutVolume / importVolume : Infinity;
+  const daysOfSuppliesFit = Math.min(daysFitW, daysFitV);
+
   return {
     siteId: site.siteId,
     storeId: store.id,
@@ -152,6 +183,9 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
     needFillPercentWeight,
     needFillPercentVolume,
     needFillRatio,
+    availableAfterShipOutWeight,
+    availableAfterShipOutVolume,
+    daysOfSuppliesFit,
     daysUntilFull,
     bindingLimit,
   };
