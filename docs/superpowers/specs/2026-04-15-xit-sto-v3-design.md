@@ -46,6 +46,11 @@ After #172 merges, rebase STO's use of CargoBar on the landed version.
 
 - **Input generalization**: CargoBar currently takes `shipId` and reaches into `shipsStore`. Change to take `store: PrunApi.Store | null | undefined` directly. Callers resolve the store. FLT passes `storagesStore.getById(ship.idShipStore)`; STO passes its own store (real or synthetic).
 - **Click behavior**: Make the click handler an optional prop. FLT passes `() => showBuffer('SHPI ' + registration)`; STO omits it. If omitted, the root div gets `cursor: default` and no onClick.
+- **Overflow visual**: Add an optional behavior for stores whose load exceeds capacity (the synthetic After-Resupply case). When `totalRatio = max(wLoad/wCap, vLoad/vCap) > 1`:
+  - Category segments still render with their true weight/volume values, but are **scaled by `1 / totalRatio`** so they collectively occupy the first `100% / totalRatio` of the bar width.
+  - A final red-hatched "overflow" segment of width `(totalRatio - 1) / totalRatio × 100%` caps the bar on the right.
+  - Result: total bar stays at 100% width (fits its cell), but a proportional red zone is visible at the end indicating "this much over capacity."
+  - For `totalRatio ≤ 1`, behavior is unchanged — no overflow segment.
 - **Animation-on-change**: keep as-is.
 
 ### StorageBar computation (the "After Resupply" bar)
