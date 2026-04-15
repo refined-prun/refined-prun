@@ -52,6 +52,8 @@ const noMatch = computed(
       <tr>
         <th :class="$style.planet">Planet</th>
         <th>Fill</th>
+        <th>Fill (no ∞)</th>
+        <th>Fill after resupply</th>
         <th>Days</th>
         <th>Limit</th>
         <th>CMD</th>
