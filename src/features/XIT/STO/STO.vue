@@ -79,7 +79,7 @@ const noMatch = computed(
     <thead>
       <tr>
         <th :class="$style.planet">Planet</th>
-        <th>
+        <th :class="$style.barCol">
           <InlineFlex>
             Current Fill
             <Tooltip
@@ -87,7 +87,7 @@ const noMatch = computed(
               tooltip="What's in base storage right now. Colored by material category." />
           </InlineFlex>
         </th>
-        <th>
+        <th :class="$style.barCol">
           <InlineFlex>
             After Resupply
             <Tooltip
@@ -121,6 +121,12 @@ const noMatch = computed(
 .planet {
   text-align: left;
   padding-left: 26px;
+}
+
+/* Force the two CargoBar columns to equal, generous widths so they don't
+   collapse when the fakeRow's synthetic projected store is empty. */
+.barCol {
+  width: 42%;
 }
 
 .empty {
