@@ -17,5 +17,5 @@ xit.add({
     'Per-base storage analysis: current fill %, days-until-full at current production rate, and ship visitation frequency derived from your fleet.',
   optionalParameters: 'PLANET',
   component: () => STO,
-  bufferSize: [720, 500],
+  bufferSize: [900, 500],
 });
