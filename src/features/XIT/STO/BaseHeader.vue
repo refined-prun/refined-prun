@@ -74,6 +74,7 @@ const limitTooltip = computed(() => {
   font-size: 12px;
   position: relative;
   padding-left: 12px;
+  white-space: nowrap;
 }
 
 .stripe {

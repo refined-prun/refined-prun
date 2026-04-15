@@ -49,6 +49,16 @@ const analyses = computed<BaseStorageAnalysis[] | undefined>(() => {
   }
   const result = sites.map(getBaseStorageAnalysis).filter((x): x is BaseStorageAnalysis => !!x);
   result.sort((a, b) => {
+    const aInf = !isFinite(a.daysUntilFull);
+    const bInf = !isFinite(b.daysUntilFull);
+    // Non-infinite first, sorted by days. Infinite bases go to the bottom
+    // sorted alphabetically by planet name.
+    if (aInf && bInf) {
+      return a.planetName.localeCompare(b.planetName);
+    }
+    if (aInf !== bInf) {
+      return aInf ? 1 : -1;
+    }
     if (a.daysUntilFull !== b.daysUntilFull) {
       return a.daysUntilFull - b.daysUntilFull;
     }
