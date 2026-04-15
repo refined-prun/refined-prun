@@ -164,3 +164,97 @@ export function getBaseStorageAnalysis(siteOrId?: PrunApi.Site | string | null) 
   }
   return analysisBySiteId.value?.get(site.siteId)?.value;
 }
+
+// Returns a synthetic Store representing the base's STORE after a full resupply
+// rotation: net-positive (producing) materials shipped out, consumed materials
+// topped up to their computeNeed amount. Capacity is unchanged. Used by
+// CargoBar to visualize projected fill.
+export function buildProjectedStore(
+  siteOrId?: PrunApi.Site | string | null,
+): PrunApi.Store | undefined {
+  const site = typeof siteOrId === 'string' ? sitesStore.getById(siteOrId) : siteOrId;
+  if (!site) {
+    return undefined;
+  }
+  const storage = storagesStore.getByAddressableId(site.siteId);
+  const store = storage?.find(x => x.type === 'STORE');
+  if (!store) {
+    return undefined;
+  }
+
+  const planetBurn = getPlanetBurn(site);
+  const resupplyDays = userData.settings.burn.resupply;
+
+  const items: PrunApi.StoreItem[] = [];
+  let weightLoad = 0;
+  let volumeLoad = 0;
+
+  // Start with existing items from consumers (exclude net-positive / produced goods).
+  const consumedTickers = new Set<string>();
+  if (planetBurn) {
+    for (const ticker of Object.keys(planetBurn.burn)) {
+      if (planetBurn.burn[ticker].dailyAmount < 0) {
+        consumedTickers.add(ticker);
+      }
+    }
+  }
+
+  for (const item of store.items) {
+    if (item.type === 'SHIPMENT') {
+      items.push(item);
+      weightLoad += item.weight;
+      volumeLoad += item.volume;
+      continue;
+    }
+    const ticker = item.quantity?.material.ticker;
+    if (!ticker || !consumedTickers.has(ticker)) {
+      // Producing goods get shipped out; materials not in burn stay as-is (e.g., idle stock).
+      if (!planetBurn || !(ticker && ticker in planetBurn.burn)) {
+        items.push(item);
+        weightLoad += item.weight;
+        volumeLoad += item.volume;
+      }
+      continue;
+    }
+    items.push(item);
+    weightLoad += item.weight;
+    volumeLoad += item.volume;
+  }
+
+  // Add Need top-ups for consumed materials.
+  if (planetBurn) {
+    for (const ticker of Object.keys(planetBurn.burn)) {
+      const mb = planetBurn.burn[ticker];
+      const need = computeNeed(mb, resupplyDays);
+      if (need <= 0) {
+        continue;
+      }
+      const material = materialsStore.getByTicker(ticker);
+      if (!material) {
+        continue;
+      }
+      const addedWeight = need * material.weight;
+      const addedVolume = need * material.volume;
+      items.push({
+        id: `projected-${ticker}`,
+        type: 'INVENTORY',
+        weight: addedWeight,
+        volume: addedVolume,
+        quantity: {
+          material,
+          amount: need,
+          value: { amount: 0, currency: 'NCC' } as PrunApi.CurrencyAmount,
+        },
+      });
+      weightLoad += addedWeight;
+      volumeLoad += addedVolume;
+    }
+  }
+
+  return {
+    ...store,
+    items,
+    weightLoad,
+    volumeLoad,
+  };
+}
