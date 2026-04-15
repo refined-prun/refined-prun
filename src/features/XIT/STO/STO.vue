@@ -3,6 +3,8 @@ import { BaseStorageAnalysis, getBaseStorageAnalysis } from '@src/core/storage-a
 import BaseHeader from '@src/features/XIT/STO/BaseHeader.vue';
 import BaseSection from '@src/features/XIT/STO/BaseSection.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
+import InlineFlex from '@src/components/InlineFlex.vue';
+import Tooltip from '@src/components/Tooltip.vue';
 import { useTileState } from '@src/features/XIT/STO/tile-state';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
@@ -78,39 +80,28 @@ const noMatch = computed(
       <tr>
         <th :class="$style.planet">Planet</th>
         <th>
-          <span
-            data-tooltip="Share of storage currently occupied (worst of weight vs volume)."
-            data-tooltip-position="bottom">
+          <InlineFlex>
             Current Fill
-          </span>
+            <Tooltip
+              position="bottom"
+              tooltip="What's in base storage right now. Colored by material category." />
+          </InlineFlex>
         </th>
         <th>
-          <span
-            data-tooltip="Current fill if you excluded produced goods that accumulate until shipped out."
-            data-tooltip-position="bottom">
-            Fill w/o Produced
-          </span>
+          <InlineFlex>
+            After Resupply
+            <Tooltip
+              position="bottom"
+              tooltip="Projected storage if all produced goods were shipped out and all consumables delivered up to their XIT BURN Need amount. Red hatching shows overflow past capacity." />
+          </InlineFlex>
         </th>
         <th>
-          <span
-            data-tooltip="Projected fill if every consumed material were delivered up to the Need amount shown in XIT BURN. Colored green/yellow/red by headroom."
-            data-tooltip-position="bottom">
-            Fill After Resupply
-          </span>
-        </th>
-        <th>
-          <span
-            data-tooltip="Days until storage fills at the current net production rate."
-            data-tooltip-position="bottom">
+          <InlineFlex>
             Days
-          </span>
-        </th>
-        <th>
-          <span
-            data-tooltip="Which dimension (weight or volume) would fill first."
-            data-tooltip-position="bottom">
-            Limit
-          </span>
+            <Tooltip
+              position="bottom"
+              tooltip="Days until a ship visit is needed — either to deliver supplies or pick up production output." />
+          </InlineFlex>
         </th>
         <th>CMD</th>
       </tr>
