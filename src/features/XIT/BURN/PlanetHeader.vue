@@ -2,8 +2,8 @@
 import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import PrunButton from '@src/components/PrunButton.vue';
-import { PlanetBurn } from '@src/core/burn';
-import { computeNeed, countDays } from '@src/features/XIT/BURN/utils';
+import { computeNeed, PlanetBurn } from '@src/core/burn';
+import { countDays } from '@src/features/XIT/BURN/utils';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
