@@ -11,6 +11,10 @@ const props = defineProps<{
   store: PrunApi.Store | null | undefined;
   tall?: boolean;
   onClick?: () => void;
+  // When true, disables the auto-shrink behavior for very low fill ratios.
+  // STO uses this so the two bars (current and projected) always render at
+  // the same height regardless of load.
+  disableMiniMode?: boolean;
 }>();
 
 const $style = useCssModule();
@@ -50,7 +54,7 @@ const cargoBar = computed<CargoBarData>(() => {
   const maxRatio = Math.max(weightRatio, volumeRatio);
   const useVolume = volumeRatio > weightRatio;
 
-  const isMiniMode = maxRatio <= 0.05 && maxRatio > 0;
+  const isMiniMode = !props.disableMiniMode && maxRatio <= 0.05 && maxRatio > 0;
   const activeLoad = useVolume ? vLoad : wLoad;
   const activeCapacity = useVolume ? vCap : wCap;
   const isOverflowing = maxRatio > 1;
