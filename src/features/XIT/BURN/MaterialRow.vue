@@ -4,6 +4,7 @@ import MaterialIcon from '@src/components/MaterialIcon.vue';
 import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
 import { fixed0, fixed1, fixed2 } from '@src/utils/format';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
+import { computeNeed } from '@src/features/XIT/BURN/utils';
 import PrunButton from '@src/components/PrunButton.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
@@ -50,17 +51,7 @@ const changeClass = computed(() => ({
   [C.ColoredValue.positive]: production.value > 0,
 }));
 
-const needAmt = computed(() => {
-  const resupply = userData.settings.burn.resupply;
-  if (days.value > resupply || production.value > 0) {
-    return 0;
-  }
-  let need = Math.ceil((days.value - resupply) * production.value);
-  // This check is needed to prevent a "-0" value that can happen
-  // in situations like: 0 * -0.25 => -0.
-  need = need === 0 ? 0 : need;
-  return need;
-});
+const needAmt = computed(() => computeNeed(burn, userData.settings.burn.resupply));
 </script>
 
 <template>
