@@ -27,6 +27,7 @@ interface Segment {
 interface CargoBarData {
   segments: Segment[];
   miniMode: boolean;
+  isOverflowing: boolean;
 }
 
 const cargoBar = computed<CargoBarData>(() => {
@@ -35,6 +36,7 @@ const cargoBar = computed<CargoBarData>(() => {
     return {
       segments: [],
       miniMode: false,
+      isOverflowing: false,
     };
   }
 
@@ -111,6 +113,7 @@ const cargoBar = computed<CargoBarData>(() => {
   return {
     segments: segments,
     miniMode: isMiniMode,
+    isOverflowing,
   };
 });
 
@@ -257,7 +260,11 @@ function handleClick() {
     :class="[
       C.ProgressBar.progress,
       $style.container,
-      { [$style.isUpdating]: isAnimating, [$style.tall]: tall },
+      {
+        [$style.isUpdating]: isAnimating,
+        [$style.tall]: tall,
+        [$style.isHazard]: cargoBar.isOverflowing,
+      },
     ]"
     :style="{
       '--stripe-color': stripeAlertColor,
@@ -361,9 +368,45 @@ function handleClick() {
 }
 
 .overflow {
-  /* Hazard-tape pattern: black + bright yellow diagonal stripes. Universal
-     "warning zone" idiom, distinct from every material category color. */
-  background-image: repeating-linear-gradient(45deg, #000, #000 5px, #ffd500 5px, #ffd500 10px);
-  border-left: 2px solid #ffd500;
+  /* Hazard-tape pattern: saturated yellow + black diagonal stripes with a
+     thick red outline. Universal "warning zone" idiom, unmistakable against
+     the muted category segments in hazard mode. */
+  background-image: repeating-linear-gradient(
+    45deg,
+    #000 0,
+    #000 6px,
+    #ffd500 6px,
+    #ffd500 12px
+  ) !important;
+  background-color: #ffd500 !important;
+  outline: 2px solid #d9534f;
+  outline-offset: -2px;
+  box-shadow: 0 0 4px 1px #d9534f;
+  z-index: 2;
+}
+
+/* When the bar is overflowing, mute category segments and stamp a subtle
+   hazard overlay across the whole bar so the whole row reads as "danger." */
+.isHazard .segment {
+  filter: saturate(0.35) brightness(0.7);
+}
+
+.isHazard .bar {
+  position: relative;
+}
+
+.isHazard .bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0,
+    transparent 8px,
+    rgba(255, 213, 0, 0.15) 8px,
+    rgba(255, 213, 0, 0.15) 16px
+  );
+  pointer-events: none;
+  z-index: 1;
 }
 </style>
