@@ -50,11 +50,11 @@ const limitTooltip = computed(() => {
       </span>
       <span>{{ analysis.planetName }}</span>
     </td>
-    <td :class="$style.clickable" @click="onClick">
+    <td :class="[$style.clickable, $style.barCell]" @click="onClick">
       <CargoBar :store="currentStore" />
     </td>
     <td
-      :class="$style.clickable"
+      :class="[$style.clickable, $style.barCell]"
       :data-tooltip="projectedDebug"
       data-tooltip-position="top"
       @click="onClick">
@@ -111,5 +111,13 @@ const limitTooltip = computed(() => {
   flex-direction: row;
   flex-wrap: wrap;
   column-gap: 0.25rem;
+}
+
+/* Force the CargoBar cells to equal generous widths so the bars render
+   at their full length regardless of whether an adjacent fakeRow has
+   short/empty bars. */
+.barCell {
+  width: 42%;
+  min-width: 200px;
 }
 </style>
