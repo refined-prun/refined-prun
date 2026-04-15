@@ -13,11 +13,27 @@ const { analysis } = defineProps<{
 }>();
 
 const fill = computed(() => worstFillPercent(analysis));
-const fillClass = computed(() => fillRatioClass(fill.value));
+
+const fillNoInf = computed(() =>
+  Math.max(analysis.fillPercentWeightNoInf, analysis.fillPercentVolumeNoInf),
+);
+
+const needFill = computed(() => analysis.needFillRatio);
+const needFillClass = computed(() => fillRatioClass(needFill.value));
 
 const fillTooltip = computed(
   () =>
     `Wt: ${percent0(analysis.fillPercentWeight)} · Vol: ${percent0(analysis.fillPercentVolume)}`,
+);
+
+const fillNoInfTooltip = computed(
+  () =>
+    `Wt: ${percent0(analysis.fillPercentWeightNoInf)} · Vol: ${percent0(analysis.fillPercentVolumeNoInf)} excluding produced goods`,
+);
+
+const needFillTooltip = computed(
+  () =>
+    `Wt: ${percent0(analysis.needFillPercentWeight)} · Vol: ${percent0(analysis.needFillPercentVolume)} after resupply`,
 );
 
 const limitTooltip = computed(() => {
@@ -38,12 +54,22 @@ const limitTooltip = computed(() => {
       </span>
       <span>{{ analysis.planetName }}</span>
     </td>
+    <td :class="$style.clickable" @click="onClick">
+      <span :data-tooltip="fillTooltip" data-tooltip-position="bottom">
+        {{ percent0(fill) }}
+      </span>
+    </td>
+    <td :class="$style.clickable" @click="onClick">
+      <span :data-tooltip="fillNoInfTooltip" data-tooltip-position="bottom">
+        {{ percent0(fillNoInf) }}
+      </span>
+    </td>
     <td :class="$style.clickable" :style="{ position: 'relative' }" @click="onClick">
       <div
         :style="{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%' }"
-        :class="fillClass" />
-      <span :data-tooltip="fillTooltip" data-tooltip-position="bottom">
-        {{ percent0(fill) }}
+        :class="needFillClass" />
+      <span :data-tooltip="needFillTooltip" data-tooltip-position="bottom">
+        {{ percent0(needFill) }}
       </span>
     </td>
     <td :class="$style.clickable" @click="onClick">{{ formatDays(analysis.daysUntilFull) }}</td>
