@@ -51,7 +51,12 @@ const netVolumeClass = computed(() => ({
         </tr>
         <tr>
           <td>Storage Filled</td>
-          <td colspan="2">{{ formatDays(analysis.daysUntilFull) }} days</td>
+          <td colspan="2">
+            <template v-if="isFinite(analysis.daysUntilFull) && analysis.daysUntilFull < 1000">
+              {{ formatDays(analysis.daysUntilFull) }} days
+            </template>
+            <template v-else>not filling</template>
+          </td>
         </tr>
       </tbody>
     </table>
