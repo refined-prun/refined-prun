@@ -389,6 +389,38 @@ showBuffer('CXM AI1.RAT');  // opens a buffer with the given command
 
 ---
 
+## Stabilizing Table Column Widths Across `<tbody>`s
+
+Tiles that render a `<thead>` + multiple `<tbody>` sections (one per planet/base/etc.) can suffer from column-width drift: because each `<tbody>` sizes its columns independently under `table-layout: auto`, and the `<thead>` sizes from its own content, the thead and the data rows don't align.
+
+Solution: a hidden reference row with the same structure as the data rows, rendered once between the thead and the `v-for` data rows. Use `visibility: collapse` on the wrapping `<tbody>` so it occupies no vertical space but still contributes to column-width computation. This is how `XIT BURN` and `XIT STO` keep their headers lined up.
+
+```vue
+<table>
+  <thead>
+    <tr>
+      <th>Planet</th>
+      <th>Value</th>
+      <th>CMD</th>
+    </tr>
+  </thead>
+  <tbody :class="$style.fakeRow">
+    <MyRow :data="fakeData" />
+  </tbody>
+  <MyRow v-for="row in rows" :key="row.id" :data="row" />
+</table>
+
+<style module>
+.fakeRow {
+  visibility: collapse;
+}
+</style>
+```
+
+**Don't** reach for `table-layout: fixed` — it forces the table to its container's full width regardless of content, which breaks rendering in narrow tiles.
+
+---
+
 ## CSS
 
 Each feature needing CSS gets a `.module.css` alongside the `.ts`. `applyCssRule` and `C` are auto-imported.
