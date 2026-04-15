@@ -2,11 +2,13 @@
 import { BaseStorageAnalysis, getBaseStorageAnalysis } from '@src/core/storage-analysis';
 import BaseSection from '@src/features/XIT/STO/BaseSection.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
+import { useTileState } from '@src/features/XIT/STO/tile-state';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { comparePlanets } from '@src/util';
 
 const parameters = useXitParameters();
+const expand = useTileState('expand');
 
 const analyses = computed<BaseStorageAnalysis[] | undefined>(() => {
   if (!sitesStore.all.value) {
@@ -25,6 +27,15 @@ const analyses = computed<BaseStorageAnalysis[] | undefined>(() => {
     return comparePlanets(a.naturalId, b.naturalId);
   });
   return result;
+});
+
+watchEffect(() => {
+  if (parameters[0] && analyses.value?.length === 1) {
+    const naturalId = analyses.value[0].naturalId;
+    if (!expand.value.includes(naturalId)) {
+      expand.value = [...expand.value, naturalId];
+    }
+  }
 });
 
 const noMatch = computed(
@@ -49,7 +60,7 @@ const noMatch = computed(
     <BaseSection
       v-for="analysis in analyses"
       :key="analysis.siteId"
-      :can-minimize="analyses.length > 1 || !parameters[0]"
+      can-minimize
       :analysis="analysis" />
   </table>
 </template>
