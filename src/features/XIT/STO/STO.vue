@@ -97,10 +97,10 @@ const noMatch = computed(
         </th>
         <th>
           <InlineFlex>
-            Days
+            Days Till Full
             <Tooltip
               position="bottom"
-              tooltip="Days until a ship visit is needed — either to deliver supplies or pick up production output." />
+              tooltip="Days until storage is full at the current net production rate — when a ship visit is forced." />
           </InlineFlex>
         </th>
         <th>CMD</th>

@@ -269,9 +269,10 @@ function handleClick() {
       <div
         v-for="segment in cargoBar.segments"
         :key="segment.name"
-        :class="[segment.class, segment.borderClasses]"
+        :class="[$style.segment, segment.class, segment.borderClasses]"
         :style="{ width: segment.width }"
-        :title="segment.title">
+        :data-tooltip="segment.title"
+        data-tooltip-position="top">
         <div v-if="segment.load" :class="$style.full">
           {{ segment.load }}
         </div>
@@ -328,6 +329,14 @@ function handleClick() {
   display: flex;
 }
 
+/* Override the inline-block applied by [data-tooltip] globally — flex items
+   still respect width, but we need block display for segment sizing. */
+.segment {
+  display: block;
+  height: 100%;
+  padding: 0;
+}
+
 .miniBar {
   width: 25%;
   height: 50%;
@@ -352,12 +361,9 @@ function handleClick() {
 }
 
 .overflow {
-  background-image: repeating-linear-gradient(
-    45deg,
-    rgb(217, 83, 79),
-    rgb(217, 83, 79) 4px,
-    rgb(150, 40, 40) 4px,
-    rgb(150, 40, 40) 8px
-  );
+  /* Hazard-tape pattern: black + bright yellow diagonal stripes. Universal
+     "warning zone" idiom, distinct from every material category color. */
+  background-image: repeating-linear-gradient(45deg, #000, #000 5px, #ffd500 5px, #ffd500 10px);
+  border-left: 2px solid #ffd500;
 }
 </style>
