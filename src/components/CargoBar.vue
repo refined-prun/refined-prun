@@ -368,21 +368,23 @@ function handleClick() {
 }
 
 .overflow {
-  /* Hazard-tape pattern: saturated yellow + black diagonal stripes with a
-     thick red outline. Universal "warning zone" idiom, unmistakable against
-     the muted category segments in hazard mode. */
+  /* Hazard-tape pattern: saturated bright yellow + black diagonal stripes
+     with a thick red outline and glow. Universal "warning zone" idiom. */
   background-image: repeating-linear-gradient(
     45deg,
     #000 0,
     #000 6px,
-    #ffd500 6px,
-    #ffd500 12px
+    #fff200 6px,
+    #fff200 12px
   ) !important;
-  background-color: #ffd500 !important;
+  background-color: #fff200 !important;
   outline: 2px solid #d9534f;
   outline-offset: -2px;
-  box-shadow: 0 0 4px 1px #d9534f;
+  box-shadow: 0 0 6px 2px rgba(255, 242, 0, 0.6);
   z-index: 2;
+  /* Ensure the overflow indicator is always visible even when the overflow
+     percentage is tiny (e.g. 5% over capacity would otherwise be a sliver). */
+  min-width: 24px;
 }
 
 /* When the bar is overflowing, mute category segments and stamp a subtle
@@ -402,9 +404,9 @@ function handleClick() {
   background-image: repeating-linear-gradient(
     45deg,
     transparent 0,
-    transparent 8px,
-    rgba(255, 213, 0, 0.15) 8px,
-    rgba(255, 213, 0, 0.15) 16px
+    transparent 6px,
+    rgba(255, 242, 0, 0.35) 6px,
+    rgba(255, 242, 0, 0.35) 12px
   );
   pointer-events: none;
   z-index: 1;
