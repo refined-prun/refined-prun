@@ -113,10 +113,11 @@ const limitTooltip = computed(() => {
   column-gap: 0.25rem;
 }
 
-/* Equal width for both CargoBar cells. With table-layout: fixed on the
-   parent table, these propagate consistently across all tbodies. */
+/* Equal width for both CargoBar cells. Using width:50% on each cell makes
+   them split the remaining table width after fixed-size columns (planet,
+   days, cmd) — the bar cells dominate and split evenly. */
 .barCell {
-  width: 40%;
+  width: 50%;
   vertical-align: middle;
 }
 </style>
