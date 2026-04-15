@@ -1,7 +1,6 @@
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import {
   getEntityNameFromAddress,
@@ -29,7 +28,8 @@ export interface BaseStorageAnalysis {
   // Derived.
   fillPercentWeight: number;
   fillPercentVolume: number;
-  daysUntilFull: number; // Infinity when net flow ≤ 0 in both dimensions.
+  // Infinity when net flow ≤ 0 in both dimensions.
+  daysUntilFull: number;
   bindingLimit: 't' | 'm³' | undefined;
 }
 
@@ -66,7 +66,8 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
       const capacity = line.capacity;
       const orders = getRecurringOrders(line);
       let totalDuration = sumBy(orders, x => x.duration?.millis ?? Infinity);
-      totalDuration /= 86400000; // ms → days
+      // Convert ms to days.
+      totalDuration /= 86400000;
       if (totalDuration === 0) {
         continue;
       }
