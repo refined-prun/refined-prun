@@ -113,11 +113,10 @@ const limitTooltip = computed(() => {
   column-gap: 0.25rem;
 }
 
-/* Force the CargoBar cells to equal generous widths so the bars render
-   at their full length regardless of whether an adjacent fakeRow has
-   short/empty bars. */
+/* Equal width for both CargoBar cells. With table-layout: fixed on the
+   parent table, these propagate consistently across all tbodies. */
 .barCell {
-  width: 42%;
-  min-width: 200px;
+  width: 40%;
+  vertical-align: middle;
 }
 </style>

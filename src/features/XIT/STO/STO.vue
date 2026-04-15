@@ -75,7 +75,7 @@ const noMatch = computed(
   <LoadingSpinner v-if="analyses === undefined" />
   <div v-else-if="noMatch" :class="$style.empty">No base matches "{{ parameters[0] }}"</div>
   <div v-else-if="analyses.length === 0" :class="$style.empty">No bases yet</div>
-  <table v-else>
+  <table v-else :class="$style.table">
     <thead>
       <tr>
         <th :class="$style.planet">Planet</th>
@@ -95,7 +95,7 @@ const noMatch = computed(
               tooltip="Projected storage if all produced goods were shipped out and all consumables delivered up to their XIT BURN Need amount. Red hatching shows overflow past capacity." />
           </InlineFlex>
         </th>
-        <th>
+        <th :class="$style.daysCol">
           <InlineFlex>
             Days Till Full
             <Tooltip
@@ -103,7 +103,7 @@ const noMatch = computed(
               tooltip="Days until storage is full at the current net production rate — when a ship visit is forced." />
           </InlineFlex>
         </th>
-        <th>CMD</th>
+        <th :class="$style.cmdCol">CMD</th>
       </tr>
     </thead>
     <tbody :class="$style.fakeRow">
@@ -118,15 +118,33 @@ const noMatch = computed(
 </template>
 
 <style module>
+.table {
+  /* Fixed layout so column widths come from the first row (thead) and stay
+     consistent across all tbodies. Prevents the fakeRow's empty After Resupply
+     cell from undersizing the column. */
+  table-layout: fixed;
+  width: 100%;
+}
+
 .planet {
   text-align: left;
   padding-left: 26px;
+  /* Let the planet cell be flexible but not forced by content. */
+  width: auto;
 }
 
-/* Force the two CargoBar columns to equal, generous widths so they don't
-   collapse when the fakeRow's synthetic projected store is empty. */
+/* Equal widths for the two CargoBar columns. With table-layout: fixed these
+   drive the actual column widths. */
 .barCol {
-  width: 42%;
+  width: 40%;
+}
+
+.daysCol {
+  width: 60px;
+}
+
+.cmdCol {
+  width: 80px;
 }
 
 .empty {

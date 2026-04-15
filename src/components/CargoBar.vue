@@ -292,11 +292,10 @@ function handleClick() {
 .container {
   margin: 0px;
   display: flex;
-  min-width: 30px;
   width: 100%;
   min-height: 13px;
   height: 13px;
-  align-items: flex-end;
+  align-items: center;
   justify-content: flex-start;
   background-color: #2a2a2a;
   --stripe-width: 10px;
