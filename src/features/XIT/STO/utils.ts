@@ -1,0 +1,26 @@
+import { BaseStorageAnalysis } from '@src/core/storage-analysis';
+import { fixed01 } from '@src/utils/format';
+
+// Formats a number of days for display. Infinity → "∞", otherwise fixed01.
+export function formatDays(days: number): string {
+  if (!isFinite(days) || days >= 1000) {
+    return '∞';
+  }
+  return fixed01(days);
+}
+
+// Returns the higher of the two fill percentages (0..1+). Used for the header row.
+export function worstFillPercent(a: BaseStorageAnalysis): number {
+  return Math.max(a.fillPercentWeight, a.fillPercentVolume);
+}
+
+// CSS-class name based on a fill ratio. Reuses PrUn's workforce color palette.
+export function fillRatioClass(ratio: number): string {
+  if (ratio >= 0.95) {
+    return C.Workforces.daysMissing;
+  }
+  if (ratio >= 0.8) {
+    return C.Workforces.daysWarning;
+  }
+  return C.Workforces.daysSupplied;
+}
