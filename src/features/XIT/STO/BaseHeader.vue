@@ -16,14 +16,6 @@ const { analysis } = defineProps<{
 const currentStore = computed(() => storagesStore.getById(analysis.storeId));
 const projectedStore = computed(() => buildProjectedStore(analysis.siteId));
 
-const projectedDebug = computed(() => {
-  const s = projectedStore.value;
-  if (!s) return 'no store';
-  const wPct = ((s.weightLoad / s.weightCapacity) * 100).toFixed(0);
-  const vPct = ((s.volumeLoad / s.volumeCapacity) * 100).toFixed(0);
-  return `Projected: ${s.weightLoad.toFixed(0)} / ${s.weightCapacity.toFixed(0)} t (${wPct}%) · ${s.volumeLoad.toFixed(0)} / ${s.volumeCapacity.toFixed(0)} m³ (${vPct}%)`;
-});
-
 const stripeClass = computed(() => {
   if (analysis.needFillRatio === 0) {
     return undefined;
@@ -53,11 +45,7 @@ const limitTooltip = computed(() => {
     <td :class="[$style.clickable, $style.barCell]" @click="onClick">
       <CargoBar :store="currentStore" />
     </td>
-    <td
-      :class="[$style.clickable, $style.barCell]"
-      :data-tooltip="projectedDebug"
-      data-tooltip-position="top"
-      @click="onClick">
+    <td :class="[$style.clickable, $style.barCell]" @click="onClick">
       <CargoBar :store="projectedStore" />
     </td>
     <td :class="$style.clickable" @click="onClick">
