@@ -189,12 +189,13 @@ export function buildProjectedStore(
   let weightLoad = 0;
   let volumeLoad = 0;
 
-  // Start with existing items from consumers (exclude net-positive / produced goods).
-  const consumedTickers = new Set<string>();
+  // Tickers that are strictly net-producing — their existing inventory is assumed
+  // shipped out during the rotation. Zero-daily materials (idle stock) are kept.
+  const producedTickers = new Set<string>();
   if (planetBurn) {
     for (const ticker of Object.keys(planetBurn.burn)) {
-      if (planetBurn.burn[ticker].dailyAmount < 0) {
-        consumedTickers.add(ticker);
+      if (planetBurn.burn[ticker].dailyAmount > 0) {
+        producedTickers.add(ticker);
       }
     }
   }
@@ -207,13 +208,8 @@ export function buildProjectedStore(
       continue;
     }
     const ticker = item.quantity?.material.ticker;
-    if (!ticker || !consumedTickers.has(ticker)) {
-      // Producing goods get shipped out; materials not in burn stay as-is (e.g., idle stock).
-      if (!planetBurn || !(ticker && ticker in planetBurn.burn)) {
-        items.push(item);
-        weightLoad += item.weight;
-        volumeLoad += item.volume;
-      }
+    if (ticker && producedTickers.has(ticker)) {
+      // Producing material — ships out, contributes nothing to projected load.
       continue;
     }
     items.push(item);
