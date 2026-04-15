@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { BaseStorageAnalysis } from '@src/core/storage-analysis';
+import { BaseStorageAnalysis, buildProjectedStore } from '@src/core/storage-analysis';
+import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import PrunButton from '@src/components/PrunButton.vue';
+import CargoBar from '@src/components/CargoBar.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import { percent0 } from '@src/utils/format';
-import { fillRatioClass, formatDays, worstFillPercent } from '@src/features/XIT/STO/utils';
+import { fillRatioClass, formatDays } from '@src/features/XIT/STO/utils';
 
 const { analysis } = defineProps<{
   analysis: BaseStorageAnalysis;
@@ -12,29 +13,15 @@ const { analysis } = defineProps<{
   onClick: () => void;
 }>();
 
-const fill = computed(() => worstFillPercent(analysis));
+const currentStore = computed(() => storagesStore.getById(analysis.storeId));
+const projectedStore = computed(() => buildProjectedStore(analysis.siteId));
 
-const fillNoInf = computed(() =>
-  Math.max(analysis.fillPercentWeightNoInf, analysis.fillPercentVolumeNoInf),
-);
-
-const needFill = computed(() => analysis.needFillRatio);
-const needFillClass = computed(() => fillRatioClass(needFill.value));
-
-const fillTooltip = computed(
-  () =>
-    `Wt: ${percent0(analysis.fillPercentWeight)} · Vol: ${percent0(analysis.fillPercentVolume)}`,
-);
-
-const fillNoInfTooltip = computed(
-  () =>
-    `Wt: ${percent0(analysis.fillPercentWeightNoInf)} · Vol: ${percent0(analysis.fillPercentVolumeNoInf)} excluding produced goods`,
-);
-
-const needFillTooltip = computed(
-  () =>
-    `Wt: ${percent0(analysis.needFillPercentWeight)} · Vol: ${percent0(analysis.needFillPercentVolume)} after resupply`,
-);
+const stripeClass = computed(() => {
+  if (analysis.needFillRatio === 0) {
+    return undefined;
+  }
+  return fillRatioClass(analysis.needFillRatio);
+});
 
 const limitTooltip = computed(() => {
   if (analysis.bindingLimit === undefined) {
@@ -49,33 +36,21 @@ const limitTooltip = computed(() => {
 <template>
   <tr :class="$style.row">
     <td :class="[$style.planet, $style.clickable]" @click="onClick">
+      <div v-if="stripeClass" :class="[$style.stripe, stripeClass]" />
       <span v-if="hasMinimize" :class="$style.minimize">
         {{ minimized ? '+' : '-' }}
       </span>
       <span>{{ analysis.planetName }}</span>
     </td>
     <td :class="$style.clickable" @click="onClick">
-      <span :data-tooltip="fillTooltip" data-tooltip-position="bottom">
-        {{ percent0(fill) }}
-      </span>
+      <CargoBar :store="currentStore" />
     </td>
     <td :class="$style.clickable" @click="onClick">
-      <span :data-tooltip="fillNoInfTooltip" data-tooltip-position="bottom">
-        {{ percent0(fillNoInf) }}
-      </span>
+      <CargoBar :store="projectedStore" />
     </td>
-    <td :class="$style.clickable" :style="{ position: 'relative' }" @click="onClick">
-      <div
-        :style="{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%' }"
-        :class="needFillClass" />
-      <span :data-tooltip="needFillTooltip" data-tooltip-position="bottom">
-        {{ percent0(needFill) }}
-      </span>
-    </td>
-    <td :class="$style.clickable" @click="onClick">{{ formatDays(analysis.daysUntilFull) }}</td>
     <td :class="$style.clickable" @click="onClick">
       <span :data-tooltip="limitTooltip" data-tooltip-position="bottom">
-        {{ analysis.bindingLimit ?? '—' }}
+        {{ formatDays(analysis.daysUntilFull) }}
       </span>
     </td>
     <td>
@@ -97,6 +72,16 @@ const limitTooltip = computed(() => {
 .planet {
   font-weight: bold;
   font-size: 12px;
+  position: relative;
+  padding-left: 12px;
+}
+
+.stripe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
 }
 
 .clickable {
@@ -105,7 +90,7 @@ const limitTooltip = computed(() => {
 
 .minimize {
   display: inline-block;
-  width: 26px;
+  width: 20px;
   text-align: center;
 }
 
