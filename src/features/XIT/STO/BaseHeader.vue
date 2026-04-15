@@ -73,12 +73,10 @@ const limitTooltip = computed(() => {
       </span>
     </td>
     <td :class="$style.clickable" @click="onClick">{{ formatDays(analysis.daysUntilFull) }}</td>
-    <td
-      :class="$style.clickable"
-      :data-tooltip="limitTooltip"
-      data-tooltip-position="bottom"
-      @click="onClick">
-      {{ analysis.bindingLimit ?? '—' }}
+    <td :class="$style.clickable" @click="onClick">
+      <span :data-tooltip="limitTooltip" data-tooltip-position="bottom">
+        {{ analysis.bindingLimit ?? '—' }}
+      </span>
     </td>
     <td>
       <div :class="$style.buttons">

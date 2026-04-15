@@ -77,31 +77,41 @@ const noMatch = computed(
     <thead>
       <tr>
         <th :class="$style.planet">Planet</th>
-        <th
-          data-tooltip="Share of storage currently occupied (worst of weight vs volume)."
-          data-tooltip-position="bottom"
-          >Current Fill</th
-        >
-        <th
-          data-tooltip="Current fill if you excluded produced goods that accumulate until shipped out."
-          data-tooltip-position="bottom"
-          >Fill w/o Produced</th
-        >
-        <th
-          data-tooltip="Projected fill if every consumed material were delivered up to the Need amount shown in XIT BURN. Colored green/yellow/red by headroom."
-          data-tooltip-position="bottom"
-          >Fill After Resupply</th
-        >
-        <th
-          data-tooltip="Days until storage fills at the current net production rate."
-          data-tooltip-position="bottom"
-          >Days</th
-        >
-        <th
-          data-tooltip="Which dimension (weight or volume) would fill first."
-          data-tooltip-position="bottom"
-          >Limit</th
-        >
+        <th>
+          <span
+            data-tooltip="Share of storage currently occupied (worst of weight vs volume)."
+            data-tooltip-position="bottom">
+            Current Fill
+          </span>
+        </th>
+        <th>
+          <span
+            data-tooltip="Current fill if you excluded produced goods that accumulate until shipped out."
+            data-tooltip-position="bottom">
+            Fill w/o Produced
+          </span>
+        </th>
+        <th>
+          <span
+            data-tooltip="Projected fill if every consumed material were delivered up to the Need amount shown in XIT BURN. Colored green/yellow/red by headroom."
+            data-tooltip-position="bottom">
+            Fill After Resupply
+          </span>
+        </th>
+        <th>
+          <span
+            data-tooltip="Days until storage fills at the current net production rate."
+            data-tooltip-position="bottom">
+            Days
+          </span>
+        </th>
+        <th>
+          <span
+            data-tooltip="Which dimension (weight or volume) would fill first."
+            data-tooltip-position="bottom">
+            Limit
+          </span>
+        </th>
         <th>CMD</th>
       </tr>
     </thead>
