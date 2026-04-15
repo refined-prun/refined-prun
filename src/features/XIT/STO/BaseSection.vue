@@ -35,7 +35,7 @@ function onHeaderClick() {
   </tbody>
   <tbody v-if="!isMinimized">
     <tr>
-      <td colspan="7">
+      <td colspan="5">
         <BaseDetail :analysis="analysis" />
       </td>
     </tr>
