@@ -1,12 +1,12 @@
-import { productionStore } from '@src/infrastructure/prun-api/data/production';
-import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
+import { computeNeed, getPlanetBurn } from '@src/core/burn';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
+import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import {
   getEntityNameFromAddress,
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
-import { getRecurringOrders } from '@src/core/orders';
+import { userData } from '@src/store/user-data';
 
 export interface BaseStorageAnalysis {
   siteId: string;
@@ -25,10 +25,21 @@ export interface BaseStorageAnalysis {
   exportWeight: number;
   exportVolume: number;
 
-  // Derived.
+  // Current fill.
   fillPercentWeight: number;
   fillPercentVolume: number;
-  // Infinity when net flow ≤ 0 in both dimensions.
+
+  // Current fill excluding inventory of net-positive (infinity-days) materials.
+  fillPercentWeightNoInf: number;
+  fillPercentVolumeNoInf: number;
+
+  // Projected fill after delivering Need amount for every consumed material.
+  needFillPercentWeight: number;
+  needFillPercentVolume: number;
+  // Max of the two — the color driver.
+  needFillRatio: number;
+
+  // Days-until-full at net production rate. Infinity when net flow ≤ 0.
   daysUntilFull: number;
   bindingLimit: 't' | 'm³' | undefined;
 }
@@ -48,58 +59,67 @@ const analysisBySiteId = computed(() => {
 });
 
 function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
-  const production = productionStore.getBySiteId(site.siteId);
-  const workforce = workforcesStore.getById(site.siteId)?.workforces;
   const storage = storagesStore.getByAddressableId(site.siteId);
   const store = storage?.find(x => x.type === 'STORE');
   if (!store) {
     return undefined;
   }
 
+  const planetBurn = getPlanetBurn(site);
+  const resupplyDays = userData.settings.burn.resupply;
+
   let importWeight = 0;
   let importVolume = 0;
   let exportWeight = 0;
   let exportVolume = 0;
+  let infWeight = 0;
+  let infVolume = 0;
+  let addedWeight = 0;
+  let addedVolume = 0;
 
-  if (production) {
-    for (const line of production) {
-      const capacity = line.capacity;
-      const orders = getRecurringOrders(line);
-      let totalDuration = sumBy(orders, x => x.duration?.millis ?? Infinity);
-      // Convert ms to days.
-      totalDuration /= 86400000;
-      if (totalDuration === 0) {
+  if (planetBurn) {
+    for (const ticker of Object.keys(planetBurn.burn)) {
+      const mat = materialsStore.getByTicker(ticker);
+      if (!mat) {
         continue;
       }
-      for (const order of orders) {
-        for (const mat of order.outputs) {
-          const perDay = (mat.amount * capacity) / totalDuration;
-          exportWeight += perDay * mat.material.weight;
-          exportVolume += perDay * mat.material.volume;
-        }
-        for (const mat of order.inputs) {
-          const perDay = (mat.amount * capacity) / totalDuration;
-          importWeight += perDay * mat.material.weight;
-          importVolume += perDay * mat.material.volume;
-        }
-      }
-    }
-  }
+      const mb = planetBurn.burn[ticker];
+      const daily = mb.dailyAmount;
 
-  if (workforce) {
-    for (const tier of workforce) {
-      if (tier.population <= 1 || tier.capacity === 0) {
-        continue;
+      if (daily < 0) {
+        // Net consumer — contributes to import rate.
+        const consumption = -daily;
+        importWeight += consumption * mat.weight;
+        importVolume += consumption * mat.volume;
+      } else {
+        // Net-positive / infinity material.
+        exportWeight += daily * mat.weight;
+        exportVolume += daily * mat.volume;
+        infWeight += mb.inventory * mat.weight;
+        infVolume += mb.inventory * mat.volume;
       }
-      for (const need of tier.needs) {
-        importWeight += need.unitsPerInterval * need.material.weight;
-        importVolume += need.unitsPerInterval * need.material.volume;
+
+      const need = computeNeed(mb, resupplyDays);
+      if (need > 0) {
+        addedWeight += need * mat.weight;
+        addedVolume += need * mat.volume;
       }
     }
   }
 
   const fillPercentWeight = store.weightCapacity > 0 ? store.weightLoad / store.weightCapacity : 0;
   const fillPercentVolume = store.volumeCapacity > 0 ? store.volumeLoad / store.volumeCapacity : 0;
+
+  const fillPercentWeightNoInf =
+    store.weightCapacity > 0 ? Math.max(store.weightLoad - infWeight, 0) / store.weightCapacity : 0;
+  const fillPercentVolumeNoInf =
+    store.volumeCapacity > 0 ? Math.max(store.volumeLoad - infVolume, 0) / store.volumeCapacity : 0;
+
+  const needFillPercentWeight =
+    store.weightCapacity > 0 ? (store.weightLoad + addedWeight) / store.weightCapacity : 0;
+  const needFillPercentVolume =
+    store.volumeCapacity > 0 ? (store.volumeLoad + addedVolume) / store.volumeCapacity : 0;
+  const needFillRatio = Math.max(needFillPercentWeight, needFillPercentVolume);
 
   const availableWeight = Math.max(store.weightCapacity - store.weightLoad, 0);
   const availableVolume = Math.max(store.volumeCapacity - store.volumeLoad, 0);
@@ -127,6 +147,11 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
     exportVolume,
     fillPercentWeight,
     fillPercentVolume,
+    fillPercentWeightNoInf,
+    fillPercentVolumeNoInf,
+    needFillPercentWeight,
+    needFillPercentVolume,
+    needFillRatio,
     daysUntilFull,
     bindingLimit,
   };
