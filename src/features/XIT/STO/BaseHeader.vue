@@ -42,16 +42,16 @@ const limitTooltip = computed(() => {
       </span>
       <span>{{ analysis.planetName }}</span>
     </td>
+    <td :class="$style.clickable" @click="onClick">
+      <span :data-tooltip="limitTooltip" data-tooltip-position="bottom">
+        {{ formatDays(analysis.daysUntilFull) }}
+      </span>
+    </td>
     <td :class="[$style.clickable, $style.barCell]" @click="onClick">
       <CargoBar :store="currentStore" disable-mini-mode />
     </td>
     <td :class="[$style.clickable, $style.barCell]" @click="onClick">
       <CargoBar :store="projectedStore" disable-mini-mode />
-    </td>
-    <td :class="$style.clickable" @click="onClick">
-      <span :data-tooltip="limitTooltip" data-tooltip-position="bottom">
-        {{ formatDays(analysis.daysUntilFull) }}
-      </span>
     </td>
     <td>
       <div :class="$style.buttons">

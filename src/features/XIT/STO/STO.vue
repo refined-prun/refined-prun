@@ -91,6 +91,14 @@ const noMatch = computed(
         <th :class="$style.planet">Planet</th>
         <th>
           <InlineFlex>
+            Days Till Full
+            <Tooltip
+              position="bottom"
+              tooltip="Days until storage is full at the current net production rate — when a ship visit is forced." />
+          </InlineFlex>
+        </th>
+        <th>
+          <InlineFlex>
             Current Fill
             <Tooltip
               position="bottom"
@@ -103,14 +111,6 @@ const noMatch = computed(
             <Tooltip
               position="bottom"
               tooltip="Projected storage if all produced goods were shipped out and all consumables delivered up to their XIT BURN Need amount. Red hatching shows overflow past capacity." />
-          </InlineFlex>
-        </th>
-        <th>
-          <InlineFlex>
-            Days Till Full
-            <Tooltip
-              position="bottom"
-              tooltip="Days until storage is full at the current net production rate — when a ship visit is forced." />
           </InlineFlex>
         </th>
         <th>CMD</th>
