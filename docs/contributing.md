@@ -157,18 +157,6 @@ background-color: rgb(217, 83, 79);
 
 Use `data-tooltip` attribute for instant tooltips (PrUn-style). Don't use `title` attribute — browser tooltips have a ~2 second delay, and most players will never see them.
 
-**Gotcha:** PrUn's stylesheet sets `[data-tooltip] { display: inline-block }`. Applying `data-tooltip` directly to a `<th>`, `<td>`, or flex child overrides its native `display` and breaks table/flex layout (column widths collapse; flex items lose sizing). Wrap the content in an inner `<span>` and put `data-tooltip` on the span instead.
-
-```vue
-<!-- Bad: collapses the cell's column width -->
-<td data-tooltip="Explanation">Value</td>
-
-<!-- Good: span becomes inline-block, td stays table-cell -->
-<td>
-  <span data-tooltip="Explanation">Value</span>
-</td>
-```
-
 ### Server Communication & ToS
 
 Every action that triggers server communication must require a user click. No automated server requests without explicit player action. This is a hard rule from the game developers.
