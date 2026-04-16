@@ -37,13 +37,11 @@ if (data.origin === configurableValue && !config.origin && originStorages.value.
 
 const destinationStorages = computed(() => {
   let storages = [...allStorages.value];
-  if (data.origin !== configurableValue) {
-    const origin = deserializeStorage(data.origin);
-    if (origin) {
-      storages = storages.filter(x => atSameLocation(x, origin) && x !== origin);
-    }
+  const originRef = data.origin !== configurableValue ? data.origin : config.origin;
+  const origin = deserializeStorage(originRef);
+  if (origin) {
+    storages = storages.filter(x => atSameLocation(x, origin) && x !== origin);
   }
-
   return storages.sort(storageSort);
 });
 
