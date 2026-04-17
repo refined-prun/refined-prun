@@ -1095,7 +1095,9 @@ function getCargoState(cargoRatio: number) {
         </div>
 
         <div v-if="showColShipClass" :class="[$style.bodyCell, $style.colShipClass]">
-          {{ x.shipClass }}
+          <span :class="C.Link.link" @click.stop="showBuffer(`SFC ${x.ship.registration}`)">
+            {{ x.shipClass }}
+          </span>
         </div>
 
         <div
