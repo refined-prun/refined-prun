@@ -42,8 +42,8 @@ function appendStylesheet() {
   const gradientStart = defaultColor.darken(20).toHexString();
   const gradientEnd = defaultColor.brighten(10).toHexString();
   const fontColor = defaultColor.brighten(40).toHexString();
+  // rp-category-none: fallback style for items without a category (see CATEGORY_CSS_PREFIX).
   const defaultStyle =
-    // rp-category-none: fallback style for items without a category (see CATEGORY_CSS_PREFIX).
     `.${C.ColoredIcon.container}, .${CATEGORY_CSS_PREFIX}none {\n` +
     `  background: linear-gradient(135deg, ${gradientStart}, ${gradientEnd});\n` +
     `  color: ${fontColor};\n` +

@@ -21,7 +21,9 @@ const getById = createMapGetter(state.all, x => x.id);
 export const getCategoryById = (
   id: string | undefined | null,
 ): PrunApi.MaterialCategory | undefined => {
-  if (!id) return undefined;
+  if (!id) {
+    return undefined;
+  }
   return getById(id);
 };
 

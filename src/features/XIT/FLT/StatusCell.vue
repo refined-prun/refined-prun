@@ -32,7 +32,7 @@ const posData = computed(() => {
   const location = getLocationLineFromAddress(address);
   const prefix = location?.type === 'STATION' ? 'STNS' : 'PLI';
   return {
-    name: getEntityNameFromAddress(address) || address?.lines[0]?.entity?.naturalId || '',
+    name: getEntityNameFromAddress(address) ?? address?.lines[0]?.entity?.naturalId ?? '',
     command: `${prefix} ${location?.entity.naturalId}`,
     invCommand: `INV ${location?.entity.naturalId}`,
   };

@@ -4,7 +4,7 @@ import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { exchangesStore } from '@src/infrastructure/prun-api/data/exchanges';
-import { getDestinationName, isSameAddress } from '@src/infrastructure/prun-api/data/addresses';
+import { isSameAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { getInvStore } from '@src/core/store-id';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { useTileState } from '@src/store/user-data-tiles';
@@ -366,28 +366,43 @@ function hasFtlFuelProblem(row: FlightRow): boolean {
 
 const hasAnyProblems = computed(() => {
   const source = rows.value;
-  if (!source) return false;
+  if (!source) {
+    return false;
+  }
   return source.some(x => x.ship.condition < 0.8 || hasFuelProblem(x));
 });
 
 const gridTemplateColumns = computed(() => {
   const cols: string[] = [];
-  if (showColName.value) cols.push('auto');
-  if (showColShipClass.value) cols.push('auto');
-  if (showColSize.value) cols.push('auto');
+  if (showColName.value) {
+    cols.push('auto');
+  }
+  if (showColShipClass.value) {
+    cols.push('auto');
+  }
+  if (showColSize.value) {
+    cols.push('auto');
+  }
   if (showColCargo.value) {
     cols.push(layoutMode.value === 'cargo' ? '1fr' : 'auto');
   }
   if (showColCargoSize.value) {
     cols.push(layoutMode.value === 'cargo' ? '1fr' : 'auto');
   }
-  cols.push('auto'); // Status is always shown
+  // Status is always shown.
+  cols.push('auto');
   if (showColTime.value) {
     cols.push(layoutMode.value === 'whitespace' ? '1fr' : 'auto');
   }
-  if (showColRepair.value) cols.push('auto');
-  if (showColFuel.value) cols.push('auto');
-  if (showColProblems.value && hasAnyProblems.value) cols.push('auto');
+  if (showColRepair.value) {
+    cols.push('auto');
+  }
+  if (showColFuel.value) {
+    cols.push('auto');
+  }
+  if (showColProblems.value && hasAnyProblems.value) {
+    cols.push('auto');
+  }
   return cols.join(' ');
 });
 
@@ -432,7 +447,9 @@ const optionFilterGroups = computed<MultiOptionFilterGroup[]>(() => [
 ]);
 
 function setSort(key: SortKey) {
-  if (key === 'none') return;
+  if (key === 'none') {
+    return;
+  }
   if (primarySortKey.value === key) {
     const currentDirection = getSortDirection(key);
     let nextDirection: SortDirection;

@@ -110,7 +110,7 @@ export const percent2 = numberFormat({
   maximumFractionDigits: 2,
 });
 
-// wall-clock time + day offset ("14:30 +2d"),
+// Wall-clock time + day offset ("14:30 +2d").
 export function formatEta(from: number, to: number) {
   let ret = hhmm(to);
   const days = diffDays(from, to);
@@ -123,7 +123,9 @@ export function formatEta(from: number, to: number) {
 // Compact duration format ("2d 3h 15m") for dense table cells.
 export function displaytimeBetween(from: number, to: number) {
   const diffMs = to - from;
-  if (diffMs <= 0) return '0m';
+  if (diffMs <= 0) {
+    return '0m';
+  }
 
   const totalSeconds = Math.floor(diffMs / 1000);
   const days = Math.floor(totalSeconds / 86400);
@@ -131,9 +133,15 @@ export function displaytimeBetween(from: number, to: number) {
   const minutes = Math.floor((totalSeconds % 3600) / 60);
 
   const parts: string[] = [];
-  if (days > 0) parts.push(`${days}d`);
-  if (hours > 0) parts.push(`${hours}h`);
-  if (minutes > 0 || parts.length === 0) parts.push(`${minutes}m`);
+  if (days > 0) {
+    parts.push(`${days}d`);
+  }
+  if (hours > 0) {
+    parts.push(`${hours}h`);
+  }
+  if (minutes > 0 || parts.length === 0) {
+    parts.push(`${minutes}m`);
+  }
 
   return parts.join(' ');
 }
