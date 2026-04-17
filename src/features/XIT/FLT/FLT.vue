@@ -176,10 +176,11 @@ const rawRows = computed<FlightRow[] | undefined>(() => {
       ? Math.min(stlFuelRatio ?? 0, ftlFuelRatio ?? 0)
       : (stlFuelRatio ?? 0);
     const inFlight = ship.flightId != null;
-    const isReturningToCx =
+    const isReturningToCx = !!(
       inFlight &&
       flight?.destination &&
-      (exchangesStore.all.value ?? []).some(ex => isSameAddress(ex.address, flight.destination));
+      (exchangesStore.all.value ?? []).some(ex => isSameAddress(ex.address, flight.destination))
+    );
     const shipClass = getShipClass(ship);
     const conditionBand = getConditionBand(conditionPercentage);
     const etaBucket = getEtaBucket(inFlight, statusSortValue);
