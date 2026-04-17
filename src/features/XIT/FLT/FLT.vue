@@ -4,7 +4,7 @@ import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { exchangesStore } from '@src/infrastructure/prun-api/data/exchanges';
-import { getDestinationName } from '@src/infrastructure/prun-api/data/addresses';
+import { getDestinationName, isSameAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { getInvStore } from '@src/core/store-id';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { useTileState } from '@src/store/user-data-tiles';
@@ -139,10 +139,6 @@ const fuelAlertThresholdMap: Record<FuelAlertFilter, number> = {
   '25': 0.25,
   '10': 0.1,
 };
-const cxCodes = computed(() => {
-  const exchanges = exchangesStore.all.value ?? [];
-  return new Set(exchanges.map(x => x.code.toUpperCase()));
-});
 
 const rawRows = computed<FlightRow[] | undefined>(() => {
   const ships = shipsStore.all.value;
@@ -180,8 +176,10 @@ const rawRows = computed<FlightRow[] | undefined>(() => {
       ? Math.min(stlFuelRatio ?? 0, ftlFuelRatio ?? 0)
       : (stlFuelRatio ?? 0);
     const inFlight = ship.flightId != null;
-    const destinationCode = getDestinationName(flight?.destination)?.toUpperCase();
-    const isReturningToCx = destinationCode != null && cxCodes.value.has(destinationCode);
+    const isReturningToCx =
+      inFlight &&
+      flight?.destination &&
+      (exchangesStore.all.value ?? []).some(ex => isSameAddress(ex.address, flight.destination));
     const shipClass = getShipClass(ship);
     const conditionBand = getConditionBand(conditionPercentage);
     const etaBucket = getEtaBucket(inFlight, statusSortValue);
