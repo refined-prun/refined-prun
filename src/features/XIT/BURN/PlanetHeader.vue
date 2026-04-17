@@ -30,6 +30,9 @@ const days = computed(() => countDays(burn.burn));
         <PrunButton dark inline @click="showBuffer(`INV ${burn.storeId.substring(0, 8)}`)">
           INV
         </PrunButton>
+        <PrunButton dark inline @click="showBuffer(`PROD ${burn.prodSiteId.substring(0, 8)}`)">
+          PROD
+        </PrunButton>
       </div>
     </td>
   </tr>

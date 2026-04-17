@@ -124,7 +124,13 @@ const planetBurn = computed(() => {
     }
   }
 
-  const overallSection = { burn: overallBurn, planetName: 'Overall', naturalId: '', storeId: '' };
+  const overallSection = {
+    burn: overallBurn,
+    planetName: 'Overall',
+    naturalId: '',
+    prodSiteId: '',
+    storeId: '',
+  };
   if (queryResult.value.overallOnly) {
     return [overallSection];
   }
