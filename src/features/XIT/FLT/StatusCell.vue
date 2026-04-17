@@ -44,20 +44,23 @@ const posData = computed(() => {
     <div :class="$style.icons">
       <span
         :class="[C.Link.link, $style.link]"
-        title="Open inventory"
+        data-tooltip="Open inventory"
+        data-tooltip-position="left"
         @click.stop="showBuffer(posData.invCommand)"
         >☒</span
       >
       <span
         :class="$style.link"
-        title="Open flight control"
+        data-tooltip="Open flight control"
+        data-tooltip-position="right"
         @click.stop="showBuffer(`SFC ${ship?.registration}`)"
         >{{ statusIcon }}</span
       >
     </div>
     <div
       :class="[C.Link.link, $style.link]"
-      title="Open location"
+      data-tooltip="Open location"
+      data-tooltip-position="left"
       @click.stop="showBuffer(posData.command)">
       {{ posData.name }}
     </div>

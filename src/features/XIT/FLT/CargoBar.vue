@@ -266,7 +266,8 @@ function onClick() {
         :key="segment.name"
         :class="[segment.class, segment.borderClasses]"
         :style="{ width: segment.width }"
-        :title="segment.title">
+        :data-tooltip="segment.title"
+        data-tooltip-position="top">
         <div v-if="segment.load" :class="$style.full">
           {{ segment.load }}
         </div>
