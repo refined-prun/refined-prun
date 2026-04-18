@@ -9,7 +9,8 @@ import {
 } from '@src/infrastructure/prun-api/data/addresses';
 import { alertsStore } from '@src/infrastructure/prun-api/data/alerts';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { dayjsEachSecond, timestampEachMinute } from '@src/utils/dayjs';
+import { timestampEachSecond } from '@src/utils/dayjs';
+import dayjs from 'dayjs';
 
 interface ElectionRow {
   planet: string;
@@ -58,8 +59,8 @@ const rows = computed<ElectionRow[] | undefined>(() => {
     map.set(key, {
       planet,
       planetNaturalId,
-      electionStart: electionTimestamp ? electionTimestamp + dayMs * 20 : undefined,
-      electionEnd: electionTimestamp ? electionTimestamp + dayMs * 28 : undefined,
+      electionStart: electionTimestamp === undefined ? undefined : electionTimestamp + dayMs * 20,
+      electionEnd: electionTimestamp === undefined ? undefined : electionTimestamp + dayMs * 28,
     });
   }
 
@@ -95,19 +96,46 @@ function getSortGroup(row: ElectionRow) {
 }
 
 function isElectionOpen(row: ElectionRow) {
+  const now = timestampEachSecond.value;
   return (
     row.electionStart !== undefined &&
     row.electionEnd !== undefined &&
-    timestampEachMinute.value >= row.electionStart &&
-    timestampEachMinute.value < row.electionEnd
+    now >= row.electionStart &&
+    now < row.electionEnd
   );
 }
 
-function formatRelative(timestamp?: number) {
-  if (timestamp === undefined) {
-    return '—';
+function isPastOrNow(timestamp?: number) {
+  return timestamp !== undefined && timestamp <= timestampEachSecond.value;
+}
+
+function formatFutureDuration(timestamp: number) {
+  const now = timestampEachSecond.value;
+  if (timestamp <= now) {
+    return '0s';
   }
-  return dayjsEachSecond.value.to(timestamp);
+
+  let duration = dayjs.duration({ milliseconds: timestamp - now });
+  const days = Math.floor(duration.asDays());
+  duration = duration.subtract(days, 'days');
+  const hours = Math.floor(duration.asHours());
+  if (days > 0) {
+    return `${days}d ${hours}h`;
+  }
+
+  duration = duration.subtract(hours, 'hours');
+  const minutes = Math.floor(duration.asMinutes());
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`;
+  }
+
+  duration = duration.subtract(minutes, 'minutes');
+  const seconds = Math.floor(duration.asSeconds());
+  if (minutes > 0) {
+    return `${minutes}m ${seconds}s`;
+  }
+
+  return `${seconds}s`;
 }
 
 function openBuffer(command: string) {
@@ -147,19 +175,24 @@ const dayMs = 24 * 60 * 60 * 1000;
           <PrunLink inline :command="`PLI ${row.planetNaturalId}`">{{ row.planet }}</PrunLink>
         </td>
         <td>
-          <PrunLink v-if="isElectionOpen(row)" inline :command="`ADM ${row.planetNaturalId}`">
-            {{ formatRelative(row.electionStart) }}
-          </PrunLink>
-          <template v-else>{{ formatRelative(row.electionStart) }}</template>
+          <template v-if="row.electionStart === undefined">—</template>
+          <PrunButton
+            v-else-if="isPastOrNow(row.electionStart)"
+            inline
+            primary
+            @click="openBuffer(`ADM ${row.planetNaturalId}`)">
+            VOTE
+          </PrunButton>
+          <template v-else>{{ formatFutureDuration(row.electionStart) }}</template>
         </td>
-        <td>{{ formatRelative(row.electionEnd) }}</td>
+        <td>
+          <template v-if="row.electionEnd === undefined">—</template>
+          <template v-else-if="isPastOrNow(row.electionEnd)">Now</template>
+          <template v-else>{{ formatFutureDuration(row.electionEnd) }}</template>
+        </td>
         <td>
           <div :class="$style.buttons">
-            <PrunButton
-              inline
-              :dark="!isElectionOpen(row)"
-              :primary="isElectionOpen(row)"
-              @click="openBuffer(`ADM ${row.planetNaturalId}`)">
+            <PrunButton inline dark @click="openBuffer(`ADM ${row.planetNaturalId}`)">
               ADM
             </PrunButton>
             <PrunButton dark inline @click="openBuffer(`GOV ${row.planetNaturalId}`)">
