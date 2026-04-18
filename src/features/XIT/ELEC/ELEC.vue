@@ -10,6 +10,7 @@ import {
 import { alertsStore } from '@src/infrastructure/prun-api/data/alerts';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { timestampEachSecond } from '@src/utils/dayjs';
+import { elecFakeRows } from './ELEC.test-fixtures';
 import dayjs from 'dayjs';
 
 interface ElectionRow {
@@ -18,6 +19,8 @@ interface ElectionRow {
   electionStart?: number;
   electionEnd?: number;
 }
+
+const dayMs = 24 * 60 * 60 * 1000;
 
 const rows = computed<ElectionRow[] | undefined>(() => {
   const sites = sitesStore.all.value;
@@ -64,7 +67,11 @@ const rows = computed<ElectionRow[] | undefined>(() => {
     });
   }
 
-  return Array.from(map.values()).sort(compareRows);
+  const merged = [
+    ...map.values(),
+    // ...elecFakeRows(timestampEachSecond.value),
+  ];
+  return merged.sort(compareRows);
 });
 
 function compareRows(a: ElectionRow, b: ElectionRow) {
@@ -154,8 +161,6 @@ function getPlanetNaturalIdFromAlert(alert: PrunApi.Alert) {
   }
   return alert.naturalId;
 }
-
-const dayMs = 24 * 60 * 60 * 1000;
 </script>
 
 <template>
