@@ -16,6 +16,7 @@ import dayjs from 'dayjs';
 interface ElectionRow {
   planet: string;
   planetNaturalId: string;
+  type: 'GOV' | 'COGC';
   electionStart?: number;
   electionEnd?: number;
 }
@@ -28,23 +29,12 @@ const rows = computed<ElectionRow[] | undefined>(() => {
     return undefined;
   }
 
-  const electionTimestampByPlanet = new Map<string, number>();
-  for (const alert of alertsStore.all.value ?? []) {
-    if (alert.type !== 'ADMIN_CENTER_GOVERNOR_ELECTED') {
-      continue;
-    }
-    const naturalId = getPlanetNaturalIdFromAlert(alert)?.toUpperCase();
-    if (!naturalId) {
-      continue;
-    }
-    const timestamp = alert.time.timestamp;
-    const existing = electionTimestampByPlanet.get(naturalId);
-    if (existing === undefined || timestamp > existing) {
-      electionTimestampByPlanet.set(naturalId, timestamp);
-    }
-  }
+  const govElectionTimestampByPlanet = getLatestAlertTimestampByPlanet(
+    'ADMIN_CENTER_GOVERNOR_ELECTED',
+  );
+  const cogcElectionTimestampByPlanet = getLatestAlertTimestampByPlanet('COGC_PROGRAM_CHANGED');
 
-  const map = new Map<string, ElectionRow>();
+  const map = new Map<string, { planet: string; planetNaturalId: string }>();
   for (const site of sites) {
     const planetNaturalId = getEntityNaturalIdFromAddress(site.address);
     const planetName = getEntityNameFromAddress(site.address);
@@ -57,20 +47,36 @@ const rows = computed<ElectionRow[] | undefined>(() => {
       continue;
     }
 
-    const planet = `${planetName} (${planetNaturalId})`;
-    const electionTimestamp = electionTimestampByPlanet.get(key);
-    map.set(key, {
-      planet,
-      planetNaturalId,
-      electionStart: electionTimestamp === undefined ? undefined : electionTimestamp + dayMs * 20,
-      electionEnd: electionTimestamp === undefined ? undefined : electionTimestamp + dayMs * 28,
+    map.set(key, { planet: `${planetName} (${planetNaturalId})`, planetNaturalId });
+  }
+
+  const merged: ElectionRow[] = [];
+  for (const planet of map.values()) {
+    const planetKey = planet.planetNaturalId.toUpperCase();
+    const govElectionTimestamp = govElectionTimestampByPlanet.get(planetKey);
+    const cogcElectionTimestamp = cogcElectionTimestampByPlanet.get(planetKey);
+
+    merged.push({
+      ...planet,
+      type: 'GOV',
+      electionStart:
+        govElectionTimestamp === undefined ? undefined : govElectionTimestamp + dayMs * 20,
+      electionEnd:
+        govElectionTimestamp === undefined ? undefined : govElectionTimestamp + dayMs * 28,
+    });
+
+    merged.push({
+      ...planet,
+      type: 'COGC',
+      electionStart: cogcElectionTimestamp,
+      electionEnd:
+        cogcElectionTimestamp === undefined ? undefined : cogcElectionTimestamp + dayMs * 7,
     });
   }
 
-  const merged = [
-    ...map.values(),
-    // ...elecFakeRows(timestampEachSecond.value),
-  ];
+  // Uncomment to include test date in the table
+  // merged.push(...elecFakeRows(timestampEachSecond.value));
+
   return merged.sort(compareRows);
 });
 
@@ -89,7 +95,11 @@ function compareRows(a: ElectionRow, b: ElectionRow) {
     return a.electionStart - b.electionStart;
   }
 
-  return a.planetNaturalId.localeCompare(b.planetNaturalId);
+  const planetDiff = a.planetNaturalId.localeCompare(b.planetNaturalId);
+  if (planetDiff !== 0) {
+    return planetDiff;
+  }
+  return a.type.localeCompare(b.type);
 }
 
 function getSortGroup(row: ElectionRow) {
@@ -149,6 +159,33 @@ function openBuffer(command: string) {
   void showBuffer(command, { force: true });
 }
 
+function getTypeCommand(row: ElectionRow) {
+  return row.type === 'GOV' ? `GOV ${row.planetNaturalId}` : `COGC ${row.planetNaturalId}`;
+}
+
+function getVoteCommand(row: ElectionRow) {
+  return row.type === 'GOV' ? `ADM ${row.planetNaturalId}` : `COGCPEX ${row.planetNaturalId}`;
+}
+
+function getLatestAlertTimestampByPlanet(type: PrunApi.AlertType) {
+  const timestamps = new Map<string, number>();
+  for (const alert of alertsStore.all.value ?? []) {
+    if (alert.type !== type) {
+      continue;
+    }
+    const naturalId = getPlanetNaturalIdFromAlert(alert)?.toUpperCase();
+    if (!naturalId) {
+      continue;
+    }
+    const timestamp = alert.time.timestamp;
+    const existing = timestamps.get(naturalId);
+    if (existing === undefined || timestamp > existing) {
+      timestamps.set(naturalId, timestamp);
+    }
+  }
+  return timestamps;
+}
+
 function getPlanetNaturalIdFromAlert(alert: PrunApi.Alert) {
   for (const item of alert.data) {
     if (item.key === 'planet' || item.key === 'address') {
@@ -169,23 +206,27 @@ function getPlanetNaturalIdFromAlert(alert: PrunApi.Alert) {
     <thead>
       <tr>
         <th>Planet</th>
+        <th>Type</th>
         <th>Voting</th>
-        <th>Election</th>
-        <th>CMD</th>
+        <th>Ends</th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="row in rows" :key="row.planetNaturalId">
+      <tr v-for="row in rows" :key="`${row.planetNaturalId}:${row.type}`">
         <td>
           <PrunLink inline :command="`PLI ${row.planetNaturalId}`">{{ row.planet }}</PrunLink>
+        </td>
+        <td>
+          <PrunButton dark @click="openBuffer(getTypeCommand(row))">
+            {{ row.type }}
+          </PrunButton>
         </td>
         <td>
           <template v-if="row.electionStart === undefined">—</template>
           <PrunButton
             v-else-if="isPastOrNow(row.electionStart)"
-            inline
             primary
-            @click="openBuffer(`ADM ${row.planetNaturalId}`)">
+            @click="openBuffer(getVoteCommand(row))">
             VOTE
           </PrunButton>
           <template v-else>{{ formatFutureDuration(row.electionStart) }}</template>
@@ -194,16 +235,6 @@ function getPlanetNaturalIdFromAlert(alert: PrunApi.Alert) {
           <template v-if="row.electionEnd === undefined">—</template>
           <template v-else-if="isPastOrNow(row.electionEnd)">Now</template>
           <template v-else>{{ formatFutureDuration(row.electionEnd) }}</template>
-        </td>
-        <td>
-          <div :class="$style.buttons">
-            <PrunButton inline dark @click="openBuffer(`ADM ${row.planetNaturalId}`)">
-              ADM
-            </PrunButton>
-            <PrunButton dark inline @click="openBuffer(`GOV ${row.planetNaturalId}`)">
-              GOV
-            </PrunButton>
-          </div>
         </td>
       </tr>
     </tbody>
