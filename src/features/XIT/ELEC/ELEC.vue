@@ -10,7 +10,6 @@ import {
 import { alertsStore } from '@src/infrastructure/prun-api/data/alerts';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { timestampEachSecond } from '@src/utils/dayjs';
-import { elecFakeRows } from './ELEC.test-fixtures';
 import dayjs from 'dayjs';
 
 interface ElectionRow {
@@ -73,9 +72,6 @@ const rows = computed<ElectionRow[] | undefined>(() => {
         cogcElectionTimestamp === undefined ? undefined : cogcElectionTimestamp + dayMs * 7,
     });
   }
-
-  // Uncomment to include test date in the table
-  // merged.push(...elecFakeRows(timestampEachSecond.value));
 
   return merged.sort(compareRows);
 });
