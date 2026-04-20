@@ -31,6 +31,10 @@ const fakeAnalysis: BaseStorageAnalysis = {
   needFillPercentWeight: 0.5,
   needFillPercentVolume: 0.5,
   needFillRatio: 0.5,
+  availableAfterShipOutWeight: 0.5,
+  availableAfterShipOutVolume: 0.5,
+  daysOfSuppliesFit: 10,
+  suppliesReserveFraction: 0.2,
   daysUntilFull: 10,
   bindingLimit: 't',
 };
@@ -95,6 +99,14 @@ const noMatch = computed(
             <Tooltip
               position="bottom"
               tooltip="Days until storage is full at the current net production rate — when a ship visit is forced." />
+          </InlineFlex>
+        </th>
+        <th>
+          <InlineFlex>
+            Supply Days
+            <Tooltip
+              position="bottom"
+              tooltip="Total days of consumables the base could hold when storage is filled to its threshold after ship-out (80% when filling, 95% when draining). Colors match XIT BURN: red below your red threshold, yellow below your yellow threshold." />
           </InlineFlex>
         </th>
         <th>

@@ -1,9 +1,20 @@
 import { fixed01 } from '@src/utils/format';
 
-// Formats a number of days for display. Infinity → "∞", otherwise fixed01.
+// Days ≥ 1000 collapse to "∞" so very-large values don't clutter the UI.
 export function formatDays(days: number): string {
   if (!isFinite(days) || days >= 1000) {
     return '∞';
+  }
+  return fixed01(days);
+}
+
+// Above 100 days, exact count stops mattering — render as "100+".
+export function formatDaysCompact(days: number): string {
+  if (!isFinite(days) || days >= 1000) {
+    return '∞';
+  }
+  if (days > 100) {
+    return '100+';
   }
   return fixed01(days);
 }

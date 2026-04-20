@@ -18,7 +18,6 @@ interface MaterialRow {
 
 const planetBurn = computed(() => getPlanetBurn(analysis.siteId));
 
-// Materials currently in storage that will be shipped out (strictly producing, dailyAmount > 0).
 const shippingOut = computed<MaterialRow[]>(() => {
   const pb = planetBurn.value;
   if (!pb) {
@@ -45,7 +44,6 @@ const shippingOut = computed<MaterialRow[]>(() => {
   return rows;
 });
 
-// Needs to deliver (computeNeed > 0).
 const adding = computed<MaterialRow[]>(() => {
   const pb = planetBurn.value;
   if (!pb) {
@@ -88,7 +86,11 @@ const afterResupplyVolumeLoad = computed(
   () => analysis.volumeCapacity * analysis.needFillPercentVolume,
 );
 
-const daysFitReserved = computed(() => analysis.daysOfSuppliesFit * 0.8);
+const fillPercent = computed(() => Math.round((1 - analysis.suppliesReserveFraction) * 100));
+const reservePercent = computed(() => Math.round(analysis.suppliesReserveFraction * 100));
+const reserveReason = computed(() =>
+  analysis.suppliesReserveFraction >= 0.2 ? 'produced goods' : 'production variance',
+);
 
 const bindingLabel = computed(() => {
   if (analysis.bindingLimit === 't') {
@@ -172,6 +174,19 @@ const overflowAmount = computed(() => {
           {{ fixed0(analysis.volumeCapacity - afterResupplyVolumeLoad) }} m³
         </b>
       </div>
+      <div :class="$style.note">
+        Full in <b>{{ formatDays(analysis.daysUntilFull) }} days</b> at net
+        {{ fixed01(analysis.exportWeight - analysis.importWeight) }} t /
+        {{ fixed01(analysis.exportVolume - analysis.importVolume) }} m³ per day.
+      </div>
+    </section>
+
+    <section :class="[$style.panel, $style.teal]">
+      <h3 :class="$style.title">Visitation Frequency</h3>
+      <div :class="$style.note">
+        How long before a ship of this size would be needed, given current import/export rates.
+      </div>
+      <VisitationTable :analysis="analysis" />
     </section>
 
     <section :class="[$style.panel, $style.green]">
@@ -179,12 +194,11 @@ const overflowAmount = computed(() => {
       <div v-if="!isFinite(analysis.daysOfSuppliesFit)" :class="$style.big">
         ∞ (no active consumers)
       </div>
-      <div v-else :class="$style.big">
-        {{ fixed01(analysis.daysOfSuppliesFit) }} days of consumables fit in the post-ship-out
-        headroom.
-      </div>
+      <div v-else :class="$style.big">{{ fixed01(analysis.daysOfSuppliesFit) }} days</div>
       <div v-if="isFinite(analysis.daysOfSuppliesFit)" :class="$style.note">
-        With a 20% reserve for produced goods: <b>{{ fixed01(daysFitReserved) }} days</b>.
+        Total consumables the base holds when filled to <b>{{ fillPercent }}%</b> after ship-out ({{
+          reservePercent
+        }}% reserved for {{ reserveReason }}). Includes consumables already in storage.
       </div>
       <div :class="$style.note"
         >Current resupply target: {{ userData.settings.burn.resupply }} days.</div
@@ -193,9 +207,7 @@ const overflowAmount = computed(() => {
 
     <section :class="[$style.panel, $style.orange]">
       <h3 :class="$style.title">Shipping Out ({{ shippingOut.length }} materials)</h3>
-      <div v-if="shippingOut.length === 0" :class="$style.empty">
-        No produced goods in storage.
-      </div>
+      <div v-if="shippingOut.length === 0" :class="$style.empty">No produced goods in storage.</div>
       <table v-else :class="$style.numTable">
         <thead>
           <tr>
@@ -237,23 +249,6 @@ const overflowAmount = computed(() => {
           </tr>
         </tbody>
       </table>
-    </section>
-
-    <section :class="[$style.panel, $style.teal]">
-      <h3 :class="$style.title">Visitation Frequency</h3>
-      <div :class="$style.note">
-        How long before a ship of this size would be needed, given current import/export rates.
-      </div>
-      <VisitationTable :analysis="analysis" />
-    </section>
-
-    <section :class="[$style.panel, $style.slate]">
-      <h3 :class="$style.title">Days Till Full</h3>
-      <div :class="$style.big">{{ formatDays(analysis.daysUntilFull) }} days</div>
-      <div :class="$style.note">
-        Net production: weight {{ fixed01(analysis.exportWeight - analysis.importWeight) }} t/day,
-        volume {{ fixed01(analysis.exportVolume - analysis.importVolume) }} m³/day.
-      </div>
     </section>
   </div>
 </template>
@@ -349,9 +344,5 @@ const overflowAmount = computed(() => {
 
 .teal {
   color: #5bc0de;
-}
-
-.slate {
-  color: #c4a484;
 }
 </style>

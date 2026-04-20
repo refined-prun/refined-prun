@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { BaseStorageAnalysis, buildProjectedStore } from '@src/core/storage-analysis';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
+import { userData } from '@src/store/user-data';
 import PrunButton from '@src/components/PrunButton.vue';
 import CargoBar from '@src/components/CargoBar.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import { fillRatioClass, formatDays } from '@src/features/XIT/STO/utils';
+import { fillRatioClass, formatDays, formatDaysCompact } from '@src/features/XIT/STO/utils';
+import { fixed01 } from '@src/utils/format';
 
 const { analysis } = defineProps<{
   analysis: BaseStorageAnalysis;
@@ -31,6 +33,30 @@ const limitTooltip = computed(() => {
     ? 'Weight is the binding limit.'
     : 'Volume is the binding limit.';
 });
+
+const supplyTooltip = computed(() => {
+  if (!isFinite(analysis.daysOfSuppliesFit)) {
+    return 'No active consumers — no supplies needed.';
+  }
+  const pct = Math.round((1 - analysis.suppliesReserveFraction) * 100);
+  const reason =
+    analysis.suppliesReserveFraction >= 0.2
+      ? 'produced goods that keep accumulating'
+      : 'production variance';
+  return `${fixed01(analysis.daysOfSuppliesFit)} days total when storage is filled to ${pct}% after ship-out (remainder reserved for ${reason}).`;
+});
+
+const supplyClass = computed(() => {
+  const floored = Math.floor(analysis.daysOfSuppliesFit);
+  if (!isFinite(analysis.daysOfSuppliesFit)) {
+    return undefined;
+  }
+  return {
+    [C.Workforces.daysMissing]: floored <= userData.settings.burn.red,
+    [C.Workforces.daysWarning]: floored <= userData.settings.burn.yellow,
+    [C.Workforces.daysSupplied]: floored > userData.settings.burn.yellow,
+  };
+});
 </script>
 
 <template>
@@ -45,6 +71,12 @@ const limitTooltip = computed(() => {
     <td :class="$style.clickable" @click="onClick">
       <span :data-tooltip="limitTooltip" data-tooltip-position="bottom">
         {{ formatDays(analysis.daysUntilFull) }}
+      </span>
+    </td>
+    <td :class="[$style.clickable, $style.supplyCell]" @click="onClick">
+      <div v-if="supplyClass" :class="[$style.supplyBg, supplyClass]" />
+      <span :data-tooltip="supplyTooltip" data-tooltip-position="bottom">
+        {{ formatDaysCompact(analysis.daysOfSuppliesFit) }}
       </span>
     </td>
     <td :class="[$style.clickable, $style.barCell]" @click="onClick">
@@ -108,5 +140,17 @@ const limitTooltip = computed(() => {
 .barCell {
   width: 50%;
   vertical-align: middle;
+}
+
+.supplyCell {
+  position: relative;
+}
+
+.supplyBg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>

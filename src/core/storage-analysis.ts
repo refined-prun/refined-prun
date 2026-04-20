@@ -40,12 +40,16 @@ export interface BaseStorageAnalysis {
   needFillRatio: number;
 
   // Headroom after shipping out produced goods but BEFORE any delivery.
-  // Used to compute "how many days of supplies would fit?"
+  // Used for the Fill Summary "After ship-out" row.
   availableAfterShipOutWeight: number;
   availableAfterShipOutVolume: number;
-  // Days of import consumption that fit in the post-ship-out headroom. Infinity
-  // if the base doesn't consume anything.
+  // Total days of consumables the base could hold after ship-out, filling up
+  // to the reserve threshold. Counts currently-held consumables as part of the
+  // total (not "extra days of room"). Infinity if nothing is consumed.
   daysOfSuppliesFit: number;
+  // 0.20 when storage is filling (reserve for produced goods that keep
+  // accumulating between visits), 0.05 when draining (small variance buffer).
+  suppliesReserveFraction: number;
 
   // Days-until-full at net production rate. Infinity when net flow ≤ 0.
   daysUntilFull: number;
@@ -88,6 +92,10 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
   // materials — these get shipped out during rotation.
   let shippedOutWeight = 0;
   let shippedOutVolume = 0;
+  // Weight/volume of current inventory for net-consuming (dailyAmount < 0)
+  // materials — counted toward the "supplies that fit" total (not against).
+  let consumerInventoryWeight = 0;
+  let consumerInventoryVolume = 0;
 
   if (planetBurn) {
     for (const ticker of Object.keys(planetBurn.burn)) {
@@ -103,6 +111,8 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
         const consumption = -daily;
         importWeight += consumption * mat.weight;
         importVolume += consumption * mat.volume;
+        consumerInventoryWeight += mb.inventory * mat.weight;
+        consumerInventoryVolume += mb.inventory * mat.volume;
       } else {
         // Net-positive or zero material.
         exportWeight += daily * mat.weight;
@@ -159,8 +169,32 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
     store.volumeCapacity - store.volumeLoad + shippedOutVolume,
     0,
   );
-  const daysFitW = importWeight > 0 ? availableAfterShipOutWeight / importWeight : Infinity;
-  const daysFitV = importVolume > 0 ? availableAfterShipOutVolume / importVolume : Infinity;
+  // Reserve depends on net flow: a filling base needs headroom for produced
+  // goods between visits (20%); a draining base only needs a small variance
+  // buffer (5%).
+  const suppliesReserveFraction = daysUntilFull === Infinity ? 0.05 : 0.2;
+  // Total consumables the base could hold after ship-out: fill capacity up to
+  // (1 - reserve), minus the idle non-consumable load that stays in storage
+  // (zero-daily stock that isn't shipped out and isn't consumed). Consumer
+  // inventory counts toward the total — that's what the user is measuring.
+  const idleNonConsumableWeight = Math.max(
+    store.weightLoad - shippedOutWeight - consumerInventoryWeight,
+    0,
+  );
+  const idleNonConsumableVolume = Math.max(
+    store.volumeLoad - shippedOutVolume - consumerInventoryVolume,
+    0,
+  );
+  const consumableCapWeight = Math.max(
+    store.weightCapacity * (1 - suppliesReserveFraction) - idleNonConsumableWeight,
+    0,
+  );
+  const consumableCapVolume = Math.max(
+    store.volumeCapacity * (1 - suppliesReserveFraction) - idleNonConsumableVolume,
+    0,
+  );
+  const daysFitW = importWeight > 0 ? consumableCapWeight / importWeight : Infinity;
+  const daysFitV = importVolume > 0 ? consumableCapVolume / importVolume : Infinity;
   const daysOfSuppliesFit = Math.min(daysFitW, daysFitV);
 
   return {
@@ -186,6 +220,7 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
     availableAfterShipOutWeight,
     availableAfterShipOutVolume,
     daysOfSuppliesFit,
+    suppliesReserveFraction,
     daysUntilFull,
     bindingLimit,
   };
