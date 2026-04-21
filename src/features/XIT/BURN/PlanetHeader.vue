@@ -4,6 +4,7 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import PrunButton from '@src/components/PrunButton.vue';
 import { PlanetBurn } from '@src/core/burn';
 import { countDays } from '@src/features/XIT/BURN/utils';
+import { useXitParameters } from '@src/hooks/use-xit-parameters';
 
 const { burn } = defineProps<{
   burn: PlanetBurn;
@@ -11,6 +12,9 @@ const { burn } = defineProps<{
   minimized?: boolean;
   onClick: () => void;
 }>();
+
+const parameters = useXitParameters();
+const showProdButton = computed(() => parameters.length === 0);
 
 const days = computed(() => countDays(burn.burn));
 </script>
@@ -30,7 +34,11 @@ const days = computed(() => countDays(burn.burn));
         <PrunButton dark inline @click="showBuffer(`INV ${burn.storeId.substring(0, 8)}`)">
           INV
         </PrunButton>
-        <PrunButton dark inline @click="showBuffer(`PROD ${burn.prodSiteId.substring(0, 8)}`)">
+        <PrunButton
+          v-if="showProdButton"
+          dark
+          inline
+          @click="showBuffer(`PROD ${burn.prodSiteId.substring(0, 8)}`)">
           PROD
         </PrunButton>
       </div>
