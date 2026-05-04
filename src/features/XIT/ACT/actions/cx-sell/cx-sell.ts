@@ -1,22 +1,46 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import Edit from '@src/features/XIT/ACT/actions/cx-sell/Edit.vue';
+import Configure from '@src/features/XIT/ACT/actions/cx-sell/Configure.vue';
+import { Config } from '@src/features/XIT/ACT/actions/cx-sell/config';
 import { CXPO_SELL } from '@src/features/XIT/ACT/action-steps/CXPO_SELL';
 import { fixed0, fixed02 } from '@src/utils/format';
 import { fillAmount } from '@src/features/XIT/ACT/actions/cx-sell/utils';
-import { AssertFn } from '@src/features/XIT/ACT/shared-types';
+import { AssertFn, configurableValue } from '@src/features/XIT/ACT/shared-types';
+import {
+  atSameLocation,
+  deserializeStorage,
+  serializeStorage,
+} from '@src/features/XIT/ACT/actions/utils';
+import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
+import { exchangesStore } from '@src/infrastructure/prun-api/data/exchanges';
+import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 
-act.addAction({
+act.addAction<Config>({
   type: 'CX Sell',
-  description: action => {
+  description: (action, config) => {
     if (!action.group || !action.exchange) {
       return '--';
     }
 
-    return 'Selling group ' + action.group + ' on ' + action.exchange;
+    let origin = 'CX warehouse';
+    if (action.origin === configurableValue) {
+      origin = config?.origin ?? 'configured location';
+    } else if (action.origin) {
+      origin = action.origin;
+    }
+
+    return `Selling group ${action.group} on ${action.exchange} from ${origin}`;
   },
   editComponent: Edit,
+  configureComponent: Configure,
+  needsConfigure: data => {
+    return data.origin === configurableValue;
+  },
+  isValidConfig: (data, config) => {
+    return data.origin !== configurableValue || config.origin !== undefined;
+  },
   generateSteps: async ctx => {
-    const { data, log, fail, getMaterialGroup, emitStep } = ctx;
+    const { data, config, log, fail, getMaterialGroup, emitStep } = ctx;
     const assert: AssertFn = ctx.assert;
     const allowUnfilled = data.allowUnfilled ?? false;
     const sellPartial = data.sellPartial ?? false;
@@ -26,6 +50,19 @@ act.addAction({
 
     const exchange = data.exchange;
     assert(exchange, 'Missing exchange');
+
+    let serializedOrigin = data.origin;
+    if (!serializedOrigin) {
+      const naturalId = exchangesStore.getNaturalIdFromCode(exchange);
+      const warehouse = warehousesStore.getByEntityNaturalId(naturalId);
+      const cxWarehouse = storagesStore.getById(warehouse?.storeId);
+      assert(cxWarehouse, `CX warehouse not found for ${exchange}`);
+      serializedOrigin = serializeStorage(cxWarehouse);
+    } else if (serializedOrigin === configurableValue) {
+      serializedOrigin = config?.origin;
+    }
+    const origin = deserializeStorage(serializedOrigin);
+    assert(origin, 'Invalid origin');
 
     for (const ticker of Object.keys(materials)) {
       const amount = materials[ticker];
@@ -68,6 +105,7 @@ act.addAction({
       emitStep(
         CXPO_SELL({
           exchange,
+          originId: origin.id,
           ticker,
           amount: askAmount,
           priceLimit,

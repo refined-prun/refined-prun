@@ -7,6 +7,15 @@ import RadioItem from '@src/components/forms/RadioItem.vue';
 import { showTileOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import EditPriceLimits from '@src/features/XIT/ACT/actions/cx-buy/EditPriceLimits.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
+import { exchangesStore } from '@src/infrastructure/prun-api/data/exchanges';
+import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
+import {
+  atSameLocation,
+  serializeStorage,
+  storageSort,
+} from '@src/features/XIT/ACT/actions/utils';
+import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 const { action, pkg } = defineProps<{
   action: UserData.ActionData;
@@ -18,6 +27,42 @@ const materialGroup = ref(action.group ?? materialGroups.value[0]);
 
 const exchanges = ['AI1', 'CI1', 'IC1', 'NC1', 'CI2', 'NC2'];
 const exchange = ref(action.exchange ?? exchanges[0]);
+
+const cxWarehouse = computed(() => {
+  const naturalId = exchangesStore.getNaturalIdFromCode(exchange.value);
+  const warehouse = warehousesStore.getByEntityNaturalId(naturalId);
+  return storagesStore.getById(warehouse?.storeId);
+});
+
+const originStorages = computed(() => {
+  const warehouse = cxWarehouse.value;
+  if (!warehouse) {
+    return [];
+  }
+
+  return (storagesStore.nonFuelStores.value ?? [])
+    .filter(x => atSameLocation(x, warehouse))
+    .sort(storageSort)
+    .map(serializeStorage);
+});
+
+const originOptions = computed(() => {
+  const options = [...originStorages.value];
+  options.unshift(configurableValue);
+  return options;
+});
+
+const origin = ref(action.origin ?? originStorages.value[0] ?? originOptions.value[0]);
+
+watchEffect(() => {
+  if (origin.value === configurableValue) {
+    return;
+  }
+
+  if (!originStorages.value.includes(origin.value)) {
+    origin.value = originStorages.value[0] ?? configurableValue;
+  }
+});
 
 const priceLimits = ref(getPriceLimits());
 
@@ -41,6 +86,7 @@ function validate() {
 function save() {
   action.group = materialGroup.value;
   action.exchange = exchange.value;
+  action.origin = origin.value;
   action.priceLimits = {};
   for (let [ticker, price] of priceLimits.value) {
     const material = materialsStore.getByTicker(ticker);
@@ -62,6 +108,9 @@ defineExpose({ validate, save });
   </Active>
   <Active label="Exchange">
     <SelectInput v-model="exchange" :options="exchanges" />
+  </Active>
+  <Active label="Origin">
+    <SelectInput v-model="origin" :options="originOptions" />
   </Active>
   <Commands label="Price Limits">
     <PrunButton primary @click="onEditPriceLimitsClick">EDIT</PrunButton>
