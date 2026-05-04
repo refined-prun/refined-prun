@@ -1,10 +1,8 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import { fixed0, fixed02 } from '@src/utils/format';
-import { changeInputValue, clickElement } from '@src/util';
+import { changeInputValue, changeSelectIndex, clickElement } from '@src/util';
 import { fillAmount } from '@src/features/XIT/ACT/actions/cx-sell/utils';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { exchangesStore } from '@src/infrastructure/prun-api/data/exchanges';
-import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { watchWhile } from '@src/utils/watch';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { watchEffect } from 'vue';
@@ -12,6 +10,7 @@ import { AssertFn } from '@src/features/XIT/ACT/shared-types';
 
 interface Data {
   exchange: string;
+  originId?: string;
   ticker: string;
   amount: number;
   priceLimit: number;
@@ -57,12 +56,8 @@ export const CXPO_SELL = act.addActionStep<Data>({
     const assert: AssertFn = ctx.assert;
     const { amount, ticker, exchange, priceLimit } = data;
     const cxTicker = `${ticker}.${exchange}`;
-    const cxWarehouse = computed(() => {
-      const naturalId = exchangesStore.getNaturalIdFromCode(exchange);
-      const warehouse = warehousesStore.getByEntityNaturalId(naturalId);
-      return storagesStore.getById(warehouse?.storeId);
-    });
-    assert(cxWarehouse.value, `CX warehouse not found for ${exchange}`);
+    const origin = computed(() => storagesStore.getById(data.originId));
+    assert(origin.value, 'Origin inventory not found');
 
     if (amount <= 0) {
       log.warning(`No ${ticker} was sold (target amount is 0)`);
@@ -74,12 +69,12 @@ export const CXPO_SELL = act.addActionStep<Data>({
     assert(material, `Unknown material ${ticker}`);
 
     const availableAmount =
-      cxWarehouse.value.items
+      origin.value.items
         .map(x => x.quantity)
         .find(x => x?.material.ticker === ticker)?.amount ?? 0;
     assert(
       availableAmount >= amount,
-      `Cannot sell ${fixed0(amount)} ${ticker} (only ${fixed0(availableAmount)} in warehouse)`,
+      `Cannot sell ${fixed0(amount)} ${ticker} (only ${fixed0(availableAmount)} in origin)`,
     );
 
     const tile = await requestTile(`CXPO ${cxTicker}`);
@@ -91,6 +86,14 @@ export const CXPO_SELL = act.addActionStep<Data>({
 
     const sellButton = await $(tile.anchor, C.Button.danger);
     const form = await $(tile.anchor, C.ComExPlaceOrderForm.form);
+
+    const storageLocation = await $(form, 'select');
+    const originIndex = Array.from(storageLocation.options).findIndex(
+      opt => opt.value === origin.value!.id,
+    );
+    assert(originIndex >= 0, 'Origin storage location not found in CXPO form');
+    changeSelectIndex(storageLocation, originIndex);
+
     const inputs = _$$(form, 'input');
     const quantityInput = inputs[0];
     assert(quantityInput !== undefined, 'Missing quantity input');
@@ -155,15 +158,15 @@ export const CXPO_SELL = act.addActionStep<Data>({
     await waitAct();
     unwatch();
 
-    const warehouseAmount = computed(() => {
+    const originAmount = computed(() => {
       return (
-        cxWarehouse.value?.items
+        origin.value?.items
           .map(x => x.quantity ?? undefined)
           .filter(x => x !== undefined)
           .find(x => x.material.ticker === ticker)?.amount ?? 0
       );
     });
-    const currentAmount = warehouseAmount.value;
+    const currentAmount = originAmount.value;
     const amountToFill = fillAmount(cxTicker, amount, priceLimit)?.amount ?? 0;
     const shouldWaitForUpdate = amountToFill > 0;
 
@@ -172,7 +175,7 @@ export const CXPO_SELL = act.addActionStep<Data>({
 
     if (shouldWaitForUpdate) {
       setStatus('Waiting for storage update...');
-      await watchWhile(() => warehouseAmount.value === currentAmount);
+      await watchWhile(() => originAmount.value === currentAmount);
     } else {
       setStatus('Ask order created');
     }
