@@ -48,15 +48,15 @@ const progressClass = computed(() => ({
   height: 100%;
 }
 
-.good::-webkit-progress-value {
+.good {
   background: var(--rp-color-green);
 }
 
-.warning::-webkit-progress-value {
+.warning {
   background: var(--rp-color-accent-primary);
 }
 
-.danger::-webkit-progress-value {
+.danger {
   background: var(--rp-color-red);
 }
 </style>
