@@ -59,7 +59,6 @@ function replacePOPIDReserves(tile: PrunTile) {
     const nextConsumptionContributionValue = computed(() =>
       Math.min(sliderValue.value, ncBarMax.value - nextConsumptionValue.value),
     );
-    console.log(nextConsumptionValue.value, nextConsumptionContributionValue.value);
     createFragmentApp(
       StackedProgressBar,
       reactive({
