@@ -45,6 +45,37 @@ function replacePOPIDReserves(tile: PrunTile) {
         ],
       }),
     ).after(reserveBar);
+    const nextConsumptionCell = row.children[2];
+    if (nextConsumptionCell === undefined) {
+      return;
+    }
+    const nextConsumptionBar = await $(nextConsumptionCell, 'progress');
+    nextConsumptionBar.hidden = true;
+    const ncBarMaxText = refAttributeValue(nextConsumptionBar, 'max');
+    const ncBarMax = computed(() => Number(ncBarMaxText.value));
+    // The 'next contribution' bar is not a real storage.
+    // The actual value is best calculated from the value of the real reserve value.
+    const nextConsumptionValue = computed(() => Math.min(reserveValue.value, ncBarMax.value));
+    const nextConsumptionContributionValue = computed(() =>
+      Math.min(sliderValue.value, ncBarMax.value - nextConsumptionValue.value),
+    );
+    console.log(nextConsumptionValue.value, nextConsumptionContributionValue.value);
+    createFragmentApp(
+      StackedProgressBar,
+      reactive({
+        max: ncBarMax,
+        sections: [
+          {
+            value: nextConsumptionValue,
+            class: $style.reserveSection,
+          },
+          {
+            value: nextConsumptionContributionValue,
+            class: $style.contributionSection,
+          },
+        ],
+      }),
+    ).after(nextConsumptionBar);
   });
 }
 
