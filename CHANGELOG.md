@@ -16,6 +16,10 @@
 - `cxpo-order-book`: Add a delete button to own orders
 - `nots-notification-type-label`: Add labels for new notification types
 
+### Fixed
+
+- `XIT PROD`: Fix order deletion in `PRODQ` tiles opened from `XIT PROD`
+
 ## 26.3.22
 
 ### Added
