@@ -241,8 +241,20 @@ function copyBurnTable() {
       <RadioItem v-model="green" horizontal>GREEN</RadioItem>
       <RadioItem v-model="inf" horizontal>INF</RadioItem>
       <div :class="$style.separator" />
-      <RadioItem v-model="prod" horizontal>PROD</RadioItem>
-      <RadioItem v-model="wf" horizontal>WF</RadioItem>
+      <RadioItem
+        v-model="prod"
+        horizontal
+        data-tooltip="Toggle production I/O. When off, only workforce consumption is shown."
+        data-tooltip-position="bottom">
+        PROD
+      </RadioItem>
+      <RadioItem
+        v-model="wf"
+        horizontal
+        data-tooltip="Toggle workforce consumption. When off, burn rates exclude workforce needs."
+        data-tooltip-position="bottom">
+        WF
+      </RadioItem>
       <div :class="$style.separator" />
       <RadioItem v-model="io" horizontal>I/O</RadioItem>
       <div :class="$style.spacer" />
