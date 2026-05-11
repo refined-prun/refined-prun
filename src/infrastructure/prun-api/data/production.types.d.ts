@@ -21,7 +21,12 @@ declare namespace PrunApi {
     value: number;
   }
 
-  type EfficiencyFactorType = 'EXPERTS' | 'COGC_PROGRAM' | 'PRODUCTION_LINE_CONDITION';
+  type EfficiencyFactorType =
+    | 'EXPERTS'
+    | 'COGC_PROGRAM'
+    | 'PRODUCTION_LINE_CONDITION'
+    | 'COMPANY_HEADQUARTERS'
+    | 'FERTILITY';
 
   interface ProductionOrder {
     id: string;

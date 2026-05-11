@@ -1,0 +1,153 @@
+diff --git a/dist/index.cjs b/dist/index.cjs
+index 3f7cf923677ce947ceb3a274494b289f514a72f9..803e8e3dae3358a3c6124dfa0e1340f12a48c023 100644
+--- a/dist/index.cjs
++++ b/dist/index.cjs
+@@ -513,11 +513,13 @@ function VitePluginLibAssets(options = {}) {
+   const processAssetsInBase64 = (bundleSourceMap) => {
+     const updatedSourceMap = { ...bundleSourceMap };
+     Object.keys(updatedSourceMap).forEach((name2) => {
+-      let updated = updatedSourceMap[name2];
++      const unprocessed = updatedSourceMap[name2];
++      if (typeof unprocessed !== "string") return;
++      let updated = unprocessed;
+       base64AssetsPathMap.forEach((asset, base64) => {
+         updated = replaceAll(updated, base64, publicUrl ? asset : `./${asset}`);
+       });
+-      if (updatedSourceMap[name2] !== updated)
++      if (unprocessed !== updated)
+         updatedSourceMap[name2] = updated;
+     });
+     return updatedSourceMap;
+@@ -526,7 +528,9 @@ function VitePluginLibAssets(options = {}) {
+     const updatedSourceMap = { ...bundleSourceMap };
+     const assetsExtracted = Object.keys(updatedSourceMap).filter((id) => filter(id));
+     Object.keys(updatedSourceMap).filter((name2) => assetsImporterFilter(name2)).forEach((name2) => {
+-      let updated = updatedSourceMap[name2];
++      const unprocessed = updatedSourceMap[name2];
++      if (typeof unprocessed !== "string") return;
++      let updated = unprocessed;
+       const fileDir = import_node_path3.default.dirname(name2);
+       assetsExtracted.forEach(async (asset) => {
+         const relativePath = import_node_path3.default.posix.relative(fileDir, asset);
+@@ -538,7 +542,7 @@ function VitePluginLibAssets(options = {}) {
+           updated = replaceAll(updated, `(${originalAsset})`, `(${relativeAsset})`);
+         }
+       });
+-      if (updatedSourceMap[name2] !== updated)
++      if (unprocessed !== updated)
+         updatedSourceMap[name2] = updated;
+     });
+     return updatedSourceMap;
+@@ -622,14 +626,14 @@ function VitePluginLibAssets(options = {}) {
+     async writeBundle(_, outputBundle) {
+       const outputDir = import_node_path3.default.isAbsolute(outDir) ? outDir : import_node_path3.default.posix.join(process.cwd(), outDir);
+       const bundleSourceMap = Object.keys(outputBundle).reduce((map, name2) => {
+-        const filePath = import_node_path3.default.posix.join(outputDir, name2);
+-        const source = import_node_fs4.default.readFileSync(filePath, "utf8");
++        const assetOrChunk = outputBundle[name2];
++        const source = assetOrChunk.type === "chunk" ? assetOrChunk.code : assetOrChunk.source;
+         map[name2] = source;
+         return map;
+       }, {});
+       const cacheSourceMap = isBuildWatch ? Object.values(Object.fromEntries(assetCache)).reduce((map, { fileName, source }) => {
+         if (fileName && source && !bundleSourceMap[fileName])
+-          map[fileName] = String(source);
++          map[fileName] = source;
+         return map;
+       }, {}) : {};
+       const updatedSourceMap = processAssetsInBase64({ ...bundleSourceMap, ...cacheSourceMap });
+@@ -640,7 +644,7 @@ function VitePluginLibAssets(options = {}) {
+         import_node_fs4.default.writeFileSync(outputPath2, updated);
+         const bundle = outputBundle[name2];
+         if (bundle.type === "chunk")
+-          bundle.code = updated;
++          bundle.code = sourceToString(updated);
+         else if (name2.endsWith(".css"))
+           bundle.source = updated;
+       });
+@@ -652,4 +656,7 @@ function VitePluginLibAssets(options = {}) {
+     }
+   };
+ }
++function sourceToString(source) {
++  return typeof source === "string" ? source : import_node_buffer.Buffer.from(source).toString("utf8");
++}
+ exports.default = module.exports;
+\ No newline at end of file
+diff --git a/dist/index.js b/dist/index.js
+index cacc8931d7997cfd251663663b3d43d86aefc777..3127932ff46ad91db2a769869e12158fc64bdcc8 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -473,11 +474,13 @@ function VitePluginLibAssets(options = {}) {
+   const processAssetsInBase64 = (bundleSourceMap) => {
+     const updatedSourceMap = { ...bundleSourceMap };
+     Object.keys(updatedSourceMap).forEach((name2) => {
+-      let updated = updatedSourceMap[name2];
++      const unprocessed = updatedSourceMap[name2];
++      if (typeof unprocessed !== "string") return;
++      let updated = unprocessed;
+       base64AssetsPathMap.forEach((asset, base64) => {
+         updated = replaceAll(updated, base64, publicUrl ? asset : `./${asset}`);
+       });
+-      if (updatedSourceMap[name2] !== updated)
++      if (unprocessed !== updated)
+         updatedSourceMap[name2] = updated;
+     });
+     return updatedSourceMap;
+@@ -486,7 +489,9 @@ function VitePluginLibAssets(options = {}) {
+     const updatedSourceMap = { ...bundleSourceMap };
+     const assetsExtracted = Object.keys(updatedSourceMap).filter((id) => filter(id));
+     Object.keys(updatedSourceMap).filter((name2) => assetsImporterFilter(name2)).forEach((name2) => {
+-      let updated = updatedSourceMap[name2];
++      const unprocessed = updatedSourceMap[name2];
++      if (typeof unprocessed !== "string") return;
++      let updated = unprocessed;
+       const fileDir = path3.dirname(name2);
+       assetsExtracted.forEach(async (asset) => {
+         const relativePath = path3.posix.relative(fileDir, asset);
+@@ -498,7 +503,7 @@ function VitePluginLibAssets(options = {}) {
+           updated = replaceAll(updated, `(${originalAsset})`, `(${relativeAsset})`);
+         }
+       });
+-      if (updatedSourceMap[name2] !== updated)
++      if (unprocessed !== updated)
+         updatedSourceMap[name2] = updated;
+     });
+     return updatedSourceMap;
+@@ -582,14 +587,14 @@ function VitePluginLibAssets(options = {}) {
+     async writeBundle(_, outputBundle) {
+       const outputDir = path3.isAbsolute(outDir) ? outDir : path3.posix.join(process.cwd(), outDir);
+       const bundleSourceMap = Object.keys(outputBundle).reduce((map, name2) => {
+-        const filePath = path3.posix.join(outputDir, name2);
+-        const source = fs4.readFileSync(filePath, "utf8");
++        const assetOrChunk = outputBundle[name2];
++        const source = assetOrChunk.type === "chunk" ? assetOrChunk.code : assetOrChunk.source;
+         map[name2] = source;
+         return map;
+       }, {});
+       const cacheSourceMap = isBuildWatch ? Object.values(Object.fromEntries(assetCache)).reduce((map, { fileName, source }) => {
+         if (fileName && source && !bundleSourceMap[fileName])
+-          map[fileName] = String(source);
++          map[fileName] = source;
+         return map;
+       }, {}) : {};
+       const updatedSourceMap = processAssetsInBase64({ ...bundleSourceMap, ...cacheSourceMap });
+@@ -600,7 +605,7 @@ function VitePluginLibAssets(options = {}) {
+         fs4.writeFileSync(outputPath2, updated);
+         const bundle = outputBundle[name2];
+         if (bundle.type === "chunk")
+-          bundle.code = updated;
++          bundle.code = sourceToString(updated);
+         else if (name2.endsWith(".css"))
+           bundle.source = updated;
+       });
+@@ -612,6 +617,9 @@ function VitePluginLibAssets(options = {}) {
+     }
+   };
+ }
++function sourceToString(source) {
++  return typeof source === "string" ? source : Buffer.from(source).toString("utf8");
++}
+ export {
+   VitePluginLibAssets as default
+ };

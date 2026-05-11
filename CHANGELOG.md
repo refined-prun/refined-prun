@@ -4,13 +4,39 @@
 
 ### Added
 
+- `XIT ELEC`: Upcoming elections for planets you have bases on
+- `adm-hide-inactive-buttons`: Hides inactive buttons
+- `cxo-delete-order-button`: Adds a delete button
+- `cxob-delete-own-exchange-orders`: Adds a delete button to own orders
+- `inv-shpt-condition-indicator`: Adds a condition indicator to SHPT and BLCK items
+
+### Changed
+
+- `XIT ACT`: Filter destination list based on selected origin in `MTRA` configuration
+- `XIT CONTC`: Show an address link in the "Contribute" condition
+- `cxpo-order-book`: Add a delete button to own orders
+- `nots-notification-type-label`: Add labels for new notification types
+
+### Fixed
+
+- `XIT ACT`: Prevent manually entered quantity/price overwrite by order book changes in CX Buy
+- `XIT PROD`: Fix order deletion in `PRODQ` tiles opened from `XIT PROD`
+- `prun-bugs`: Prevent text selection when moving items by dragging
+
+## 26.3.22
+
+### Added
+
+- `XIT PROD`: Dense cross-base production overview
 - `contribution-bulk-controls`: Adds NONE/ALL buttons to contribution sections
 - `contribution-maxed`: Automatically maxes contribution sliders in CoGC and population upkeep tiles
 - `flt-flex-fuel`: Allows the fuel column layout to better use available space
+- `sidebar-hide-zero-currencies`: Hides currencies with zero balance in the right sidebar
 - `sysi-blue-negative-value`: Makes lower negative planet values blue instead of red
 
 ### Changed
 
+- `XIT BURN`: Add Google Sheets-friendly copy button
 - `XIT CONTS`: Add missing condition labels
 - `XIT CONTC`: Add missing condition descriptions
 - `flt-ship-condition`: Restore red/yellow thresholds; red at 79%, yellow at 81%
@@ -21,6 +47,7 @@
 - `prun-bugs`: Fix layout shift when selecting inventory grid items
 - `prun-bugs`: Fix slider dot stretching and cursor styles
 - `prun-bugs`: Disable POPID sliders that can't be filled due to full reserves
+- `screen-tab-bar`: Fix jerky trackpad scroll and add horizontal gesture support
 - Fix financial data collection failure when the user has no warehouses
 
 ## 26.1.24

@@ -11,25 +11,17 @@ Analyze a PR and produce a structured review in `.tmp/pr/<number>/pr-review.md`.
 
 **Principle:** Never assume how the game works. Flag any change that assumes game mechanics without doc backing.
 
+**Principle:** Only review code that appears in the diff. Do not review unchanged code in changed files. Do not suggest improvements to code outside the PR's scope unless it has a direct connection to the changed code.
+
 ## Phase 1: Pre-flight
 
 ```bash
-git status --porcelain
+.claude/skills/review-pr/scripts/preflight.sh
 ```
 
-**If output is non-empty:** Stop. Tell the user: there are uncommitted changes. Commit or stash them first.
-
-```bash
-which gh || echo "GH_MISSING"
-```
-
-**If GH_MISSING:** Stop. Tell the user: `gh` CLI is required. Install from https://cli.github.com.
+**If exit code is non-zero:** Stop. The script prints the blocking issue (dirty worktree or missing `gh`). Tell the user.
 
 ## Phase 2: Setup
-
-```bash
-git fetch origin main
-```
 
 Detect the current branch's PR:
 
@@ -45,36 +37,18 @@ Determine the target PR number and whether to checkout:
 **If the current branch's PR number matches the target PR number:**
 
 ```bash
-git merge origin/main --no-edit
+.claude/skills/review-pr/scripts/setup-pr.sh <number>
 ```
 
-**Otherwise:**
+**Otherwise (need to checkout):**
 
 ```bash
-gh pr checkout <number>
+.claude/skills/review-pr/scripts/setup-pr.sh <number> --checkout
 ```
 
-```bash
-git merge origin/main --no-edit
-```
+**If the script exits non-zero:** It prints `ERROR: MERGE_CONFLICT`. Stop. Tell the user: merge conflict with main. Resolve manually.
 
-**If merge conflict:** Stop. Tell the user: merge conflict with main. Resolve manually.
-
-```bash
-gh pr view --json number,title,body,baseRefName,headRefName,author,labels,files 2>&1
-```
-
-Save the JSON output. Extract `number`, `title`, `baseRefName` for later use.
-
-```bash
-mkdir -p .tmp/pr/<number>
-```
-
-Write the PR number to `.tmp/pr/current.txt`:
-
-```bash
-echo <number> > .tmp/pr/current.txt
-```
+**On success:** The script prints the PR JSON metadata. Save it. Extract `number`, `title`, `baseRefName` for later use. The script also creates `.tmp/pr/<number>/` and writes `.tmp/pr/current.txt`.
 
 ### Existing Review Detection
 
@@ -84,39 +58,21 @@ If the file does not exist, this is a fresh review.
 
 ## Phase 3: Prettier + Commit
 
-```bash
-pnpm prettier
-```
-
-Check if prettier made any changes:
-
-```bash
-git diff --stat
-```
-
-**If changes exist:** Stage only prettier-touched files and commit:
-
-```bash
-git diff --name-only | xargs git add && git commit -m "prettier"
-```
-
-**If no changes:** Skip — working tree is already formatted.
-
 ## Phase 4: Gather Context
 
-Run all three in parallel:
+Run formatting, linting, and context gathering in parallel:
 
 ```bash
-gh pr diff > .tmp/pr/<number>/pr-diff.txt
+.claude/skills/review-pr/scripts/format-and-lint.sh <number>
 ```
 
 ```bash
-gh pr view --json comments,reviews --jq '.comments[].body, .reviews[].body' > .tmp/pr/<number>/pr-comments.txt 2>/dev/null
+.claude/skills/review-pr/scripts/gather-context.sh <number>
 ```
 
-```bash
-gh pr view --json files --jq '.files[].path'
-```
+The format-and-lint script runs prettier (auto-commits if needed) then eslint. It prints `PRETTIER_COMMITTED` or `PRETTIER_CLEAN`.
+
+The gather-context script writes `pr-diff.txt` and `pr-comments.txt` to `.tmp/pr/<number>/` and prints the list of changed files.
 
 ### Doc Reading Strategy
 
@@ -139,13 +95,23 @@ Now read `.tmp/pr/<number>/pr-diff.txt`. If it exceeds 800 lines, read in 500-li
 
 ## Phase 5: ESLint
 
+Read `.tmp/pr/<number>/eslint-output.txt` (written by `format-and-lint.sh`). Note exit code and any errors/warnings.
+
+## Phase 5.5: Create Worktree
+
+Create an isolated, read-only snapshot of the PR code for analysis. This protects the review from the user's concurrent edits on the main worktree.
+
 ```bash
-pnpm lint 2>&1 | head -200 > .tmp/pr/<number>/eslint-output.txt; echo "EXIT:${PIPESTATUS[0]}" >> .tmp/pr/<number>/eslint-output.txt
+.claude/skills/review-pr/scripts/worktree.sh create <number>
 ```
 
-Read `.tmp/pr/<number>/eslint-output.txt`. Note exit code and any errors/warnings.
+The worktree is a detached HEAD snapshot of the current commit (post-merge, post-prettier).
+
+**If the script exits non-zero:** It prints `git worktree list` output. Remove the conflicting entry and retry.
 
 ## Phase 6: Analyze
+
+**File reading:** When reading source files referenced in the diff, read from `.tmp/pr/<number>/workspace/<path>` (the worktree), not from the main worktree. This ensures you see the clean PR state regardless of the user's concurrent edits. Docs (`docs/`) can be read from either location. Artifacts (`pr-diff.txt`, `eslint-output.txt`) are at `.tmp/pr/<number>/` on the main worktree.
 
 Review the diff against **every rule in the docs you read in Phase 3**. The docs contain Good/Bad examples — use those as the reference. Only flag items that actually appear in the diff. Do not invent issues.
 
@@ -163,7 +129,7 @@ Check these categories. For each, the source of truth is the doc file, not this 
 
 ## Phase 7: Write Review
 
-**Incremental mode** (existing `.tmp/pr/<number>/pr-review.md`): Read the existing file. Keep all existing findings and their resolutions exactly as-is. Append any newly discovered findings that are not already covered. Do not duplicate findings. Do not remove or reword existing entries. Update the ESLint section and review date. Add new files to "Files Reviewed" if not already listed. If the file has a `## Dismissed` section, do not re-flag any finding whose title matches a dismissed entry.
+**Incremental mode** (existing `.tmp/pr/<number>/pr-review.md`): Read the existing file. Keep all existing findings and their resolutions exactly as-is. Append any newly discovered findings that are not already covered. Do not duplicate findings. Do not remove or reword existing entries. Update the ESLint section and review date. Add new files to "Files Reviewed" if not already listed. If the file has a `## Dismissed` section, do not re-flag any finding whose title matches a dismissed entry. After merging existing and new findings, renumber all findings sequentially starting from 1, continuous across sections (Critical, then Suggestions, then Observations).
 
 **Fresh mode** (file does not exist): Create `.tmp/pr/<number>/pr-review.md` from scratch.
 
@@ -191,6 +157,10 @@ Write `.tmp/pr/<number>/pr-review.md` with this structure:
 <If fail: list errors and warnings grouped by file. Brief — path + message only.>
 
 <If pass: "No errors or warnings.">
+
+## Strengths
+
+<1-3 brief bullet points noting what the PR does well — e.g., clean decomposition, good use of existing patterns, solid data modeling. Only include genuinely notable positives. If nothing stands out, write "None." Do not pad with generic praise.>
 
 ## Findings
 
@@ -279,6 +249,14 @@ Tell the user:
 > **ESLint:** <pass/fail> (<error count> errors, <warning count> warnings)
 > **Prettier:** <committed/no changes>
 
+## Phase 8.5: Cleanup Worktree
+
+```bash
+.claude/skills/review-pr/scripts/worktree.sh remove <number>
+```
+
+Idempotent. If the review was interrupted, the next run's Phase 5.5 will also clean up.
+
 ## Troubleshooting
 
 ### gh auth error
@@ -302,3 +280,11 @@ gh pr view --json state --jq '.state'
 ```
 
 Report the state and stop.
+
+### Worktree creation fails
+
+The `.claude/skills/review-pr/scripts/worktree.sh create` script auto-cleans stale worktrees before creating. If it still fails, check `git worktree list` for conflicts and remove the conflicting entry manually.
+
+### Stale worktree from interrupted review
+
+Phase 5.5 cleans up automatically. To clean up manually: `.claude/skills/review-pr/scripts/worktree.sh remove <number>`

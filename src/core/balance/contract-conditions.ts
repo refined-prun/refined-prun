@@ -1,7 +1,6 @@
 import { contractsStore, isFactionContract } from '@src/infrastructure/prun-api/data/contracts';
 import dayjs from 'dayjs';
 import { timestampEachMinute } from '@src/utils/dayjs';
-import { sumBy } from '@src/utils/sum-by';
 import { calcMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { binarySearch } from '@src/utils/binary-search';
 import { map } from '@src/utils/map-values';

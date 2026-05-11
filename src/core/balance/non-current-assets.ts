@@ -10,7 +10,6 @@ import {
 import { buildings, buildingsNetValueByLocation } from '@src/core/balance/buildings';
 import { sum } from '@src/utils/sum';
 import { blueprintsStore } from '@src/infrastructure/prun-api/data/blueprints';
-import { sumBy } from '@src/utils/sum-by';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { sumMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { shipyardProjectsStore } from '@src/infrastructure/prun-api/data/shipyard-projects';

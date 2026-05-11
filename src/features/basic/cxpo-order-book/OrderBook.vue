@@ -52,7 +52,7 @@ function onClick(data: OrderHoverData) {
     return;
   }
   const orders = getCumulativeOrders(order);
-  const quantity = orders.map(x => x.amount as number).reduce((a, b) => a + b, 0);
+  const quantity = sumBy(orders, x => x.amount!);
   onOrderClick(orders.at(-1)?.limit.amount ?? 0, quantity);
 }
 

@@ -54,9 +54,9 @@ src/
 │   └── user-data.ts            # userData reactive object — all persisted prefs
 ├── features/
 │   ├── feature-registry.ts     # features.add(), features.init()
-│   ├── basic/                  # All users. Features are imported in basic/index.ts
-│   ├── advanced/               # FULL mode only. Features are imported in advanced/index.ts
-│   └── XIT/                    # Custom tile commands. Import in XIT/index.ts
+│   ├── basic/                  # All users. Auto-imported via import.meta.glob
+│   ├── advanced/               # FULL mode only. Auto-imported via import.meta.glob
+│   └── XIT/                    # Custom tile commands. Auto-imported via import.meta.glob
 ├── components/                 # Shared Vue components
 ├── utils/                      # Pure utilities (no game/extension deps)
 ├── core/                       # Domain logic

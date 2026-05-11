@@ -18,7 +18,7 @@ features.add(import.meta.url, init, 'BBL: Short description of what this does.')
 ```
 
 - `import.meta.url` → the filename (without extension) becomes the feature ID.
-- Then import the file in `src/features/basic/index.ts` or `src/features/advanced/index.ts`.
+- The file is auto-imported via `import.meta.glob` in `src/features/index.ts` — no manual registration needed.
 
 ### Naming
 
@@ -80,7 +80,7 @@ xit.add({
 });
 ```
 
-Then import the file in `src/features/XIT/index.ts`.
+The file is auto-imported via `import.meta.glob` in `src/features/index.ts` — no manual registration needed.
 
 The command should be short. Refer to `docs/game/commands.csv` for an example of game commands. Alias is usually added for backwards compatibility or if the community REALLY wants it.
 
@@ -292,6 +292,10 @@ watchEffectWhileNodeAlive(row, () => {
 ```
 
 `watchEffectWhileNodeAlive` runs immediately — don't duplicate initialization code before it.
+
+### MutationObserver Cleanup
+
+MutationObservers on `tile.anchor` don't need explicit `disconnect()`. When the tile closes and anchor is removed from the DOM, the observer becomes inert and is garbage collected with the closure. This is the established pattern across the codebase (`inv-custom-item-sorting.ts`, `reactive-dom.ts`, `mutation-observer.ts`).
 
 ---
 

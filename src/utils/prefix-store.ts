@@ -42,7 +42,11 @@ export class PrefixStore<T> {
   }
 
   /** Returns the single value matching the prefix, or undefined if zero or 2+ matches. */
-  findOne(prefix: string): T | undefined {
+  findOne(prefix?: string | null): T | undefined {
+    if (prefix === undefined || prefix === null) {
+      return undefined;
+    }
+
     this.ensureReadable();
     const start = this.lowerBound(prefix);
     let found: T | undefined;
@@ -60,7 +64,11 @@ export class PrefixStore<T> {
   }
 
   /** Returns all values matching the prefix. */
-  findAll(prefix: string): T[] {
+  findAll(prefix?: string | null): T[] | undefined {
+    if (prefix === undefined || prefix === null) {
+      return undefined;
+    }
+
     this.ensureReadable();
     const start = this.lowerBound(prefix);
     const result: T[] = [];
