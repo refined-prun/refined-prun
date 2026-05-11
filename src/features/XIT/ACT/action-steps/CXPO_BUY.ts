@@ -154,7 +154,7 @@ export const CXPO_BUY = act.addActionStep<Data>({
 
     function onManualInput(event: Event) {
       // Synthetic events from changeInputValue() have isTrusted === false.
-      if (event.isTrusted && !shouldUnwatch) { 
+      if (event.isTrusted && !shouldUnwatch) {
         shouldUnwatch = true;
         log.info('Manual input detected; keeping user-entered quantity and price');
       }
