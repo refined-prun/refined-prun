@@ -37,7 +37,7 @@ export class StepMachine {
 
   start() {
     this.options.onStart();
-    this.startNext();
+    void this.startNext();
   }
 
   act() {
@@ -60,7 +60,7 @@ export class StepMachine {
     const info = act.getActionStepInfo(next.type);
     this.log.skip(info.description(next));
     this.nextAct = undefined;
-    this.startNext();
+    void this.startNext();
   }
 
   cancel() {
@@ -77,7 +77,7 @@ export class StepMachine {
     this.options.onEnd();
   }
 
-  private startNext() {
+  private async startNext() {
     if (this.steps.length === 0) {
       this.log.success('Action Package execution completed');
       this.stop();
@@ -88,8 +88,8 @@ export class StepMachine {
     const info = act.getActionStepInfo(next.type);
     let description: string | undefined;
     const log = this.options.log;
-    info
-      .execute({
+    try {
+      await info.execute({
         data: next,
         log,
         setStatus: status => this.options.onStatusChanged(status),
@@ -116,7 +116,7 @@ export class StepMachine {
           // Wait a moment to allow data to update.
           await sleep(0);
           log.success(description ?? info.description(next));
-          this.startNext();
+          void this.startNext();
         },
         skip: () => this.skip(),
         fail: message => {
@@ -134,13 +134,13 @@ export class StepMachine {
           }
         },
         requestTile: async command => await this.requestTile(command),
-      })
-      .catch(e => {
-        if (e !== AssertionError) {
-          log.runtimeError(e);
-        }
-        this.stop();
       });
+    } catch (e) {
+      if (e !== AssertionError) {
+        log.runtimeError(e);
+      }
+      this.stop();
+    }
   }
 
   private async requestTile(command: string) {

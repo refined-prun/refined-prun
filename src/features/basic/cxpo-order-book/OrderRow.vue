@@ -4,6 +4,7 @@ import { companyStore } from '@src/infrastructure/prun-api/data/company';
 import { fixed0, fixed2 } from '@src/utils/format';
 import { OrderHoverData } from '@src/features/basic/cxpo-order-book/order-hover-data';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import DeleteExchangeOrderButton from '@src/components/DeleteExchangeOrderButton.vue';
 
 const { order, request, highlightAmount, highlightPrice, onHover, onClick } = defineProps<{
   order: PrunApi.CXBrokerOrder;
@@ -68,6 +69,7 @@ function onPriceClick() {
       @mouseleave="onValueMouseLeave"
       @click="onAmountClick">
       <div>
+        <DeleteExchangeOrderButton v-if="isOwnOrder" :order-id="order.id" screen-command="CXOS" />
         {{ amount }}
       </div>
     </td>
@@ -95,6 +97,8 @@ function onPriceClick() {
 
 .value {
   cursor: pointer;
+  position: relative;
+  padding-left: 22px;
 }
 
 .valueHighlight {

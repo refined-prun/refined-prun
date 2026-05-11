@@ -46,7 +46,7 @@ function shortenTableLabels(tile: PrunTile) {
       return storage ? map.get(storage?.type) : undefined;
     });
     watchEffectWhileNodeAlive(row, () => {
-      // tr -> td -> span
+      // DOM structure: tr -> td -> span
       const typeLabel = row.firstChild?.firstChild;
       if (typeLabel && name.value !== undefined) {
         typeLabel.textContent = name.value;

@@ -39,7 +39,7 @@ function onEditMaterialGroupClick(e: Event, group: UserData.MaterialGroupData) {
 
 function onDeleteMaterialGroupClick(e: Event, group: UserData.MaterialGroupData) {
   showConfirmationOverlay(e, () => removeArrayElement(pkg.groups, group), {
-    message: `Are you sure you want to delete the material group "${group.name || '--'}"?`,
+    message: `Are you sure you want to delete the material group "${group.name ?? '--'}"?`,
     confirmLabel: 'DELETE',
   });
 }
@@ -63,7 +63,7 @@ function onEditActionClick(e: Event, action: UserData.ActionData) {
 
 function onDeleteActionClick(e: Event, action: UserData.ActionData) {
   showConfirmationOverlay(e, () => removeArrayElement(pkg.actions, action), {
-    message: `Are you sure you want to delete the action "${action.name || '--'}"?`,
+    message: `Are you sure you want to delete the action "${action.name ?? '--'}"?`,
     confirmLabel: 'DELETE',
   });
 }

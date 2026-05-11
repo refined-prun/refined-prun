@@ -4,7 +4,6 @@ import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addr
 import { timestampEachMinute } from '@src/utils/dayjs';
 import { calcBuildingCondition, calcBuildingMarketValue } from '@src/core/buildings';
 import { diffDays } from '@src/utils/time-diff';
-import { sumBy } from '@src/utils/sum-by';
 
 interface Entry {
   location: string;
