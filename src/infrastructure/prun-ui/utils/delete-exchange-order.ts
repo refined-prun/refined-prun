@@ -8,7 +8,6 @@ import ActionFeedbackProgress from '@src/components/ActionFeedbackProgress.vue';
 import { watchUntil } from '@src/utils/watch';
 import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
-import { sleep } from '@src/utils/sleep';
 import { refAnimationFrame } from '@src/utils/reactive-dom';
 
 export async function deleteExchangeOrderFromClick(
@@ -46,10 +45,9 @@ export async function deleteExchangeOrder(
     }
   });
 
-  // FXOS doesn't support 9999 D:
   const isCX = screenCommand === 'CXOS';
-  const commandWithParameter = isCX ? `${screenCommand} 9999` : screenCommand;
-  const window = await showBuffer(commandWithParameter, {
+  // FXOS doesn't support 9999 D:
+  const window = await showBuffer(isCX ? `CXOS 9999` : screenCommand, {
     autoClose: true,
     closeWhen: shouldClose,
     force: true,
@@ -61,7 +59,7 @@ export async function deleteExchangeOrder(
     return false;
   }
   await awaitBufferLoad(window);
-  const button = await findOrderDangerButton(window, orderId);
+  const button = await findOrderDeleteButton(window, orderId, orderCount);
   if (!button) {
     shouldClose.value = true;
     return false;
@@ -134,9 +132,6 @@ function showManualProgressOverlay(target: Element) {
 }
 
 async function awaitBufferLoad(window: Element) {
-  // Allow FXOS to display the table after loading.
-  await sleep(100);
-
   const loading = _$(window, C.Loading.loader);
   if (loading) {
     await new Promise<void>(resolve => {
@@ -145,36 +140,33 @@ async function awaitBufferLoad(window: Element) {
   }
 }
 
-async function findOrderDangerButton(window: Element, orderId: string) {
-  const tbody = _$(window, 'tbody');
-  if (!tbody) {
-    return undefined;
-  }
+async function findOrderDeleteButton(window: Element, orderId: string, orderCount: number) {
+  const tbody = await $(window, 'tbody');
+  await watchUntil(refAnimationFrame(tbody, x => x.children.length > 0));
 
-  const loadMoreButton = _$(window, C.EndlessScrollControl.loadMore);
-  let nextRowIndex = 0;
-  while (true) {
-    while (nextRowIndex < tbody.children.length) {
-      const row = tbody.children[nextRowIndex] as HTMLElement | undefined;
-      nextRowIndex++;
+  for (let i = 0; i < orderCount; i++) {
+    let row = tbody.children[i] as HTMLElement | undefined;
+
+    if (!row) {
+      const loadMore = await $(window, C.EndlessScrollControl.loadMore);
+
+      await watchUntil(
+        refAnimationFrame(loadMore, x => !x.classList.contains(C.EndlessScrollControl.hidden)),
+      );
+
+      await clickElement(loadMore);
+      await watchUntil(refAnimationFrame(tbody, x => i < x.children.length));
+
+      row = tbody.children[i] as HTMLElement | undefined;
       if (!row) {
-        continue;
-      }
-      const isMatch = getPrunId(row)?.startsWith(orderId);
-      if (isMatch) {
-        return _$(row, C.Button.danger);
+        break;
       }
     }
 
-    const canClickLoadMore =
-      loadMoreButton && !loadMoreButton.classList.contains(C.EndlessScrollControl.hidden);
-    if (!canClickLoadMore) {
-      break;
+    const isMatch = getPrunId(row)?.startsWith(orderId);
+    if (isMatch) {
+      return await $(row, C.Button.danger);
     }
-
-    await clickElement(loadMoreButton);
-    const isReady = refAnimationFrame(tbody, x => nextRowIndex < x.children.length);
-    await watchUntil(isReady);
   }
 
   return undefined;
