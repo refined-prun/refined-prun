@@ -19,6 +19,7 @@
 
 ### Fixed
 
+- `XIT ACT`: Prevent manually entered quantity/price overwrite by order book changes in CX Buy
 - `XIT PROD`: Fix order deletion in `PRODQ` tiles opened from `XIT PROD`
 - `prun-bugs`: Prevent text selection when moving items by dragging
 
