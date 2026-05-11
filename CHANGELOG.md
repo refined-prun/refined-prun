@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `XIT ELEC`: Upcoming elections for planets you have bases on
+- `adm-hide-inactive-buttons`: Hides inactive buttons
+- `cxo-delete-order-button`: Adds a delete button
+- `cxob-delete-own-exchange-orders`: Adds a delete button to own orders
+- `inv-shpt-condition-indicator`: Adds a condition indicator to SHPT and BLCK items
+
+### Changed
+
+- `XIT ACT`: Filter destination list based on selected origin in `MTRA` configuration
+- `XIT CONTC`: Show an address link in the "Contribute" condition
+- `cxpo-order-book`: Add a delete button to own orders
+- `nots-notification-type-label`: Add labels for new notification types
+
+### Fixed
+
+- `XIT PROD`: Fix order deletion in `PRODQ` tiles opened from `XIT PROD`
+
 ## 26.3.22
 
 ### Added
