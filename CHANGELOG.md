@@ -14,6 +14,7 @@
 
 - `XIT ACT`: Filter destination list based on selected origin in `MTRA` configuration
 - `XIT CONTC`: Show an address link in the "Contribute" condition
+- `contribution-maxed`: Disable the feature in `POPID` tiles
 - `cxpo-order-book`: Add a delete button to own orders
 - `nots-notification-type-label`: Add labels for new notification types
 
