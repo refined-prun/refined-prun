@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `audio-volume-slider`: Implement a more robust volume control mechanism
+
 ## 26.5.11
 
 ### Added
