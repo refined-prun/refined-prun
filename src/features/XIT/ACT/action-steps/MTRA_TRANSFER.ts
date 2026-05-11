@@ -26,8 +26,7 @@ export const MTRA_TRANSFER = act.addActionStep<Data>({
     return `Transfer ${fixed0(data.amount)} ${data.ticker} from ${fromName} to ${toName}`;
   },
   execute: async ctx => {
-    const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete, skip, fail } =
-      ctx;
+    const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete, skip } = ctx;
     const assert: AssertFn = ctx.assert;
     const { ticker, amount } = data;
     const from = storagesStore.getById(data.from);
@@ -71,10 +70,7 @@ export const MTRA_TRANSFER = act.addActionStep<Data>({
     const container = await $(tile.anchor, C.MaterialSelector.container);
 
     const ok = await selectMaterial(container, ticker);
-    if (!ok) {
-      fail(`Ticker ${ticker} not found in the material selector`);
-      return;
-    }
+    assert(ok, `Ticker ${ticker} not found in the material selector`);
 
     const sliderNumbers = _$$(tile.anchor, 'rc-slider-mark-text').map(x =>
       Number(x.textContent ?? 0),

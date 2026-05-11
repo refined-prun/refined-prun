@@ -2,18 +2,17 @@ import { act } from '@src/features/XIT/ACT/act-registry';
 import { fixed0 } from '@src/utils/format';
 import { changeInputValue, focusElement } from '@src/util';
 import {
-  selectLocation,
+  addMaterials,
+  applyTemplate,
   createNewDraft,
-  setDraftNameAndPreamble,
-  saveDraftDetails,
   openTemplate,
+  saveConditions,
+  saveDraftDetails,
+  selectLocation,
   selectTemplateType,
   setCurrency,
-  addMaterials,
   setDeadline,
-  applyTemplate,
-  saveConditions,
-  ContDraftContext,
+  setDraftNameAndPreamble,
 } from '@src/features/XIT/ACT/action-steps/cont-utils';
 
 interface Data {
@@ -34,7 +33,7 @@ export const CONT_TRADE = act.addActionStep<Data>({
     return `Create ${typeLabel} contract draft (${materialCount} materials)`;
   },
   execute: async ctx => {
-    const { data, log, setStatus, requestTile, waitAct, complete, fail } = ctx;
+    const { data, log, setStatus, requestTile, waitAct, complete, assert } = ctx;
 
     const typeLabel = data.tradeType === 'BUYING' ? 'Buy' : 'Sell';
 
@@ -45,27 +44,18 @@ export const CONT_TRADE = act.addActionStep<Data>({
       return;
     }
 
-    const draftCtx: ContDraftContext = { draftTile: listTile, log, setStatus, fail };
-
-    const newDraft = await createNewDraft(draftCtx);
-    if (!newDraft) {
-      return;
-    }
+    const newDraft = await createNewDraft(assert, log, setStatus);
 
     setStatus(`Loading draft ${newDraft.naturalId}...`);
     const draftTile = await requestTile(`CONTD ${newDraft.naturalId}`);
     if (!draftTile) {
       return;
     }
+    const anchor = draftTile.anchor;
 
-    const ctx2: ContDraftContext = { draftTile, log, setStatus, fail };
-
-    // Set contract name.
-    const now = new Date();
-    const dateStr = now.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    const dateStr = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
     const contractName = `${data.packageName} - ${typeLabel} - ${dateStr}`;
 
-    // Set preamble.
     const materialsList = Object.entries(data.materials)
       .map(([ticker, amount]) => {
         const price = data.prices[ticker];
@@ -79,46 +69,40 @@ export const CONT_TRADE = act.addActionStep<Data>({
       `Materials: ${materialsList}\n` +
       (data.daysToFulfill > 0 ? `Fulfill within ${data.daysToFulfill} days` : '');
 
-    await setDraftNameAndPreamble(ctx2, contractName, preambleText);
+    await setDraftNameAndPreamble(anchor, log, setStatus, contractName, preambleText);
 
     // Step 2: Save draft details (name/preamble).
     await waitAct('Save draft details?');
-    await saveDraftDetails(ctx2);
+    await saveDraftDetails(anchor, log, setStatus);
 
-    const templateSelect = await openTemplate(ctx2);
-    if (!templateSelect) {
-      return;
-    }
+    const templateSelect = await openTemplate(assert, anchor, setStatus);
+    selectTemplateType(log, templateSelect, data.tradeType);
+    await setCurrency(anchor, log, data.currency);
 
-    selectTemplateType(ctx2, templateSelect, data.tradeType);
-    await setCurrency(ctx2, data.currency);
-
-    // Add materials with per-material prices.
     const materialEntries = Object.entries(data.materials)
       .filter(([, amount]) => amount > 0)
       .map(([ticker, amount]) => ({ ticker, amount }));
 
-    await addMaterials(ctx2, materialEntries, {
+    await addMaterials(anchor, log, setStatus, materialEntries, {
       setPrice: (group, ticker) => {
         const price = data.prices[ticker];
-        if (price !== undefined && price > 0) {
-          const priceInput = group.querySelector(
-            'input[inputmode="decimal"]',
-          ) as HTMLInputElement | null;
-          if (priceInput) {
-            focusElement(priceInput);
-            priceInput.select();
-            changeInputValue(priceInput, String(price));
-            log.info(`Price for ${ticker}: ${price} ${data.currency}`);
-          } else {
-            log.warning(`Could not find price input for ${ticker}`);
-          }
+        if (price === undefined || price <= 0) {
+          return;
+        }
+        const priceInput = group.querySelector<HTMLInputElement>('input[inputmode="decimal"]');
+        if (priceInput) {
+          focusElement(priceInput);
+          priceInput.select();
+          changeInputValue(priceInput, String(price));
+          log.info(`Price for ${ticker}: ${price} ${data.currency}`);
+        } else {
+          log.warning(`Could not find price input for ${ticker}`);
         }
       },
     });
 
     // Step 3: Set location address.
-    const addressContainers = _$$(draftTile.anchor, C.AddressSelector.container) as HTMLElement[];
+    const addressContainers = _$$(anchor, C.AddressSelector.container);
     if (addressContainers.length >= 1 && data.location) {
       await waitAct(`Set location to ${data.location}?`);
       const ok = await selectLocation(addressContainers[0], data.location);
@@ -129,17 +113,15 @@ export const CONT_TRADE = act.addActionStep<Data>({
       }
     }
 
-    setDeadline(ctx2, data.daysToFulfill);
+    setDeadline(anchor, log, data.daysToFulfill);
 
     // Step 4: Apply template.
     await waitAct('Apply template?');
-    const applied = await applyTemplate(ctx2);
-    if (!applied) {
-      return;
-    }
+    await applyTemplate(assert, anchor, log, setStatus);
 
-    // Step 5: Save conditions.
-    await saveConditions(ctx2, waitAct);
+    // Step 5: Save conditions (after user review).
+    await waitAct('Save conditions?');
+    await saveConditions(anchor, log, setStatus);
 
     log.success(`Contract draft ${newDraft.naturalId} ready to send`);
     complete();

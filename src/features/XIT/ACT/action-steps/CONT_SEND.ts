@@ -3,19 +3,17 @@ import { fixed0 } from '@src/utils/format';
 import { changeInputValue, changeSelectIndex, focusElement } from '@src/util';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import {
-  waitFor,
-  selectLocation,
+  addMaterials,
+  applyTemplate,
   createNewDraft,
-  setDraftNameAndPreamble,
-  saveDraftDetails,
   openTemplate,
+  saveConditions,
+  saveDraftDetails,
+  selectLocation,
   selectTemplateType,
   setCurrency,
-  addMaterials,
   setDeadline,
-  applyTemplate,
-  saveConditions,
-  ContDraftContext,
+  setDraftNameAndPreamble,
 } from '@src/features/XIT/ACT/action-steps/cont-utils';
 
 interface Data {
@@ -30,6 +28,18 @@ interface Data {
   autoProvisionStoreId?: string;
 }
 
+function findPriceInput(anchor: Element) {
+  const named = anchor.querySelector<HTMLInputElement>('input[name="price"]');
+  if (named) {
+    return named;
+  }
+  // Fall back to the first decimal input that's outside the per-commodity groups.
+  const groups = _$$(anchor, C.TemplateSelection.group);
+  return Array.from(anchor.querySelectorAll<HTMLInputElement>('input[inputmode="decimal"]')).find(
+    x => !groups.some(g => g.contains(x)),
+  );
+}
+
 export const CONT_SEND = act.addActionStep<Data>({
   type: 'CONT_SEND',
   description: data => {
@@ -38,16 +48,13 @@ export const CONT_SEND = act.addActionStep<Data>({
     return `Create contract draft (${materialCount} materials)${payment}`;
   },
   execute: async ctx => {
-    const { data, log, setStatus, requestTile, waitAct, complete, fail } = ctx;
+    const { data, log, setStatus, requestTile, waitAct, complete, assert } = ctx;
 
-    // Calculate total tonnage for preamble and payment logging.
-    // The material.weight field is in the same unit as weightCapacity (tonnes).
+    // Compute total tonnage for the preamble and payment logging.
     let totalTonnage = 0;
-    const materialDetails: Array<{ ticker: string; amount: number; tonnage: number }> = [];
-
-    for (const [ticker, rawAmount] of Object.entries(data.materials)) {
-      const qty = rawAmount;
-      if (qty <= 0) {
+    const materialDetails: Array<{ ticker: string; amount: number }> = [];
+    for (const [ticker, amount] of Object.entries(data.materials)) {
+      if (amount <= 0) {
         continue;
       }
       const material = materialsStore.getByTicker(ticker);
@@ -55,9 +62,8 @@ export const CONT_SEND = act.addActionStep<Data>({
         log.warning(`Material ${ticker} not found, skipping`);
         continue;
       }
-      const t = material.weight * qty;
-      totalTonnage += t;
-      materialDetails.push({ ticker, amount: qty, tonnage: t });
+      totalTonnage += material.weight * amount;
+      materialDetails.push({ ticker, amount });
     }
 
     if (data.payment > 0 && totalTonnage > 0) {
@@ -73,24 +79,16 @@ export const CONT_SEND = act.addActionStep<Data>({
       return;
     }
 
-    const draftCtx: ContDraftContext = { draftTile: listTile, log, setStatus, fail };
-
-    const newDraft = await createNewDraft(draftCtx);
-    if (!newDraft) {
-      return;
-    }
+    const newDraft = await createNewDraft(assert, log, setStatus);
 
     setStatus(`Loading draft ${newDraft.naturalId}...`);
     const draftTile = await requestTile(`CONTD ${newDraft.naturalId}`);
     if (!draftTile) {
       return;
     }
+    const anchor = draftTile.anchor;
 
-    // Update context to point at the actual draft tile.
-    const ctx2: ContDraftContext = { draftTile, log, setStatus, fail };
-
-    const now = new Date();
-    const dateStr = now.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    const dateStr = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
     const contractName = `${data.packageName} - ${data.contDest ?? ''} - ${dateStr}`;
 
     const materialsList = materialDetails.map(x => `${x.ticker} x${x.amount}`).join(', ');
@@ -103,38 +101,23 @@ export const CONT_SEND = act.addActionStep<Data>({
           : '') +
         (data.daysToFulfill > 0 ? `Delivery within ${data.daysToFulfill} days` : '');
 
-    await setDraftNameAndPreamble(ctx2, contractName, preambleText);
+    await setDraftNameAndPreamble(anchor, log, setStatus, contractName, preambleText);
 
     // Step 2: Save draft details (name/preamble).
     await waitAct('Save draft details?');
-    await saveDraftDetails(ctx2);
+    await saveDraftDetails(anchor, log, setStatus);
 
-    const templateSelect = await openTemplate(ctx2);
-    if (!templateSelect) {
-      return;
-    }
+    const templateSelect = await openTemplate(assert, anchor, setStatus);
+    selectTemplateType(log, templateSelect, 'SHIP');
+    await setCurrency(anchor, log, data.currency);
 
-    selectTemplateType(ctx2, templateSelect, 'SHIP');
-    await setCurrency(ctx2, data.currency);
+    await addMaterials(anchor, log, setStatus, materialDetails);
 
-    await addMaterials(
-      ctx2,
-      materialDetails.map(x => ({ ticker: x.ticker, amount: x.amount })),
-    );
-
-    // The SHIP template price field is per-commodity. The game charges this
-    // amount for each commodity row, so divide total payment by number of commodities.
+    // The SHIP template price field is per-commodity. The game charges the
+    // configured amount for each commodity row, so divide total payment by row count.
     if (data.payment > 0 && materialDetails.length > 0) {
       const pricePerCommodity = Math.round(data.payment / materialDetails.length);
-      // The SHIP template has a single price field outside the commodity groups.
-      // Try name="price" first, then fall back to decimal input outside groups.
-      const priceInput = (draftTile.anchor.querySelector('input[name="price"]') ??
-        (() => {
-          const groups = new Set(_$$(draftTile.anchor, C.TemplateSelection.group));
-          return Array.from(
-            draftTile.anchor.querySelectorAll<HTMLInputElement>('input[inputmode="decimal"]'),
-          ).find(x => !Array.from(groups).some(g => g.contains(x)));
-        })()) as HTMLInputElement | null;
+      const priceInput = findPriceInput(anchor);
       if (priceInput) {
         focusElement(priceInput);
         priceInput.select();
@@ -148,7 +131,7 @@ export const CONT_SEND = act.addActionStep<Data>({
     }
 
     // Step 3: Set origin address.
-    const addressContainers = _$$(draftTile.anchor, C.AddressSelector.container) as HTMLElement[];
+    const addressContainers = _$$(anchor, C.AddressSelector.container);
 
     if (addressContainers.length >= 1 && data.contOrigin) {
       await waitAct(`Set origin to ${data.contOrigin}?`);
@@ -173,13 +156,9 @@ export const CONT_SEND = act.addActionStep<Data>({
 
     if (data.autoProvisionStoreId) {
       setStatus('Setting auto-provision store...');
-      const storeSelectReady = await waitFor(() => {
-        const sel = _$(draftTile.anchor, C.StoreSelect.container) as HTMLSelectElement | null;
-        return !!sel && sel.options.length > 1;
-      }, 5000);
-      if (storeSelectReady) {
-        const storeSelect = _$(draftTile.anchor, C.StoreSelect.container) as HTMLSelectElement;
-        const normalizedId = data.autoProvisionStoreId!.replaceAll('-', '');
+      const storeSelect = _$(anchor, C.StoreSelect.container) as HTMLSelectElement | undefined;
+      if (storeSelect && storeSelect.options.length > 1) {
+        const normalizedId = data.autoProvisionStoreId.replaceAll('-', '');
         const optionIndex = Array.from(storeSelect.options).findIndex(
           x => x.value === data.autoProvisionStoreId || x.value === normalizedId,
         );
@@ -194,17 +173,15 @@ export const CONT_SEND = act.addActionStep<Data>({
       }
     }
 
-    setDeadline(ctx2, data.daysToFulfill);
+    setDeadline(anchor, log, data.daysToFulfill);
 
     // Step 5: Apply template.
     await waitAct('Apply template?');
-    const applied = await applyTemplate(ctx2);
-    if (!applied) {
-      return;
-    }
+    await applyTemplate(assert, anchor, log, setStatus);
 
-    // Step 6: Save conditions.
-    await saveConditions(ctx2, waitAct);
+    // Step 6: Save conditions (after user review).
+    await waitAct('Save conditions?');
+    await saveConditions(anchor, log, setStatus);
 
     log.success(`Contract draft ${newDraft.naturalId} ready to send`);
     complete();
