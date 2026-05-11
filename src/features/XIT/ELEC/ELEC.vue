@@ -12,15 +12,19 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { timestampEachSecond } from '@src/utils/dayjs';
 import dayjs from 'dayjs';
 
-interface ElectionRow {
-  planet: string;
-  planetNaturalId: string;
-  type: 'GOV' | 'COGC';
+interface ElectionWindow {
   electionStart?: number;
   electionEnd?: number;
 }
 
-const dayMs = 24 * 60 * 60 * 1000;
+interface ElectionRow extends ElectionWindow {
+  planet: string;
+  planetNaturalId: string;
+  type: 'GOV' | 'COGC';
+}
+
+const dayMs = dayjs.duration(1, 'day').asMilliseconds();
+const voteCommand = { GOV: 'ADM', COGC: 'COGCPEX' } as const;
 
 const rows = computed<ElectionRow[] | undefined>(() => {
   const sites = sitesStore.all.value;
@@ -28,80 +32,67 @@ const rows = computed<ElectionRow[] | undefined>(() => {
     return undefined;
   }
 
-  const govGovernorElectedByPlanet = getLatestAlertTimestampByPlanet(
-    'ADMIN_CENTER_GOVERNOR_ELECTED',
-  );
-  const govElectionStartedByPlanet = getLatestAlertTimestampByPlanet(
-    'ADMIN_CENTER_ELECTION_STARTED',
-  );
-  const govElectionReminderByPlanet = getLatestAlertTimestampByPlanet(
-    'ADMIN_CENTER_ELECTION_REMINDER',
-  );
-  const cogcElectionTimestampByPlanet = getLatestAlertTimestampByPlanet('COGC_PROGRAM_CHANGED');
-
-  const map = new Map<string, { planet: string; planetNaturalId: string }>();
-  for (const site of sites) {
-    const planetNaturalId = getEntityNaturalIdFromAddress(site.address);
-    const planetName = getEntityNameFromAddress(site.address);
-    if (!planetNaturalId || !planetName) {
-      continue;
-    }
-
-    const key = planetNaturalId.toUpperCase();
-    if (map.has(key)) {
-      continue;
-    }
-
-    map.set(key, { planet: `${planetName} (${planetNaturalId})`, planetNaturalId });
-  }
+  const govStartedAt = getLatestAlertTimestampByPlanet('ADMIN_CENTER_ELECTION_STARTED');
+  const govElectedAt = getLatestAlertTimestampByPlanet('ADMIN_CENTER_GOVERNOR_ELECTED');
+  const govReminderAt = getLatestAlertTimestampByPlanet('ADMIN_CENTER_ELECTION_REMINDER');
+  const cogcChangedAt = getLatestAlertTimestampByPlanet('COGC_PROGRAM_CHANGED');
 
   const merged: ElectionRow[] = [];
-  for (const planet of map.values()) {
-    const planetKey = planet.planetNaturalId.toUpperCase();
-    const govGovernorElectedAt = govGovernorElectedByPlanet.get(planetKey);
-    const govElectionStartedAt = govElectionStartedByPlanet.get(planetKey);
-    const govElectionReminderAt = govElectionReminderByPlanet.get(planetKey);
-    const cogcElectionTimestamp = cogcElectionTimestampByPlanet.get(planetKey);
-
-    let govStart: number | undefined;
-    let govEnd: number | undefined;
-    if (govElectionStartedAt !== undefined) {
-      govStart = govElectionStartedAt;
-      govEnd = govElectionStartedAt + dayMs * 8;
-    } else if (govGovernorElectedAt !== undefined) {
-      govStart = govGovernorElectedAt + dayMs * 20;
-      govEnd = govGovernorElectedAt + dayMs * 28;
-    } else if (govElectionReminderAt !== undefined) {
-      govStart = govElectionReminderAt;
-      govEnd = govElectionReminderAt + dayMs;
+  for (const site of sites) {
+    const naturalId = getEntityNaturalIdFromAddress(site.address);
+    const name = getEntityNameFromAddress(site.address);
+    if (!naturalId || !name) {
+      continue;
     }
-
-    merged.push({
-      ...planet,
-      type: 'GOV',
-      electionStart: govStart,
-      electionEnd: govEnd,
-    });
-
-    merged.push({
-      ...planet,
-      type: 'COGC',
-      electionStart: cogcElectionTimestamp,
-      electionEnd:
-        cogcElectionTimestamp === undefined ? undefined : cogcElectionTimestamp + dayMs * 7,
-    });
+    const planet = { planet: `${name} (${naturalId})`, planetNaturalId: naturalId };
+    const key = naturalId.toUpperCase();
+    merged.push(
+      {
+        ...planet,
+        type: 'GOV',
+        ...govWindow(govStartedAt.get(key), govElectedAt.get(key), govReminderAt.get(key)),
+      },
+      {
+        ...planet,
+        type: 'COGC',
+        ...cogcWindow(cogcChangedAt.get(key)),
+      },
+    );
   }
 
   return merged.sort(compareRows);
 });
 
-function compareRows(a: ElectionRow, b: ElectionRow) {
-  const groupA = getSortGroup(a);
-  const groupB = getSortGroup(b);
-  if (groupA !== groupB) {
-    return groupA - groupB;
+function govWindow(started?: number, elected?: number, reminder?: number): ElectionWindow {
+  let latestAt = -Infinity;
+  let result: ElectionWindow = {};
+  if (elected !== undefined && elected > latestAt) {
+    latestAt = elected;
+    result = electionWindow(elected + dayMs * 20, 8);
   }
+  if (started !== undefined && started > latestAt) {
+    latestAt = started;
+    result = electionWindow(started, 8);
+  }
+  if (reminder !== undefined && reminder > latestAt) {
+    result = electionWindow(reminder, 1);
+  }
+  return result;
+}
 
+function cogcWindow(start?: number) {
+  return start === undefined ? {} : electionWindow(start, 7);
+}
+
+function electionWindow(start: number, durationDays: number): ElectionWindow {
+  return { electionStart: start, electionEnd: start + dayMs * durationDays };
+}
+
+function compareRows(a: ElectionRow, b: ElectionRow) {
+  const groupDiff = getSortGroup(a) - getSortGroup(b);
+  if (groupDiff !== 0) {
+    return groupDiff;
+  }
   if (
     a.electionStart !== undefined &&
     b.electionStart !== undefined &&
@@ -109,12 +100,8 @@ function compareRows(a: ElectionRow, b: ElectionRow) {
   ) {
     return a.electionStart - b.electionStart;
   }
-
   const planetDiff = a.planetNaturalId.localeCompare(b.planetNaturalId);
-  if (planetDiff !== 0) {
-    return planetDiff;
-  }
-  return a.type.localeCompare(b.type);
+  return planetDiff !== 0 ? planetDiff : a.type.localeCompare(b.type);
 }
 
 function getSortGroup(row: ElectionRow) {
@@ -170,18 +157,6 @@ function formatFutureDuration(timestamp: number) {
   return `${seconds}s`;
 }
 
-function openBuffer(command: string) {
-  void showBuffer(command);
-}
-
-function getTypeCommand(row: ElectionRow) {
-  return row.type === 'GOV' ? `GOV ${row.planetNaturalId}` : `COGC ${row.planetNaturalId}`;
-}
-
-function getVoteCommand(row: ElectionRow) {
-  return row.type === 'GOV' ? `ADM ${row.planetNaturalId}` : `COGCPEX ${row.planetNaturalId}`;
-}
-
 function getLatestAlertTimestampByPlanet(type: PrunApi.AlertType) {
   const timestamps = new Map<string, number>();
   for (const alert of alertsStore.all.value ?? []) {
@@ -232,22 +207,22 @@ function getPlanetNaturalIdFromAlert(alert: PrunApi.Alert) {
           <PrunLink inline :command="`PLI ${row.planetNaturalId}`">{{ row.planet }}</PrunLink>
         </td>
         <td>
-          <PrunButton dark @click="openBuffer(getTypeCommand(row))">
+          <PrunButton dark @click="showBuffer(`${row.type} ${row.planetNaturalId}`)">
             {{ row.type }}
           </PrunButton>
         </td>
         <td>
-          <template v-if="row.electionStart === undefined">—</template>
+          <template v-if="row.electionStart === undefined">--</template>
           <PrunButton
             v-else-if="isPastOrNow(row.electionStart)"
             primary
-            @click="openBuffer(getVoteCommand(row))">
+            @click="showBuffer(`${voteCommand[row.type]} ${row.planetNaturalId}`)">
             VOTE
           </PrunButton>
           <template v-else>{{ formatFutureDuration(row.electionStart) }}</template>
         </td>
         <td>
-          <template v-if="row.electionEnd === undefined">—</template>
+          <template v-if="row.electionEnd === undefined">--</template>
           <template v-else-if="isPastOrNow(row.electionEnd)">Now</template>
           <template v-else>{{ formatFutureDuration(row.electionEnd) }}</template>
         </td>
@@ -255,12 +230,3 @@ function getPlanetNaturalIdFromAlert(alert: PrunApi.Alert) {
     </tbody>
   </table>
 </template>
-
-<style module>
-.buttons {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-}
-</style>
