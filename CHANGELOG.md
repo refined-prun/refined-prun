@@ -10,7 +10,7 @@
 - `bs-warehouse-button`: Adds a "Warehouse" button
 - `cxo-delete-order-button`: Adds a delete button
 - `cxob-delete-own-exchange-orders`: Adds a delete button to own orders
-- `inv-shpt-condition-indicator`: Adds a condition indicator to SHPT and BLCK items
+- `inv-shpt-condition-indicator`: Adds a contract condition indicator to SHPT and BLCK items
 - `inv-warehouse-button`: Adds a "Warehouse" button to base inventories
 
 ### Changed
