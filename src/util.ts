@@ -92,7 +92,7 @@ export function comparePlanets(idOrNameA: string, idOrNameB: string) {
   if (isPlanetANamed && !isPlanetBNamed) {
     return -1;
   }
-  if (isPlanetANamed && !isPlanetBNamed) {
+  if (isPlanetBNamed && !isPlanetANamed) {
     return 1;
   }
 
