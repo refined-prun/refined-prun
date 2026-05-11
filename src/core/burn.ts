@@ -23,6 +23,7 @@ export interface BurnValues {
 }
 
 export interface PlanetBurn {
+  prodSiteId: string;
   storeId: string;
   planetName: string;
   naturalId: string;
@@ -48,6 +49,7 @@ const burnBySiteId = computed(() => {
         }
 
         return {
+          prodSiteId: id,
           storeId: storage?.[0]?.id,
           planetName: getEntityNameFromAddress(site.address),
           naturalId: getEntityNaturalIdFromAddress(site.address),
