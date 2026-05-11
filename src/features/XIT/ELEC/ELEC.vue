@@ -28,8 +28,14 @@ const rows = computed<ElectionRow[] | undefined>(() => {
     return undefined;
   }
 
-  const govElectionTimestampByPlanet = getLatestAlertTimestampByPlanet(
+  const govGovernorElectedByPlanet = getLatestAlertTimestampByPlanet(
     'ADMIN_CENTER_GOVERNOR_ELECTED',
+  );
+  const govElectionStartedByPlanet = getLatestAlertTimestampByPlanet(
+    'ADMIN_CENTER_ELECTION_STARTED',
+  );
+  const govElectionReminderByPlanet = getLatestAlertTimestampByPlanet(
+    'ADMIN_CENTER_ELECTION_REMINDER',
   );
   const cogcElectionTimestampByPlanet = getLatestAlertTimestampByPlanet('COGC_PROGRAM_CHANGED');
 
@@ -52,16 +58,29 @@ const rows = computed<ElectionRow[] | undefined>(() => {
   const merged: ElectionRow[] = [];
   for (const planet of map.values()) {
     const planetKey = planet.planetNaturalId.toUpperCase();
-    const govElectionTimestamp = govElectionTimestampByPlanet.get(planetKey);
+    const govGovernorElectedAt = govGovernorElectedByPlanet.get(planetKey);
+    const govElectionStartedAt = govElectionStartedByPlanet.get(planetKey);
+    const govElectionReminderAt = govElectionReminderByPlanet.get(planetKey);
     const cogcElectionTimestamp = cogcElectionTimestampByPlanet.get(planetKey);
+
+    let govStart: number | undefined;
+    let govEnd: number | undefined;
+    if (govElectionStartedAt !== undefined) {
+      govStart = govElectionStartedAt;
+      govEnd = govElectionStartedAt + dayMs * 8;
+    } else if (govGovernorElectedAt !== undefined) {
+      govStart = govGovernorElectedAt + dayMs * 20;
+      govEnd = govGovernorElectedAt + dayMs * 28;
+    } else if (govElectionReminderAt !== undefined) {
+      govStart = govElectionReminderAt;
+      govEnd = govElectionReminderAt + dayMs;
+    }
 
     merged.push({
       ...planet,
       type: 'GOV',
-      electionStart:
-        govElectionTimestamp === undefined ? undefined : govElectionTimestamp + dayMs * 20,
-      electionEnd:
-        govElectionTimestamp === undefined ? undefined : govElectionTimestamp + dayMs * 28,
+      electionStart: govStart,
+      electionEnd: govEnd,
     });
 
     merged.push({
