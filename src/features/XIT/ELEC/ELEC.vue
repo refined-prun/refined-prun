@@ -11,6 +11,8 @@ import { alertsStore } from '@src/infrastructure/prun-api/data/alerts';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { timestampEachSecond } from '@src/utils/dayjs';
 import dayjs from 'dayjs';
+import { useTileState } from '@src/features/XIT/ELEC/tile-state';
+import RadioItem from '@src/components/forms/RadioItem.vue';
 
 interface ElectionWindow {
   electionStart?: number;
@@ -25,6 +27,9 @@ interface ElectionRow extends ElectionWindow {
 
 const dayMs = dayjs.duration(1, 'day').asMilliseconds();
 const voteCommand = { GOV: 'ADM', COGC: 'COGCPEX' } as const;
+
+const gov = useTileState('gov');
+const cogc = useTileState('cogc');
 
 const rows = computed<ElectionRow[] | undefined>(() => {
   const sites = sitesStore.all.value;
@@ -60,7 +65,25 @@ const rows = computed<ElectionRow[] | undefined>(() => {
     );
   }
 
-  return merged.sort(compareRows);
+  return merged;
+});
+
+const filtered = computed(() => {
+  if (!rows.value) {
+    return undefined;
+  }
+
+  return rows.value.filter(
+    x => (gov.value && x.type === 'GOV') || (cogc.value && x.type === 'COGC'),
+  );
+});
+
+const sorted = computed(() => {
+  if (!filtered.value) {
+    return undefined;
+  }
+
+  return filtered.value.slice().sort(compareRows);
 });
 
 function govWindow(started?: number, elected?: number, reminder?: number): ElectionWindow {
@@ -192,41 +215,47 @@ function getPlanetNaturalIdFromAlert(alert: PrunApi.Alert) {
 
 <template>
   <LoadingSpinner v-if="rows === undefined" />
-  <table v-else>
-    <thead>
-      <tr>
-        <th>Planet</th>
-        <th>Type</th>
-        <th>Voting</th>
-        <th>Ends</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="row in rows" :key="`${row.planetNaturalId}:${row.type}`">
-        <td>
-          <PrunLink inline :command="`PLI ${row.planetNaturalId}`">{{ row.planet }}</PrunLink>
-        </td>
-        <td>
-          <PrunButton dark @click="showBuffer(`${row.type} ${row.planetNaturalId}`)">
-            {{ row.type }}
-          </PrunButton>
-        </td>
-        <td>
-          <template v-if="row.electionStart === undefined">--</template>
-          <PrunButton
-            v-else-if="isPastOrNow(row.electionStart)"
-            primary
-            @click="showBuffer(`${voteCommand[row.type]} ${row.planetNaturalId}`)">
-            VOTE
-          </PrunButton>
-          <template v-else>{{ formatFutureDuration(row.electionStart) }}</template>
-        </td>
-        <td>
-          <template v-if="row.electionEnd === undefined">--</template>
-          <template v-else-if="isPastOrNow(row.electionEnd)">Now</template>
-          <template v-else>{{ formatFutureDuration(row.electionEnd) }}</template>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <template v-else>
+    <div :class="C.ComExOrdersPanel.filter">
+      <RadioItem v-model="gov" horizontal>GOV</RadioItem>
+      <RadioItem v-model="cogc" horizontal>COGC</RadioItem>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Planet</th>
+          <th>Type</th>
+          <th>Voting</th>
+          <th>Ends</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="row in sorted" :key="`${row.planetNaturalId}:${row.type}`">
+          <td>
+            <PrunLink inline :command="`PLI ${row.planetNaturalId}`">{{ row.planet }}</PrunLink>
+          </td>
+          <td>
+            <PrunButton dark @click="showBuffer(`${row.type} ${row.planetNaturalId}`)">
+              {{ row.type }}
+            </PrunButton>
+          </td>
+          <td>
+            <template v-if="row.electionStart === undefined">--</template>
+            <PrunButton
+              v-else-if="isPastOrNow(row.electionStart)"
+              primary
+              @click="showBuffer(`${voteCommand[row.type]} ${row.planetNaturalId}`)">
+              VOTE
+            </PrunButton>
+            <template v-else>{{ formatFutureDuration(row.electionStart) }}</template>
+          </td>
+          <td>
+            <template v-if="row.electionEnd === undefined">--</template>
+            <template v-else-if="isPastOrNow(row.electionEnd)">Now</template>
+            <template v-else>{{ formatFutureDuration(row.electionEnd) }}</template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </template>
 </template>
