@@ -20,6 +20,7 @@
 ### Fixed
 
 - `XIT PROD`: Fix order deletion in `PRODQ` tiles opened from `XIT PROD`
+- `prun-bugs`: Prevent text selection when moving items by dragging
 
 ## 26.3.22
 
