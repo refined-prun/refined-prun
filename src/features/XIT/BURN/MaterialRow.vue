@@ -27,6 +27,7 @@ const red = useTileState('red');
 const yellow = useTileState('yellow');
 const green = useTileState('green');
 const inf = useTileState('inf');
+const io = useTileState('io');
 
 const isVisible = computed(() => {
   if (alwaysVisible) {
@@ -40,14 +41,31 @@ const isVisible = computed(() => {
   );
 });
 
+function formatAmount(value: number) {
+  const abs = Math.abs(value);
+  return abs >= 1000 ? fixed0(abs) : abs >= 100 ? fixed1(abs) : fixed2(abs);
+}
+
 const changeText = computed(() => {
-  const abs = Math.abs(production.value);
-  const fixed = abs >= 1000 ? fixed0(abs) : abs >= 100 ? fixed1(abs) : fixed2(abs);
-  return production.value > 0 ? '+' + fixed : production.value < 0 ? '-' + fixed : 0;
+  if (production.value === 0) {
+    return 0;
+  }
+  const fixed = formatAmount(production.value);
+  return production.value > 0 ? '+' + fixed : '-' + fixed;
 });
 
 const changeClass = computed(() => ({
   [C.ColoredValue.positive]: production.value > 0,
+}));
+
+const inAmount = computed(() => burn.input + burn.workforce);
+const outAmount = computed(() => burn.output);
+
+const inText = computed(() => (inAmount.value === 0 ? 0 : '-' + formatAmount(inAmount.value)));
+const outText = computed(() => (outAmount.value === 0 ? 0 : '+' + formatAmount(outAmount.value)));
+
+const outClass = computed(() => ({
+  [C.ColoredValue.positive]: outAmount.value > 0,
 }));
 
 const needAmt = computed(() => {
@@ -71,7 +89,18 @@ const needAmt = computed(() => {
     <td>
       <span>{{ fixed0(invAmount) }}</span>
     </td>
-    <td>
+    <template v-if="io">
+      <td>
+        <span>{{ inText }}</span>
+      </td>
+      <td>
+        <span :class="outClass">{{ outText }}</span>
+      </td>
+      <td>
+        <span :class="changeClass">{{ changeText }}</span>
+      </td>
+    </template>
+    <td v-else>
       <span :class="changeClass">{{ changeText }}</span>
     </td>
     <td>

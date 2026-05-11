@@ -27,5 +27,5 @@ declare namespace PrunApi {
     partner: ExchangeEntity;
   }
 
-  type CXOrderType = 'BUYING' | 'SELLING';
+  type FXOrderType = 'BUYING' | 'SELLING';
 }

@@ -51,6 +51,7 @@ const labels: NotificationTypeLabel[] = [
   },
   {
     types: [
+      'ADMIN_CENTER_ELECTION_REMINDER',
       'ADMIN_CENTER_ELECTION_STARTED',
       'ADMIN_CENTER_GOVERNOR_ELECTED',
       'ADMIN_CENTER_NO_GOVERNOR_ELECTED',
@@ -62,6 +63,7 @@ const labels: NotificationTypeLabel[] = [
   {
     types: [
       'CONTRACT_CONDITION_FULFILLED',
+      'CONTRACT_CONDITION_PICKUP_CONDITION_PENDING',
       'CONTRACT_CONTRACT_BREACHED',
       'CONTRACT_CONTRACT_CANCELLED',
       'CONTRACT_CONTRACT_CLOSED',

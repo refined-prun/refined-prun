@@ -3,6 +3,7 @@ import { formatEta } from '@src/utils/format';
 import { refAttributeValue, refTextContent } from '@src/utils/reactive-dom';
 import { createReactiveSpan } from '@src/utils/reactive-element';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
+import { timestampEachMinute } from '@src/utils/dayjs';
 
 function onTileReady(tile: PrunTile) {
   const line = computed(() => productionStore.getById(tile.parameter)!);
@@ -33,7 +34,7 @@ function onTileReady(tile: PrunTile) {
       if (!template.value) {
         return undefined;
       }
-      return ` (${formatEta(Date.now(), calcCompletionDate(line.value, template.value, orderSize.value))})`;
+      return ` (${formatEta(timestampEachMinute.value, calcCompletionDate(line.value, template.value, orderSize.value))})`;
     });
 
     const durationField = form.children[8];
