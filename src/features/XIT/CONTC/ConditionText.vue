@@ -14,7 +14,10 @@ defineProps<{ condition: PrunApi.ContractCondition }>();
     <AddressLink :address="condition.address!" />
   </template>
   <template v-else-if="condition.type === 'CONSTRUCT_SHIP'">Construct Ship</template>
-  <template v-else-if="condition.type === 'CONTRIBUTION'">Contribution</template>
+  <template v-else-if="condition.type === 'CONTRIBUTION'">
+    Contribute @
+    <AddressLink :address="condition.address!" />
+  </template>
   <template v-else-if="condition.type === 'DELIVERY'">
     Deliver {{ condition.quantity!.amount }} {{ condition.quantity!.material.ticker }} @
     <AddressLink :address="condition.address!" />
