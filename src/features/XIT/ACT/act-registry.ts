@@ -34,9 +34,8 @@ function getMaterialGroupTypes() {
 
 interface ActionInfo<TConfig> {
   type: UserData.ActionType;
-  shortDescription?: string;
   description: (data: UserData.ActionData, config?: TConfig) => string;
-  editComponent?: Component;
+  editComponent: Component;
   configureComponent?: Component;
   needsConfigure?: (data: UserData.ActionData) => boolean;
   isValidConfig?: (data: UserData.ActionData, config: TConfig) => boolean;
