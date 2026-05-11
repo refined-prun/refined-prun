@@ -12,7 +12,6 @@ import {
 
 act.addAction<Config>({
   type: 'CONT Ship',
-  shortDescription: 'Create a shipping contract draft for a material group',
   description: (action, config) => {
     if (!action.group || !action.contOrigin || !action.contDest) {
       return '--';

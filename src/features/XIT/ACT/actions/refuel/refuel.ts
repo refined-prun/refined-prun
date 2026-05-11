@@ -15,7 +15,6 @@ import { clamp } from '@src/utils/clamp';
 
 act.addAction<Config>({
   type: 'Refuel',
-  shortDescription: 'Refuel all ships docked near a storage',
   description: action => {
     return action.origin ? 'Refuel all ships near ' + action.origin : '--';
   },
