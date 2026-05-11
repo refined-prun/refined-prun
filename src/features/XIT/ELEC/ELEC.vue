@@ -152,7 +152,7 @@ function formatFutureDuration(timestamp: number) {
 }
 
 function openBuffer(command: string) {
-  void showBuffer(command, { force: true });
+  void showBuffer(command);
 }
 
 function getTypeCommand(row: ElectionRow) {
