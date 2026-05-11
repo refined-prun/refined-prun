@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `adm-hide-inactive-buttons`: Hides inactive buttons
+- `cxo-delete-order-button`: Adds a delete button
+- `cxob-delete-own-exchange-orders`: Adds a delete button to own orders
+- `inv-shpt-condition-indicator`: Adds a condition indicator to SHPT and BLCK items
+
+### Changed
+
+- `XIT CONTC`: Show an address link in the "Contribute" condition
+- `cxpo-order-book`: Add a delete button to own orders
+- `nots-notification-type-label`: Add labels for new notification types
+
 ## 26.3.22
 
 ### Added
