@@ -8,6 +8,7 @@ import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 act.addMaterialGroup<Config>({
   type: 'Repair',
+  shortDescription: 'Calculate repair materials for aging buildings',
   description: data => {
     if (!data.planet) {
       return '--';

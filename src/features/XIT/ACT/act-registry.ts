@@ -7,8 +7,9 @@ import {
 
 interface MaterialGroupInfo<TConfig> {
   type: UserData.MaterialGroupType;
+  shortDescription?: string;
   description: (data: UserData.MaterialGroupData, config?: TConfig) => string;
-  editComponent: Component;
+  editComponent?: Component;
   configureComponent?: Component;
   needsConfigure?: (data: UserData.MaterialGroupData) => boolean;
   isValidConfig?: (data: UserData.MaterialGroupData, config: TConfig) => boolean;
@@ -33,8 +34,9 @@ function getMaterialGroupTypes() {
 
 interface ActionInfo<TConfig> {
   type: UserData.ActionType;
+  shortDescription?: string;
   description: (data: UserData.ActionData, config?: TConfig) => string;
-  editComponent: Component;
+  editComponent?: Component;
   configureComponent?: Component;
   needsConfigure?: (data: UserData.ActionData) => boolean;
   isValidConfig?: (data: UserData.ActionData, config: TConfig) => boolean;
