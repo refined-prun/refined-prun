@@ -22,6 +22,7 @@ const activeOrders = computed(() => productionLine.orders.length);
 const condition = computed(() => productionLine.condition);
 const expandInfo = useTileState('expandInfo');
 const id = computed(() => productionLine.id);
+const shortId = computed(() => id.value.substring(0, 8));
 const displayInfo = computed(() => expandInfo.value.includes(id.value));
 
 const onHeaderClick = () => {
@@ -83,8 +84,8 @@ const tooltipText = computed(() => tooltipLines.value.join('\n'));
     <FracCell :numerator="activeOrders" :denominator="capacity" />
     <td>
       <div :class="$style.buttons">
-        <PrunButton dark inline @click="showBuffer(`PRODCO ${productionLine.id}`)">CO</PrunButton>
-        <PrunButton dark inline @click="showBuffer(`PRODQ ${productionLine.id}`)">Q</PrunButton>
+        <PrunButton dark inline @click="showBuffer(`PRODCO ${shortId}`)">CO</PrunButton>
+        <PrunButton dark inline @click="showBuffer(`PRODQ ${shortId}`)">Q</PrunButton>
       </div>
     </td>
   </tr>

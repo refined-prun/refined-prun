@@ -9,6 +9,7 @@ import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { userData } from '@src/store/user-data';
 import { fixed0 } from '@src/utils/format';
+import { useTileState } from '@src/features/XIT/BURN/tile-state';
 
 const { burn } = defineProps<{
   burn: PlanetBurn;
@@ -17,7 +18,9 @@ const { burn } = defineProps<{
   onClick: () => void;
 }>();
 
+const io = useTileState('io');
 const days = computed(() => countDays(burn.burn));
+const nameColspan = computed(() => (io.value ? 6 : 4));
 
 const capacity = computed(() => {
   const site = sitesStore.getByPlanetNaturalId(burn.naturalId);
@@ -75,7 +78,7 @@ const capacityTooltip = computed(() => {
 
 <template>
   <tr :class="$style.row">
-    <td colspan="4" :class="$style.cell" @click="onClick">
+    <td :colspan="nameColspan" :class="$style.cell" @click="onClick">
       <div
         v-if="capacityClass"
         :class="[$style.stripe, capacityClass]"

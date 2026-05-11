@@ -40,7 +40,7 @@ function setHeaders(tile: PrunTile, isMinimized: boolean) {
 }
 
 function init() {
-  tiles.observe(['CX', 'CONT', 'LM', 'SYSI'], onTileReady);
+  tiles.observe(['CX', 'CONT', 'LM', 'SYSI', 'POPID'], onTileReady);
 }
 
 features.add(import.meta.url, init, 'Minimizes headers in CX, CONT, LM, and SYSI.');
