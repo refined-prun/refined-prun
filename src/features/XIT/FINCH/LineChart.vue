@@ -190,7 +190,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
           return `${hhmm(timestamp)} ${ddmmyyyy(timestamp)}`;
         },
         label(item): string | void {
-          let label = item.dataset.label || '';
+          let label = item.dataset.label ?? '';
 
           if (label) {
             label += ': ';

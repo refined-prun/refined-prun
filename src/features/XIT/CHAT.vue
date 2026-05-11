@@ -16,16 +16,14 @@ const parameter = parameters[0];
 
 const isLoaded = ref(false);
 const messages = ref([] as FioChatMessage[]);
-watchEffect(() => {
+watchEffect(async () => {
   if (!parameter) {
     return;
   }
-  fetch(`https://rest.fnar.net/chat/display/${parameter}`)
-    .then(response => response.json())
-    .then(data => {
-      isLoaded.value = true;
-      messages.value = data;
-    });
+  const response = await fetch(`https://rest.fnar.net/chat/display/${parameter}`);
+  const data = await response.json();
+  isLoaded.value = true;
+  messages.value = data;
 });
 </script>
 
