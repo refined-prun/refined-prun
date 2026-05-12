@@ -1,65 +1,57 @@
 import StackedProgressBar from '@src/components/StackedProgressBar.vue';
 import { refAttributeValue } from '@src/utils/reactive-dom';
-import $style from './visible-popid-contributions.module.css';
+import $style from './visible-contributions.module.css';
 import { clamp } from '@src/utils/clamp';
 import { createFragmentApp } from '@src/utils/vue-fragment-app';
 
-function visualizeCOGCReserves(tile: PrunTile) {
+function onTileReadySimple(tile: PrunTile) {
+  const contributionIndex = 1;
+  const reserveIndex = 2;
   subscribe($$(tile.anchor, 'tr'), async reserveRow => {
-    const { contributionValue, reserveValue } = await extractValuesFromReserveRow(reserveRow, 1, 2);
-    const reserveCell = reserveRow.children[2];
+    const { contributionValue, reserveValue } = await extractValuesFromReserveRow(
+      reserveRow,
+      contributionIndex,
+      reserveIndex,
+    );
+    const reserveCell = reserveRow.children[reserveIndex];
     const reserveProgressBar = await $(reserveCell, 'progress');
-    await visualizeContributions(reserveProgressBar, contributionValue, reserveValue);
+    await visualizeContribution(reserveProgressBar, contributionValue, reserveValue);
   });
 }
 
-function visualizeHQReserves(tile: PrunTile) {
-  subscribe($$(tile.anchor, 'tr'), async reserveRow => {
-    const { contributionValue, reserveValue } = await extractValuesFromReserveRow(reserveRow, 1, 2);
-    const reserveCell = reserveRow.children[2];
-    const reserveProgressBar = await $(reserveCell, 'progress');
-    await visualizeContributions(reserveProgressBar, contributionValue, reserveValue);
-  });
-}
-
-function visualizeSHYPReserves(tile: PrunTile) {
-  subscribe($$(tile.anchor, 'tr'), async reserveRow => {
-    const { contributionValue, reserveValue } = await extractValuesFromReserveRow(reserveRow, 1, 2);
-    const reserveCell = reserveRow.children[2];
-    const reserveProgressBar = await $(reserveCell, 'progress');
-    await visualizeContributions(reserveProgressBar, contributionValue, reserveValue);
-  });
-}
-
-function visualizePOPIDReserves(tile: PrunTile) {
+function onTileReadyPOPID(tile: PrunTile) {
   subscribe($$(tile.anchor, C.Population.container), async populationContainer => {
     const upkeepTable = populationContainer.children[7]?.firstElementChild;
     if (upkeepTable != undefined) {
       subscribe($$(upkeepTable, 'tr'), async reserveRow => {
+        const contributionIndex = 1;
+        const reserveIndex = 3;
         const { contributionValue, reserveValue } = await extractValuesFromReserveRow(
           reserveRow,
-          1,
-          3,
+          contributionIndex,
+          reserveIndex,
         );
-        const reserveCell = reserveRow.children[3];
+        const reserveCell = reserveRow.children[reserveIndex];
         const reserveProgressBar = await $(reserveCell, 'progress');
-        await visualizeContributions(reserveProgressBar, contributionValue, reserveValue);
+        await visualizeContribution(reserveProgressBar, contributionValue, reserveValue);
         const nextConsumptionCell = reserveRow.children[2];
         const nextConsumptionProgressBar = await $(nextConsumptionCell, 'progress');
-        await visualizeContributions(nextConsumptionProgressBar, contributionValue, reserveValue);
+        await visualizeContribution(nextConsumptionProgressBar, contributionValue, reserveValue);
       });
     }
     const upgradeTable = populationContainer.children[9]?.firstElementChild;
     if (upgradeTable != undefined) {
       subscribe($$(upgradeTable, 'tr'), async reserveRow => {
+        const contributionIndex = 1;
+        const reserveIndex = 2;
         const { contributionValue, reserveValue } = await extractValuesFromReserveRow(
           reserveRow,
-          1,
-          2,
+          contributionIndex,
+          reserveIndex,
         );
-        const reserveCell = reserveRow.children[2];
+        const reserveCell = reserveRow.children[reserveIndex];
         const reserveProgressBar = await $(reserveCell, 'progress');
-        await visualizeContributions(reserveProgressBar, contributionValue, reserveValue);
+        await visualizeContribution(reserveProgressBar, contributionValue, reserveValue);
       });
     }
   });
@@ -97,7 +89,7 @@ async function extractValuesFromReserveRow(
   return { contributionValue, reserveValue: realReserveValue };
 }
 
-async function visualizeContributions(
+async function visualizeContribution(
   progressBar: HTMLProgressElement,
   contributionValue: globalThis.Ref<number>,
   reserveValue: globalThis.Ref<number>,
@@ -145,14 +137,12 @@ async function visualizeContributions(
 }
 
 function init() {
-  tiles.observe(['POPID'], visualizePOPIDReserves);
-  tiles.observe(['COGCU'], visualizeCOGCReserves);
-  tiles.observe(['SHYP'], visualizeSHYPReserves);
-  tiles.observe(['HQ'], visualizeHQReserves);
+  tiles.observe(['POPID'], onTileReadyPOPID);
+  tiles.observe(['COGCU', 'SHYP', 'HQ'], onTileReadySimple);
 }
 
 features.add(
   import.meta.url,
   init,
-  'POPID: Sections the reserve bar to make the change more visible.',
+  'Sections contribution bars to differentiate the current state of the reserve from the potential state after contribution.',
 );
