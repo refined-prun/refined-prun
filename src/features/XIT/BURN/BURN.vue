@@ -244,6 +244,7 @@ function copyBurnTable() {
       <RadioItem
         v-model="prod"
         horizontal
+        :class="$style.radioItemWithTooltip"
         data-tooltip="Toggle production I/O. When off, only workforce consumption is shown."
         data-tooltip-position="bottom">
         PROD
@@ -251,6 +252,7 @@ function copyBurnTable() {
       <RadioItem
         v-model="wf"
         horizontal
+        :class="$style.radioItemWithTooltip"
         data-tooltip="Toggle workforce consumption. When off, burn rates exclude workforce needs."
         data-tooltip-position="bottom">
         WF
@@ -326,5 +328,9 @@ function copyBurnTable() {
   font-size: 12px;
   padding-left: 18px;
   font-weight: bold;
+}
+
+.radioItemWithTooltip {
+  padding: 0;
 }
 </style>
