@@ -138,7 +138,7 @@ async function visualizeContribution(
 
 function init() {
   tiles.observe(['POPID'], onTileReadyPOPID);
-  tiles.observe(['COGCU', 'SHYP', 'HQ'], onTileReadySimple);
+  tiles.observe(['COGCU', 'SHYP', 'HQ', 'WAR', 'PP'], onTileReadySimple);
 }
 
 features.add(
