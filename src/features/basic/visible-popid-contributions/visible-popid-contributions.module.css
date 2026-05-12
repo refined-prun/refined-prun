@@ -11,3 +11,13 @@
     color-mix(in srgb, var(--rp-color-accent-primary), black 40%) 8px
   );
 }
+
+.negativeContributionSection {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--rp-color-red),
+    var(--rp-color-red) 4px,
+    color-mix(in srgb, var(--rp-color-red), black 40%) 4px,
+    color-mix(in srgb, var(--rp-color-red), black 40%) 8px
+  );
+}

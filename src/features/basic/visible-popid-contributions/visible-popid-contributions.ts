@@ -1,94 +1,122 @@
 import StackedProgressBar from '@src/components/StackedProgressBar.vue';
 import { refAttributeValue } from '@src/utils/reactive-dom';
 import $style from './visible-popid-contributions.module.css';
+import { clamp } from '@src/utils/clamp';
+import { createFragmentApp } from '@src/utils/vue-fragment-app';
 
-function replacePopidReserveBars(tile: PrunTile) {
+function visualizeCOGCReserves(tile: PrunTile) {
   subscribe($$(tile.anchor, 'tr'), async reserveRow => {
-    const contributionSliderHandle = await $(reserveRow, 'rc-slider-handle');
-    const contributionSliderClasses = refAttributeValue(contributionSliderHandle, 'class');
-    const contributionSliderValueText = refAttributeValue(
-      contributionSliderHandle,
-      'aria-valuenow',
-    );
-    // Contribution value should only be updated when the slider is released
-    // or when no previous value has been set. Otherwise, we lose track of
-    // the stock already contributed.
-    const contributionValue = computed<number>(previousContributionValue => {
-      if (
-        contributionSliderClasses.value?.includes('rc-slider-handle-dragging') &&
-        previousContributionValue !== undefined
-      ) {
-        return previousContributionValue;
-      }
-      return Number(contributionSliderValueText.value);
-    });
-    const reserveCell = reserveRow.children[3];
-    if (reserveCell === undefined) {
-      return;
-    }
+    const { contributionValue, reserveValue } = await extractValuesFromReserveRow(reserveRow, 1, 2);
+    const reserveCell = reserveRow.children[2];
     const reserveProgressBar = await $(reserveCell, 'progress');
-    reserveProgressBar.hidden = true;
-    const totalReserveValueText = refAttributeValue(reserveProgressBar, 'value');
-    const totalReserveValue = computed(() => Number(totalReserveValueText.value));
-    const reserveMaxValueText = refAttributeValue(reserveProgressBar, 'max');
-    const reserveMaxValue = computed(() => Number(reserveMaxValueText.value));
-    const currentReserveValue = computed(() => totalReserveValue.value - contributionValue.value);
-    createFragmentApp(
-      StackedProgressBar,
-      reactive({
-        max: reserveMaxValue,
-        sections: [
-          {
-            value: currentReserveValue,
-            class: $style.reserveSection,
-          },
-          {
-            value: contributionValue,
-            class: $style.contributionSection,
-          },
-        ],
-      }),
-    ).after(reserveProgressBar);
-    const nextConsumptionCell = reserveRow.children[2];
-    if (nextConsumptionCell === undefined) {
-      return;
-    }
-    const nextConsumptionProgressBar = await $(nextConsumptionCell, 'progress');
-    nextConsumptionProgressBar.hidden = true;
-    const nextConsumptionMaxValueText = refAttributeValue(nextConsumptionProgressBar, 'max');
-    const nextConsumptionMaxValue = computed(() => Number(nextConsumptionMaxValueText.value));
-    // The "next consumption" bar is not a real storage.
-    // The actual value is best calculated from the real reserve value.
-    const nextConsumptionReserveValue = computed(() =>
-      Math.min(currentReserveValue.value, nextConsumptionMaxValue.value),
-    );
-    const nextConsumptionContributionValue = computed(() =>
-      Math.min(
-        contributionValue.value,
-        nextConsumptionMaxValue.value - nextConsumptionReserveValue.value,
-      ),
-    );
-    createFragmentApp(
-      StackedProgressBar,
-      reactive({
-        max: nextConsumptionMaxValue,
-        sections: [
-          {
-            value: nextConsumptionReserveValue,
-            class: $style.reserveSection,
-          },
-          {
-            value: nextConsumptionContributionValue,
-            class: $style.contributionSection,
-          },
-        ],
-      }),
-    ).after(nextConsumptionProgressBar);
+    await visualizeContributions(reserveProgressBar, contributionValue, reserveValue);
   });
 }
 
+function visualizeSHYPReserves(tile: PrunTile) {
+  subscribe($$(tile.anchor, 'tr'), async reserveRow => {
+    const { contributionValue, reserveValue } = await extractValuesFromReserveRow(reserveRow, 1, 2);
+    const reserveCell = reserveRow.children[2];
+    const reserveProgressBar = await $(reserveCell, 'progress');
+    await visualizeContributions(reserveProgressBar, contributionValue, reserveValue);
+  });
+}
+
+function visualizePOPIDReserves(tile: PrunTile) {
+  subscribe($$(tile.anchor, 'tr'), async reserveRow => {
+    const { contributionValue, reserveValue } = await extractValuesFromReserveRow(reserveRow, 1, 3);
+    const reserveCell = reserveRow.children[3];
+    const reserveProgressBar = await $(reserveCell, 'progress');
+    await visualizeContributions(reserveProgressBar, contributionValue, reserveValue);
+    const nextConsumptionCell = reserveRow.children[2];
+    const nextConsumptionProgressBar = await $(nextConsumptionCell, 'progress');
+    await visualizeContributions(nextConsumptionProgressBar, contributionValue, reserveValue);
+  });
+}
+
+async function extractValuesFromReserveRow(
+  reserveRow: HTMLTableRowElement,
+  contributionIndex: number,
+  reserveIndex: number,
+): Promise<{
+  contributionValue: globalThis.Ref<number>;
+  reserveValue: globalThis.Ref<number>;
+}> {
+  const contributionCell = reserveRow.children[contributionIndex];
+  const contributionSliderHandle = await $(contributionCell, 'rc-slider-handle');
+  const contributionSliderHandleClasses = refAttributeValue(contributionSliderHandle, 'class');
+  const contributionValueText = refAttributeValue(contributionSliderHandle, 'aria-valuenow');
+  // Contribution value should only be updated when the slider is released
+  // or when no previous value has been set. Otherwise, we lose track of
+  // the stock already contributed.
+  const contributionValue = computed<number>(previousContributionValue => {
+    if (
+      contributionSliderHandleClasses.value?.includes('rc-slider-handle-dragging') &&
+      previousContributionValue !== undefined
+    ) {
+      return previousContributionValue;
+    }
+    return Number(contributionValueText.value);
+  });
+  const reserveCell = reserveRow.children[reserveIndex];
+  const reserveProgressBar = await $(reserveCell, 'progress');
+  const totalReserveValueText = refAttributeValue(reserveProgressBar, 'value');
+  const totalReserveValue = computed(() => Number(totalReserveValueText.value));
+  const realReserveValue = computed(() => totalReserveValue.value - contributionValue.value);
+  return { contributionValue, reserveValue: realReserveValue };
+}
+
+async function visualizeContributions(
+  progressBar: HTMLProgressElement,
+  contributionValue: globalThis.Ref<number>,
+  reserveValue: globalThis.Ref<number>,
+) {
+  const progressBarMaxText = refAttributeValue(progressBar, 'max');
+  const progressBarMax = computed(() => {
+    return Number(progressBarMaxText.value);
+  });
+  const clampedReserveValue = computed(() => clamp(reserveValue.value, 0, progressBarMax.value));
+  const clampedContributionValue = computed(() =>
+    clamp(
+      contributionValue.value,
+      0 - clampedReserveValue.value,
+      progressBarMax.value - clampedReserveValue.value,
+    ),
+  );
+  const contributionStyle = computed(() =>
+    clampedContributionValue.value >= 0
+      ? $style.contributionSection
+      : $style.negativeContributionSection,
+  );
+  const adjReserveValue = computed(() =>
+    clampedContributionValue.value >= 0
+      ? clampedReserveValue.value
+      : clampedReserveValue.value + clampedContributionValue.value,
+  );
+  const adjContributionValue = computed(() => Math.abs(clampedContributionValue.value));
+  progressBar.hidden = true;
+  createFragmentApp(
+    StackedProgressBar,
+    reactive({
+      max: progressBarMax,
+      sections: [
+        {
+          value: adjReserveValue,
+          class: $style.reserveSection,
+        },
+        {
+          value: adjContributionValue,
+          class: contributionStyle,
+        },
+      ],
+    }),
+  ).after(progressBar);
+}
+
 function init() {
-  tiles.observe(['POPID'], replacePopidReserveBars);
+  tiles.observe(['POPID'], visualizePOPIDReserves);
+  tiles.observe(['COGCU'], visualizeCOGCReserves);
+  tiles.observe(['SHYP'], visualizeSHYPReserves);
 }
 
 features.add(
