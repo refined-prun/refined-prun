@@ -5,6 +5,7 @@
 ### Changed
 
 - `audio-volume-slider`: Implement a more robust volume control mechanism
+- Skip confirmation overlays when deleting exchange orders while holding the Shift key
 
 ## 26.5.11
 
