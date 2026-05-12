@@ -13,6 +13,15 @@ function visualizeCOGCReserves(tile: PrunTile) {
   });
 }
 
+function visualizeHQReserves(tile: PrunTile) {
+  subscribe($$(tile.anchor, 'tr'), async reserveRow => {
+    const { contributionValue, reserveValue } = await extractValuesFromReserveRow(reserveRow, 1, 2);
+    const reserveCell = reserveRow.children[2];
+    const reserveProgressBar = await $(reserveCell, 'progress');
+    await visualizeContributions(reserveProgressBar, contributionValue, reserveValue);
+  });
+}
+
 function visualizeSHYPReserves(tile: PrunTile) {
   subscribe($$(tile.anchor, 'tr'), async reserveRow => {
     const { contributionValue, reserveValue } = await extractValuesFromReserveRow(reserveRow, 1, 2);
@@ -23,14 +32,36 @@ function visualizeSHYPReserves(tile: PrunTile) {
 }
 
 function visualizePOPIDReserves(tile: PrunTile) {
-  subscribe($$(tile.anchor, 'tr'), async reserveRow => {
-    const { contributionValue, reserveValue } = await extractValuesFromReserveRow(reserveRow, 1, 3);
-    const reserveCell = reserveRow.children[3];
-    const reserveProgressBar = await $(reserveCell, 'progress');
-    await visualizeContributions(reserveProgressBar, contributionValue, reserveValue);
-    const nextConsumptionCell = reserveRow.children[2];
-    const nextConsumptionProgressBar = await $(nextConsumptionCell, 'progress');
-    await visualizeContributions(nextConsumptionProgressBar, contributionValue, reserveValue);
+  subscribe($$(tile.anchor, C.Population.container), async populationContainer => {
+    const upkeepTable = populationContainer.children[7]?.firstElementChild;
+    if (upkeepTable != undefined) {
+      subscribe($$(upkeepTable, 'tr'), async reserveRow => {
+        const { contributionValue, reserveValue } = await extractValuesFromReserveRow(
+          reserveRow,
+          1,
+          3,
+        );
+        const reserveCell = reserveRow.children[3];
+        const reserveProgressBar = await $(reserveCell, 'progress');
+        await visualizeContributions(reserveProgressBar, contributionValue, reserveValue);
+        const nextConsumptionCell = reserveRow.children[2];
+        const nextConsumptionProgressBar = await $(nextConsumptionCell, 'progress');
+        await visualizeContributions(nextConsumptionProgressBar, contributionValue, reserveValue);
+      });
+    }
+    const upgradeTable = populationContainer.children[9]?.firstElementChild;
+    if (upgradeTable != undefined) {
+      subscribe($$(upgradeTable, 'tr'), async reserveRow => {
+        const { contributionValue, reserveValue } = await extractValuesFromReserveRow(
+          reserveRow,
+          1,
+          2,
+        );
+        const reserveCell = reserveRow.children[2];
+        const reserveProgressBar = await $(reserveCell, 'progress');
+        await visualizeContributions(reserveProgressBar, contributionValue, reserveValue);
+      });
+    }
   });
 }
 
@@ -117,6 +148,7 @@ function init() {
   tiles.observe(['POPID'], visualizePOPIDReserves);
   tiles.observe(['COGCU'], visualizeCOGCReserves);
   tiles.observe(['SHYP'], visualizeSHYPReserves);
+  tiles.observe(['HQ'], visualizeHQReserves);
 }
 
 features.add(
