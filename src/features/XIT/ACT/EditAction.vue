@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import PrunButton from '@src/components/PrunButton.vue';
 import SectionHeader from '@src/components/SectionHeader.vue';
+import SectionDescription from '@src/components/SectionDescription.vue';
 import Active from '@src/components/forms/Active.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
 import Commands from '@src/components/forms/Commands.vue';
@@ -48,7 +49,7 @@ function onSaveClick() {
 <template>
   <div :class="C.DraftConditionEditor.form">
     <SectionHeader>{{ add ? 'Add' : 'Edit' }} Action</SectionHeader>
-    <div v-if="shortDescription" :class="$style.description">{{ shortDescription }}</div>
+    <SectionDescription v-if="shortDescription">{{ shortDescription }}</SectionDescription>
     <form>
       <Active label="Type">
         <SelectInput v-model="type" :options="typeOptions" />
@@ -68,12 +69,3 @@ function onSaveClick() {
     </form>
   </div>
 </template>
-
-<style module>
-.description {
-  line-height: 13px;
-  padding: 0 4px;
-  background-color: #26353e;
-  margin-bottom: 5px;
-}
-</style>
