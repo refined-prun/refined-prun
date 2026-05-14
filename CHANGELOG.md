@@ -7,6 +7,10 @@
 - `audio-volume-slider`: Implement a more robust volume control mechanism
 - Skip confirmation overlays when deleting exchange orders while holding the Shift key
 
+### Fixed
+
+- `minimize-headers`: Fix inventory selector getting minimized in `POPID` tiles
+
 ## 26.5.11
 
 ### Added
