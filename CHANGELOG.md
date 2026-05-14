@@ -4,11 +4,11 @@
 
 ### Changed
 
-- `audio-volume-slider`: Implement a more robust volume control mechanism
 - Skip confirmation overlays when deleting exchange orders while holding the Shift key
 
 ### Fixed
 
+- `audio-volume-slider`: Fix volume not being applied in some cases
 - `minimize-headers`: Fix inventory selector getting minimized in `POPID` tiles
 - `mtra-auto-focus-amount`: Fix the amount input field failing to focus automatically
 
