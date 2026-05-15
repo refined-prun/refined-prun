@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `pli-cogc-label`: Replaces "Chamber of Global Commerce" row label with "CoGC ({program type})"
+
 ### Changed
 
 - `XIT BURN`: Change PROD and WF buttons to only exclude inactive material rows without affecting in/out rates
