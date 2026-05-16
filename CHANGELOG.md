@@ -4,6 +4,8 @@
 
 ### Added
 
+- `shpi-base-inv-button`: Adds an INV context button when the ship is landed at a base
+- `shpi-warehouse-button`: Adds a WAR context button when the ship is landed at an address with a warehouse
 - `pli-cogc-label`: Replaces "Chamber of Global Commerce" row label with "CoGC ({program type})"
 
 ### Changed
