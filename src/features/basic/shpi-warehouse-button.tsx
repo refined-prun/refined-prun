@@ -47,7 +47,9 @@ async function onTileReady(tile: PrunTile) {
       <div
         class={[C.ContextControls.item, C.fonts.fontRegular, C.type.typeSmall]}
         onMousedown={(e: MouseEvent) => {
-          if (e.shiftKey) e.preventDefault();
+          if (e.shiftKey) {
+            e.preventDefault();
+          }
         }}
         onClick={(e: MouseEvent) => {
           const cmd = `INV ${ws.id.substring(0, 8)}`;
