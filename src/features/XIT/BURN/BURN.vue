@@ -97,12 +97,7 @@ function filterBurn(burn: BurnValues): BurnValues {
     if (!(hasProd && prod.value) && !(hasWf && wf.value)) {
       continue;
     }
-    const input = prod.value ? mat.input : 0;
-    const output = prod.value ? mat.output : 0;
-    const workforce = wf.value ? mat.workforce : 0;
-    const dailyAmount = output - input - workforce;
-    const daysLeft = dailyAmount >= 0 ? 1000 : Math.floor(-mat.inventory / dailyAmount);
-    filtered[ticker] = { ...mat, input, output, workforce, dailyAmount, daysLeft };
+    filtered[ticker] = mat;
   }
   return filtered;
 }
@@ -245,7 +240,7 @@ function copyBurnTable() {
         v-model="prod"
         horizontal
         :class="$style.radioItemWithTooltip"
-        data-tooltip="Toggle production I/O. When off, only workforce consumption is shown."
+        data-tooltip="Toggle materials with production consumption. When off, hides materials only used in production."
         data-tooltip-position="bottom">
         PROD
       </RadioItem>
@@ -253,7 +248,7 @@ function copyBurnTable() {
         v-model="wf"
         horizontal
         :class="$style.radioItemWithTooltip"
-        data-tooltip="Toggle workforce consumption. When off, burn rates exclude workforce needs."
+        data-tooltip="Toggle materials with workforce consumption. When off, hides materials only consumed by workforce."
         data-tooltip-position="bottom">
         WF
       </RadioItem>
