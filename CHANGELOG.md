@@ -4,6 +4,7 @@
 
 ### Changed
 
+- `XIT ELEC`: Sort elections by election date end ascending
 - Skip confirmation overlays when deleting exchange orders while holding the Shift key
 
 ### Fixed
