@@ -57,8 +57,7 @@ export async function deleteExchangeOrder(
   });
 
   const isCX = screenCommand === 'CXOS';
-  // FXOS doesn't support 9999 D:
-  const window = await showBuffer(isCX ? `CXOS 9999` : screenCommand, {
+  const window = await showBuffer(screenCommand, {
     autoClose: true,
     closeWhen: shouldClose,
     force: true,

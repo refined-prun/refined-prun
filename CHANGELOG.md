@@ -7,6 +7,7 @@
 - `XIT BURN`: Change PROD and WF buttons to only exclude inactive material rows without affecting in/out rates
 - `XIT ELEC`: Sort elections by election date end ascending
 - Skip confirmation overlays when deleting exchange orders while holding the Shift key
+- Optimize deleting own orders from non-CXOS places
 
 ### Fixed
 
