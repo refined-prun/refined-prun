@@ -11,17 +11,27 @@ import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
 import { refAnimationFrame } from '@src/utils/reactive-dom';
 
 export async function deleteExchangeOrderFromClick(
-  event: Event,
+  event: MouseEvent,
   orderId: string,
   screenCommand: 'CXOS' | 'FXOS',
 ) {
   event.preventDefault();
   event.stopPropagation();
+
+  if (event.shiftKey) {
+    return await deleteExchangeOrder(event.target as Element, orderId, screenCommand, true);
+  }
+
   return await new Promise<boolean>(resolve => {
     showConfirmationOverlay(
       event,
       async () => {
-        const success = await deleteExchangeOrder(event.target as Element, orderId, screenCommand);
+        const success = await deleteExchangeOrder(
+          event.target as Element,
+          orderId,
+          screenCommand,
+          false,
+        );
         resolve(success);
       },
       { message: 'Delete this order?', confirmLabel: 'Delete' },
@@ -33,6 +43,7 @@ export async function deleteExchangeOrder(
   target: Element,
   orderId: string,
   screenCommand: 'CXOS' | 'FXOS',
+  autoClose: boolean,
 ) {
   orderId = orderId.toLowerCase();
   const dismissProgress = showManualProgressOverlay(target);
@@ -46,8 +57,7 @@ export async function deleteExchangeOrder(
   });
 
   const isCX = screenCommand === 'CXOS';
-  // FXOS doesn't support 9999 D:
-  const window = await showBuffer(isCX ? `CXOS 9999` : screenCommand, {
+  const window = await showBuffer(screenCommand, {
     autoClose: true,
     closeWhen: shouldClose,
     force: true,
@@ -70,27 +80,18 @@ export async function deleteExchangeOrder(
   onNodeDisconnected(outcome, () => {
     shouldClose.value = true;
   });
-  return outcome.classList.contains(C.ActionFeedback.success);
+  const isSuccess = outcome.classList.contains(C.ActionFeedback.success);
+  if (autoClose) {
+    await clickElement(outcome);
+  }
+  return isSuccess;
 }
 
-function awaitActionOutcome(window: Element) {
-  return new Promise<Element>(resolve => {
-    const findOutcome = () =>
-      _$(window, C.ActionFeedback.error) ?? _$(window, C.ActionFeedback.success);
-    const existing = findOutcome();
-    if (existing) {
-      resolve(existing);
-      return;
-    }
-    const observer = new MutationObserver(() => {
-      const outcome = findOutcome();
-      if (outcome) {
-        observer.disconnect();
-        resolve(outcome);
-      }
-    });
-    observer.observe(window, { childList: true, subtree: true });
-  });
+async function awaitActionOutcome(window: Element) {
+  return await Promise.race([
+    $(window, C.ActionFeedback.error),
+    $(window, C.ActionFeedback.success),
+  ]);
 }
 
 function showManualProgressOverlay(target: Element) {

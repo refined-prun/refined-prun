@@ -12,7 +12,7 @@ function onTileReady(tile: PrunTile) {
     const formParent = form.parentElement!;
     formParent.style.display = 'flex';
     form.style.flex = '1';
-    for (const label of _$$(form, C.FormComponent.label)) {
+    for (const label of _$$(form, 'label')) {
       (label as HTMLLabelElement).style.minWidth = '120px';
     }
     for (const span of _$$(form, C.Tooltip.container)) {

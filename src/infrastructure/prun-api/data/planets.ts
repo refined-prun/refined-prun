@@ -5,6 +5,7 @@ import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-ge
 interface Planet {
   naturalId: string;
   name: string;
+  cogcProgramType?: string | null;
 }
 
 const store = createEntityStore<Planet>({
@@ -17,6 +18,18 @@ onApiMessage({
   FIO_PLANET_DATA(data: { planets: Planet[] }) {
     store.setAll(data.planets);
     store.setFetched();
+  },
+  DATA_DATA(data: {
+    body: { naturalId: string; cogcProgramType?: string | null };
+    path: string[];
+  }) {
+    if (data.path[0] !== 'planets' || data.path.length !== 2) {
+      return;
+    }
+    const existing = state.getById(data.body.naturalId);
+    if (existing) {
+      store.updateOne({ ...existing, cogcProgramType: data.body.cogcProgramType });
+    }
   },
 });
 

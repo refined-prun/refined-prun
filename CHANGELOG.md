@@ -1,15 +1,39 @@
 # Changelog
 
-## Unreleased
+## 26.5.18
+
+### Added
+
+- `shpi-base-inv-button`: Adds an INV context button when the ship is landed at a base
+- `shpi-warehouse-button`: Adds a WAR context button when the ship is landed at an address with a warehouse
+- `pli-cogc-label`: Replaces "Chamber of Global Commerce" row label with "CoGC ({program type})"
+
+### Changed
+
+- `XIT BURN`: Change PROD and WF buttons to only exclude inactive material rows without affecting in/out rates
+- `XIT ELEC`: Sort elections by election end date ascending
+- `inv-warehouse-button`: Move the button to the context bar
+- Skip confirmation overlays when deleting exchange orders while holding the Shift key
+- Optimize deleting own orders from non-CXOS places
+
+### Fixed
+
+- `audio-volume-slider`: Fix volume not being applied in some cases
+- `minimize-headers`: Fix inventory selector getting minimized in `POPID` tiles
+- `mtra-auto-focus-amount`: Fix the amount input field failing to focus automatically
+
+## 26.5.11
 
 ### Added
 
 - `XIT ELEC`: Upcoming elections for planets you have bases on
 - `XIT FXTS`: List of all your foreign exchange trades
 - `adm-hide-inactive-buttons`: Hides inactive buttons
+- `bs-warehouse-button`: Adds a "Warehouse" button
 - `cxo-delete-order-button`: Adds a delete button
 - `cxob-delete-own-exchange-orders`: Adds a delete button to own orders
-- `inv-shpt-condition-indicator`: Adds a condition indicator to SHPT and BLCK items
+- `inv-shpt-condition-indicator`: Adds a contract condition indicator to SHPT and BLCK items
+- `inv-warehouse-button`: Adds a "Warehouse" button to base inventories
 
 ### Changed
 

@@ -4,7 +4,7 @@ const { label = 'CMD' } = defineProps<{ label?: string }>();
 
 <template>
   <div :class="[C.FormComponent.containerCommand, C.forms.cmd, C.forms.formComponent]">
-    <label :class="[C.FormComponent.label, C.fonts.fontRegular, C.type.typeRegular]">
+    <label>
       <span>{{ label }}</span>
     </label>
     <div :class="[C.FormComponent.input, C.forms.input]">
