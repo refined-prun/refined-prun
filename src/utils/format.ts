@@ -93,6 +93,11 @@ export const fixed2 = numberFormat({
   maximumFractionDigits: 2,
 });
 
+export const fixed4 = numberFormat({
+  minimumFractionDigits: 4,
+  maximumFractionDigits: 4,
+});
+
 export const percent0 = numberFormat({
   style: 'percent',
   maximumFractionDigits: 0,

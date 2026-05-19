@@ -2,19 +2,7 @@
 
 ## Code Style
 
-### Braces and Control Flow
-
-Always wrap code blocks in braces, even single-line ones.
-
-```ts
-// Bad
-if (!site) return;
-
-// Good
-if (!site) {
-  return;
-}
-```
+### Control Flow
 
 Invert conditions early to reduce nesting:
 
@@ -29,18 +17,6 @@ if (sliders.length === 0) {
   return;
 }
 // 20 lines at base indentation
-```
-
-### Loops
-
-Don't use `.forEach`. Use `for..of`.
-
-```ts
-// Bad
-sites.forEach(site => { });
-
-// Good
-for (const site of sites) { }
 ```
 
 ### Lambdas
@@ -72,18 +48,6 @@ contextItems: (parameters: string[]) => { }
 contextItems: parameters => { }
 ```
 
-### Template Literals
-
-Don't wrap a single variable in `${}`.
-
-```ts
-// Bad
-applyCssRule('INV', `${C.StoreView.row}`, classes.storeInfo);
-
-// Good
-applyCssRule('INV', C.StoreView.row, classes.storeInfo);
-```
-
 ### Non-null Assertions
 
 Use `!` for `parentElement` and similar DOM properties that are guaranteed to exist when we process elements at DOM-appearance time. Don't use `as HTMLDivElement` casts for this — `!` is shorter and clearer.
@@ -94,34 +58,6 @@ tile.anchor.parentElement as HTMLDivElement
 
 // Good
 tile.anchor.parentElement!
-```
-
-### Summation
-
-Use `sumBy` utility instead of `.reduce()` for summation.
-
-```ts
-// Bad
-const total = items.reduce((sum, x) => sum + x.amount, 0);
-
-// Good
-import { sumBy } from '@src/utils/sum-by';
-const total = sumBy(items, x => x.amount);
-```
-
-### Nullish Checks
-
-Don't use `||` with numbers — use explicit checks.
-
-```ts
-// Bad
-const divisor = value || 1;
-
-// Good
-let divisor = value;
-if (divisor === 0) {
-  divisor = 1;
-}
 ```
 
 ### Comments

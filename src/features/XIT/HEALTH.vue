@@ -36,7 +36,7 @@ const otherData = computed(() => [
   ['CXOS', cxosStore.all.value?.length],
   ['FXOS', fxosStore.all.value?.length],
   ['Currency', (balancesStore.all.value?.length ?? 0) > 0],
-  ['Last CX Price Update', cxStore.fetched ? `${dayjsEachSecond.value.to(cxStore.age)}` : false],
+  ['Last CX Price Update', cxStore.fetched ? dayjsEachSecond.value.to(cxStore.age) : false],
 ]);
 
 const positive = C.ColoredValue.positive;

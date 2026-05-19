@@ -14,9 +14,7 @@ function onTileReady(tile: PrunTile) {
   const broker = computed(() => cxobStore.getByTicker(ticker));
   const cxpc = computed(() => cxpcStore.getById(broker.value?.id));
   const chartType = computedTileState(getTileState(tile), 'chartType', undefined);
-  if (chartType.value === undefined) {
-    chartType.value = userData.settings.defaultChartType;
-  }
+  chartType.value ??= userData.settings.defaultChartType;
 
   subscribe($$(tile.anchor, C.ChartContainer.container), container => {
     watchEffectWhileNodeAlive(container, () => {
@@ -65,7 +63,8 @@ function smooth(data: PrunApi.CXBrokerPrices) {
 
     // Perform the Heikin-Ashi transformation.
     const ha = [] as typeof interval.prices;
-    interval.prices.forEach((c, i) => {
+    for (let i = 0; i < interval.prices.length; i++) {
+      const c = interval.prices[i];
       // 1. HA-Close: mean of raw OHLC.
       const haClose = (c.open + c.high + c.low + c.close) / 4;
 
@@ -77,7 +76,7 @@ function smooth(data: PrunApi.CXBrokerPrices) {
       const haLow = Math.min(c.low, haOpen, haClose);
 
       ha.push({ ...c, open: haOpen, high: haHigh, low: haLow, close: haClose });
-    });
+    }
     intervalCopy.prices = ha;
   }
   const messsage = COMEX_BROKER_PRICES(payload);

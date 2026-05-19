@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import CopyButton from '@src/components/CopyButton.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
-import { getPlanetBurn, MaterialBurn, PlanetBurn } from '@src/core/burn';
+import { BurnValues, getPlanetBurn, MaterialBurn, PlanetBurn } from '@src/core/burn';
 import { comparePlanets } from '@src/util';
 import BurnSection from '@src/features/XIT/BURN/BurnSection.vue';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
@@ -80,6 +80,28 @@ function findSites(term: string, parts: string[]) {
   return sitesStore.getByPlanetNaturalId(naturalId);
 }
 
+const red = useTileState('red');
+const yellow = useTileState('yellow');
+const green = useTileState('green');
+const inf = useTileState('inf');
+const prod = useTileState('prod');
+const wf = useTileState('wf');
+const io = useTileState('io');
+
+function filterBurn(burn: BurnValues): BurnValues {
+  const filtered: BurnValues = {};
+  for (const ticker of Object.keys(burn)) {
+    const mat = burn[ticker];
+    const hasProd = mat.input > 0 || mat.output > 0;
+    const hasWf = mat.workforce > 0;
+    if (!(hasProd && prod.value) && !(hasWf && wf.value)) {
+      continue;
+    }
+    filtered[ticker] = mat;
+  }
+  return filtered;
+}
+
 const planetBurn = computed(() => {
   if (queryResult.value === undefined) {
     return undefined;
@@ -88,7 +110,8 @@ const planetBurn = computed(() => {
   const filtered = queryResult.value.sites
     .filter(x => x !== overall)
     .map(getPlanetBurn)
-    .filter(x => x !== undefined);
+    .filter(x => x !== undefined)
+    .map(x => ({ ...x, burn: filterBurn(x.burn) }));
   if (filtered.length <= 1) {
     return filtered;
   }
@@ -102,43 +125,47 @@ const planetBurn = computed(() => {
     return comparePlanets(a.naturalId, b.naturalId);
   });
 
-  const overallBurn = {};
-  for (const burn of filtered) {
-    for (const mat of Object.keys(burn.burn)) {
-      if (overallBurn[mat]) {
-        overallBurn[mat].dailyAmount += burn.burn[mat].dailyAmount;
-        overallBurn[mat].inventory += burn.burn[mat].inventory;
-      } else {
-        overallBurn[mat] = {};
-        overallBurn[mat].dailyAmount = burn.burn[mat].dailyAmount;
-        overallBurn[mat].inventory = burn.burn[mat].inventory;
-      }
+  const overallBurn: BurnValues = {};
+  for (const planet of filtered) {
+    for (const ticker of Object.keys(planet.burn)) {
+      const mat = planet.burn[ticker];
+      overallBurn[ticker] ??= {
+        input: 0,
+        output: 0,
+        workforce: 0,
+        dailyAmount: 0,
+        inventory: 0,
+        daysLeft: 0,
+        type: 'output',
+      };
+      overallBurn[ticker].input += mat.input;
+      overallBurn[ticker].output += mat.output;
+      overallBurn[ticker].workforce += mat.workforce;
+      overallBurn[ticker].inventory += mat.inventory;
     }
   }
 
-  for (const mat of Object.keys(overallBurn)) {
-    if (overallBurn[mat].dailyAmount >= 0) {
-      overallBurn[mat].daysLeft = 1000;
+  for (const ticker of Object.keys(overallBurn)) {
+    const mat = overallBurn[ticker];
+    mat.dailyAmount = mat.output - mat.input - mat.workforce;
+    if (mat.dailyAmount >= 0) {
+      mat.daysLeft = 1000;
     } else {
-      overallBurn[mat].daysLeft = -overallBurn[mat].inventory / overallBurn[mat].dailyAmount;
+      mat.daysLeft = -mat.inventory / mat.dailyAmount;
     }
   }
 
   const overallSection = { burn: overallBurn, planetName: 'Overall', naturalId: '', storeId: '' };
+
   if (queryResult.value.overallOnly) {
     return [overallSection];
   }
-
+  const sections = filtered.slice();
   if (queryResult.value.includeOverall) {
-    filtered.push(overallSection);
+    sections.push(overallSection);
   }
-  return filtered;
+  return sections;
 });
-
-const red = useTileState('red');
-const yellow = useTileState('yellow');
-const green = useTileState('green');
-const inf = useTileState('inf');
 
 const fakeBurn: MaterialBurn = {
   dailyAmount: -100000,
@@ -146,7 +173,7 @@ const fakeBurn: MaterialBurn = {
   inventory: 100000,
   type: 'input',
   input: 100000,
-  output: 0,
+  output: 100000,
   workforce: 0,
 };
 
@@ -167,7 +194,10 @@ function onExpandAllClick() {
 // Exports all materials regardless of active color filters (RED/YELLOW/GREEN/INF)
 // so spreadsheet users always get the complete dataset.
 function formatBurnTable(burns: PlanetBurn[]) {
-  const lines = ['Planet\tTicker\tInv\tBurn/day\tDays'];
+  const header = io.value
+    ? 'Planet\tTicker\tInv\tIn\tOut\tNet\tDays'
+    : 'Planet\tTicker\tInv\tBurn/day\tDays';
+  const lines = [header];
   for (const planet of burns) {
     const sorted = getSortedTickers(planet);
     for (const material of sorted) {
@@ -175,7 +205,15 @@ function formatBurnTable(burns: PlanetBurn[]) {
       // Floor needed here: per-planet burns are pre-floored, but overall burn is not.
       const days = mat.dailyAmount >= 0 ? '' : Math.floor(mat.daysLeft).toString();
       const burn = Math.round(mat.dailyAmount * 1000) / 1000;
-      lines.push(`${planet.planetName}\t${material.ticker}\t${mat.inventory}\t${burn}\t${days}`);
+      if (io.value) {
+        const inAmt = Math.round((mat.input + mat.workforce) * 1000) / 1000;
+        const outAmt = Math.round(mat.output * 1000) / 1000;
+        lines.push(
+          `${planet.planetName}\t${material.ticker}\t${mat.inventory}\t${inAmt}\t${outAmt}\t${burn}\t${days}`,
+        );
+      } else {
+        lines.push(`${planet.planetName}\t${material.ticker}\t${mat.inventory}\t${burn}\t${days}`);
+      }
     }
   }
   return lines.join('\n');
@@ -197,6 +235,25 @@ function copyBurnTable() {
       <RadioItem v-model="yellow" horizontal>YELLOW</RadioItem>
       <RadioItem v-model="green" horizontal>GREEN</RadioItem>
       <RadioItem v-model="inf" horizontal>INF</RadioItem>
+      <div :class="$style.separator" />
+      <RadioItem
+        v-model="prod"
+        horizontal
+        :class="$style.radioItemWithTooltip"
+        data-tooltip="Toggle materials with production consumption. When off, hides materials only used in production."
+        data-tooltip-position="bottom">
+        PROD
+      </RadioItem>
+      <RadioItem
+        v-model="wf"
+        horizontal
+        :class="$style.radioItemWithTooltip"
+        data-tooltip="Toggle materials with workforce consumption. When off, hides materials only consumed by workforce."
+        data-tooltip-position="bottom">
+        WF
+      </RadioItem>
+      <div :class="$style.separator" />
+      <RadioItem v-model="io" horizontal>I/O</RadioItem>
       <div :class="$style.spacer" />
       <CopyButton :copy-fn="copyBurnTable" data-tooltip-position="bottom" />
     </div>
@@ -208,7 +265,12 @@ function copyBurnTable() {
           </th>
           <th v-else />
           <th>Inv</th>
-          <th>
+          <template v-if="io">
+            <th>In</th>
+            <th>Out</th>
+            <th>Net</th>
+          </template>
+          <th v-else>
             <InlineFlex>
               Burn
               <Tooltip position="bottom" tooltip="How much of a material is consumed per day." />
@@ -247,6 +309,13 @@ function copyBurnTable() {
   flex: 1;
 }
 
+.separator {
+  width: 1px;
+  align-self: stretch;
+  background-color: #2b485a;
+  margin: 0 0.25rem;
+}
+
 .expand {
   text-align: center;
   cursor: pointer;
@@ -254,5 +323,9 @@ function copyBurnTable() {
   font-size: 12px;
   padding-left: 18px;
   font-weight: bold;
+}
+
+.radioItemWithTooltip {
+  padding: 0;
 }
 </style>

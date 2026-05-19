@@ -48,9 +48,8 @@ export function getTileState<T extends TileState>(tileOrId: PrunTile | string) {
   const id = typeof tileOrId === 'string' ? tileOrId : tileOrId.id;
   let state = userData.tileState[id];
   let isAdded = state !== undefined;
-  if (!state) {
-    state = reactive({});
-  }
+  state ??= reactive({});
+
   const isPersistent = isNaN(Number(id));
   if (isPersistent) {
     watch(
