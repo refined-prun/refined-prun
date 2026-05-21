@@ -70,10 +70,11 @@ const outClass = computed(() => ({
 
 const needAmt = computed(() => {
   const resupply = userData.settings.burn.resupply;
-  if (days.value > resupply || production.value > 0) {
+  const daysExact = burn.dailyAmount === 0 ? Infinity : -burn.inventory / burn.dailyAmount;
+  if (daysExact > resupply || production.value > 0) {
     return 0;
   }
-  let need = Math.ceil((days.value - resupply) * production.value);
+  let need = Math.ceil((daysExact - resupply) * production.value);
   // This check is needed to prevent a "-0" value that can happen
   // in situations like: 0 * -0.25 => -0.
   need = need === 0 ? 0 : need;
