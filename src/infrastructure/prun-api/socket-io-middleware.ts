@@ -17,8 +17,13 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
       return new Proxy(ws, {
         set(target, prop, value) {
           if (prop === 'onmessage') {
-            middleware.dispatchClientMessage.value = message => {
-              value(new MessageEvent('message', { data: encodeMessage(message) }));
+            console.log('opening ws', ws.url);
+            target.onopen = () => {
+              console.log('opened ws, assigning dispatch', ws.url);
+              middleware.dispatchClientMessage.value = message => {
+                console.log('dispatching client message', ws.url, message, value);
+                value(new MessageEvent('message', { data: encodeMessage(message) }));
+              };
             };
             target.onmessage = async e => {
               const data = await processMessage(e.data, middleware);
@@ -33,6 +38,14 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
                 });
               }
               value(e);
+            };
+            return true;
+          }
+          if (prop === 'onclose') {
+            console.log('closing websocket', ws.url);
+            target.onclose = e => {
+              middleware.dispatchClientMessage.value = undefined;
+              value?.(e);
             };
             return true;
           }

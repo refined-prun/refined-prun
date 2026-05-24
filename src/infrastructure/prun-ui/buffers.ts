@@ -42,8 +42,9 @@ export async function showBuffer(command: string, options?: ShowBufferOptions) {
     }
   }
   await acquireSlot();
+  console.log('showBuffer', command, 'creating!');
   const create = await $(document.documentElement, C.Dock.create);
-
+  console.log('showBuffer', command, 'created!');
   try {
     const windows = document.getElementsByClassName(C.Window.window);
     const seenWindows = new Set(Array.from(windows));
@@ -59,8 +60,13 @@ export async function showBuffer(command: string, options?: ShowBufferOptions) {
       });
       create.click();
     });
+    console.log('showBuffer', command, 'got new windows!');
     await processWindow(newWindow, command, options);
+    console.log('showBuffer', command, 'processed window!');
     return newWindow;
+  } catch (e) {
+    console.error(e);
+    throw e;
   } finally {
     releaseSlot();
   }
@@ -84,12 +90,15 @@ function releaseSlot() {
 }
 
 async function processWindow(window: HTMLDivElement, command: string, options?: ShowBufferOptions) {
+  console.log('showBuffer', 'processWindow', command, 'Processing!');
   const input = _$(window, C.PanelSelector.input) as HTMLInputElement;
   const form = input.form;
   if (!form?.isConnected) {
+    console.log('showBuffer', 'processWindow', command, 'form not connected!');
     return;
   }
   if (!(options?.autoSubmit ?? true)) {
+    console.log('showBuffer', 'processWindow', command, 'not autosubmitting!');
     changeInputValue(input, command);
     return;
   }
@@ -97,6 +106,7 @@ async function processWindow(window: HTMLDivElement, command: string, options?: 
   const tile = _$(window, C.Tile.tile);
   const id = getPrunId(tile!);
   if (options?.autoClose) {
+    console.log('showBuffer', 'processWindow', command, 'hiding dockTab!');
     const dockLabel = id?.padStart(2, '0');
     const dockTab = _$$(document, C.Dock.buffer).find(
       x => _$(x, C.Dock.title)?.textContent === dockLabel,
@@ -107,15 +117,19 @@ async function processWindow(window: HTMLDivElement, command: string, options?: 
   }
   const message = UI_TILES_CHANGE_COMMAND(id!, command);
   if (!dispatchClientPrunMessage(message)) {
+    console.log('showBuffer', 'processWindow', command, "couldn't message?");
     changeInputValue(input, command);
     await sleep(0);
     form.requestSubmit();
   }
+  console.log('showBuffer', 'processWindow', command, 'Finding selector!');
   const selector = await $(window, C.Tile.selector);
+  console.log('showBuffer', 'processWindow', command, 'Selector found!', selector);
   await Promise.any([
     new Promise<void>(resolve => onNodeDisconnected(input, resolve)),
     $(selector, C.Tile.warning),
   ]);
+  console.log('showBuffer', 'processWindow', command, 'closed!');
   if (!options?.autoClose) {
     window.classList.remove(css.hidden);
     return;
