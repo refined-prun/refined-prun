@@ -36,7 +36,7 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
           if (prop === 'onopen') {
             target.onopen = e => {
               middleware.dispatchClientMessage.value = message => {
-                target.onmessage?.(new MessageEvent('message', { data: encodeMessage(message) }));
+                target.onmessage!(new MessageEvent('message', { data: encodeMessage(message) }));
               };
               value?.(e);
             };
