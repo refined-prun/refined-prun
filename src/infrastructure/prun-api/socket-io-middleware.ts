@@ -13,10 +13,10 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
   window.WebSocket = new Proxy(WebSocket, {
     construct(target: typeof WebSocket, args: [string, (string | string[])?]) {
       const ws = new target(...args);
+      let dispatchClientMessage: ((message: T) => void) | undefined = undefined;
 
       return new Proxy(ws, {
         set(target, prop, value) {
-          let dispatchClientMessage: ((message: T) => void) | undefined = undefined;
           if (prop === 'onmessage') {
             dispatchClientMessage = message => {
               value(new MessageEvent('message', { data: encodeMessage(message) }));
