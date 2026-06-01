@@ -16,8 +16,20 @@ export const toSerializableCategoryName = (name: string) =>
   name.replaceAll('(', '').replaceAll(')', '').toUpperCase();
 
 const getBySerializableName = createMapGetter(state.all, x => x.name, toSerializableCategoryName);
+const getById = createMapGetter(state.all, x => x.id);
+
+export const getCategoryById = (
+  id: string | undefined | null,
+): PrunApi.MaterialCategory | undefined => {
+  if (!id) {
+    return undefined;
+  }
+  return getById(id);
+};
 
 export const materialCategoriesStore = {
   ...state,
+  getById,
   getBySerializableName,
+  getCategoryById,
 };

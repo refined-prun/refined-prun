@@ -1,0 +1,110 @@
+@import './variables.less';
+@import './mobile/variables.less';
+
+// Known resolved values (inspected from PrUn's live CSS):
+//   @color-border-table        → #2b485a   (borders between rows/columns)
+//   @color-background-table    → #23282b   (column stripe background)
+//   @color-hover-background    → (game-controlled, see note below)
+//
+// COLUMN vs ROW striping:
+//   td:nth-child(odd)  → #23282b on odd *columns* (not rows)
+//   tr:nth-child(2n)::after → rgba(255,255,255,0.02) overlay on even *rows*
+//     — injected by PrUn's own stylesheet, not this file
+//
+// When using div-based layouts (e.g. FLT flexbox/grid), PrUn's row
+// striping via ::after does NOT apply. Replicate manually with .oddRow.
+
+.table {
+  background-color: purple;
+}
+
+table {
+  // replaces "composes: type-regular from './type.less';"
+  font-size: 11px;
+  line-height: 1.1;
+
+  // replaces "composes: font-regular from './fonts.less';"
+  font-family: 'Droid Sans', sans-serif;
+
+  table-layout: auto;
+  border-collapse: collapse;
+  width: 100%;
+
+  caption {
+    text-align: left;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0;
+    padding: 6px 4px 2px;
+    background-color: @color-accent-secondary-fade-85;
+    color: @color-text-header;
+  }
+
+  th,
+  td {
+    font-weight: normal;
+    padding: 5px 8px;
+  }
+
+  thead {
+    th {
+      border-bottom: 1px solid @color-border-table;
+      text-align: left;
+      padding: 5px 8px 2px;
+    }
+  }
+
+  tbody {
+    border-bottom: 1px solid @color-border-table;
+
+    th {
+      border-bottom: 1px solid @color-border-table;
+      text-align: left;
+      padding: 5px 8px 2px;
+      font-weight: bold;
+    }
+
+    td {
+      padding: 2px 8px;
+      border-left: 1px solid @color-border-table;
+    }
+
+    td:first-child {
+      border-left: none;
+    }
+
+    td:nth-child(odd) {
+      background-color: @color-background-table;
+    }
+
+    tr:hover {
+      td {
+        background-color: @color-hover-background;
+      }
+    }
+  }
+
+  tfoot {
+    border-bottom: 1px solid @color-border-table;
+
+    th {
+      border-bottom: 1px solid @color-border-table;
+      text-align: left;
+      padding: 5px 8px 2px;
+      font-weight: bold;
+    }
+
+    td {
+      padding: 2px 8px;
+      border-left: 1px solid @color-border-table;
+    }
+
+    td:first-child {
+      border-left: none;
+    }
+
+    td:nth-child(odd) {
+      background-color: @color-background-table;
+    }
+  }
+}
