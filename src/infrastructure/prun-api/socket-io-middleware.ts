@@ -46,7 +46,9 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
           }
           if (prop === 'onclose') {
             target.onclose = e => {
-              middleware.dispatchClientMessage.value = undefined;
+              if (middleware.dispatchClientMessage.value === dispatchClientMessage) {
+                middleware.dispatchClientMessage.value = undefined;
+              }
               value?.(e);
             };
             return true;
