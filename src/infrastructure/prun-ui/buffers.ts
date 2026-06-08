@@ -112,11 +112,21 @@ async function processWindow(window: HTMLDivElement, command: string, options?: 
     await sleep(0);
     form.requestSubmit();
   };
-  const selector = await $(window, C.Tile.selector);
+  if (!dispatchClientPrunMessage(message)) {
+    fallbackTileChange();
+  }
+  let tileChanged = false;
+  setTimeout(() => {
+    if (tileChanged) {
+      return;
+    }
+    fallbackTileChange();
+  }, 100);
   await Promise.any([
     new Promise<void>(resolve => onNodeDisconnected(input, resolve)),
     $(selector, C.Tile.warning),
   ]);
+  tileChanged = true;
   if (!options?.autoClose) {
     window.classList.remove(css.hidden);
     return;
