@@ -106,11 +106,12 @@ async function processWindow(window: HTMLDivElement, command: string, options?: 
     }
   }
   const message = UI_TILES_CHANGE_COMMAND(id!, command);
-  if (!dispatchClientPrunMessage(message)) {
+  const selector = await $(window, C.Tile.selector);
+  const fallbackTileChange = async () => {
     changeInputValue(input, command);
     await sleep(0);
     form.requestSubmit();
-  }
+  };
   const selector = await $(window, C.Tile.selector);
   await Promise.any([
     new Promise<void>(resolve => onNodeDisconnected(input, resolve)),
