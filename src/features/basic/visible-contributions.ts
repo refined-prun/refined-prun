@@ -21,7 +21,7 @@ function onTileReadySimple(tile: PrunTile) {
 
 function onTileReadyPOPID(tile: PrunTile) {
   subscribe($$(tile.anchor, C.Population.container), async populationContainer => {
-    const upkeepTable = populationContainer.children[7]?.firstElementChild;
+    const upkeepTable = populationContainer.children[8]?.firstElementChild;
     if (upkeepTable != undefined) {
       subscribe($$(upkeepTable, 'tr'), async reserveRow => {
         const contributionIndex = 1;
@@ -39,7 +39,7 @@ function onTileReadyPOPID(tile: PrunTile) {
         await visualizeContribution(nextConsumptionProgressBar, contributionValue, reserveValue);
       });
     }
-    const upgradeTable = populationContainer.children[9]?.firstElementChild;
+    const upgradeTable = populationContainer.children[10]?.firstElementChild;
     if (upgradeTable != undefined) {
       subscribe($$(upgradeTable, 'tr'), async reserveRow => {
         const contributionIndex = 1;
