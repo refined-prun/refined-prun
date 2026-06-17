@@ -16,8 +16,8 @@ export function loadPrunI18N() {
   PrunI18N = window['PrUn_i18n'];
   L = generateLocalizationTree(PrunI18N) as unknown as PrunLocalization;
   // Below code is for type generation.
-  const localizationFile = emitLocalizationFile(L as unknown as LocalizationTree);
-  console.log(localizationFile);
+  // const localizationFile = emitLocalizationFile(L as unknown as LocalizationTree);
+  // console.log(localizationFile);
   for (const material of materialsStore.all.value!) {
     const name = getMaterialName(material);
     if (name) {
