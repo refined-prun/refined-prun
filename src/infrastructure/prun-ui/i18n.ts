@@ -82,6 +82,8 @@ const materialsByName = new Map<string, PrunApi.Material>();
 
 export function loadPrunI18N() {
   const i18n = window['PrUn_i18n'];
+  const i18nEN = window['PrUn_i18n_en'];
+  addMissingLocalizationEntries(i18n, i18nEN);
   L = generateLocalizationTree(i18n) as unknown as PrunLocalization;
   for (const material of materialsStore.all.value!) {
     const name = getMaterialName(material);
@@ -101,9 +103,17 @@ export function getMaterialByName(name?: string | null) {
   return name ? materialsByName.get(name) : undefined;
 }
 
-export function generateLocalizationTree(
-  localizationDict: Record<string, MessageFormatElement[]>,
-): LocalizationTree {
+type LocalizationDict = Record<string, MessageFormatElement[]>;
+
+function addMissingLocalizationEntries(destination: LocalizationDict, source: LocalizationDict) {
+  for (const key in source) {
+    if (!(key in destination)) {
+      destination[key] = source[key];
+    }
+  }
+}
+
+export function generateLocalizationTree(localizationDict: LocalizationDict): LocalizationTree {
   const tree = {} as LocalizationTree;
   for (const [key, value] of Object.entries(localizationDict)) {
     let cursor: LocalizationTree = tree;
