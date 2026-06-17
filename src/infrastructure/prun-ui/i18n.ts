@@ -78,13 +78,11 @@ export type LiteralLocalizationLeaf = LocalizationTree & {
 
 export let L!: PrunLocalization;
 
-export let PrunI18N: Record<string, MessageFormatElement[]> = {};
-
 const materialsByName = new Map<string, PrunApi.Material>();
 
 export function loadPrunI18N() {
-  PrunI18N = window['PrUn_i18n'];
-  L = generateLocalizationTree(PrunI18N) as unknown as PrunLocalization;
+  const i18n = window['PrUn_i18n'];
+  L = generateLocalizationTree(i18n) as unknown as PrunLocalization;
   for (const material of materialsStore.all.value!) {
     const name = getMaterialName(material);
     if (name) {
