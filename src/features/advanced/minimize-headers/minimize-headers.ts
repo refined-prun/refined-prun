@@ -27,16 +27,17 @@ function onTileReady(tile: PrunTile) {
 function setHeaders(tile: PrunTile, isMinimized: boolean) {
   for (const header of _$$(tile.anchor, C.FormComponent.containerPassive)) {
     const label = _$(header, 'label');
-    if (label?.textContent === 'Minimize') {
+    const labelText = label?.textContent;
+    if (labelText === 'Minimize') {
       continue;
     }
-    if (label === L.Contract.termination.format()) {
+    if (labelText === L.Contract.termination.format()) {
       const value = _$(header, C.FormComponent.input);
       if (value?.textContent !== '--') {
         continue;
       }
     }
-    if (label === L.Contribution.stores.format()) {
+    if (labelText === L.Contribution.stores.format()) {
       continue;
     }
     header.style.display = isMinimized ? 'none' : 'flex';
