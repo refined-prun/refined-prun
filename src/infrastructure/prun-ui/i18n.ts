@@ -1,6 +1,80 @@
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { type MessageFormatElement, type LiteralElement } from '@formatjs/icu-messageformat-parser';
-import { generateLocalizationTree } from '@src/infrastructure/prun-ui/localization-type-generator';
+import { type MessageFormatElement } from '@formatjs/icu-messageformat-parser';
+import IntlMessageFormat from 'intl-messageformat';
+
+export const LEAF_KEYS = ['format', 'imf'] as const;
+
+export const RESERVED_KEYS = new Set(
+  [
+    // Javascript
+    'break',
+    'case',
+    'catch',
+    'class',
+    'const',
+    'continue',
+    'debugger',
+    'default',
+    'delete',
+    'do',
+    'else',
+    'export',
+    'extends',
+    'false',
+    'finally',
+    'for',
+    'function',
+    'if',
+    'import',
+    'in',
+    'instanceof',
+    'new',
+    'null',
+    'return',
+    'super',
+    'switch',
+    'this',
+    'throw',
+    'true',
+    'try',
+    'typeof',
+    'var',
+    'void',
+    'while',
+    'with',
+    'implements',
+    'interface',
+    'let',
+    'package',
+    'private',
+    'protected',
+    'public',
+    'static',
+    'yield',
+    'enum',
+    'await',
+    'constructor',
+    // Utility
+    LEAF_KEYS,
+  ].flat(),
+);
+
+export type LocalizationTree = {
+  [p: string]: LocalizationTree;
+};
+
+// I don't want to deal with the type argument in format just for the shortcut, so I am assuming it's a string.
+// This means the return type can also be assumed to be a simple string.
+// If the full format functionality is necessary, it can be accessed through imf.
+export type LocalizationLeaf = LocalizationTree & {
+  imf: IntlMessageFormat;
+  format: typeof IntlMessageFormat.prototype.format<string>;
+};
+
+export type LiteralLocalizationLeaf = LocalizationTree & {
+  format: (options: void) => string;
+  imf: IntlMessageFormat;
+};
 
 export let L!: PrunLocalization;
 
@@ -11,9 +85,6 @@ const materialsByName = new Map<string, PrunApi.Material>();
 export function loadPrunI18N() {
   PrunI18N = window['PrUn_i18n'];
   L = generateLocalizationTree(PrunI18N) as unknown as PrunLocalization;
-  // Below code is for type generation.
-  // const localizationFile = emitLocalizationFile(L as unknown as LocalizationTree);
-  // console.log(localizationFile);
   for (const material of materialsStore.all.value!) {
     const name = getMaterialName(material);
     if (name) {
@@ -24,10 +95,63 @@ export function loadPrunI18N() {
 
 export function getMaterialName(material?: PrunApi.Material | null) {
   return material
-    ? (PrunI18N[`Material.${material?.name}.name`]?.[0] as LiteralElement | undefined)?.value
+    ? (L.Material[material?.name as keyof typeof L.Material]?.name.format() ?? material.name)
     : undefined;
 }
 
 export function getMaterialByName(name?: string | null) {
   return name ? materialsByName.get(name) : undefined;
+}
+
+export function generateLocalizationTree(
+  localizationDict: Record<string, MessageFormatElement[]>,
+): LocalizationTree {
+  const tree = {} as LocalizationTree;
+  for (const [key, value] of Object.entries(localizationDict)) {
+    let cursor: LocalizationTree = tree;
+    const pathParts = key.split('.');
+    for (const pathPart of pathParts) {
+      const sanitizedPathPart = sanitizeKey(pathPart);
+      if (sanitizedPathPart in cursor) {
+        cursor = cursor[sanitizedPathPart] as LocalizationTree;
+      } else {
+        cursor[sanitizedPathPart] = {};
+        cursor = cursor[sanitizedPathPart];
+      }
+    }
+    const messageFormat = new IntlMessageFormat(value);
+    for (const leafKey of LEAF_KEYS) {
+      switch (leafKey) {
+        case 'imf':
+          (cursor as Partial<LocalizationLeaf>)['imf'] = messageFormat;
+          break;
+        case 'format':
+          (cursor as Partial<LocalizationLeaf>)['format'] = messageFormat.format;
+          break;
+      }
+    }
+  }
+  return tree;
+}
+
+export function isLeaf(input: LocalizationTree): boolean {
+  return LEAF_KEYS.every(x => x in input);
+}
+
+export function sanitizeKey(s: string): string {
+  // Replace invalid chars with _
+  s = s.replace(/[^a-zA-Z0-9_$]/g, '_');
+  // Cannot start with number
+  if (/^[0-9]/.test(s)) {
+    s = '_' + s;
+  }
+  // Empty fallback
+  if (!s) {
+    s = '_';
+  }
+  // Avoid reserved words
+  if (RESERVED_KEYS.has(s)) {
+    s = `_${s}`;
+  }
+  return s;
 }

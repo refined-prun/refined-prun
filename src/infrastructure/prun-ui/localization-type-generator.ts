@@ -1,117 +1,10 @@
 import { type MessageFormatElement, TYPE } from '@formatjs/icu-messageformat-parser';
-import IntlMessageFormat from 'intl-messageformat';
-
-const LeafKeys = ['format', 'imf'] as const;
-
-const RESERVED = new Set(
-  [
-    // Javascript
-    'break',
-    'case',
-    'catch',
-    'class',
-    'const',
-    'continue',
-    'debugger',
-    'default',
-    'delete',
-    'do',
-    'else',
-    'export',
-    'extends',
-    'false',
-    'finally',
-    'for',
-    'function',
-    'if',
-    'import',
-    'in',
-    'instanceof',
-    'new',
-    'null',
-    'return',
-    'super',
-    'switch',
-    'this',
-    'throw',
-    'true',
-    'try',
-    'typeof',
-    'var',
-    'void',
-    'while',
-    'with',
-    'implements',
-    'interface',
-    'let',
-    'package',
-    'private',
-    'protected',
-    'public',
-    'static',
-    'yield',
-    'enum',
-    'await',
-    'constructor',
-    // Utility
-    LeafKeys,
-  ].flat(),
-);
-
-export type LocalizationTree = {
-  [p: string]: LocalizationTree;
-};
-
-// I don't want to deal with the type argument in format just for the shortcut, so I am assuming it's a string.
-// This means the return type can also be assumed to be a simple string.
-// If the full format functionality is necessary it can be accessed through imf.
-export type LocalizationLeaf = LocalizationTree & {
-  imf: IntlMessageFormat;
-  format: typeof IntlMessageFormat.prototype.format<string>;
-};
-
-export type LiteralLocalizationLeaf = LocalizationTree & {
-  format: (options: void) => string;
-  imf: IntlMessageFormat;
-};
-
-function isLeaf(input: LocalizationTree): boolean {
-  return LeafKeys.every(x => x in input);
-}
-
-export function generateLocalizationTree(
-  localizationDict: Record<string, MessageFormatElement[]>,
-): LocalizationTree {
-  const tree = {} as LocalizationTree;
-  for (const [key, value] of Object.entries(localizationDict)) {
-    let cursor: LocalizationTree = tree;
-    const pathParts = key.split('.');
-    for (const pathPart of pathParts) {
-      const sanitizedPathPart = sanitizeKey(pathPart);
-      if (sanitizedPathPart in cursor) {
-        cursor = cursor[sanitizedPathPart] as LocalizationTree;
-      } else {
-        cursor[sanitizedPathPart] = {};
-        cursor = cursor[sanitizedPathPart];
-      }
-    }
-    if (LeafKeys.some(x => x in cursor)) {
-      throw new Error(`Duplicate key: ${key}`);
-    }
-    const messageFormat = new IntlMessageFormat(value);
-    for (const leafKey of LeafKeys) {
-      switch (leafKey) {
-        case 'imf':
-          (cursor as Partial<LocalizationLeaf>)['imf'] = messageFormat;
-          break;
-        case 'format':
-          (cursor as Partial<LocalizationLeaf>)['format'] = messageFormat.format;
-          break;
-      }
-    }
-  }
-  return tree;
-}
+import {
+  isLeaf,
+  LEAF_KEYS,
+  LocalizationLeaf,
+  LocalizationTree,
+} from '@src/infrastructure/prun-ui/i18n';
 
 export function emitLocalizationFile(tree: LocalizationTree): string {
   let result: string = 'export {};';
@@ -128,13 +21,13 @@ function emitLocalizationTree(
 ): `LiteralLocalizationLeaf` | `{${string}}` {
   let result: string = ``;
   const isTreeLeaf = isLeaf(tree);
-  const children = Object.entries(tree).filter(([key]) => !LeafKeys.some(x => x == key));
-  const append = (line: string) => (result += `\n${'\t'.repeat(indent)}${line}`);
+  const children = Object.entries(tree).filter(([key]) => !LEAF_KEYS.some(x => x == key));
   const format = isTreeLeaf ? (tree as LocalizationLeaf).imf : undefined;
   const formatOptions = format ? emitFormatOptions(format.getAst()) : undefined;
   if (isTreeLeaf && format && formatOptions == 'void') {
     return `LiteralLocalizationLeaf`;
   }
+  const append = (line: string) => (result += `\n${'\t'.repeat(indent)}${line}`);
   result += `{`;
   indent++;
   for (const [key, value] of children) {
@@ -144,7 +37,7 @@ function emitLocalizationTree(
     append(`${key}: ${emitLocalizationTree(value as LocalizationTree, indent).trimStart()};`);
   }
   if (isTreeLeaf) {
-    for (const leafKey of LeafKeys) {
+    for (const leafKey of LEAF_KEYS) {
       switch (leafKey) {
         case 'imf':
           append(`imf: IntlMessageFormat;`);
@@ -160,6 +53,7 @@ function emitLocalizationTree(
   return result as `{${string}}`;
 }
 
+// This is to create an "example" template that one can check to match in-game text with localization keys.
 function emitStatic(ast: MessageFormatElement[]): string {
   const nodeStrings: string[] = [];
   for (const node of ast) {
@@ -216,6 +110,8 @@ function emitStatic(ast: MessageFormatElement[]): string {
         break;
     }
   }
+  // Some of the english localization keys had NBSP, which eslint did not like.
+  // I replace all of these with regular spaces here.
   return nodeStrings.join('').replaceAll('\u00A0', ' ');
 }
 
@@ -266,22 +162,4 @@ function emitFormatOptions(ast: MessageFormatElement[]): `void` | `{${string}}` 
     .map(x => `${x[0]}: ${x[1].join(' | ')}`)
     .toArray()
     .join('; ')} }`;
-}
-
-export function sanitizeKey(s: string): string {
-  // Replace invalid chars with _
-  s = s.replace(/[^a-zA-Z0-9_$]/g, '_');
-  // Cannot start with number
-  if (/^[0-9]/.test(s)) {
-    s = '_' + s;
-  }
-  // Empty fallback
-  if (!s) {
-    s = '_';
-  }
-  // Avoid reserved words
-  if (RESERVED.has(s)) {
-    s = `_${s}`;
-  }
-  return s;
 }

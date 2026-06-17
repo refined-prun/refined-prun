@@ -1,17 +1,12 @@
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { L } from '@src/infrastructure/prun-ui/i18n';
-import { LiteralLocalizationLeaf } from '@src/infrastructure/prun-ui/localization-type-generator';
 
 function formatCogcLabel(programType?: string | null) {
   if (!programType) {
     return 'CoGC (Inactive)';
   }
   const localized =
-    (
-      L.CoGCProgram[`${programType}_SHORT` as keyof typeof L.CoGCProgram] as
-        | LiteralLocalizationLeaf
-        | undefined
-    )?.format() ??
+    L.CoGCProgram[`${programType}_SHORT` as keyof typeof L.CoGCProgram]?.format() ??
     programType
       .replace(/^(ADVERTISING|WORKFORCE)_/, '')
       .replace(/^\w/, c => c.toUpperCase())
