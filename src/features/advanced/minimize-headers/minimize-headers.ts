@@ -2,7 +2,6 @@ import MinimizeRow from './MinimizeRow.vue';
 import { streamHtmlCollection } from '@src/utils/stream-html-collection';
 import { computedTileState } from '@src/store/user-data-tiles';
 import { getTileState } from './tile-state';
-import { L } from '@src/infrastructure/prun-ui/i18n';
 
 function onTileReady(tile: PrunTile) {
   const isMinimized = computedTileState(getTileState(tile), 'minimizeHeader', true);

@@ -1,5 +1,4 @@
 import $style from './expand-sidebar-contract-list.module.css';
-import { L } from '@src/infrastructure/prun-ui/i18n';
 import { clickElement } from '@src/util';
 
 async function onSidebarReady(sidebar: HTMLElement) {

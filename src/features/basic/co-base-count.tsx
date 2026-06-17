@@ -1,4 +1,3 @@
-import { L } from '@src/infrastructure/prun-ui/i18n';
 import Passive from '@src/components/forms/Passive.vue';
 
 function onTileReady(tile: PrunTile) {

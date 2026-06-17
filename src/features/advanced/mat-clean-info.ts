@@ -1,5 +1,4 @@
 import css from '@src/utils/css-utils.module.css';
-import { L } from '@src/infrastructure/prun-ui/i18n';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.FormComponent.containerPassive), async container => {

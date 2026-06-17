@@ -1,5 +1,4 @@
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { L } from '@src/infrastructure/prun-ui/i18n';
 import Passive from '@src/components/forms/Passive.vue';
 import { getPrice } from '@src/infrastructure/fio/cx';
 import { fixed0, fixed01, fixed02, formatCurrency } from '@src/utils/format';

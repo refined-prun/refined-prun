@@ -4,6 +4,7 @@ declare global {
   const $: typeof import('@src/utils/select-dom')['$']
   const C: typeof import('@src/infrastructure/prun-ui/prun-css')['C']
   const EffectScope: typeof import('vue')['EffectScope']
+  const L: typeof import('@src/infrastructure/prun-ui/i18n')['L']
   const _$$: typeof import('@src/utils/select-dom')['_$$']
   const _$: typeof import('@src/utils/select-dom')['_$']
   const applyCssRule: typeof import('@src/infrastructure/prun-ui/refined-prun-css')['applyCssRule']
@@ -86,6 +87,7 @@ declare module 'vue' {
     readonly $: UnwrapRef<typeof import('@src/utils/select-dom')['$']>
     readonly C: UnwrapRef<typeof import('@src/infrastructure/prun-ui/prun-css')['C']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
+    readonly L: UnwrapRef<typeof import('@src/infrastructure/prun-ui/i18n')['L']>
     readonly _$$: UnwrapRef<typeof import('@src/utils/select-dom')['_$$']>
     readonly _$: UnwrapRef<typeof import('@src/utils/select-dom')['_$']>
     readonly applyCssRule: UnwrapRef<typeof import('@src/infrastructure/prun-ui/refined-prun-css')['applyCssRule']>

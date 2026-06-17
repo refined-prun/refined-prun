@@ -1,5 +1,4 @@
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
-import { L } from '@src/infrastructure/prun-ui/i18n';
 
 function formatCogcLabel(programType?: string | null) {
   if (!programType) {

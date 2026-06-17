@@ -1,7 +1,6 @@
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
-import { L } from '@src/infrastructure/prun-ui/i18n';
 
 const storeTypes = [
   'STORE',
