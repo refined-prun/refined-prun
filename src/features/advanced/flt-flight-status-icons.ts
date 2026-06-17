@@ -1,5 +1,6 @@
 import $style from './flt-flight-status-icons.module.css';
 import IntlMessageFormat from 'intl-messageformat';
+import { LiteralElement } from '@formatjs/icu-messageformat-parser';
 
 function init() {
   const replace = (message: { imf: IntlMessageFormat }, icon: string) => {
