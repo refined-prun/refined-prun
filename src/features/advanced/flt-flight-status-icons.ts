@@ -1,65 +1,25 @@
-import { PrunI18N } from '@src/infrastructure/prun-ui/i18n';
 import $style from './flt-flight-status-icons.module.css';
+import IntlMessageFormat from 'intl-messageformat';
 
 function init() {
-  const replacements = [
-    {
-      key: 'ships.status.stationary',
-      icon: '⦁',
-    },
-    {
-      key: 'ShipStatus.takeoff',
-      icon: '↑',
-    },
-    {
-      key: 'ShipStatus.departure',
-      icon: '↗',
-    },
-    {
-      key: 'ShipStatus.transit',
-      icon: '⟶',
-    },
-    {
-      key: 'ShipStatus.charge',
-      icon: '±',
-    },
-    {
-      key: 'ShipStatus.jump',
-      icon: '➾',
-    },
-    {
-      key: 'ShipStatus.float',
-      icon: '↑',
-    },
-    {
-      key: 'ShipStatus.approach',
-      icon: '↘',
-    },
-    {
-      key: 'ShipStatus.landing',
-      icon: '↓',
-    },
-    {
-      key: 'ShipStatus.lock',
-      icon: '⟴',
-    },
-    {
-      key: 'ShipStatus.decay',
-      icon: '⟴',
-    },
-    {
-      key: 'ShipStatus.jumpgateway',
-      icon: '⟴',
-    },
-  ];
-  for (const { key, icon } of replacements) {
-    PrunI18N[key] = [
-      {
-        type: 0,
-        value: icon,
-      },
-    ];
-  }
+  const replace = (message: { imf: IntlMessageFormat }, icon: string) => {
+    const localized = message.imf.getAst()[0] as LiteralElement | undefined;
+    if (localized) {
+      localized.value = icon;
+    }
+  };
+  replace(L.ships.status.stationary, '⦁');
+  replace(L.ShipStatus.takeoff, '↑');
+  replace(L.ShipStatus.departure, '↗');
+  replace(L.ShipStatus.transit, '⟶');
+  replace(L.ShipStatus.charge, '±');
+  replace(L.ShipStatus.jump, '➾');
+  replace(L.ShipStatus.float, '↑');
+  replace(L.ShipStatus.approach, '↘');
+  replace(L.ShipStatus.landing, '↓');
+  replace(L.ShipStatus.lock, '⟴');
+  replace(L.ShipStatus.decay, '⟴');
+  replace(L.ShipStatus.jumpgateway, '⟴');
   applyCssRule(['FLT', 'FLTS', 'FLTP'], `td:nth-child(4)`, $style.status);
 }
 
