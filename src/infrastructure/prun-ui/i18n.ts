@@ -1,10 +1,6 @@
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { type MessageFormatElement, type LiteralElement } from '@formatjs/icu-messageformat-parser';
-import {
-  emitLocalizationFile,
-  generateLocalizationTree,
-  LocalizationTree,
-} from '@src/infrastructure/prun-ui/localization-type-generator';
+import { generateLocalizationTree } from '@src/infrastructure/prun-ui/localization-type-generator';
 
 export let L!: PrunLocalization;
 

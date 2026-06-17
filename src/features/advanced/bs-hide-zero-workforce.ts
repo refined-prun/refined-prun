@@ -3,7 +3,7 @@ import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { isEmpty } from 'ts-extras';
-import { L, PrunI18N } from '@src/infrastructure/prun-ui/i18n';
+import { L } from '@src/infrastructure/prun-ui/i18n';
 import { LiteralElement } from '@formatjs/icu-messageformat-parser';
 
 function onTileReady(tile: PrunTile) {

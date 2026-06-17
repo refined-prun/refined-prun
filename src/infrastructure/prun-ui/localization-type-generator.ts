@@ -1,5 +1,5 @@
 import { type MessageFormatElement, TYPE } from '@formatjs/icu-messageformat-parser';
-import IntlMessageFormat, { FormatXMLElementFn, PrimitiveType } from 'intl-messageformat';
+import IntlMessageFormat from 'intl-messageformat';
 
 const LeafKeys = ['format', 'imf'] as const;
 

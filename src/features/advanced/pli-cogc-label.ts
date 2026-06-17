@@ -6,13 +6,16 @@ function formatCogcLabel(programType?: string | null) {
   if (!programType) {
     return 'CoGC (Inactive)';
   }
-  let localized = (
-    L.CoGCProgram[`${programType}_SHORT`] as LiteralLocalizationLeaf | undefined
-  )?.format();
-  localized ??= programType
-    .replace(/^(ADVERTISING|WORKFORCE)_/, '')
-    .replace(/^\w/, c => c.toUpperCase())
-    .replace(/\w+$/, c => c.toLowerCase());
+  const localized =
+    (
+      L.CoGCProgram[`${programType}_SHORT` as keyof typeof L.CoGCProgram] as
+        | LiteralLocalizationLeaf
+        | undefined
+    )?.format() ??
+    programType
+      .replace(/^(ADVERTISING|WORKFORCE)_/, '')
+      .replace(/^\w/, c => c.toUpperCase())
+      .replace(/\w+$/, c => c.toLowerCase());
   return `CoGC (${localized})`;
 }
 

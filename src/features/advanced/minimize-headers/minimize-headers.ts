@@ -2,9 +2,7 @@ import MinimizeRow from './MinimizeRow.vue';
 import { streamHtmlCollection } from '@src/utils/stream-html-collection';
 import { computedTileState } from '@src/store/user-data-tiles';
 import { getTileState } from './tile-state';
-import { L, PrunI18N } from '@src/infrastructure/prun-ui/i18n';
-import { LiteralElement } from '@formatjs/icu-messageformat-parser';
-import { LiteralLocalizationLeaf } from '@src/infrastructure/prun-ui/localization-type-generator';
+import { L } from '@src/infrastructure/prun-ui/i18n';
 
 function onTileReady(tile: PrunTile) {
   const isMinimized = computedTileState(getTileState(tile), 'minimizeHeader', true);
