@@ -1,5 +1,5 @@
 import $style from './expand-sidebar-contract-list.module.css';
-import { PrunI18N } from '@src/infrastructure/prun-ui/i18n';
+import { L } from '@src/infrastructure/prun-ui/i18n';
 import { clickElement } from '@src/util';
 
 async function onSidebarReady(sidebar: HTMLElement) {
@@ -8,7 +8,7 @@ async function onSidebarReady(sidebar: HTMLElement) {
     return;
   }
 
-  const localizedTitle = PrunI18N['Sidebar.header.contracts']?.[0]?.value;
+  const localizedTitle = L.Sidebar.header.contracts.format();
   const contractTitle = sectionHeads.find(x => x.textContent === localizedTitle);
   if (!contractTitle) {
     return;
