@@ -534,7 +534,7 @@ declare global {
       };
       table: {
         address: LL;
-        _constructor: LL;
+        constructor: LL;
         created: LL;
         established: LL;
         owner: LL;
@@ -2272,7 +2272,7 @@ declare global {
     ConstructInfrastructureComponent: {
       label: {
         address: LL;
-        _constructor: LL;
+        constructor: LL;
         currency: LL;
         deadline: LL;
         payment: LL;
@@ -3218,7 +3218,7 @@ declare global {
     Forms: {
       validation: {
         error: {
-          float: {
+          _float: {
             invalid: LL;
           };
           integer: {
@@ -5827,7 +5827,7 @@ declare global {
       departure: LL & {
         tooltip: LL;
       };
-      float: LL & {
+      _float: LL & {
         tooltip: LL;
       };
       jump: LL & {
@@ -7418,7 +7418,7 @@ declare global {
       charge: LL;
       decay: LL;
       departure: LL;
-      float: LL;
+      _float: LL;
       jump: LL;
       jumpgateway: LL;
       landing: LL;
@@ -8496,7 +8496,7 @@ declare global {
       };
       label: {
         address: LL;
-        _constructor: LL;
+        constructor: LL;
         currency: LL;
         deadline: LL;
         infrastructure: LL;

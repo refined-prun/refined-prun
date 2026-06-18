@@ -7,7 +7,7 @@ function init() {
   applyLocalizationPatch(L.ShipStatus.transit, () => '⟶');
   applyLocalizationPatch(L.ShipStatus.charge, () => '±');
   applyLocalizationPatch(L.ShipStatus.jump, () => '➾');
-  applyLocalizationPatch(L.ShipStatus.float, () => '↑');
+  applyLocalizationPatch(L.ShipStatus._float, () => '↑');
   applyLocalizationPatch(L.ShipStatus.approach, () => '↘');
   applyLocalizationPatch(L.ShipStatus.landing, () => '↓');
   applyLocalizationPatch(L.ShipStatus.lock, () => '⟴');
