@@ -1,5 +1,4 @@
 import $style from './flt-flight-status-icons.module.css';
-import { applyLocalizationPatch } from '@src/infrastructure/prun-ui/i18n';
 
 function init() {
   applyLocalizationPatch(L.ships.status.stationary, () => '⦁');

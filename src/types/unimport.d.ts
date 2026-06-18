@@ -8,6 +8,7 @@ declare global {
   const _$$: typeof import('@src/utils/select-dom')['_$$']
   const _$: typeof import('@src/utils/select-dom')['_$']
   const applyCssRule: typeof import('@src/infrastructure/prun-ui/refined-prun-css')['applyCssRule']
+  const applyLocalizationPatch: typeof import('@src/infrastructure/prun-ui/i18n')['applyLocalizationPatch']
   const computed: typeof import('vue')['computed']
   const config: typeof import('@src/infrastructure/shell/config')['default']
   const createApp: typeof import('vue')['createApp']
@@ -91,6 +92,7 @@ declare module 'vue' {
     readonly _$$: UnwrapRef<typeof import('@src/utils/select-dom')['_$$']>
     readonly _$: UnwrapRef<typeof import('@src/utils/select-dom')['_$']>
     readonly applyCssRule: UnwrapRef<typeof import('@src/infrastructure/prun-ui/refined-prun-css')['applyCssRule']>
+    readonly applyLocalizationPatch: UnwrapRef<typeof import('@src/infrastructure/prun-ui/i18n')['applyLocalizationPatch']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly config: UnwrapRef<typeof import('@src/infrastructure/shell/config')['default']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>

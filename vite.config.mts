@@ -54,6 +54,7 @@ export default defineConfig({
         { name: 'default', as: 'xit', from: '@src/features/XIT/xit-registry' },
         { name: 'default', as: 'config', from: '@src/infrastructure/shell/config' },
         { name: 'createFragmentApp', from: '@src/utils/vue-fragment-app' },
+        { name: 'applyLocalizationPatch', from: '@src/infrastructure/prun-ui/i18n' },
         { name: 'applyCssRule', from: '@src/infrastructure/prun-ui/refined-prun-css' },
         { name: 'sumBy', from: '@src/utils/sum-by' },
       ],
