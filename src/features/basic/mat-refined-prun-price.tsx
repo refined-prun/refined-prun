@@ -6,7 +6,7 @@ import { fixed0, fixed01, fixed02, formatCurrency } from '@src/utils/format';
 function onTileReady(tile: PrunTile) {
   const parameter = tile.parameter;
   const material = materialsStore.getByTicker(parameter);
-  const volumeLabelText = L.MaterialInformation.label.volume.message();
+  const volumeLabelText = L.MaterialInformation.label.volume();
 
   subscribe($$(tile.anchor, C.FormComponent.containerPassive), async container => {
     const label = await $(container, 'label');

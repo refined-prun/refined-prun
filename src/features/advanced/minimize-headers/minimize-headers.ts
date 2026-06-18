@@ -30,13 +30,13 @@ function setHeaders(tile: PrunTile, isMinimized: boolean) {
     if (labelText === 'Minimize') {
       continue;
     }
-    if (labelText === L.Contract.termination.message()) {
+    if (labelText === L.Contract.termination()) {
       const value = _$(header, C.FormComponent.input);
       if (value?.textContent !== '--') {
         continue;
       }
     }
-    if (labelText === L.Contribution.stores.message()) {
+    if (labelText === L.Contribution.stores()) {
       continue;
     }
     header.style.display = isMinimized ? 'none' : 'flex';

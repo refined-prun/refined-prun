@@ -2,7 +2,7 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { LiteralElement, type MessageFormatElement } from '@formatjs/icu-messageformat-parser';
 import IntlMessageFormat from 'intl-messageformat';
 
-export const LEAF_KEYS = ['getFormat', 'message'] as const;
+export const LEAF_KEYS = ['getFormat'] as const;
 
 export const RESERVED_KEYS = new Set(
   [
@@ -66,14 +66,13 @@ export type LocalizationTree = {
 // I don't want to deal with the type argument in format just for the shortcut, so I am assuming it's a string.
 // This means the return type can also be assumed to be a simple string.
 // If the full format functionality is necessary, it can be accessed through imf.
-export type LocalizationLeaf = LocalizationTree & {
-  getFormat: () => IntlMessageFormat;
-  message: typeof IntlMessageFormat.prototype.format<string>;
-};
+export type LocalizationLeaf = LocalizationTree &
+  typeof IntlMessageFormat.prototype.format<string> & {
+    getFormat: () => IntlMessageFormat;
+  };
 
-export type LiteralLocalizationLeaf = LocalizationTree & {
+export type LiteralLocalizationLeaf = ((options: void) => string) & {
   getFormat: () => IntlMessageFormat;
-  message: (options: void) => string;
 };
 
 export let L!: PrunLocalization;
@@ -95,7 +94,7 @@ export function loadPrunI18N() {
 
 export function getMaterialName(material?: PrunApi.Material | null) {
   return material
-    ? (L.Material[material?.name as keyof typeof L.Material]?.name.message() ?? material.name)
+    ? (L.Material[material?.name as keyof typeof L.Material]?.name() ?? material.name)
     : undefined;
 }
 
@@ -104,7 +103,7 @@ export function getMaterialByName(name?: string | null) {
 }
 
 export function applyLocalizationPatch(
-  localization: Pick<LiteralLocalizationLeaf, 'getFormat' | 'message'>,
+  localization: LiteralLocalizationLeaf,
   patch: (value: string) => string,
 ) {
   const localized = localization.getFormat().getAst()[0] as LiteralElement | undefined;
@@ -127,10 +126,12 @@ function addMissingLocalizationEntries(destination: LocalizationDict, source: Lo
 export function generateLocalizationTree(localizationDict: LocalizationDict): LocalizationTree {
   const tree = {} as LocalizationTree;
   for (const [key, value] of Object.entries(localizationDict)) {
+    let parent = tree;
     let cursor: LocalizationTree = tree;
     const pathParts = key.split('.');
     for (const pathPart of pathParts) {
       const sanitizedPathPart = sanitizeKey(pathPart);
+      parent = cursor;
       if (sanitizedPathPart in cursor) {
         cursor = cursor[sanitizedPathPart] as LocalizationTree;
       } else {
@@ -139,16 +140,9 @@ export function generateLocalizationTree(localizationDict: LocalizationDict): Lo
       }
     }
     const messageFormat = new IntlMessageFormat(value);
-    for (const leafKey of LEAF_KEYS) {
-      switch (leafKey) {
-        case 'getFormat':
-          (cursor as Partial<LocalizationLeaf>)['getFormat'] = () => messageFormat;
-          break;
-        case 'message':
-          (cursor as Partial<LocalizationLeaf>)['message'] = messageFormat.format;
-          break;
-      }
-    }
+    const format = values => messageFormat.format(values);
+    (cursor as Partial<LocalizationLeaf>)['getFormat'] = () => messageFormat;
+    parent[pathParts[pathParts.length - 1]] = Object.assign(format, cursor);
   }
   return tree;
 }

@@ -1,7 +1,7 @@
 import Passive from '@src/components/forms/Passive.vue';
 
 function onTileReady(tile: PrunTile) {
-  const basesText = L.CompanyPanel.data.bases.message();
+  const basesText = L.CompanyPanel.data.bases();
   subscribe($$(tile.anchor, C.FormComponent.containerPassive), async container => {
     const label = await $(container, 'label');
     if (label.textContent !== basesText) {

@@ -15,42 +15,36 @@ export function emitLocalizationFile(tree: LocalizationTree): string {
   return result;
 }
 
-function emitLocalizationTree(
-  tree: LocalizationTree,
-  indent: number = 0,
-): `LiteralLocalizationLeaf` | `{${string}}` {
+function emitLocalizationTree(tree: LocalizationTree, indent: number = 0): string {
   let result: string = ``;
   const isTreeLeaf = isLeaf(tree);
   const children = Object.entries(tree).filter(([key]) => !LEAF_KEYS.some(x => x == key));
   const format = isTreeLeaf ? (tree as LocalizationLeaf).getFormat() : undefined;
   const formatOptions = format ? emitFormatOptions(format.getAst()) : undefined;
-  if (children.length === 0 && isTreeLeaf && format && formatOptions == 'void') {
-    return `LiteralLocalizationLeaf`;
-  }
   const append = (line: string) => (result += `\n${'\t'.repeat(indent)}${line}`);
+  if (isTreeLeaf) {
+    result += `((options: ${formatOptions}) => string) & `;
+  }
   result += `{`;
   indent++;
-  for (const [key, value] of children) {
-    if (isLeaf(value as LocalizationTree)) {
-      append(`// Template: ${emitStatic((value as LocalizationLeaf).getFormat().getAst())}`);
-    }
-    append(`${key}: ${emitLocalizationTree(value as LocalizationTree, indent).trimStart()};`);
-  }
   if (isTreeLeaf) {
     for (const leafKey of LEAF_KEYS) {
       switch (leafKey) {
         case 'getFormat':
           append(`getFormat: () => IntlMessageFormat;`);
           break;
-        case 'message':
-          append(`message: (options: ${formatOptions}) => string;`);
-          break;
       }
     }
   }
+  for (const [key, value] of children) {
+    if (isLeaf(value as LocalizationTree)) {
+      append(`// Template: ${emitStatic((value as LocalizationLeaf).getFormat().getAst())}`);
+    }
+    append(`${key}: ${emitLocalizationTree(value as LocalizationTree, indent).trimStart()};`);
+  }
   indent--;
   append('}');
-  return result as `{${string}}`;
+  return result;
 }
 
 // This is to create an "example" template that one can check to match in-game text with localization keys.
