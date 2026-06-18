@@ -134,14 +134,14 @@ function emitFormatOptions(ast: MessageFormatElement[]): `void` | `{${string}}` 
           break;
         case TYPE.select:
           options.set(n.value, ['string']);
-          for (const key in n.options) {
-            visit(n.options[key].value);
+          for (const option of Object.values(n.options)) {
+            visit(option.value);
           }
           break;
         case TYPE.plural:
           options.set(n.value, ['number']);
-          for (const key in n.options) {
-            visit(n.options[key].value);
+          for (const option of Object.values(n.options)) {
+            visit(option.value);
           }
           break;
         case TYPE.pound:
