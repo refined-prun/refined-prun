@@ -9,6 +9,10 @@ import SectionHeader from '@src/components/SectionHeader.vue';
 import { relayUrl } from '@src/infrastructure/prun-api/relay';
 import Active from '@src/components/forms/Active.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
+import {
+  emitLocalizationFile,
+  generateLocalizationTemplates,
+} from '@src/infrastructure/prun-ui/localization-type-generator';
 
 function logUserData() {
   console.log(userData);
@@ -53,6 +57,20 @@ function downloadPrunStyles() {
     window.open('https://github.com/refined-prun/prun-css/upload/main');
   }
 }
+
+function downloadLocalizationTypes() {
+  if (import.meta.env.DEV) {
+    const file = emitLocalizationFile();
+    downloadFile(file, 'localization.types.d.ts', false);
+  }
+}
+
+function downloadLocalizationTemplates() {
+  if (import.meta.env.DEV) {
+    const templates = generateLocalizationTemplates();
+    downloadFile(JSON.stringify(templates, null, 2), 'localization.json', false);
+  }
+}
 </script>
 
 <template>
@@ -73,5 +91,7 @@ function downloadPrunStyles() {
     <DebugButton @click="downloadPrunStyles">
       Export prun.css <span v-if="prunStyleUpdated">(new!)</span>
     </DebugButton>
+    <DebugButton @click="downloadLocalizationTypes">Export localization.types.d.ts</DebugButton>
+    <DebugButton @click="downloadLocalizationTemplates">Export localization.json</DebugButton>
   </div>
 </template>

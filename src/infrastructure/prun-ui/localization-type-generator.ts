@@ -1,49 +1,54 @@
 import { type MessageFormatElement, TYPE } from '@formatjs/icu-messageformat-parser';
-import {
-  isLeaf,
-  LEAF_KEYS,
-  LocalizationLeaf,
-  LocalizationTree,
-} from '@src/infrastructure/prun-ui/i18n';
+import { isLeaf, LEAF_KEYS } from '@src/infrastructure/prun-ui/i18n';
 
-export function emitLocalizationFile(tree: LocalizationTree): string {
+export function emitLocalizationFile(): string {
   let result: string = 'export {};';
   result += '\n';
+  result += '\ntype LL = LiteralLocalizationLeaf';
+  result += '\ntype PL<T> = ParametrizedLocalizationLeaf<T>';
+  result += '\n';
   result += '\ndeclare global {';
-  result += `\n\tinterface PrunLocalization ${emitLocalizationTree(tree, 1).trimStart()}`;
+  result += `\n  interface PrunLocalization extends LocalizationTree `;
+  result += emitLocalizationTree(L, 1).trimStart();
   result += `\n}`;
   return result;
 }
 
+export function generateLocalizationTemplates(): Record<string, string> {
+  const i18n = window['PrUn_i18n'];
+  const templates = {} as Record<string, string>;
+  for (const [key, value] of Object.entries(i18n)) {
+    templates[key] = emitStatic(value as MessageFormatElement[]);
+  }
+  return templates;
+}
+
 function emitLocalizationTree(tree: LocalizationTree, indent: number = 0): string {
-  let result: string = ``;
+  let result = ``;
   const isTreeLeaf = isLeaf(tree);
   const children = Object.entries(tree).filter(([key]) => !LEAF_KEYS.some(x => x == key));
   const format = isTreeLeaf ? (tree as LocalizationLeaf).getFormat() : undefined;
   const formatOptions = format ? emitFormatOptions(format.getAst()) : undefined;
-  const append = (line: string) => (result += `\n${'\t'.repeat(indent)}${line}`);
+  const append = (line: string) => (result += `\n${'  '.repeat(indent)}${line}`);
   if (isTreeLeaf) {
-    result += `((options: ${formatOptions}) => string) & `;
-  }
-  result += `{`;
-  indent++;
-  if (isTreeLeaf) {
-    for (const leafKey of LEAF_KEYS) {
-      switch (leafKey) {
-        case 'getFormat':
-          append(`getFormat: () => IntlMessageFormat;`);
-          break;
-      }
+    if (formatOptions === 'void') {
+      result += 'LL';
+    } else {
+      result += `PL<${formatOptions}>`;
     }
   }
-  for (const [key, value] of children) {
-    if (isLeaf(value as LocalizationTree)) {
-      append(`// Template: ${emitStatic((value as LocalizationLeaf).getFormat().getAst())}`);
+  if (children.length > 0) {
+    if (isTreeLeaf) {
+      result += ' & ';
     }
-    append(`${key}: ${emitLocalizationTree(value as LocalizationTree, indent).trimStart()};`);
+    result += '{';
+    indent++;
+    for (const [key, value] of children) {
+      append(`${key}: ${emitLocalizationTree(value, indent).trimStart()};`);
+    }
+    indent--;
+    append('}');
   }
-  indent--;
-  append('}');
   return result;
 }
 
@@ -105,7 +110,7 @@ function emitStatic(ast: MessageFormatElement[]): string {
         break;
     }
   }
-  // Some of the english localization keys had NBSP, which eslint did not like.
+  // Some of the English localization keys had NBSP, which eslint did not like.
   // I replace all of these with regular spaces here.
   return nodeStrings.join('').replaceAll('\u00A0', ' ');
 }

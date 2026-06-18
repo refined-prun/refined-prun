@@ -59,22 +59,6 @@ export const RESERVED_KEYS = new Set(
   ].flat(),
 );
 
-export type LocalizationTree = {
-  [p: string]: LocalizationTree;
-};
-
-// I don't want to deal with the type argument in format just for the shortcut, so I am assuming it's a string.
-// This means the return type can also be assumed to be a simple string.
-// If the full format functionality is necessary, it can be accessed through imf.
-export type LocalizationLeaf = LocalizationTree &
-  typeof IntlMessageFormat.prototype.format<string> & {
-    getFormat: () => IntlMessageFormat;
-  };
-
-export type LiteralLocalizationLeaf = ((options: void) => string) & {
-  getFormat: () => IntlMessageFormat;
-};
-
 export let L!: PrunLocalization;
 
 const materialsByName = new Map<string, PrunApi.Material>();
@@ -141,13 +125,14 @@ export function generateLocalizationTree(localizationDict: LocalizationDict): Lo
     }
     const messageFormat = new IntlMessageFormat(value);
     const format = values => messageFormat.format(values);
-    (cursor as Partial<LocalizationLeaf>)['getFormat'] = () => messageFormat;
-    parent[pathParts[pathParts.length - 1]] = Object.assign(format, cursor);
+    (cursor as Partial<LocalizationLeaf>).getFormat = () => messageFormat;
+    parent[sanitizeKey(pathParts[pathParts.length - 1])] = Object.assign(format, cursor);
   }
   return tree;
 }
 
 export function isLeaf(input: LocalizationTree): boolean {
+  const a = L.StoreTypeLabel['asd'];
   return LEAF_KEYS.every(x => x in input);
 }
 
