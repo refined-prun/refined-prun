@@ -75,6 +75,7 @@ export const RESERVED_KEYS = new Set(
 );
 
 export let L!: PrunLocalization;
+export let localizationTree!: LocalizationTree;
 
 const materialsByName = new Map<string, PrunApi.Material>();
 
@@ -82,7 +83,8 @@ export function loadPrunI18N() {
   const i18n = window['PrUn_i18n'];
   const i18nEN = window['PrUn_i18n_en'];
   addMissingLocalizationEntries(i18n, i18nEN);
-  L = generateLocalizationTree(i18n) as unknown as PrunLocalization;
+  localizationTree = generateLocalizationTree(i18n);
+  L = createLocalizationProxy(localizationTree, 'L') as unknown as PrunLocalization;
   for (const material of materialsStore.all.value!) {
     const name = getMaterialName(material);
     if (name) {
@@ -93,7 +95,7 @@ export function loadPrunI18N() {
 
 export function getMaterialName(material?: PrunApi.Material | null) {
   return material
-    ? (L.Material[material?.name as keyof typeof L.Material]?.name() ?? material.name)
+    ? (L.Material[material?.name as keyof typeof L.Material].name() ?? material.name)
     : undefined;
 }
 
@@ -105,7 +107,7 @@ export function applyLocalizationPatch(
   localization: LiteralLocalizationLeaf,
   patch: (value: string) => string,
 ) {
-  const localized = localization.getFormat().getAst()[0] as LiteralElement | undefined;
+  const localized = localization.getFormat()?.getAst()[0] as LiteralElement | undefined;
   if (!localized) {
     return;
   }
@@ -151,6 +153,53 @@ function createLocalizationLeaf(value: MessageFormatElement[], children: Localiz
   const getFormat = () => (messageFormat ??= new IntlMessageFormat(value));
   const format = values => getFormat().format(values);
   return Object.assign(format, children, { getFormat });
+}
+
+// An empty callable target so the `apply` trap fires when a node is invoked as `L.x.y()`.
+const localizationProxyTarget = () => undefined;
+
+// Wraps the localization tree so that walking a missing path never throws. Property access keeps
+// tracking the path; the result only resolves at a terminal op — `()`, `getFormat()`, `toString()`
+// or `valueOf()` — yielding the real value when the path exists and `undefined` (plus an error log)
+// when it does not.
+function createLocalizationProxy(node, path: string) {
+  return new Proxy(localizationProxyTarget, {
+    get(_target, key) {
+      if (key === 'getFormat') {
+        return () => {
+          if (typeof node?.getFormat === 'function') {
+            return node.getFormat();
+          }
+          reportMissingLocalization(path);
+          return undefined;
+        };
+      }
+      if (key === 'toString' || key === 'valueOf' || key === Symbol.toPrimitive) {
+        return () => {
+          if (typeof node === 'function') {
+            return node();
+          }
+          reportMissingLocalization(path);
+          return undefined;
+        };
+      }
+      if (typeof key === 'symbol') {
+        return undefined;
+      }
+      return createLocalizationProxy(node ? node[key] : undefined, `${path}.${key}`);
+    },
+    apply(_target, _thisArg, args) {
+      if (typeof node === 'function') {
+        return node(...args);
+      }
+      reportMissingLocalization(path);
+      return undefined;
+    },
+  });
+}
+
+function reportMissingLocalization(path: string) {
+  console.error(`Missing localization entry: ${path}`);
 }
 
 export function isLeaf(input: LocalizationTree): boolean {

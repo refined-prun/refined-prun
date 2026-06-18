@@ -5,7 +5,7 @@ function formatCogcLabel(programType?: string | null) {
     return 'CoGC (Inactive)';
   }
   const localized =
-    L.CoGCProgram[`${programType}_SHORT` as keyof typeof L.CoGCProgram]?.() ??
+    L.CoGCProgram[`${programType}_SHORT` as keyof typeof L.CoGCProgram]() ??
     programType
       .replace(/^(ADVERTISING|WORKFORCE)_/, '')
       .replace(/^\w/, c => c.toUpperCase())

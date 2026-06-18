@@ -1,5 +1,5 @@
 import { type MessageFormatElement, TYPE } from '@formatjs/icu-messageformat-parser';
-import { isLeaf, LEAF_KEYS } from '@src/infrastructure/prun-ui/i18n';
+import { isLeaf, LEAF_KEYS, localizationTree } from '@src/infrastructure/prun-ui/i18n';
 
 export function emitLocalizationFile(): string {
   let result: string = 'export {};';
@@ -9,7 +9,7 @@ export function emitLocalizationFile(): string {
   result += '\n';
   result += '\ndeclare global {';
   result += `\n  interface PrunLocalization extends LocalizationTree `;
-  result += emitLocalizationTree(L, 1).trimStart();
+  result += emitLocalizationTree(localizationTree, 1).trimStart();
   result += `\n}`;
   return result;
 }
