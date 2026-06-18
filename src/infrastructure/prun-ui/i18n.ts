@@ -122,48 +122,69 @@ function addMissingLocalizationEntries(destination: LocalizationDict, source: Lo
   }
 }
 
-export function generateLocalizationTree(localizationDict: LocalizationDict): LocalizationTree {
+export function generateLocalizationTree(localizationDict: LocalizationDict) {
   const tree = {} as LocalizationTree;
-  for (const [key, value] of Object.entries(localizationDict)) {
+  for (const key in localizationDict) {
+    const value = localizationDict[key];
     let parent = tree;
-    let cursor: LocalizationTree = tree;
-    const pathParts = key.split('.');
-    for (const pathPart of pathParts) {
-      const sanitizedPathPart = sanitizeKey(pathPart);
+    let cursor = tree;
+    let cursorKey = '';
+    let start = 0;
+    while (true) {
+      const dot = key.indexOf('.', start);
+      cursorKey = sanitizeKey(key.slice(start, dot === -1 ? undefined : dot));
       parent = cursor;
-      if (sanitizedPathPart in cursor) {
-        cursor = cursor[sanitizedPathPart] as LocalizationTree;
-      } else {
-        cursor[sanitizedPathPart] = {};
-        cursor = cursor[sanitizedPathPart];
+      cursor = (cursor[cursorKey] ??= {}) as LocalizationTree;
+      if (dot === -1) {
+        break;
       }
+      start = dot + 1;
     }
-    const messageFormat = new IntlMessageFormat(value);
-    const format = values => messageFormat.format(values);
-    (cursor as Partial<LocalizationLeaf>).getFormat = () => messageFormat;
-    parent[sanitizeKey(pathParts[pathParts.length - 1])] = Object.assign(format, cursor);
+    parent[cursorKey] = createLocalizationLeaf(value, cursor);
   }
+  sanitizeCache.clear();
   return tree;
+}
+
+function createLocalizationLeaf(value: MessageFormatElement[], children: LocalizationTree) {
+  let messageFormat: IntlMessageFormat;
+  const getFormat = () => (messageFormat ??= new IntlMessageFormat(value));
+  const format = values => getFormat().format(values);
+  return Object.assign(format, children, { getFormat });
 }
 
 export function isLeaf(input: LocalizationTree): boolean {
   return LEAF_KEYS.every(x => x in input);
 }
 
-export function sanitizeKey(s: string): string {
+const sanitizeCache = new Map<string, string>();
+
+function sanitizeKey(key: string): string {
+  const cached = sanitizeCache.get(key);
+  if (cached !== undefined) {
+    return cached;
+  }
+
+  let s = key;
   // Replace invalid chars with _
   s = s.replace(/[^a-zA-Z0-9_$]/g, '_');
-  // Cannot start with number
-  if (/^[0-9]/.test(s)) {
-    s = '_' + s;
-  }
   // Empty fallback
   if (!s) {
     s = '_';
   }
+  // Cannot start with number
+  else if (isDigit(s.charCodeAt(0))) {
+    s = '_' + s;
+  }
   // Avoid reserved words
-  if (RESERVED_KEYS.has(s)) {
+  else if (RESERVED_KEYS.has(s)) {
     s = `_${s}`;
   }
+
+  sanitizeCache.set(key, s);
   return s;
+}
+
+function isDigit(c: number) {
+  return c >= 48 && c <= 57;
 }
