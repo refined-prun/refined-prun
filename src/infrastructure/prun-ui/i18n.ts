@@ -132,7 +132,6 @@ export function generateLocalizationTree(localizationDict: LocalizationDict): Lo
 }
 
 export function isLeaf(input: LocalizationTree): boolean {
-  const a = L.StoreTypeLabel['asd'];
   return LEAF_KEYS.every(x => x in input);
 }
 
