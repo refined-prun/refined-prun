@@ -3974,7 +3974,7 @@ declare global {
           indevelopment: LiteralLocalizationLeaf;
           // Template: slow game
           slowgame: LiteralLocalizationLeaf;
-          // Template: Please note that the game and its interface APEX is still {indevelopment}. Bugs will occur during the early access stage; please report them  to get help. The universe will be reset multiple times before the full release, but we will make sure to give you a timely heads up.
+          // Template: Please note that the game and its interface APEX is still {indevelopment}. Bugs will occur during the early access stage; please report them <a>in the forums</a> to get help. The universe will be reset multiple times before the full release, but we will make sure to give you a timely heads up.
           text1: {
             getFormat: () => IntlMessageFormat;
             message: (options: { indevelopment: string }) => string;
@@ -3984,7 +3984,7 @@ declare global {
             getFormat: () => IntlMessageFormat;
             message: (options: { slowgame: string }) => string;
           };
-          // Template: By accepting this disclaimer, you also confirm that you will behave in accordance with the . Violating them might result in limitation, suspension, or deletion of your account.
+          // Template: By accepting this disclaimer, you also confirm that you will behave in accordance with the <a>Community Guidelines</a>. Violating them might result in limitation, suspension, or deletion of your account.
           text3: LiteralLocalizationLeaf;
         };
         location: {
@@ -14483,7 +14483,7 @@ declare global {
         _1: {
           // Template: Congratulations, you just built your first base.
           _1: LiteralLocalizationLeaf;
-          // Template: We added a new screen for you to manage your base and switched to it. It is called '04. Base' and you can find it in the  drop down menu.
+          // Template: We added a new screen for you to manage your base and switched to it. It is called '04. Base' and you can find it in the <strong>SCRNS</strong> drop down menu.
           _2: LiteralLocalizationLeaf;
           // Template: Base screen
           title: LiteralLocalizationLeaf;
@@ -14493,7 +14493,7 @@ declare global {
           _1: LiteralLocalizationLeaf;
           // Template: You can transfer items to your base inventory (on the right) by dragging them over.
           _2: LiteralLocalizationLeaf;
-          // Template: As a shortcut, you can also use the  button to transfer everything at once.
+          // Template: As a shortcut, you can also use the <strong>UNLOAD</strong> button to transfer everything at once.
           _3: LiteralLocalizationLeaf;
           // Template: Inventories
           title: LiteralLocalizationLeaf;
@@ -14511,7 +14511,7 @@ declare global {
           _1: LiteralLocalizationLeaf;
           // Template: You can click the individual buildings to get more information.
           _2: LiteralLocalizationLeaf;
-          // Template: Click  to get started!
+          // Template: Click <strong>CONSTRUCT</strong> to get started!
           _3: LiteralLocalizationLeaf;
           // Template: Building construction
           title: LiteralLocalizationLeaf;
@@ -14527,7 +14527,7 @@ declare global {
         _6: {
           // Template: Once your production buildings are set up, they are displayed in this tile.
           _1: LiteralLocalizationLeaf;
-          // Template: Here you can start your production and queue up future orders via.
+          // Template: Here you can start your production and queue up future orders via<strong>NEW ORDER</strong>.
           _2: LiteralLocalizationLeaf;
           // Template: Production orders usually take many hours to complete. Your first order will be sped up significantly, so you can continue to get to know the APEX interface without having to interrupt your session.
           _3: LiteralLocalizationLeaf;
@@ -14543,13 +14543,13 @@ declare global {
       };
       CONTRACT: {
         _1: {
-          // Template: You just received your first faction contract. A new 'Contracts' screen was created automatically. Find it in the  dropdown.
+          // Template: You just received your first faction contract. A new 'Contracts' screen was created automatically. Find it in the <strong>SCRNS</strong> dropdown.
           _1: LiteralLocalizationLeaf;
           // Template: Contract screen
           title: LiteralLocalizationLeaf;
         };
         _2: {
-          // Template: All your contracts are collected in the  command. You can also find an overview of contracts pending action in the sidebar to the right.
+          // Template: All your contracts are collected in the <code>CONTS</code> command. You can also find an overview of contracts pending action in the sidebar to the right.
           _1: LiteralLocalizationLeaf;
           // Template: The first contract you received is one from your faction and includes the task of setting up your first base.
           _2: LiteralLocalizationLeaf;
@@ -14557,21 +14557,21 @@ declare global {
           title: LiteralLocalizationLeaf;
         };
         _3: {
-          // Template: These are the contract’s details. You can open the details of each contract via the “view” button in .
+          // Template: These are the contract’s details. You can open the details of each contract via the “view” button in <code>CONTS</code>.
           _1: LiteralLocalizationLeaf;
-          // Template: The  command on the right has a preamble explaining what the contract is about. At the bottom you will always find a contract’s conditions, i.e. what you and your contract partner have to do at which point in time.
+          // Template: The <code>CONT</code> command on the right has a preamble explaining what the contract is about. At the bottom you will always find a contract’s conditions, i.e. what you and your contract partner have to do at which point in time.
           _2: LiteralLocalizationLeaf;
           // Template: Contract details
           title: LiteralLocalizationLeaf;
         };
         _4: {
-          // Template: One more advanced feature you may want to keep in mind for the future: Via the  command and its “create new” button you can draft your own contracts and send them to other players. Please note that sending out contracts requires a PRO license.
+          // Template: One more advanced feature you may want to keep in mind for the future: Via the <code>CONTD</code> command and its “create new” button you can draft your own contracts and send them to other players. Please note that sending out contracts requires a PRO license.
           _1: LiteralLocalizationLeaf;
           // Template: Contract drafts
           title: LiteralLocalizationLeaf;
         };
         _5: {
-          // Template: For now though, go back to the “START” screen via the  dropdown and find the “start base” button to fulfill your contract. After setting up your base, you will receive the first part of your company startup bonus.
+          // Template: For now though, go back to the “START” screen via the <strong>SCRNS</strong> dropdown and find the “start base” button to fulfill your contract. After setting up your base, you will receive the first part of your company startup bonus.
           _1: LiteralLocalizationLeaf;
           // Template: Setting up your base
           title: LiteralLocalizationLeaf;
@@ -14581,13 +14581,13 @@ declare global {
         _1: {
           // Template: Congratulations, your ship finished its first journey.
           _1: LiteralLocalizationLeaf;
-          // Template: We added a new screen for you to manage your trading activities and switched to it. It is called '06. Trading' and you can find it in the  drop down menu.
+          // Template: We added a new screen for you to manage your trading activities and switched to it. It is called '06. Trading' and you can find it in the <strong>SCRNS</strong> drop down menu.
           _2: LiteralLocalizationLeaf;
           // Template: Trading screen
           title: LiteralLocalizationLeaf;
         };
         _2: {
-          // Template: This is the  command, the main interface of each commodity exchange. You can access all available commodities via the category dropdown.
+          // Template: This is the <code>CX</code> command, the main interface of each commodity exchange. You can access all available commodities via the category dropdown.
           _1: LiteralLocalizationLeaf;
           // Template: Each commodity entry holds data on its current price, demand and supply. On the right of each row, you can get more information, charts and - most importantly - the commodity's order book ('Orders') and its trading command ('Trade').
           _2: LiteralLocalizationLeaf;
@@ -14603,25 +14603,25 @@ declare global {
           title: LiteralLocalizationLeaf;
         };
         _4: {
-          // Template: The information from the order book allows you to make informed decisions when placing orders via the  command.
+          // Template: The information from the order book allows you to make informed decisions when placing orders via the <code>CXPO</code> command.
           _1: LiteralLocalizationLeaf;
           // Template: Just enter a quantity and a price, and then click 'sell' or 'buy' to create either an offer or a request.
           _2: LiteralLocalizationLeaf;
-          // Template: Now, set up a request for !
+          // Template: Now, set up a request for <strong>RAT</strong>!
           _3: LiteralLocalizationLeaf;
-          // Template: : Once your request is filled, it will be loaded into a ship present at the commodity exchange station automatically. You can also trade if you have no ship present though. In that case a pick-up contract will be created that allows you to collect your goods later on!
+          // Template: <strong>Note</strong>: Once your request is filled, it will be loaded into a ship present at the commodity exchange station automatically. You can also trade if you have no ship present though. In that case a pick-up contract will be created that allows you to collect your goods later on!
           _4: LiteralLocalizationLeaf;
           // Template: Order placement
           title: LiteralLocalizationLeaf;
         };
         _5: {
-          // Template: All your commodity exchange offers and requests will be listed in  for future reference. You can also track whether they have been (partially) filled already here.
+          // Template: All your commodity exchange offers and requests will be listed in <code>CXOS</code> for future reference. You can also track whether they have been (partially) filled already here.
           _1: LiteralLocalizationLeaf;
           // Template: Order list
           title: LiteralLocalizationLeaf;
         };
         _6: {
-          // Template: Sometimes it can be worth checking prices not only at your nearby commodity exchange, but also on others. The  command has a list of all commodity exchanges.
+          // Template: Sometimes it can be worth checking prices not only at your nearby commodity exchange, but also on others. The <code>CXL</code> command has a list of all commodity exchanges.
           _1: LiteralLocalizationLeaf;
           // Template: List of commodity exchanges
           title: LiteralLocalizationLeaf;
@@ -14631,13 +14631,13 @@ declare global {
         _1: {
           // Template: Congratulations, your first production order just completed.
           _1: LiteralLocalizationLeaf;
-          // Template: We added a new screen for you to manage your ships and switched to it. It is called '05. Travel' and you can find it in the  drop down menu.
+          // Template: We added a new screen for you to manage your ships and switched to it. It is called '05. Travel' and you can find it in the <strong>SCRNS</strong> drop down menu.
           _2: LiteralLocalizationLeaf;
           // Template: Travel screen
           title: LiteralLocalizationLeaf;
         };
         _2: {
-          // Template: The fleet overview command  holds a list of all your ships.
+          // Template: The fleet overview command <code>FLT</code> holds a list of all your ships.
           _1: LiteralLocalizationLeaf;
           // Template: Clicking the transponder code will open a new buffer with more information about your ship.
           _2: LiteralLocalizationLeaf;
@@ -14666,7 +14666,7 @@ declare global {
           title: LiteralLocalizationLeaf;
         };
         _5: {
-          // Template: These are your ship's flight controls. You can open them anytime via the 'fly' button on the right side of your fleet overview command ().
+          // Template: These are your ship's flight controls. You can open them anytime via the 'fly' button on the right side of your fleet overview command (<code>FLT</code>).
           _1: LiteralLocalizationLeaf;
           // Template: The flight controls allow you to send ships to other destinations, like planets and stations.
           _2: LiteralLocalizationLeaf;
@@ -14681,9 +14681,9 @@ declare global {
           };
           // Template: Once you entered a destination, the bottom of the flight controls command will show your ship's route. By the way, you can hover over each location in the list to highlight it on the universe map on the left.
           _2: LiteralLocalizationLeaf;
-          // Template: It's important to save on fuel since you're in this for the long haul hopefully. So keep your fuel usage sliders low and click the  button only if you are certain that you are ready to start the flight!
+          // Template: It's important to save on fuel since you're in this for the long haul hopefully. So keep your fuel usage sliders low and click the <strong>START</strong> button only if you are certain that you are ready to start the flight!
           _3: LiteralLocalizationLeaf;
-          // Template: Depending on your destination and fuel usage flights usually take . Your first flight will be sped up significantly, so you can continue to get to know the APEX interface without having to interrupt your session.
+          // Template: Depending on your destination and fuel usage flights usually take <strong>many hours</strong>. Your first flight will be sped up significantly, so you can continue to get to know the APEX interface without having to interrupt your session.
           _4: LiteralLocalizationLeaf;
           // Template: Flight controls
           title: LiteralLocalizationLeaf;
@@ -14693,7 +14693,7 @@ declare global {
         _1: {
           // Template: You're about to dive into a dynamic, universe-spanning economy where you will manage your own startup company.
           _1: LiteralLocalizationLeaf;
-          // Template: No worries though, take a quick tour of the powerful  interface and you’ll be building, negotiating and trading in no time!
+          // Template: No worries though, take a quick tour of the powerful <strong>APEX</strong> interface and you’ll be building, negotiating and trading in no time!
           _2: LiteralLocalizationLeaf;
           // Template: Welcome licensee!
           title: LiteralLocalizationLeaf;
@@ -14711,9 +14711,9 @@ declare global {
           title: LiteralLocalizationLeaf;
         };
         _12: {
-          // Template: Now you know how to navigate
+          // Template: Now you know how to navigate <strong>APEX</strong>
           _1: LiteralLocalizationLeaf;
-          // Template: For your first steps, consider following the instructions in the  tile.
+          // Template: For your first steps, consider following the instructions in the <code>HELP</code> tile.
           _2: LiteralLocalizationLeaf;
           // Template: Many tiles also link directly to the handbook via the {image} icon in their top bar!
           _3: {
@@ -14726,7 +14726,7 @@ declare global {
           title: LiteralLocalizationLeaf;
         };
         _2: {
-          // Template: This is a . Specifically, this tile shows you information about the starting planet you chose. You can always hover over the {image} icon for more information!
+          // Template: This is a <strong>tile</strong>. Specifically, this tile shows you information about the starting planet you chose. You can always hover over the {image} icon for more information!
           _1: {
             getFormat: () => IntlMessageFormat;
             message: (options: { image: string }) => string;
@@ -14756,13 +14756,13 @@ declare global {
           _4: LiteralLocalizationLeaf;
           // Template: Remove the tile from your current screen’s layout
           _5: LiteralLocalizationLeaf;
-          // Template: Empty the tile and fill it with a new
+          // Template: Empty the tile and fill it with a new <strong>COMMAND</strong>
           _6: LiteralLocalizationLeaf;
           // Template: Tiles & Screens
           title: LiteralLocalizationLeaf;
         };
         _5: {
-          // Template: Another way of accessing the content you’re looking for is by using .
+          // Template: Another way of accessing the content you’re looking for is by using <strong>BUFFERS</strong>.
           _1: LiteralLocalizationLeaf;
           // Template: Click the button below to create a new buffer!
           _2: LiteralLocalizationLeaf;
@@ -14770,15 +14770,15 @@ declare global {
           title: LiteralLocalizationLeaf;
         };
         _6: {
-          // Template: Content in  is accessed via commands.
+          // Template: Content in <strong>APEX</strong> is accessed via commands.
           _1: LiteralLocalizationLeaf;
-          // Template: For example: type  and hit enter to open an overview of all commodity exchanges.
+          // Template: For example: type <code>CXL</code> and hit enter to open an overview of all commodity exchanges.
           _2: LiteralLocalizationLeaf;
           // Template: Buffers
           title: LiteralLocalizationLeaf;
         };
         _7: {
-          // Template: Buffers are . They will disappear when you re-boot APEX.
+          // Template: Buffers are <strong>temporary</strong>. They will disappear when you re-boot APEX.
           _1: LiteralLocalizationLeaf;
           // Template: To make them permanent, integrate them in your screen's layout!
           _2: LiteralLocalizationLeaf;
@@ -14800,7 +14800,7 @@ declare global {
         _9: {
           // Template: Optionally, you can activate an additional sidebar on the right side of your screen.
           _1: LiteralLocalizationLeaf;
-          // Template: Try it now by clicking !
+          // Template: Try it now by clicking <code>SDBR</code>!
           _2: LiteralLocalizationLeaf;
           // Template: Sidebars
           title: LiteralLocalizationLeaf;

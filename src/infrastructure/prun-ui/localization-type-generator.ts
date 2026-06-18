@@ -105,6 +105,7 @@ function emitStatic(ast: MessageFormatElement[]): string {
         nodeStrings.push('#');
         break;
       case TYPE.tag:
+        nodeStrings.push(`<${node.value}>${emitStatic(node.children)}</${node.value}>`);
         break;
       default:
         break;
@@ -147,6 +148,7 @@ function emitFormatOptions(ast: MessageFormatElement[]): `void` | `{${string}}` 
         case TYPE.pound:
           break;
         case TYPE.tag:
+          visit(n.children);
           break;
         default:
           break;
