@@ -1,5 +1,5 @@
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { type MessageFormatElement } from '@formatjs/icu-messageformat-parser';
+import { LiteralElement, type MessageFormatElement } from '@formatjs/icu-messageformat-parser';
 import IntlMessageFormat from 'intl-messageformat';
 
 export const LEAF_KEYS = ['getFormat', 'message'] as const;
@@ -101,6 +101,17 @@ export function getMaterialName(material?: PrunApi.Material | null) {
 
 export function getMaterialByName(name?: string | null) {
   return name ? materialsByName.get(name) : undefined;
+}
+
+export function applyLocalizationPatch(
+  localization: Pick<LiteralLocalizationLeaf, 'getFormat' | 'message'>,
+  patch: (value: string) => string,
+) {
+  const localized = localization.getFormat().getAst()[0] as LiteralElement | undefined;
+  if (!localized) {
+    return;
+  }
+  localized.value = patch(localized.value);
 }
 
 type LocalizationDict = Record<string, MessageFormatElement[]>;
