@@ -22,9 +22,9 @@ function emitLocalizationTree(
   let result: string = ``;
   const isTreeLeaf = isLeaf(tree);
   const children = Object.entries(tree).filter(([key]) => !LEAF_KEYS.some(x => x == key));
-  const format = isTreeLeaf ? (tree as LocalizationLeaf).imf : undefined;
+  const format = isTreeLeaf ? (tree as LocalizationLeaf).getFormat() : undefined;
   const formatOptions = format ? emitFormatOptions(format.getAst()) : undefined;
-  if (isTreeLeaf && format && formatOptions == 'void') {
+  if (children.length === 0 && isTreeLeaf && format && formatOptions == 'void') {
     return `LiteralLocalizationLeaf`;
   }
   const append = (line: string) => (result += `\n${'\t'.repeat(indent)}${line}`);
@@ -32,18 +32,18 @@ function emitLocalizationTree(
   indent++;
   for (const [key, value] of children) {
     if (isLeaf(value as LocalizationTree)) {
-      append(`// Template: ${emitStatic((value as LocalizationLeaf).imf.getAst())}`);
+      append(`// Template: ${emitStatic((value as LocalizationLeaf).getFormat().getAst())}`);
     }
     append(`${key}: ${emitLocalizationTree(value as LocalizationTree, indent).trimStart()};`);
   }
   if (isTreeLeaf) {
     for (const leafKey of LEAF_KEYS) {
       switch (leafKey) {
-        case 'imf':
-          append(`imf: IntlMessageFormat;`);
+        case 'getFormat':
+          append(`getFormat: () => IntlMessageFormat;`);
           break;
-        case 'format':
-          append(`format: (options: ${formatOptions}) => string;`);
+        case 'message':
+          append(`message: (options: ${formatOptions}) => string;`);
           break;
       }
     }

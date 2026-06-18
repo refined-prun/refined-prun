@@ -55,11 +55,11 @@ function shortenTableLabels(tile: PrunTile) {
 }
 
 function getFullName(type: string) {
-  return L.StoreTypeLabel[type as keyof typeof L.StoreTypeLabel]?.format() ?? type;
+  return L.StoreTypeLabel[type as keyof typeof L.StoreTypeLabel]?.message() ?? type;
 }
 
 function getShortName(type: string) {
-  return L.StoreTypeLabel[`${type}_SHORT` as keyof typeof L.StoreTypeLabel]?.format() ?? type;
+  return L.StoreTypeLabel[`${type}_SHORT` as keyof typeof L.StoreTypeLabel]?.message() ?? type;
 }
 
 function init() {

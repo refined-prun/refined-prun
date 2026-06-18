@@ -2,7 +2,7 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { type MessageFormatElement } from '@formatjs/icu-messageformat-parser';
 import IntlMessageFormat from 'intl-messageformat';
 
-export const LEAF_KEYS = ['format', 'imf'] as const;
+export const LEAF_KEYS = ['getFormat', 'message'] as const;
 
 export const RESERVED_KEYS = new Set(
   [
@@ -67,13 +67,13 @@ export type LocalizationTree = {
 // This means the return type can also be assumed to be a simple string.
 // If the full format functionality is necessary, it can be accessed through imf.
 export type LocalizationLeaf = LocalizationTree & {
-  imf: IntlMessageFormat;
-  format: typeof IntlMessageFormat.prototype.format<string>;
+  getFormat: () => IntlMessageFormat;
+  message: typeof IntlMessageFormat.prototype.format<string>;
 };
 
 export type LiteralLocalizationLeaf = LocalizationTree & {
-  format: (options: void) => string;
-  imf: IntlMessageFormat;
+  getFormat: () => IntlMessageFormat;
+  message: (options: void) => string;
 };
 
 export let L!: PrunLocalization;
@@ -95,7 +95,7 @@ export function loadPrunI18N() {
 
 export function getMaterialName(material?: PrunApi.Material | null) {
   return material
-    ? (L.Material[material?.name as keyof typeof L.Material]?.name.format() ?? material.name)
+    ? (L.Material[material?.name as keyof typeof L.Material]?.name.message() ?? material.name)
     : undefined;
 }
 
@@ -130,11 +130,11 @@ export function generateLocalizationTree(localizationDict: LocalizationDict): Lo
     const messageFormat = new IntlMessageFormat(value);
     for (const leafKey of LEAF_KEYS) {
       switch (leafKey) {
-        case 'imf':
-          (cursor as Partial<LocalizationLeaf>)['imf'] = messageFormat;
+        case 'getFormat':
+          (cursor as Partial<LocalizationLeaf>)['getFormat'] = () => messageFormat;
           break;
-        case 'format':
-          (cursor as Partial<LocalizationLeaf>)['format'] = messageFormat.format;
+        case 'message':
+          (cursor as Partial<LocalizationLeaf>)['message'] = messageFormat.format;
           break;
       }
     }

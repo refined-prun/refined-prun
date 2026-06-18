@@ -7,7 +7,7 @@ async function onSidebarReady(sidebar: HTMLElement) {
     return;
   }
 
-  const localizedTitle = L.Sidebar.header.contracts.format();
+  const localizedTitle = L.Sidebar.header.contracts.message();
   const contractTitle = sectionHeads.find(x => x.textContent === localizedTitle);
   if (!contractTitle) {
     return;

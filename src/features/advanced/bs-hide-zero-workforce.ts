@@ -33,7 +33,7 @@ function onTileReady(tile: PrunTile) {
 }
 
 function init() {
-  const localizationAst = L.SiteWorkforces.table.currentWorkforce.imf.getAst();
+  const localizationAst = L.SiteWorkforces.table.currentWorkforce.getFormat().getAst();
   const localized = localizationAst[0] as LiteralElement | undefined;
   if (localized) {
     localized.value = localized.value.replace('Current Workforce', 'Current');

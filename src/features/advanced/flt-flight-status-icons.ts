@@ -1,10 +1,10 @@
 import $style from './flt-flight-status-icons.module.css';
-import IntlMessageFormat from 'intl-messageformat';
 import { LiteralElement } from '@formatjs/icu-messageformat-parser';
+import { LiteralLocalizationLeaf } from '@src/infrastructure/prun-ui/i18n';
 
 function init() {
-  const replace = (message: { imf: IntlMessageFormat }, icon: string) => {
-    const localized = message.imf.getAst()[0] as LiteralElement | undefined;
+  const replace = (message: LiteralLocalizationLeaf, icon: string) => {
+    const localized = message.getFormat().getAst()[0] as LiteralElement | undefined;
     if (localized) {
       localized.value = icon;
     }

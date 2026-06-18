@@ -5,7 +5,7 @@ function formatCogcLabel(programType?: string | null) {
     return 'CoGC (Inactive)';
   }
   const localized =
-    L.CoGCProgram[`${programType}_SHORT` as keyof typeof L.CoGCProgram]?.format() ??
+    L.CoGCProgram[`${programType}_SHORT` as keyof typeof L.CoGCProgram]?.message() ??
     programType
       .replace(/^(ADVERTISING|WORKFORCE)_/, '')
       .replace(/^\w/, c => c.toUpperCase())
@@ -14,7 +14,7 @@ function formatCogcLabel(programType?: string | null) {
 }
 
 function onTileReady(tile: PrunTile) {
-  const localizedLabel = L.PlanetaryProjects.COGC.format();
+  const localizedLabel = L.PlanetaryProjects.COGC.message();
   subscribe($$(tile.anchor, C.PlanetaryProjectsList.row), async row => {
     const link = await $(row, C.Link.link);
     if (link.textContent !== localizedLabel) {

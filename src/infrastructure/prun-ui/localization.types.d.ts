@@ -21,13 +21,13 @@ declare global {
     AccountType: {
       // Template: Cash ({currencyCode})
       CASH: {
-        format: (options: { currencyCode: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { currencyCode: string }) => string;
       };
       // Template: Deposits ({currencyCode})
       CASH_ESCROW: {
-        format: (options: { currencyCode: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { currencyCode: string }) => string;
       };
       // Template: Company Headquarters Contributions
       COMPANY_HEADQUARTER_CONTRIBUTIONS: LiteralLocalizationLeaf;
@@ -417,13 +417,13 @@ declare global {
     AddressLabel: {
       // Template: {address} (orbit)
       withOrbit: {
-        format: (options: { address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { address: string }) => string;
       };
       // Template: {address}
       withoutOrbit: {
-        format: (options: { address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { address: string }) => string;
       };
     };
     AddressSelector: {
@@ -463,7 +463,12 @@ declare global {
         // Template: Members of Parliament
         membersOfParliament: LiteralLocalizationLeaf;
         // Template: Parliament size
-        parliamentSize: LiteralLocalizationLeaf;
+        parliamentSize: {
+          // Template: The more bases a planet has, the higher the number of parliament seats. Parliament seats will be distributed among candidates who received the most votes, with the top one becoming the governor. With the approval vote system every voter can vote for as many candidates as they approve of.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Start
         start: LiteralLocalizationLeaf;
         // Template: Term
@@ -476,8 +481,8 @@ declare global {
       error: {
         // Template: No administration center found for input {input}.
         id: {
-          format: (options: { input: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { input: string }) => string;
         };
         // Template: This planet has no administration center.
         noadm: LiteralLocalizationLeaf;
@@ -508,8 +513,8 @@ declare global {
       title: {
         // Template: Administration Center
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
       upcoming: {
         action: {
@@ -555,29 +560,29 @@ declare global {
     AgentPreamble: {
       // Template: Faction Contract Offers{br}~~~~~~~~~~~~~~~~~~~~~~~{br}You received a series of contract offers from your faction. Feel free to accept one of them to boost your faction reputation. As soon as you accept one the others will get cancelled.{br}
       intro: {
-        format: (options: { br: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { br: string }) => string;
       };
       introductory: {
         // Template: On behalf of {country} I wish you and your company the best of success. We are eager to follow your endeavors from here on out.{br}At this point you should have gone through basic APEX training. I will now provide you with a set of tasks to make sure you are able to navigate your command interface at a sufficient level of proficiency. Should you pass, I will regularly forward you requests from faction ambassadors and representatives that may help you generate some additional funds.{br}First things first, to become a valuable asset to our faction you need to get your production running. Click the 'START BASE' button on your starting screen to found your first base, which will automatically be declared your company headquarters for now.{br}Once you are done, APEX will guide you to build a few recommended starting buildings. Then I will get back to you!
         baseConstruction: {
-          format: (options: { country: string; br: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { country: string; br: string }) => string;
         };
         // Template: Your expansion package is ready for collection. The {country} is confident in your ability to lead your company to success and to support its future endeavors.{br}{br}As a gesture of goodwill, once you have established your new base, you will be eligible to receive additional consumables for your workforce, as well as a founding bonus.{br}{br}Maintain your current performance, continue trading, and consider further expansion when appropriate. The faction will continue to provide contract offers on a regular basis. However, responsibility for developing your core business now rests solely with you.
         baseConstructionII: {
-          format: (options: { country: string; br: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { country: string; br: string }) => string;
         };
         // Template: Now that you are all set up in APEX, keep working towards scaling up your business.{br}One of the first steps you should look into is constructing additional buildings that either expand your existing production lines or add new ones.{br}Explore your base's construction menu and the commodities each building can produce. Keep in mind you will need to acquire the necessary input materials, either by producing them yourself or buying them from other companies on the market. And do not forget about expanding your workforce housing if necessary, as well as providing enough consumables.
         buildingConstruction: {
-          format: (options: { br: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { br: string }) => string;
         };
         // Template: The representatives of {country} have been observing your progress with satisfaction.{br}While you are likely already attending to this, they want to ensure that your workers’ needs are being met. Submit an invoice for a consumable purchase, and I will confirm your reliability to them.{br}The faction will reimburse the fuel required to collect the goods and return them to your base.
         buyConsumables: {
-          format: (options: { country: string; br: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { country: string; br: string }) => string;
         };
         // Template: channel
         channel: LiteralLocalizationLeaf;
@@ -585,18 +590,18 @@ declare global {
         findExpansionSpot: {
           // Template: map
           map: LiteralLocalizationLeaf;
-          format: (options: {
+          getFormat: () => IntlMessageFormat;
+          message: (options: {
             br: string;
             map: string;
             comPlanet: string;
             comHelp: string;
           }) => string;
-          imf: IntlMessageFormat;
         };
         // Template: Alright, the last thing we will need to check is if your trading interface works properly.{br}Just ping me later by fulfilling this contract!{br}In the meantime, you may want to explore the APEX handbook and find out about politics, planetary projects, local markets or ship building. There are a lot of advanced features to be explored and plans to be made for the future of your career and your company!
         finishFlight: {
-          format: (options: { br: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { br: string }) => string;
         };
         // Template: Over the coming days, the faction would like you to demonstrate your value. As a first step, I will begin sending you contracts on a regular basis. You will typically be able to choose one of three. Select the options that best balance effort and reward within your daily routine.
         fulfillCountryContracts: LiteralLocalizationLeaf;
@@ -604,33 +609,33 @@ declare global {
         increaseSatisfaction: {
           // Template: workforce
           workforce: LiteralLocalizationLeaf;
-          format: (options: { br: string; workforce: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { br: string; workforce: string }) => string;
         };
         // Template: Before investing more resources to scale your startup, the faction wants you to demonstrate your business savvy.{br}Keep trading on the commodity exchanges, or take on a few shipping contracts. Once you’ve proven your capability, they’ll get back to you.
         makeMoney: {
-          format: (options: { br: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { br: string }) => string;
         };
         // Template: Thank you for the reminder! We should test one final component before we can integrate your company into the regular faction task process. Go buy or sell any item at a commodity exchange and let me know when you are done!{br}Note that I will also grant your company account a first faction reputation point. These points are a measure of your faction services and will make officials consider granting you more substantial payments in the future.{br}In any case, you seem to be getting the hang of APEX pretty quickly! I will collect a few "real" tasks now that need to get done within the faction and will get back to you soon.
         placeOrder: {
-          format: (options: { br: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { br: string }) => string;
         };
         // Template: Good! Now, I need to check in on a few other startup companies, but I will get back to you with more tasks when your production run is done.{br}Just ping me later by fulfilling this contract!{br}In the meantime, feel free to chat with other APEX users (find your communication channels you have access to via the "COM" button on the left) or explore additional resources via the HELP command. You may also want to look into more involved commodities to produce in the future. Your production chains will not stay this basic forever!
         productionOrderCompleted: {
-          format: (options: { br: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { br: string }) => string;
         };
         // Template: You should have set up habitations for your pioneers and a few production facilities at this point. Now check if everything is working properly by starting your first production order!{br}Make sure you have enough consumables and input material in your base's inventory.
         productionRun: {
-          format: (options: { br: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { br: string }) => string;
         };
         // Template: Seems like everything is in order.{br}We are almost done here. Now send a ship on a mission to check whether communication works properly.{br}A good first destination might be the nearby commodity exchange station, where you could sell your first produced items and resupply with consumables.
         startFlight: {
-          format: (options: { br: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { br: string }) => string;
         };
       };
       // Template: {br}Mission description{br}~~~~~~~~~~~~~~~~~~~{br}
@@ -639,55 +644,55 @@ declare global {
         contribution: {
           // Template: This initiative will not last forever though.
           deadline: LiteralLocalizationLeaf;
-          format: (options: { country: string; address: string; deadline: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { country: string; address: string; deadline: string }) => string;
         };
         // Template: A {country} colonization ship is currently en route to visit several faction planets and bases and will soon come by your current headquarters location. The crew is building additional core modules right now to expand the faction's reach even further. If you can provide the required materials in time, the faction will show its gratitude.
         expansion: {
-          format: (options: { country: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { country: string }) => string;
         };
         // Template: {country} continues to build a universal data library. Send a ship to this planet and hand in any environment data your sensors pick up.
         exploration: {
-          format: (options: { country: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { country: string }) => string;
         };
         // Template: {country}'s faction strategy involves a focus on ships in a push to become known for the biggest and most impressive fleets across the universe. If you manage to expand your fleet soon, you will receive additional support. Please make sure the {country} badge is clearly visible on the hull.
         fleet: {
-          format: (options: { country: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { country: string }) => string;
         };
         // Template: A {country} transporter delivering food supplies to colonies in need is passing by your {planet} base soon. Make sure to provision the shipment in time so it can be picked up on the way.
         food: {
-          format: (options: { country: string; planet: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { country: string; planet: string }) => string;
         };
         // Template: A big media outlet will soon broadcast their faction rankings. One of the rankings will be based on the conditions of randomly selected ships among the faction. Make sure your assets are in perfect condition.
         maintenance: LiteralLocalizationLeaf;
         // Template: A {country} transporter is passing by your {planet} base soon and has space for more commodities. Make sure to provision the shipment in time so it can be picked up on the way.
         materials: {
-          format: (options: { country: string; planet: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { country: string; planet: string }) => string;
         };
         // Template: As you are well aware, {country} is always looking to expand its influence throughout the universe. If you can manage to get elected to govern a planet, this will go right along with these plans.
         power: {
-          format: (options: { country: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { country: string }) => string;
         };
         // Template: We need you to pick up and deliver a shipment of materials. {country} officials have already provisioned the container and will be taking it off your hands on site. {deadline}
         shipping: {
           // Template: This is urgent, so make sure to get started on this soon.
           deadline: LiteralLocalizationLeaf;
-          format: (options: { country: string; deadline: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { country: string; deadline: string }) => string;
         };
         // Template: At the moment, {country} is trying to establish a prosperous future for all its companies. Therefore, they support investments into administrative structures. This program will only be active for a limited time though.
         upgrade: {
-          format: (options: { country: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { country: string }) => string;
         };
-        format: (options: { br: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { br: string }) => string;
       };
       // Template: (this contract)
       thisContract: LiteralLocalizationLeaf;
@@ -695,294 +700,298 @@ declare global {
     Alert: {
       // Template: The election on {planetName} is nearing its end.
       ADMIN_CENTER_ELECTION_REMINDER: {
-        format: (options: { planetName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { planetName: string }) => string;
       };
       // Template: The election at {planetName} has started.
       ADMIN_CENTER_ELECTION_STARTED: {
-        format: (options: { planetName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { planetName: string }) => string;
       };
       // Template: A new government has been elected at {planetName}.
       ADMIN_CENTER_GOVERNOR_ELECTED: {
-        format: (options: { planetName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { planetName: string }) => string;
       };
       // Template: Motion {motionId} / '{motionName}' {motionStatus}.
       ADMIN_CENTER_MOTION_ENDED: {
-        format: (options: { motionId: string; motionName: string; motionStatus: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: {
+          motionId: string;
+          motionName: string;
+          motionStatus: string;
+        }) => string;
       };
       // Template: A new motion '{motionName}' has passed at {address}.
       ADMIN_CENTER_MOTION_PASSED: {
-        format: (options: { motionName: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { motionName: string; address: string }) => string;
       };
       // Template: The voting for motion {motionId} / '{motionName}' has started.
       ADMIN_CENTER_MOTION_VOTING_STARTED: {
-        format: (options: { motionId: string; motionName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { motionId: string; motionName: string }) => string;
       };
       // Template: The election at {planetName} has ended, but no government was elected.
       ADMIN_CENTER_NO_GOVERNOR_ELECTED: {
-        format: (options: { planetName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { planetName: string }) => string;
       };
       // Template: Your run for an office at {planetName} has been successful.
       ADMIN_CENTER_RUN_SUCCEEDED: {
-        format: (options: { planetName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { planetName: string }) => string;
       };
       // Template: The Chamber of Global Commerce at {planetName} started a new economic program: {programName}.
       COGC_PROGRAM_CHANGED: {
-        format: (options: { planetName: string; programName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { planetName: string; programName: string }) => string;
       };
       // Template: The Chamber of Global Commerce at {planetName} went on strike since the required upkeep has not been contributed.
       COGC_STATUS_CHANGED: {
-        format: (options: { planetName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { planetName: string }) => string;
       };
       // Template: The Chamber of Global Commerce at {planetName} started a new upkeep phase.
       COGC_UPKEEP_STARTED: {
-        format: (options: { planetName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { planetName: string }) => string;
       };
       // Template: {commodity} order filled at {exchangeName}.
       COMEX_ORDER_FILLED: {
-        format: (options: { commodity: string; exchangeName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { commodity: string; exchangeName: string }) => string;
       };
       // Template: A contract for pickup of {commodity} has been created at {exchangeName}.
       COMEX_PICKUP_CONTRACT_CREATED: {
-        format: (options: { commodity: string; exchangeName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { commodity: string; exchangeName: string }) => string;
       };
       // Template: {trades, plural, one {A trade} other {{trades} trades}} took place for your {commodity} order at {exchangeName}.
       COMEX_TRADE: {
-        format: (options: { trades: string; commodity: string; exchangeName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { trades: string; commodity: string; exchangeName: string }) => string;
       };
       // Template: {partner} fulfilled a contract condition for contract {contract}: {conditionType}.
       CONTRACT_CONDITION_FULFILLED: {
-        format: (options: { partner: string; contract: string; conditionType: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { partner: string; contract: string; conditionType: string }) => string;
       };
       // Template: You have not yet picked up the materials from contract {contract}.
       CONTRACT_CONDITION_PICKUP_CONDITION_PENDING: {
-        format: (options: { contract: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { contract: string }) => string;
       };
       // Template: The contract with {partner} has been breached.
       CONTRACT_CONTRACT_BREACHED: {
-        format: (options: { partner: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { partner: string }) => string;
       };
       // Template: The contract with {partner} has been cancelled.
       CONTRACT_CONTRACT_CANCELLED: {
-        format: (options: { partner: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { partner: string }) => string;
       };
       // Template: The contract '{contract}' with {partner} has been closed.
       CONTRACT_CONTRACT_CLOSED: {
-        format: (options: { contract: string; partner: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { contract: string; partner: string }) => string;
       };
       // Template: The contract with {partner} has been extended.
       CONTRACT_CONTRACT_EXTENDED: {
-        format: (options: { partner: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { partner: string }) => string;
       };
       // Template: Received contract '{contract}' from {partner}.
       CONTRACT_CONTRACT_RECEIVED: {
-        format: (options: { contract: string; partner: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { contract: string; partner: string }) => string;
       };
       // Template: {partner} has rejected your contract offer '{contract}'.
       CONTRACT_CONTRACT_REJECTED: {
-        format: (options: { partner: string; contract: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { partner: string; contract: string }) => string;
       };
       // Template: Contract '{contract}' with partner {partner} has been terminated.
       CONTRACT_CONTRACT_TERMINATED: {
-        format: (options: { contract: string; partner: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { contract: string; partner: string }) => string;
       };
       // Template: {partner} requested the termination of the contract '{contract}'.
       CONTRACT_CONTRACT_TERMINATION_REQUESTED: {
-        format: (options: { partner: string; contract: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { partner: string; contract: string }) => string;
       };
       // Template: The contract with {partner} is about to be breached. {partner} must take action to allow or deny an extension.
       CONTRACT_DEADLINE_EXCEEDED_WITHOUT_CONTROL: {
-        format: (options: { partner: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { partner: string }) => string;
       };
       // Template: The contract with {partner} is about to be breached. Your action is required to allow or deny an extension.
       CONTRACT_DEADLINE_EXCEEDED_WITH_CONTROL: {
-        format: (options: { partner: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { partner: string }) => string;
       };
       // Template: {inviteeName} have accepted our invitation to become a shareholder of {corporationName}.
       CORPORATION_MANAGER_INVITE_ACCEPTED: {
-        format: (options: { inviteeName: string; corporationName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { inviteeName: string; corporationName: string }) => string;
       };
       // Template: {inviteeName} have decided to reject our invitation to become a shareholder of {corporationName}.
       CORPORATION_MANAGER_INVITE_REJECTED: {
-        format: (options: { inviteeName: string; corporationName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { inviteeName: string; corporationName: string }) => string;
       };
       // Template: {companyName} have decided to leave our corporation {corporationName}.
       CORPORATION_MANAGER_SHAREHOLDER_LEFT: {
-        format: (options: { companyName: string; corporationName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { companyName: string; corporationName: string }) => string;
       };
       // Template: The corporation project '{type}' at {address} has been finished.
       CORPORATION_PROJECT_FINISHED: {
-        format: (options: { type: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { type: string; address: string }) => string;
       };
       // Template: You have received a dividend payout from your corporation {corporationName}.
       CORPORATION_SHAREHOLDER_DIVIDEND_RECEIVED: {
-        format: (options: { corporationName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { corporationName: string }) => string;
       };
       // Template: You have received an invitation to become a shareholder of {corporationName}.
       CORPORATION_SHAREHOLDER_INVITE_RECEIVED: {
-        format: (options: { corporationName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { corporationName: string }) => string;
       };
       // Template: {pair} order filled.
       FOREX_ORDER_FILLED: {
-        format: (options: { pair: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { pair: string }) => string;
       };
       // Template: {trades, plural, one {A trade} other {{trades} trades}} took place for your {pair} order.
       FOREX_TRADE: {
-        format: (options: { trades: string; pair: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { trades: string; pair: string }) => string;
       };
       // Template: Ship {ship} aborted the gateway jump at {address}: gateway link changed.
       GATEWAY_JUMP_ABORTED_LINK_CHANGED: {
-        format: (options: { ship: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { ship: string; address: string }) => string;
       };
       // Template: Ship {ship} aborted the gateway jump at {address}: gateway link not established.
       GATEWAY_JUMP_ABORTED_LINK_NOT_ESTABLISHED: {
-        format: (options: { ship: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { ship: string; address: string }) => string;
       };
       // Template: Ship {ship} aborted the gateway jump at {address}: missing gateway fee funds.
       GATEWAY_JUMP_ABORTED_MISSING_FUNDS: {
-        format: (options: { ship: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { ship: string; address: string }) => string;
       };
       // Template: Ship {ship} aborted the gateway jump at {address}: gateway not operational.
       GATEWAY_JUMP_ABORTED_NOT_OPERATIONAL: {
-        format: (options: { ship: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { ship: string; address: string }) => string;
       };
       // Template: Ship {ship} aborted the gateway jump at {address}: no jump capacity available.
       GATEWAY_JUMP_ABORTED_NO_CAPACITY: {
-        format: (options: { ship: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { ship: string; address: string }) => string;
       };
       // Template: Ship {ship} aborted the gateway jump at {address}: no gateway fuel available.
       GATEWAY_JUMP_ABORTED_NO_FUEL: {
-        format: (options: { ship: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { ship: string; address: string }) => string;
       };
       // Template: A link between gateway {gateway} and {otherGateway} has been established.
       GATEWAY_LINK_ESTABLISHED: {
-        format: (options: { gateway: string; otherGateway: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { gateway: string; otherGateway: string }) => string;
       };
       // Template: Received link request for gateway {destinationGateway} from gateway {originGateway} @ {originAddress}.
       GATEWAY_LINK_REQUEST_RECEIVED: {
-        format: (options: {
+        getFormat: () => IntlMessageFormat;
+        message: (options: {
           destinationGateway: string;
           originGateway: string;
           originAddress: string;
         }) => string;
-        imf: IntlMessageFormat;
       };
       // Template: The link between gateway {gateway} and {otherGateway} has been removed.
       GATEWAY_LINK_UNLINKED: {
-        format: (options: { gateway: string; otherGateway: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { gateway: string; otherGateway: string }) => string;
       };
       // Template: The operational state of {type} infrastructure {address} changed to {state}.
       INFRASTRUCTURE_OPERATIONAL_STATE_CHANGED: {
-        format: (options: { type: string; address: string; state: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { type: string; address: string; state: string }) => string;
       };
       // Template: The infrastructure project {type} at {address} has been finished.
       INFRASTRUCTURE_PROJECT_COMPLETED: {
-        format: (options: { type: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { type: string; address: string }) => string;
       };
       // Template: The upgrade of {type} {infrastructure} has been completed.
       INFRASTRUCTURE_UPGRADE_COMPLETED: {
-        format: (options: { type: string; infrastructure: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { type: string; infrastructure: string }) => string;
       };
       // Template: The {type} {infrastructure} at {address} started upkeep phase {naturalId}.
       INFRASTRUCTURE_UPKEEP_PHASE_STARTED: {
-        format: (options: {
+        getFormat: () => IntlMessageFormat;
+        message: (options: {
           type: string;
           infrastructure: string;
           address: string;
           naturalId: string;
         }) => string;
-        imf: IntlMessageFormat;
       };
       // Template: Your ad at the {addressName} local market has been accepted by {partner}.
       LOCAL_MARKET_AD_ACCEPTED: {
-        format: (options: { addressName: string; partner: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { addressName: string; partner: string }) => string;
       };
       // Template: Your ad at the {addressName} local market has expired.
       LOCAL_MARKET_AD_EXPIRED: {
-        format: (options: { addressName: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { addressName: string }) => string;
       };
       // Template: The planetary project '{project}' at {address} has been finished.
       PLANETARY_PROJECT_FINISHED: {
-        format: (options: { project: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { project: string; address: string }) => string;
       };
       // Template: The population infrastructure project {type} at {address} has been upgraded to level {level}.
       POPULATION_PROJECT_UPGRADED: {
-        format: (options: { type: string; address: string; level: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { type: string; address: string; level: string }) => string;
       };
       // Template: A new population report for {address} is available.
       POPULATION_REPORT_AVAILABLE: {
-        format: (options: { address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { address: string }) => string;
       };
       // Template: {quantity, plural, one {One unit} other {{quantity} units}} of {material} have been produced at your base on {address}.
       PRODUCTION_ORDER_FINISHED: {
-        format: (options: { quantity: string; material: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { quantity: string; material: string; address: string }) => string;
       };
       // Template: There is a new version of APEX. Click here to read the release notes.
       RELEASE_NOTES: LiteralLocalizationLeaf;
       // Template: Shipbuilding project at {address} completed.
       SHIPYARD_PROJECT_FINISHED: {
-        format: (options: { address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { address: string }) => string;
       };
       // Template: Ship {registration} arrived at its destination {destination}.
       SHIP_FLIGHT_ENDED: {
-        format: (options: { registration: string; destination: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { registration: string; destination: string }) => string;
       };
       // Template: A new {category} expert arrived at your base on {address}.
       SITE_EXPERT_DROPPED: {
-        format: (options: { category: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { category: string; address: string }) => string;
       };
       // Template: Tutorial task fulfilled. Click here to see your current progress!
       TUTORIAL_TASK_FINISHED: LiteralLocalizationLeaf;
@@ -994,37 +1003,37 @@ declare global {
       USER_LICENSE_EXPIRED: LiteralLocalizationLeaf;
       // Template: You received {amount, plural, one {one day} other {{amount} days}} of PRO license time from {user}.
       USER_LICENSE_GIFT_RECEIVED: {
-        format: (options: { amount: string; user: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: string; user: string }) => string;
       };
       // Template: Help out by posting a Steam review!
       USER_STEAM_REVIEW: LiteralLocalizationLeaf;
       // Template: Your warehouse storage unit at {address} has been locked due to insufficient funds for its weekly fee.
       WAREHOUSE_STORE_LOCKED_INSUFFICIENT_FUNDS: {
-        format: (options: { address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { address: string }) => string;
       };
       // Template: Your warehouse storage unit at {address} has been unlocked.
       WAREHOUSE_STORE_UNLOCKED: {
-        format: (options: { address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { address: string }) => string;
       };
       // Template: Welcome licensee! Click here to get started with the APEX console!
       WELCOME: LiteralLocalizationLeaf;
       // Template: Consumable supplies at {address} are running low.
       WORKFORCE_LOW_SUPPLIES: {
-        format: (options: { address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { address: string }) => string;
       };
       // Template: The workforce at {address} is out of supplies.
       WORKFORCE_OUT_OF_SUPPLIES: {
-        format: (options: { address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { address: string }) => string;
       };
       // Template: The workforce at {address} is unsatisfied.
       WORKFORCE_UNSATISFIED: {
-        format: (options: { address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { address: string }) => string;
       };
     };
     AlertType: {
@@ -1170,8 +1179,8 @@ declare global {
       notifications: {
         // Template: Notifications
         tooltip: LiteralLocalizationLeaf;
-        format: (options: { count: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { count: string }) => string;
       };
     };
     ApexMobile: {
@@ -1191,8 +1200,8 @@ declare global {
     AreaCost: {
       // Template: {cost} / {available} {error}
       cost: {
-        format: (options: { cost: string; available: string; error: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { cost: string; available: string; error: string }) => string;
       };
       // Template: Not enough free area
       error: LiteralLocalizationLeaf;
@@ -1236,8 +1245,8 @@ declare global {
     AvailableSites: {
       // Template: {free} / {total}{ghost}
       plots: {
-        format: (options: { free: string; total: string; ghost: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { free: string; total: string; ghost: string }) => string;
       };
     };
     Badge: {
@@ -1327,8 +1336,8 @@ declare global {
       inStock: LiteralLocalizationLeaf;
       // Template: {amount} missing
       missing: {
-        format: (options: { amount: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: string }) => string;
       };
     };
     BlackListedUsers: {
@@ -1362,8 +1371,8 @@ declare global {
       };
       // Template: ~{buildTime}h
       buildTime: {
-        format: (options: { buildTime: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { buildTime: string }) => string;
       };
       header: {
         // Template: Construction
@@ -1698,9 +1707,21 @@ declare global {
     };
     BrokerList: {
       // Template: Ask
-      ask: LiteralLocalizationLeaf;
+      ask: {
+        // Template: Amount
+        amount: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Bid
-      bid: LiteralLocalizationLeaf;
+      bid: {
+        // Template: Amount
+        amount: LiteralLocalizationLeaf;
+        // Template: Demand
+        demand: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Change
       change: LiteralLocalizationLeaf;
       // Template: No materials in this category. Try a sub-category.
@@ -1730,8 +1751,8 @@ declare global {
     };
     // Template: {absolute} ({relative})
     BrokerListLine: {
-      format: (options: { absolute: string; relative: string }) => string;
-      imf: IntlMessageFormat;
+      getFormat: () => IntlMessageFormat;
+      message: (options: { absolute: string; relative: string }) => string;
     };
     BtnBack: {
       action: {
@@ -1742,8 +1763,8 @@ declare global {
     Buffer: {
       // Template: Buffer {id}
       title: {
-        format: (options: { id: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { id: string }) => string;
       };
     };
     BuildingInformation: {
@@ -1771,8 +1792,8 @@ declare global {
       title: LiteralLocalizationLeaf;
       // Template: Building: {name}
       titleWithName: {
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     BuildingRepairAssistant: {
@@ -1797,7 +1818,18 @@ declare global {
       // Template: Bill of materials
       materials: LiteralLocalizationLeaf;
       // Template: Time offset
-      timeoffset: LiteralLocalizationLeaf;
+      timeoffset: {
+        // Template: in 24h
+        _24: LiteralLocalizationLeaf;
+        // Template: in 48h
+        _48: LiteralLocalizationLeaf;
+        // Template: Allows to modify the moment of time, by a fixed offset, that is used to calculate the necessary repair materials.
+        info: LiteralLocalizationLeaf;
+        // Template: now
+        now: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Building Repair Assistant
       title: LiteralLocalizationLeaf;
     };
@@ -1816,8 +1848,8 @@ declare global {
     CalculatedDistance: {
       // Template: {jumps} jumps
       jumps: {
-        format: (options: { jumps: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { jumps: string }) => string;
       };
       // Template: on planet
       samePlanet: LiteralLocalizationLeaf;
@@ -1833,8 +1865,8 @@ declare global {
     CardSubheading: {
       // Template: {name} / {subheading}
       title: {
-        format: (options: { name: string; subheading: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string; subheading: string }) => string;
       };
     };
     CashBookings: {
@@ -1850,8 +1882,8 @@ declare global {
       time: LiteralLocalizationLeaf;
       // Template: {value} {postfix}
       value: {
-        format: (options: { value: string; postfix: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { value: string; postfix: string }) => string;
       };
     };
     CategoryName: {
@@ -1904,9 +1936,23 @@ declare global {
     };
     ChannelMembership: {
       // Template: Start Conversation
-      create: LiteralLocalizationLeaf;
+      create: {
+        description: {
+          // Template: Click the button below to create this group channel. You can add other users in the next step.
+          group: LiteralLocalizationLeaf;
+          // Template: Click the button below to start a conversation with this user. They will immediately be able to see in their COM panel that you are about to contact them.
+          _private: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Join Conversation
-      join: LiteralLocalizationLeaf;
+      join: {
+        // Template: Click below to join this public channel.
+        description: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
     };
     ChannelMembershipList: {
       controls: {
@@ -1926,36 +1972,36 @@ declare global {
         group: {
           // Template: {u1} and {u2}
           _2: {
-            format: (options: { u1: string; u2: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { u1: string; u2: string }) => string;
           };
           // Template: {u1}, {u2} and {u3}
           _3: {
-            format: (options: { u1: string; u2: string; u3: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { u1: string; u2: string; u3: string }) => string;
           };
           // Template: {u1}, {u2} and {additional} others
           more: {
-            format: (options: { u1: string; u2: string; additional: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { u1: string; u2: string; additional: string }) => string;
           };
           // Template: GROUP: {name}
           named: {
-            format: (options: { name: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { name: string }) => string;
           };
-          format: (options: { userCount: number; users: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { userCount: number; users: string }) => string;
         };
         // Template: PRIVATE: {name}
         _private: {
-          format: (options: { name: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { name: string }) => string;
         };
         // Template: PUBLIC: {name}
         _public: {
-          format: (options: { name: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { name: string }) => string;
         };
       };
     };
@@ -1990,18 +2036,18 @@ declare global {
         time: {
           // Template: started {start}
           current: {
-            format: (options: { start: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { start: string }) => string;
           };
           // Template: ended {end}
           previous: {
-            format: (options: { end: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { end: string }) => string;
           };
           // Template: starts {start}
           upcoming: {
-            format: (options: { start: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { start: string }) => string;
           };
         };
       };
@@ -2025,7 +2071,12 @@ declare global {
         // Template: The CoGC needs a constant upkeep to run. It is due every 10 days and depends on the amount of company bases on the planet.
         description: LiteralLocalizationLeaf;
         // Template: Due date
-        dueDate: LiteralLocalizationLeaf;
+        dueDate: {
+          // Template: now
+          now: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
     };
     CoGCPanel: {
@@ -2049,8 +2100,8 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: CoGC: not found…
         notFound: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     CoGCProgram: {
@@ -2155,7 +2206,12 @@ declare global {
         error: LiteralLocalizationLeaf;
       };
       // Template: Due date
-      dueDate: LiteralLocalizationLeaf;
+      dueDate: {
+        // Template: now
+        now: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       section: {
         // Template: Contribute
         contribute: LiteralLocalizationLeaf;
@@ -2176,8 +2232,8 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: CoGC: not found…
         notFound: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     CoGCVoting: {
@@ -2208,8 +2264,8 @@ declare global {
       header: {
         // Template: CoGC Program: {name}
         name: {
-          format: (options: { name: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { name: string }) => string;
         };
       };
       label: {
@@ -2217,8 +2273,8 @@ declare global {
         noBase: LiteralLocalizationLeaf;
         // Template: Voting ends {time}
         timeleft: {
-          format: (options: { time: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { time: string }) => string;
         };
       };
       section: {
@@ -2253,8 +2309,8 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: CoGC: not found…
         notFound: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     CoGCVotingPanel: {
@@ -2268,8 +2324,8 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: CoGC: not found…
         notFound: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     ComEx: {
@@ -2303,8 +2359,8 @@ declare global {
     ComExInlineTickerQuote: {
       // Template: {name} {quote}{arrow}
       quote: {
-        format: (options: { name: string; quote: string; arrow: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string; quote: string; arrow: string }) => string;
       };
     };
     ComExListPanel: {
@@ -2327,9 +2383,19 @@ declare global {
     };
     ComExMaterialInfo: {
       // Template: Ask
-      ask: LiteralLocalizationLeaf;
+      ask: {
+        // Template: Amount
+        amount: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Bid
-      bid: LiteralLocalizationLeaf;
+      bid: {
+        // Template: Amount
+        amount: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       context: {
         // Template: List of Exchanges
         exchangeList: LiteralLocalizationLeaf;
@@ -2345,7 +2411,12 @@ declare global {
         nodata: LiteralLocalizationLeaf;
       };
       // Template: CX
-      exchange: LiteralLocalizationLeaf;
+      exchange: {
+        // Template: Location
+        location: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       link: {
         // Template: Chart
         chart: LiteralLocalizationLeaf;
@@ -2357,18 +2428,33 @@ declare global {
         placeOrder: LiteralLocalizationLeaf;
       };
       // Template: Price
-      price: LiteralLocalizationLeaf;
+      price: {
+        // Template: Change
+        change: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Supply
-      supply: LiteralLocalizationLeaf;
+      supply: {
+        // Template: Demand
+        demand: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: CX Material Info: {name}
       title: {
         // Template: CX Material Info
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
       // Template: 1d Units
-      units: LiteralLocalizationLeaf;
+      units: {
+        // Template: 7d Units
+        weekly: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
     };
     ComExMaterialInfoRow: {
       // Template: ∞
@@ -2377,14 +2463,19 @@ declare global {
       noPrice: LiteralLocalizationLeaf;
       // Template: {absolute} ({relative})
       priceChange: {
-        format: (options: { absolute: string; relative: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { absolute: string; relative: string }) => string;
       };
     };
     ComExOrderPanel: {
       data: {
         // Template: Remaining Amount
-        amount: LiteralLocalizationLeaf;
+        amount: {
+          // Template: Initial Amount
+          initial: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Exchange
         exchange: LiteralLocalizationLeaf;
         // Template: Limit
@@ -2401,20 +2492,41 @@ declare global {
       error: {
         // Template: No order found for input {input}.
         id: {
-          format: (options: { input: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { input: string }) => string;
         };
       };
       // Template: CX Order
       title: LiteralLocalizationLeaf;
       // Template: Trades
-      trades: LiteralLocalizationLeaf;
+      trades: {
+        // Template: Amount
+        amount: LiteralLocalizationLeaf;
+        // Template: No trades took place so far.
+        empty: LiteralLocalizationLeaf;
+        // Template: Partner
+        partner: LiteralLocalizationLeaf;
+        // Template: Price
+        price: LiteralLocalizationLeaf;
+        // Template: Time
+        time: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
     };
     ComExOrdersPanel: {
       _delete: {
         action: {
           // Template: You deleted too many unfilled or partially filled orders recently.
-          confirmation: LiteralLocalizationLeaf;
+          confirmation: {
+            // Template: You may still delete this order right now, but you will have to pay a fee depending on the order's remaining value: {fees}
+            details: {
+              getFormat: () => IntlMessageFormat;
+              message: (options: { fees: string }) => string;
+            };
+            getFormat: () => IntlMessageFormat;
+            message: (options: void) => string;
+          };
           // Template: delete order
           submit: LiteralLocalizationLeaf;
         };
@@ -2445,8 +2557,8 @@ declare global {
     ComExOrdersTable: {
       // Template: {amount} ({initial})
       amount: {
-        format: (options: { amount: string; initial: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: string; initial: string }) => string;
       };
       // Template: delete
       _delete: LiteralLocalizationLeaf;
@@ -2491,8 +2603,8 @@ declare global {
       error: {
         // Template: No commodity exchange for input {input}.
         id: {
-          format: (options: { input: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { input: string }) => string;
         };
       };
       title: {
@@ -2504,13 +2616,23 @@ declare global {
       // Template: ∞
       infinity: LiteralLocalizationLeaf;
       // Template: Offers
-      offers: LiteralLocalizationLeaf;
+      offers: {
+        // Template: No offers.
+        empty: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Requests
-      requests: LiteralLocalizationLeaf;
+      requests: {
+        // Template: No requests.
+        empty: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Spread: {spread}
       spread: {
-        format: (options: { spread: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { spread: string }) => string;
       };
       table: {
         // Template: Amount
@@ -2524,8 +2646,8 @@ declare global {
     ComExPlaceOrderForm: {
       // Template: {bid} / {ask}
       bidask: {
-        format: (options: { bid: string; ask: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { bid: string; ask: string }) => string;
       };
       // Template: buy
       buy: LiteralLocalizationLeaf;
@@ -2535,11 +2657,11 @@ declare global {
         amount: {
           // Template: set
           set: LiteralLocalizationLeaf;
-          format: (options: { amount: number }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { amount: number }) => string;
         };
-        format: (options: { inventory: string; button: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { inventory: string; button: string }) => string;
       };
       label: {
         // Template: Quantity
@@ -2547,7 +2669,12 @@ declare global {
         // Template: Bid / Ask
         bidask: LiteralLocalizationLeaf;
         // Template: Effective price
-        effectivePrice: LiteralLocalizationLeaf;
+        effectivePrice: {
+          // Template: CX prices are rounded to 3 significant figures. For prices above 10, the minimum increment is 0.1, for prices above 100, the minimum increment is 1, and so on.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Exchange
         exchange: LiteralLocalizationLeaf;
         // Template: Inventory
@@ -2559,7 +2686,12 @@ declare global {
         // Template: Price average
         priceAverage: LiteralLocalizationLeaf;
         // Template: Price Band
-        priceband: LiteralLocalizationLeaf;
+        priceband: {
+          // Template: The broker's price band depends on the average price of the latest trades. Orders with a price limit outside the price band will only be accepted from companies with a PRO rating and a minimum age of 45 days.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Storage Location
         storeId: LiteralLocalizationLeaf;
         // Template: Volume
@@ -2571,13 +2703,13 @@ declare global {
       };
       // Template: {priceAverage} {command}
       priceAverage: {
-        format: (options: { priceAverage: string; command: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { priceAverage: string; command: string }) => string;
       };
       // Template: {low} / {high} {currency}
       priceband: {
-        format: (options: { low: string; high: string; currency: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { low: string; high: string; currency: string }) => string;
       };
       // Template: sell
       sell: LiteralLocalizationLeaf;
@@ -2587,31 +2719,36 @@ declare global {
     ComExPlaceOrderPanel: {
       action: {
         // Template: place order
-        place: LiteralLocalizationLeaf;
+        place: {
+          // Template: The price limit you selected is outside the broker's price band. Continue?
+          confirmation: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
       // Template: Place order ({ticker})
       title: {
-        format: (options: { ticker: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { ticker: string }) => string;
       };
     };
     ComExPrice: {
       // Template: {absolute} ({relative})
       pricechange: {
-        format: (options: { absolute: string; relative: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { absolute: string; relative: string }) => string;
       };
     };
     ComExPriceChartPanel: {
       // Template: Chart: {name} ({ticker})
       chartWithNameAndTicker: {
-        format: (options: { name: string; ticker: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string; ticker: string }) => string;
       };
       // Template: Chart: {ticker}
       chartWithTicker: {
-        format: (options: { ticker: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { ticker: string }) => string;
       };
     };
     ComExPricePanel: {
@@ -2619,34 +2756,50 @@ declare global {
       noPrice: LiteralLocalizationLeaf;
       // Template: Price {ticker}
       title: {
-        format: (options: { ticker: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { ticker: string }) => string;
       };
       // Template: {material} ({ticker})
       titlebroker: {
-        format: (options: { material: string; ticker: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { material: string; ticker: string }) => string;
       };
     };
     ComExPurchasePickUpCondition: {
       // Template: Pick up {amount, number} / {total, number} {total, plural, one {unit} other {units}} of {material} at {address}
       content: {
-        format: (options: {
+        getFormat: () => IntlMessageFormat;
+        message: (options: {
           amount: string | number;
           total: number;
           material: string;
           address: string;
         }) => string;
-        imf: IntlMessageFormat;
       };
     };
     Command: {
       // Template: List of all pending actions.
       ACTIONS: LiteralLocalizationLeaf;
       // Template: General information about a planetary administration center.
-      ADM: LiteralLocalizationLeaf;
+      ADM: {
+        parameter: {
+          // Template: Planet Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Information about a administration center term.
-      ADMT: LiteralLocalizationLeaf;
+      ADMT: {
+        parameter: {
+          // Template: Planet Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+          // Template: Term Identifier
+          termId: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Entrypoint for the mobile version of APEX.
       APEXM: LiteralLocalizationLeaf;
       // Template: Shows information about and allows to upgrade the APEX representation center.
@@ -2654,35 +2807,123 @@ declare global {
       // Template: An overview of all infrastructure assets both in construction and completed.
       ASTS: LiteralLocalizationLeaf;
       // Template: Construct a new building at one of your bases.
-      BBC: LiteralLocalizationLeaf;
+      BBC: {
+        parameter: {
+          // Template: Blueprint
+          blueprintIdInput: LiteralLocalizationLeaf;
+          // Template: Base
+          siteIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Has a list of all buildings at one of your bases.
-      BBL: LiteralLocalizationLeaf;
+      BBL: {
+        parameter: {
+          // Template: Base
+          siteIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: A list of all user badges.
       BDGS: LiteralLocalizationLeaf;
       // Template: Shows a list of all blueprints or details of a specific blueprint.
-      BLU: LiteralLocalizationLeaf;
+      BLU: {
+        parameter: {
+          // Template: Blueprint
+          blueprintIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Repair multiple buildings at once.
-      BRA: LiteralLocalizationLeaf;
+      BRA: {
+        parameter: {
+          // Template: Base
+          siteIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Display one or all of your bases.
-      BS: LiteralLocalizationLeaf;
+      BS: {
+        parameter: {
+          // Template: Base
+          siteIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Allows to construct a new base on a planet.
-      BSC: LiteralLocalizationLeaf;
+      BSC: {
+        parameter: {
+          // Template: Planet Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Blueprint test flight controls.
       BTF: LiteralLocalizationLeaf;
       // Template: Information about buildings.
-      BUI: LiteralLocalizationLeaf;
+      BUI: {
+        parameter: {
+          // Template: Building Ticker
+          buildingTicker: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: List of available commands.
       CMDS: LiteralLocalizationLeaf;
       // Template: Company information.
-      CO: LiteralLocalizationLeaf;
+      CO: {
+        parameter: {
+          // Template: Company Code or Company Id
+          query: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: The Chamber of Global Commerce and its programs.
-      COGC: LiteralLocalizationLeaf;
+      COGC: {
+        parameter: {
+          // Template: Planet Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: The Chamber of Global Commerce program details.
-      COGCPD: LiteralLocalizationLeaf;
+      COGCPD: {
+        parameter: {
+          // Template: Planet Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+          // Template: Program Name
+          program: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: The Chamber of Global Commerce program execution query and voting.
-      COGCPEX: LiteralLocalizationLeaf;
+      COGCPEX: {
+        parameter: {
+          // Template: Planet Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Upkeep of the Chamber of Global Commerce.
-      COGCU: LiteralLocalizationLeaf;
+      COGCU: {
+        parameter: {
+          // Template: Planet Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Liquidate your company.
       COLIQ: LiteralLocalizationLeaf;
       // Template: Communications.
@@ -2692,17 +2933,52 @@ declare global {
       // Template: List of muted users.
       COMF: LiteralLocalizationLeaf;
       // Template: A private group conversation.
-      COMG: LiteralLocalizationLeaf;
+      COMG: {
+        parameter: {
+          // Template: Channel Identifier
+          channelIdentifier: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: A public communication channel.
-      COMP: LiteralLocalizationLeaf;
+      COMP: {
+        parameter: {
+          // Template: Channel Identifier
+          channelIdentifier: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Direct communication channel to another user.
-      COMU: LiteralLocalizationLeaf;
+      COMU: {
+        parameter: {
+          // Template: Username
+          channelIdentifier: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: List of currently connected users.
       CONS: LiteralLocalizationLeaf;
       // Template: Displays a contract.
-      CONT: LiteralLocalizationLeaf;
+      CONT: {
+        parameter: {
+          // Template: Contract
+          contractId: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Displays the list of all or a specific contract draft.
-      CONTD: LiteralLocalizationLeaf;
+      CONTD: {
+        parameter: {
+          // Template: Draft Identifier
+          draftIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Displays all contracts.
       CONTS: LiteralLocalizationLeaf;
       // Template: Information about your primary corporation.
@@ -2712,39 +2988,132 @@ declare global {
       // Template: Information about your primary corporation's finances.
       CORPFIN: LiteralLocalizationLeaf;
       // Template: Pending invites of your corporation.
-      CORPIVS: LiteralLocalizationLeaf;
+      CORPIVS: {
+        parameter: {
+          // Template: Company Code
+          companyIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Starting a new project for your corporation.
       CORPNP: LiteralLocalizationLeaf;
       // Template: Detailed information about corporation projects.
-      CORPP: LiteralLocalizationLeaf;
+      CORPP: {
+        parameter: {
+          // Template: Project Identifier
+          partialProjectId: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Displays a list of all corporations or details of a single corporation.
-      CORPS: LiteralLocalizationLeaf;
+      CORPS: {
+        parameter: {
+          // Template: Corporation Code
+          corporationIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Create a new screen.
       CS: LiteralLocalizationLeaf;
       // Template: General information about a commodity exchange.
-      CX: LiteralLocalizationLeaf;
+      CX: {
+        parameter: {
+          // Template: Market Identifier Code
+          idInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: List of all commodity exchanges.
       CXL: LiteralLocalizationLeaf;
       // Template: Compare commodity information across all exchanges.
-      CXM: LiteralLocalizationLeaf;
+      CXM: {
+        parameter: {
+          // Template: Material Ticker
+          materialTicker: LiteralLocalizationLeaf;
+          // Template: Planet to determine distance from
+          planetIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: View a commodity exchange order.
-      CXO: LiteralLocalizationLeaf;
+      CXO: {
+        parameter: {
+          // Template: Order Identifier
+          query: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Order book for a given commodity exchange ticker.
-      CXOB: LiteralLocalizationLeaf;
+      CXOB: {
+        parameter: {
+          // Template: Ticker
+          ticker: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Manage your commodity exchange orders.
-      CXOS: LiteralLocalizationLeaf;
+      CXOS: {
+        parameter: {
+          // Template: Pagesize
+          pagesize: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Commodity price information.
-      CXP: LiteralLocalizationLeaf;
+      CXP: {
+        parameter: {
+          // Template: Ticker
+          ticker: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Chart: Commodity price plotted over time.
-      CXPC: LiteralLocalizationLeaf;
+      CXPC: {
+        parameter: {
+          // Template: Ticker
+          ticker: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Commodity exchange order form.
-      CXPO: LiteralLocalizationLeaf;
+      CXPO: {
+        parameter: {
+          // Template: Ticker
+          ticker: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Display and manage the experts at a given base.
-      EXP: LiteralLocalizationLeaf;
+      EXP: {
+        parameter: {
+          // Template: Base
+          siteIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Shows and opens a link that leads to an external site.
       EXTLNK: LiteralLocalizationLeaf;
       // Template: Faction information.
-      FA: LiteralLocalizationLeaf;
+      FA: {
+        parameter: {
+          // Template: Faction Code
+          query: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Basic financial overview and recent cash bookings.
       FIN: LiteralLocalizationLeaf;
       // Template: Balance statement showing your assets and liabilities.
@@ -2756,9 +3125,23 @@ declare global {
       // Template: Overview of the whole fleet or fleets at specific locations.
       FLT: LiteralLocalizationLeaf;
       // Template: Overview of the fleet at the given planet.
-      FLTP: LiteralLocalizationLeaf;
+      FLTP: {
+        parameter: {
+          // Template: Planet Identifier
+          partialPlanetId: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Overview of the fleet in the given system.
-      FLTS: LiteralLocalizationLeaf;
+      FLTS: {
+        parameter: {
+          // Template: System Identifier
+          partialSystemId: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       FTL: {
         parameter: {
           // Template: Address
@@ -2768,65 +3151,213 @@ declare global {
       // Template: A matrix of foreign exchange conversion rates.
       FX: LiteralLocalizationLeaf;
       // Template: Shows a foreign exchange order.
-      FXO: LiteralLocalizationLeaf;
+      FXO: {
+        parameter: {
+          // Template: Order Identifier
+          query: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Order book for a given currency pair.
-      FXOB: LiteralLocalizationLeaf;
+      FXOB: {
+        parameter: {
+          // Template: Ticker
+          ticker: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: List of your foreign exchange orders.
       FXOS: LiteralLocalizationLeaf;
       // Template: Exchange rate information.
-      FXP: LiteralLocalizationLeaf;
+      FXP: {
+        parameter: {
+          // Template: Ticker
+          ticker: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Chart: Exchange rate plotted over time.
-      FXPC: LiteralLocalizationLeaf;
+      FXPC: {
+        parameter: {
+          // Template: Ticker
+          ticker: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Place foreign exchange order.
-      FXPO: LiteralLocalizationLeaf;
+      FXPO: {
+        parameter: {
+          // Template: Ticker
+          ticker: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Allows to gift PRO license time to another user.
       GIFT: LiteralLocalizationLeaf;
       // Template: Shows information about the current and past governments.
-      GOV: LiteralLocalizationLeaf;
+      GOV: {
+        parameter: {
+          // Template: Planet Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Displays information about a FTL gateway.
-      GTW: LiteralLocalizationLeaf;
+      GTW: {
+        parameter: {
+          // Template: Address or specific gateway id.
+          locationIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Allows to plan gateway projects.
       GTWI: LiteralLocalizationLeaf;
       // Template: Displays traffic information about a FTL gateway.
-      GTWT: LiteralLocalizationLeaf;
+      GTWT: {
+        parameter: {
+          // Template: Gateway Identifier
+          gatewayNaturalId: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Links to the Handbook with useful information on how to get started.
       HELP: LiteralLocalizationLeaf;
       // Template: Allows to upgrade and relocate your company headquarters.
       HQ: LiteralLocalizationLeaf;
       // Template: Displays information about a system's infrastructure.
-      INF: LiteralLocalizationLeaf;
+      INF: {
+        parameter: {
+          // Template: Infrastructure Identifier
+          infrastructureNaturalId: LiteralLocalizationLeaf;
+          // Template: System Identifier
+          systemIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Displays information about an infrastructure's upkeep.
       INFU: LiteralLocalizationLeaf;
       // Template: Display all inventories, those located at the specified address, or a specific inventory.
-      INV: LiteralLocalizationLeaf;
+      INV: {
+        parameter: {
+          // Template: Inventory or Address
+          storeIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Shows the company leaderboards.
       LEAD: LiteralLocalizationLeaf;
       // Template: Information about your APEX license/subscription status.
       LIC: LiteralLocalizationLeaf;
       // Template: General info about a local market and its list of ads.
-      LM: LiteralLocalizationLeaf;
+      LM: {
+        parameter: {
+          // Template: Local Market Identifier
+          localMarketIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Detailed view of a local market ad.
-      LMA: LiteralLocalizationLeaf;
+      LMA: {
+        parameter: {
+          // Template: Local Market Ad Identifier
+          localMarketAdIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Local market blocklist.
       LMBL: LiteralLocalizationLeaf;
       // Template: List of your local market ads.
       LMOS: LiteralLocalizationLeaf;
       // Template: Form to create local market ads.
-      LMP: LiteralLocalizationLeaf;
+      LMP: {
+        parameter: {
+          // Template: Local Market Identifier
+          localMarketIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Listing of local rules like production fees, etc.
-      LR: LiteralLocalizationLeaf;
+      LR: {
+        parameter: {
+          // Template: Planet Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Information about commodities and materials.
-      MAT: LiteralLocalizationLeaf;
+      MAT: {
+        parameter: {
+          // Template: Material Ticker
+          materialTicker: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Motion
-      MOT: LiteralLocalizationLeaf;
+      MOT: {
+        parameter: {
+          // Template: Administration Center Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Motions
-      MOTS: LiteralLocalizationLeaf;
+      MOTS: {
+        parameter: {
+          // Template: Motion Identifier
+          motionId: LiteralLocalizationLeaf;
+          // Template: Motion Identifier
+          motionIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Map: Star System
-      MS: LiteralLocalizationLeaf;
+      MS: {
+        parameter: {
+          // Template: System Identifier
+          systemIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Transfer a specific amount of a commodity between inventories.
-      MTRA: LiteralLocalizationLeaf;
+      MTRA: {
+        parameter: {
+          // Template: Material Ticker
+          materialTickerInput: LiteralLocalizationLeaf;
+          // Template: Origin Store Identifier
+          originStoreIdInput: LiteralLocalizationLeaf;
+          // Template: Target Store Identifier
+          targetStoreIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Map: Universe
-      MU: LiteralLocalizationLeaf;
+      MU: {
+        parameter: {
+          // Template: Mode
+          mode: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: In-game notification settings.
       NOTIG: LiteralLocalizationLeaf;
       // Template: Push notification settings.
@@ -2834,65 +3365,241 @@ declare global {
       // Template: List of notifications.
       NOTS: LiteralLocalizationLeaf;
       // Template: Allows to search for and display information about a planet.
-      PLI: LiteralLocalizationLeaf;
+      PLI: {
+        parameter: {
+          // Template: Planet Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Name a planet.
-      PLNM: LiteralLocalizationLeaf;
+      PLNM: {
+        parameter: {
+          // Template: Planet Identifier
+          naturalId: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Shows recent and past offices a user held.
-      POL: LiteralLocalizationLeaf;
+      POL: {
+        parameter: {
+          // Template: Username
+          query: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Shows recent population reports containing information like population size, growth, unemployment rate, ..
-      POPI: LiteralLocalizationLeaf;
+      POPI: {
+        parameter: {
+          // Template: Planet Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Shows details of a certain population infrastructure project and allows to contribute upkeep materials as well as building materials to upgrade the project.
-      POPID: LiteralLocalizationLeaf;
+      POPID: {
+        parameter: {
+          // Template: Infrastructure Type
+          infrastructureType: LiteralLocalizationLeaf;
+          // Template: Planet Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Shows recent population reports containing information like population size, growth, unemployment rate, ..
-      POPR: LiteralLocalizationLeaf;
+      POPR: {
+        parameter: {
+          // Template: Planet Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Detailed information about a planetary project.
-      PP: LiteralLocalizationLeaf;
+      PP: {
+        parameter: {
+          // Template: Planet Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+          // Template: Planetary Project
+          planetaryProjectIdInput: LiteralLocalizationLeaf;
+          // Template: Base
+          siteIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Displays information about a planetary plot.
       PPI: LiteralLocalizationLeaf;
       // Template: List of all planetary projects of the given planet.
-      PPS: LiteralLocalizationLeaf;
+      PPS: {
+        parameter: {
+          // Template: Planet Identifier
+          planetIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Display one or all of your production lines.
       PROD: LiteralLocalizationLeaf;
       // Template: Queue a new production order for a production line.
-      PRODCO: LiteralLocalizationLeaf;
+      PRODCO: {
+        parameter: {
+          // Template: Base
+          productionLineIdInput: LiteralLocalizationLeaf;
+          // Template: Plot
+          siteIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Order queue of a production line.
-      PRODQ: LiteralLocalizationLeaf;
+      PRODQ: {
+        parameter: {
+          // Template: Production Line
+          productionLineIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Has a list of recommended starter buildings for your selected starting package.
       RSB: LiteralLocalizationLeaf;
       // Template: Screen configuration
       SCRN: LiteralLocalizationLeaf;
       // Template: Ship flight controls.
-      SFC: LiteralLocalizationLeaf;
+      SFC: {
+        parameter: {
+          // Template: Ship Transponder
+          partialShipId: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Ship detail information
-      SHP: LiteralLocalizationLeaf;
+      SHP: {
+        parameter: {
+          // Template: Ship Transponder
+          partialShipId: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Ship fuel tanks.
-      SHPF: LiteralLocalizationLeaf;
+      SHPF: {
+        parameter: {
+          // Template: Ship Transponder
+          partialShipId: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Ship inventory.
-      SHPI: LiteralLocalizationLeaf;
+      SHPI: {
+        parameter: {
+          // Template: Ship Transponder
+          partialShipId: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: General information about planetary shipyards.
-      SHY: LiteralLocalizationLeaf;
+      SHY: {
+        parameter: {
+          // Template: Address
+          locationIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: An overview of all shipyard projects and details for specific ones.
-      SHYP: LiteralLocalizationLeaf;
+      SHYP: {
+        parameter: {
+          // Template: Shipyard Project Identifier
+          projectIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Public ship information.
-      SI: LiteralLocalizationLeaf;
+      SI: {
+        parameter: {
+          // Template: Ship Transponder
+          partialShipId: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Steam review.
       STEAM: LiteralLocalizationLeaf;
       // Template: Displays a list of all space stations or public information of a single station.
-      STNS: LiteralLocalizationLeaf;
+      STNS: {
+        parameter: {
+          // Template: Station Identifier
+          partialStationId: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Allows to search for and display information about a system.
-      SYSI: LiteralLocalizationLeaf;
+      SYSI: {
+        parameter: {
+          // Template: System Identifier
+          systemIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Name a system.
-      SYSNM: LiteralLocalizationLeaf;
+      SYSNM: {
+        parameter: {
+          // Template: System Identifier
+          naturalId: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Display a list of recent transmissions.
       TRA: LiteralLocalizationLeaf;
       // Template: Allows unpacking of consumable bundles.
-      UPCK: LiteralLocalizationLeaf;
+      UPCK: {
+        parameter: {
+          // Template: Store Identifier
+          storeIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: User information.
-      USR: LiteralLocalizationLeaf;
+      USR: {
+        parameter: {
+          // Template: Username
+          query: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: General information about a warehouse.
-      WAR: LiteralLocalizationLeaf;
+      WAR: {
+        parameter: {
+          // Template: Warehouse Identifier
+          warehouseIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Display the workforce at a given base.
-      WF: LiteralLocalizationLeaf;
+      WF: {
+        parameter: {
+          // Template: Base
+          siteIdInput: LiteralLocalizationLeaf;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Greenscreen
       XIT: LiteralLocalizationLeaf;
       // Template: YouTube video
@@ -2919,14 +3626,15 @@ declare global {
       text: {
         // Template: {advice, plural, one {# day} other {# days}}
         advice: {
-          format: (options: { advice: number }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { advice: number }) => string;
         };
         // Template: collection
         collection: LiteralLocalizationLeaf;
         // Template: delivery
         delivery: LiteralLocalizationLeaf;
-        format: (options: {
+        getFormat: () => IntlMessageFormat;
+        message: (options: {
           action: string;
           amount: string;
           commodity: string;
@@ -2935,19 +3643,19 @@ declare global {
           advice: string;
           adviceTime: string;
         }) => string;
-        imf: IntlMessageFormat;
       };
     };
     CommodityShippingAd: {
       text: {
         // Template: {advice, plural, one {# day} other {# days}}
         collection: {
-          format: (options: { advice: number }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { advice: number }) => string;
         };
         // Template: {action} {amount} {commodity} @ {price} from {origin} to {destination} for delivery within {adviceTime}
         perspectiveSender: {
-          format: (options: {
+          getFormat: () => IntlMessageFormat;
+          message: (options: {
             action: string;
             amount: string;
             commodity: string;
@@ -2956,11 +3664,11 @@ declare global {
             destination: string;
             adviceTime: string;
           }) => string;
-          imf: IntlMessageFormat;
         };
         // Template: {action} {weight}t / {volume}m³ @ {price} from {origin} to {destination} for delivery within {adviceTime}
         perspectiveShipper: {
-          format: (options: {
+          getFormat: () => IntlMessageFormat;
+          message: (options: {
             action: string;
             weight: string;
             volume: string;
@@ -2969,7 +3677,6 @@ declare global {
             destination: string;
             adviceTime: string;
           }) => string;
-          imf: IntlMessageFormat;
         };
       };
     };
@@ -2986,8 +3693,8 @@ declare global {
     CompanyHeadquarters: {
       // Template: {usedPermits} / {availablePermits}
       basepermits: {
-        format: (options: { usedPermits: string; availablePermits: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { usedPermits: string; availablePermits: string }) => string;
       };
       button: {
         // Template: Relocate
@@ -3014,8 +3721,8 @@ declare global {
         efficiencygains: LiteralLocalizationLeaf;
         // Template: {category} {gain}
         efficiencygainsdetails: {
-          format: (options: { category: string; gain: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { category: string; gain: string }) => string;
         };
         // Template: Level
         level: LiteralLocalizationLeaf;
@@ -3023,8 +3730,8 @@ declare global {
         name: LiteralLocalizationLeaf;
         // Template: Relocations are locked and will become available in {relocation} again.
         nextRelocationTime: {
-          format: (options: { relocation: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { relocation: string }) => string;
         };
         // Template: Site
         site: LiteralLocalizationLeaf;
@@ -3064,8 +3771,8 @@ declare global {
         noAddress: LiteralLocalizationLeaf;
         // Template: Headquarters @ {address}
         withAddress: {
-          format: (options: { address: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { address: string }) => string;
         };
       };
     };
@@ -3073,8 +3780,8 @@ declare global {
       action: {
         // Template: Do you want to relocate your company's headquarters to {name}? You will not be able to relocate again immediately.
         confirmation: {
-          format: (options: { name: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { name: string }) => string;
         };
         // Template: Relocate
         relocate: LiteralLocalizationLeaf;
@@ -3091,7 +3798,12 @@ declare global {
         // Template: Code
         code: LiteralLocalizationLeaf;
         // Template: Corporation
-        corporation: LiteralLocalizationLeaf;
+        corporation: {
+          // Template: invite
+          invite: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Faction
         country: LiteralLocalizationLeaf;
         // Template: Founded
@@ -3101,7 +3813,15 @@ declare global {
         // Template: Registration
         registration: LiteralLocalizationLeaf;
         // Template: APEX representation center
-        representation: LiteralLocalizationLeaf;
+        representation: {
+          // Template: Level {level}
+          level: {
+            getFormat: () => IntlMessageFormat;
+            message: (options: { level: string }) => string;
+          };
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Reputation
         reputation: LiteralLocalizationLeaf;
         // Template: Managing Director
@@ -3110,8 +3830,8 @@ declare global {
       error: {
         // Template: No company for input {input}.
         id: {
-          format: (options: { input: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { input: string }) => string;
         };
       };
       title: {
@@ -3119,8 +3839,8 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: Company: {name}
         single: {
-          format: (options: { name: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { name: string }) => string;
         };
       };
     };
@@ -3141,17 +3861,59 @@ declare global {
       header: LiteralLocalizationLeaf;
       profile: {
         // Template: Carbon Farmer
-        CARBON_FARMER: LiteralLocalizationLeaf;
+        CARBON_FARMER: {
+          // Template: Carbon has become a vital resource across different industries, so much so that a whole job profile has evolved around it: the carbon farmer. Even though you will be planting crops like a victualler, you will not have much to do with the food industry. Instead, your plants will be harvested for their precious carbon, which is the basis for many essential production processes in the metal and other industries.
+          description: LiteralLocalizationLeaf;
+          // Template: Water
+          resources: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Constructor
-        CONSTRUCTOR: LiteralLocalizationLeaf;
+        CONSTRUCTOR: {
+          // Template: Constructors know their way around building parts, from basic structural elements to complex engineering materials.
+          description: LiteralLocalizationLeaf;
+          // Template: Limestone, Iron Ore
+          resources: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Fuel Engineer
-        FUEL_ENGINEER: LiteralLocalizationLeaf;
+        FUEL_ENGINEER: {
+          // Template: The commodities you produce will be the foundation of faster-than-light and slower-than-light space travel. Both fuel types are based on a variety of gaseous and solid ingredients, so there is plenty of room for development and specialization in your trade.
+          description: LiteralLocalizationLeaf;
+          // Template: Galerite, Ammonia, Hydrogen
+          resources: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Manufacturer
-        MANUFACTURER: LiteralLocalizationLeaf;
+        MANUFACTURER: {
+          // Template: As a manufacturer, you will be a versatile creature which does not depend too much on a single industry. Your company’s main purpose will be to supply your trade partners with goods such as basic clothing and building parts. Getting started as a manufacturer is quite complex logistically, as you will have to buy your input materials from a nearby commodity exchange.
+          description: LiteralLocalizationLeaf;
+          // Template: Limestone, Silicon Ore
+          resources: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Metallurgist
-        METALLURGIST: LiteralLocalizationLeaf;
+        METALLURGIST: {
+          // Template: If you don’t mind getting your (workers’) hands dirty, this might be the job for you. Operating at the base of several industry branches, metallurgists produce ores, smelt them down and supply their trade partners with refined metals that will ultimately go into the construction of buildings, ships, and other structures.
+          description: LiteralLocalizationLeaf;
+          // Template: Aluminium Ore, Iron Ore, Oxygen
+          resources: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Victualler
-        VICTUALLER: LiteralLocalizationLeaf;
+        VICTUALLER: {
+          // Template: Victuallers are the heart of the food industry. Their profession revolves around extracting water, producing ingredients and turning it all into edibles for their own and others’ workforces. Without victuallers, all other industries would soon come to a halt, which is why their trade will always be relevant across the universe.
+          description: LiteralLocalizationLeaf;
+          // Template: Water
+          resources: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
       step: {
         action: {
@@ -3166,7 +3928,14 @@ declare global {
         };
         company: {
           // Template: Company code
-          code: LiteralLocalizationLeaf;
+          code: {
+            // Template: A 3- or 4-character abbreviation for your company. Owners of some APEX licenses can even use 2- or 1-character abbreviations. Cannot consist of numbers only.
+            info: LiteralLocalizationLeaf;
+            // Template: code
+            placeholder: LiteralLocalizationLeaf;
+            getFormat: () => IntlMessageFormat;
+            message: (options: void) => string;
+          };
           // Template: Your company represents your personal business interests in the APEX system. It is identified by a name and a short code.
           description1: LiteralLocalizationLeaf;
           // Template: Your company can later join a corporation to work towards a shared goal with other players.
@@ -3180,13 +3949,20 @@ declare global {
           // Template: Name your company
           header: LiteralLocalizationLeaf;
           // Template: Company name
-          name: LiteralLocalizationLeaf;
+          name: {
+            // Template: Your company's name will be visible to all APEX participants and cannot be changed. Choose wisely.
+            info: LiteralLocalizationLeaf;
+            // Template: name
+            placeholder: LiteralLocalizationLeaf;
+            getFormat: () => IntlMessageFormat;
+            message: (options: void) => string;
+          };
         };
         country: {
           // Template: Currency: {currency}
           currency: {
-            format: (options: { currency: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { currency: string }) => string;
           };
           // Template: Choose a faction
           header: LiteralLocalizationLeaf;
@@ -3200,13 +3976,13 @@ declare global {
           slowgame: LiteralLocalizationLeaf;
           // Template: Please note that the game and its interface APEX is still {indevelopment}. Bugs will occur during the early access stage; please report them  to get help. The universe will be reset multiple times before the full release, but we will make sure to give you a timely heads up.
           text1: {
-            format: (options: { indevelopment: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { indevelopment: string }) => string;
           };
           // Template: Please also note that Prosperous Universe is a {slowgame}, especially when starting out. Actions, like sending out ships or the production of materials, are being executed in real-time and will take real hours to complete. The game will get busier the more bases and ships you have. It is perfectly normal to play a couple of minutes and come back hours later. In the meantime, many players will plan their next steps and interact with the community.
           text2: {
-            format: (options: { slowgame: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { slowgame: string }) => string;
           };
           // Template: By accepting this disclaimer, you also confirm that you will behave in accordance with the . Violating them might result in limitation, suspension, or deletion of your account.
           text3: LiteralLocalizationLeaf;
@@ -3243,80 +4019,81 @@ declare global {
       type: {
         // Template: Accept a contribution of {money} from {contributor}.
         CONTRIBUTION: {
-          format: (options: { money: string; contributor: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { money: string; contributor: string }) => string;
         };
         // Template: Set local market fees to {base} and time factor to {timefactor}.
         FEE_LOCAL_MARKET: {
-          format: (options: { base: string; timefactor: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { base: string; timefactor: string }) => string;
         };
         // Template: Set base establishment fee to {fee}.
         FEE_SITE_ESTABLISHMENT: {
-          format: (options: { fee: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { fee: string }) => string;
         };
         // Template: Set warehouse rental fees to {amount} per unit.
         FEE_WAREHOUSE: {
-          format: (options: { amount: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { amount: string }) => string;
         };
         // Template: Commission {contractor} to provide {periods, plural, one {one week} other {{periods} weeks}} of fuel for gateway {link} with a {slo}% service level objective, paying {amount}.
         GATEWAY_FUEL: {
-          format: (options: {
+          getFormat: () => IntlMessageFormat;
+          message: (options: {
             contractor: string;
             periods: string;
             link: string;
             slo: string;
             amount: string;
           }) => string;
-          imf: IntlMessageFormat;
         };
         GATEWAY_LINK: {
           // Template: Establish link from gateway {originGateway} at {originAddress} to gateway {destinationGateway} at {destinationAddress}.
           link: {
-            format: (options: {
+            getFormat: () => IntlMessageFormat;
+            message: (options: {
               originGateway: string;
               originAddress: string;
               destinationGateway: string;
               destinationAddress: string;
             }) => string;
-            imf: IntlMessageFormat;
           };
           // Template: Unlink gateway {originGateway}.
           unlink: {
-            format: (options: { originGateway: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { originGateway: string }) => string;
           };
         };
         // Template: Set the usage fee for gateway {link} to {amount}.
         GATEWAY_PRICING: {
-          format: (options: { link: string; amount: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { link: string; amount: string }) => string;
         };
         // Template: Commission {constructor} to construct a {type} infrastructure for {amount}.
         INFRASTRUCTURE_CONSTRUCTION: {
-          format: (options: { constructor: string; type: string; amount: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { constructor: string; type: string; amount: string }) => string;
         };
         // Template: Rename {type} {naturalId} to {name}.
         INFRASTRUCTURE_NAME: {
-          format: (options: { type: string; naturalId: string; name: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { type: string; naturalId: string; name: string }) => string;
         };
         // Template: Commission {constructor} to upgrade {type} {link} for {amount}.
         INFRASTRUCTURE_UPGRADE: {
-          format: (options: {
+          getFormat: () => IntlMessageFormat;
+          message: (options: {
             constructor: string;
             type: string;
             link: string;
             amount: string;
           }) => string;
-          imf: IntlMessageFormat;
         };
         // Template: Commission {contractor} to provide {periods, plural, one {one week} other {{periods} weeks}} of upkeep for {type} {link} with a {slo}% service level objective, paying {amount}.
         INFRASTRUCTURE_UPKEEP: {
-          format: (options: {
+          getFormat: () => IntlMessageFormat;
+          message: (options: {
             contractor: string;
             periods: string;
             type: string;
@@ -3324,25 +4101,24 @@ declare global {
             slo: string;
             amount: string;
           }) => string;
-          imf: IntlMessageFormat;
         };
         // Template: Transfer {money} to {user}.
         PAYOUT: {
-          format: (options: { money: string; user: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { money: string; user: string }) => string;
         };
         // Template: Start workforce program '{program}' ({costs}).
         WORKFORCE_PROGRAM: {
-          format: (options: { program: string; costs: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { program: string; costs: string }) => string;
         };
       };
     };
     ComponentOption: {
       // Template: {amount, number} {amount, plural, one {emitter} other {emitters} zero {emitters}}
       ftlEmitter: {
-        format: (options: { amount: number }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: number }) => string;
       };
       // Template: not required
       notrequired: LiteralLocalizationLeaf;
@@ -3350,8 +4126,8 @@ declare global {
       required: LiteralLocalizationLeaf;
       // Template: {amount} structural elements
       structure: {
-        format: (options: { amount: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: string }) => string;
       };
     };
     ComponentType: {
@@ -3401,8 +4177,8 @@ declare global {
       WAIT: LiteralLocalizationLeaf;
       // Template: #{index}
       dependency: {
-        format: (options: { index: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { index: string }) => string;
       };
     };
     ConditionEditForm: {
@@ -3418,36 +4194,36 @@ declare global {
       buildingConstruction: LiteralLocalizationLeaf;
       // Template: Buy some {category} at the commodity exchange
       buyMaterialFromCategory: {
-        format: (options: { category: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { category: string }) => string;
       };
       // Template: Finish a ship construction project
       construction: LiteralLocalizationLeaf;
       // Template: Contribute building or upkeep materials to a infrastructure project @ {address}
       contribution: {
-        format: (options: { address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { address: string }) => string;
       };
       // Template: Delivery of {amount, number} {amount, plural, one {unit} other {units}} of {material} to {address}
       delivery: {
-        format: (options: { amount: number; material: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: number; material: string; address: string }) => string;
       };
       // Template: Deliver shipment @ {address}
       deliveryShipment: {
-        format: (options: { address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { address: string }) => string;
       };
       exploration: {
         // Template: Conduct planetary exploration survey @ {address}
         planet: {
-          format: (options: { address: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { address: string }) => string;
         };
         // Template: Conduct exploration survey @ {address} system
         system: {
-          format: (options: { address: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { address: string }) => string;
         };
       };
       // Template: Finish a flight
@@ -3456,69 +4232,69 @@ declare global {
       fulfillCountryContract: LiteralLocalizationLeaf;
       // Template: Provide {infrastructure} with fuel in upkeep phase {phase} keeping the service level above {level}
       gatewayFuel: {
-        format: (options: { infrastructure: string; phase: string; level: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { infrastructure: string; phase: string; level: string }) => string;
       };
       // Template: Increase a workforce satisfaction to at least {requiredSatisfaction}
       increaseSatisfaction: {
-        format: (options: { requiredSatisfaction: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { requiredSatisfaction: string }) => string;
       };
       // Template: Finish construction of infrastructure
       infrastructureConstructionFinish: LiteralLocalizationLeaf;
       // Template: Start construction of {type} infrastructure at {address}
       infrastructureConstructionStart: {
-        format: (options: { type: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { type: string; address: string }) => string;
       };
       // Template: Finish upgrade of infrastructure
       infrastructureUpgradeFinish: LiteralLocalizationLeaf;
       // Template: Start upgrade of {type} {link}
       infrastructureUpgradeStart: {
-        format: (options: { type: string; link: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { type: string; link: string }) => string;
       };
       // Template: Provide infrastructure upkeep for {type} {infrastructure} in upkeep phase {phase} keeping the service level above {level}
       infrastructureUpkeep: {
-        format: (options: {
+        getFormat: () => IntlMessageFormat;
+        message: (options: {
           type: string;
           infrastructure: string;
           phase: string;
           level: string;
         }) => string;
-        imf: IntlMessageFormat;
       };
       // Template: Pay installment: {interest} interest, {repayment} repayment
       loanInstallment: {
-        format: (options: { interest: string; repayment: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { interest: string; repayment: string }) => string;
       };
       // Template: Pay out loan: {amount}
       loanPayout: {
-        format: (options: { amount: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: string }) => string;
       };
       // Template: Repair one of your ships
       maintenance: LiteralLocalizationLeaf;
       // Template: Earn at least {threshold}
       makeMoney: {
-        format: (options: { threshold: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { threshold: string }) => string;
       };
       // Template: Payment of {amount}
       payment: {
-        format: (options: { amount: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: string }) => string;
       };
       // Template: Pick up {amount, number} {amount, plural, one {unit} other {units}} of {material} @ {address}
       pickup: {
-        format: (options: { amount: number; material: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: number; material: string; address: string }) => string;
       };
       // Template: Pickup shipment @ {address}
       pickupShipment: {
-        format: (options: { address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { address: string }) => string;
       };
       // Template: Place a commodity exchange order
       placeOrder: LiteralLocalizationLeaf;
@@ -3532,23 +4308,23 @@ declare global {
       provision: {
         // Template: (auto-provisioned)
         autoprovision: LiteralLocalizationLeaf;
-        format: (options: { amount: number; material: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: number; material: string; address: string }) => string;
       };
       // Template: Provision shipment of {amount, number} {amount, plural, one {unit} other {units}} of {material} @ {address} {autoprovision}
       provisionShipment: {
-        format: (options: {
+        getFormat: () => IntlMessageFormat;
+        message: (options: {
           amount: number;
           material: string;
           address: string;
           autoprovision: string;
         }) => string;
-        imf: IntlMessageFormat;
       };
       // Template: Grant {reputation} faction reputation points
       reputation: {
-        format: (options: { reputation: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { reputation: string }) => string;
       };
       // Template: Start a flight
       startFlight: LiteralLocalizationLeaf;
@@ -3556,13 +4332,13 @@ declare global {
       upgrade: LiteralLocalizationLeaf;
       // Template: Wait {duration}
       wait: {
-        format: (options: { duration: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { duration: string }) => string;
       };
       // Template: Start workforce program {type}
       workforceProgramStart: {
-        format: (options: { type: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { type: string }) => string;
       };
     };
     ConditionType: {
@@ -3668,30 +4444,30 @@ declare global {
     ContextControls: {
       // Template: {command}{label}
       contextItem: {
-        format: (options: { command: string; label: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { command: string; label: string }) => string;
       };
       // Template: CTXS
       contexts: LiteralLocalizationLeaf;
       // Template: CTX: {context}
       title: {
-        format: (options: { context: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { context: string }) => string;
       };
     };
     ContextName: {
       company: {
         // Template: Company: {name}
         title: {
-          format: (options: { name: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { name: string }) => string;
         };
       };
       government: {
         // Template: Government @ {address}
         title: {
-          format: (options: { address: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { address: string }) => string;
         };
       };
     };
@@ -3702,7 +4478,12 @@ declare global {
         // Template: reject
         reject: LiteralLocalizationLeaf;
         // Template: request termination
-        requestTermination: LiteralLocalizationLeaf;
+        requestTermination: {
+          // Template: Contracts can be terminated if both parties send a termination request.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
       banner: {
         action: {
@@ -3738,7 +4519,12 @@ declare global {
         // Template: Condition
         condition: LiteralLocalizationLeaf;
         // Template: Deadline
-        deadline: LiteralLocalizationLeaf;
+        deadline: {
+          // Template: The duration of a deadline which is currently not active, will be shown in parenthesis.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Depends on
         dependencies: LiteralLocalizationLeaf;
         // Template: Index
@@ -3749,7 +4535,14 @@ declare global {
         status: LiteralLocalizationLeaf;
       };
       // Template: Termination request
-      termination: LiteralLocalizationLeaf;
+      termination: {
+        // Template: received
+        received: LiteralLocalizationLeaf;
+        // Template: sent
+        sent: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
     };
     ContractCondition: {
       // Template: fulfilled
@@ -3766,8 +4559,8 @@ declare global {
       VIOLATED: LiteralLocalizationLeaf;
       // Template: ({duration})
       deadline: {
-        format: (options: { duration: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { duration: string }) => string;
       };
       // Template: fulfill
       fulfill: LiteralLocalizationLeaf;
@@ -3782,15 +4575,20 @@ declare global {
       condition: {
         // Template: {deadline, plural, one {# day} other {# days}}
         deadline: {
-          format: (options: { deadline: number }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { deadline: number }) => string;
         };
       };
       form: {
         // Template: Name
         name: LiteralLocalizationLeaf;
         // Template: Preamble
-        preamble: LiteralLocalizationLeaf;
+        preamble: {
+          // Template: Contract preamble
+          placeholder: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Repeating
         repeating: LiteralLocalizationLeaf;
         // Template: Status
@@ -3866,9 +4664,25 @@ declare global {
     ContractDraftsPanel: {
       action: {
         // Template: delete draft
-        _delete: LiteralLocalizationLeaf;
+        _delete: {
+          // Template: The contract draft '{name}' will be deleted.
+          confirmation: {
+            getFormat: () => IntlMessageFormat;
+            message: (options: { name: string }) => string;
+          };
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: send draft
-        send: LiteralLocalizationLeaf;
+        send: {
+          // Template: The contract draft '{name}' will be sent to '{user}'.
+          confirmation: {
+            getFormat: () => IntlMessageFormat;
+            message: (options: { name: string; user: string }) => string;
+          };
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
       error: {
         // Template: No draft found.
@@ -3884,20 +4698,20 @@ declare global {
     ContractPanel: {
       // Template: This contract will be breached in {countdown}. You can choose to either breach the contract immediately or grant an extension.
       extensionWithControl: {
-        format: (options: { countdown: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { countdown: string }) => string;
       };
       // Template: This contract will be breached in {countdown} unless your partner grants an extension.
       extensionWithoutControl: {
-        format: (options: { countdown: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { countdown: string }) => string;
       };
       // Template: Contract {id}
       title: {
         // Template: Contract loading
         loading: LiteralLocalizationLeaf;
-        format: (options: { id: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { id: string }) => string;
       };
     };
     ContractStatus: {
@@ -3967,8 +4781,8 @@ declare global {
       };
       // Template: (every {interval, plural, one {day} other {{interval} days}})
       consumption: {
-        format: (options: { interval: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { interval: string }) => string;
       };
       // Template: Inventory
       stores: LiteralLocalizationLeaf;
@@ -4014,13 +4828,30 @@ declare global {
     CoporationContainer: {
       data: {
         // Template: APEX representation center
-        representationCenter: LiteralLocalizationLeaf;
+        representationCenter: {
+          // Template: Level {level}
+          level: {
+            getFormat: () => IntlMessageFormat;
+            message: (options: { level: string }) => string;
+          };
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
     };
     Corporation: {
       infrastructure: {
         // Template: Cmd
-        command: LiteralLocalizationLeaf;
+        command: {
+          // Template: contribute
+          contribute: LiteralLocalizationLeaf;
+          // Template: project
+          project: LiteralLocalizationLeaf;
+          // Template: view
+          view: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: No infrastructure projects found.
         empty: LiteralLocalizationLeaf;
         // Template: Location
@@ -4049,8 +4880,8 @@ declare global {
         name: LiteralLocalizationLeaf;
         // Template: {entity} ({share})
         shareholder: {
-          format: (options: { entity: string; share: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { entity: string; share: string }) => string;
         };
         // Template: Shareholders
         shareholders: LiteralLocalizationLeaf;
@@ -4098,7 +4929,15 @@ declare global {
         notFound: LiteralLocalizationLeaf;
       };
       // Template: Invite Company
-      invite: LiteralLocalizationLeaf;
+      invite: {
+        // Template: If {company} is not already a member of another corporation, you can invite it to become one of yours.
+        description: {
+          getFormat: () => IntlMessageFormat;
+          message: (options: { company: string }) => string;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       pendingInvite: {
         // Template: Capital Contribution
         contribution: LiteralLocalizationLeaf;
@@ -4115,8 +4954,8 @@ declare global {
       title: {
         // Template: Corporation Invite
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     CorporationInvitesContainer: {
@@ -4180,8 +5019,8 @@ declare global {
       };
       // Template: {amount} / {cardinality}
       limit: {
-        format: (options: { amount: string; cardinality: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: string; cardinality: string }) => string;
       };
     };
     CorporationNewProjectPanel: {
@@ -4196,7 +5035,12 @@ declare global {
       // Template: Bill of material
       billOfMaterial: LiteralLocalizationLeaf;
       // Template: CMD
-      command: LiteralLocalizationLeaf;
+      command: {
+        // Template: Cancel Project
+        cancelProject: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Constructed
       constructionDate: LiteralLocalizationLeaf;
       contribute: {
@@ -4212,8 +5056,8 @@ declare global {
         immortality_center: LiteralLocalizationLeaf;
         // Template: The APEX representation center allows corporations to donate some of their profits to the APEX foundation.{break}The foundation uses the money to supply new and upcoming CEOs with the necessary capital and ships to start their entrepreneurial journey.{break}Having a high representation level is widely recognized as a testimony of wealth and success.
         representation_center: {
-          format: (options: { break: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { break: string }) => string;
         };
         // Template: NO FUNCTIONALITY ATM - Prestige Building
         terraforming_center: LiteralLocalizationLeaf;
@@ -4237,7 +5081,14 @@ declare global {
         contributions: LiteralLocalizationLeaf;
       };
       // Template: Status
-      status: LiteralLocalizationLeaf;
+      status: {
+        // Template: in construction
+        inConstruction: LiteralLocalizationLeaf;
+        // Template: operational
+        operational: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Terraforming Center
       terraforming_center: LiteralLocalizationLeaf;
       ticker: {
@@ -4256,7 +5107,12 @@ declare global {
     CorporationProjectPanel: {
       action: {
         // Template: Cancel project
-        cancel: LiteralLocalizationLeaf;
+        cancel: {
+          // Template: Are you sure you want to cancel this project? No materials can be reimbursed.
+          confirmation: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
       error: {
         // Template: No project found.
@@ -4272,8 +5128,8 @@ declare global {
         notFound: LiteralLocalizationLeaf;
         // Template: Corporation projects
         projects: LiteralLocalizationLeaf;
-        format: (options: { type: string; name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { type: string; name: string }) => string;
       };
     };
     CorporationRepresentationCenter: {
@@ -4308,8 +5164,8 @@ declare global {
         single: {
           // Template: Corporation
           loading: LiteralLocalizationLeaf;
-          format: (options: { name: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { name: string }) => string;
         };
       };
     };
@@ -4417,12 +5273,20 @@ declare global {
       error: {
         // Template: No faction for input ’{input}’.
         id: {
-          format: (options: { input: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { input: string }) => string;
         };
       };
       // Template: Faction
-      title: LiteralLocalizationLeaf;
+      title: {
+        // Template: Faction {name}
+        country: {
+          getFormat: () => IntlMessageFormat;
+          message: (options: { name: string }) => string;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
     };
     CreateGroupMembership: {
       form: {
@@ -4463,15 +5327,15 @@ declare global {
     Currency: {
       // Template: {name} ({code})
       nameAndCode: {
-        format: (options: { name: string; code: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string; code: string }) => string;
       };
     };
     Damage: {
       // Template: {damage}%
       value: {
-        format: (options: { damage: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { damage: string }) => string;
       };
     };
     DeleteCompanyPanel: {
@@ -4479,20 +5343,20 @@ declare global {
       confirm: LiteralLocalizationLeaf;
       // Template: The next company liquidation is possible in {time}
       cooldown: {
-        format: (options: { time: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { time: string }) => string;
       };
       // Template: If you wish to start over, you can liquidate your company '{name}'.
       description: {
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
       // Template: You do not currently control a company.
       noCompany: LiteralLocalizationLeaf;
       // Template: NOTE: You have {contracts, plural, one {a pending contract} other {{contracts} pending contracts}}. Please consider resolving them first before you continue to liquidate your company.
       pendingContracts: {
-        format: (options: { contracts: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { contracts: string }) => string;
       };
       // Template: Liquidate
       submit: LiteralLocalizationLeaf;
@@ -4518,8 +5382,8 @@ declare global {
     Distance: {
       // Template: {distance} {unit}
       distance: {
-        format: (options: { distance: string; unit: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { distance: string; unit: string }) => string;
       };
     };
     DistanceUnit: {
@@ -4556,8 +5420,8 @@ declare global {
     };
     // Template: Shipment #{id}
     DropDownBoxShipmentItem: {
-      format: (options: { id: string }) => string;
-      imf: IntlMessageFormat;
+      getFormat: () => IntlMessageFormat;
+      message: (options: { id: string }) => string;
     };
     DropTargetView: {
       // Template: ALL
@@ -4596,8 +5460,8 @@ declare global {
     EntityLink: {
       // Template: Government of {entity}
       government: {
-        format: (options: { entity: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { entity: string }) => string;
       };
     };
     EnvironmentTable: {
@@ -4643,13 +5507,13 @@ declare global {
       };
       // Template: {active} / {totalActiveCap}
       activeExperts: {
-        format: (options: { active: string; totalActiveCap: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { active: string; totalActiveCap: string }) => string;
       };
       // Template: {current} / {limit}
       currentAndLimit: {
-        format: (options: { current: string; limit: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { current: string; limit: string }) => string;
       };
       label: {
         // Template: Active / Max Experts
@@ -4681,8 +5545,8 @@ declare global {
       title: {
         // Template: Experts
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     ExternalURLPanel: {
@@ -4824,8 +5688,8 @@ declare global {
       fleet: LiteralLocalizationLeaf;
       // Template: Fleet @ {address}
       fleetAt: {
-        format: (options: { address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { address: string }) => string;
       };
       table: {
         // Template: Cargo
@@ -4851,16 +5715,31 @@ declare global {
       title: {
         // Template: Fleet
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     FlightControlContainer: {
       action: {
         // Template: abort flight
-        abort: LiteralLocalizationLeaf;
+        abort: {
+          // Template: Are you sure to abort this flight? The current flight segment will be finished in any case.
+          description: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: start
-        start: LiteralLocalizationLeaf;
+        start: {
+          // Template: The flight from {origin} to {destination} will take {duration}.
+          content: {
+            getFormat: () => IntlMessageFormat;
+            message: (options: { origin: string; destination: string; duration: string }) => string;
+          };
+          // Template: Are you sure you want to start this flight? Flights can be aborted, but the current flight segment will always be finished.
+          description: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
     };
     FlightControlPanel: {
@@ -4876,8 +5755,8 @@ declare global {
     FlightControlView: {
       // Template: {mass}t / {operatingEmptyMass}t
       mass: {
-        format: (options: { mass: string; operatingEmptyMass: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { mass: string; operatingEmptyMass: string }) => string;
       };
     };
     FlightPlan: {
@@ -4917,26 +5796,36 @@ declare global {
     ForExInlineTickerQuote: {
       // Template: {ticker} ({highlight}{arrow})
       line: {
-        format: (options: { ticker: string; highlight: string; arrow: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { ticker: string; highlight: string; arrow: string }) => string;
       };
     };
     ForExOrderBook: {
       error: {
         // Template: No broker found for ticker {ticker}.
         ticker: {
-          format: (options: { ticker: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { ticker: string }) => string;
         };
       };
       // Template: Offers
-      offers: LiteralLocalizationLeaf;
+      offers: {
+        // Template: No offers.
+        none: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Requests
-      requests: LiteralLocalizationLeaf;
+      requests: {
+        // Template: No requests.
+        none: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Spread: {spread}
       spread: {
-        format: (options: { spread: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { spread: string }) => string;
       };
       table: {
         // Template: Amount
@@ -4948,14 +5837,19 @@ declare global {
       };
       // Template: Order book ({ticker})
       title: {
-        format: (options: { ticker: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { ticker: string }) => string;
       };
     };
     ForExOrderPanel: {
       data: {
         // Template: Remaining Amount
-        amount: LiteralLocalizationLeaf;
+        amount: {
+          // Template: Initial Amount
+          initial: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Limit
         limit: LiteralLocalizationLeaf;
         // Template: Status
@@ -4968,14 +5862,27 @@ declare global {
       error: {
         // Template: No order found for input {input}.
         id: {
-          format: (options: { input: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { input: string }) => string;
         };
       };
       // Template: FX Order
       title: LiteralLocalizationLeaf;
       // Template: Trades
-      trades: LiteralLocalizationLeaf;
+      trades: {
+        // Template: Amount
+        amount: LiteralLocalizationLeaf;
+        // Template: No trades took place so far.
+        empty: LiteralLocalizationLeaf;
+        // Template: Partner
+        partner: LiteralLocalizationLeaf;
+        // Template: Price
+        price: LiteralLocalizationLeaf;
+        // Template: Time
+        time: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
     };
     ForExOrdersPanel: {
       // Template: Order deleted.
@@ -4992,8 +5899,8 @@ declare global {
       };
       // Template: {amount} ({initial})
       amount: {
-        format: (options: { amount: string; initial: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: string; initial: string }) => string;
       };
       table: {
         // Template: Amount (initial)
@@ -5025,9 +5932,21 @@ declare global {
           quote: LiteralLocalizationLeaf;
         };
         // Template: Fee
-        fee: LiteralLocalizationLeaf;
+        fee: {
+          // Template: For each FX trade a fee has to be paid by the buyer and seller. That fee is deducted once the order is matched from the amount of currency you receive from the trade.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Lots
-        lots: LiteralLocalizationLeaf;
+        lots: {
+          // Template: Currency can only be bought or sold in multiples of a lot. A lot is 1000 units.
+          info: LiteralLocalizationLeaf;
+          // Template: Lot Size
+          size: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Place order
         placeOrder: LiteralLocalizationLeaf;
         // Template: Current Price
@@ -5035,7 +5954,12 @@ declare global {
         // Template: Net amount after fees
         total: LiteralLocalizationLeaf;
         // Template: Volume
-        volume: LiteralLocalizationLeaf;
+        volume: {
+          // Template: The volume is the amount of currency removed from your account once the order is posted.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
       limit: {
         // Template: Maximum price
@@ -5047,8 +5971,8 @@ declare global {
       price: {
         // Template: set
         set: LiteralLocalizationLeaf;
-        format: (options: { rate: string; action: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { rate: string; action: string }) => string;
       };
       // Template: sell
       sell: LiteralLocalizationLeaf;
@@ -5057,66 +5981,66 @@ declare global {
       error: {
         // Template: No broker found for ticker {ticker}.
         ticker: {
-          format: (options: { ticker: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { ticker: string }) => string;
         };
       };
       tab: {
         // Template: BUYING {currency}
         buy: {
-          format: (options: { currency: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { currency: string }) => string;
         };
         // Template: SELLING {currency}
         sell: {
-          format: (options: { currency: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { currency: string }) => string;
         };
       };
       // Template: Place FX Order ({ticker})
       title: {
-        format: (options: { ticker: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { ticker: string }) => string;
       };
     };
     ForExPrice: {
       // Template: {absolute} ({relative})
       change: {
-        format: (options: { absolute: string; relative: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { absolute: string; relative: string }) => string;
       };
       // Template: 1 {code} = {rate}
       rate: {
-        format: (options: { code: string; rate: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { code: string; rate: string }) => string;
       };
     };
     ForExPriceChart: {
       error: {
         // Template: No broker found for ticker {ticker}.
         ticker: {
-          format: (options: { ticker: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { ticker: string }) => string;
         };
       };
       // Template: Chart: {ticker}
       title: {
-        format: (options: { ticker: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { ticker: string }) => string;
       };
     };
     ForExPricePanel: {
       error: {
         // Template: No broker found for ticker {ticker}.
         ticker: {
-          format: (options: { ticker: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { ticker: string }) => string;
         };
       };
       // Template: Exchange Rate {ticker}
       title: {
-        format: (options: { ticker: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { ticker: string }) => string;
       };
     };
     ForExPricePanelContent: {
@@ -5126,13 +6050,13 @@ declare global {
       bid: LiteralLocalizationLeaf;
       // Template: {baseName} ({baseCode}) traded in {quoteName} ({quoteCode})
       exchange: {
-        format: (options: {
+        getFormat: () => IntlMessageFormat;
+        message: (options: {
           baseName: string;
           baseCode: string;
           quoteName: string;
           quoteCode: string;
         }) => string;
-        imf: IntlMessageFormat;
       };
       // Template: High
       high: LiteralLocalizationLeaf;
@@ -5176,23 +6100,23 @@ declare global {
           isRequired: LiteralLocalizationLeaf;
           // Template: Must be less than or equal {max}.
           max: {
-            format: (options: { max: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { max: string }) => string;
           };
           // Template: Must not be longer than {max} characters.
           maxLength: {
-            format: (options: { max: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { max: string }) => string;
           };
           // Template: Must be greater than or equal {min}.
           min: {
-            format: (options: { min: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { min: string }) => string;
           };
           // Template: Must be longer or equal than {min} characters.
           minLength: {
-            format: (options: { min: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { min: string }) => string;
           };
           // Template: Input invalid.
           pattern: LiteralLocalizationLeaf;
@@ -5205,16 +6129,31 @@ declare global {
     };
     Frame: {
       // Template: Your session has expired.
-      loginRequired: LiteralLocalizationLeaf;
+      loginRequired: {
+        // Template: Click here to log in again.
+        dismiss: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: APEX alpha
       title: LiteralLocalizationLeaf;
       toggle: {
         // Template: BS
-        bases: LiteralLocalizationLeaf;
+        bases: {
+          // Template: Bases
+          tooltip: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: BFRS
         buffers: LiteralLocalizationLeaf;
         // Template: CMDS
-        commands: LiteralLocalizationLeaf;
+        commands: {
+          // Template: Commands
+          tooltip: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: CXL
         commodityexchanges: LiteralLocalizationLeaf;
         communication: {
@@ -5224,17 +6163,37 @@ declare global {
         // Template: COM
         communications: LiteralLocalizationLeaf;
         // Template: CONT
-        contracts: LiteralLocalizationLeaf;
+        contracts: {
+          // Template: Contracts
+          tooltip: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: CORP
-        corporation: LiteralLocalizationLeaf;
+        corporation: {
+          // Template: Corporation
+          tooltip: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         cx: {
           // Template: Commodity Exchanges
           tooltip: LiteralLocalizationLeaf;
         };
         // Template: FIN
-        financials: LiteralLocalizationLeaf;
+        financials: {
+          // Template: Financial overview
+          tooltip: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: FLT
-        fleet: LiteralLocalizationLeaf;
+        fleet: {
+          // Template: Fleet
+          tooltip: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         footer: {
           // Template: Toggle footer
           tooltip: LiteralLocalizationLeaf;
@@ -5250,15 +6209,30 @@ declare global {
         // Template: INV
         inventory: LiteralLocalizationLeaf;
         // Template: LEAD
-        leaderboards: LiteralLocalizationLeaf;
+        leaderboards: {
+          // Template: Leaderboards
+          tooltip: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: MAP
         map: LiteralLocalizationLeaf;
         // Template: PROD
-        production: LiteralLocalizationLeaf;
+        production: {
+          // Template: Production Lines
+          tooltip: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: SCRNS
         screens: LiteralLocalizationLeaf;
         // Template: SDBR
-        sidebar: LiteralLocalizationLeaf;
+        sidebar: {
+          // Template: Toggle sidebar
+          tooltip: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         universemap: {
           // Template: Universe Map
           tooltip: LiteralLocalizationLeaf;
@@ -5270,13 +6244,13 @@ declare global {
     FuelConsumption: {
       // Template: {amount} {amount, plural, one {unit} other {units}} {label} {percentage}
       label: {
-        format: (options: { amount: number; label: string; percentage: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: number; label: string; percentage: string }) => string;
       };
       // Template: ({percentage}%)
       percentage: {
-        format: (options: { percentage: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { percentage: string }) => string;
       };
     };
     FuelUnits: {
@@ -5328,13 +6302,13 @@ declare global {
       };
       // Template: {count} / 5
       capacityUpgrades: {
-        format: (options: { count: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { count: string }) => string;
       };
       // Template: {count} / 3
       distanceUpgrades: {
-        format: (options: { count: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { count: string }) => string;
       };
       header: {
         // Template: Capacity
@@ -5388,25 +6362,25 @@ declare global {
       };
       // Template: {radius} parsecs
       linkradius: {
-        format: (options: { radius: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { radius: string }) => string;
       };
       // Template: {maxShipVolume}m³
       maxShipVolume: {
-        format: (options: { maxShipVolume: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { maxShipVolume: string }) => string;
       };
-      message: {
+      _message: {
         // Template: This gateway is currently under construction. Current progress is {progress}.
         inConstruction: {
-          format: (options: { progress: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { progress: string }) => string;
         };
       };
       // Template: {current} / {capacity}
       recentJumps: {
-        format: (options: { current: string; capacity: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { current: string; capacity: string }) => string;
       };
       upgrade: {
         // Template: Contractor
@@ -5416,18 +6390,18 @@ declare global {
         parameter: {
           // Template: Capacity: {current} ➔ {target}
           capacity: {
-            format: (options: { current: string; target: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { current: string; target: string }) => string;
           };
           // Template: Distance: {current} ➔ {target}
           distance: {
-            format: (options: { current: string; target: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { current: string; target: string }) => string;
           };
           // Template: Volume: {current} ➔ {target}
           volume: {
-            format: (options: { current: string; target: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { current: string; target: string }) => string;
           };
         };
         // Template: Progress
@@ -5435,14 +6409,19 @@ declare global {
         // Template: Started
         started: LiteralLocalizationLeaf;
         // Template: Construction store
-        store: LiteralLocalizationLeaf;
+        store: {
+          // Template: store
+          action: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Upgrades
         upgrades: LiteralLocalizationLeaf;
       };
       // Template: {count} / 3
       volumeUpgrades: {
-        format: (options: { count: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { count: string }) => string;
       };
     };
     GatewayFuelComponent: {
@@ -5572,8 +6551,8 @@ declare global {
       insufficient: LiteralLocalizationLeaf;
       // Template: {distance} ({sufficient})
       range: {
-        format: (options: { distance: string; sufficient: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { distance: string; sufficient: string }) => string;
       };
       // Template: sufficient
       sufficient: LiteralLocalizationLeaf;
@@ -5597,8 +6576,8 @@ declare global {
     GatewayParametersInput: {
       // Template: {sum} / 5
       parameterSum: {
-        format: (options: { sum: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { sum: string }) => string;
       };
       select: {
         capacity: {
@@ -5636,8 +6615,8 @@ declare global {
     GatewayTraffic: {
       // Template: {current} / {total}
       fuelAvailable: {
-        format: (options: { current: string; total: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { current: string; total: string }) => string;
       };
       header: {
         // Template: Capacity
@@ -5653,7 +6632,12 @@ declare global {
       };
       label: {
         // Template: Average fuel availability
-        fuelAvailability: LiteralLocalizationLeaf;
+        fuelAvailability: {
+          // Template: Shows the average availability of fuel for at least one jump over the course of the last ten upkeep phases.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Available fuel units
         fuelAvailable: LiteralLocalizationLeaf;
         // Template: Fuel per jump
@@ -5752,8 +6736,8 @@ declare global {
         total: LiteralLocalizationLeaf;
         // Template: {votes} / {percentage}
         votes: {
-          format: (options: { votes: string; percentage: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { votes: string; percentage: string }) => string;
         };
       };
     };
@@ -5767,13 +6751,13 @@ declare global {
         current: LiteralLocalizationLeaf;
         // Template: Term #{naturalId} (current)
         termCurrent: {
-          format: (options: { naturalId: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { naturalId: string }) => string;
         };
         // Template: Term #{naturalId}
         termPrevious: {
-          format: (options: { naturalId: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { naturalId: string }) => string;
         };
       };
     };
@@ -5781,12 +6765,20 @@ declare global {
       error: {
         // Template: No government found for input {input}.
         id: {
-          format: (options: { input: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { input: string }) => string;
         };
       };
       // Template: Government
-      title: LiteralLocalizationLeaf;
+      title: {
+        // Template: Government: {planet}
+        withPlanet: {
+          getFormat: () => IntlMessageFormat;
+          message: (options: { planet: string }) => string;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
     };
     GroupChannelMembershipPanel: {
       // Template: Group {name}
@@ -5798,8 +6790,8 @@ declare global {
         audio: LiteralLocalizationLeaf;
         // Template: {username} ☰
         menu: {
-          format: (options: { username: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { username: string }) => string;
         };
       };
     };
@@ -5807,27 +6799,27 @@ declare global {
       action: {
         // Template: {icon} Audio
         audio: {
-          format: (options: { icon: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { icon: string }) => string;
         };
         // Template: {icon} Help
         help: {
-          format: (options: { icon: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { icon: string }) => string;
         };
         // Template: {icon} Login
         login: {
           // Template: login
           alt: LiteralLocalizationLeaf;
-          format: (options: { icon: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { icon: string }) => string;
         };
         // Template: {icon} Logout
         logout: {
           // Template: logout
           alt: LiteralLocalizationLeaf;
-          format: (options: { icon: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { icon: string }) => string;
         };
       };
     };
@@ -5854,13 +6846,13 @@ declare global {
     HelpHeadItem: {
       // Template: HELP: {progress}
       help: {
-        format: (options: { progress: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { progress: string }) => string;
       };
       // Template: {fulfilled} / {total}
       helpProgress: {
-        format: (options: { fulfilled: string; total: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { fulfilled: string; total: string }) => string;
       };
       // Template: HELP: --
       loading: LiteralLocalizationLeaf;
@@ -5910,7 +6902,30 @@ declare global {
       title: LiteralLocalizationLeaf;
     };
     // Template: Failed to generate income statement.
-    IncomeStatementPanel: LiteralLocalizationLeaf;
+    IncomeStatementPanel: {
+      // Template: Change
+      change: LiteralLocalizationLeaf;
+      // Template: Expenses
+      expenses: LiteralLocalizationLeaf;
+      period: {
+        // Template: Current Period
+        current: LiteralLocalizationLeaf;
+        // Template: Last Period
+        last: LiteralLocalizationLeaf;
+        // Template: Previous Period
+        previous: LiteralLocalizationLeaf;
+      };
+      // Template: Result
+      result: LiteralLocalizationLeaf;
+      // Template: Revenues
+      revenues: LiteralLocalizationLeaf;
+      // Template: Income Statement
+      title: LiteralLocalizationLeaf;
+      // Template: Total
+      total: LiteralLocalizationLeaf;
+      getFormat: () => IntlMessageFormat;
+      message: (options: void) => string;
+    };
     IncrementalNumberInput: {
       action: {
         // Template: -
@@ -5922,7 +6937,15 @@ declare global {
     InfrastructureContractors: {
       table: {
         // Template: Contractors
-        contractors: LiteralLocalizationLeaf;
+        contractors: {
+          // Template: {contractor} [{contract}]
+          value: {
+            getFormat: () => IntlMessageFormat;
+            message: (options: { contractor: string; contract: string }) => string;
+          };
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Phase
         phase: LiteralLocalizationLeaf;
       };
@@ -5930,8 +6953,8 @@ declare global {
     InfrastructureLink: {
       // Template: {gatewayAmount, plural, one {Gateway} other {{gatewayAmount} Gateways}}
       gateways: {
-        format: (options: { gatewayAmount: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { gatewayAmount: string }) => string;
       };
     };
     InfrastructureNameComponent: {
@@ -5973,8 +6996,8 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: Infrastructure: not found…
         notfound: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     InfrastructureType: {
@@ -6008,7 +7031,12 @@ declare global {
         // Template: Uptime history
         uptime: LiteralLocalizationLeaf;
         // Template: Uptime average
-        uptimeAverage: LiteralLocalizationLeaf;
+        uptimeAverage: {
+          // Template: Shows the average uptime of the infrastructure over the course of the last ten upkeep phases.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
     };
     InfrastructureUpkeepPanel: {
@@ -6025,18 +7053,18 @@ declare global {
       material: {
         // Template: {amount, plural, one {1 unit} other {{amount} units}}
         amount: {
-          format: (options: { amount: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { amount: string }) => string;
         };
         // Template: {amount} {amount, plural, one {unit} other {units}} in store
         available: {
-          format: (options: { amount: number }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { amount: number }) => string;
         };
         // Template: {amount} {amount, plural, one {unit} other {units}} missing
         missing: {
-          format: (options: { amount: number }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { amount: number }) => string;
         };
       };
       // Template: Output Materials
@@ -6090,29 +7118,42 @@ declare global {
         weight: LiteralLocalizationLeaf;
       };
       // Template: Inventories
-      title: LiteralLocalizationLeaf;
+      title: {
+        // Template: inventory {type}
+        inventory: {
+          getFormat: () => IntlMessageFormat;
+          message: (options: { type: string }) => string;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
     };
     Inventory: {
       // Template: {load} / {capacity}
       capacity: {
-        format: (options: { load: string; capacity: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { load: string; capacity: string }) => string;
       };
       // Template: {load} / {capacity}m³
       capacityVolume: {
-        format: (options: { load: string; capacity: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { load: string; capacity: string }) => string;
       };
       // Template: {load} / {capacity}t
       capacityWeight: {
-        format: (options: { load: string; capacity: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { load: string; capacity: string }) => string;
       };
     };
     LanguageSelector: {
       header: {
         // Template: Community Translations
-        community: LiteralLocalizationLeaf;
+        community: {
+          // Template: These translations are provided by the community. They might not cover the whole game. Default fallback language is English.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Official Languages
         official: LiteralLocalizationLeaf;
       };
@@ -6123,13 +7164,13 @@ declare global {
         now: LiteralLocalizationLeaf;
         // Template: last activity on {date}
         past: {
-          format: (options: { date: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { date: string }) => string;
         };
         // Template: active {timeAgo}
         recently: {
-          format: (options: { timeAgo: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { timeAgo: string }) => string;
         };
       };
       muted: {
@@ -6137,13 +7178,13 @@ declare global {
         now: LiteralLocalizationLeaf;
         // Template: muted on {date}
         past: {
-          format: (options: { date: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { date: string }) => string;
         };
         // Template: muted {timeAgo}
         recently: {
-          format: (options: { timeAgo: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { timeAgo: string }) => string;
         };
       };
     };
@@ -6215,8 +7256,8 @@ declare global {
       value: {
         // Template: {days, plural, one {one day} other {{days} days}}
         gift: {
-          format: (options: { days: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { days: string }) => string;
         };
       };
     };
@@ -6240,8 +7281,8 @@ declare global {
       action: {
         // Template: Do you want to gift {user} {days} days of your PRO license time?
         confirmation: {
-          format: (options: { user: string; days: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { user: string; days: string }) => string;
         };
         // Template: Gift
         gift: LiteralLocalizationLeaf;
@@ -6256,27 +7297,27 @@ declare global {
     LicenseHeadItem: {
       // Template: (expires in {countdown})
       expiry2d: {
-        format: (options: { countdown: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { countdown: string }) => string;
       };
       // Template: (expires in {countdown})
       expiry7d: {
-        format: (options: { countdown: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { countdown: string }) => string;
       };
       // Template: LIC: {level}
       level: {
         // Template: License Management
         tooltip: LiteralLocalizationLeaf;
-        format: (options: { level: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { level: string }) => string;
       };
     };
     LicenseMobileHeader: {
       // Template: License - {level}
       level: {
-        format: (options: { level: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { level: string }) => string;
       };
     };
     LinkStatus: {
@@ -6300,13 +7341,13 @@ declare global {
     ListItemView: {
       // Template: {units, plural, one {{units} unit} other {{units} units}}
       units: {
-        format: (options: { units: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { units: string }) => string;
       };
       // Template: {weight}t / {volume}m³
       weightVolume: {
-        format: (options: { weight: string; volume: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { weight: string; volume: string }) => string;
       };
     };
     Loading: {
@@ -6363,7 +7404,12 @@ declare global {
           // Template: Fee currency
           currency: LiteralLocalizationLeaf;
           // Template: Fees
-          fees: LiteralLocalizationLeaf;
+          fees: {
+            // Template: Fees consist of a fixed base and a variable time value. The variable value depends on the visibility time of the ad.
+            info: LiteralLocalizationLeaf;
+            getFormat: () => IntlMessageFormat;
+            message: (options: void) => string;
+          };
           // Template: Operator
           operator: LiteralLocalizationLeaf;
         };
@@ -6371,21 +7417,21 @@ declare global {
       market: {
         // Template: {base} / {timeFactor}
         fees: {
-          format: (options: { base: string; timeFactor: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { base: string; timeFactor: string }) => string;
         };
       };
       // Template: {name} Local Market
       name: {
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
       // Template: Local market: {name}
       title: {
         // Template: Local Market
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     LocalMarketAd: {
@@ -6412,8 +7458,8 @@ declare global {
         ad: LiteralLocalizationLeaf;
         // Template: {address} local market
         address: {
-          format: (options: { address: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { address: string }) => string;
         };
         // Template: Creator
         creator: LiteralLocalizationLeaf;
@@ -6436,8 +7482,8 @@ declare global {
       title: {
         // Template: Local market ad
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     LocalMarketAds: {
@@ -6481,7 +7527,12 @@ declare global {
     LocalMarketAdsPanel: {
       action: {
         // Template: delete
-        _delete: LiteralLocalizationLeaf;
+        _delete: {
+          // Template: Are you sure to delete this ad?
+          description: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
     };
     LocalMarketPost: {
@@ -6535,8 +7586,8 @@ declare global {
       title: {
         // Template: Post ad
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     LocalMarketPostContainer: {
@@ -6596,11 +7647,21 @@ declare global {
         // Template: Base fee
         base: LiteralLocalizationLeaf;
         // Template: Time factor
-        timeFactor: LiteralLocalizationLeaf;
+        timeFactor: {
+          // Template: The time factor determines how much higher the fees are for posting a longer-term local market ad.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
       population: {
         // Template: Workforce reserve pool
-        reserve: LiteralLocalizationLeaf;
+        reserve: {
+          // Template: The workforce reserve is, per workforce tier, held back during the weekly distribution of workforces among requesting bases on a planet. It will instead be available to newly founded bases or production lines in-between two workforce distributions.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: 10%
         reserveDefault: LiteralLocalizationLeaf;
       };
@@ -6630,7 +7691,12 @@ declare global {
         // Template: Workforce
         population: LiteralLocalizationLeaf;
         // Template: Production fees
-        productionfees: LiteralLocalizationLeaf;
+        productionfees: {
+          // Template: Production fees determine the amount of currency to be paid per 24 hours of full-time employment per worker of a certain tier. Fees are paid when a production order is started.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Warehouse fees
         warehousefees: LiteralLocalizationLeaf;
       };
@@ -6661,16 +7727,16 @@ declare global {
       error: {
         // Template: No local rules found for input {input}.
         id: {
-          format: (options: { input: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { input: string }) => string;
         };
       };
       // Template: Local Rules: {name}
       title: {
         // Template: Local Rules
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     LocalRulesPopulation: {
@@ -6718,8 +7784,8 @@ declare global {
       title: {
         // Template: APEX
         alt: LiteralLocalizationLeaf;
-        format: (options: { logo: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { logo: string }) => string;
       };
     };
     Maintenance: {
@@ -9064,18 +10130,25 @@ declare global {
       // Template: Production
       production: LiteralLocalizationLeaf;
       // Template: Natural resource
-      resource: LiteralLocalizationLeaf;
+      resource: {
+        // Template: no
+        no: LiteralLocalizationLeaf;
+        // Template: yes
+        yes: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Ticker
       ticker: LiteralLocalizationLeaf;
       // Template: {volume}m³
       volume: {
-        format: (options: { volume: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { volume: string }) => string;
       };
       // Template: {weight}t
       weight: {
-        format: (options: { weight: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { weight: string }) => string;
       };
       // Template: Workforce upkeep
       workforceUsage: LiteralLocalizationLeaf;
@@ -9095,8 +10168,8 @@ declare global {
       title: LiteralLocalizationLeaf;
       // Template: Material: {name}
       titleWithName: {
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     MaterialSelector: {
@@ -9137,13 +10210,13 @@ declare global {
       transferResult: {
         // Template: {amount} {materialName} from {storeFrom} to {storeTo}
         description: {
-          format: (options: {
+          getFormat: () => IntlMessageFormat;
+          message: (options: {
             amount: string;
             materialName: string;
             storeFrom: string;
             storeTo: string;
           }) => string;
-          imf: IntlMessageFormat;
         };
         // Template: Invalid transfer.
         transferInvalid: LiteralLocalizationLeaf;
@@ -9171,7 +10244,12 @@ declare global {
       // Template: Fees
       costs: LiteralLocalizationLeaf;
       // Template: Damage
-      damage: LiteralLocalizationLeaf;
+      damage: {
+        // Template: Ship damage depends on several factors such as environment conditions, radiation or meteoroid density along the route. Damage can be reduced by applying certain hull plates or shields in a ship's blueprint. Consider repairing your ships (via SHP) at some point or they will slow down significantly.
+        info: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Destination
       destination: LiteralLocalizationLeaf;
       // Template: Distance
@@ -9185,27 +10263,82 @@ declare global {
     };
     MissionSegmentType: {
       // Template: APP
-      approach: LiteralLocalizationLeaf;
+      approach: {
+        // Template: Approach: Ship closes in on a planet or station before landing on it.
+        tooltip: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: CHRG
-      charge: LiteralLocalizationLeaf;
+      charge: {
+        // Template: Charge: FTL engine is charged up. Charge time and power depends on the used engine.
+        tooltip: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: DCAY
-      decay: LiteralLocalizationLeaf;
+      decay: {
+        // Template: Decay: Ship waits for the gateway polarity field to decay sufficiently to continue its flight.
+        tooltip: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: DEP
-      departure: LiteralLocalizationLeaf;
+      departure: {
+        // Template: Departure: Ship moves away from planet or station to be able to perform a safe FTL jump.
+        tooltip: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: FLT
-      float: LiteralLocalizationLeaf;
+      float: {
+        // Template: Float: Colony ships move between sectors independently from FTL lanes (even if none exist). This step takes a fixed amount of time and fuel.
+        tooltip: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: JMP
-      jump: LiteralLocalizationLeaf;
+      jump: {
+        // Template: Jump: Ship jumps between two stars along an FTL lane.
+        tooltip: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: GTW
-      jumpgateway: LiteralLocalizationLeaf;
+      jumpgateway: {
+        // Template: Gateway: Ship jumps through a gateway and exits at the connected counterpart.
+        tooltip: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: LND
-      landing: LiteralLocalizationLeaf;
+      landing: {
+        // Template: Landing: Ship lands on a planetary surface or station.
+        tooltip: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: LOCK
-      lock: LiteralLocalizationLeaf;
+      lock: {
+        // Template: Lock: Ship waits for the gateway polarity field to establish to then align with it.
+        tooltip: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: TO
-      takeoff: LiteralLocalizationLeaf;
+      takeoff: {
+        // Template: Takeoff: Ship starts flight from a planetary surface or station.
+        tooltip: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: TRA
-      transit: LiteralLocalizationLeaf;
+      transit: {
+        // Template: Transit: Ship performs a transit within the same system.
+        tooltip: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
     };
     MobileMainState: {
       // Template: Could not find the selected resource
@@ -9247,36 +10380,36 @@ declare global {
       action: {
         // Template: {icon} Dismiss
         dismiss: {
-          format: (options: { icon: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { icon: string }) => string;
         };
       };
     };
     Modifier: {
       // Template: Hold: {weight}t / {volume}m³
       cargoBay: {
-        format: (options: { weight: string; volume: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { weight: string; volume: string }) => string;
       };
       // Template: {sign}{factor}% damage reduction
       damageReduction: {
-        format: (options: { sign: string; factor: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { sign: string; factor: string }) => string;
       };
       // Template: Capacity: {units} units
       ftlFuelTank: {
-        format: (options: { units: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { units: string }) => string;
       };
       // Template: {power}GW, charge factor {charge}
       ftlReactor: {
-        format: (options: { power: string; charge: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { power: string; charge: string }) => string;
       };
       // Template: +{delta} max g-factor
       maxGFactorIncrease: {
-        format: (options: { delta: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { delta: string }) => string;
       };
       // Template: not protected
       notprotected: LiteralLocalizationLeaf;
@@ -9284,30 +10417,30 @@ declare global {
       _protected: LiteralLocalizationLeaf;
       // Template: {units} fuel units / second
       stlEngine: {
-        format: (options: { units: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { units: string }) => string;
       };
       // Template: Capacity: {units} units
       stlFuelTank: {
-        format: (options: { units: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { units: string }) => string;
       };
       // Template: Capacity: {units} units
       vortexFuelTank: {
-        format: (options: { units: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { units: string }) => string;
       };
     };
     Money: {
       // Template: {amount} {currency}
       amount: {
-        format: (options: { amount: string; currency: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: string; currency: string }) => string;
       };
       // Template: -- {forcedCurrencyCode}
       missingAmount: {
-        format: (options: { forcedCurrencyCode: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { forcedCurrencyCode: string }) => string;
       };
     };
     Motion: {
@@ -9446,8 +10579,8 @@ declare global {
       error: {
         // Template: Could not find a motion for input '{motionId}'
         noMotion: {
-          format: (options: { motionId: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { motionId: string }) => string;
         };
       };
     };
@@ -9455,15 +10588,15 @@ declare global {
       error: {
         // Template: No government found for input {input}.
         id: {
-          format: (options: { input: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { input: string }) => string;
         };
       };
       title: {
         // Template: Motion: {motionId}
         loading: {
-          format: (options: { motionId: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { motionId: string }) => string;
         };
       };
     };
@@ -9498,12 +10631,27 @@ declare global {
     MotionsPanel: {
       action: {
         // Template: Delete
-        deleteComponent: LiteralLocalizationLeaf;
+        deleteComponent: {
+          // Template: Are you sure you want to delete this component?
+          confirmation: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Delete
-        deleteMotion: LiteralLocalizationLeaf;
+        deleteMotion: {
+          // Template: Are you sure you want to delete this motion?
+          confirmation: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
       // Template: Motions
-      title: LiteralLocalizationLeaf;
+      title: {
+        // Template: Motion
+        motion: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
     };
     MutedChatMessage: {
       // Template: Blocked message
@@ -9533,8 +10681,8 @@ declare global {
       action: {
         // Template: Are you sure you want to name this planet '{name}'? You cannot undo this!
         confirmation: {
-          format: (options: { name: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { name: string }) => string;
         };
         // Template: Name Planet
         name: LiteralLocalizationLeaf;
@@ -9553,16 +10701,16 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: Name Planet: not found…
         notFound: LiteralLocalizationLeaf;
-        format: (options: { naturalId: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { naturalId: string }) => string;
       };
     };
     NameSystemPanel: {
       action: {
         // Template: Are you sure you want to name this system '{name}'? You cannot undo this!
         confirmation: {
-          format: (options: { name: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { name: string }) => string;
         };
         // Template: Name System
         name: LiteralLocalizationLeaf;
@@ -9581,8 +10729,8 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: Name System: not found…
         notFound: LiteralLocalizationLeaf;
-        format: (options: { naturalId: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { naturalId: string }) => string;
       };
     };
     NamingForm: {
@@ -9597,7 +10745,12 @@ declare global {
       // Template: Please note that the selected name has to be a fit for the universe and lore. We will change names that don't fit.
       note: LiteralLocalizationLeaf;
       // Template: Assign name…
-      submit: LiteralLocalizationLeaf;
+      submit: {
+        // Template: n/a
+        disabled: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
     };
     NavigationConstants: {
       // Template: calculating
@@ -9610,13 +10763,13 @@ declare global {
       invalid: LiteralLocalizationLeaf;
       // Template: not enough FTL fuel ({ftlFuelNecessary} units necessary)
       missingFtlFuel: {
-        format: (options: { ftlFuelNecessary: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { ftlFuelNecessary: string }) => string;
       };
       // Template: not enough STL fuel ({stlFuelNecessary} units necessary)
       missingStlFuel: {
-        format: (options: { stlFuelNecessary: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { stlFuelNecessary: string }) => string;
       };
       // Template: no path to destination
       noPath: LiteralLocalizationLeaf;
@@ -9632,8 +10785,8 @@ declare global {
     NeedFulfillment: {
       // Template: {type} - {fulfillment}%
       content: {
-        format: (options: { type: string; fulfillment: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { type: string; fulfillment: string }) => string;
       };
     };
     NeedTypeLabel: {
@@ -9661,8 +10814,8 @@ declare global {
       text1: LiteralLocalizationLeaf;
       // Template: To gain access, please head over to {link} and purchase any of the available supporter tiers.
       text2: {
-        format: (options: { link: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { link: string }) => string;
       };
       // Template: Thank you very much for your understanding.
       text3: LiteralLocalizationLeaf;
@@ -9718,7 +10871,12 @@ declare global {
         // Template: Max. Frequency
         frequency: LiteralLocalizationLeaf;
         // Template: Alert
-        type: LiteralLocalizationLeaf;
+        type: {
+          // Template: Default Settings
+          _default: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
       // Template: Push Notification Settings
       title: LiteralLocalizationLeaf;
@@ -9793,23 +10951,23 @@ declare global {
       error: {
         // Template: No user for input '{input}'.
         id: {
-          format: (options: { input: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { input: string }) => string;
         };
       };
       // Template: Offices {name}
       title: {
         // Template: Offices
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     OrderSlot: {
       // Template: {amount} {amount, plural, one {unit} other {units}}
       output: {
-        format: (options: { amount: number }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: number }) => string;
       };
     };
     OrderStatus: {
@@ -9823,8 +10981,8 @@ declare global {
       input: LiteralLocalizationLeaf;
       // Template: {completed, number, style: 'percent'} done
       progress: {
-        format: (options: { completed: string | number }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { completed: string | number }) => string;
       };
       // Template: recurring
       recurring: LiteralLocalizationLeaf;
@@ -9864,13 +11022,13 @@ declare global {
       footer: LiteralLocalizationLeaf;
       // Template: Thank you for playing Prosperous Universe!{linebreak}We hope you're enjoying your time in APEX!
       heading1: {
-        format: (options: { linebreak: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { linebreak: string }) => string;
       };
       // Template: DID YOU KNOW?{linebreak}With a PRO license you have access to many more advanced features of APEX, such as:
       heading2: {
-        format: (options: { linebreak: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { linebreak: string }) => string;
       };
     };
     PanelSelector: {
@@ -9955,28 +11113,28 @@ declare global {
       value: {
         // Template: {value}m/s²
         accelerationMax: {
-          format: (options: { value: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { value: string }) => string;
         };
         // Template: {weight}t / {volume}m³
         cargoCapacity: {
-          format: (options: { weight: string; volume: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { weight: string; volume: string }) => string;
         };
         // Template: {value}parsec/h
         ftlSpeedMax: {
-          format: (options: { value: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { value: string }) => string;
         };
         // Template: {value}t
         operatingEmptyMass: {
-          format: (options: { value: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { value: string }) => string;
         };
         // Template: {value}m³
         volume: {
-          format: (options: { value: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { value: string }) => string;
         };
       };
     };
@@ -10043,7 +11201,15 @@ declare global {
         // Template: Faction affinity
         faction: LiteralLocalizationLeaf;
         // Template: Government
-        government: LiteralLocalizationLeaf;
+        government: {
+          // Template: Government of {planet}
+          content: {
+            getFormat: () => IntlMessageFormat;
+            message: (options: { planet: string }) => string;
+          };
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Name
         name: LiteralLocalizationLeaf;
         // Template: Named by
@@ -10063,8 +11229,8 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: Planet Info: not found…
         notfound: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     PlanetInformation: {
@@ -10086,7 +11252,12 @@ declare global {
           info: LiteralLocalizationLeaf;
         };
         // Template: Soil fertility
-        fertility: LiteralLocalizationLeaf;
+        fertility: {
+          // Template: Fertility affects how efficient farms are at the production of agricultural commodities. Infertile planets cannot produce any agricultural products without advanced buildings.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         government: {
           // Template: Links to the current government of the planet.
           info: LiteralLocalizationLeaf;
@@ -10100,9 +11271,19 @@ declare global {
         // Template: Available plots
         plots: LiteralLocalizationLeaf;
         // Template: Resources
-        resources: LiteralLocalizationLeaf;
+        resources: {
+          // Template: The natural resources available on this planet. The bars indicate how efficiently a resource can be extracted.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Type
-        type: LiteralLocalizationLeaf;
+        type: {
+          // Template: The environmental conditions determine whether a planet is habitable or not. Extreme conditions require special building materials.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         workforce: {
           // Template: The cumulative workforce population.
           info: LiteralLocalizationLeaf;
@@ -10110,8 +11291,8 @@ declare global {
       };
       // Template: {namer} {time}
       named: {
-        format: (options: { namer: string; time: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { namer: string; time: string }) => string;
       };
       naming: {
         // Template: Name this planet
@@ -10121,8 +11302,8 @@ declare global {
       noData: LiteralLocalizationLeaf;
       // Template: {free} / {plots}
       plots: {
-        format: (options: { free: string; plots: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { free: string; plots: string }) => string;
       };
       type: {
         // Template: Planet
@@ -10132,8 +11313,8 @@ declare global {
       };
       // Template: -- {button}
       unnamed: {
-        format: (options: { button: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { button: string }) => string;
       };
     };
     PlanetType: {
@@ -10207,25 +11388,74 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: Planetary project: not found…
         notFound: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     PlanetaryProjects: {
       // Template: Planetary Administration Center
-      ADM: LiteralLocalizationLeaf;
+      ADM: {
+        // Template: The Administration Center allows to hold elections for a planetary government. The government can set taxes and fees like a production fee for example. Every one can run for office, but only site owners can vote for a candidate.
+        description: LiteralLocalizationLeaf;
+        // Template: ADM
+        ticker: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Chamber of Global Commerce
-      COGC: LiteralLocalizationLeaf;
+      COGC: {
+        // Template: Orchestrates the planet-wide execution of industrial support and advertisement programs.
+        description: LiteralLocalizationLeaf;
+        // Template: CoGC
+        ticker: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Commodity Exchange
-      CX: LiteralLocalizationLeaf;
+      CX: {
+        // Template: A public, escrow based trading platform for all kinds of commodities.
+        description: LiteralLocalizationLeaf;
+        // Template: CX
+        ticker: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Local Market
-      LOCM: LiteralLocalizationLeaf;
+      LOCM: {
+        // Template: A simple, unregulated, bulletin board style market place.
+        description: LiteralLocalizationLeaf;
+        // Template: LOCM
+        ticker: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Population Infrastructure
-      POP: LiteralLocalizationLeaf;
+      POP: {
+        // Template: This planetary project is a collection of all infrastructure projects that are relevant for the local population.
+        description: LiteralLocalizationLeaf;
+        // Template: POP
+        ticker: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Shipyard
-      SHY: LiteralLocalizationLeaf;
+      SHY: {
+        // Template: A public shipyard to build ships of any type or size.
+        description: LiteralLocalizationLeaf;
+        // Template: SHY
+        ticker: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Warehouse
-      WAR: LiteralLocalizationLeaf;
+      WAR: {
+        // Template: An extendable warehouse facility where companies can rent storage units.
+        description: LiteralLocalizationLeaf;
+        // Template: WAR
+        ticker: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
     };
     PlanetaryProjectsPanel: {
       context: {
@@ -10244,15 +11474,15 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: Planetary projects: not found…
         notFound: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     PlotSelectionMapContainer: {
       // Template: Select a plot on the surface or use a {random}!
       action: {
-        format: (options: { random: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { random: string }) => string;
       };
       button: {
         // Template: random plot
@@ -10277,8 +11507,8 @@ declare global {
         culture: LiteralLocalizationLeaf;
         // Template: Report #{period} / {time}
         current: {
-          format: (options: { period: string; time: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { period: string; time: string }) => string;
         };
         // Template: Education
         education: LiteralLocalizationLeaf;
@@ -10310,8 +11540,8 @@ declare global {
         settler: LiteralLocalizationLeaf;
         // Template: {in} / {sign}{out}
         shift: {
-          format: (options: { in: string; sign: string; out: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { in: string; sign: string; out: string }) => string;
         };
         // Template: Technicians
         technicians: LiteralLocalizationLeaf;
@@ -10342,7 +11572,12 @@ declare global {
         // Template: Cmds
         cmds: LiteralLocalizationLeaf;
         // Template: Current
-        current: LiteralLocalizationLeaf;
+        current: {
+          // Template: The level currently in use per infrastructure can be controlled by the government to be lower than the maximum level built, for example to save on upkeep resources.
+          description: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Name
         name: LiteralLocalizationLeaf;
         // Template: Upgrade
@@ -10394,8 +11629,8 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: PopulationReport: not found…
         notfound: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     PopulationInfrastructureProject: {
@@ -10433,7 +11668,12 @@ declare global {
     PopulationInfrastructureProjectPanel: {
       action: {
         // Template: contribute
-        contribute: LiteralLocalizationLeaf;
+        contribute: {
+          // Template: Do you really want to invest commodities into planet infrastructure? This is typically handled by the planet's government or companies it partnered with.
+          confirmation: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
       context: {
         // Template: Planet
@@ -10453,8 +11693,8 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: PopulationReport: not found…
         notfound: LiteralLocalizationLeaf;
-        format: (options: { type: string; name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { type: string; name: string }) => string;
       };
     };
     PopulationNeedsTable: {
@@ -10506,15 +11746,15 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: Population Report: not found…
         notfound: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     PrivateChannelMembershipPanel: {
       // Template: Conversation {name}
       title: {
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     Production: {
@@ -10537,15 +11777,15 @@ declare global {
         // Template: edit
         edit: LiteralLocalizationLeaf;
       };
-      format: (options: { category: string; workforce: string }) => string;
-      imf: IntlMessageFormat;
+      getFormat: () => IntlMessageFormat;
+      message: (options: { category: string; workforce: string }) => string;
     };
     ProductionFeeTable: {
       cell: {
         // Template: {value} ({sign}{change})
         valueWithChange: {
-          format: (options: { value: string; sign: string; change: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { value: string; sign: string; change: string }) => string;
         };
       };
     };
@@ -10553,8 +11793,8 @@ declare global {
       efficiencyFactors: {
         // Template: {name} Experts
         experts: {
-          format: (options: { name: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { name: string }) => string;
         };
       };
       error: {
@@ -10590,20 +11830,25 @@ declare global {
         recurring: LiteralLocalizationLeaf;
         // Template: Since this is your first production order, the duration will be reduced to {reducedDuration}. Normally this order would take {duration} to complete. Use the time until your first production order finishes to look around and familiarize yourself with APEX.
         reducedDuration: {
-          format: (options: { reducedDuration: string; duration: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { reducedDuration: string; duration: string }) => string;
         };
         // Template: Queue Order
         submit: LiteralLocalizationLeaf;
       };
       label: {
         // Template: Recurring order
-        recurring: LiteralLocalizationLeaf;
+        recurring: {
+          // Template: A recurring order gets re-queued as soon as it starts. Requires a PRO license.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
       // Template: {fee} {linebreak} collected by {collector}
       productionfee: {
-        format: (options: { fee: string; linebreak: string; collector: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { fee: string; linebreak: string; collector: string }) => string;
       };
     };
     ProductionLinePanel: {
@@ -10615,8 +11860,8 @@ declare global {
       title: {
         // Template: Production Line
         loading: LiteralLocalizationLeaf;
-        format: (options: { line: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { line: string; address: string }) => string;
       };
     };
     ProductionLines: {
@@ -10630,8 +11875,8 @@ declare global {
       };
       // Template: {active} / {total}
       slots: {
-        format: (options: { active: string; total: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { active: string; total: string }) => string;
       };
       table: {
         header: {
@@ -10655,8 +11900,8 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: Production
         sites: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     ProductionQueue: {
@@ -10664,23 +11909,39 @@ declare global {
       createOrder: LiteralLocalizationLeaf;
       figures: {
         // Template: Active Orders
-        capacity: LiteralLocalizationLeaf;
+        capacity: {
+          // Template: {active} / {capacity}
+          amount: {
+            getFormat: () => IntlMessageFormat;
+            message: (options: { active: string; capacity: string }) => string;
+          };
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Current Efficiency
         efficiency: LiteralLocalizationLeaf;
         // Template: Production Line Condition
         productionLineCondition: LiteralLocalizationLeaf;
         // Template: Queued Orders
-        slots: LiteralLocalizationLeaf;
+        slots: {
+          // Template: {queued} / {slots}
+          amount: {
+            getFormat: () => IntlMessageFormat;
+            message: (options: { queued: string; slots: string }) => string;
+          };
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
       // Template: {available} / {amount}
       materialAvailability: {
-        format: (options: { available: string; amount: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { available: string; amount: string }) => string;
       };
       // Template: {amount} {name}
       materialquantity: {
-        format: (options: { amount: string; name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: string; name: string }) => string;
       };
       orders: {
         // Template: Active
@@ -10730,45 +11991,115 @@ declare global {
       title: {
         // Template: Production Queue
         loading: LiteralLocalizationLeaf;
-        format: (options: { line: string; location: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { line: string; location: string }) => string;
       };
     };
     Program: {
       // Template: Advanced Education I
-      EDUCATION_1: LiteralLocalizationLeaf;
+      EDUCATION_1: {
+        // Template: Multiply the rate of workers who level up a tier by 150% for one week via concentrated educational efforts.
+        description: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Advanced Education II
-      EDUCATION_2: LiteralLocalizationLeaf;
+      EDUCATION_2: {
+        // Template: Multiply the rate of workers who level up a tier by 175% for one week via concentrated educational efforts.
+        description: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Advanced Education III
-      EDUCATION_3: LiteralLocalizationLeaf;
+      EDUCATION_3: {
+        // Template: Multiply the rate of workers who level up a tier by 200% for one week via concentrated educational efforts.
+        description: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Family Support I
-      FAMILY_SUPPORT_1: LiteralLocalizationLeaf;
+      FAMILY_SUPPORT_1: {
+        // Template: Increase the natural growth of Pioneers, Settlers and Technicians by 10% for one week by offering benefits for families.
+        description: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Family Support II
-      FAMILY_SUPPORT_2: LiteralLocalizationLeaf;
+      FAMILY_SUPPORT_2: {
+        // Template: Increase the natural growth of Pioneers, Settlers and Technicians by 15% for one week by offering benefits for families.
+        description: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Family Support III
-      FAMILY_SUPPORT_3: LiteralLocalizationLeaf;
+      FAMILY_SUPPORT_3: {
+        // Template: Increase the natural growth of Pioneers, Settlers and Technicians by 25% for one week by offering benefits for families.
+        description: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Planetary Festivities I
-      FESTIVITIES_1: LiteralLocalizationLeaf;
+      FESTIVITIES_1: {
+        // Template: Increase the happiness of all workers by 5% for one week by hosting a variety of amusement festivities.
+        description: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Planetary Festivities II
-      FESTIVITIES_2: LiteralLocalizationLeaf;
+      FESTIVITIES_2: {
+        // Template: Increase the happiness of all workers by 10% for one week by hosting a variety of amusement festivities.
+        description: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Planetary Festivities III
-      FESTIVITIES_3: LiteralLocalizationLeaf;
+      FESTIVITIES_3: {
+        // Template: Increase the happiness of all workers by 20% for one week by hosting a variety of amusement festivities.
+        description: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Engineer Immigration
-      IMMIGRATION_ENGINEER: LiteralLocalizationLeaf;
+      IMMIGRATION_ENGINEER: {
+        // Template: Attract 50 new engineers to the planet via targeted immigration support efforts.
+        description: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Pioneer Immigration
-      IMMIGRATION_PIONEER: LiteralLocalizationLeaf;
+      IMMIGRATION_PIONEER: {
+        // Template: Attract 500 new pioneers to the planet via targeted immigration support efforts.
+        description: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Scientist Immigration
-      IMMIGRATION_SCIENTIST: LiteralLocalizationLeaf;
+      IMMIGRATION_SCIENTIST: {
+        // Template: Attract 25 new scientists to the planet via targeted immigration support efforts.
+        description: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Settler Immigration
-      IMMIGRATION_SETTLER: LiteralLocalizationLeaf;
+      IMMIGRATION_SETTLER: {
+        // Template: Attract 200 new settlers to the planet via targeted immigration support efforts.
+        description: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Technician Immigration
-      IMMIGRATION_TECHNICIAN: LiteralLocalizationLeaf;
+      IMMIGRATION_TECHNICIAN: {
+        // Template: Attract 100 new technicians to the planet via targeted immigration support efforts.
+        description: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
     };
     ProgressBar: {
       // Template: {value} / {maximum}
       value: {
-        format: (options: { value: string; maximum: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { value: string; maximum: string }) => string;
       };
     };
     ProjectStatus: {
@@ -10783,8 +12114,8 @@ declare global {
       placeholder: {
         // Template: You have been banned from this channel. The ban ends at {date} {time}.
         banned: {
-          format: (options: { date: string; time: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { date: string; time: string }) => string;
         };
         // Template: Enter a message…
         _default: LiteralLocalizationLeaf;
@@ -10795,8 +12126,8 @@ declare global {
     ProvisionCondition: {
       // Template: Provisioning of {amount, number} {amount, plural, one {unit} other {units}} of {material} @ {address}
       content: {
-        format: (options: { amount: number; material: string; address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { amount: number; material: string; address: string }) => string;
       };
     };
     ProvisionConditionEditForm: {
@@ -10832,8 +12163,8 @@ declare global {
     RatingInfo: {
       // Template: Based on {count} contracts over the last {days}.
       details: {
-        format: (options: { count: string; days: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { count: string; days: string }) => string;
       };
     };
     ReachableSystems: {
@@ -11217,8 +12548,8 @@ declare global {
       _5: LiteralLocalizationLeaf;
       // Template: {stars} ({label})
       stars: {
-        format: (options: { stars: string; label: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { stars: string; label: string }) => string;
       };
       // Template: Profession suitability indicates how well the planet is suited for the profession you chose. Note that factors like competition is not factored in, so the highest value might not always the best choice.
       suitability: LiteralLocalizationLeaf;
@@ -11230,8 +12561,8 @@ declare global {
       };
       // Template: You have chosen the {profession} profession. In general, APEX recommends to get started by building the following initial buildings.
       text: {
-        format: (options: { profession: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { profession: string }) => string;
       };
       // Template: In some circumstances it might make sense to deviate from this recommendation. Make sure to double check the planetary conditions and resource availability.
       text2: LiteralLocalizationLeaf;
@@ -11247,15 +12578,15 @@ declare global {
     RelativeTime: {
       // Template: in {time}
       future: {
-        format: (options: { time: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { time: string }) => string;
       };
       // Template: now
       now: LiteralLocalizationLeaf;
       // Template: {time} ago
       past: {
-        format: (options: { time: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { time: string }) => string;
       };
     };
     RepresentationCenter: {
@@ -11302,15 +12633,15 @@ declare global {
         contribution: LiteralLocalizationLeaf;
         // Template: {left} {set}
         left: {
-          format: (options: { left: string; set: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { left: string; set: string }) => string;
         };
         // Template: Note that increasing your ARC level has no effect except making for a more and more impressive representation of your economic success.
         level: LiteralLocalizationLeaf;
         // Template: {contributed} / {cost}
         progress: {
-          format: (options: { contributed: string; cost: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { contributed: string; cost: string }) => string;
         };
       };
       // Template: APEX Representation Center
@@ -11319,8 +12650,8 @@ declare global {
     ReputationTable: {
       // Template: {entity} - {reputation}
       entity: {
-        format: (options: { entity: string; reputation: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { entity: string; reputation: string }) => string;
       };
     };
     ResourceType: {
@@ -11341,11 +12672,11 @@ declare global {
       // Template: Access restricted
       headline: LiteralLocalizationLeaf;
       // Template: Access to this command is restricted. Click to learn how to get access.
-      message: LiteralLocalizationLeaf;
+      _message: LiteralLocalizationLeaf;
     };
     RestrictionBanner: {
       // Template: Some settings in this command are limited. Click to learn how to get full access.
-      message: LiteralLocalizationLeaf;
+      _message: LiteralLocalizationLeaf;
     };
     Role: {
       // Template: Borrower
@@ -11380,8 +12711,8 @@ declare global {
       };
       // Template: SCRN: {name}
       screenName: {
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
       // Template: SCRN
       title: LiteralLocalizationLeaf;
@@ -11455,15 +12786,20 @@ declare global {
         // Template: Reclaimable materials
         reclaimableMaterials: LiteralLocalizationLeaf;
         // Template: Repair costs
-        repairMaterials: LiteralLocalizationLeaf;
+        repairMaterials: {
+          // Template: Repair materials have to be available in the base's own storage.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
     };
     SectionListPanel: {
       action: {
         // Template: Demolishing the {name} cannot be undone. Only the displayed materials will be reclaimed.
         confirmation: {
-          format: (options: { name: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { name: string }) => string;
         };
         // Template: Demolish
         demolish: LiteralLocalizationLeaf;
@@ -11476,8 +12812,8 @@ declare global {
       title: {
         // Template: Buildings
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     SectionType: {
@@ -11507,8 +12843,8 @@ declare global {
         condition: {
           // Template: {condition}%
           value: {
-            format: (options: { condition: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { condition: string }) => string;
           };
         };
       };
@@ -11516,13 +12852,13 @@ declare global {
     Sender: {
       // Template: [{link}]
       label: {
-        format: (options: { link: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { link: string }) => string;
       };
       // Template: {corp} {user}
       name: {
-        format: (options: { corp: string; user: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { corp: string; user: string }) => string;
       };
     };
     ServerNotification: {
@@ -11533,13 +12869,13 @@ declare global {
       label: {
         // Template: See {link} for more information.
         info: {
-          format: (options: { link: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { link: string }) => string;
         };
         // Template: ({countdown})
         time: {
-          format: (options: { countdown: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { countdown: string }) => string;
         };
       };
     };
@@ -11599,8 +12935,8 @@ declare global {
         joined: LiteralLocalizationLeaf;
         // Template: {x} %
         relativeShare: {
-          format: (options: { x: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { x: string }) => string;
         };
         // Template: Shares
         shares: LiteralLocalizationLeaf;
@@ -11647,23 +12983,23 @@ declare global {
       };
       // Template: {mass}t
       operatingEmptyMass: {
-        format: (options: { mass: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { mass: string }) => string;
       };
       // Template: {blueprint} @ {shipyard}
       projecthistory: {
-        format: (options: { blueprint: string; shipyard: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { blueprint: string; shipyard: string }) => string;
       };
       // Template: {registration} / {name}
       registrationAndName: {
-        format: (options: { registration: string; name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { registration: string; name: string }) => string;
       };
       // Template: {volume}m³
       volume: {
-        format: (options: { volume: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { volume: string }) => string;
       };
     };
     ShipFlightControl: {
@@ -11677,7 +13013,12 @@ declare global {
         // Template: Location
         address: LiteralLocalizationLeaf;
         // Template: Condition
-        condition: LiteralLocalizationLeaf;
+        condition: {
+          // Template: Ships take attrition damage from space flight, meteoroids and extreme environmental conditions. Below a condition of 80% ships start getting slower. You can repair ships from their SHP command (just click their transponder code or name).
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Destination
         destination: LiteralLocalizationLeaf;
         // Template: Fuel
@@ -11709,7 +13050,12 @@ declare global {
         // Template: Destination
         target: LiteralLocalizationLeaf;
         // Template: Unload on arrival
-        unload: LiteralLocalizationLeaf;
+        unload: {
+          // Template: Setting this option will automatically unload your ship's cargo to a fixed storage location at the destination (ie base or warehouse store). This option requires a PRO license.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Unload on arrival
         unloading: LiteralLocalizationLeaf;
       };
@@ -11722,13 +13068,13 @@ declare global {
       fuel: {
         // Template: {current}/{max}
         ftl: {
-          format: (options: { current: string; max: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { current: string; max: string }) => string;
         };
         // Template: {current}/{max}
         stl: {
-          format: (options: { current: string; max: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { current: string; max: string }) => string;
         };
       };
     };
@@ -11753,8 +13099,8 @@ declare global {
       };
       // Template: {name} ({reg})
       title: {
-        format: (options: { name: string; reg: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string; reg: string }) => string;
       };
     };
     ShipInformationPanel: {
@@ -11772,8 +13118,8 @@ declare global {
       title: {
         // Template: Ship
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string; reg: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string; reg: string }) => string;
       };
     };
     ShipInventoryPanel: {
@@ -11793,8 +13139,8 @@ declare global {
       title: {
         // Template: Ship
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string; reg: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string; reg: string }) => string;
       };
     };
     ShipPanel: {
@@ -11806,8 +13152,8 @@ declare global {
       title: {
         // Template: Ship
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string; reg: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string; reg: string }) => string;
       };
     };
     ShipStatus: {
@@ -11837,13 +13183,13 @@ declare global {
     ShipStore: {
       // Template: {weight}t/{volume}m³
       capacities: {
-        format: (options: { weight: string; volume: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { weight: string; volume: string }) => string;
       };
       // Template: {current}t/{max}t
       weight: {
-        format: (options: { current: string; max: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { current: string; max: string }) => string;
       };
     };
     ShipType: {
@@ -11856,8 +13202,8 @@ declare global {
       content: {
         // Template: Deliver shipment @ {address}
         own: {
-          format: (options: { address: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { address: string }) => string;
         };
       };
     };
@@ -11865,13 +13211,13 @@ declare global {
       content: {
         // Template: Pick up shipment @ {address}
         other: {
-          format: (options: { address: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { address: string }) => string;
         };
         // Template: Pick up shipment ({weight}t / {volume}m³) @ {address}
         own: {
-          format: (options: { weight: string; volume: string; address: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { weight: string; volume: string; address: string }) => string;
         };
       };
     };
@@ -11879,18 +13225,18 @@ declare global {
       content: {
         // Template: Provisioning of shipment @ {address} {autoprovision}
         other: {
-          format: (options: { address: string; autoprovision: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { address: string; autoprovision: string }) => string;
         };
         // Template: Provisioning of {amount, number} {amount, plural, one {unit} other {units}} of {material} @ {address} {autoprovision}
         own: {
-          format: (options: {
+          getFormat: () => IntlMessageFormat;
+          message: (options: {
             amount: number;
             material: string;
             address: string;
             autoprovision: string;
           }) => string;
-          imf: IntlMessageFormat;
         };
       };
     };
@@ -11998,12 +13344,17 @@ declare global {
       error: {
         // Template: Could not find shipyard at {input}
         notfound: {
-          format: (options: { input: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { input: string }) => string;
         };
       };
       // Template: Shipyard
-      title: LiteralLocalizationLeaf;
+      title: {
+        // Template: Shipyards
+        all: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
     };
     ShipyardProject: {
       action: {
@@ -12046,8 +13397,8 @@ declare global {
         project: LiteralLocalizationLeaf;
         // Template: Shipyard projects
         projects: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     ShipyardProjects: {
@@ -12100,8 +13451,8 @@ declare global {
       title: {
         // Template: Government of {entity}
         government: {
-          format: (options: { entity: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { entity: string }) => string;
         };
       };
     };
@@ -12135,11 +13486,26 @@ declare global {
       // Template: Expertise
       expertise: LiteralLocalizationLeaf;
       // Template: Fertile soil
-      fertile: LiteralLocalizationLeaf;
+      fertile: {
+        // Template: no
+        no: LiteralLocalizationLeaf;
+        // Template: yes
+        yes: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Materials
       materials: LiteralLocalizationLeaf;
       // Template: Workforce
-      workforce: LiteralLocalizationLeaf;
+      workforce: {
+        // Template: {capacity} ({reserve})
+        capacity: {
+          getFormat: () => IntlMessageFormat;
+          message: (options: { capacity: string; reserve: string }) => string;
+        };
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
     };
     SiteBuildOptionsContainer: {
       error: {
@@ -12164,23 +13530,33 @@ declare global {
       title: {
         // Template: Building Construction
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     SiteConstruction: {
       // Template: {used} / {total}
       basePermits: {
-        format: (options: { used: string; total: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { used: string; total: string }) => string;
       };
       // Template: Building a base on a planet requires the building materials for a core module, the heart of your base, as well as environment specific additions. These resources need to be brought to the planet with one of your ships. You can choose a location for your base by clicking on a free plot on the map below or click 'random plot' to select a random plot.
       description: LiteralLocalizationLeaf;
       label: {
         // Template: Base Permits
-        basePermits: LiteralLocalizationLeaf;
+        basePermits: {
+          // Template: The amount of base permits depends on the level of your company headquarters. If you run out of base permits consider upgrading your HQ.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Materials
-        billOfMaterials: LiteralLocalizationLeaf;
+        billOfMaterials: {
+          // Template: The materials required to build a Core Module on this planet in order to start your base. Impacted by different environmental factors such as high or low temperature.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: build base
         build: LiteralLocalizationLeaf;
         buildOptions: {
@@ -12190,26 +13566,56 @@ declare global {
         // Template: Description
         description: LiteralLocalizationLeaf;
         // Template: Base Establishment Fee
-        establishmentFee: LiteralLocalizationLeaf;
+        establishmentFee: {
+          // Template: Some planets require a base establishment fee to be paid to the local government in order to be able to settle on the planet.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Limit
-        limit: LiteralLocalizationLeaf;
+        limit: {
+          // Template: The amount of bases you have already built on this planet. The maximum is 1.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Location
-        location: LiteralLocalizationLeaf;
+        location: {
+          // Template: The planet on which your base will be located. Choose wisely!
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Plot
-        plotSelection: LiteralLocalizationLeaf;
+        plotSelection: {
+          // Template: With the correct ship transponder selected, left-click the plot where your base should be located. This is purely cosmetic at the moment and has no effect on your company. Right click and drag to rotate the planet.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Plots / available plots
-        plots: LiteralLocalizationLeaf;
+        plots: {
+          // Template: Bases (and some other structures) each require one free plot to be constructed. The numbers indicate the total plots and free plots on this planet. Grey plots are still open.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Build Options
         siteType: LiteralLocalizationLeaf;
         // Template: Storage Location
-        store: LiteralLocalizationLeaf;
+        store: {
+          // Template: One of your ships needs to hold the building materials for your base in its cargo. Select its transponder code from the dropdown.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: view base
         view: LiteralLocalizationLeaf;
       };
       // Template: {current} / 1
       limit: {
-        format: (options: { current: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { current: string }) => string;
       };
       siteType: {
         // Template: Core Module Kit
@@ -12231,8 +13637,8 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: Base construction: unknown location
         unknownLocation: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     SitePanel: {
@@ -12254,8 +13660,8 @@ declare global {
       title: {
         // Template: Bases
         sites: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     SiteProductionLines: {
@@ -12271,8 +13677,8 @@ declare global {
     SitePublicInformation: {
       // Template: {area}%
       area: {
-        format: (options: { area: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { area: string }) => string;
       };
       label: {
         // Template: Developed area
@@ -12297,23 +13703,23 @@ declare global {
         siteId: LiteralLocalizationLeaf;
         // Template: Plot info not implemented for type {type}
         type: {
-          format: (options: { type: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { type: string }) => string;
         };
       };
       // Template: Plot @ {name}
       title: {
         // Template: Plot
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     SiteStats: {
       // Template: {developed} / {available} / {total}
       developedArea: {
-        format: (options: { developed: string; available: string; total: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { developed: string; available: string; total: string }) => string;
       };
       label: {
         // Template: Area
@@ -12325,14 +13731,19 @@ declare global {
     SiteWorkforces: {
       // Template: {workforce} ({reserve})
       population: {
-        format: (options: { workforce: string; reserve: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { workforce: string; reserve: string }) => string;
       };
       table: {
         // Template: Capacity
         capacity: LiteralLocalizationLeaf;
         // Template: Current Workforce
-        currentWorkforce: LiteralLocalizationLeaf;
+        currentWorkforce: {
+          // Template: The number of workers currently employed at the base. The number in brackets was recruited from the planet's "reserve pool". Once a week workers will be distributed between all requesting bases with a reserve being held back for mid-week acquisitions.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Level
         level: LiteralLocalizationLeaf;
         // Template: Required
@@ -12352,11 +13763,29 @@ declare global {
         // Template: add
         addPermit: LiteralLocalizationLeaf;
         // Template: Used Area
-        area: LiteralLocalizationLeaf;
+        area: {
+          // Template: {developed} / {total}
+          value: {
+            getFormat: () => IntlMessageFormat;
+            message: (options: { developed: string; total: string }) => string;
+          };
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Change Permits
         changePermits: LiteralLocalizationLeaf;
         // Template: Permits
-        permits: LiteralLocalizationLeaf;
+        permits: {
+          // Template: Founding a new base requires a permit. However you can also assign permits to existing bases to increase the available building area. Level up your headquarters to gain additional permits.
+          info: LiteralLocalizationLeaf;
+          // Template: {invested} / {maximum}
+          value: {
+            getFormat: () => IntlMessageFormat;
+            message: (options: { invested: string; maximum: string }) => string;
+          };
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Planet
         planet: LiteralLocalizationLeaf;
         // Template: rmv
@@ -12438,8 +13867,8 @@ declare global {
       };
       // Template: {part}…
       name: {
-        format: (options: { part: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { part: string }) => string;
       };
       // Template: Add New Stack
       newStack: LiteralLocalizationLeaf;
@@ -12449,8 +13878,8 @@ declare global {
     StarOverlay: {
       // Template: {population} - {workforce}
       populationDataLine: {
-        format: (options: { population: string; workforce: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { population: string; workforce: string }) => string;
       };
     };
     Station: {
@@ -12482,15 +13911,15 @@ declare global {
       title: {
         // Template: Station
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     StationInfrastructure: {
       // Template: {name} Warehouse
       warehouse: {
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     Stations: {
@@ -12542,13 +13971,13 @@ declare global {
     StoreItem: {
       // Template: Blocked materials #{id}
       blocked_materials: {
-        format: (options: { id: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { id: string }) => string;
       };
       // Template: Shipment #{id}
       shipment: {
-        format: (options: { id: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { id: string }) => string;
       };
     };
     StoreItemIcon: {
@@ -12559,7 +13988,7 @@ declare global {
     };
     StoreLockOverlay: {
       // Template: Inventory is locked
-      message: LiteralLocalizationLeaf;
+      _message: LiteralLocalizationLeaf;
     };
     StoreName: {
       // Template: Base
@@ -12568,25 +13997,25 @@ declare global {
       construction_store: LiteralLocalizationLeaf;
       // Template: Ship {name} FTL fuel store
       ftl_fuel_store: {
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
       // Template: Ship {name} cargo hold
       ship_store: {
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
       // Template: Ship {name} STL fuel store
       stl_fuel_store: {
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
       // Template: Upkeep
       upkeep_store: LiteralLocalizationLeaf;
       // Template: Ship {name} Vortex fuel store
       vortex_fuel_store: {
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
       // Template: Warehouse
       warehouse: LiteralLocalizationLeaf;
@@ -12712,8 +14141,8 @@ declare global {
         loading: LiteralLocalizationLeaf;
         // Template: System Info: not found…
         notfound: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     SystemInformation: {
@@ -12727,8 +14156,8 @@ declare global {
       };
       // Template: {namer} {time}
       named: {
-        format: (options: { namer: string; time: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { namer: string; time: string }) => string;
       };
       naming: {
         // Template: Name this system
@@ -12736,8 +14165,8 @@ declare global {
       };
       // Template: -- {button}
       unnamed: {
-        format: (options: { button: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { button: string }) => string;
       };
     };
     SystemMap: {
@@ -12783,8 +14212,8 @@ declare global {
       title: {
         // Template: System Map
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     TaskDescription: {
@@ -12808,8 +14237,8 @@ declare global {
       BASIC_INTRO_HANDBOOK: LiteralLocalizationLeaf;
       // Template: You chose the starting package '{startingProfile}'. To learn more about your building options, have a look at the corresponding chapter in the handbook.
       BASIC_INTRO_HANDBOOK_PACKAGE: {
-        format: (options: { startingProfile: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { startingProfile: string }) => string;
       };
       // Template: If you have any questions, try asking in the HELP channel first!
       BASIC_INTRO_HELP_CHANNEL: LiteralLocalizationLeaf;
@@ -12905,7 +14334,12 @@ declare global {
         // Template: Interest rate
         interestRate: LiteralLocalizationLeaf;
         // Template: Interval
-        interval: LiteralLocalizationLeaf;
+        interval: {
+          // Template: Specifies the time between installments in days
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Initial repayment rate
         repayment: LiteralLocalizationLeaf;
         // Template: Role
@@ -12927,7 +14361,12 @@ declare global {
         // Template: Interest rate
         interestRate: LiteralLocalizationLeaf;
         // Template: Interval
-        interval: LiteralLocalizationLeaf;
+        interval: {
+          // Template: Specifies the time between installments in days
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Role
         role: LiteralLocalizationLeaf;
       };
@@ -12941,7 +14380,12 @@ declare global {
         // Template: Interest rate
         interestRate: LiteralLocalizationLeaf;
         // Template: Interval
-        interval: LiteralLocalizationLeaf;
+        interval: {
+          // Template: Specifies the time between installments in days
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Repayment rate
         repaymentRate: LiteralLocalizationLeaf;
         // Template: Role
@@ -12951,8 +14395,8 @@ declare global {
     TemplateSelectionShip: {
       // Template: {weight}t / {volume}m³
       cargo: {
-        format: (options: { weight: string; volume: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { weight: string; volume: string }) => string;
       };
       label: {
         // Template: Amount
@@ -13004,8 +14448,8 @@ declare global {
     TextAreaInput: {
       // Template: {length} / {maxLength}
       length: {
-        format: (options: { length: string; maxLength: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { length: string; maxLength: string }) => string;
       };
     };
     Tile: {
@@ -13015,23 +14459,23 @@ declare global {
     Time: {
       // Template: {days, plural, one {# day} other {# days}}
       days: {
-        format: (options: { days: number }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { days: number }) => string;
       };
       // Template: {hours}h
       hours: {
-        format: (options: { hours: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { hours: string }) => string;
       };
       // Template: {minutes}m
       minutes: {
-        format: (options: { minutes: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { minutes: string }) => string;
       };
       // Template: {seconds}s
       seconds: {
-        format: (options: { seconds: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { seconds: string }) => string;
       };
     };
     Tour: {
@@ -13215,8 +14659,8 @@ declare global {
           _1: LiteralLocalizationLeaf;
           // Template: Take note of the station's code ({code}), it can be used when entering a destination for our space flight.
           _2: {
-            format: (options: { code: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { code: string }) => string;
           };
           // Template: Commodity exchange
           title: LiteralLocalizationLeaf;
@@ -13232,8 +14676,8 @@ declare global {
         _6: {
           // Template: Now, try entering the station's code ({code}) into the destination field and select the station from the results.
           _1: {
-            format: (options: { code: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { code: string }) => string;
           };
           // Template: Once you entered a destination, the bottom of the flight controls command will show your ship's route. By the way, you can hover over each location in the list to highlight it on the universe map on the left.
           _2: LiteralLocalizationLeaf;
@@ -13273,8 +14717,8 @@ declare global {
           _2: LiteralLocalizationLeaf;
           // Template: Many tiles also link directly to the handbook via the {image} icon in their top bar!
           _3: {
-            format: (options: { image: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { image: string }) => string;
           };
           // Template: Happy trading, licensee!
           _4: LiteralLocalizationLeaf;
@@ -13284,8 +14728,8 @@ declare global {
         _2: {
           // Template: This is a . Specifically, this tile shows you information about the starting planet you chose. You can always hover over the {image} icon for more information!
           _1: {
-            format: (options: { image: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { image: string }) => string;
           };
           // Template: Multiple tiles make up a SCREEN. In APEX you can design your own screen layouts!
           _2: LiteralLocalizationLeaf;
@@ -13301,8 +14745,8 @@ declare global {
         _4: {
           // Template: Hovering over the {image} icon at the top of a tile will allow you to create new tiles by
           _1: {
-            format: (options: { image: string }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { image: string }) => string;
           };
           // Template: Dividing the tile horizontally
           _2: LiteralLocalizationLeaf;
@@ -13375,8 +14819,8 @@ declare global {
         };
         // Template: {current} / {size}
         progress: {
-          format: (options: { current: string; size: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { current: string; size: string }) => string;
         };
       };
     };
@@ -13478,9 +14922,9 @@ declare global {
     };
     Unavailable: {
       // Template: This command is not supported in the '{type}' context
-      message: {
-        format: (options: { type: string }) => string;
-        imf: IntlMessageFormat;
+      _message: {
+        getFormat: () => IntlMessageFormat;
+        message: (options: { type: string }) => string;
       };
     };
     UniverseMap: {
@@ -13508,7 +14952,12 @@ declare global {
           label: LiteralLocalizationLeaf;
         };
         // Template: Use mouse left to pan, mouse right to rotate, mouse wheel to zoom
-        hint: LiteralLocalizationLeaf;
+        hint: {
+          // Template: Hint
+          label: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         population: {
           // Template: Population
           label: LiteralLocalizationLeaf;
@@ -13619,11 +15068,30 @@ declare global {
         gifting: LiteralLocalizationLeaf;
       };
       // Template: License Details
-      details: LiteralLocalizationLeaf;
+      details: {
+        // Template: Your PRO subscription expired and you now have a BASIC license. To get unlimited access to APEX you will have to acquire a PRO subscription again.
+        BASIC: LiteralLocalizationLeaf;
+        // Template: Your account is currently on a FREE license. Upgrade to PRO today to get unlimited access to all of APEX' features, including corporation management, foreign exchange trading and many more. A PRO license is also a prerequisite for a company rating which is required for access to restricted markets and private contracts.{linebreak}Once your PRO license expires you will fall back to a BASIC license, which will retain some functionality, such as accepting custom contracts from other licencees.
+        FREE: {
+          getFormat: () => IntlMessageFormat;
+          message: (options: { linebreak: string }) => string;
+        };
+        // Template: You have an active PRO subscription which grants you unlimited access to all features of the APEX network.
+        PRO: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Expiry
       expiry: LiteralLocalizationLeaf;
       // Template: Current License
-      license: LiteralLocalizationLeaf;
+      license: {
+        // Template: gift PRO
+        gift: LiteralLocalizationLeaf;
+        // Template: manage license
+        manage: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: APEX License Status
       title: LiteralLocalizationLeaf;
     };
@@ -13643,20 +15111,25 @@ declare global {
       office: {
         // Template: {count}x {office} at {address}
         multiple: {
-          format: (options: { count: string; office: string; address: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { count: string; office: string; address: string }) => string;
         };
         // Template: {office} at {address}
         single: {
-          format: (options: { office: string; address: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { office: string; address: string }) => string;
         };
       };
     };
     UserPanel: {
       action: {
         // Template: Block User
-        blacklist: LiteralLocalizationLeaf;
+        blacklist: {
+          // Template: Are you sure you want to prevent this user from accepting your local market ads?
+          confirmation: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Contact User
         contact: LiteralLocalizationLeaf;
         // Template: Unblock User
@@ -13664,7 +15137,12 @@ declare global {
         // Template: Impersonate
         impersonate: LiteralLocalizationLeaf;
         // Template: Mute User
-        mute: LiteralLocalizationLeaf;
+        mute: {
+          // Template: Are you sure you want to globally mute this user?
+          confirmation: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Unmute User
         unmute: LiteralLocalizationLeaf;
       };
@@ -13675,8 +15153,8 @@ declare global {
       data: {
         // Template: {count, plural, =0 {Currently inactive} one {Active one day per week} other {Active ~# days per week}}
         activeDaysPerWeek: {
-          format: (options: { count: number }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { count: number }) => string;
         };
         // Template: Activity
         activity: LiteralLocalizationLeaf;
@@ -13691,13 +15169,20 @@ declare global {
         // Template: Name
         name: LiteralLocalizationLeaf;
         // Template: Connection Status
-        online: LiteralLocalizationLeaf;
+        online: {
+          // Template: offline
+          no: LiteralLocalizationLeaf;
+          // Template: connected
+          yes: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
       error: {
         // Template: No user for input '{input}'.
         id: {
-          format: (options: { input: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { input: string }) => string;
         };
       };
       title: {
@@ -13721,8 +15206,8 @@ declare global {
     };
     // Template: CONS {count}
     UsersOnlineCount: {
-      format: (options: { count: string }) => string;
-      imf: IntlMessageFormat;
+      getFormat: () => IntlMessageFormat;
+      message: (options: { count: string }) => string;
     };
     UsersOnlinePanel: {
       // Template: Connected Users
@@ -13738,13 +15223,13 @@ declare global {
         matches: LiteralLocalizationLeaf;
         // Template: Must be less than or equal {max}.
         max: {
-          format: (options: { max: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { max: string }) => string;
         };
         // Template: Must be greater than or equal {min}.
         min: {
-          format: (options: { min: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { min: string }) => string;
         };
         // Template: Must be a number.
         number: LiteralLocalizationLeaf;
@@ -13756,26 +15241,26 @@ declare global {
       action: {
         // Template: Cancel {units}
         cancel: {
-          format: (options: { units: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { units: string }) => string;
         };
         // Template: Rent {units}
         rent: {
-          format: (options: { units: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { units: string }) => string;
         };
       };
       // Template: {available} / {total}
       availableUnits: {
         // Template: unlimited
         unlimited: LiteralLocalizationLeaf;
-        format: (options: { available: string; total: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { available: string; total: string }) => string;
       };
       // Template: {weight}t / {volume}m³
       capacity: {
-        format: (options: { weight: string; volume: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { weight: string; volume: string }) => string;
       };
       command: {
         // Template: open store
@@ -13797,8 +15282,8 @@ declare global {
       };
       // Template: {fee}{linebreak}collected by {collector}
       fee: {
-        format: (options: { fee: string; linebreak: string; collector: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { fee: string; linebreak: string; collector: string }) => string;
       };
       header: {
         // Template: Contributions
@@ -13818,7 +15303,12 @@ declare global {
         // Template: Cmd
         command: LiteralLocalizationLeaf;
         // Template: Weekly rental fee
-        fee: LiteralLocalizationLeaf;
+        fee: {
+          // Template: If you cannot afford paying the rental fee, your warehouse store will be locked and inaccessible to you until the fee is paid.
+          info: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: Fees
         feeCollector: LiteralLocalizationLeaf;
         // Template: Level
@@ -13846,8 +15336,8 @@ declare global {
       };
       // Template: {address} Warehouse
       name: {
-        format: (options: { address: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { address: string }) => string;
       };
       size: {
         // Template: 500t / 500m³
@@ -13863,21 +15353,31 @@ declare global {
       title: {
         // Template: Warehouse
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
       // Template: {units} / {rentableUnits}
       unitsRented: {
-        format: (options: { units: string; rentableUnits: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { units: string; rentableUnits: string }) => string;
       };
     };
     Window: {
       action: {
         // Template: x
-        close: LiteralLocalizationLeaf;
+        close: {
+          // Template: Close buffer
+          alt: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
         // Template: _
-        minimize: LiteralLocalizationLeaf;
+        minimize: {
+          // Template: Minimize buffer
+          alt: LiteralLocalizationLeaf;
+          getFormat: () => IntlMessageFormat;
+          message: (options: void) => string;
+        };
       };
     };
     WithCompany: {
@@ -13910,9 +15410,21 @@ declare global {
       // Template: Category
       category: LiteralLocalizationLeaf;
       // Template: Days
-      days: LiteralLocalizationLeaf;
+      days: {
+        // Template: The number of days your supplies will last given the current consumption rate.
+        info: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Essential
-      essential: LiteralLocalizationLeaf;
+      essential: {
+        // Template: Efficiency losses from running out of essential consumables are higher than for non-essential ones. If a workforce runs out of all essential consumables, it will stop working altogether.
+        info: LiteralLocalizationLeaf;
+        // Template: yes
+        yes: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Needs
       needs: LiteralLocalizationLeaf;
       // Template: Required
@@ -13921,22 +15433,27 @@ declare global {
       size: LiteralLocalizationLeaf;
       // Template: {size} / {capacity}
       sizeCapacity: {
-        format: (options: { size: string; capacity: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { size: string; capacity: string }) => string;
       };
       // Template: Total
-      total: LiteralLocalizationLeaf;
+      total: {
+        // Template: The total units consumed per day across all workforce tiers.
+        info: LiteralLocalizationLeaf;
+        getFormat: () => IntlMessageFormat;
+        message: (options: void) => string;
+      };
       // Template: Total Satisfaction
       totalSatisfaction: LiteralLocalizationLeaf;
       // Template: {units, plural, one {{units} unit} other {{units} units}} / day / 100
       unitsPer100: {
-        format: (options: { units: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { units: string }) => string;
       };
       // Template: {units, plural, one {{units} unit} other {{units} units}} / day
       unitsPerInterval: {
-        format: (options: { units: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { units: string }) => string;
       };
     };
     WorkforcesPanel: {
@@ -13948,8 +15465,8 @@ declare global {
       title: {
         // Template: Workforce
         loading: LiteralLocalizationLeaf;
-        format: (options: { name: string }) => string;
-        imf: IntlMessageFormat;
+        getFormat: () => IntlMessageFormat;
+        message: (options: { name: string }) => string;
       };
     };
     cForExPricePanelContent: {
@@ -13965,33 +15482,33 @@ declare global {
         label: {
           // Template: {users} {count, plural, one {is typing..} other {are typing..}}
           typingUser: {
-            format: (options: { users: string; count: number }) => string;
-            imf: IntlMessageFormat;
+            getFormat: () => IntlMessageFormat;
+            message: (options: { users: string; count: number }) => string;
           };
         };
       };
       messages: {
         // Template: {user} has been temporarily banned from this channel.
         banned: {
-          format: (options: { user: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { user: string }) => string;
         };
         // Template: {user} deleted this message
         deleted: {
           // Template: Message has been deleted. You exceeded your messaging limit.
           auto: LiteralLocalizationLeaf;
-          format: (options: { user: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { user: string }) => string;
         };
         // Template: {name} joined.
         joined: {
-          format: (options: { name: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { name: string }) => string;
         };
         // Template: {name} left.
         left: {
-          format: (options: { name: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { name: string }) => string;
         };
         // Template: new messages
         read_status: LiteralLocalizationLeaf;
@@ -13999,8 +15516,8 @@ declare global {
         renamed: {
           // Template: Channel renamed to {name}.
           auto: LiteralLocalizationLeaf;
-          format: (options: { user: string }) => string;
-          imf: IntlMessageFormat;
+          getFormat: () => IntlMessageFormat;
+          message: (options: { user: string }) => string;
         };
       };
     };
@@ -14008,13 +15525,33 @@ declare global {
       broker: {
         info: {
           // Template: Ask
-          ask: LiteralLocalizationLeaf;
+          ask: {
+            // Template: Ask Amount
+            amount: LiteralLocalizationLeaf;
+            getFormat: () => IntlMessageFormat;
+            message: (options: void) => string;
+          };
           // Template: Bid
-          bid: LiteralLocalizationLeaf;
+          bid: {
+            // Template: Bid Amount
+            amount: LiteralLocalizationLeaf;
+            getFormat: () => IntlMessageFormat;
+            message: (options: void) => string;
+          };
           // Template: High
-          high: LiteralLocalizationLeaf;
+          high: {
+            // Template: All-time High
+            allTime: LiteralLocalizationLeaf;
+            getFormat: () => IntlMessageFormat;
+            message: (options: void) => string;
+          };
           // Template: Low
-          low: LiteralLocalizationLeaf;
+          low: {
+            // Template: All-time Low
+            allTime: LiteralLocalizationLeaf;
+            getFormat: () => IntlMessageFormat;
+            message: (options: void) => string;
+          };
           // Template: Price Average
           priceAverage: LiteralLocalizationLeaf;
           // Template: Traded
