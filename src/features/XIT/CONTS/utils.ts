@@ -25,24 +25,32 @@ export function friendlyConditionText(type: PrunApi.ContractConditionType) {
   switch (type) {
     case 'BASE_CONSTRUCTION':
       return 'Construct Base';
+    case 'BUILDING_CONSTRUCTION':
+      return 'Construct Building';
+    case 'BUY_MATERIAL_FROM_CATEGORY':
+      return 'Purchase';
     case 'COMEX_PURCHASE_PICKUP':
       return 'Material Pickup';
     case 'CONSTRUCT_SHIP':
-      return 'Construct Ship';
+      return 'Ship Project';
     case 'CONTRIBUTION':
       return 'Contribution';
     case 'DELIVERY':
       return 'Delivery';
     case 'DELIVERY_SHIPMENT':
-      return 'Deliver Shipment';
+      return 'Delivery';
     case 'EXPLORATION':
       return 'Exploration';
     case 'FINISH_FLIGHT':
       return 'Finish Flight';
+    case 'FULFILL_COUNTRY_CONTRACT':
+      return 'Complete Contract';
     case 'GATEWAY_FUEL':
       return 'Gateway Fuel';
     case 'HEADQUARTERS_UPGRADE':
-      return 'Upgrade HQ';
+      return 'HQ Upgrade';
+    case 'INCREASE_SATISFACTION':
+      return 'WF Satisfaction';
     case 'INFRASTRUCTURE_CONSTRUCTION_FINISH':
       return 'Infra Build Finish';
     case 'INFRASTRUCTURE_CONSTRUCTION_START':
@@ -57,6 +65,8 @@ export function friendlyConditionText(type: PrunApi.ContractConditionType) {
       return 'Loan Installment';
     case 'LOAN_PAYOUT':
       return 'Loan Payout';
+    case 'MAKE_MONEY':
+      return 'Make Money';
     case 'PAYMENT':
       return 'Payment';
     case 'PICKUP':
@@ -76,15 +86,17 @@ export function friendlyConditionText(type: PrunApi.ContractConditionType) {
     case 'PROVISION_SHIPMENT':
       return 'Provision';
     case 'REPAIR_SHIP':
-      return 'Repair Ship';
+      return 'Ship Repair';
     case 'REPUTATION':
       return 'Reputation';
     case 'START_FLIGHT':
       return 'Start Flight';
+    case 'WAIT':
+      return 'Wait';
     case 'WORKFORCE_PROGRAM_PAYMENT':
       return 'WF Payment';
     case 'WORKFORCE_PROGRAM_START':
-      return 'WF Program Start';
+      return 'WF Program';
     default:
       return type;
   }

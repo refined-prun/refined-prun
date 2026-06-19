@@ -69,6 +69,8 @@ declare namespace PrunApi {
 
   type ContractConditionType =
     | 'BASE_CONSTRUCTION'
+    | 'BUILDING_CONSTRUCTION'
+    | 'BUY_MATERIAL_FROM_CATEGORY'
     | 'COMEX_PURCHASE_PICKUP'
     | 'CONSTRUCT_SHIP'
     | 'CONTRIBUTION'
@@ -76,8 +78,10 @@ declare namespace PrunApi {
     | 'DELIVERY_SHIPMENT'
     | 'EXPLORATION'
     | 'FINISH_FLIGHT'
+    | 'FULFILL_COUNTRY_CONTRACT'
     | 'GATEWAY_FUEL'
     | 'HEADQUARTERS_UPGRADE'
+    | 'INCREASE_SATISFACTION'
     | 'INFRASTRUCTURE_CONSTRUCTION_FINISH'
     | 'INFRASTRUCTURE_CONSTRUCTION_START'
     | 'INFRASTRUCTURE_UPGRADE_FINISH'
@@ -85,6 +89,7 @@ declare namespace PrunApi {
     | 'INFRASTRUCTURE_UPKEEP'
     | 'LOAN_INSTALLMENT'
     | 'LOAN_PAYOUT'
+    | 'MAKE_MONEY'
     | 'PAYMENT'
     | 'PICKUP'
     | 'PICKUP_SHIPMENT'
@@ -97,6 +102,7 @@ declare namespace PrunApi {
     | 'REPAIR_SHIP'
     | 'REPUTATION'
     | 'START_FLIGHT'
+    | 'WAIT'
     | 'WORKFORCE_PROGRAM_PAYMENT'
     | 'WORKFORCE_PROGRAM_START';
 
