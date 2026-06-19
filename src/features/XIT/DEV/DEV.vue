@@ -12,7 +12,7 @@ import TextInput from '@src/components/forms/TextInput.vue';
 import {
   emitLocalizationFile,
   generateLocalizationTemplates,
-} from '@src/infrastructure/prun-ui/localization-type-generator';
+} from '@src/infrastructure/prun-ui/i18n/localization-type-generator';
 
 function logUserData() {
   console.log(userData);
@@ -61,7 +61,7 @@ function downloadPrunStyles() {
 function downloadLocalizationTypes() {
   if (import.meta.env.DEV) {
     const file = emitLocalizationFile();
-    downloadFile(file, 'localization.types.d.ts', false);
+    downloadFile(file, 'localization.gen.d.ts', false);
   }
 }
 
@@ -91,7 +91,7 @@ function downloadLocalizationTemplates() {
     <DebugButton @click="downloadPrunStyles">
       Export prun.css <span v-if="prunStyleUpdated">(new!)</span>
     </DebugButton>
-    <DebugButton @click="downloadLocalizationTypes">Export localization.types.d.ts</DebugButton>
+    <DebugButton @click="downloadLocalizationTypes">Export localization.gen.d.ts</DebugButton>
     <DebugButton @click="downloadLocalizationTemplates">Export localization.json</DebugButton>
   </div>
 </template>

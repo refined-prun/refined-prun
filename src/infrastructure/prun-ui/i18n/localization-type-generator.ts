@@ -1,5 +1,5 @@
 import { type MessageFormatElement, TYPE } from '@formatjs/icu-messageformat-parser';
-import { localizationTree } from '@src/infrastructure/prun-ui/i18n';
+import { localizationTree } from './index';
 
 export function emitLocalizationFile() {
   let result: string = 'export {};';
