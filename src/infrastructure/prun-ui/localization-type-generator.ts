@@ -4,8 +4,8 @@ import { localizationTree } from '@src/infrastructure/prun-ui/i18n';
 export function emitLocalizationFile(): string {
   let result: string = 'export {};';
   result += '\n';
-  result += '\ntype LL = LiteralLocalizationLeaf';
-  result += '\ntype PL<T> = ParametrizedLocalizationLeaf<T>';
+  result += '\ntype LL = LiteralLocalizationLeaf;';
+  result += '\ntype PL<T> = ParametrizedLocalizationLeaf<T>;';
   result += '\n';
   result += '\ndeclare global {';
   result += `\n  interface PrunLocalization extends LocalizationTree `;
