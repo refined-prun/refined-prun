@@ -107,11 +107,10 @@ export function applyLocalizationPatch(
   localization: LiteralLocalizationLeaf,
   patch: (value: string) => string,
 ) {
-  const localized = localization.getFormat()?.getAst()[0] as LiteralElement | undefined;
-  if (!localized) {
-    return;
-  }
-  localized.value = patch(localized.value);
+  const ast = localization.getFormat().getAst();
+  const newText = patch(localization());
+  const newAst = new IntlMessageFormat(newText).getAst();
+  ast.splice(0, ast.length, ...newAst);
 }
 
 type LocalizationDict = Record<string, MessageFormatElement[]>;
