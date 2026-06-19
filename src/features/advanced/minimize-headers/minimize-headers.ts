@@ -2,7 +2,6 @@ import MinimizeRow from './MinimizeRow.vue';
 import { streamHtmlCollection } from '@src/utils/stream-html-collection';
 import { computedTileState } from '@src/store/user-data-tiles';
 import { getTileState } from './tile-state';
-import { PrunI18N } from '@src/infrastructure/prun-ui/i18n';
 
 function onTileReady(tile: PrunTile) {
   const isMinimized = computedTileState(getTileState(tile), 'minimizeHeader', true);
@@ -27,25 +26,21 @@ function onTileReady(tile: PrunTile) {
 function setHeaders(tile: PrunTile, isMinimized: boolean) {
   for (const header of _$$(tile.anchor, C.FormComponent.containerPassive)) {
     const label = _$(header, 'label');
-    if (label?.textContent === 'Minimize') {
+    const labelText = label?.textContent;
+    if (labelText === 'Minimize') {
       continue;
     }
-    if (matchesLocalization(label, 'Contract.termination', 'Termination request')) {
+    if (labelText === L.Contract.termination()) {
       const value = _$(header, C.FormComponent.input);
       if (value?.textContent !== '--') {
         continue;
       }
     }
-    if (matchesLocalization(label, 'Contribution.stores', 'Inventory')) {
+    if (labelText === L.Contribution.stores()) {
       continue;
     }
     header.style.display = isMinimized ? 'none' : 'flex';
   }
-}
-
-function matchesLocalization(element: Element | undefined, key: string, defaultValue: string) {
-  const text = PrunI18N[key]?.[0]?.value ?? defaultValue;
-  return element?.textContent === text;
 }
 
 function init() {
