@@ -1,6 +1,6 @@
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
-import { getDestinationName } from '@src/infrastructure/prun-api/data/addresses';
+import { getAddressName } from '@src/infrastructure/prun-api/data/addresses';
 import { watchUntil } from '@src/utils/watch';
 
 function init() {
@@ -16,7 +16,7 @@ function init() {
     await watchUntil(() => !!id.value);
 
     const destination = contractsStore.getDestinationByShipmentId(id.value);
-    const name = getDestinationName(destination);
+    const name = getAddressName(destination);
     if (!name) {
       return;
     }
