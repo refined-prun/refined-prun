@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `fxpo-better-current-price`: Sets the current price to the order book price
+
 ### Fixed
 
 - `XIT CONTC`: Fix address link display for unnamed planets in named systems
