@@ -1,5 +1,5 @@
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { type MessageFormatElement } from '@formatjs/icu-messageformat-parser';
+import { type MessageFormatElement, TYPE } from '@formatjs/icu-messageformat-parser';
 import IntlMessageFormat from 'intl-messageformat';
 
 export const RESERVED_KEYS = new Set(
@@ -107,8 +107,8 @@ export function applyLocalizationPatch(
 ) {
   const ast = localization.getFormat().getAst();
   const newText = patch(localization());
-  const newAst = new IntlMessageFormat(newText).getAst();
-  ast.splice(0, ast.length, ...newAst);
+  ast.length = 1;
+  ast[0] = { type: TYPE.literal, value: newText };
 }
 
 type LocalizationDict = Record<string, MessageFormatElement[]>;
