@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- `XIT CONTC`: Fix address link display for unnamed planets in named systems
+
 ### Removed
 
 - `adm-hide-inactive-buttons`: The base game now shows one button at a time
