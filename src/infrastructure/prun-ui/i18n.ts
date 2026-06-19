@@ -1,8 +1,6 @@
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { LiteralElement, type MessageFormatElement } from '@formatjs/icu-messageformat-parser';
+import { type MessageFormatElement } from '@formatjs/icu-messageformat-parser';
 import IntlMessageFormat from 'intl-messageformat';
-
-export const LEAF_KEYS = ['getFormat'] as const;
 
 export const RESERVED_KEYS = new Set(
   [
@@ -70,7 +68,7 @@ export const RESERVED_KEYS = new Set(
     'with',
     'yield',
     // Utility
-    LEAF_KEYS,
+    'getFormat',
   ].flat(),
 );
 
@@ -199,10 +197,6 @@ function createLocalizationProxy(node, path: string) {
 
 function reportMissingLocalization(path: string) {
   console.error(`Missing localization entry: ${path}`);
-}
-
-export function isLeaf(input: LocalizationTree): boolean {
-  return LEAF_KEYS.every(x => x in input);
 }
 
 const sanitizeCache = new Map<string, string>();

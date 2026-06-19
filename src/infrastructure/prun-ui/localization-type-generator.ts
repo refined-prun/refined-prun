@@ -1,5 +1,5 @@
 import { type MessageFormatElement, TYPE } from '@formatjs/icu-messageformat-parser';
-import { isLeaf, LEAF_KEYS, localizationTree } from '@src/infrastructure/prun-ui/i18n';
+import { localizationTree } from '@src/infrastructure/prun-ui/i18n';
 
 export function emitLocalizationFile(): string {
   let result: string = 'export {};';
@@ -25,8 +25,8 @@ export function generateLocalizationTemplates(): Record<string, string> {
 
 function emitLocalizationTree(tree: LocalizationTree, indent: number = 0): string {
   let result = ``;
-  const isTreeLeaf = isLeaf(tree);
-  const children = Object.entries(tree).filter(([key]) => !LEAF_KEYS.some(x => x == key));
+  const isTreeLeaf = typeof tree === 'function' && 'getFormat' in tree;
+  const children = Object.entries(tree).filter(([key]) => key !== 'getFormat');
   const format = isTreeLeaf ? (tree as LocalizationLeaf).getFormat() : undefined;
   const formatOptions = format ? emitFormatOptions(format.getAst()) : undefined;
   const append = (line: string) => (result += `\n${'  '.repeat(indent)}${line}`);
