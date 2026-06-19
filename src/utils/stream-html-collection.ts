@@ -16,22 +16,26 @@ export async function* streamHtmlCollection<T extends Element>(
 
   const newElements: T[] = [];
   let resolve = () => {};
-  onNodeTreeMutation(root, mutations => {
-    if (mutations.every(x => x.addedNodes.length === 0)) {
-      return;
-    }
-    for (let i = 0; i < elements.length; i++) {
-      const element = elements[i];
-      if (!seenElements.has(element)) {
-        seenElements.add(element);
-        newElements.push(element);
+  onNodeTreeMutation(
+    root,
+    mutations => {
+      if (mutations.every(x => x.addedNodes.length === 0)) {
+        return;
       }
-    }
+      for (let i = 0; i < elements.length; i++) {
+        const element = elements[i];
+        if (!seenElements.has(element)) {
+          seenElements.add(element);
+          newElements.push(element);
+        }
+      }
 
-    if (!isEmpty(newElements)) {
-      resolve();
-    }
-  });
+      if (!isEmpty(newElements)) {
+        resolve();
+      }
+    },
+    true,
+  );
   while (true) {
     await new Promise<void>(x => (resolve = x));
     while (!isEmpty(newElements)) {
@@ -49,13 +53,17 @@ export async function streamElementOfHtmlCollection<T extends Element>(
   }
 
   await new Promise<void>(resolve => {
-    onNodeTreeMutation(root, () => {
-      if (elements.length > 0) {
-        resolve();
-        return true;
-      }
-      return false;
-    });
+    onNodeTreeMutation(
+      root,
+      () => {
+        if (elements.length > 0) {
+          resolve();
+          return true;
+        }
+        return false;
+      },
+      true,
+    );
   });
 
   return elements[0] as T;

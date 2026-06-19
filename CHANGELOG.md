@@ -5,6 +5,7 @@
 ### Added
 
 - `fxpo-better-current-price`: Sets the current price to the order book price
+- `fxpo-maximum-lot-size`: Adds a "Maximum Lot Size" field to fill the top order in the order book
 
 ### Fixed
 

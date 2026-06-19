@@ -3,6 +3,7 @@ import {
   streamElementOfHtmlCollection,
   streamHtmlCollection,
 } from '@src/utils/stream-html-collection';
+import { ElementTag } from '@src/infrastructure/prun-ui/tagger';
 
 export function getElementByClassNameOrTag<
   Selector extends string,
@@ -68,6 +69,7 @@ const classNames = new Set<string>([
   'rc-slider-mark-text-active',
   'rc-slider-handle',
   'rc-slider-mark-text',
+  ...Object.values(ElementTag),
 ]);
 
 export function registerClassName(className: string) {

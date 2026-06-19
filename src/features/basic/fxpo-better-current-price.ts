@@ -3,26 +3,18 @@ import { fixed4 } from '@src/utils/format';
 import { changeInputValue } from '@src/util';
 import { refTextContent } from '@src/utils/reactive-dom';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
+import { ElementTag } from '@src/infrastructure/prun-ui/tagger';
 
 function onTileReady(tile: PrunTile) {
   const broker = computed(() => fxobStore.getByTicker(tile.parameter));
-  const currentPriceL = L.ForExPlaceOrderForm.label.price();
-  const maximumPriceL = L.ForExPlaceOrderForm.limit.maximum();
-  const minimumPriceL = L.ForExPlaceOrderForm.limit.minimum();
 
   subscribe($$(tile.anchor, C.ForExPlaceOrderForm.form), async form => {
-    const passive = _$$(form, C.FormComponent.containerPassive);
-    const currentPriceField = passive.find(x => _$(x, 'label')?.textContent === currentPriceL);
-
-    const active = _$$(form, C.FormComponent.containerActive);
-    const maximumPriceField = active.find(x => _$(x, 'label')?.textContent === maximumPriceL);
-    const isBuying = maximumPriceField !== undefined;
-    const minimumPriceField = active.find(x => _$(x, 'label')?.textContent === minimumPriceL);
-    const priceInputField = isBuying ? maximumPriceField : minimumPriceField;
-
-    if (!currentPriceField || !priceInputField) {
-      return;
-    }
+    const currentPriceField = await $(form, ElementTag.FXPO_CURRENT_PRICE_FIELD);
+    const priceInputField = await Promise.any([
+      $(form, ElementTag.FXPO_MAXIMUM_PRICE_FIELD),
+      $(form, ElementTag.FXPO_MINIMUM_PRICE_FIELD),
+    ]);
+    const isBuying = priceInputField.classList.contains(ElementTag.FXPO_MAXIMUM_PRICE_FIELD);
 
     const currentPriceContainer = await $(currentPriceField, C.StaticInput.static);
     const currentPriceSpan = await $(currentPriceContainer, 'span');
@@ -56,28 +48,11 @@ function onTileReady(tile: PrunTile) {
 }
 
 function getPrice(broker: PrunApi.FXBroker, isBuying: boolean) {
-  return isBuying ? getBuyPrice(broker) : getSellPrice(broker);
-}
-
-function getBuyPrice(broker: PrunApi.FXBroker) {
-  const orders = broker.sellingOrders;
+  const orders = isBuying ? broker.sellingOrders : broker.buyingOrders;
   if (orders.length === 0) {
     return broker.price.close.rate;
   }
-  const prices = orders.map(x => x.limit.rate).toSorted();
-  return prices[0];
-}
-
-function getSellPrice(broker: PrunApi.FXBroker) {
-  const orders = broker.buyingOrders;
-  if (orders.length === 0) {
-    return broker.price.close.rate;
-  }
-  const prices = orders
-    .map(x => x.limit.rate)
-    .toSorted()
-    .reverse();
-  return prices[0];
+  return orders[0].limit.rate;
 }
 
 function init() {

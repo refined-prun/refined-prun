@@ -3,7 +3,11 @@ type MutationCallback = (mutations: MutationRecord[]) => boolean | void;
 const callbackMap = new WeakMap<Node, MutationCallback[]>();
 const removed = new Set<MutationCallback>();
 
-export function onNodeTreeMutation(node: Node, callback: MutationCallback) {
+export function onNodeTreeMutation(
+  node: Node,
+  callback: MutationCallback,
+  observeClass: boolean = false,
+) {
   let callbacks = callbackMap.get(node) ?? [];
   if (callbacks.length === 0) {
     callbackMap.set(node, callbacks);
@@ -30,7 +34,14 @@ export function onNodeTreeMutation(node: Node, callback: MutationCallback) {
       }
       removed.clear();
     });
-    observer.observe(node, { childList: true, subtree: true });
+    const options: MutationObserverInit = {
+      childList: true,
+      subtree: true,
+    };
+    if (observeClass) {
+      options.attributeFilter = ['class'];
+    }
+    observer.observe(node, options);
   }
   callbacks.push(callback);
 }
