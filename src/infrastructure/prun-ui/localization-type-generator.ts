@@ -1,7 +1,7 @@
 import { type MessageFormatElement, TYPE } from '@formatjs/icu-messageformat-parser';
 import { localizationTree } from '@src/infrastructure/prun-ui/i18n';
 
-export function emitLocalizationFile(): string {
+export function emitLocalizationFile() {
   let result: string = 'export {};';
   result += '\n';
   result += '\ntype LL = LiteralLocalizationLeaf;';
@@ -14,7 +14,7 @@ export function emitLocalizationFile(): string {
   return result;
 }
 
-export function generateLocalizationTemplates(): Record<string, string> {
+export function generateLocalizationTemplates() {
   const i18n = window['PrUn_i18n'];
   const templates = {} as Record<string, string>;
   for (const [key, value] of Object.entries(i18n)) {
@@ -23,7 +23,7 @@ export function generateLocalizationTemplates(): Record<string, string> {
   return templates;
 }
 
-function emitLocalizationTree(tree: LocalizationTree, indent: number = 0): string {
+function emitLocalizationTree(tree: LocalizationTree, indent: number = 0) {
   let result = ``;
   const isTreeLeaf = typeof tree === 'function' && 'getFormat' in tree;
   const children = Object.entries(tree).filter(([key]) => key !== 'getFormat');
@@ -53,7 +53,7 @@ function emitLocalizationTree(tree: LocalizationTree, indent: number = 0): strin
 }
 
 // This is to create an "example" template that one can check to match in-game text with localization keys.
-function emitStatic(ast: MessageFormatElement[]): string {
+function emitStatic(ast: MessageFormatElement[]) {
   const nodeStrings: string[] = [];
   for (const node of ast) {
     switch (node.type) {

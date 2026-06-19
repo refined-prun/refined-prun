@@ -67,7 +67,7 @@ export const RESERVED_KEYS = new Set(
     'while',
     'with',
     'yield',
-    // Utility
+    // LocalizationLeaf
     'getFormat',
   ].flat(),
 );
@@ -148,16 +148,17 @@ export function generateLocalizationTree(localizationDict: LocalizationDict) {
 function createLocalizationLeaf(value: MessageFormatElement[], children: LocalizationTree) {
   let messageFormat: IntlMessageFormat;
   const getFormat = () => (messageFormat ??= new IntlMessageFormat(value));
-  const format = values => getFormat().format(values);
-  return Object.assign(format, children, { getFormat });
+  const format: typeof IntlMessageFormat.prototype.format<string> = values =>
+    getFormat().format(values);
+  return Object.assign(format, children, { getFormat }) as LocalizationLeaf;
 }
 
-// An empty callable target so the `apply` trap fires when a node is invoked as `L.x.y()`.
+// An empty callable target, so the `apply` trap fires when a node is invoked as `L.x.y()`.
 const localizationProxyTarget = () => undefined;
 
 // Wraps the localization tree so that walking a missing path never throws. Property access keeps
-// tracking the path; the result only resolves at a terminal op — `()`, `getFormat()`, `toString()`
-// or `valueOf()` — yielding the real value when the path exists and `undefined` (plus an error log)
+// tracking the path; the result only resolves at a terminal op - `()`, `getFormat()`, `toString()`
+// or `valueOf()` - yielding the real value when the path exists and `undefined` (plus an error log)
 // when it does not.
 function createLocalizationProxy(node, path: string) {
   return new Proxy(localizationProxyTarget, {
