@@ -756,9 +756,9 @@ declare global {
     };
     Blueprints: {
       actions: {
+        _delete: LL;
         copy: LL;
         create: LL;
-        _delete: LL;
         test: LL;
         view: LL;
       };
@@ -967,8 +967,8 @@ declare global {
     ChannelMembership: {
       create: LL & {
         description: {
-          group: LL;
           _private: LL;
+          group: LL;
         };
       };
       join: LL & {
@@ -987,14 +987,14 @@ declare global {
     };
     ChannelMembershipListItem: {
       label: {
+        _private: PL<{ name: string }>;
+        _public: PL<{ name: string }>;
         group: PL<{ userCount: number; users: string }> & {
           _2: PL<{ u1: string; u2: string }>;
           _3: PL<{ u1: string; u2: string; u3: string }>;
           more: PL<{ u1: string; u2: string; additional: string }>;
           named: PL<{ name: string }>;
         };
-        _private: PL<{ name: string }>;
-        _public: PL<{ name: string }>;
       };
     };
     CoGC: {
@@ -1306,8 +1306,8 @@ declare global {
       title: LL;
     };
     ComExOrdersTable: {
-      amount: PL<{ amount: string; initial: string }>;
       _delete: LL;
+      amount: PL<{ amount: string; initial: string }>;
       noOrders: LL;
       table: {
         amount: LL;
@@ -2391,9 +2391,9 @@ declare global {
     };
     ContractDrafts: {
       actions: {
+        _delete: LL;
         copy: LL;
         create: LL;
-        _delete: LL;
         view: LL;
       };
       table: {
@@ -5815,6 +5815,9 @@ declare global {
       type: LL;
     };
     MissionSegmentType: {
+      _float: LL & {
+        tooltip: LL;
+      };
       approach: LL & {
         tooltip: LL;
       };
@@ -5825,9 +5828,6 @@ declare global {
         tooltip: LL;
       };
       departure: LL & {
-        tooltip: LL;
-      };
-      _float: LL & {
         tooltip: LL;
       };
       jump: LL & {
@@ -5882,13 +5882,13 @@ declare global {
       };
     };
     Modifier: {
+      _protected: LL;
       cargoBay: PL<{ weight: string; volume: string }>;
       damageReduction: PL<{ sign: string; factor: string }>;
       ftlFuelTank: PL<{ units: string }>;
       ftlReactor: PL<{ power: string; charge: string }>;
       maxGFactorIncrease: PL<{ delta: string }>;
       notprotected: LL;
-      _protected: LL;
       stlEngine: PL<{ units: string }>;
       stlFuelTank: PL<{ units: string }>;
       vortexFuelTank: PL<{ units: string }>;
@@ -6843,8 +6843,8 @@ declare global {
     };
     Prompt: {
       placeholder: {
-        banned: PL<{ date: string; time: string }>;
         _default: LL;
+        banned: PL<{ date: string; time: string }>;
         muted: LL;
       };
     };
@@ -7156,9 +7156,9 @@ declare global {
     };
     ScreenControls: {
       action: {
+        _delete: LL;
         add: LL;
         copy: LL;
-        _delete: LL;
         fullscreen: LL;
         undoDelete: LL;
       };
@@ -7414,11 +7414,11 @@ declare global {
       };
     };
     ShipStatus: {
+      _float: LL;
       approach: LL;
       charge: LL;
       decay: LL;
       departure: LL;
-      _float: LL;
       jump: LL;
       jumpgateway: LL;
       landing: LL;
@@ -7796,16 +7796,16 @@ declare global {
       };
     };
     Stacks: {
+      _delete: {
+        confirm: LL;
+        details: LL;
+        question: LL;
+      };
       action: {
         cancel: LL;
         create: LL;
         edit: LL;
         stopEditing: LL;
-      };
-      _delete: {
-        confirm: LL;
-        details: LL;
-        question: LL;
       };
       label: {
         stackName: LL;

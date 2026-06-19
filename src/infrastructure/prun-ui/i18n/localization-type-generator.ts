@@ -26,7 +26,9 @@ export function generateLocalizationTemplates() {
 function emitLocalizationTree(tree: LocalizationTree, indent: number = 0) {
   let result = ``;
   const isTreeLeaf = typeof tree === 'function' && 'getFormat' in tree;
-  const children = Object.entries(tree).filter(([key]) => key !== 'getFormat');
+  const children = Object.entries(tree)
+    .filter(([key]) => key !== 'getFormat')
+    .sort();
   const format = isTreeLeaf ? (tree as LocalizationLeaf).getFormat() : undefined;
   const formatOptions = format ? emitFormatOptions(format.getAst()) : undefined;
   const append = (line: string) => (result += `\n${'  '.repeat(indent)}${line}`);
