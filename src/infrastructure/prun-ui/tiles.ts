@@ -4,7 +4,7 @@ import onetime from 'onetime';
 import { onNodeTreeMutation } from '@src/utils/on-node-tree-mutation';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
-import onNodeDisconnected from '@src/utils/on-node-disconnected';
+import { onNodeDisconnected } from '@src/utils/on-node-disconnected';
 import { matchBufferSize } from '@src/infrastructure/prun-ui/buffer-sizes';
 import { setBufferSize } from '@src/infrastructure/prun-ui/buffers';
 

@@ -2,7 +2,7 @@ import { clickElement } from '@src/util';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { mirrorConfirmationOverlay } from '@src/infrastructure/prun-ui/utils/mirror-confirmation-overlay';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
-import onNodeDisconnected from '@src/utils/on-node-disconnected';
+import { onNodeDisconnected } from '@src/utils/on-node-disconnected';
 import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import ActionFeedbackProgress from '@src/components/ActionFeedbackProgress.vue';
 import { watchUntil } from '@src/utils/watch';

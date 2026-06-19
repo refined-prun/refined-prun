@@ -1,7 +1,7 @@
 import { changeInputValue, clickElement } from '@src/util';
 import { sleep } from '@src/utils/sleep';
 import css from '@src/utils/css-utils.module.css';
-import onNodeDisconnected from '@src/utils/on-node-disconnected';
+import { onNodeDisconnected } from '@src/utils/on-node-disconnected';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { watchUntil } from '@src/utils/watch';
 import { isEmpty } from 'ts-extras';
