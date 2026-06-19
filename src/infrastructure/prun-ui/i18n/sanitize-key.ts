@@ -23,7 +23,7 @@ export function sanitizeKey(key: string): string {
   }
   // Avoid reserved words
   else if (RESERVED_KEYS.has(s)) {
-    s = `_${s}`;
+    s = '_' + s;
   }
 
   sanitizeCache.set(key, s);
