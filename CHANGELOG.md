@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Removed
+
+- `adm-hide-inactive-buttons`: The base game now shows one button at a time
+
 ## 26.5.18
 
 ### Added
