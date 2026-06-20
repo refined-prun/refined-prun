@@ -42,8 +42,12 @@ export function applyLocalizationPatch(
   localization: LiteralLocalizationLeaf,
   patch: (value: string) => string,
 ) {
-  const ast = localization.getFormat().getAst();
-  const newText = patch(localization());
+  const ast = localization.getFormat()?.getAst();
+  const text = localization();
+  if (ast === undefined || text === undefined) {
+    return;
+  }
+  const newText = patch(text);
   ast.length = 1;
   ast[0] = { type: TYPE.literal, value: newText };
 }

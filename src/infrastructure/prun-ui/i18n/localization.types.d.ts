@@ -8,14 +8,14 @@ declare global {
   }
 
   interface LocalizationLeaf extends LocalizationTree {
-    getFormat: () => IntlMessageFormat;
+    getFormat: () => IntlMessageFormat | undefined;
   }
 
   interface LiteralLocalizationLeaf extends LocalizationLeaf {
-    (): string;
+    (): string | undefined;
   }
 
   interface ParametrizedLocalizationLeaf<T> extends LocalizationLeaf {
-    (params: T): string;
+    (params: T): string | undefined;
   }
 }
