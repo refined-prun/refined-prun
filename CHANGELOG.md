@@ -16,6 +16,7 @@
 ### Fixed
 
 - `XIT CONTC`: Fix address link display for unnamed planets in named systems
+- `bui-sort-recipes`: Fix recipe material layout
 
 ### Removed
 
