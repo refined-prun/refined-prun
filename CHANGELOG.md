@@ -7,6 +7,10 @@
 - `fxpo-better-current-price`: Sets the current price to the order book price
 - `fxpo-maximum-lot-size`: Adds a "Maximum Lot Size" field to fill the top order in the order book
 
+### Changed
+
+- Improve performance for screens with many UI elements added by Refined PrUn
+
 ### Fixed
 
 - `XIT CONTC`: Fix address link display for unnamed planets in named systems
