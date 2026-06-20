@@ -52,7 +52,7 @@ declare global {
   const shallowReactive: typeof import('vue')['shallowReactive']
   const shallowReadonly: typeof import('vue')['shallowReadonly']
   const shallowRef: typeof import('vue')['shallowRef']
-  const subscribe: typeof import('@src/utils/subscribe-async-generator')['subscribe']
+  const subscribe: typeof import('@src/utils/observable')['subscribe']
   const sumBy: typeof import('@src/utils/sum-by')['sumBy']
   const tiles: typeof import('@src/infrastructure/prun-ui/tiles')['default']
   const toRaw: typeof import('vue')['toRaw']
@@ -136,7 +136,7 @@ declare module 'vue' {
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
-    readonly subscribe: UnwrapRef<typeof import('@src/utils/subscribe-async-generator')['subscribe']>
+    readonly subscribe: UnwrapRef<typeof import('@src/utils/observable')['subscribe']>
     readonly sumBy: UnwrapRef<typeof import('@src/utils/sum-by')['sumBy']>
     readonly tiles: UnwrapRef<typeof import('@src/infrastructure/prun-ui/tiles')['default']>
     readonly toRaw: UnwrapRef<typeof import('vue')['toRaw']>

@@ -117,7 +117,7 @@ Migrations (`user-data-migrations.ts`) run on every load to transform stored dat
 | Vue composables (`ref`, `computed`, `reactive`, `watch`, …) | `vue` |
 | `$`, `$$`, `_$`, `_$$` | `@src/utils/select-dom` |
 | `C` | `@src/infrastructure/prun-ui/prun-css` |
-| `subscribe` | `@src/utils/subscribe-async-generator` |
+| `subscribe` | `@src/utils/observable` |
 | `tiles` | `@src/infrastructure/prun-ui/tiles` |
 | `features` | `@src/features/feature-registry` |
 | `xit` | `@src/features/XIT/xit-registry` |

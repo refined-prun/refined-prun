@@ -48,7 +48,7 @@ export default defineConfig({
       imports: [
         { name: 'C', from: '@src/infrastructure/prun-ui/prun-css' },
         { name: 'L', from: '@src/infrastructure/prun-ui/i18n' },
-        { name: 'subscribe', from: '@src/utils/subscribe-async-generator' },
+        { name: 'subscribe', from: '@src/utils/observable' },
         { name: 'default', as: 'tiles', from: '@src/infrastructure/prun-ui/tiles' },
         { name: 'default', as: 'features', from: '@src/features/feature-registry' },
         { name: 'default', as: 'xit', from: '@src/features/XIT/xit-registry' },
