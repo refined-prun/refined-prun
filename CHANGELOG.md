@@ -9,6 +9,7 @@
 
 ### Changed
 
+- `minimize-headers`: Show non-empty preamble for user-made contracts in `CONT`
 - Improve performance for screens with many UI elements added by Refined PrUn
 
 ### Fixed
