@@ -1,4 +1,4 @@
-import { clickElement } from '@src/util';
+import { clickElement, selectMaterialInMaterialSelector } from '@src/util';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { mirrorConfirmationOverlay } from '@src/infrastructure/prun-ui/utils/mirror-confirmation-overlay';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
@@ -69,6 +69,9 @@ export async function deleteExchangeOrder(
     return false;
   }
   await awaitBufferLoad(window);
+  if (isCX) {
+    await setCxosFilters(window, orderId);
+  }
   const button = await findOrderDeleteButton(window, orderId, orderCount);
   if (!button) {
     shouldClose.value = true;
@@ -138,6 +141,38 @@ async function awaitBufferLoad(window: Element) {
     await new Promise<void>(resolve => {
       onNodeDisconnected(loading, resolve);
     });
+  }
+}
+
+async function setCxosFilters(window: Element, orderId: string) {
+  const order = cxosStore.getById(orderId);
+  if (!order) {
+    return;
+  }
+  const filters = _$$(window, C.ComExOrdersPanel.filter);
+  if (filters.length === 0) {
+    // FREE user, probably.
+    return;
+  }
+  const materialSelector = _$(window, C.MaterialSelector.container);
+  if (materialSelector) {
+    await selectMaterialInMaterialSelector(materialSelector, order.material.ticker);
+  }
+  await clickFilter(L.OrderStatusLabel.FILLED());
+  await clickFilter(
+    order.type === 'BUYING' ? L.OrderTypeLabel.SELLING() : L.OrderTypeLabel.BUYING(),
+  );
+
+  async function clickFilter(button: string | undefined) {
+    if (!button) {
+      return;
+    }
+    const filter = filters
+      .flatMap(x => _$$(x, C.RadioItem.value))
+      .find(x => x.textContent === button);
+    if (filter) {
+      await clickElement(filter);
+    }
   }
 }
 
