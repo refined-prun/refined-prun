@@ -4,5 +4,6 @@ xit.add({
   command: ['FXTS'],
   name: 'FOREIGN EXCHANGE TRADES',
   description: 'List of all your foreign exchange trades.',
+  optionalParameters: 'Page Size',
   component: () => FXTS,
 });

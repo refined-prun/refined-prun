@@ -3,10 +3,15 @@ import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
 import DateRow from '@src/features/XIT/FXTS/DateRow.vue';
 import TradeRow from '@src/features/XIT/FXTS/TradeRow.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
+import EndlessScrollControl from '@src/components/EndlessScrollControl.vue';
+import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { isEmpty } from 'ts-extras';
-import { clamp } from '@src/utils/clamp';
 
 const orders = computed(() => fxosStore.all.value);
+
+const parameters = useXitParameters();
+const parsedPages = parseInt(parameters[0]);
+const startingPages = Number.isNaN(parsedPages) ? 1 : Math.max(1, parsedPages);
 
 interface OrderTrade {
   order: PrunApi.FXOrder;
@@ -21,8 +26,13 @@ interface DayTrades {
 }
 
 const days = computed(() => {
+  const days: DayTrades[] = [];
+  if (!orders.value) {
+    return days;
+  }
+
   const trades: OrderTrade[] = [];
-  for (const order of orders.value!) {
+  for (const order of orders.value) {
     for (const trade of order.trades) {
       trades.push({
         order,
@@ -32,7 +42,6 @@ const days = computed(() => {
     }
   }
   trades.sort((a, b) => b.date - a.date);
-  const days: DayTrades[] = [];
   if (isEmpty(trades)) {
     return days;
   }
@@ -71,20 +80,10 @@ function getDateComponent(dateTime: number) {
   return new Date(new Date(dateTime).toDateString()).getTime();
 }
 
-const daysToRender = ref(1);
-let id = 0;
-
-function stepRender() {
-  id = requestAnimationFrame(stepRender);
-  if (!orders.value) {
-    daysToRender.value = 1;
-  } else {
-    daysToRender.value = clamp(daysToRender.value + 1, 0, days.value.length);
-  }
-}
-
-onBeforeUnmount(() => cancelAnimationFrame(id));
-stepRender();
+const daysToRender = ref(startingPages);
+const visibleDays = computed(() => days.value.slice(0, daysToRender.value));
+const restart = () => (daysToRender.value = startingPages);
+watch(orders, restart);
 </script>
 
 <template>
@@ -107,13 +106,10 @@ stepRender();
           <td colSpan="7">No recent trades</td>
         </tr>
         <template v-else>
-          <template v-for="group in daysToRender" :key="days[group - 1].date">
-            <DateRow
-              :date="days[group - 1].date"
-              :totals="days[group - 1].totals"
-              :hide-totals="days[group - 1].trades.length === 1" />
+          <template v-for="day in visibleDays" :key="day.date">
+            <DateRow :date="day.date" :totals="day.totals" :hide-totals="day.trades.length === 1" />
             <TradeRow
-              v-for="trade in days[group - 1].trades"
+              v-for="trade in day.trades"
               :key="trade.trade.id"
               :date="trade.date"
               :order="trade.order"
@@ -122,5 +118,6 @@ stepRender();
         </template>
       </tbody>
     </table>
+    <EndlessScrollControl :has-more="daysToRender < days.length" @load-more="daysToRender++" />
   </template>
 </template>
