@@ -30,7 +30,7 @@ export function loadMaterialNameMap() {
 
 export function getMaterialName(material?: PrunApi.Material | null) {
   return material
-    ? (L.Material[material?.name as keyof typeof L.Material].name() ?? material.name)
+    ? (lookupLocalization(L.Material, material.name).name() ?? material.name)
     : undefined;
 }
 
@@ -50,4 +50,11 @@ export function applyLocalizationPatch(
   const newText = patch(text);
   ast.length = 1;
   ast[0] = { type: TYPE.literal, value: newText };
+}
+
+// Indexes a localization subtree with a runtime key, returning the child leaf or subtree.
+// Use instead of `node[key as keyof typeof node]` for dynamic keys. The L proxy resolves a
+// missing key to `undefined` at the terminal call, so the result stays safe to invoke.
+export function lookupLocalization<T>(node: T, key: string): T[keyof T] {
+  return (node as Record<string, unknown>)[key] as T[keyof T];
 }

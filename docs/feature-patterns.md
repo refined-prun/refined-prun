@@ -148,12 +148,6 @@ applyLocalizationPatch(L.SiteWorkforces.table.currentWorkforce, value =>
 
 Accessing a leaf that is not present in the localization tree doesn't throw, and resolves in `undefined` at a terminal op - `()`, `getFormat()`, `toString()` or `valueOf()`. This means that the code won't break if some localization string gets removed from the game, but it requires the code to account for possible `undefined` when working with the `L` object.
 
-```ts
-function getMaterialName(material: PrunApi.Material) {
-  return L.Material[material.name as keyof typeof L.Material].name() ?? material.name;
-}
-```
-
 ## DOM Helpers
 
 Four auto-imported functions for finding elements by CSS class name (`C.X.y`) or HTML tag name.

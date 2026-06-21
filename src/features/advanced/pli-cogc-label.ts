@@ -1,11 +1,12 @@
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
+import { lookupLocalization } from '@src/infrastructure/prun-ui/i18n';
 
 function formatCogcLabel(programType?: string | null) {
   if (!programType) {
     return 'CoGC (Inactive)';
   }
   const localized =
-    L.CoGCProgram[`${programType}_SHORT` as keyof typeof L.CoGCProgram]() ??
+    lookupLocalization(L.CoGCProgram, `${programType}_SHORT`)() ??
     programType
       .replace(/^(ADVERTISING|WORKFORCE)_/, '')
       .replace(/^\w/, c => c.toUpperCase())
