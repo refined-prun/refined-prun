@@ -4,23 +4,19 @@
 
 ### Added
 
-- `adm-neutral-withdraw-button`: Applies the "neutral" style to the "Withdraw" vote button
-- `fxpo-better-current-price`: Sets the current price to the order book price
-- `fxpo-maximum-lot-size`: Adds a "Maximum Lot Size" field to fill the top order in the order book
+- `FXPO`: Added a "Maximum Lot Size" field to fill the top order in the order book (`fxpo-maximum-lot-size`)
 
 ### Changed
 
-- `minimize-headers`: Show non-empty preamble for user-made contracts in `CONT`
-- Improve performance for screens with many UI elements added by Refined PrUn
+- `ADM`: The "Withdraw" vote button now has a gray color (`adm-neutral-withdraw-button`)
+- `CONT`: The preamble of user-made contracts is no longer minimized (`minimize-headers`)
+- `FXPO`: The Current Price field is now set to the order book price (`fxpo-better-current-price`)
+- Screens with many added elements now render faster
 
 ### Fixed
 
-- `XIT CONTC`: Fix address link display for unnamed planets in named systems
-- `bui-sort-recipes`: Fix recipe material layout
-
-### Removed
-
-- `adm-hide-inactive-buttons`: The base game now shows one button at a time
+- `BUI`: Fixed recipe material layout (`bui-sort-recipes`)
+- `XIT CONTC`: Fixed address link display for unnamed planets in named systems
 
 ## 26.5.18
 
