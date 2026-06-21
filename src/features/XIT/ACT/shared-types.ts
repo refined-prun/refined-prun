@@ -18,6 +18,7 @@ export interface MaterialGroupGenerateContext<TConfig>
   extends ActionRunnerContext<UserData.MaterialGroupData> {
   config: TConfig;
   setStatus: (status: string) => void;
+  setPrices: (prices: Record<string, number>) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,9 +27,12 @@ export type AssertFn = (condition: any, message: string) => asserts condition;
 export interface ActionStepGenerateContext<TConfig>
   extends ActionRunnerContext<UserData.ActionData> {
   config: TConfig;
+  packageName: string;
   fail: (message?: string) => void;
   assert: AssertFn;
   getMaterialGroup: (name: string | undefined) => Promise<Record<string, number> | undefined>;
+  getMaterialGroupPrices: (name: string | undefined) => Record<string, number> | undefined;
+  getMaterialGroupPlanet: (name: string | undefined) => string | undefined;
   emitStep: (step: ActionStep) => void;
   state: {
     WAR: {
@@ -52,3 +56,4 @@ export interface ActionStepExecuteContext<T> extends ActionRunnerContext<T> {
 }
 
 export const configurableValue = 'Configure on Execution';
+export const groupTargetPrefix = 'group:';
