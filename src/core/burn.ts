@@ -13,6 +13,7 @@ export interface MaterialBurn {
   output: number;
   workforce: number;
   dailyAmount: number;
+  remainingAllocation: number;
   inventory: number;
   daysLeft: number;
   type: 'input' | 'output' | 'workforce';
@@ -75,12 +76,14 @@ export function calculatePlanetBurn(
 ) {
   const burnValues: BurnValues = {};
 
-  function getBurnValue(ticker: string) {
+  function getBurnValue(material: PrunApi.Material) {
+    const ticker = material.ticker;
     burnValues[ticker] ??= {
       input: 0,
       output: 0,
       workforce: 0,
       dailyAmount: 0,
+      remainingAllocation: 0,
       inventory: 0,
       daysLeft: 0,
       type: 'output',
@@ -97,13 +100,11 @@ export function calculatePlanetBurn(
       totalDuration /= 86400000;
 
       for (const order of burnOrders) {
-        for (const mat of order.outputs) {
-          const materialBurn = getBurnValue(mat.material.ticker);
-          materialBurn.output += (mat.amount * capacity) / totalDuration;
+        for (const amount of order.outputs) {
+          getBurnValue(amount.material).output += (amount.amount * capacity) / totalDuration;
         }
-        for (const mat of order.inputs) {
-          const materialBurn = getBurnValue(mat.material.ticker);
-          materialBurn.input += (mat.amount * capacity) / totalDuration;
+        for (const amount of order.inputs) {
+          getBurnValue(amount.material).input += (amount.amount * capacity) / totalDuration;
         }
       }
     }
@@ -120,23 +121,10 @@ export function calculatePlanetBurn(
         continue;
       }
       for (const need of tier.needs) {
-        const materialBurn = getBurnValue(need.material.ticker);
-        materialBurn.workforce += need.unitsPerInterval;
+        const mat = getBurnValue(need.material);
+        mat.workforce += need.unitsPerInterval;
+        mat.remainingAllocation = need.remainingAllocation;
       }
-    }
-  }
-
-  for (const ticker of Object.keys(burnValues)) {
-    const burnValue = burnValues[ticker];
-    burnValue.dailyAmount = burnValue.output;
-    burnValue.type = 'output';
-    burnValue.dailyAmount -= burnValue.workforce;
-    if (burnValue.workforce > 0 && burnValue.dailyAmount <= 0) {
-      burnValue.type = 'workforce';
-    }
-    burnValue.dailyAmount -= burnValue.input;
-    if (burnValue.input > 0 && burnValue.dailyAmount <= 0) {
-      burnValue.type = 'input';
     }
   }
 
@@ -152,14 +140,24 @@ export function calculatePlanetBurn(
           continue;
         }
         materialBurn.inventory += quantity.amount;
-        if (quantity.amount != 0) {
-          materialBurn.daysLeft =
-            materialBurn.dailyAmount > 0
-              ? 1000
-              : Math.floor(-materialBurn.inventory / materialBurn.dailyAmount);
-        }
       }
     }
+  }
+
+  for (const ticker in burnValues) {
+    const mat = burnValues[ticker];
+    mat.dailyAmount = mat.output;
+    mat.type = 'output';
+    mat.dailyAmount -= mat.workforce;
+    if (mat.workforce > 0 && mat.dailyAmount <= 0) {
+      mat.type = 'workforce';
+    }
+    mat.dailyAmount -= mat.input;
+    if (mat.input > 0 && mat.dailyAmount <= 0) {
+      mat.type = 'input';
+    }
+    const inv = mat.remainingAllocation + mat.inventory;
+    mat.daysLeft = mat.dailyAmount >= 0 ? Number.POSITIVE_INFINITY : inv / -mat.dailyAmount;
   }
 
   return burnValues;

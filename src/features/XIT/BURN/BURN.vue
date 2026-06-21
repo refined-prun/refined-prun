@@ -15,6 +15,7 @@ import { countDays, getSortedTickers } from '@src/features/XIT/BURN/utils';
 import InlineFlex from '@src/components/InlineFlex.vue';
 import { findWithQuery } from '@src/utils/find-with-query';
 import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
+import { userData } from '@src/store/user-data';
 
 const parameters = useXitParameters();
 
@@ -134,6 +135,7 @@ const planetBurn = computed(() => {
         output: 0,
         workforce: 0,
         dailyAmount: 0,
+        remainingAllocation: 0,
         inventory: 0,
         daysLeft: 0,
         type: 'output',
@@ -141,6 +143,7 @@ const planetBurn = computed(() => {
       overallBurn[ticker].input += mat.input;
       overallBurn[ticker].output += mat.output;
       overallBurn[ticker].workforce += mat.workforce;
+      overallBurn[ticker].remainingAllocation += mat.remainingAllocation;
       overallBurn[ticker].inventory += mat.inventory;
     }
   }
@@ -148,11 +151,8 @@ const planetBurn = computed(() => {
   for (const ticker of Object.keys(overallBurn)) {
     const mat = overallBurn[ticker];
     mat.dailyAmount = mat.output - mat.input - mat.workforce;
-    if (mat.dailyAmount >= 0) {
-      mat.daysLeft = 1000;
-    } else {
-      mat.daysLeft = -mat.inventory / mat.dailyAmount;
-    }
+    const remaining = mat.inventory + mat.remainingAllocation;
+    mat.daysLeft = mat.dailyAmount >= 0 ? Number.POSITIVE_INFINITY : remaining / -mat.dailyAmount;
   }
 
   const overallSection = { burn: overallBurn, planetName: 'Overall', naturalId: '', storeId: '' };
@@ -170,6 +170,7 @@ const planetBurn = computed(() => {
 const fakeBurn: MaterialBurn = {
   dailyAmount: -100000,
   daysLeft: 10,
+  remainingAllocation: 0,
   inventory: 100000,
   type: 'input',
   input: 100000,
@@ -194,25 +195,31 @@ function onExpandAllClick() {
 // Exports all materials regardless of active color filters (RED/YELLOW/GREEN/INF)
 // so spreadsheet users always get the complete dataset.
 function formatBurnTable(burns: PlanetBurn[]) {
+  const resupply = userData.settings.burn.resupply;
   const header = io.value
-    ? 'Planet\tTicker\tInv\tIn\tOut\tNet\tDays'
-    : 'Planet\tTicker\tInv\tBurn/day\tDays';
+    ? 'Planet\tTicker\tInv\tIn\tOut\tNet\tNeed\tDays'
+    : 'Planet\tTicker\tInv\tBurn/day\tNeed\tDays';
   const lines = [header];
+  const round = (x: number) => Math.round(x * 1000) / 1000;
   for (const planet of burns) {
     const sorted = getSortedTickers(planet);
     for (const material of sorted) {
       const mat = planet.burn[material.ticker];
-      // Floor needed here: per-planet burns are pre-floored, but overall burn is not.
       const days = mat.dailyAmount >= 0 ? '' : Math.floor(mat.daysLeft).toString();
-      const burn = Math.round(mat.dailyAmount * 1000) / 1000;
+      const burn = round(mat.dailyAmount);
+      const inv = mat.inventory + mat.inventory;
+      const need =
+        mat.dailyAmount >= 0 || mat.daysLeft > resupply
+          ? 0
+          : Math.ceil((mat.daysLeft - resupply) * mat.dailyAmount);
       if (io.value) {
-        const inAmt = Math.round((mat.input + mat.workforce) * 1000) / 1000;
-        const outAmt = Math.round(mat.output * 1000) / 1000;
+        const inAmt = round(mat.input + mat.workforce);
+        const outAmt = round(mat.output);
         lines.push(
-          `${planet.planetName}\t${material.ticker}\t${mat.inventory}\t${inAmt}\t${outAmt}\t${burn}\t${days}`,
+          `${planet.planetName}\t${material.ticker}\t${inv}\t${inAmt}\t${outAmt}\t${burn}\t${need}\t${days}`,
         );
       } else {
-        lines.push(`${planet.planetName}\t${material.ticker}\t${mat.inventory}\t${burn}\t${days}`);
+        lines.push(`${planet.planetName}\t${material.ticker}\t${inv}\t${burn}\t${need}\t${days}`);
       }
     }
   }
@@ -264,7 +271,15 @@ function copyBurnTable() {
             {{ anyExpanded ? '-' : '+' }}
           </th>
           <th v-else />
-          <th>Inv</th>
+          <th>
+            <InlineFlex>
+              Inv
+              <Tooltip
+                position="right"
+                tooltip="How much of a material the inventory still has. Fractional amount
+                 represents the leftover materials since the last workforce consumption event." />
+            </InlineFlex>
+          </th>
           <template v-if="io">
             <th>In</th>
             <th>Out</th>
