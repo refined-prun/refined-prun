@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Fixed the window resizing bug introduced in the previous release
+
 ## 26.6.22
 
 ### Added

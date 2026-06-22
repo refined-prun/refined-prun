@@ -130,7 +130,7 @@ async function closeWhenDone(window: HTMLDivElement, options?: ShowBufferOptions
   if (closeWhen) {
     await watchUntil(closeWhen);
   }
-  void closePrunWindow(window);
+  closePrunWindow(window);
   await new Promise<void>(resolve => onNodeDisconnected(window, resolve));
 }
 

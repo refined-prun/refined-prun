@@ -16,7 +16,7 @@ function onTileReady(tile: PrunTile) {
         $(tile.frame, C.ActionFeedback.error),
       ]);
       await $(tile.frame, C.ActionFeedback.success);
-      await closeTileWindow(tile);
+      closeTileWindow(tile);
     });
   });
 }

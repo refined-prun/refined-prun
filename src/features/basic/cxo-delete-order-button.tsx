@@ -15,7 +15,7 @@ function onTileReady(tile: PrunTile) {
   const onClick = async (event: MouseEvent) => {
     const success = await deleteExchangeOrderFromClick(event, orderId, ordersCommand);
     if (success) {
-      await closeTileWindow(tile);
+      closeTileWindow(tile);
     }
   };
 

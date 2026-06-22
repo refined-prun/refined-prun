@@ -1,17 +1,17 @@
-import { clickElement } from '@src/util';
-
-export async function closePrunWindow(window: Element | null | undefined) {
+export function closePrunWindow(window: Element | null | undefined) {
   if (!window) {
     return;
   }
 
   const close = L.Window.action.close();
-  const button = _$$(window, C.Window.button).find(x => x.textContent === close);
-  await clickElement(button);
+  const button = _$$(window, C.Window.button).find(
+    x => x.textContent === close,
+  ) as HTMLButtonElement;
+  button.click();
 }
 
-export async function closeTileWindow(tile: PrunTile) {
+export function closeTileWindow(tile: PrunTile) {
   if (!tile.docked) {
-    await closePrunWindow(tile.window);
+    closePrunWindow(tile.window);
   }
 }
