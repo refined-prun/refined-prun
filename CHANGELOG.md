@@ -5,6 +5,7 @@
 ### Added
 
 - `FXPO`: Added a "Maximum Lot Size" field to fill the top order in the order book (`fxpo-maximum-lot-size`)
+- `XIT CONTC`: Added a "Violated Conditions" section (separate for partner/self)
 
 ### Changed
 

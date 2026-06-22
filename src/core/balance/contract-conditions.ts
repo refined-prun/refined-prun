@@ -46,6 +46,10 @@ function calculateDeadline(contract: PrunApi.Contract, condition: PrunApi.Contra
     return Number.POSITIVE_INFINITY;
   }
 
+  if (condition.status === 'VIOLATED' && contract.extensionDeadline) {
+    return contract.extensionDeadline.timestamp;
+  }
+
   return getLatestDependencyDeadline(contract, condition) + condition.deadlineDuration.millis;
 }
 

@@ -7,7 +7,7 @@ declare namespace PrunApi {
     partner: ContractPartner;
     status: ContractStatus;
     conditions: ContractCondition[];
-    extensionDeadline: null;
+    extensionDeadline: DateTime | null;
     canExtend: boolean;
     canRequestTermination: boolean;
     dueDate: DateTime | null;
