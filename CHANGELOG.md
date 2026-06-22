@@ -14,7 +14,7 @@
 - `XIT BURN`: Workforce consumables now include remaining fractional allocations
 - `XIT BURN`: The "Days" column now displays fractional days when less than 10 days remain
 - `XIT BURN`: The "Need" column is now based on fractional days instead of whole days
-- `XIT BURN`: The CSV export now includes the "Need" column
+- `XIT BURN`: The TSV export now includes the "Need" column
 - `XIT CXTS`: The command now supports an optional "Page Size" parameter
 - `XIT FXTS`: The command now supports an optional "Page Size" parameter
 
