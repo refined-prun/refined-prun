@@ -22,6 +22,7 @@
 
 - `BUI`: Fixed recipe material layout (`bui-sort-recipes`)
 - `XIT CONTC`: Fixed address link display for unnamed planets in named systems
+- `XIT CONTC`: Fixed "Pick up X material" condition deadline handling
 
 ## 26.5.18
 
