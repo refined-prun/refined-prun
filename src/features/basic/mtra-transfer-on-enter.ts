@@ -1,3 +1,5 @@
+import { closeWindow } from '@src/infrastructure/prun-ui/utils/close-window';
+
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'input'), async input => {
     if (input.type !== 'text') {
@@ -17,9 +19,7 @@ function onTileReady(tile: PrunTile) {
         $(tile.frame, C.ActionFeedback.error),
       ]);
       await $(tile.frame, C.ActionFeedback.success);
-      const window = tile.frame.closest(`.${C.Window.window}`) as HTMLElement;
-      const close = _$$(window, C.Window.button).at(-1);
-      close?.click();
+      void closeWindow(tile.window);
     });
   });
 }
