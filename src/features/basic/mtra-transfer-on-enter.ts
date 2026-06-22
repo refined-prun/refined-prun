@@ -1,4 +1,4 @@
-import { closeWindow } from '@src/infrastructure/prun-ui/utils/close-window';
+import { closeTileWindow } from '@src/infrastructure/prun-ui/utils/close-prun-window';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'input'), async input => {
@@ -11,15 +11,12 @@ function onTileReady(tile: PrunTile) {
         return;
       }
       transfer.click();
-      if (tile.docked) {
-        return;
-      }
       await Promise.any([
         $(tile.frame, C.ActionFeedback.success),
         $(tile.frame, C.ActionFeedback.error),
       ]);
       await $(tile.frame, C.ActionFeedback.success);
-      void closeWindow(tile.window);
+      await closeTileWindow(tile);
     });
   });
 }

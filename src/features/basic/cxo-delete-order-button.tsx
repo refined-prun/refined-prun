@@ -1,6 +1,7 @@
 import ActionBar from '@src/components/ActionBar.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import { deleteExchangeOrderFromClick } from '@src/infrastructure/prun-ui/utils/delete-exchange-order';
+import { closeTileWindow } from '@src/infrastructure/prun-ui/utils/close-prun-window';
 
 function onTileReady(tile: PrunTile) {
   const orderId = tile.parameter;
@@ -13,15 +14,9 @@ function onTileReady(tile: PrunTile) {
 
   const onClick = async (event: MouseEvent) => {
     const success = await deleteExchangeOrderFromClick(event, orderId, ordersCommand);
-    if (!success || tile.docked) {
-      return;
+    if (success) {
+      await closeTileWindow(tile);
     }
-    const window = tile.container.closest(`.${C.Window.window}`);
-    if (!window) {
-      return;
-    }
-    const closeButton = _$$(window, C.Window.button).find(x => x.textContent === 'x');
-    closeButton?.click();
   };
 
   subscribe($$(tile.anchor, 'table'), table => {
