@@ -1,7 +1,7 @@
 import { fxobStore } from '@src/infrastructure/prun-api/data/fxob';
 import Passive from '@src/components/forms/Passive.vue';
 import { ElementTag } from '@src/infrastructure/prun-ui/tagger';
-import { fixed0 } from '@src/utils/format';
+import { fixed0, fixed4 } from '@src/utils/format';
 import PrunButton from '@src/components/PrunButton.vue';
 import { changeInputValue } from '@src/util';
 
@@ -33,7 +33,7 @@ function onTileReady(tile: PrunTile) {
 
     const onClick = () => {
       if (nextOrder.value !== undefined) {
-        changeInputValue(priceInput, fixed0(nextOrder.value.limit.rate));
+        changeInputValue(priceInput, fixed4(nextOrder.value.limit.rate));
         changeInputValue(lotsInput, maximumLot.value!.toFixed(0));
       }
     };

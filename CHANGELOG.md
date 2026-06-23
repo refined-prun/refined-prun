@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `FXPO`: The "Maximum Lot Size" field now sets a more precise price (`fxpo-maximum-lot-size`)
+
 ## 26.6.22.2033
 
 ### Fixed
@@ -17,7 +23,7 @@
 
 - `ADM`: The "Withdraw" vote button now has a gray color (`adm-neutral-withdraw-button`)
 - `CONT`: The preamble of user-made contracts is no longer minimized (`minimize-headers`)
-- `FXPO`: The Current Price field is now set to the order book price (`fxpo-better-current-price`)
+- `FXPO`: The "Current Price" field is now set to the order book price (`fxpo-better-current-price`)
 - `SFC`: The window now auto-closes on success (`sfc-auto-close`)
 - `XIT BURN`: Workforce consumables now include remaining fractional allocations
 - `XIT BURN`: The "Days" column now displays fractional days when less than 10 days remain
