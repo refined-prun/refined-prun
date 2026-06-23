@@ -59,8 +59,12 @@ const getByPlanetNaturalIdOrName = (value?: string | null) =>
 export const getBuildingLastRepair = (building: PrunApi.Platform) =>
   building.lastRepair?.timestamp ?? building.creationTime.timestamp;
 
+const find = (idOrNaturalIdOrName?: string | null) =>
+  state.getById(idOrNaturalIdOrName) ?? getByPlanetNaturalIdOrName(idOrNaturalIdOrName);
+
 export const sitesStore = {
   ...state,
+  find,
   getByPlanetNaturalId,
   getByPlanetName,
   getByPlanetNaturalIdOrName,

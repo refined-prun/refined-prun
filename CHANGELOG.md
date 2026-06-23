@@ -6,6 +6,10 @@
 
 - `FXPO`: The "Maximum Lot Size" field now sets a more precise price (`fxpo-maximum-lot-size`)
 
+### Fixed
+
+- `PROD`: Fixed order completion time not displaying for `PROD {planet id}` (`prod-order-eta`)
+
 ## 26.6.22.2033
 
 ### Fixed
