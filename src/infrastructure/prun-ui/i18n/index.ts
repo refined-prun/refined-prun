@@ -2,6 +2,23 @@ import { TYPE } from '@formatjs/icu-messageformat-parser';
 import { addMissingLocalizationEntries, generateLocalizationTree } from './localization-tree';
 import { createLocalizationProxy } from './localization-proxy';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import Cookies from 'js-cookie';
+
+export const prunLocale = (Cookies.get('pu-locale') ?? 'en') as
+  | 'en'
+  | 'de'
+  | 'ca'
+  | 'zh_CN'
+  | 'nl'
+  | 'fi'
+  | 'fr'
+  | 'it'
+  | 'ja'
+  | 'ko'
+  | 'pt_BR'
+  | 'ru'
+  | 'es'
+  | 'uk';
 
 export let L!: PrunLocalization;
 export let localizationTree!: LocalizationTree;
@@ -40,14 +57,21 @@ export function getMaterialByName(name?: string | null) {
 
 export function applyLocalizationPatch(
   localization: LiteralLocalizationLeaf,
-  patch: (value: string) => string,
+  patch:
+    | ((value: string) => string)
+    | Partial<Record<typeof prunLocale | 'default', (value: string) => string>>,
 ) {
   const ast = localization.getFormat()?.getAst();
   const text = localization();
   if (ast === undefined || text === undefined) {
     return;
   }
-  const newText = patch(text);
+  const applyPatch: ((value: string) => string) | undefined =
+    typeof patch === 'function' ? patch : (patch[prunLocale] ?? patch['default']);
+  if (applyPatch === undefined) {
+    return;
+  }
+  const newText = applyPatch(text);
   ast.length = 1;
   ast[0] = { type: TYPE.literal, value: newText };
 }
