@@ -3,7 +3,6 @@ import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { isEmpty } from 'ts-extras';
-import { PrunI18N } from '@src/infrastructure/prun-ui/i18n';
 
 function onTileReady(tile: PrunTile) {
   // Only process BS {base} tiles
@@ -33,10 +32,9 @@ function onTileReady(tile: PrunTile) {
 }
 
 function init() {
-  const localized = PrunI18N['SiteWorkforces.table.currentWorkforce']?.[0];
-  if (localized) {
-    localized.value = localized.value.replace('Current Workforce', 'Current');
-  }
+  applyLocalizationPatch(L.SiteWorkforces.table.currentWorkforce, value =>
+    value.replace('Current Workforce', 'Current'),
+  );
   tiles.observe('BS', onTileReady);
 }
 

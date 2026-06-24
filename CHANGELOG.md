@@ -2,14 +2,80 @@
 
 ## Unreleased
 
+### Changed
+
+- `FXPO`: The "Maximum Lot Size" field now sets a more precise price (`fxpo-maximum-lot-size`)
+
+### Fixed
+
+- `PROD`: Fixed order completion time not displaying for `PROD {planet id}` (`prod-order-eta`)
+
+## 26.6.22.2033
+
+### Fixed
+
+- Fixed the window resizing bug introduced in the previous release
+
+## 26.6.22
+
+### Added
+
+- `FXPO`: Added a "Maximum Lot Size" field to fill the top order in the order book (`fxpo-maximum-lot-size`)
+- `XIT CONTC`: Added a "Violated Conditions" section (separate for partner/self)
+
+### Changed
+
+- `ADM`: The "Withdraw" vote button now has a gray color (`adm-neutral-withdraw-button`)
+- `CONT`: The preamble of user-made contracts is no longer minimized (`minimize-headers`)
+- `FXPO`: The "Current Price" field is now set to the order book price (`fxpo-better-current-price`)
+- `SFC`: The window now auto-closes on success (`sfc-auto-close`)
+- `XIT BURN`: Workforce consumables now include remaining fractional allocations
+- `XIT BURN`: The "Days" column now displays fractional days when less than 10 days remain
+- `XIT BURN`: The "Need" column is now based on fractional days instead of whole days
+- `XIT BURN`: The TSV export now includes the "Need" column
+- `XIT CXTS`: The command now supports an optional "Page Size" parameter
+- `XIT FXTS`: The command now supports an optional "Page Size" parameter
+
+### Fixed
+
+- `BUI`: Fixed recipe material layout (`bui-sort-recipes`)
+- `XIT CONTC`: Fixed address link display for unnamed planets in named systems
+- `XIT CONTC`: Fixed "Pick up X material" condition deadline handling
+
+## 26.5.18
+
+### Added
+
+- `shpi-base-inv-button`: Adds an INV context button when the ship is landed at a base
+- `shpi-warehouse-button`: Adds a WAR context button when the ship is landed at an address with a warehouse
+- `pli-cogc-label`: Replaces "Chamber of Global Commerce" row label with "CoGC ({program type})"
+
+### Changed
+
+- `XIT BURN`: Change PROD and WF buttons to only exclude inactive material rows without affecting in/out rates
+- `XIT ELEC`: Sort elections by election end date ascending
+- `inv-warehouse-button`: Move the button to the context bar
+- Skip confirmation overlays when deleting exchange orders while holding the Shift key
+- Optimize deleting own orders from non-CXOS places
+
+### Fixed
+
+- `audio-volume-slider`: Fix volume not being applied in some cases
+- `minimize-headers`: Fix inventory selector getting minimized in `POPID` tiles
+- `mtra-auto-focus-amount`: Fix the amount input field failing to focus automatically
+
+## 26.5.11
+
 ### Added
 
 - `XIT ELEC`: Upcoming elections for planets you have bases on
 - `XIT FXTS`: List of all your foreign exchange trades
 - `adm-hide-inactive-buttons`: Hides inactive buttons
+- `bs-warehouse-button`: Adds a "Warehouse" button
 - `cxo-delete-order-button`: Adds a delete button
 - `cxob-delete-own-exchange-orders`: Adds a delete button to own orders
-- `inv-shpt-condition-indicator`: Adds a condition indicator to SHPT and BLCK items
+- `inv-shpt-condition-indicator`: Adds a contract condition indicator to SHPT and BLCK items
+- `inv-warehouse-button`: Adds a "Warehouse" button to base inventories
 
 ### Changed
 

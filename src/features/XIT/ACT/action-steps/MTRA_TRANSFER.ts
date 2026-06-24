@@ -1,7 +1,7 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import { serializeStorage } from '@src/features/XIT/ACT/actions/utils';
 import { fixed0 } from '@src/utils/format';
-import { changeInputValue, clickElement, focusElement } from '@src/util';
+import { changeInputValue, clickElement, selectMaterialInMaterialSelector } from '@src/util';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { watchWhile } from '@src/utils/watch';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
@@ -67,27 +67,12 @@ export const MTRA_TRANSFER = act.addActionStep<Data>({
     }
 
     setStatus('Setting up MTRA buffer...');
-    const container = await $(tile.anchor, C.MaterialSelector.container);
-    const input = await $(container, 'input');
 
-    const suggestionsContainer = await $(container, C.MaterialSelector.suggestionsContainer);
-    focusElement(input);
-    changeInputValue(input, ticker);
-
-    const suggestionsList = await $(container, C.MaterialSelector.suggestionsList);
-    suggestionsContainer.style.display = 'none';
-    const match = _$$(suggestionsList, C.MaterialSelector.suggestionEntry).find(
-      x => _$(x, C.ColoredIcon.label)?.textContent === ticker,
-    );
-
-    if (!match) {
-      suggestionsContainer.style.display = '';
+    const materialSelectSuccess = await selectMaterialInMaterialSelector(tile.anchor, ticker);
+    if (!materialSelectSuccess) {
       fail(`Ticker ${ticker} not found in the material selector`);
       return;
     }
-
-    await clickElement(match);
-    suggestionsContainer.style.display = '';
 
     const sliderNumbers = _$$(tile.anchor, 'rc-slider-mark-text').map(x =>
       Number(x.textContent ?? 0),

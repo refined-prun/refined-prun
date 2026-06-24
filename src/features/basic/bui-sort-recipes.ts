@@ -3,9 +3,7 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 
 interface Recipe {
   element: HTMLElement;
-  inputsContainer?: HTMLElement;
   inputs?: MaterialAmount[];
-  outputsContainer?: HTMLElement;
   outputs?: MaterialAmount[];
 }
 
@@ -20,18 +18,10 @@ function onTileReady(tile: PrunTile) {
     const recipes = _$$(recipeList, C.BuildingInformation.recipe);
     const parsed = recipes.map(parseRecipe);
     parsed.sort(compareRecipes);
+    reorder(parsed);
     for (const recipe of parsed) {
-      recipeList.appendChild(recipe.element);
-      if (recipe.inputsContainer) {
-        for (const input of recipe.inputs ?? []) {
-          recipe.inputsContainer.appendChild(input.element);
-        }
-      }
-      if (recipe.outputsContainer) {
-        for (const output of recipe.outputs ?? []) {
-          recipe.outputsContainer.appendChild(output.element);
-        }
-      }
+      reorder(recipe.inputs);
+      reorder(recipe.outputs);
     }
   });
 }
@@ -47,25 +37,38 @@ function parseRecipe(element: HTMLElement): Recipe {
   const allMaterials = _$$(element, C.MaterialIcon.container);
   const inputMaterials = _$$(inputsContainer, C.MaterialIcon.container);
   const outputMaterials = allMaterials.filter(x => !inputMaterials.includes(x));
-  const outputsContainer = outputMaterials[0]?.parentElement ?? undefined;
 
   return {
     element: element,
-    inputsContainer,
     inputs: inputMaterials
       .map(parseMaterialAmount)
       .sort((a, b) => compareMaterials(a.material, b.material)),
-    outputsContainer,
     outputs: outputMaterials
       .map(parseMaterialAmount)
       .sort((a, b) => compareMaterials(a.material, b.material)),
   };
 }
 
+function reorder(items?: { element: HTMLElement }[]) {
+  if (!items) {
+    return;
+  }
+
+  for (let i = 1; i < items.length; i++) {
+    items[i - 1].element.after(items[i].element);
+  }
+}
+
 function parseMaterialAmount(element: HTMLElement): MaterialAmount {
   const material = materialsStore.getByTicker(_$(element, C.ColoredIcon.label)?.textContent);
   const amount = Number(_$(element, C.MaterialIcon.indicator)?.textContent ?? 0);
-  return { element, material, amount };
+  const parent = element.parentElement!;
+  // For some reason, MaterialIcon.container elements are wrapped in an additional div,
+  // so we need to reorder those divs instead of the MaterialIcon element itself.
+  // This check is here in case molp changes it so the MaterialIcon elements become
+  // direct children of the BuildingInformation.recipe element.
+  const targetElement = parent.classList.contains(C.BuildingInformation.recipe) ? element : parent;
+  return { element: targetElement, material, amount };
 }
 
 function compareRecipes(a: Recipe, b: Recipe) {

@@ -1,5 +1,5 @@
 import { App, Plugin } from 'vue';
-import onNodeDisconnected from '@src/utils/on-node-disconnected';
+import { onNodeDisconnectedLazy } from '@src/utils/on-node-disconnected';
 
 export type FragmentAppData = Record<string, unknown>;
 
@@ -38,28 +38,28 @@ export class FragmentApp {
 
   appendTo(parent: Node) {
     const instance = this.mount();
-    onNodeDisconnected(parent, () => this.app.unmount());
+    onNodeDisconnectedLazy(parent, () => this.app.unmount());
     parent.appendChild(this.fragment);
     return instance;
   }
 
   prependTo(parent: Node) {
     const instance = this.mount();
-    onNodeDisconnected(parent, () => this.app.unmount());
+    onNodeDisconnectedLazy(parent, () => this.app.unmount());
     parent.insertBefore(this.fragment, parent.firstChild);
     return instance;
   }
 
   before(sibling: Node) {
     const instance = this.mount();
-    onNodeDisconnected(sibling.parentElement!, () => this.app.unmount());
+    onNodeDisconnectedLazy(sibling.parentElement!, () => this.app.unmount());
     sibling.parentElement!.insertBefore(this.fragment, sibling);
     return instance;
   }
 
   after(sibling: Node) {
     const instance = this.mount();
-    onNodeDisconnected(sibling.parentElement!, () => this.app.unmount());
+    onNodeDisconnectedLazy(sibling.parentElement!, () => this.app.unmount());
     sibling.parentElement!.insertBefore(this.fragment, sibling.nextSibling);
     return instance;
   }

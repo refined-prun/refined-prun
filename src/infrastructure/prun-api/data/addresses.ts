@@ -35,11 +35,11 @@ export const addressesStore = {
   ...state,
 };
 
-export const getEntityNaturalIdFromAddress = (address?: PrunApi.Address | undefined) => {
+export const getEntityNaturalIdFromAddress = (address?: PrunApi.Address | null) => {
   return getLocationLineFromAddress(address)?.entity.naturalId;
 };
 
-export const getEntityNameFromAddress = (address?: PrunApi.Address | undefined) => {
+export const getEntityNameFromAddress = (address?: PrunApi.Address | null) => {
   const location = getLocationLineFromAddress(address);
   if (!location) {
     return undefined;
@@ -57,21 +57,21 @@ export const getEntityNameFromAddress = (address?: PrunApi.Address | undefined) 
   return location.entity.name.replace(system.entity.naturalId, `${system.entity.name} `);
 };
 
-export const getSystemLineFromAddress = (address?: PrunApi.Address | undefined) => {
+export const getSystemLineFromAddress = (address?: PrunApi.Address | null) => {
   if (!address) {
     return undefined;
   }
   return isSystemLine(address.lines[0]) ? address.lines[0] : address.lines.find(isSystemLine);
 };
 
-export const getLocationLineFromAddress = (address?: PrunApi.Address | undefined) => {
+export const getLocationLineFromAddress = (address?: PrunApi.Address | null) => {
   if (!address) {
     return undefined;
   }
   return isLocationLine(address.lines[1]) ? address.lines[1] : address.lines.find(isLocationLine);
 };
 
-export function getDestinationName(destination?: PrunApi.Address) {
+export function getAddressName(destination?: PrunApi.Address) {
   if (!destination) {
     return undefined;
   }
@@ -84,7 +84,7 @@ export function getDestinationName(destination?: PrunApi.Address) {
   return getEntityNameFromAddress(destination);
 }
 
-export function getDestinationFullName(destination?: PrunApi.Address) {
+export function getFullAddressName(destination?: PrunApi.Address) {
   if (!destination) {
     return undefined;
   }

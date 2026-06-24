@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import PrunLink from '@src/components/PrunLink.vue';
-import { isPlanetLine } from '@src/infrastructure/prun-api/data/addresses';
+import { getAddressName, isPlanetLine } from '@src/infrastructure/prun-api/data/addresses';
 
 const { address } = defineProps<{ address: PrunApi.Address }>();
 
 const body = computed(() => address.lines[1]);
 const isPlanet = computed(() => isPlanetLine(body.value));
 const naturalId = computed(() => body.value.entity?.naturalId);
-const name = computed(() => body.value.entity?.name);
+const name = computed(() => getAddressName(address));
 </script>
 
 <template>

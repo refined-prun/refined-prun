@@ -1,5 +1,5 @@
 import { clickElement } from '@src/util';
-import onNodeDisconnected from '@src/utils/on-node-disconnected';
+import { onNodeDisconnected } from '@src/utils/on-node-disconnected';
 
 export function mirrorSubtree(origin: Element, target: Element, classes: string[]) {
   const cloneOf = new WeakMap<Node, Node>();

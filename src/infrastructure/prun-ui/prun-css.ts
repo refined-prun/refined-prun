@@ -1,9 +1,12 @@
 import { registerClassName } from '@src/utils/select-dom';
 import { watchUntil } from '@src/utils/watch';
 import { sleep } from '@src/utils/sleep';
+import { createCssProxy } from '@src/infrastructure/prun-ui/prun-css-proxy';
 
-export const C = {} as PrunCssClasses;
+const cssClasses = {} as Record<string, Record<string, string>>;
+export const C = createCssProxy(cssClasses, 'C') as unknown as PrunCssClasses;
 export const prunCssStylesheets = reactive<Set<HTMLStyleElement>>(new Set());
+
 const appContainerFound = ref(false);
 export let mergedPrunStyles = '';
 export const prunStyleUpdated = ref(false);
@@ -51,10 +54,10 @@ function processStylesheet(style: HTMLStyleElement) {
       continue;
     }
     const child = camelize(parts[1]);
-    let parentObject = C[parent];
+    let parentObject = cssClasses[parent];
     if (parentObject === undefined) {
       parentObject = {};
-      C[parent] = parentObject;
+      cssClasses[parent] = parentObject;
     }
     if (parentObject[child] !== undefined) {
       continue;
@@ -64,7 +67,7 @@ function processStylesheet(style: HTMLStyleElement) {
   }
 
   prunCssStylesheets.add(style);
-  appContainerFound.value = C.App?.container !== undefined;
+  appContainerFound.value = cssClasses.App?.container !== undefined;
 
   mergedPrunStyles +=
     style

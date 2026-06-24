@@ -3,6 +3,7 @@ interface PrunTile {
   container: HTMLElement;
   frame: HTMLDivElement;
   anchor: HTMLDivElement;
+  window: HTMLElement | null;
   docked: boolean;
   fullCommand: string;
   command: string;

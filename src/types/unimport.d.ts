@@ -4,9 +4,11 @@ declare global {
   const $: typeof import('@src/utils/select-dom')['$']
   const C: typeof import('@src/infrastructure/prun-ui/prun-css')['C']
   const EffectScope: typeof import('vue')['EffectScope']
+  const L: typeof import('@src/infrastructure/prun-ui/i18n')['L']
   const _$$: typeof import('@src/utils/select-dom')['_$$']
   const _$: typeof import('@src/utils/select-dom')['_$']
   const applyCssRule: typeof import('@src/infrastructure/prun-ui/refined-prun-css')['applyCssRule']
+  const applyLocalizationPatch: typeof import('@src/infrastructure/prun-ui/i18n')['applyLocalizationPatch']
   const computed: typeof import('vue')['computed']
   const config: typeof import('@src/infrastructure/shell/config')['default']
   const createApp: typeof import('vue')['createApp']
@@ -50,7 +52,7 @@ declare global {
   const shallowReactive: typeof import('vue')['shallowReactive']
   const shallowReadonly: typeof import('vue')['shallowReadonly']
   const shallowRef: typeof import('vue')['shallowRef']
-  const subscribe: typeof import('@src/utils/subscribe-async-generator')['subscribe']
+  const subscribe: typeof import('@src/utils/observable')['subscribe']
   const sumBy: typeof import('@src/utils/sum-by')['sumBy']
   const tiles: typeof import('@src/infrastructure/prun-ui/tiles')['default']
   const toRaw: typeof import('vue')['toRaw']
@@ -86,9 +88,11 @@ declare module 'vue' {
     readonly $: UnwrapRef<typeof import('@src/utils/select-dom')['$']>
     readonly C: UnwrapRef<typeof import('@src/infrastructure/prun-ui/prun-css')['C']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
+    readonly L: UnwrapRef<typeof import('@src/infrastructure/prun-ui/i18n')['L']>
     readonly _$$: UnwrapRef<typeof import('@src/utils/select-dom')['_$$']>
     readonly _$: UnwrapRef<typeof import('@src/utils/select-dom')['_$']>
     readonly applyCssRule: UnwrapRef<typeof import('@src/infrastructure/prun-ui/refined-prun-css')['applyCssRule']>
+    readonly applyLocalizationPatch: UnwrapRef<typeof import('@src/infrastructure/prun-ui/i18n')['applyLocalizationPatch']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly config: UnwrapRef<typeof import('@src/infrastructure/shell/config')['default']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
@@ -132,7 +136,7 @@ declare module 'vue' {
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
-    readonly subscribe: UnwrapRef<typeof import('@src/utils/subscribe-async-generator')['subscribe']>
+    readonly subscribe: UnwrapRef<typeof import('@src/utils/observable')['subscribe']>
     readonly sumBy: UnwrapRef<typeof import('@src/utils/sum-by')['sumBy']>
     readonly tiles: UnwrapRef<typeof import('@src/infrastructure/prun-ui/tiles')['default']>
     readonly toRaw: UnwrapRef<typeof import('vue')['toRaw']>

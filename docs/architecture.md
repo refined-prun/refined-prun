@@ -96,6 +96,7 @@ onApiMessage({ SOME_MESSAGE_TYPE(data) { /* ... */ } });
 ### `prun-ui/` — DOM Layer
 
 - **`C`** (`prun-css.ts`) — Object of runtime CSS class names parsed from PrUn's hashed stylesheets. E.g. `C.TileFrame.frame`. Available globally (auto-import).
+- **`L`** (`prun-ui/i18n`) — Typed tree over PrUn's localization dictionary. E.g. `L.CompanyPanel.data.bases()`. Available globally (auto-import).
 - **`tiles`** (`tiles.ts`) — Tracks active game tiles. `tiles.observe('CMD', cb)` fires `cb(tile)` for every tile matching the command. `tile` has `.command`, `.parameter`, `.frame`, `.anchor`.
 - **`showBuffer(cmd)`** (`buffers.ts`) — Opens a new game floating buffer programmatically with the provided command.
 - **`applyCssRule`** (`refined-prun-css.ts`) — Injects CSS rules, optionally scoped to a command.
@@ -117,7 +118,8 @@ Migrations (`user-data-migrations.ts`) run on every load to transform stored dat
 | Vue composables (`ref`, `computed`, `reactive`, `watch`, …) | `vue` |
 | `$`, `$$`, `_$`, `_$$` | `@src/utils/select-dom` |
 | `C` | `@src/infrastructure/prun-ui/prun-css` |
-| `subscribe` | `@src/utils/subscribe-async-generator` |
+| `L`, `applyLocalizationPatch` | `@src/infrastructure/prun-ui/i18n` |
+| `subscribe` | `@src/utils/observable` |
 | `tiles` | `@src/infrastructure/prun-ui/tiles` |
 | `features` | `@src/features/feature-registry` |
 | `xit` | `@src/features/XIT/xit-registry` |
