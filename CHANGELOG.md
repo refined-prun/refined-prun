@@ -9,6 +9,7 @@
 ### Fixed
 
 - `PROD`: Fixed order completion time not displaying for `PROD {planet id}` (`prod-order-eta`)
+- `XIT BURN`: Fixed the TSV export reporting double the inventory in the "Inv" column
 
 ## 26.6.22.2033
 
