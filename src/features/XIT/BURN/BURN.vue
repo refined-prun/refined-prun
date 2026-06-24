@@ -207,7 +207,7 @@ function formatBurnTable(burns: PlanetBurn[]) {
       const mat = planet.burn[material.ticker];
       const days = mat.dailyAmount >= 0 ? '' : Math.floor(mat.daysLeft).toString();
       const burn = round(mat.dailyAmount);
-      const inv = mat.inventory + mat.inventory;
+      const inv = mat.inventory + mat.remainingAllocation;
       const need =
         mat.dailyAmount >= 0 || mat.daysLeft > resupply
           ? 0
