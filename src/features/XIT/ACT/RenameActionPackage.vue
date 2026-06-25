@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import PrunButton from '@src/components/PrunButton.vue';
 import SectionHeader from '@src/components/SectionHeader.vue';
+import SectionDescription from '@src/components/SectionDescription.vue';
 import Active from '@src/components/forms/Active.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
 import Commands from '@src/components/forms/Commands.vue';
@@ -27,10 +28,10 @@ function onCreateClick() {
 <template>
   <div :class="C.DraftConditionEditor.form">
     <SectionHeader>Rename Action Package</SectionHeader>
-    <div :class="$style.description">
+    <SectionDescription>
       WARNING: Renaming an action package will break all existing tile links to it (including this
       one). You can see the full list of your action packages in XIT ACT.
-    </div>
+    </SectionDescription>
     <form>
       <Active label="Name" :error="nameError">
         <TextInput v-model="newName" />
@@ -41,12 +42,3 @@ function onCreateClick() {
     </form>
   </div>
 </template>
-
-<style module>
-.description {
-  line-height: 13px;
-  padding: 0 4px;
-  background-color: #26353e;
-  margin-bottom: 5px;
-}
-</style>

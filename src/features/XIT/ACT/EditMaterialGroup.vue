@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import PrunButton from '@src/components/PrunButton.vue';
 import SectionHeader from '@src/components/SectionHeader.vue';
+import SectionDescription from '@src/components/SectionDescription.vue';
 import Active from '@src/components/forms/Active.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
 import Commands from '@src/components/forms/Commands.vue';
@@ -21,6 +22,7 @@ const nameError = ref(false);
 const typeOptions = act.getMaterialGroupTypes();
 const type = ref(group.type);
 
+const shortDescription = computed(() => act.getMaterialGroupInfo(type.value)?.shortDescription);
 const editFormComponent = computed(() => act.getMaterialGroupInfo(type.value)?.editComponent);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const editForm = useTemplateRef<any>('editForm');
@@ -46,6 +48,7 @@ function onSaveClick() {
 <template>
   <div :class="C.DraftConditionEditor.form">
     <SectionHeader>{{ add ? 'Add' : 'Edit' }} Material Group</SectionHeader>
+    <SectionDescription v-if="shortDescription">{{ shortDescription }}</SectionDescription>
     <form>
       <Active label="Type">
         <SelectInput v-model="type" :options="typeOptions" />
