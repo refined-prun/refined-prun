@@ -17,6 +17,7 @@ import { getInvStore } from '@src/core/store-id';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { alertsStore } from '@src/infrastructure/prun-api/data/alerts';
 import { shipyardProjectsStore } from '@src/infrastructure/prun-api/data/shipyard-projects';
+import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
 
 export function initTileDataExport() {
   subscribe($$(document, C.TileFrame.cmd), cmd => {
@@ -137,9 +138,15 @@ function getTileData(command: string): object {
     };
   }
 
-  if (command.startsWith('CXOS')) {
+  if (command.startsWith('CXOS') || command.startsWith('XIT CXTS')) {
     return {
       orders: cxosStore.all.value,
+    };
+  }
+
+  if (command.startsWith('FXOS') || command.startsWith('XIT FXTS')) {
+    return {
+      orders: fxosStore.all.value,
     };
   }
 
