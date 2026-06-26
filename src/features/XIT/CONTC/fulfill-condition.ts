@@ -36,15 +36,18 @@ export async function fulfillCondition(
   const done = ref(false);
   try {
     const command = `CONT ${contract.localId}`;
-    await showBuffer(command, {
+    // Force a fresh buffer so we never reuse a contract window the user already has open.
+    const bufferWindow = await showBuffer(command, {
       force: true,
       autoSubmit: true,
       autoClose: true,
       closeWhen: done,
     });
 
-    // Find the tile that was just opened.
-    const tile = tiles.find(command, true)[0];
+    // Resolve the tile from the window we just created, not via tiles.find,
+    // which could return another already-open CONT window for the same contract.
+    const body = _$(bufferWindow, C.Window.body);
+    const tile = body ? tiles.findByContainer(body)[0] : undefined;
     if (tile === undefined) {
       return { success: false, error: 'Failed to open contract buffer.' };
     }
@@ -68,21 +71,19 @@ export async function fulfillCondition(
     }
 
     const row = dataRows[idx];
-    const fulfillBtn = _$$(row, C.Button.success).find(
-      x => x.textContent?.trim().toLowerCase() === 'fulfill',
-    );
+    // The row is already matched to this condition by index, so its lone success
+    // button is the fulfill button. Avoid matching on localized button text.
+    const fulfillBtn = _$$(row, C.Button.success)[0];
     if (fulfillBtn === undefined) {
       return { success: false, error: 'Cannot fulfill this condition right now.' };
     }
 
     // Replace display:none with offscreen positioning so React processes events.
-    const bufferWindow = tile.frame.closest(`.${C.Window.window}`) as HTMLElement | null;
-    if (bufferWindow) {
-      bufferWindow.classList.remove(css.hidden);
-      bufferWindow.style.position = 'fixed';
-      bufferWindow.style.left = '-9999px';
-    }
-    await clickElement(fulfillBtn as HTMLElement);
+    const windowEl = bufferWindow as HTMLElement;
+    windowEl.classList.remove(css.hidden);
+    windowEl.style.position = 'fixed';
+    windowEl.style.left = '-9999px';
+    await clickElement(fulfillBtn);
 
     const error = await waitActionFeedback(tile.frame);
     if (error) {
