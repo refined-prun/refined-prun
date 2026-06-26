@@ -82,6 +82,11 @@ Core principle: Everything is a **command** (all-caps 2–6 letter codes). Comma
 - Modal dialogs pause interaction with background
 - Require user to confirm or cancel before proceeding
 
+### Contract Conditions (CONT buffer)
+- Conditions are displayed in a plain `<table>` with rows, not SectionList components
+- The native "FULFILL" button only appears in a condition's Cmds column when all prerequisites are met (e.g., materials in inventory at the correct location, sufficient currency)
+- Conditions that cannot be fulfilled yet show an empty Cmds cell
+
 ## Accessibility Notes
 
 - All-caps command language may appear cryptic but is intentional: precise, searchable, unmistakable.

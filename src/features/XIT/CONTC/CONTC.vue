@@ -40,6 +40,7 @@ const nonCurrent = computed(() =>
         <th>Contract</th>
         <th>Deadline</th>
         <th>Condition</th>
+        <th></th>
       </tr>
     </thead>
     <template v-if="partnerViolated.length > 0">
@@ -74,12 +75,12 @@ const nonCurrent = computed(() =>
     </template>
     <thead>
       <tr>
-        <th colspan="3">Current Conditions</th>
+        <th colspan="4">Current Conditions</th>
       </tr>
     </thead>
     <tbody>
       <tr v-if="isEmpty(currentNonViolated)">
-        <td colspan="3">No pending conditions</td>
+        <td colspan="4">No pending conditions</td>
       </tr>
       <template v-else>
         <ConditionRow
@@ -92,12 +93,12 @@ const nonCurrent = computed(() =>
     </tbody>
     <thead>
       <tr>
-        <th colspan="3">Non-Current Conditions</th>
+        <th colspan="4">Non-Current Conditions</th>
       </tr>
     </thead>
     <tbody>
       <tr v-if="isEmpty(nonCurrent)">
-        <td colspan="3">No pending conditions</td>
+        <td colspan="4">No pending conditions</td>
       </tr>
       <template v-else>
         <ConditionRow
