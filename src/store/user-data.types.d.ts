@@ -62,7 +62,7 @@ declare namespace UserData {
     consumablesOnly?: boolean;
   }
 
-  type ActionType = 'CX Buy' | 'MTRA' | 'Refuel';
+  type ActionType = 'CX Buy' | 'CX Sell' | 'MTRA' | 'Refuel';
 
   interface ActionData {
     type: ActionType;
@@ -72,6 +72,7 @@ declare namespace UserData {
 
     allowUnfilled?: boolean;
     buyPartial?: boolean;
+    sellPartial?: boolean;
     exchange?: string;
     useCXInv?: boolean;
     priceLimits?: Record<string, number>;

@@ -1,4 +1,5 @@
 import './actions/cx-buy/cx-buy';
+import './actions/cx-sell/cx-sell';
 import './actions/mtra/mtra';
 import './actions/refuel/refuel';
 
