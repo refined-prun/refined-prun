@@ -19,14 +19,13 @@ export interface MaterialGroupGenerateContext<TConfig>
   config: TConfig;
   setStatus: (status: string) => void;
   // Optional side channel for groups that carry per-ticker prices (e.g. Paste).
-  // `currency` is the exchange/currency the prices are denominated in.
-  setPrices?: (prices: Record<string, number>, currency?: string) => void;
+  // Prices are per-unit numbers in the currency of the action's target exchange.
+  setPrices?: (prices: Record<string, number>) => void;
 }
 
 // Prices a material group supplied alongside its quantity bill.
 export interface MaterialGroupPrices {
   prices: Record<string, number>;
-  currency?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

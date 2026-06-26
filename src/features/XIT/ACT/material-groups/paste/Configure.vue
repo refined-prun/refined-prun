@@ -1,25 +1,14 @@
 <script setup lang="ts">
 import Active from '@src/components/forms/Active.vue';
-import SelectInput from '@src/components/forms/SelectInput.vue';
 import { Config } from '@src/features/XIT/ACT/material-groups/paste/config';
 import { parsePaste } from '@src/features/XIT/ACT/material-groups/paste/paste';
-import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 const { config } = defineProps<{ data: UserData.MaterialGroupData; config: Config }>();
 
-const currencyOptions = [configurableValue, 'AI1', 'CI1', 'IC1', 'NC1', 'CI2', 'NC2'];
-
 const text = ref(config.materials ?? '');
-const currency = ref(config.currency ?? configurableValue);
-
-config.currency = currency.value;
 
 watch(text, x => {
   config.materials = x;
-});
-
-watch(currency, x => {
-  config.currency = x;
 });
 
 const result = computed(() => parsePaste(text.value));
@@ -58,9 +47,6 @@ const summary = computed(() => {
         :class="$style.textarea"
         placeholder="Paste from a spreadsheet, or type rows as TICKER,QTY,PRICE&#10;RAT,100,530&#10;DW,50&#10;&#10;One delimiter per paste: tab (spreadsheet), comma, or semicolon.&#10;PRICE is optional; max 3 significant figures."
         spellcheck="false" />
-    </Active>
-    <Active label="Currency">
-      <SelectInput v-model="currency" :options="currencyOptions" />
     </Active>
     <div
       v-if="summary"

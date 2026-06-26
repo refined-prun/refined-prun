@@ -103,8 +103,8 @@ export class StepGenerator {
       config: groupConfig,
       log: new Logger((tag, message) => this.log.logMessage(tag, `[${group.name}] ${message}`)),
       setStatus: status => this.options.onStatusChanged(status),
-      setPrices: (prices, currency) => {
-        this.groupPrices.set(name!, { prices, currency });
+      setPrices: prices => {
+        this.groupPrices.set(name!, { prices });
       },
     });
   }

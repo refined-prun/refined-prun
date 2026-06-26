@@ -346,7 +346,7 @@ act.addMaterialGroup<Config>({
       log.error('Invalid or missing pasted materials.');
       return undefined;
     }
-    setPrices?.(parsePrices(config.materials), config.currency);
+    setPrices?.(parsePrices(config.materials));
     return materials;
   },
 });
