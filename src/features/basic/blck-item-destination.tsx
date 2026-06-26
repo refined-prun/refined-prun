@@ -1,5 +1,5 @@
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
-import { getDestinationFullName } from '@src/infrastructure/prun-api/data/addresses';
+import { getFullAddressName } from '@src/infrastructure/prun-api/data/addresses';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { watchUntil } from '@src/utils/watch';
 
@@ -14,7 +14,7 @@ function init() {
     await watchUntil(() => !!id.value);
 
     const destination = contractsStore.getDestinationByShipmentId(id.value);
-    const name = getDestinationFullName(destination);
+    const name = getFullAddressName(destination);
     if (name) {
       createFragmentApp(() => (
         <span class={[C.ColoredIcon.subLabel, C.type.typeVerySmall]}>{name}</span>

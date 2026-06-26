@@ -1,7 +1,7 @@
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
-import { PrunI18N } from '@src/infrastructure/prun-ui/i18n';
+import { lookupLocalization } from '@src/infrastructure/prun-ui/i18n';
 
 const storeTypes = [
   'STORE',
@@ -56,11 +56,11 @@ function shortenTableLabels(tile: PrunTile) {
 }
 
 function getFullName(type: string) {
-  return PrunI18N[`StoreTypeLabel.${type}`]?.[0]?.value ?? type;
+  return lookupLocalization(L.StoreTypeLabel, type)() ?? type;
 }
 
 function getShortName(type: string) {
-  return PrunI18N[`StoreTypeLabel.${type}_SHORT`]?.[0]?.value ?? type;
+  return lookupLocalization(L.StoreTypeLabel, `${type}_SHORT`)() ?? type;
 }
 
 function init() {

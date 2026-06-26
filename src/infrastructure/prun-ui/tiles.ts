@@ -4,7 +4,7 @@ import onetime from 'onetime';
 import { onNodeTreeMutation } from '@src/utils/on-node-tree-mutation';
 import removeArrayElement from '@src/utils/remove-array-element';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
-import onNodeDisconnected from '@src/utils/on-node-disconnected';
+import { onNodeDisconnected } from '@src/utils/on-node-disconnected';
 import { matchBufferSize } from '@src/infrastructure/prun-ui/buffer-sizes';
 import { setBufferSize } from '@src/infrastructure/prun-ui/buffers';
 
@@ -69,6 +69,7 @@ function activateFrame(frame: HTMLDivElement, anchor: HTMLDivElement) {
   const tileElement = frame.parentElement!;
   const container = tileElement.parentElement!;
   const docked = !container.classList.contains(C.Window.body);
+  const window = container.closest(`.${C.Window.window}`) as HTMLElement | null;
   const id = getPrunId(tileElement)!;
   const commandElement = _$(frame, C.TileFrame.cmd);
   const fullCommand = commandElement!.textContent!.trim();
@@ -78,6 +79,7 @@ function activateFrame(frame: HTMLDivElement, anchor: HTMLDivElement) {
     container,
     frame,
     anchor,
+    window,
     docked,
     fullCommand,
     command: (indexOfSpace > 0 ? fullCommand.slice(0, indexOfSpace) : fullCommand).toUpperCase(),

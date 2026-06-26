@@ -71,7 +71,7 @@ export const getLocationLineFromAddress = (address?: PrunApi.Address | null) => 
   return isLocationLine(address.lines[1]) ? address.lines[1] : address.lines.find(isLocationLine);
 };
 
-export function getDestinationName(destination?: PrunApi.Address) {
+export function getAddressName(destination?: PrunApi.Address) {
   if (!destination) {
     return undefined;
   }
@@ -84,7 +84,7 @@ export function getDestinationName(destination?: PrunApi.Address) {
   return getEntityNameFromAddress(destination);
 }
 
-export function getDestinationFullName(destination?: PrunApi.Address) {
+export function getFullAddressName(destination?: PrunApi.Address) {
   if (!destination) {
     return undefined;
   }
