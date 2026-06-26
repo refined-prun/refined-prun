@@ -70,7 +70,8 @@ export function parseMaterials(input: string | undefined): Record<string, number
 
 act.addMaterialGroup<Config>({
   type: 'Paste',
-  shortDescription: 'Paste materials from clipboard at execution time',
+  // TODO(#212): Restore once PR #213 (shortDescription) merges to main.
+  // shortDescription: 'Paste materials from clipboard at execution time',
   description: () => 'Paste materials at execution time',
   configureComponent: Configure,
   needsConfigure: () => true,

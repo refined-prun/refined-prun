@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import PrunButton from '@src/components/PrunButton.vue';
 import SectionHeader from '@src/components/SectionHeader.vue';
-import SectionDescription from '@src/components/SectionDescription.vue';
 import Active from '@src/components/forms/Active.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
 import Commands from '@src/components/forms/Commands.vue';
@@ -97,7 +96,7 @@ const ExchangeTickers = {
 <template>
   <div :class="C.DraftConditionEditor.form">
     <SectionHeader>Quickstart</SectionHeader>
-    <SectionDescription>
+    <div :class="$style.description">
       This prefilled action package will resupply your base with materials for a given number of
       days.
       <br />
@@ -108,7 +107,7 @@ const ExchangeTickers = {
       configure the target ship, then press "Execute" and press "Act" until the package is done.
       <br />
       <mark>Note: You need a ship parked at the selected CX for this to work.</mark>
-    </SectionDescription>
+    </div>
     <form>
       <Active label="Name">
         <TextInput v-model="name" />
@@ -128,3 +127,12 @@ const ExchangeTickers = {
     </form>
   </div>
 </template>
+
+<style module>
+.description {
+  line-height: 13px;
+  padding: 0 4px;
+  background-color: #26353e;
+  margin-bottom: 5px;
+}
+</style>
