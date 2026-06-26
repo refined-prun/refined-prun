@@ -21,7 +21,7 @@ function isLikelyCommitted(input: HTMLInputElement) {
 }
 
 async function attachMaterialSelector(container: Element) {
-  const input = (await $(container, 'input')) as HTMLInputElement;
+  const input = await $(container, 'input');
   input.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
       recordCommitted(input);
@@ -68,18 +68,19 @@ function checkAndMaybeBlock(template: Element, button: HTMLElement, event: Event
 }
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, C.TemplateSelection.container), template => {
-    subscribe($$(template, C.MaterialSelector.container), attachMaterialSelector);
-    subscribe($$(template, C.Button.primary), button => {
-      if (button.textContent?.trim().toLowerCase() !== 'apply template') {
-        return;
-      }
-      const buttonEl = button as HTMLElement;
-      buttonEl.addEventListener(
-        'click',
-        event => checkAndMaybeBlock(template, buttonEl, event),
-        true,
-      );
+  subscribe($$(tile.anchor, C.TemplateSelection.container), container => {
+    subscribe($$(container, C.MaterialSelector.container), attachMaterialSelector);
+    // The apply-template button is the primary button in the action-button row.
+    // Scope to C.TemplateSelection.buttons (instead of matching localized
+    // "Apply template" text) so this works for non-English clients.
+    subscribe($$(container, C.TemplateSelection.buttons), buttons => {
+      subscribe($$(buttons, C.Button.primary), primary => {
+        primary.addEventListener(
+          'click',
+          event => checkAndMaybeBlock(container, primary, event),
+          true,
+        );
+      });
     });
   });
 }
