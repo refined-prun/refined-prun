@@ -16,13 +16,17 @@ act.addAction({
   },
   editComponent: Edit,
   generateSteps: async ctx => {
-    const { data, state, log, fail, getMaterialGroup, emitStep } = ctx;
+    const { data, state, log, fail, getMaterialGroup, getMaterialGroupPrices, emitStep } = ctx;
     const assert: AssertFn = ctx.assert;
     const allowUnfilled = data.allowUnfilled ?? false;
     const buyPartial = data.buyPartial ?? false;
 
     const materials = await getMaterialGroup(data.group);
     assert(materials, 'Invalid material group');
+
+    // Prices pasted into the material group take precedence over the action's
+    // manually-entered price limits; manual limits act as a fallback.
+    const groupPrices = getMaterialGroupPrices(data.group).prices;
 
     const exchange = data.exchange;
     assert(exchange, 'Missing exchange');
@@ -51,7 +55,7 @@ act.addAction({
 
     for (const ticker of Object.keys(materials)) {
       const amount = materials[ticker];
-      const priceLimit = data.priceLimits?.[ticker] ?? Infinity;
+      const priceLimit = groupPrices[ticker] ?? data.priceLimits?.[ticker] ?? Infinity;
       if (isNaN(priceLimit)) {
         log.error('Non-numerical price limit on ' + ticker);
         continue;
