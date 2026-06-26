@@ -14,12 +14,12 @@ const currency = ref(config.currency ?? configurableValue);
 
 config.currency = currency.value;
 
-watch(text, value => {
-  config.materials = value;
+watch(text, x => {
+  config.materials = x;
 });
 
-watch(currency, value => {
-  config.currency = value;
+watch(currency, x => {
+  config.currency = x;
 });
 
 const result = computed(() => parsePaste(text.value));
@@ -56,7 +56,7 @@ const summary = computed(() => {
       <textarea
         v-model="text"
         :class="$style.textarea"
-        placeholder="Paste from a spreadsheet (tab-separated) or type manually&#10;TICKER  QTY  PRICE&#10;RAT     100  530&#10;&#10;One delimiter per paste (tab, comma, or semicolon).&#10;PRICE is optional; max 3 significant figures."
+        placeholder="Paste from a spreadsheet, or type rows as TICKER,QTY,PRICE&#10;RAT,100,530&#10;DW,50&#10;&#10;One delimiter per paste: tab (spreadsheet), comma, or semicolon.&#10;PRICE is optional; max 3 significant figures."
         spellcheck="false" />
     </Active>
     <Active label="Currency">
