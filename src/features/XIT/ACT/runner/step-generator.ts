@@ -1,4 +1,8 @@
-import { ActionPackageConfig, ActionStep } from '@src/features/XIT/ACT/shared-types';
+import {
+  ActionPackageConfig,
+  ActionStep,
+  MaterialGroupPrices,
+} from '@src/features/XIT/ACT/shared-types';
 import { Logger } from '@src/features/XIT/ACT/runner/logger';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { exchangesStore } from '@src/infrastructure/prun-api/data/exchanges';
@@ -51,6 +55,7 @@ export class StepGenerator {
           },
           emitStep: step => steps.push(step),
           getMaterialGroup: async name => await this.getMaterialGroup(pkg, config, name),
+          getMaterialGroupPrices: name => this.getMaterialGroupPrices(name),
           state,
         });
       } catch (e) {
@@ -98,7 +103,18 @@ export class StepGenerator {
       config: groupConfig,
       log: new Logger((tag, message) => this.log.logMessage(tag, `[${group.name}] ${message}`)),
       setStatus: status => this.options.onStatusChanged(status),
+      setPrices: (prices, currency) => {
+        this.groupPrices.set(name!, { prices, currency });
+      },
     });
+  }
+
+  // Per-ticker prices supplied by material groups during this run, keyed by
+  // group name. Populated by setPrices() while generating the bill.
+  private groupPrices = new Map<string, MaterialGroupPrices>();
+
+  private getMaterialGroupPrices(name: string | undefined): MaterialGroupPrices {
+    return (name ? this.groupPrices.get(name) : undefined) ?? { prices: {} };
   }
 }
 
