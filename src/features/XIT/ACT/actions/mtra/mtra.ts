@@ -4,7 +4,12 @@ import Configure from '@src/features/XIT/ACT/actions/mtra/Configure.vue';
 import { MTRA_TRANSFER } from '@src/features/XIT/ACT/action-steps/MTRA_TRANSFER';
 import { atSameLocation, deserializeStorage } from '@src/features/XIT/ACT/actions/utils';
 import { Config } from '@src/features/XIT/ACT/actions/mtra/config';
-import { AssertFn, configurableValue } from '@src/features/XIT/ACT/shared-types';
+import {
+  AssertFn,
+  actionTargetPrefix,
+  configurableValue,
+} from '@src/features/XIT/ACT/shared-types';
+import { resolveActionDest } from '@src/features/XIT/ACT/reference-utils';
 
 act.addAction<Config>({
   type: 'MTRA',
@@ -17,10 +22,14 @@ act.addAction<Config>({
       action.origin == configurableValue
         ? (config?.origin ?? 'configured location')
         : action.origin;
-    const dest =
-      action.dest == configurableValue
-        ? (config?.destination ?? 'configured location')
-        : action.dest;
+    let dest: string;
+    if (action.dest?.startsWith(actionTargetPrefix)) {
+      dest = `Same as: ${action.dest.slice(actionTargetPrefix.length)} dest`;
+    } else if (action.dest == configurableValue) {
+      dest = config?.destination ?? 'configured location';
+    } else {
+      dest = action.dest!;
+    }
     return `Transfer group [${action.group}] from ${origin} to ${dest}`;
   },
   editComponent: Edit,
@@ -35,7 +44,7 @@ act.addAction<Config>({
     );
   },
   generateSteps: async ctx => {
-    const { data, config, getMaterialGroup, emitStep } = ctx;
+    const { data, config, pkg, fullConfig, getMaterialGroup, emitStep } = ctx;
     const assert: AssertFn = ctx.assert;
 
     const materials = await getMaterialGroup(data.group);
@@ -45,7 +54,13 @@ act.addAction<Config>({
     const origin = deserializeStorage(serializedOrigin);
     assert(origin, 'Invalid origin');
 
-    const serializedDest = data.dest === configurableValue ? config?.destination : data.dest;
+    let serializedDest: string | undefined;
+    if (data.dest?.startsWith(actionTargetPrefix)) {
+      serializedDest = resolveActionDest(data.dest, pkg, fullConfig);
+      assert(serializedDest, `Failed to resolve destination reference: ${data.dest}`);
+    } else {
+      serializedDest = data.dest === configurableValue ? config?.destination : data.dest;
+    }
     const dest = deserializeStorage(serializedDest);
     assert(dest, 'Invalid destination');
 

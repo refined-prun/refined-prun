@@ -5,20 +5,44 @@ import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addr
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import NumberInput from '@src/components/forms/NumberInput.vue';
 import { comparePlanets } from '@src/util';
-import { configurableValue } from '@src/features/XIT/ACT/shared-types';
+import {
+  configurableValue,
+  groupTargetPrefix,
+  DropdownOption,
+} from '@src/features/XIT/ACT/shared-types';
 
-const { group } = defineProps<{ group: UserData.MaterialGroupData }>();
+const { group, pkg } = defineProps<{
+  group: UserData.MaterialGroupData;
+  pkg: UserData.ActionPackageData;
+}>();
 
 const planets = computed(() => {
-  const planets = (sitesStore.all.value ?? [])
+  const planets: DropdownOption[] = (sitesStore.all.value ?? [])
     .map(x => getEntityNameFromAddress(x.address))
     .filter(x => x !== undefined)
     .sort(comparePlanets);
   planets.unshift(configurableValue);
+
+  // Add reference options for groups above this one.
+  // When adding a new group it is not in the array yet, so treat its index as the end.
+  const currentIndex = pkg.groups.indexOf(group);
+  const refLimit = currentIndex === -1 ? pkg.groups.length : currentIndex;
+  let insertAt = 1;
+  for (let i = 0; i < refLimit; i++) {
+    const other = pkg.groups[i];
+    if (!other.name || (other.type !== 'Resupply' && other.type !== 'Repair') || !other.planet) {
+      continue;
+    }
+    planets.splice(insertAt++, 0, {
+      label: `Same as: ${other.name}`,
+      value: groupTargetPrefix + other.name,
+    });
+  }
+
   return planets;
 });
 
-const planet = ref(group.planet ?? planets.value[0]);
+const planet = ref(group.planet ?? configurableValue);
 const planetError = ref(false);
 
 const days = ref(typeof group.days === 'string' ? parseInt(group.days || '0') : group.days);
