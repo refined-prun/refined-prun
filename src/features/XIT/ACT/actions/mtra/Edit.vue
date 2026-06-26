@@ -29,9 +29,11 @@ const destinationOptions = computed(() => {
   const options: DropdownOption[] = [...storages.value];
 
   // Add reference options for MTRA actions above this one.
+  // When adding a new action it is not in the array yet, so treat its index as the end.
   const currentIndex = pkg.actions.indexOf(action);
+  const refLimit = currentIndex === -1 ? pkg.actions.length : currentIndex;
   let insertAt = 1;
-  for (let i = 0; i < currentIndex; i++) {
+  for (let i = 0; i < refLimit; i++) {
     const other = pkg.actions[i];
     if (!other.name || other.type !== 'MTRA' || !other.dest) {
       continue;

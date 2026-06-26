@@ -24,9 +24,11 @@ const planets = computed(() => {
   planets.unshift(configurableValue);
 
   // Add reference options for groups above this one.
+  // When adding a new group it is not in the array yet, so treat its index as the end.
   const currentIndex = pkg.groups.indexOf(group);
+  const refLimit = currentIndex === -1 ? pkg.groups.length : currentIndex;
   let insertAt = 1;
-  for (let i = 0; i < currentIndex; i++) {
+  for (let i = 0; i < refLimit; i++) {
     const other = pkg.groups[i];
     if (!other.name || (other.type !== 'Resupply' && other.type !== 'Repair') || !other.planet) {
       continue;
