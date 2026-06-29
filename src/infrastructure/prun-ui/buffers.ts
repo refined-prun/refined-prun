@@ -107,16 +107,27 @@ async function processWindow(window: HTMLDivElement, command: string, options?: 
     }
   }
   const message = UI_TILES_CHANGE_COMMAND(id!, command);
-  if (!dispatchClientPrunMessage(message)) {
+  const selector = await $(window, C.Tile.selector);
+  const fallbackTileChange = async () => {
     changeInputValue(input, command);
     await sleep(0);
     form.requestSubmit();
+  };
+  if (!dispatchClientPrunMessage(message)) {
+    fallbackTileChange();
   }
-  const selector = await $(window, C.Tile.selector);
+  let tileChanged = false;
+  setTimeout(() => {
+    if (tileChanged) {
+      return;
+    }
+    fallbackTileChange();
+  }, 100);
   await Promise.any([
     new Promise<void>(resolve => onNodeDisconnected(input, resolve)),
     $(selector, C.Tile.warning),
   ]);
+  tileChanged = true;
   if (!options?.autoClose) {
     window.classList.remove(css.hidden);
     return;

@@ -13,11 +13,12 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
   window.WebSocket = new Proxy(WebSocket, {
     construct(target: typeof WebSocket, args: [string, (string | string[])?]) {
       const ws = new target(...args);
+      let dispatchClientMessage: ((payload: T) => void) | undefined = undefined;
 
       return new Proxy(ws, {
         set(target, prop, value) {
           if (prop === 'onmessage') {
-            middleware.dispatchClientMessage.value = message => {
+            dispatchClientMessage = message => {
               value(new MessageEvent('message', { data: encodeMessage(message) }));
             };
             target.onmessage = async e => {
@@ -33,6 +34,22 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
                 });
               }
               value(e);
+            };
+            return true;
+          }
+          if (prop === 'onopen') {
+            target.onopen = e => {
+              middleware.dispatchClientMessage.value = dispatchClientMessage;
+              value?.(e);
+            };
+            return true;
+          }
+          if (prop === 'onclose') {
+            target.onclose = e => {
+              if (middleware.dispatchClientMessage.value === dispatchClientMessage) {
+                middleware.dispatchClientMessage.value = undefined;
+              }
+              value?.(e);
             };
             return true;
           }
