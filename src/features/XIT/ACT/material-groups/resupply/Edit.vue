@@ -24,8 +24,13 @@ const planets = computed(() => {
 const planet = ref(group.planet ?? planets.value[0]);
 const planetError = ref(false);
 
+const configureDaysOnExecution = ref(group.days === configurableValue);
 const days = ref(
-  typeof group.days === 'string' ? parseInt(group.days || '10') : (group.days ?? 10),
+  typeof group.days === 'string' && group.days !== configurableValue
+    ? parseInt(group.days || '10')
+    : typeof group.days === 'number'
+      ? group.days
+      : 10,
 );
 const daysError = ref(false);
 
@@ -39,14 +44,14 @@ function validate() {
   let isValid = true;
   planetError.value = !planet.value;
   isValid &&= !planetError.value;
-  daysError.value = days.value <= 0;
+  daysError.value = !configureDaysOnExecution.value && days.value <= 0;
   isValid &&= !daysError.value;
   return isValid;
 }
 
 function save() {
   group.planet = planet.value;
-  group.days = days.value;
+  group.days = configureDaysOnExecution.value ? configurableValue : days.value;
   group.exclusions = exclusions.value
     .split(',')
     .map(x => materialsStore.getByTicker(x.trim())?.ticker)
@@ -66,7 +71,8 @@ defineExpose({ validate, save });
     label="Days"
     tooltip="The number of days of supplies to refill the planet with."
     :error="daysError">
-    <NumberInput v-model="days" />
+    <NumberInput v-if="!configureDaysOnExecution" v-model="days" />
+    <RadioItem v-model="configureDaysOnExecution">configure on execution</RadioItem>
   </Active>
   <Active
     label="Material Exclusions"

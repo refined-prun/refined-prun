@@ -33,6 +33,9 @@ const nameColspan = computed(() => (io.value ? 6 : 4));
         <PrunButton dark inline @click="showBuffer(`INV ${burn.storeId.substring(0, 8)}`)">
           INV
         </PrunButton>
+        <PrunButton dark inline @click="showBuffer(`XIT BURNACT ${burn.naturalId}`)"
+          >ACT</PrunButton
+        >
       </div>
     </td>
   </tr>

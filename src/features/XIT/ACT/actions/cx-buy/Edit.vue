@@ -7,6 +7,7 @@ import RadioItem from '@src/components/forms/RadioItem.vue';
 import { showTileOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
 import EditPriceLimits from '@src/features/XIT/ACT/actions/cx-buy/EditPriceLimits.vue';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 const { action, pkg } = defineProps<{
   action: UserData.ActionData;
@@ -16,7 +17,7 @@ const { action, pkg } = defineProps<{
 const materialGroups = computed(() => pkg.groups.map(x => x.name!).filter(x => x));
 const materialGroup = ref(action.group ?? materialGroups.value[0]);
 
-const exchanges = ['AI1', 'CI1', 'IC1', 'NC1', 'CI2', 'NC2'];
+const exchanges = [configurableValue, 'AI1', 'CI1', 'IC1', 'NC1', 'CI2', 'NC2'];
 const exchange = ref(action.exchange ?? exchanges[0]);
 
 const priceLimits = ref(getPriceLimits());
