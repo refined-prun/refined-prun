@@ -18,13 +18,15 @@ const { alwaysVisible, burn, material } = defineProps<{
 const production = computed(() => burn.dailyAmount);
 const invAmount = computed(() => {
   const amount = burn.inventory + burn.remainingAllocation;
+  // Truncate rather than round so the amount never exceeds what the game shows:
+  // the game floors partial stacks, so a raw 19.95 must display as 19(.9), not 20.
   if (amount >= 100) {
-    return fixed0(amount);
+    return fixed0(Math.floor(amount));
   }
   if (amount >= 10) {
-    return fixed01(amount);
+    return fixed01(Math.trunc(amount * 10) / 10);
   }
-  return fixed02(amount);
+  return fixed02(Math.trunc(amount * 100) / 100);
 });
 const invWhole = computed(() => {
   const dot = invAmount.value.indexOf('.');
