@@ -37,8 +37,6 @@ const invFraction = computed(() => {
 const isInf = computed(() => production.value >= 0);
 const days = computed(() => (isInf.value ? Number.POSITIVE_INFINITY : burn.daysLeft));
 
-// Use the shared classifier so the color filter buttons include/exclude exactly
-// the rows shown in each color by DaysCell.
 const thresholds = computed(() => getBurnThresholds(days.value));
 
 const red = useTileState('red');
