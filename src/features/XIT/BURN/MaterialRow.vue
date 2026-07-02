@@ -4,6 +4,7 @@ import MaterialIcon from '@src/components/MaterialIcon.vue';
 import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
 import { fixed0, fixed01, fixed02, fixed1, fixed2 } from '@src/utils/format';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
+import { getBurnThresholds } from '@src/features/XIT/BURN/utils';
 import PrunButton from '@src/components/PrunButton.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
@@ -17,13 +18,15 @@ const { alwaysVisible, burn, material } = defineProps<{
 const production = computed(() => burn.dailyAmount);
 const invAmount = computed(() => {
   const amount = burn.inventory + burn.remainingAllocation;
+  // Truncate rather than round so the amount never exceeds what the game shows:
+  // the game floors partial stacks, so a raw 19.95 must display as 19(.9), not 20.
   if (amount >= 100) {
-    return fixed0(amount);
+    return fixed0(Math.floor(amount));
   }
   if (amount >= 10) {
-    return fixed01(amount);
+    return fixed01(Math.trunc(amount * 10) / 10);
   }
-  return fixed02(amount);
+  return fixed02(Math.trunc(amount * 100) / 100);
 });
 const invWhole = computed(() => {
   const dot = invAmount.value.indexOf('.');
@@ -36,9 +39,7 @@ const invFraction = computed(() => {
 const isInf = computed(() => production.value >= 0);
 const days = computed(() => (isInf.value ? Number.POSITIVE_INFINITY : burn.daysLeft));
 
-const isRed = computed(() => days.value <= userData.settings.burn.red);
-const isYellow = computed(() => days.value <= userData.settings.burn.yellow);
-const isGreen = computed(() => days.value > userData.settings.burn.yellow);
+const thresholds = computed(() => getBurnThresholds(days.value));
 
 const red = useTileState('red');
 const yellow = useTileState('yellow');
@@ -53,9 +54,8 @@ const isVisible = computed(() => {
   if (isInf.value) {
     return inf.value;
   }
-  return (
-    (isRed.value && red.value) || (isYellow.value && yellow.value) || (isGreen.value && green.value)
-  );
+  const { isRed, isYellow, isGreen } = thresholds.value;
+  return (isRed && red.value) || (isYellow && yellow.value) || (isGreen && green.value);
 });
 
 function formatAmount(value: number) {
