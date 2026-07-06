@@ -3,9 +3,16 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { sortMaterials } from '@src/core/sort-materials';
 import { userData } from '@src/store/user-data';
 
+// Days at the precision the table shows: whole days from 10 up, one decimal
+// below that. Truncated, never rounded, so the value can't overstate runway.
+export function displayedDays(days: number) {
+  return days >= 10 ? Math.floor(days) : Math.trunc(days * 10) / 10;
+}
+
 // Shared red/yellow/green classification for the cell color (DaysCell) and the
-// color filter buttons (MaterialRow), so they always match. Days are floored to
-// match the display; categories are cumulative (red implies yellow).
+// color filter buttons (MaterialRow), so they always match. Classifies the
+// displayed value, and the categories are mutually exclusive:
+// red <= R < yellow <= Y < green.
 export interface BurnThresholds {
   isRed: boolean;
   isYellow: boolean;
@@ -13,11 +20,13 @@ export interface BurnThresholds {
 }
 
 export function getBurnThresholds(days: number): BurnThresholds {
-  const flooredDays = Math.floor(days);
+  const shownDays = displayedDays(days);
+  const isRed = shownDays <= userData.settings.burn.red;
+  const isYellow = !isRed && shownDays <= userData.settings.burn.yellow;
   return {
-    isRed: flooredDays <= userData.settings.burn.red,
-    isYellow: flooredDays <= userData.settings.burn.yellow,
-    isGreen: flooredDays > userData.settings.burn.yellow,
+    isRed,
+    isYellow,
+    isGreen: !isRed && !isYellow,
   };
 }
 
