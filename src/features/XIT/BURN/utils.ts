@@ -12,7 +12,7 @@ export function displayedDays(days: number) {
 // Shared red/yellow/green classification for the cell color (DaysCell) and the
 // color filter buttons (MaterialRow), so they always match. Classifies the
 // displayed value, and the categories are mutually exclusive:
-// red <= R < yellow <= Y < green.
+// red ≤ R < yellow ≤ Y < green.
 export interface BurnThresholds {
   isRed: boolean;
   isYellow: boolean;
