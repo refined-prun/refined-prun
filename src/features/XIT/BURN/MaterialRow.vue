@@ -18,8 +18,7 @@ const { alwaysVisible, burn, material } = defineProps<{
 const production = computed(() => burn.dailyAmount);
 const invAmount = computed(() => {
   const amount = burn.inventory + burn.remainingAllocation;
-  // Truncate rather than round so the amount never exceeds what the game shows:
-  // the game floors partial stacks, so a raw 19.95 must display as 19(.9), not 20.
+  // Truncate, don't round, so the shown amount never exceeds what you hold.
   if (amount >= 100) {
     return fixed0(Math.floor(amount));
   }
