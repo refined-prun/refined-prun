@@ -82,6 +82,24 @@ declare namespace UserData {
     dest?: string;
   }
 
+  interface StockPresetData {
+    name: string;
+    planets: StockPlanetData[];
+  }
+
+  interface StockPlanetData {
+    // Planet natural id or name, resolved via sitesStore.find.
+    planet: string;
+    items: StockItemData[];
+  }
+
+  interface StockItemData {
+    ticker: string;
+    max: number;
+    // Include this planet's warehouse in the "current" amount.
+    warehouse?: boolean;
+  }
+
   interface TaskList {
     id: string;
     name: string;
