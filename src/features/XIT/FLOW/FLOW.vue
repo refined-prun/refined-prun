@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import CopyButton from '@src/components/CopyButton.vue';
+import InlineFlex from '@src/components/InlineFlex.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
+import Tooltip from '@src/components/Tooltip.vue';
 import FlowRow from '@src/features/XIT/FLOW/FlowRow.vue';
 import SortHeader from '@src/features/XIT/FLOW/SortHeader.vue';
 import { useTileState } from '@src/features/XIT/FLOW/tile-state';
@@ -74,18 +76,24 @@ const sorted = computed(() => {
 
 function formatFlowTable(rows: MaterialFlow[]) {
   const round = (x: number) => Math.round(x * 1000) / 1000;
-  const planets = (contributions: PlanetContribution[]) =>
-    contributions.map(x => `${x.planetName} (${x.naturalId}): ${round(x.amount)}`).join('; ');
-  const lines = ['Ticker\tProduction\tConsumption\tDelta\tValue\tProducers\tConsumers'];
+  function planets(contributions: PlanetContribution[]) {
+    return contributions
+      .map(x => `${x.planetName} (${x.naturalId}): ${round(x.amount)}`)
+      .join('; ');
+  }
+  const price = (value: number | undefined, override: boolean) =>
+    value === undefined ? '' : round(value) + (override ? '*' : '');
+  const lines = ['Ticker\tProduction\tConsumption\tDelta\tBuy\tSell\tValue\tProducers\tConsumers'];
   for (const flow of rows) {
-    const value = flow.currencyDelta === undefined ? '' : round(flow.currencyDelta);
     lines.push(
       [
         flow.ticker,
         round(flow.production),
         round(flow.consumption),
         round(flow.delta),
-        value,
+        price(flow.buy, flow.buyOverride),
+        price(flow.sell, flow.sellOverride),
+        price(flow.currencyDelta, false),
         planets(flow.producers),
         planets(flow.consumers),
       ].join('\t'),
@@ -113,13 +121,29 @@ function copyFlowTable() {
           <SortHeader sort-key="delta">Delta</SortHeader>
           <SortHeader sort-key="production">Prod</SortHeader>
           <SortHeader sort-key="consumption">Cons</SortHeader>
-          <SortHeader sort-key="currencyDelta">Value</SortHeader>
+          <th>Buy</th>
+          <th>Sell</th>
+          <SortHeader sort-key="currencyDelta">
+            <InlineFlex>
+              Value
+              <Tooltip
+                position="bottom"
+                tooltip="Surplus valued at the sell price, deficit at the buy price.
+                 Click a Buy or Sell price to override it, e.g. for a partner deal."
+                :class="$style.tooltip"
+                @click.stop />
+            </InlineFlex>
+          </SortHeader>
           <th>Producers</th>
           <th>Consumers</th>
         </tr>
       </thead>
       <tbody>
-        <FlowRow v-for="flow in sorted" :key="flow.ticker" :flow="flow" />
+        <FlowRow
+          v-for="(flow, i) in sorted"
+          :key="flow.ticker"
+          :flow="flow"
+          :last="i === sorted.length - 1" />
       </tbody>
     </table>
   </template>
@@ -130,8 +154,13 @@ function copyFlowTable() {
   flex: 1;
 }
 
-.table tr > :nth-child(n + 2):nth-child(-n + 5) {
+.table tr > :nth-child(n + 2):nth-child(-n + 7) {
   text-align: right;
+}
+
+/* The sort header is nowrap; let the tooltip text wrap. */
+.tooltip {
+  white-space: normal;
 }
 
 .table th {

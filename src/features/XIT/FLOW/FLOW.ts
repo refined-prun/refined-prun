@@ -19,5 +19,5 @@ xit.add({
   optionalParameters: 'Planet Identifier(s), NOT',
   contextItems: () => [{ cmd: 'XIT BURN' }, { cmd: 'XIT FINPR' }, { cmd: 'XIT SET FIN' }],
   component: () => FLOW,
-  bufferSize: [900, 500],
+  bufferSize: [1000, 500],
 });

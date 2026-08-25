@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { MaterialFlow, PlanetContribution } from '@src/core/flow';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
+import PriceCell from '@src/features/XIT/FLOW/PriceCell.vue';
 import { fixed0, fixed01, fixed02, fixed1, fixed2, formatCurrency } from '@src/utils/format';
 
-const { flow } = defineProps<{ flow: MaterialFlow }>();
+const { flow, last } = defineProps<{ flow: MaterialFlow; last?: boolean }>();
+
+// Tooltips on the last row open upwards so they don't extend the table.
+const tooltipPosition = computed(() => (last ? 'top' : 'bottom'));
 
 function formatAmount(value: number) {
   const abs = Math.abs(value);
@@ -47,6 +51,18 @@ function formatContribution(contribution: PlanetContribution) {
     <td :class="signClass(flow.delta)">{{ formatAmount(flow.delta) }}</td>
     <td>{{ formatAmount(flow.production) }}</td>
     <td>{{ formatAmount(flow.consumption) }}</td>
+    <PriceCell
+      :ticker="flow.ticker"
+      side="buy"
+      :price="flow.buy"
+      :override="flow.buyOverride"
+      :tooltip-position="tooltipPosition" />
+    <PriceCell
+      :ticker="flow.ticker"
+      side="sell"
+      :price="flow.sell"
+      :override="flow.sellOverride"
+      :tooltip-position="tooltipPosition" />
     <td :class="signClass(flow.currencyDelta)">{{ valueText }}</td>
     <td :class="$style.planets">
       <div v-for="x in flow.producers" :key="x.naturalId">{{ formatContribution(x) }}</div>
