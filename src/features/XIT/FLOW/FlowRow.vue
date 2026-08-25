@@ -1,0 +1,69 @@
+<script setup lang="ts">
+import { MaterialFlow, PlanetContribution } from '@src/core/flow';
+import MaterialIcon from '@src/components/MaterialIcon.vue';
+import { fixed0, fixed01, fixed02, fixed1, fixed2, formatCurrency } from '@src/utils/format';
+
+const { flow } = defineProps<{ flow: MaterialFlow }>();
+
+function formatAmount(value: number) {
+  const abs = Math.abs(value);
+  return abs >= 1000 ? fixed0(value) : abs >= 100 ? fixed1(value) : fixed2(value);
+}
+
+const valueText = computed(() => {
+  const value = flow.currencyDelta;
+  if (value === undefined) {
+    return '--';
+  }
+  const abs = Math.abs(value);
+  let format = fixed02;
+  if (abs >= 100) {
+    format = fixed0;
+  } else if (abs >= 10) {
+    format = fixed01;
+  }
+  return formatCurrency(value, format);
+});
+
+function signClass(value: number | undefined) {
+  return {
+    [C.ColoredValue.positive]: value !== undefined && value > 0,
+    [C.ColoredValue.negative]: value !== undefined && value < 0,
+  };
+}
+
+function formatContribution(contribution: PlanetContribution) {
+  const { planetName, naturalId, amount } = contribution;
+  const name = planetName === naturalId ? naturalId : `${planetName} (${naturalId})`;
+  return `${name}: ${formatAmount(amount)}`;
+}
+</script>
+
+<template>
+  <tr>
+    <td :class="$style.materialContainer">
+      <MaterialIcon size="inline-table" :ticker="flow.ticker" />
+    </td>
+    <td :class="signClass(flow.delta)">{{ formatAmount(flow.delta) }}</td>
+    <td>{{ formatAmount(flow.production) }}</td>
+    <td>{{ formatAmount(flow.consumption) }}</td>
+    <td :class="signClass(flow.currencyDelta)">{{ valueText }}</td>
+    <td :class="$style.planets">
+      <div v-for="x in flow.producers" :key="x.naturalId">{{ formatContribution(x) }}</div>
+    </td>
+    <td :class="$style.planets">
+      <div v-for="x in flow.consumers" :key="x.naturalId">{{ formatContribution(x) }}</div>
+    </td>
+  </tr>
+</template>
+
+<style module>
+.materialContainer {
+  width: 32px;
+  padding: 0;
+}
+
+.planets {
+  white-space: nowrap;
+}
+</style>
