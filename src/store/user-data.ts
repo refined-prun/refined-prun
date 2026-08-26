@@ -27,6 +27,9 @@ export const initialUserData = deepFreeze({
       yellow: 7,
       resupply: 16,
     },
+    flow: {
+      overrides: {} as Record<string, UserData.PriceOverride>,
+    },
     repair: {
       threshold: 60,
       offset: 10,
