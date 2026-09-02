@@ -120,6 +120,7 @@ Migrations (`user-data-migrations.ts`) run on every load to transform stored dat
 | `C` | `@src/infrastructure/prun-ui/prun-css` |
 | `L`, `applyLocalizationPatch` | `@src/infrastructure/prun-ui/i18n` |
 | `subscribe` | `@src/utils/observable` |
+| `sumBy` | `@src/utils/sum-by` |
 | `tiles` | `@src/infrastructure/prun-ui/tiles` |
 | `features` | `@src/features/feature-registry` |
 | `xit` | `@src/features/XIT/xit-registry` |

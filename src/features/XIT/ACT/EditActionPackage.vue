@@ -170,7 +170,7 @@ function onExportClick() {
   </form>
   <SectionHeader>Commands</SectionHeader>
   <form>
-    <Commands label="Remame">
+    <Commands label="Rename">
       <PrunButton primary @click="onRenameClick">RENAME</PrunButton>
     </Commands>
     <Commands label="Execute">

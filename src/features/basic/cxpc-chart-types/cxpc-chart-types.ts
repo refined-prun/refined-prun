@@ -3,11 +3,12 @@ import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 import { cxobStore } from '@src/infrastructure/prun-api/data/cxob';
 import { cxpcStore } from '@src/infrastructure/prun-api/data/cxpc';
 import { COMEX_BROKER_PRICES } from '@src/infrastructure/prun-api/client-messages';
-import { dispatchClientPrunMessage } from '@src/infrastructure/prun-api/prun-api-listener';
+import { dispatchClientPrunMessage, Message } from '@src/infrastructure/prun-api/prun-api-listener';
 import { userData } from '@src/store/user-data';
 import SettingsGroup from '@src/features/basic/cxpc-chart-types/SettingsGroup.vue';
 import { computedTileState } from '@src/store/user-data-tiles';
 import { getTileState } from '@src/features/basic/cxpc-chart-types/tile-state';
+import { sleep } from '@src/utils/sleep';
 
 function onTileReady(tile: PrunTile) {
   const ticker = tile.parameter!;
@@ -17,24 +18,30 @@ function onTileReady(tile: PrunTile) {
   chartType.value ??= userData.settings.defaultChartType;
 
   subscribe($$(tile.anchor, C.ChartContainer.container), container => {
-    watchEffectWhileNodeAlive(container, () => {
+    watchEffectWhileNodeAlive(container, async () => {
       if (!cxpc.value) {
         return;
       }
 
+      let message: Message | null = null;
       switch (chartType.value) {
         case 'SMOOTH': {
-          smooth(cxpc.value);
+          message = smooth(cxpc.value);
           break;
         }
         case 'ALIGNED': {
-          aligned(cxpc.value);
+          message = aligned(cxpc.value);
           break;
         }
         case 'RAW': {
-          raw(cxpc.value);
+          message = raw(cxpc.value);
           break;
         }
+      }
+
+      if (message) {
+        await sleep(0);
+        dispatchClientPrunMessage(message);
       }
     });
   });
@@ -79,8 +86,7 @@ function smooth(data: PrunApi.CXBrokerPrices) {
     }
     intervalCopy.prices = ha;
   }
-  const messsage = COMEX_BROKER_PRICES(payload);
-  dispatchClientPrunMessage(messsage);
+  return COMEX_BROKER_PRICES(payload);
 }
 
 function aligned(data: PrunApi.CXBrokerPrices) {
@@ -109,13 +115,11 @@ function aligned(data: PrunApi.CXBrokerPrices) {
     }
     intervalCopy.prices = vwap;
   }
-  const messsage = COMEX_BROKER_PRICES(payload);
-  dispatchClientPrunMessage(messsage);
+  return COMEX_BROKER_PRICES(payload);
 }
 
 function raw(data: PrunApi.CXBrokerPrices) {
-  const messsage = COMEX_BROKER_PRICES(data);
-  dispatchClientPrunMessage(messsage);
+  return COMEX_BROKER_PRICES(data);
 }
 
 function init() {

@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
-import libAssetsPlugin from '@laynezh/vite-plugin-lib-assets';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import unimport from 'unimport/unplugin';
@@ -63,15 +62,11 @@ export default defineConfig({
         vueTemplate: true,
       },
     }),
-    libAssetsPlugin({
-      outputPath: 'assets',
-      name: '[name].[contenthash:8].[ext]',
-    }),
   ],
   publicDir: resolve(__dirname, 'public'),
   build: {
     outDir,
-    emptyOutDir: !isDev,
+    emptyOutDir: true,
     sourcemap: isDev ? 'inline' : false,
     minify: false,
     reportCompressedSize: false,
@@ -83,23 +78,22 @@ export default defineConfig({
       },
       formats: ['es'],
     },
-    rollupOptions: {
+    rolldownOptions: {
       external: ['chrome'],
       output: {
         preserveModules: true,
         preserveModulesRoot: 'source',
-        sanitizeFileName: name =>
-          name.replace('_virtual', 'virtual').replace('\x00', '').replace(':', '_'),
+        sanitizeFileName: sanitizeOutputSegment,
         entryFileNames(chunkInfo) {
           if (chunkInfo.name.includes('node_modules')) {
             const cleanName = chunkInfo.name
               .split('/')
               .filter(part => !noise.has(part))
               .join('-');
-            return `npm/${cleanName}.js`;
+            return `npm/${sanitizeOutputSegment(cleanName)}.js`;
           }
 
-          return chunkInfo.name + '.js';
+          return sanitizeOutputPath(chunkInfo.name) + '.js';
         },
       },
     },
@@ -137,4 +131,21 @@ function sanitizeModuleClassname(name: string, filename: string | undefined): st
 
 function getHash(input: string): string {
   return createHash('sha256').update(input).digest('hex').slice(0, 7);
+}
+
+function sanitizeOutputPath(path: string): string {
+  return path.split('/').map(sanitizeOutputSegment).join('/');
+}
+
+function sanitizeOutputSegment(segment: string): string {
+  const sanitized = segment
+    .replace(/^_virtual$/, 'virtual')
+    .replace(/^\0rolldown$/, 'rolldown')
+    .replaceAll('\x00', '')
+    .replaceAll(':', '_')
+    .replaceAll('?', '_')
+    .replaceAll('&', '_')
+    .replaceAll('=', '_');
+
+  return sanitized.replace(/^_+/, '') || 'virtual';
 }
