@@ -2,7 +2,8 @@
 import { MaterialFlow, PlanetContribution } from '@src/core/flow';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import PriceCell from '@src/features/XIT/FLOW/PriceCell.vue';
-import { fixed0, fixed01, fixed02, fixed1, fixed2, formatCurrency } from '@src/utils/format';
+import { formatPrice } from '@src/features/XIT/FLOW/format';
+import { fixed0, fixed1, fixed2 } from '@src/utils/format';
 
 const { flow, last } = defineProps<{ flow: MaterialFlow; last?: boolean }>();
 
@@ -11,23 +12,18 @@ const tooltipPosition = computed(() => (last ? 'top' : 'bottom'));
 
 function formatAmount(value: number) {
   const abs = Math.abs(value);
-  return abs >= 1000 ? fixed0(value) : abs >= 100 ? fixed1(value) : fixed2(value);
+  let format = fixed2;
+  if (abs >= 1000) {
+    format = fixed0;
+  } else if (abs >= 100) {
+    format = fixed1;
+  }
+  return format(value);
 }
 
-const valueText = computed(() => {
-  const value = flow.currencyDelta;
-  if (value === undefined) {
-    return '--';
-  }
-  const abs = Math.abs(value);
-  let format = fixed02;
-  if (abs >= 100) {
-    format = fixed0;
-  } else if (abs >= 10) {
-    format = fixed01;
-  }
-  return formatCurrency(value, format);
-});
+const valueText = computed(() =>
+  flow.currencyDelta === undefined ? '--' : formatPrice(flow.currencyDelta),
+);
 
 function signClass(value: number | undefined) {
   return {

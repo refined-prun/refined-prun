@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { PriceSide, setFlowPriceOverride } from '@src/core/flow';
-import { fixed0, fixed01, fixed02, formatCurrency } from '@src/utils/format';
+import { formatPrice } from '@src/features/XIT/FLOW/format';
 
 const {
   ticker,
@@ -20,18 +20,9 @@ const editing = ref(false);
 const draft = ref('');
 const input = useTemplateRef<HTMLInputElement>('input');
 
-const text = computed(() => {
-  if (price === undefined) {
-    return '--';
-  }
-  let format = fixed02;
-  if (price >= 100) {
-    format = fixed0;
-  } else if (price >= 10) {
-    format = fixed01;
-  }
-  return formatCurrency(price, format) + (override ? '*' : '');
-});
+const text = computed(() =>
+  price === undefined ? '--' : formatPrice(price) + (override ? '*' : ''),
+);
 
 const tooltip = computed(() =>
   override ? 'Override. Click to edit, clear to reset.' : 'Click to override.',
@@ -51,7 +42,7 @@ function commit() {
     return;
   }
   editing.value = false;
-  const value = String(draft.value).trim();
+  const value = draft.value.trim();
   if (value === '') {
     setFlowPriceOverride(ticker, side, undefined);
     return;
@@ -71,7 +62,7 @@ function cancel() {
 <template>
   <td :class="$style.cell" @click="startEditing">
     <span
-      :class="{ [$style.hiddenText]: editing }"
+      :class="{ [$style.text]: editing }"
       :data-tooltip="editing ? undefined : tooltip"
       :data-tooltip-position="tooltipPosition">
       {{ text }}
@@ -102,7 +93,7 @@ function cancel() {
 }
 
 /* The text keeps sizing the cell while the editor is open. */
-.hiddenText {
+.text {
   visibility: hidden;
 }
 

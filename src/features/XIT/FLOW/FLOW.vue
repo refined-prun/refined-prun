@@ -55,11 +55,13 @@ const sorted = computed(() => {
   const key = sort.value;
   const direction = desc.value ? -1 : 1;
   return flows.value.slice().sort((a, b) => {
-    // Unpriced rows always go last.
-    const aUnpriced = a.currencyDelta === undefined;
-    const bUnpriced = b.currencyDelta === undefined;
-    if (aUnpriced !== bUnpriced) {
-      return aUnpriced ? 1 : -1;
+    if (key === 'currencyDelta') {
+      // Unpriced rows always go last.
+      const aUnpriced = a.currencyDelta === undefined;
+      const bUnpriced = b.currencyDelta === undefined;
+      if (aUnpriced !== bUnpriced) {
+        return aUnpriced ? 1 : -1;
+      }
     }
     // Same category-then-ticker order as XIT BURN.
     const byMaterial = compareMaterials(
