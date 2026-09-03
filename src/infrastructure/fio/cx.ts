@@ -111,7 +111,9 @@ function weightedAverage<T>(
 const ignored = computed(() => new Set(userData.settings.financial.ignoredMaterials.split(',')));
 const mmMaterials = computed(() => new Set(userData.settings.financial.mmMaterials.split(',')));
 
-export function getPrice(ticker?: string | null) {
+// Price of a ticker at one specific exchange, using the configured pricing method.
+// Pass an exchange code (AI1, NC1, ...) or UNIVERSE for the weighted average.
+export function getPriceAt(ticker?: string | null, exchangeCode?: string | null) {
   if (!ticker) {
     return undefined;
   }
@@ -126,7 +128,7 @@ export function getPrice(ticker?: string | null) {
   }
 
   const pricing = userData.settings.pricing;
-  const exchange = cxStore.prices.get(pricing.exchange);
+  const exchange = exchangeCode ? cxStore.prices.get(exchangeCode) : undefined;
   if (!exchange) {
     return undefined;
   }
@@ -163,6 +165,10 @@ export function getPrice(ticker?: string | null) {
   }
 
   return undefined;
+}
+
+export function getPrice(ticker?: string | null) {
+  return getPriceAt(ticker, userData.settings.pricing.exchange);
 }
 
 export function getMaterialPrice(material: PrunApi.Material) {
