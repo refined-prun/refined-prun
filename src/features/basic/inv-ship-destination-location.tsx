@@ -32,16 +32,12 @@ function onTileReady(tile: PrunTile) {
         if (!locationCell) {
           return;
         }
-        if (destinationInfo.value) {
-          const textNodes = document.createTreeWalker(locationCell, NodeFilter.SHOW_TEXT);
-          while (textNodes.nextNode()) {
-            const text = textNodes.currentNode;
-            if (!container.contains(text) && text.textContent?.trim() === '--') {
-              text.textContent = '';
-            }
-          }
-        }
-        if (locationCell.lastChild !== container) {
+        if (
+          destinationInfo.value &&
+          (locationCell.childNodes.length !== 1 || locationCell.firstChild !== container)
+        ) {
+          locationCell.replaceChildren(container);
+        } else if (locationCell.lastChild !== container) {
           locationCell.append(container);
         }
       });

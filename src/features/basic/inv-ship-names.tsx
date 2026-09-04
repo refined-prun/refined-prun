@@ -15,14 +15,12 @@ function onTileReady(tile: PrunTile) {
       if (!nameCell) {
         return;
       }
-      if (ship.value?.name) {
-        for (const child of Array.from(nameCell.childNodes)) {
-          if (child !== container) {
-            child.remove();
-          }
-        }
-      }
-      if (nameCell.lastChild !== container) {
+      if (
+        ship.value?.name &&
+        (nameCell.childNodes.length !== 1 || nameCell.firstChild !== container)
+      ) {
+        nameCell.replaceChildren(container);
+      } else if (nameCell.lastChild !== container) {
         nameCell.append(container);
       }
     });
