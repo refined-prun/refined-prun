@@ -2,7 +2,7 @@ import PrunLink from '@src/components/PrunLink.vue';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { watchEffectWhileNodeAlive } from '@src/utils/watch';
+import { observeDescendantListChanged } from '@src/utils/mutation-observer';
 
 const shipStoreTypes = new Set([
   'SHIP_STORE',
@@ -14,7 +14,7 @@ const shipStoreTypes = new Set([
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'tr'), row => {
     const id = refPrunId(row);
-    const nameCell = row.children[2];
+    const getNameCell = () => row.children[2];
     const ship = computed(() => {
       const storage = storagesStore.getById(id.value);
       if (!storage || !shipStoreTypes.has(storage.type)) {
@@ -22,20 +22,33 @@ function onTileReady(tile: PrunTile) {
       }
       return shipsStore.getById(storage.addressableId);
     });
+    const container = document.createElement('span');
 
-    watchEffectWhileNodeAlive(row, () => {
+    observeDescendantListChanged(row, () => {
+      const nameCell = getNameCell();
+      if (ship.value?.name) {
+        for (const child of Array.from(nameCell.childNodes)) {
+          if (child !== container) {
+            child.remove();
+          }
+        }
+      }
+      if (nameCell.lastChild !== container) {
+        nameCell.append(container);
+      }
+    });
+
+    createFragmentApp(() => {
       const currentShip = ship.value;
       if (!currentShip?.name) {
-        return;
+        return null;
       }
-
-      nameCell.textContent = '';
-      createFragmentApp(() => (
+      return (
         <PrunLink inline command={`SHP ${currentShip.registration}`}>
           {currentShip.name}
         </PrunLink>
-      )).appendTo(nameCell);
-    });
+      );
+    }).appendTo(container);
   });
 }
 
