@@ -1,17 +1,20 @@
 import PrunLink from '@src/components/PrunLink.vue';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
+import { ElementTag } from '@src/infrastructure/prun-ui/tagger';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'tr'), row => {
     const id = refPrunId(row);
-    const getNameCell = () => row.children[2];
     const ship = computed(() => shipsStore.getByStoreId(id.value));
     const container = document.createElement('span');
 
     observeDescendantListChanged(row, () => {
-      const nameCell = getNameCell();
+      const nameCell = _$(row, ElementTag.INV_NAME_CELL);
+      if (!nameCell) {
+        return;
+      }
       if (ship.value?.name) {
         for (const child of Array.from(nameCell.childNodes)) {
           if (child !== container) {

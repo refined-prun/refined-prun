@@ -8,13 +8,13 @@ import {
   isStationLine,
 } from '@src/infrastructure/prun-api/data/addresses';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
+import { ElementTag } from '@src/infrastructure/prun-ui/tagger';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
 import { watchEffectWhileNodeAlive } from '@src/utils/watch';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'tr'), row => {
     const id = refPrunId(row);
-    const getLocationCell = () => row.children[1];
     const ship = computed(() => shipsStore.getByStoreId(id.value));
     const destination = computed(() => {
       const currentShip = ship.value;
@@ -31,7 +31,10 @@ function onTileReady(tile: PrunTile) {
       mounted = true;
       const container = document.createElement('span');
       observeDescendantListChanged(row, () => {
-        const locationCell = getLocationCell();
+        const locationCell = _$(row, ElementTag.INV_LOCATION_CELL);
+        if (!locationCell) {
+          return;
+        }
         if (destinationInfo.value) {
           const textNodes = document.createTreeWalker(locationCell, NodeFilter.SHOW_TEXT);
           while (textNodes.nextNode()) {
