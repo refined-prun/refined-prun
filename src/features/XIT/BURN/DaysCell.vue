@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { fixed0, fixed01 } from '@src/utils/format';
-import { displayedDays, getBurnThresholds } from '@src/features/XIT/BURN/utils';
+import { getBurnThresholds } from '@src/features/XIT/BURN/utils';
+import { trunc0, trunc01 } from '@src/utils/format';
 
 const { days } = defineProps<{ days: number }>();
 
@@ -8,8 +8,10 @@ const formattedDays = computed(() => {
   if (days > 999) {
     return '∞';
   }
-  const shownDays = displayedDays(days);
-  return days >= 10 ? fixed0(shownDays) : fixed01(shownDays);
+  if (days >= 10) {
+    return trunc0(days);
+  }
+  return trunc01(days);
 });
 
 const burnClass = computed(() => {

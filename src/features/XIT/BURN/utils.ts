@@ -3,11 +3,6 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { sortMaterials } from '@src/core/sort-materials';
 import { userData } from '@src/store/user-data';
 
-// Days at the precision shown: whole from 10 up, one decimal below. Truncated, not rounded.
-export function displayedDays(days: number) {
-  return days >= 10 ? Math.floor(days) : Math.trunc(days * 10) / 10;
-}
-
 // Shared classification so the cell color and filter buttons always match.
 // Classifies the true value against the integer thresholds, not the truncated
 // display, so a 10.9 that displays "10" still counts as above a 10-day

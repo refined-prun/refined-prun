@@ -2,7 +2,7 @@
 import { MaterialBurn } from '@src/core/burn';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
-import { fixed0, fixed01, fixed02, fixed1, fixed2 } from '@src/utils/format';
+import { fixed0, fixed1, fixed2, trunc0, trunc01, trunc02 } from '@src/utils/format';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
 import { getBurnThresholds } from '@src/features/XIT/BURN/utils';
 import PrunButton from '@src/components/PrunButton.vue';
@@ -20,12 +20,12 @@ const invAmount = computed(() => {
   const amount = burn.inventory + burn.remainingAllocation;
   // Truncate, don't round, so the shown amount never exceeds what you hold.
   if (amount >= 100) {
-    return fixed0(Math.floor(amount));
+    return trunc0(amount);
   }
   if (amount >= 10) {
-    return fixed01(Math.trunc(amount * 10) / 10);
+    return trunc01(amount);
   }
-  return fixed02(Math.trunc(amount * 100) / 100);
+  return trunc02(amount);
 });
 const invWhole = computed(() => {
   const dot = invAmount.value.indexOf('.');
