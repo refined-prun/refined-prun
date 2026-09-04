@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import PrunButton from '@src/components/PrunButton.vue';
 import SectionHeader from '@src/components/SectionHeader.vue';
-import SectionDescription from '@src/components/SectionDescription.vue';
 import Active from '@src/components/forms/Active.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
 import Commands from '@src/components/forms/Commands.vue';
+import Passive from '@src/components/forms/Passive.vue';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import { act } from '@src/features/XIT/ACT/act-registry';
 
@@ -49,11 +49,13 @@ function onSaveClick() {
 <template>
   <div :class="C.DraftConditionEditor.form">
     <SectionHeader>{{ add ? 'Add' : 'Edit' }} Action</SectionHeader>
-    <SectionDescription v-if="shortDescription">{{ shortDescription }}</SectionDescription>
     <form>
       <Active label="Type">
         <SelectInput v-model="type" :options="typeOptions" />
       </Active>
+      <Passive v-if="shortDescription" label="Description">
+        <span>{{ shortDescription }}</span>
+      </Passive>
       <Active label="Name" :error="nameError">
         <TextInput v-model="name" />
       </Active>
