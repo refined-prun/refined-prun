@@ -6,6 +6,7 @@
 
 - `INV`: Added in-flight ship destinations to the Location column (`inv-ship-destination-location`)
 - `INV`: Added ship names to the Name column (`inv-ship-names`)
+- `XIT ACT`: Added descriptions to the action and material group type fields
 - Added a notification count badge to the browser tab favicon (`favicon-notification-badge`)
 
 ### Changed
