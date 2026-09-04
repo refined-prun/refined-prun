@@ -3,10 +3,6 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { sortMaterials } from '@src/core/sort-materials';
 import { userData } from '@src/store/user-data';
 
-// Shared classification so the cell color and filter buttons always match.
-// Classifies the true value against the integer thresholds, not the truncated
-// display, so a 10.9 that displays "10" still counts as above a 10-day
-// threshold. Mutually exclusive: red ≤ R < yellow ≤ Y < green.
 export function getBurnThresholds(days: number) {
   const isRed = days <= userData.settings.burn.red;
   const isYellow = !isRed && days <= userData.settings.burn.yellow;
