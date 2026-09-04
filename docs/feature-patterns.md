@@ -167,6 +167,7 @@ Selectors are **not CSS selector strings**. Internally they resolve to `getEleme
 
 Valid selectors:
 - `C.ComponentName.className` — a PrUn CSS class name (preferred)
+- `ElementTag.*` — a semantic Refined PrUn tag registered in `tagger.ts`
 - HTML tag names: `'div'`, `'tr'`, `'td'`, etc
 
 ### `$` — Async Single Element (Gate Pattern)
