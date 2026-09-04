@@ -28,12 +28,13 @@ function onAddMaterialGroupClick(e: Event) {
   showTileOverlay(e, EditMaterialGroup, {
     add: true,
     group,
+    pkg,
     onSave: () => pkg.groups.push(group),
   });
 }
 
 function onEditMaterialGroupClick(e: Event, group: UserData.MaterialGroupData) {
-  showTileOverlay(e, EditMaterialGroup, { group });
+  showTileOverlay(e, EditMaterialGroup, { group, pkg });
 }
 
 function onDeleteMaterialGroupClick(e: Event, group: UserData.MaterialGroupData) {
