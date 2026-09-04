@@ -164,8 +164,8 @@ function getTileData(command: string): object {
     };
   }
 
-  if (command.startsWith('INV ')) {
-    const parameter = command.replace('INV ', '').trim();
+  if (command.startsWith('INV ') || command === 'INV') {
+    const parameter = command.replace('INV', '').trim();
     if (parameter) {
       return {
         store: getInvStore(parameter),

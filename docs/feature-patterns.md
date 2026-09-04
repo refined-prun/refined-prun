@@ -93,7 +93,9 @@ The command should be short. Refer to `docs/game/commands.csv` for an example of
 | Vue composables (`ref`, `computed`, `reactive`, `watch`, …) | `vue` |
 | `$`, `$$`, `_$`, `_$$` | `@src/utils/select-dom` |
 | `C` | `@src/infrastructure/prun-ui/prun-css` |
-| `subscribe` | `@src/utils/subscribe-async-generator` |
+| `subscribe` | `@src/utils/observable` |
+| `sumBy` | `@src/utils/sum-by` |
+| `L`, `applyLocalizationPatch` | `@src/infrastructure/prun-ui/i18n` |
 | `tiles` | `@src/infrastructure/prun-ui/tiles` |
 | `features` | `@src/features/feature-registry` |
 | `xit` | `@src/features/XIT/xit-registry` |
