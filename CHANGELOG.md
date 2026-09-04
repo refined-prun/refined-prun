@@ -19,6 +19,8 @@
 - `XIT ACT`: Fixed the "Unknown action feedback overlay" error when CX Buy places an order outside the price band
 - `XIT BURN`: Fixed the TSV export reporting double the inventory in the "Inv" column
 - `XIT BURN`: Fixed workforce allocation accumulation across tiers
+- `XIT BURN`: Fixed color filters not matching fractional-day colors
+- `XIT BURN`: Fixed inventory values rounding up
 
 ## 26.6.22.2033
 
