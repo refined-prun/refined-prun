@@ -7,13 +7,7 @@ import { userData } from '@src/store/user-data';
 // Classifies the true value against the integer thresholds, not the truncated
 // display, so a 10.9 that displays "10" still counts as above a 10-day
 // threshold. Mutually exclusive: red ≤ R < yellow ≤ Y < green.
-export interface BurnThresholds {
-  isRed: boolean;
-  isYellow: boolean;
-  isGreen: boolean;
-}
-
-export function getBurnThresholds(days: number): BurnThresholds {
+export function getBurnThresholds(days: number) {
   const isRed = days <= userData.settings.burn.red;
   const isYellow = !isRed && days <= userData.settings.burn.yellow;
   return {
