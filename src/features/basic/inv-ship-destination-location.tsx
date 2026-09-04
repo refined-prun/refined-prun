@@ -1,6 +1,5 @@
 import PrunLink from '@src/components/PrunLink.vue';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
-import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
 import {
   getFullAddressName,
@@ -20,18 +19,6 @@ const shipStoreTypes = new Set([
   'VORTEX_FUEL_STORE',
 ]);
 
-const endedDestinations = shallowReactive<Record<string, PrunApi.Address>>({});
-
-onApiMessage({
-  SHIP_FLIGHT_FLIGHT_ENDED(flight: PrunApi.Flight) {
-    endedDestinations[flight.shipId] =
-      flight.segments[flight.currentSegmentIndex]?.destination ?? flight.destination;
-  },
-  SHIP_DATA(ship: PrunApi.Ship) {
-    delete endedDestinations[ship.id];
-  },
-});
-
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'tr'), row => {
     const id = refPrunId(row);
@@ -45,10 +32,7 @@ function onTileReady(tile: PrunTile) {
     });
     const destination = computed(() => {
       const currentShip = ship.value;
-      return currentShip
-        ? (flightsStore.getById(currentShip.flightId)?.destination ??
-            endedDestinations[currentShip.id])
-        : undefined;
+      return currentShip ? flightsStore.getById(currentShip.flightId)?.destination : undefined;
     });
     const destinationInfo = computed(() => getDestinationInfo(destination.value));
     let mounted = false;
