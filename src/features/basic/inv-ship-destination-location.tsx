@@ -16,10 +16,7 @@ function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'tr'), row => {
     const id = refPrunId(row);
     const ship = computed(() => shipsStore.getByStoreId(id.value));
-    const destination = computed(() => {
-      const currentShip = ship.value;
-      return currentShip ? flightsStore.getById(currentShip.flightId)?.destination : undefined;
-    });
+    const destination = computed(() => flightsStore.getById(ship.value?.flightId)?.destination);
     const destinationInfo = computed(() => getDestinationInfo(destination.value));
     let mounted = false;
 
