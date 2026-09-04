@@ -50,7 +50,7 @@ Browser extension that simplifies the Prosperous Universe interface and adds use
 
 ## Building
 
-To build this extension, you will need to install [pnpm](https://pnpm.io/) v9.x
+To build this extension, you will need to install [pnpm](https://pnpm.io/) v11.x
 
 Then, in the repository root, run
 

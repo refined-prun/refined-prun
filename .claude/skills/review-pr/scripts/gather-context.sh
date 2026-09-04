@@ -10,7 +10,7 @@ dir=".tmp/pr/${number}"
 gh pr diff > "${dir}/pr-diff.txt" &
 pid_diff=$!
 
-gh pr view --json comments,reviews --jq '.comments[].body, .reviews[].body' > "${dir}/pr-comments.txt" 2>/dev/null &
+gh pr view --json comments,reviews --jq '(.comments[] | "@\(.author.login):\n\(.body)\n"), (.reviews[] | "@\(.author.login) (review):\n\(.body)\n")' > "${dir}/pr-comments.txt" 2>/dev/null &
 pid_comments=$!
 
 files=$(gh pr view --json files --jq '.files[].path')

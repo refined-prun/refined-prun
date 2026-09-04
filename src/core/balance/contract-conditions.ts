@@ -38,23 +38,16 @@ const sortedConditions = computed(() => {
 });
 
 function calculateDeadline(contract: PrunApi.Contract, condition: PrunApi.ContractCondition) {
-  if (condition.type === 'COMEX_PURCHASE_PICKUP') {
-    // The COMEX_PURCHASE_PICKUP condition has unique handling:
-    // Once all its dependencies are fulfilled,
-    // the player needs to pick up the materials using this condition.
-    // For determining the deadline of the COMEX_PURCHASE_PICKUP condition,
-    // we will use the latest deadline among its dependencies.
-    // This is because the materials can be picked up at any time,
-    // making the COMEX_PURCHASE_PICKUP's own deadline irrelevant.
-    return getLatestDependencyDeadline(contract, condition);
-  }
-
   if (condition.deadline) {
     return condition.deadline.timestamp;
   }
 
   if (!condition.deadlineDuration) {
     return Number.POSITIVE_INFINITY;
+  }
+
+  if (condition.status === 'VIOLATED' && contract.extensionDeadline) {
+    return contract.extensionDeadline.timestamp;
   }
 
   return getLatestDependencyDeadline(contract, condition) + condition.deadlineDuration.millis;

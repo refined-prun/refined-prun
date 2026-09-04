@@ -7,13 +7,15 @@ defineProps<{ condition: PrunApi.ContractCondition }>();
 </script>
 
 <template>
-  <template v-if="condition.type === 'BASE_CONSTRUCTION'">Construct Base</template>
+  <template v-if="condition.type === 'BASE_CONSTRUCTION'">Set up a base</template>
+  <template v-if="condition.type === 'BUILDING_CONSTRUCTION'">Construct a building</template>
+  <template v-if="condition.type === 'BUY_MATERIAL_FROM_CATEGORY'">Buy a material</template>
   <template v-else-if="condition.type === 'COMEX_PURCHASE_PICKUP'">
     Pick up {{ condition.quantity!.amount - condition.pickedUp!.amount }}
     {{ condition.quantity!.material.ticker }} @
     <AddressLink :address="condition.address!" />
   </template>
-  <template v-else-if="condition.type === 'CONSTRUCT_SHIP'">Construct Ship</template>
+  <template v-else-if="condition.type === 'CONSTRUCT_SHIP'">Construct or modify a ship</template>
   <template v-else-if="condition.type === 'CONTRIBUTION'">
     Contribute @
     <AddressLink :address="condition.address!" />
@@ -30,7 +32,10 @@ defineProps<{ condition: PrunApi.ContractCondition }>();
     Explore
     <AddressLink :address="condition.address!" />
   </template>
-  <template v-else-if="condition.type === 'FINISH_FLIGHT'">Finish Flight</template>
+  <template v-else-if="condition.type === 'FINISH_FLIGHT'">Finish a flight</template>
+  <template v-else-if="condition.type === 'FULFILL_COUNTRY_CONTRACT'">
+    Fulfill a faction contract
+  </template>
   <template v-else-if="condition.type === 'GATEWAY_FUEL'">
     Refuel
     <PrunLink inline :command="`GTW ${condition.gatewayId?.naturalId}`">{{
@@ -38,17 +43,18 @@ defineProps<{ condition: PrunApi.ContractCondition }>();
     }}</PrunLink>
   </template>
   <template v-else-if="condition.type === 'HEADQUARTERS_UPGRADE'">Upgrade HQ</template>
+  <template v-else-if="condition.type === 'INCREASE_SATISFACTION'">Increase satisfaction</template>
   <template v-else-if="condition.type === 'INFRASTRUCTURE_CONSTRUCTION_FINISH'">
-    Finish Building Infrastructure
+    Finish building Infrastructure
   </template>
   <template v-else-if="condition.type === 'INFRASTRUCTURE_CONSTRUCTION_START'">
-    Start Building Infrastructure
+    Start building Infrastructure
   </template>
   <template v-else-if="condition.type === 'INFRASTRUCTURE_UPGRADE_FINISH'">
-    Finish Upgrading Infrastructure
+    Finish upgrading Infrastructure
   </template>
   <template v-else-if="condition.type === 'INFRASTRUCTURE_UPGRADE_START'">
-    Start Upgrading Infrastructure
+    Start upgrading Infrastructure
   </template>
   <template v-else-if="condition.type === 'INFRASTRUCTURE_UPKEEP'">
     Upkeep
@@ -63,6 +69,7 @@ defineProps<{ condition: PrunApi.ContractCondition }>();
   <template v-else-if="condition.type === 'LOAN_PAYOUT'">
     Pay {{ fixed02(condition.amount!.amount) }} {{ condition.amount!.currency }}
   </template>
+  <template v-else-if="condition.type === 'MAKE_MONEY'">Make money</template>
   <template v-else-if="condition.type === 'PAYMENT'">
     Pay {{ fixed02(condition.amount!.amount) }} {{ condition.amount!.currency }}
   </template>
@@ -71,12 +78,12 @@ defineProps<{ condition: PrunApi.ContractCondition }>();
     Pick up SHPT @
     <AddressLink :address="condition.address!" />
   </template>
-  <template v-else-if="condition.type === 'PLACE_ORDER'">Place Order</template>
-  <template v-else-if="condition.type === 'POWER'">Become Governor</template>
+  <template v-else-if="condition.type === 'PLACE_ORDER'">Place an order</template>
+  <template v-else-if="condition.type === 'POWER'">Become a governor</template>
   <template v-else-if="condition.type === 'PRODUCTION_ORDER_COMPLETED'">
-    Complete Production Order
+    Complete a production order
   </template>
-  <template v-else-if="condition.type === 'PRODUCTION_RUN'">Run Production</template>
+  <template v-else-if="condition.type === 'PRODUCTION_RUN'">Run production</template>
   <template v-else-if="condition.type === 'PROVISION'">
     Provision {{ condition.quantity!.amount }} {{ condition.quantity!.material.ticker }} @
     <AddressLink :address="condition.address!" />
@@ -85,10 +92,14 @@ defineProps<{ condition: PrunApi.ContractCondition }>();
     Provision {{ condition.quantity!.amount }} {{ condition.quantity!.material.ticker }} @
     <AddressLink :address="condition.address!" />
   </template>
-  <template v-else-if="condition.type === 'REPAIR_SHIP'">Repair Ship</template>
-  <template v-else-if="condition.type === 'START_FLIGHT'">Start Flight</template>
+  <template v-else-if="condition.type === 'REPAIR_SHIP'">Repair a ship</template>
+  <template v-else-if="condition.type === 'START_FLIGHT'">Start a flight</template>
+  <template v-else-if="condition.type === 'WAIT'">Wait</template>
   <template v-else-if="condition.type === 'WORKFORCE_PROGRAM_PAYMENT'">
     Pay {{ fixed02(condition.amount!.amount) }} {{ condition.amount!.currency }}
+  </template>
+  <template v-else-if="condition.type === 'WORKFORCE_PROGRAM_START'">
+    Start workforce program
   </template>
   <template v-else>
     {{ condition.type }}

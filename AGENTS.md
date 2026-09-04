@@ -5,7 +5,7 @@ This file provides guidance to AI agents when working with code in this reposito
 ## YOUR ROLE
 
 Pay attention to the task and code. If you see a stupid thing/idea, stop and report it.
-Be extremely concise. Sacrifice grammar for the sake of concision.
+Always use ASD-STE100 Simplified Technical English when you respond to user.
 
 NEVER blindly assume how the game works. If you don't 100% know how a feature or UI component works, read the appropriate docs.
 If there is no relevant info in the docs, make an assumption and ask the user if it is correct. Only then you are allowed to follow an assumption.

@@ -70,6 +70,7 @@ const defaultBufferSizes: Record<string, [number, number]> = {
   CXOS: [750, 300],
   CXPO: [450, 310],
   FLT: [650, 180],
+  FXPO: [330, 350],
   GOV: [470, 550],
   HQ: [450, 600],
   INV: [530, 250],

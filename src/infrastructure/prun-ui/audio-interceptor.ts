@@ -1,4 +1,5 @@
 const audios = [] as HTMLAudioElement[];
+let volume = undefined as number | undefined;
 
 export function initAudioInterceptor() {
   window.Audio = new Proxy(Audio, {
@@ -8,9 +9,18 @@ export function initAudioInterceptor() {
       return audio;
     },
   });
+
+  const origPlay = HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play = function () {
+    if (isValidAudio(this) && volume !== undefined) {
+      this.volume = volume;
+    }
+    return origPlay.apply(this);
+  };
 }
 
-export function setAudioVolume(volume: number) {
+export function setAudioVolume(newVolume: number) {
+  volume = newVolume;
   for (const audio of getValidAudios()) {
     audio.volume = volume;
   }
@@ -28,5 +38,9 @@ export function playAudio() {
 }
 
 function getValidAudios() {
-  return audios.filter(x => x.src.startsWith(location.origin));
+  return audios.filter(isValidAudio);
+}
+
+function isValidAudio(audio: HTMLAudioElement) {
+  return audio.src.startsWith(location.origin);
 }

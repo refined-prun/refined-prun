@@ -19,6 +19,12 @@ const getByRegistration = createMapGetter(state.all, x => x.registration);
 
 const getByName = createMapGetter(state.all, x => x.name);
 
+const getByStoreId = createMapGetter(state.all, x => [
+  x.idShipStore,
+  x.idFtlFuelStore,
+  x.idStlFuelStore,
+]);
+
 export const getShipLastRepair = (ship: PrunApi.Ship) =>
   ship.lastRepair ? ship.lastRepair.timestamp : ship.commissioningTime.timestamp;
 
@@ -26,4 +32,5 @@ export const shipsStore = {
   ...state,
   getByRegistration,
   getByName,
+  getByStoreId,
 };
