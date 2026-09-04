@@ -48,7 +48,7 @@ declare namespace UserData {
     };
   }
 
-  type MaterialGroupType = 'Manual' | 'Resupply' | 'Repair';
+  type MaterialGroupType = 'Manual' | 'Resupply' | 'Repair' | 'Stock';
 
   interface MaterialGroupData {
     type: MaterialGroupType;
