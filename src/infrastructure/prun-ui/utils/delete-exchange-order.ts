@@ -4,7 +4,7 @@ import { mirrorConfirmationOverlay } from '@src/infrastructure/prun-ui/utils/mir
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { onNodeDisconnected } from '@src/utils/on-node-disconnected';
 import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
-import ActionFeedbackProgress from '@src/components/ActionFeedbackProgress.vue';
+import ActionFeedback from '@src/components/ActionFeedback.vue';
 import { watchUntil } from '@src/utils/watch';
 import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
@@ -103,7 +103,7 @@ function showManualProgressOverlay(target: Element) {
     return () => {};
   }
   const before = new Set(Array.from(targetBody.children));
-  const progressApp = createFragmentApp(ActionFeedbackProgress);
+  const progressApp = createFragmentApp(ActionFeedback, { status: 'progress' });
   progressApp.appendTo(targetBody);
   const manual = Array.from(targetBody.children).filter(x => !before.has(x));
 

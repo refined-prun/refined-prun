@@ -123,7 +123,7 @@ export function calculatePlanetBurn(
       for (const need of tier.needs) {
         const mat = getBurnValue(need.material);
         mat.workforce += need.unitsPerInterval;
-        mat.remainingAllocation = need.remainingAllocation;
+        mat.remainingAllocation += need.remainingAllocation;
       }
     }
   }

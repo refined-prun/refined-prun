@@ -2,14 +2,27 @@
 
 ## Unreleased
 
+### Added
+
+- Added a notification count badge to the browser tab favicon (`favicon-notification-badge`)
+
 ### Changed
 
+- `COM`: The text in backticks now renders as command links (`chat-command-links`)
 - `FXPO`: The "Maximum Lot Size" field now sets a more precise price (`fxpo-maximum-lot-size`)
+- `XIT ACT`: The package name title now validates the new name before saving
+- `XIT CONTC`: The conditions with no deadline are now grouped and sorted
 
 ### Fixed
 
+- `CXPC`: Fixed the chart not respecting the "Default CX Chart Type" setting (`cxpc-chart-types`)
+- `POPID`: Fixed ALL contribution selection exceeding full reserves (`contribution-bulk-controls`)
 - `PROD`: Fixed order completion time not displaying for `PROD {planet id}` (`prod-order-eta`)
+- `XIT ACT`: Fixed the "Unknown action feedback overlay" error when CX Buy places an order outside the price band
 - `XIT BURN`: Fixed the TSV export reporting double the inventory in the "Inv" column
+- `XIT BURN`: Fixed workforce allocation accumulation across tiers
+- `XIT BURN`: Fixed color filters not matching fractional-day colors
+- `XIT BURN`: Fixed inventory values rounding up
 
 ## 26.6.22.2033
 

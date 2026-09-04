@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { userData } from '@src/store/user-data';
-import { fixed0, fixed01 } from '@src/utils/format';
+import { getBurnThresholds } from '@src/features/XIT/BURN/utils';
+import { trunc0, trunc01 } from '@src/utils/format';
 
 const { days } = defineProps<{ days: number }>();
 
@@ -9,17 +9,17 @@ const formattedDays = computed(() => {
     return '∞';
   }
   if (days >= 10) {
-    return fixed0(Math.floor(days));
+    return trunc0(days);
   }
-  return fixed01(days);
+  return trunc01(days);
 });
 
 const burnClass = computed(() => {
-  const flooredDays = Math.floor(days);
+  const { isRed, isYellow, isGreen } = getBurnThresholds(days);
   return {
-    [C.Workforces.daysMissing]: flooredDays <= userData.settings.burn.red,
-    [C.Workforces.daysWarning]: flooredDays <= userData.settings.burn.yellow,
-    [C.Workforces.daysSupplied]: flooredDays > userData.settings.burn.yellow,
+    [C.Workforces.daysMissing]: isRed,
+    [C.Workforces.daysWarning]: isYellow,
+    [C.Workforces.daysSupplied]: isGreen,
   };
 });
 </script>

@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import { showErrorOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
+
 const model = defineModel<string>();
 
-const { editable = false } = defineProps<{ editable?: boolean }>();
+const { editable = false, validate = () => true } = defineProps<{
+  editable?: boolean;
+  validate?: (value: string) => string | boolean;
+}>();
 
 const inputRef = useTemplateRef<HTMLInputElement>('input');
 const inputValue = ref('');
@@ -13,10 +18,18 @@ function onHeaderClick() {
   nextTick(() => inputRef.value?.focus());
 }
 
-function onEnterPress() {
-  if (inputValue.value.length > 0) {
-    model.value = inputValue.value;
+function onEnterPress(event: KeyboardEvent) {
+  if (inputValue.value.length === 0) {
+    inputRef.value?.blur();
+    return;
   }
+  const result = validate(inputValue.value);
+  if (result !== true) {
+    showErrorOverlay(event, typeof result === 'string' ? result : 'Illegal arguments.');
+    inputRef.value?.blur();
+    return;
+  }
+  model.value = inputValue.value;
   inputRef.value?.blur();
 }
 

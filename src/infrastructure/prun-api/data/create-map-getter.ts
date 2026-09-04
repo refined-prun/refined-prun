@@ -1,8 +1,10 @@
+import { castArray } from '@src/utils/cast-array';
+
 const upperCase = (value: string) => value.toUpperCase();
 
 export function createMapGetter<T>(
   items: Ref<T[] | undefined>,
-  selector: (item: T) => string,
+  selector: (item: T) => string | string[],
   valueTransformer?: (value: string) => string,
 ) {
   valueTransformer ??= upperCase;
@@ -12,7 +14,10 @@ export function createMapGetter<T>(
     }
     const map = new Map<string, T>();
     for (const item of items.value) {
-      map.set(valueTransformer(selector(item)), item);
+      const values = castArray(selector(item));
+      for (const value of values) {
+        map.set(valueTransformer(value), item);
+      }
     }
     return map;
   });
