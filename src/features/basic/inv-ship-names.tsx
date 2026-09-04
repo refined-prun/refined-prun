@@ -1,27 +1,13 @@
 import PrunLink from '@src/components/PrunLink.vue';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
-import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { observeDescendantListChanged } from '@src/utils/mutation-observer';
-
-const shipStoreTypes = new Set([
-  'SHIP_STORE',
-  'STL_FUEL_STORE',
-  'FTL_FUEL_STORE',
-  'VORTEX_FUEL_STORE',
-]);
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, 'tr'), row => {
     const id = refPrunId(row);
     const getNameCell = () => row.children[2];
-    const ship = computed(() => {
-      const storage = storagesStore.getById(id.value);
-      if (!storage || !shipStoreTypes.has(storage.type)) {
-        return undefined;
-      }
-      return shipsStore.getById(storage.addressableId);
-    });
+    const ship = computed(() => shipsStore.getByStoreId(id.value));
     const container = document.createElement('span');
 
     observeDescendantListChanged(row, () => {
