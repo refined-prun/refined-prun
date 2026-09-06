@@ -93,7 +93,9 @@ The command should be short. Refer to `docs/game/commands.csv` for an example of
 | Vue composables (`ref`, `computed`, `reactive`, `watch`, …) | `vue` |
 | `$`, `$$`, `_$`, `_$$` | `@src/utils/select-dom` |
 | `C` | `@src/infrastructure/prun-ui/prun-css` |
-| `subscribe` | `@src/utils/subscribe-async-generator` |
+| `subscribe` | `@src/utils/observable` |
+| `sumBy` | `@src/utils/sum-by` |
+| `L`, `applyLocalizationPatch` | `@src/infrastructure/prun-ui/i18n` |
 | `tiles` | `@src/infrastructure/prun-ui/tiles` |
 | `features` | `@src/features/feature-registry` |
 | `xit` | `@src/features/XIT/xit-registry` |
@@ -105,7 +107,7 @@ The command should be short. Refer to `docs/game/commands.csv` for an example of
 
 ## `C` Object
 
-`C` maps all PrUn CSS class names with auto-complete. Always prefer `C` over hardcoded hashed class names — hashes change between game updates.
+`C` maps all PrUn CSS class names with auto-complete. Always prefer `C` over hardcoded hashed class names — hashes can change between game updates.
 
 ```typescript
 // Bad: brittle
@@ -116,6 +118,37 @@ applyCssRule(`.${C.Frame.logo}`, $style.logo);
 ```
 
 ---
+
+## `L` Object
+
+`L` maps PrUn's localization dictionary into a typed tree with autocomplete down to each key.
+
+Access a key by its dotted name as nested properties, then call them as functions to get the localized string. Always prefer `L` over hardcoded English text — localized strings differ per user locale and change between game updates.
+
+Keys with no ICU placeholders take no argument; keys with placeholders require an `options` object. The generated types enforce the exact argument shape per key.
+
+```ts
+// Localization key "CompanyPanel.data.bases"
+
+// Bad: breaks for non-English users
+if (label.textContent === 'Bases') { }
+
+// Good
+if (label.textContent === L.CompanyPanel.data.bases()) { }
+
+// With placeholders (types enforce the argument shape)
+L.MaterialInformation.volume({ volume: 3 });
+```
+
+Additionally, each localization leaf provides the `.getFormat()` function that returns `IntlMessageFormat`, allowing for advanced use such as direct AST manipulation via `.getAst()`. As an example, the globally available function `applyLocalizationPatch` allows modifying the localization strings via AST.
+
+```ts
+applyLocalizationPatch(L.SiteWorkforces.table.currentWorkforce, value =>
+  value.replace('Current Workforce', 'Current'),
+);
+```
+
+Accessing a leaf that is not present in the localization tree doesn't throw, and resolves in `undefined` at a terminal op - `()`, `getFormat()`, `toString()` or `valueOf()`. This means that the code won't break if some localization string gets removed from the game, but it requires the code to account for possible `undefined` when working with the `L` object.
 
 ## DOM Helpers
 
@@ -134,6 +167,7 @@ Selectors are **not CSS selector strings**. Internally they resolve to `getEleme
 
 Valid selectors:
 - `C.ComponentName.className` — a PrUn CSS class name (preferred)
+- `ElementTag.*` — a semantic Refined PrUn tag registered in `tagger.ts`
 - HTML tag names: `'div'`, `'tr'`, `'td'`, etc
 
 ### `$` — Async Single Element (Gate Pattern)
@@ -362,7 +396,7 @@ const naturalId = getEntityNaturalIdFromAddress(site?.address);
 
 ### Localized Text
 
-Avoid matching on localized text (like "Weight", "Volume"). Use element index or `PrunI18N` lookup instead.
+Avoid matching on localized text (like "Weight", "Volume"). Use element index or the `L` localization API instead (see the `L` Object section).
 
 ### Reactivity
 
@@ -385,6 +419,26 @@ const line = computed(() => productionStore.getById(tile.parameter));
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 showBuffer('CXM AI1.RAT');  // opens a buffer with the given command
+```
+
+---
+
+## Tile Overlays
+
+```ts
+import {
+  showTileOverlay,
+  showConfirmationOverlay,
+  showErrorOverlay,
+  showSuccessOverlay,
+} from '@src/infrastructure/prun-ui/tile-overlay';
+
+// Pass the event from the user action so that the show function can find the correct tile.
+showTileOverlay(event, EditorComponent, props);
+showConfirmationOverlay(event, onConfirm, { message: 'Are you sure?' });
+showErrorOverlay(event, 'Illegal arguments.');
+showSuccessOverlay(event); // Uses the localized default message.
+showSuccessOverlay(event, 'Package renamed.');
 ```
 
 ---

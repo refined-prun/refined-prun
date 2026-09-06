@@ -1,10 +1,11 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import { fixed0 } from '@src/utils/format';
 import Edit from '@src/features/XIT/ACT/material-groups/manual/Edit.vue';
-import { deepToRaw } from '@src/utils/deep-to-raw';
+import { MaterialBill } from '@src/features/XIT/ACT/shared-types';
 
 act.addMaterialGroup({
   type: 'Manual',
+  shortDescription: 'A fixed list of materials and quantities',
   description: data => {
     const materials = data.materials;
     if (!materials || Object.keys(materials).length == 0) {
@@ -21,6 +22,10 @@ act.addMaterialGroup({
       log.error('Missing materials.');
       return undefined;
     }
-    return structuredClone(deepToRaw(data.materials));
+    const materials: MaterialBill = {};
+    for (const ticker in data.materials) {
+      materials[ticker] = { quantity: data.materials[ticker] };
+    }
+    return materials;
   },
 });

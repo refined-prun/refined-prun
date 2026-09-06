@@ -4,6 +4,7 @@ import {
   changeTextAreaValue,
   clickElement,
   focusElement,
+  selectMaterialInMaterialSelector,
 } from '@src/util';
 import { sleep } from '@src/utils/sleep';
 import { contractDraftsStore } from '@src/infrastructure/prun-api/data/contract-drafts';
@@ -40,35 +41,6 @@ export async function selectLocation(container: Element, locationName: string) {
   }
   await clickElement(match);
   return true;
-}
-
-export async function selectMaterial(container: Element, ticker: string) {
-  const input = (await $(container, C.MaterialSelector.input)) as HTMLInputElement;
-  const suggestionsContainer = (await $(
-    container,
-    C.MaterialSelector.suggestionsContainer,
-  )) as HTMLElement;
-
-  focusElement(input);
-  changeInputValue(input, ticker);
-
-  const suggestionsList = await $(container, C.MaterialSelector.suggestionsList);
-
-  // Hide the dropdown to keep the tile clean while we click programmatically.
-  suggestionsContainer.style.display = 'none';
-  try {
-    const match = _$$(suggestionsList, C.MaterialSelector.suggestionEntry).find(
-      x => _$(x, C.ColoredIcon.label)?.textContent === ticker,
-    ) as HTMLElement | undefined;
-    if (!match) {
-      return false;
-    }
-    await clickElement(match);
-    await sleep(200);
-    return true;
-  } finally {
-    suggestionsContainer.style.display = '';
-  }
 }
 
 // --- Contract draft helpers. ---
@@ -277,8 +249,9 @@ export async function addMaterials(
 
     const matSelector = _$(group, C.MaterialSelector.container);
     if (matSelector) {
-      const ok = await selectMaterial(matSelector, mat.ticker);
+      const ok = await selectMaterialInMaterialSelector(matSelector, mat.ticker);
       if (ok) {
+        await sleep(200);
         log.info(`Added: ${mat.ticker} x${mat.amount}`);
       } else {
         log.warning(`Could not select material ${mat.ticker}`);

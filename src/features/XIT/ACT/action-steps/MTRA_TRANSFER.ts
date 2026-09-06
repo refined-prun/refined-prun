@@ -1,12 +1,11 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import { serializeStorage } from '@src/features/XIT/ACT/actions/utils';
 import { fixed0 } from '@src/utils/format';
-import { changeInputValue, clickElement } from '@src/util';
+import { changeInputValue, clickElement, selectMaterialInMaterialSelector } from '@src/util';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { watchWhile } from '@src/utils/watch';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { AssertFn } from '@src/features/XIT/ACT/shared-types';
-import { selectMaterial } from '@src/features/XIT/ACT/action-steps/cont-utils';
 
 interface Data {
   from: string;
@@ -26,7 +25,8 @@ export const MTRA_TRANSFER = act.addActionStep<Data>({
     return `Transfer ${fixed0(data.amount)} ${data.ticker} from ${fromName} to ${toName}`;
   },
   execute: async ctx => {
-    const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete, skip } = ctx;
+    const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete, skip, fail } =
+      ctx;
     const assert: AssertFn = ctx.assert;
     const { ticker, amount } = data;
     const from = storagesStore.getById(data.from);
@@ -67,10 +67,12 @@ export const MTRA_TRANSFER = act.addActionStep<Data>({
     }
 
     setStatus('Setting up MTRA buffer...');
-    const container = await $(tile.anchor, C.MaterialSelector.container);
 
-    const ok = await selectMaterial(container, ticker);
-    assert(ok, `Ticker ${ticker} not found in the material selector`);
+    const materialSelectSuccess = await selectMaterialInMaterialSelector(tile.anchor, ticker);
+    if (!materialSelectSuccess) {
+      fail(`Ticker ${ticker} not found in the material selector`);
+      return;
+    }
 
     const sliderNumbers = _$$(tile.anchor, 'rc-slider-mark-text').map(x =>
       Number(x.textContent ?? 0),

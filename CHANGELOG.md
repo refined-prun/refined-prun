@@ -1,5 +1,66 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `INV`: Added in-flight ship destinations to the Location column (`inv-ship-destination-location`)
+- `INV`: Added ship names to the Name column (`inv-ship-names`)
+- `XIT ACT`: Added descriptions to the action and material group type fields
+- `XIT ACT`: Added "Paste" material group
+- Added a notification count badge to the browser tab favicon (`favicon-notification-badge`)
+
+### Changed
+
+- `COM`: The text in backticks now renders as command links (`chat-command-links`)
+- `FXPO`: The "Maximum Lot Size" field now sets a more precise price (`fxpo-maximum-lot-size`)
+- `XIT ACT`: The package name title now validates the new name before saving
+- `XIT CONTC`: The conditions with no deadline are now grouped and sorted
+- `XIT PRUNSTAT`: Switched to raylu's fork
+
+### Fixed
+
+- `CXPC`: Fixed the chart not respecting the "Default CX Chart Type" setting (`cxpc-chart-types`)
+- `POPID`: Fixed ALL contribution selection exceeding full reserves (`contribution-bulk-controls`)
+- `PROD`: Fixed order completion time not displaying for `PROD {planet id}` (`prod-order-eta`)
+- `XIT ACT`: Fixed the "Unknown action feedback overlay" error when CX Buy places an order outside the price band
+- `XIT BURN`: Fixed the TSV export reporting double the inventory in the "Inv" column
+- `XIT BURN`: Fixed workforce allocation accumulation across tiers
+- `XIT BURN`: Fixed color filters not matching fractional-day colors
+- `XIT BURN`: Fixed inventory values rounding up
+
+## 26.6.22.2033
+
+### Fixed
+
+- Fixed the window resizing bug introduced in the previous release
+
+## 26.6.22
+
+### Added
+
+- `FXPO`: Added a "Maximum Lot Size" field to fill the top order in the order book (`fxpo-maximum-lot-size`)
+- `XIT CONTC`: Added a "Violated Conditions" section (separate for partner/self)
+
+### Changed
+
+- `ADM`: The "Withdraw" vote button now has a gray color (`adm-neutral-withdraw-button`)
+- `CONT`: The preamble of user-made contracts is no longer minimized (`minimize-headers`)
+- `FXPO`: The "Current Price" field is now set to the order book price (`fxpo-better-current-price`)
+- `SFC`: The window now auto-closes on success (`sfc-auto-close`)
+- `XIT BURN`: Workforce consumables now include remaining fractional allocations
+- `XIT BURN`: The "Days" column now displays fractional days when less than 10 days remain
+- `XIT BURN`: The "Need" column is now based on fractional days instead of whole days
+- `XIT BURN`: The TSV export now includes the "Need" column
+- `XIT CXTS`: The command now supports an optional "Page Size" parameter
+- `XIT FXTS`: The command now supports an optional "Page Size" parameter
+
+### Fixed
+
+- `BUI`: Fixed recipe material layout (`bui-sort-recipes`)
+- `XIT CONTC`: Fixed address link display for unnamed planets in named systems
+- `XIT CONTC`: Fixed "Pick up X material" condition deadline handling
+
 ## 26.5.18
 
 ### Added

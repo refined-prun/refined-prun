@@ -1,7 +1,7 @@
 import { changeInputValue, clickElement } from '@src/util';
 import { sleep } from '@src/utils/sleep';
 import css from '@src/utils/css-utils.module.css';
-import onNodeDisconnected from '@src/utils/on-node-disconnected';
+import { onNodeDisconnected } from '@src/utils/on-node-disconnected';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { watchUntil } from '@src/utils/watch';
 import { isEmpty } from 'ts-extras';
@@ -13,6 +13,7 @@ import {
   UI_WINDOWS_UPDATE_SIZE,
 } from '@src/infrastructure/prun-api/client-messages';
 import { onNodeTreeMutation } from '@src/utils/on-node-tree-mutation';
+import { closePrunWindow } from '@src/infrastructure/prun-ui/utils/close-prun-window';
 
 let isBusy = false;
 const pendingResolvers: (() => void)[] = [];
@@ -129,11 +130,7 @@ async function closeWhenDone(window: HTMLDivElement, options?: ShowBufferOptions
   if (closeWhen) {
     await watchUntil(closeWhen);
   }
-  const buttons = _$$(window, C.Window.button);
-  const closeButton = buttons.find(x => x.textContent === 'x');
-  if (closeButton) {
-    closeButton?.click();
-  }
+  closePrunWindow(window);
   await new Promise<void>(resolve => onNodeDisconnected(window, resolve));
 }
 

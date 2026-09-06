@@ -11,6 +11,7 @@ import {
 
 act.addAction<Config>({
   type: 'CONT Trade',
+  shortDescription: 'Create a buying or selling contract draft',
   description: (action, config) => {
     if (!action.group || !action.contLocation) {
       return '--';
@@ -33,23 +34,14 @@ act.addAction<Config>({
     return data.contLocation !== configurableValue || config.location !== undefined;
   },
   generateSteps: async ctx => {
-    const {
-      data,
-      config,
-      packageName,
-      getMaterialGroup,
-      getMaterialGroupPrices,
-      getMaterialGroupPlanet,
-      emitStep,
-    } = ctx;
+    const { data, config, packageName, getMaterialGroup, getMaterialGroupPlanet, emitStep } = ctx;
     const assert: AssertFn = ctx.assert;
 
     const materials = await getMaterialGroup(data.group);
     assert(materials, 'Invalid material group');
 
-    const prices = getMaterialGroupPrices(data.group);
     assert(
-      prices,
+      Object.values(materials).some(x => x.price !== undefined),
       `Material group [${data.group}] has no prices. Use a Paste group with 3 columns (ticker, amount, price).`,
     );
 
@@ -65,7 +57,6 @@ act.addAction<Config>({
       CONT_TRADE({
         packageName,
         materials,
-        prices,
         tradeType,
         location,
         currency,

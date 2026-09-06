@@ -2,10 +2,7 @@
 import ColoredIcon, { ColoredIconSize } from '@src/components/ColoredIcon.vue';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import {
-  getDestinationFullName,
-  getDestinationName,
-} from '@src/infrastructure/prun-api/data/addresses';
+import { getFullAddressName, getAddressName } from '@src/infrastructure/prun-api/data/addresses';
 
 const { shipmentId, size = 'large' } = defineProps<{
   shipmentId?: string;
@@ -14,7 +11,7 @@ const { shipmentId, size = 'large' } = defineProps<{
 
 const resolvedDestination = computed(() => {
   const destination = contractsStore.getDestinationByShipmentId(shipmentId);
-  return size === 'large' ? getDestinationFullName(destination) : getDestinationName(destination);
+  return size === 'large' ? getFullAddressName(destination) : getAddressName(destination);
 });
 
 const background = 'linear-gradient(135deg, #030303, #181818)';

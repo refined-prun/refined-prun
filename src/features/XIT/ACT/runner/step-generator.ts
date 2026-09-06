@@ -23,10 +23,7 @@ export class StepGenerator {
     return this.options.log;
   }
 
-  private groupPrices = new Map<string, Record<string, number>>();
-
   async generateSteps(pkg: UserData.ActionPackageData, config: ActionPackageConfig) {
-    this.groupPrices.clear();
     const state = generateState();
     const steps = [] as ActionStep[];
     let fail = false;
@@ -59,7 +56,6 @@ export class StepGenerator {
           },
           emitStep: step => steps.push(step),
           getMaterialGroup: async name => await this.getMaterialGroup(pkg, config, name),
-          getMaterialGroupPrices: name => (name ? this.groupPrices.get(name) : undefined),
           getMaterialGroupPlanet: name => this.getMaterialGroupPlanet(pkg, config, name),
           state,
         });
@@ -140,7 +136,6 @@ export class StepGenerator {
       config: groupConfig,
       log: new Logger((tag, message) => this.log.logMessage(tag, `[${group.name}] ${message}`)),
       setStatus: status => this.options.onStatusChanged(status),
-      setPrices: prices => this.groupPrices.set(name, prices),
     });
   }
 }

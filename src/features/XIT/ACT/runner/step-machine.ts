@@ -173,7 +173,7 @@ export class StepMachine {
 }
 
 async function waitActionFeedback(tile: PrunTile) {
-  const overlay = await $(tile.frame, C.ActionFeedback.overlay);
+  let overlay = await $(tile.frame, C.ActionFeedback.overlay);
   await waitActionProgress(overlay);
   if (overlay.classList.contains(C.ActionConfirmationOverlay.container)) {
     const confirm = _$$(overlay, C.Button.btn)[1];
@@ -181,6 +181,7 @@ async function waitActionFeedback(tile: PrunTile) {
       return 'Confirmation overlay is missing confirm button';
     }
     await clickElement(confirm);
+    overlay = await $(tile.frame, C.ActionFeedback.overlay);
     await waitActionProgress(overlay);
   }
   if (overlay.classList.contains(C.ActionFeedback.success)) {

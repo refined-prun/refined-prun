@@ -12,6 +12,7 @@ import {
 
 act.addAction<Config>({
   type: 'CONT Ship',
+  shortDescription: 'Create a shipping contract draft',
   description: (action, config) => {
     if (!action.group || !action.contOrigin || !action.contDest) {
       return '--';
@@ -61,9 +62,9 @@ act.addAction<Config>({
     const currency = data.currency ?? 'NCC';
 
     let totalTonnage = 0;
-    for (const [ticker, amount] of Object.entries(materials)) {
+    for (const [ticker, { quantity }] of Object.entries(materials)) {
       const material = materialsStore.getByTicker(ticker);
-      totalTonnage += material ? material.weight * amount : amount;
+      totalTonnage += material ? material.weight * quantity : quantity;
     }
     const totalPayment = Math.round(totalTonnage * paymentPerTon);
 

@@ -2,6 +2,7 @@ import { act } from '@src/features/XIT/ACT/act-registry';
 import { fixed0 } from '@src/utils/format';
 import { changeInputValue, changeSelectIndex, focusElement } from '@src/util';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import { MaterialBill } from '@src/features/XIT/ACT/shared-types';
 import {
   addMaterials,
   applyTemplate,
@@ -18,7 +19,7 @@ import {
 
 interface Data {
   packageName: string;
-  materials: Record<string, number>;
+  materials: MaterialBill;
   contractNote?: string;
   payment: number;
   currency: string;
@@ -53,7 +54,7 @@ export const CONT_SEND = act.addActionStep<Data>({
     // Compute total tonnage for the preamble and payment logging.
     let totalTonnage = 0;
     const materialDetails: Array<{ ticker: string; amount: number }> = [];
-    for (const [ticker, amount] of Object.entries(data.materials)) {
+    for (const [ticker, { quantity: amount }] of Object.entries(data.materials)) {
       if (amount <= 0) {
         continue;
       }

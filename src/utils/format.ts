@@ -98,6 +98,23 @@ export const fixed4 = numberFormat({
   maximumFractionDigits: 4,
 });
 
+export const trunc0 = numberFormat({
+  maximumFractionDigits: 0,
+  roundingMode: 'trunc',
+});
+
+export const trunc01 = numberFormat({
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 1,
+  roundingMode: 'trunc',
+});
+
+export const trunc02 = numberFormat({
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+  roundingMode: 'trunc',
+});
+
 export const percent0 = numberFormat({
   style: 'percent',
   maximumFractionDigits: 0,

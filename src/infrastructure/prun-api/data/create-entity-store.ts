@@ -12,11 +12,12 @@ export function createEntityStore<T>(options?: EntityStoreOptions<T>) {
   const selectId = options?.selectId ?? ((model: any) => model.id);
   const transformId = options?.transformId ?? ((s: string) => s.toUpperCase());
 
-  let entities = shallowReactive({} as Record<string, T>);
+  const entitiesRef = shallowRef({} as Record<string, T>);
   const prefixStoreRef = shallowRef(new PrefixStore<T>());
   const fetched = ref(false);
 
   function rebuildPrefixStore() {
+    const entities = entitiesRef.value;
     const prefixStore = prefixStoreRef.value;
     prefixStore.clear();
     for (const key in entities) {
@@ -29,7 +30,7 @@ export function createEntityStore<T>(options?: EntityStoreOptions<T>) {
     onApiMessage({
       CLIENT_CONNECTION_OPENED() {
         fetched.value = false;
-        entities = shallowReactive({} as Record<string, T>);
+        entitiesRef.value = {};
         prefixStoreRef.value = new PrefixStore<T>();
       },
     });
@@ -39,14 +40,14 @@ export function createEntityStore<T>(options?: EntityStoreOptions<T>) {
     state: {
       fetched,
       entities: computed(() => {
-        return fetched.value ? entities : undefined;
+        return fetched.value ? entitiesRef.value : undefined;
       }),
-      all: computed(() => (fetched.value ? Object.values(entities) : undefined)),
+      all: computed(() => (fetched.value ? Object.values(entitiesRef.value) : undefined)),
       getById: (id?: string | null): T | undefined => {
         if (!id || !fetched.value) {
           return undefined;
         }
-        const exact = entities[id];
+        const exact = entitiesRef.value[id];
         if (exact !== undefined) {
           return exact;
         }
@@ -60,17 +61,17 @@ export function createEntityStore<T>(options?: EntityStoreOptions<T>) {
       },
     },
     setAll(items: T[]) {
-      for (const key in entities) {
-        delete entities[key];
-      }
+      const entities: Record<string, T> = {};
       for (const item of items) {
         entities[selectId(item)] = item;
       }
+      entitiesRef.value = entities;
       rebuildPrefixStore();
     },
     setOne(item: T) {
       const id = selectId(item);
-      entities[id] = item;
+      entitiesRef.value[id] = item;
+      triggerRef(entitiesRef);
       prefixStoreRef.value.setOne(transformId(id), item);
       triggerRef(prefixStoreRef);
     },
@@ -78,32 +79,37 @@ export function createEntityStore<T>(options?: EntityStoreOptions<T>) {
       const prefixStore = prefixStoreRef.value;
       for (const item of items) {
         const id = selectId(item);
-        entities[id] = item;
+        entitiesRef.value[id] = item;
         prefixStore.setOne(transformId(id), item);
       }
+      triggerRef(entitiesRef);
       triggerRef(prefixStoreRef);
     },
     addOne(item: T) {
       const id = selectId(item);
-      if (!entities[id]) {
-        entities[id] = item;
+      if (!entitiesRef.value[id]) {
+        entitiesRef.value[id] = item;
+        triggerRef(entitiesRef);
         prefixStoreRef.value.insert(transformId(id), item);
         triggerRef(prefixStoreRef);
       }
     },
     updateOne(item: T) {
       const id = selectId(item);
+      const entities = entitiesRef.value;
       if (entities[id]) {
         entities[id] = {
           ...entities[id],
           ...item,
         };
+        triggerRef(entitiesRef);
         prefixStoreRef.value.setOne(transformId(id), entities[id]);
         triggerRef(prefixStoreRef);
       }
     },
     removeOne(id: string) {
-      delete entities[id];
+      delete entitiesRef.value[id];
+      triggerRef(entitiesRef);
       prefixStoreRef.value.remove(transformId(id));
       triggerRef(prefixStoreRef);
     },

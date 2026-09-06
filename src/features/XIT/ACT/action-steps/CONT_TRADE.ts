@@ -1,6 +1,7 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import { fixed0 } from '@src/utils/format';
 import { changeInputValue, focusElement } from '@src/util';
+import { MaterialBill } from '@src/features/XIT/ACT/shared-types';
 import {
   addMaterials,
   applyTemplate,
@@ -17,8 +18,7 @@ import {
 
 interface Data {
   packageName: string;
-  materials: Record<string, number>;
-  prices: Record<string, number>;
+  materials: MaterialBill;
   tradeType: 'BUYING' | 'SELLING';
   location: string;
   currency: string;
@@ -57,8 +57,7 @@ export const CONT_TRADE = act.addActionStep<Data>({
     const contractName = `${data.packageName} - ${typeLabel} - ${dateStr}`;
 
     const materialsList = Object.entries(data.materials)
-      .map(([ticker, amount]) => {
-        const price = data.prices[ticker];
+      .map(([ticker, { quantity: amount, price }]) => {
         return price !== undefined && price > 0
           ? `${ticker} x${amount} @ ${fixed0(price)}/u`
           : `${ticker} x${amount}`;
@@ -80,12 +79,12 @@ export const CONT_TRADE = act.addActionStep<Data>({
     await setCurrency(anchor, log, data.currency);
 
     const materialEntries = Object.entries(data.materials)
-      .filter(([, amount]) => amount > 0)
-      .map(([ticker, amount]) => ({ ticker, amount }));
+      .filter(([, material]) => material.quantity > 0)
+      .map(([ticker, { quantity: amount }]) => ({ ticker, amount }));
 
     await addMaterials(anchor, log, setStatus, materialEntries, {
       setPrice: (group, ticker) => {
-        const price = data.prices[ticker];
+        const price = data.materials[ticker].price;
         if (price === undefined || price <= 0) {
           return;
         }
