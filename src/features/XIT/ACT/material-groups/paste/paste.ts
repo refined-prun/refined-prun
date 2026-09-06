@@ -102,7 +102,7 @@ function parseQuantity(raw: string): { amount: number } | { error: string } {
   if ('error' in parsed) {
     return parsed;
   }
-  if (!Number.isSafeInteger(parsed.value)) {
+  if (parsed.normalized.includes('.') || !Number.isSafeInteger(parsed.value)) {
     return { error: `quantity "${raw}" is not a whole number` };
   }
   return { amount: parsed.value };
