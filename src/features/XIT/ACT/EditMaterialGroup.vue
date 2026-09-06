@@ -48,10 +48,6 @@ function onSaveClick() {
 <template>
   <div :class="C.DraftConditionEditor.form">
     <SectionHeader>{{ add ? 'Add' : 'Edit' }} Material Group</SectionHeader>
-    <!-- TODO(#212): Re-enable shortDescription banner once PR #213 (shortDescription) merges to main.
-         Restore: import SectionDescription, the `shortDescription` computed, the `shortDescription?`
-         field in act-registry MaterialGroupInfo, and the line below.
-    <SectionDescription v-if="shortDescription">{{ shortDescription }}</SectionDescription> -->
     <form>
       <Active label="Type">
         <SelectInput v-model="type" :options="typeOptions" />

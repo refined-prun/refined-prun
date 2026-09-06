@@ -212,8 +212,7 @@ function parseMaterials(input: string | undefined) {
 
 act.addMaterialGroup<Config>({
   type: 'Paste',
-  // TODO(#212): Restore once PR #213 (shortDescription) merges to main.
-  // shortDescription: 'Paste materials from clipboard at execution time',
+  shortDescription: 'Paste materials from clipboard at execution time',
   description: () => 'Paste materials at execution time',
   configureComponent: Configure,
   needsConfigure: () => true,
