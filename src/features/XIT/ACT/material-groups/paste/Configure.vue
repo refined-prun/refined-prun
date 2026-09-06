@@ -5,13 +5,7 @@ import { parsePaste } from '@src/features/XIT/ACT/material-groups/paste/paste';
 
 const { config } = defineProps<{ data: UserData.MaterialGroupData; config: Config }>();
 
-const text = ref(config.materials ?? '');
-
-watch(text, x => {
-  config.materials = x;
-});
-
-const result = computed(() => parsePaste(text.value));
+const result = computed(() => parsePaste(config.materials));
 const errors = computed(() => result.value.errors);
 const fatal = computed(() => result.value.fatal);
 const rowCount = computed(() => result.value.rows.length);
@@ -19,11 +13,11 @@ const hasError = computed(() => !!fatal.value || errors.value.length > 0 || rowC
 
 // "N of M lines have errors" — M counts only non-empty lines.
 const nonEmptyLineCount = computed(
-  () => text.value.split(/\r\n|\r|\n/).filter(x => x.trim().length > 0).length,
+  () => (config.materials ?? '').split(/\r\n|\r|\n/).filter(x => x.trim().length > 0).length,
 );
 
 const summary = computed(() => {
-  if (text.value.trim().length === 0) {
+  if ((config.materials ?? '').trim().length === 0) {
     return undefined;
   }
   if (fatal.value) {
@@ -43,7 +37,7 @@ const summary = computed(() => {
   <form>
     <Active label="Materials" :error="hasError">
       <textarea
-        v-model="text"
+        v-model="config.materials"
         :class="$style.textarea"
         placeholder="Paste from a spreadsheet, or type rows as TICKER,QTY,PRICE&#10;RAT,100,530&#10;DW,50&#10;&#10;One delimiter per paste: tab (spreadsheet), comma, or semicolon.&#10;PRICE is optional; max 3 significant figures."
         spellcheck="false" />
