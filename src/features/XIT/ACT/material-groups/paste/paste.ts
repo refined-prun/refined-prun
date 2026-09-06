@@ -136,6 +136,8 @@ export function parsePaste(input: string | undefined) {
     return result;
   }
 
+  const prices = new Map<string, { price: number; line: number }>();
+
   // Papa Parse will interpret \r as a valid line separator and will return extra records, so we
   // should split by all combinations of \r\n, \r, and \n.
   const lines = input.split(/\r\n|\r|\n/);
@@ -183,6 +185,18 @@ export function parsePaste(input: string | undefined) {
       if ('error' in price) {
         result.errors.push({ line, raw, reason: price.error });
         continue;
+      }
+      const previous = prices.get(material.ticker);
+      if (previous !== undefined && previous.price !== price.price) {
+        result.errors.push({
+          line,
+          raw,
+          reason: `conflicting price for ${material.ticker}; use the same price as line ${fixed0(previous.line)}`,
+        });
+        continue;
+      }
+      if (previous === undefined) {
+        prices.set(material.ticker, { price: price.price, line });
       }
       row.price = price.price;
     }
