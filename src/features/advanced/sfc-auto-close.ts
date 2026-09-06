@@ -1,12 +1,7 @@
 import { closeTileWindow } from '@src/infrastructure/prun-ui/utils/close-prun-window';
-import { sleep } from '@src/utils/sleep';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.frame, C.ActionFeedback.success), async () => {
-    // Delay a bit so the user can see the success overlay for a bit.
-    await sleep(300);
-    closeTileWindow(tile);
-  });
+  subscribe($$(tile.frame, C.ActionFeedback.success), () => closeTileWindow(tile));
 }
 
 function init() {
