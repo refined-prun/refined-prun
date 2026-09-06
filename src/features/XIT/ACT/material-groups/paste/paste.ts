@@ -3,7 +3,7 @@ import { act } from '@src/features/XIT/ACT/act-registry';
 import Configure from '@src/features/XIT/ACT/material-groups/paste/Configure.vue';
 import { Config } from '@src/features/XIT/ACT/material-groups/paste/config';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { fixed0, fixed02 } from '@src/utils/format';
+import { fixed0 } from '@src/utils/format';
 import { MaterialBill } from '@src/features/XIT/ACT/shared-types';
 
 type Delimiter = '\t' | ';' | ',';
@@ -114,18 +114,18 @@ function parsePrice(raw: string): { price: number } | { error: string } {
   if ('error' in parsed) {
     return parsed;
   }
+  // CXPO_BUY writes prices through fixed02. Do not accept a limit it would round.
+  if ((parsed.normalized.split('.')[1]?.length ?? 0) > 2) {
+    return { error: `price "${raw}" must have at most two decimal places` };
+  }
   // CXPO rounds prices to 3 significant figures. For example, 123456789 becomes 123000000.
   const MAX_PRICE_SIGNIFICANT_FIGURES = 3;
   const digits = parsed.normalized.replace('.', '').replace(/^0+/, '').replace(/0+$/, '');
   if (digits.length > MAX_PRICE_SIGNIFICANT_FIGURES) {
     const suggestion = Number(parsed.value.toPrecision(MAX_PRICE_SIGNIFICANT_FIGURES));
     return {
-      error: `price "${raw}" has more than ${MAX_PRICE_SIGNIFICANT_FIGURES} significant figures (use ${fixed02(suggestion)})`,
+      error: `price "${raw}" has more than ${MAX_PRICE_SIGNIFICANT_FIGURES} significant figures (use ${suggestion})`,
     };
-  }
-  // CXPO_BUY writes prices through fixed02. Do not accept a limit it would round.
-  if ((parsed.normalized.split('.')[1]?.length ?? 0) > 2) {
-    return { error: `price "${raw}" must have at most two decimal places` };
   }
   return { price: parsed.value };
 }
