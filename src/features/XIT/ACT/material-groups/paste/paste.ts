@@ -3,7 +3,6 @@ import { act } from '@src/features/XIT/ACT/act-registry';
 import Configure from '@src/features/XIT/ACT/material-groups/paste/Configure.vue';
 import { Config } from '@src/features/XIT/ACT/material-groups/paste/config';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { fixed0 } from '@src/utils/format';
 import { MaterialBill } from '@src/features/XIT/ACT/shared-types';
 
 type Delimiter = '\t' | ';' | ',';
@@ -157,7 +156,7 @@ export function parsePaste(input: string | undefined) {
       result.errors.push({
         line,
         raw,
-        reason: `expected TICKER, QUANTITY[, PRICE] (got ${fixed0(fields.length)} fields)`,
+        reason: `expected TICKER, QUANTITY[, PRICE] (got ${fields.length} fields)`,
       });
       continue;
     }
@@ -191,7 +190,7 @@ export function parsePaste(input: string | undefined) {
         result.errors.push({
           line,
           raw,
-          reason: `conflicting price for ${material.ticker}; use the same price as line ${fixed0(previous.line)}`,
+          reason: `conflicting price for ${material.ticker}; use the same price as line ${previous.line}`,
         });
         continue;
       }
