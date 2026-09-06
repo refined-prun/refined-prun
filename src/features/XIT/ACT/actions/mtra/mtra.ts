@@ -59,7 +59,7 @@ act.addAction<Config>({
           from: origin.id,
           to: dest.id,
           ticker,
-          amount: materials[ticker],
+          amount: materials[ticker].quantity,
         }),
       );
     }

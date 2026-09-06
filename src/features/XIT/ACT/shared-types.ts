@@ -18,15 +18,10 @@ export interface MaterialGroupGenerateContext<TConfig>
   extends ActionRunnerContext<UserData.MaterialGroupData> {
   config: TConfig;
   setStatus: (status: string) => void;
-  // Optional side channel for groups that carry per-ticker prices (e.g. Paste).
-  // Prices are per-unit numbers in the currency of the action's target exchange.
-  setPrices?: (prices: Record<string, number>) => void;
 }
 
-// Prices a material group supplied alongside its quantity bill.
-export interface MaterialGroupPrices {
-  prices: Record<string, number>;
-}
+// Prices are per unit in the currency of the action's target exchange.
+export type MaterialBill = Record<string, { quantity: number; price?: number }>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AssertFn = (condition: any, message: string) => asserts condition;
@@ -36,10 +31,7 @@ export interface ActionStepGenerateContext<TConfig>
   config: TConfig;
   fail: (message?: string) => void;
   assert: AssertFn;
-  getMaterialGroup: (name: string | undefined) => Promise<Record<string, number> | undefined>;
-  // Per-ticker prices the named group supplied (empty when none). Must be
-  // called after getMaterialGroup, which is what populates the prices.
-  getMaterialGroupPrices: (name: string | undefined) => MaterialGroupPrices;
+  getMaterialGroup: (name: string | undefined) => Promise<MaterialBill | undefined>;
   emitStep: (step: ActionStep) => void;
   state: {
     WAR: {

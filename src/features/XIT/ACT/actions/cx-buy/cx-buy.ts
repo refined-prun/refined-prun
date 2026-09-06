@@ -17,17 +17,13 @@ act.addAction({
   },
   editComponent: Edit,
   generateSteps: async ctx => {
-    const { data, state, log, fail, getMaterialGroup, getMaterialGroupPrices, emitStep } = ctx;
+    const { data, state, log, fail, getMaterialGroup, emitStep } = ctx;
     const assert: AssertFn = ctx.assert;
     const allowUnfilled = data.allowUnfilled ?? false;
     const buyPartial = data.buyPartial ?? false;
 
     const materials = await getMaterialGroup(data.group);
     assert(materials, 'Invalid material group');
-
-    // Prices pasted into the material group take precedence over the action's
-    // manually-entered price limits; manual limits act as a fallback.
-    const groupPrices = getMaterialGroupPrices(data.group).prices;
 
     const exchange = data.exchange;
     assert(exchange, 'Missing exchange');
@@ -38,8 +34,8 @@ act.addAction({
         for (const CXMat of Object.keys(state.WAR[data.exchange])) {
           if (CXMat === mat) {
             // Amount of material used (minimum of needed and had on hand)
-            const used = Math.min(materials[mat], state.WAR[data.exchange][CXMat]);
-            materials[mat] -= used;
+            const used = Math.min(materials[mat].quantity, state.WAR[data.exchange][CXMat]);
+            materials[mat].quantity -= used;
             state.WAR[data.exchange][CXMat] -= used;
             if (state.WAR[data.exchange][mat] <= 0) {
               // Remove material from CX Inv is already allocated
@@ -47,7 +43,7 @@ act.addAction({
             }
           }
         }
-        if (materials[mat] <= 0) {
+        if (materials[mat].quantity <= 0) {
           // Remove material from list if you already have enough on the CX
           delete materials[mat];
         }
@@ -55,8 +51,9 @@ act.addAction({
     }
 
     for (const ticker of Object.keys(materials)) {
-      const amount = materials[ticker];
-      const priceLimit = groupPrices[ticker] ?? data.priceLimits?.[ticker] ?? Infinity;
+      const { quantity: amount, price } = materials[ticker];
+      // Group prices take precedence; manual limits act as a fallback.
+      const priceLimit = price ?? data.priceLimits?.[ticker] ?? Infinity;
       if (isNaN(priceLimit)) {
         log.error('Non-numerical price limit on ' + ticker);
         continue;

@@ -2,6 +2,7 @@ import {
   ActionStep,
   ActionStepExecuteContext,
   ActionStepGenerateContext,
+  MaterialBill,
   MaterialGroupGenerateContext,
 } from '@src/features/XIT/ACT/shared-types';
 
@@ -15,7 +16,7 @@ interface MaterialGroupInfo<TConfig> {
   isValidConfig?: (data: UserData.MaterialGroupData, config: TConfig) => boolean;
   generateMaterialBill: (
     ctx: MaterialGroupGenerateContext<TConfig>,
-  ) => Promise<Record<string, number> | undefined>;
+  ) => Promise<MaterialBill | undefined>;
 }
 
 const materialGroups: MaterialGroupInfo<unknown>[] = [];

@@ -4,6 +4,7 @@ import Configure from '@src/features/XIT/ACT/material-groups/paste/Configure.vue
 import { Config } from '@src/features/XIT/ACT/material-groups/paste/config';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { fixed0, fixed02 } from '@src/utils/format';
+import { MaterialBill } from '@src/features/XIT/ACT/shared-types';
 
 type Delimiter = '\t' | ';' | ',';
 
@@ -195,19 +196,18 @@ function parseMaterials(input: string | undefined) {
   if (fatal || errors.length > 0 || rows.length === 0) {
     return undefined;
   }
-  const materials: Record<string, number> = {};
-  const prices: Record<string, number> = {};
+  const materials: MaterialBill = {};
   for (const row of rows) {
-    const amount = (materials[row.ticker] ?? 0) + row.amount;
-    if (!Number.isSafeInteger(amount)) {
+    const material = (materials[row.ticker] ??= { quantity: 0 });
+    material.quantity += row.amount;
+    if (!Number.isSafeInteger(material.quantity)) {
       return undefined;
     }
-    materials[row.ticker] = amount;
     if (row.price !== undefined) {
-      prices[row.ticker] = row.price;
+      material.price = row.price;
     }
   }
-  return { materials, prices };
+  return materials;
 }
 
 act.addMaterialGroup<Config>({
@@ -217,13 +217,12 @@ act.addMaterialGroup<Config>({
   configureComponent: Configure,
   needsConfigure: () => true,
   isValidConfig: (_data, config) => parseMaterials(config.materials) !== undefined,
-  generateMaterialBill: async ({ config, log, setPrices }) => {
+  generateMaterialBill: async ({ config, log }) => {
     const parsed = parseMaterials(config.materials);
     if (!parsed) {
       log.error('Invalid or missing pasted materials.');
       return undefined;
     }
-    setPrices?.(parsed.prices);
-    return parsed.materials;
+    return parsed;
   },
 });

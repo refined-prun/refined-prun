@@ -4,7 +4,7 @@ import Configure from '@src/features/XIT/ACT/material-groups/repair/Configure.vu
 import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { isRepairableBuilding } from '@src/core/buildings';
 import { Config } from '@src/features/XIT/ACT/material-groups/repair/config';
-import { configurableValue } from '@src/features/XIT/ACT/shared-types';
+import { configurableValue, MaterialBill } from '@src/features/XIT/ACT/shared-types';
 
 act.addMaterialGroup<Config>({
   type: 'Repair',
@@ -42,7 +42,7 @@ act.addMaterialGroup<Config>({
     const threshold = isNaN(days) ? 0 : days;
     advanceDays = isNaN(advanceDays) ? 0 : advanceDays;
 
-    const parsedGroup = {};
+    const parsedGroup: MaterialBill = {};
     for (const building of site.platforms) {
       if (!isRepairableBuilding(building)) {
         continue;
@@ -83,11 +83,8 @@ act.addMaterialGroup<Config>({
             ? buildingMaterials[ticker]
             : Math.ceil((buildingMaterials[ticker] * adjustedDate) / 180);
 
-        if (parsedGroup[ticker]) {
-          parsedGroup[ticker] += amount;
-        } else {
-          parsedGroup[ticker] = amount;
-        }
+        const material = (parsedGroup[ticker] ??= { quantity: 0 });
+        material.quantity += amount;
       }
     }
     return parsedGroup;
