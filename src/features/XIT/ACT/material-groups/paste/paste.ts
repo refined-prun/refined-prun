@@ -135,7 +135,9 @@ export function parsePaste(input: string | undefined) {
     return result;
   }
 
-  const lines = input.split('\n');
+  // Papa Parse will interpret \r as a valid line separator and will return extra records, so we
+  // should split by all combinations of \r\n, \r, and \n.
+  const lines = input.split(/\r\n|\r|\n/);
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i].trim();
     if (raw.length === 0) {

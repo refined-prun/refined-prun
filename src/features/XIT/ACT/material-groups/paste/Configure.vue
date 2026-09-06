@@ -19,7 +19,7 @@ const hasError = computed(() => !!fatal.value || errors.value.length > 0 || rowC
 
 // "N of M lines have errors" — M counts only non-empty lines.
 const nonEmptyLineCount = computed(
-  () => text.value.split('\n').filter(x => x.trim().length > 0).length,
+  () => text.value.split(/\r\n|\r|\n/).filter(x => x.trim().length > 0).length,
 );
 
 const summary = computed(() => {
