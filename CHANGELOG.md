@@ -8,6 +8,7 @@
 - `INV`: Added ship names to the Name column (`inv-ship-names`)
 - `XIT ACT`: Added descriptions to the action and material group type fields
 - `XIT ACT`: Added "Paste" material group
+- `XIT ACT`: Added "CONT Ship" and "CONT Trade" actions
 - Added a notification count badge to the browser tab favicon (`favicon-notification-badge`)
 
 ### Changed
