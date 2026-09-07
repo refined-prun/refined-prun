@@ -559,40 +559,24 @@ function getSortDirection(key: SortKey) {
 }
 
 function compareByKey(a: FlightRow, b: FlightRow, key: SortKey) {
-  const nameCompare = (a.ship.name || a.ship.registration).localeCompare(
-    b.ship.name || b.ship.registration,
-  );
-
   switch (key) {
     case 'none':
       return 0;
     case 'name':
-      return nameCompare;
-    case 'cargo': {
-      const primary = a.cargoRatio - b.cargoRatio;
-      return primary;
-    }
+      return (a.ship.name || a.ship.registration).localeCompare(b.ship.name || b.ship.registration);
+    case 'cargo':
+      return a.cargoRatio - b.cargoRatio;
     case 'status':
-    case 'eta': {
-      const primary = a.statusSortValue - b.statusSortValue;
-      return primary;
-    }
-    case 'repair': {
-      const primary = a.ship.condition - b.ship.condition;
-      return primary;
-    }
-    case 'size': {
-      const primary = a.cargoCapacity - b.cargoCapacity;
-      return primary;
-    }
-    case 'shipClass': {
-      const primary = a.shipClass.localeCompare(b.shipClass);
-      return primary;
-    }
-    case 'fuel': {
-      const primary = a.fuelRatio - b.fuelRatio;
-      return primary;
-    }
+    case 'eta':
+      return a.statusSortValue - b.statusSortValue;
+    case 'repair':
+      return a.ship.condition - b.ship.condition;
+    case 'size':
+      return a.cargoCapacity - b.cargoCapacity;
+    case 'shipClass':
+      return a.shipClass.localeCompare(b.shipClass);
+    case 'fuel':
+      return a.fuelRatio - b.fuelRatio;
   }
 }
 
