@@ -2,7 +2,7 @@ import { act } from '@src/features/XIT/ACT/act-registry';
 import { fixed0 } from '@src/utils/format';
 import { changeInputValue, changeSelectIndex, focusElement } from '@src/util';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { MaterialBill } from '@src/features/XIT/ACT/shared-types';
+import { AssertFn, MaterialBill } from '@src/features/XIT/ACT/shared-types';
 import {
   addMaterials,
   applyTemplate,
@@ -49,7 +49,8 @@ export const CONT_SEND = act.addActionStep<Data>({
     return `Create contract draft (${materialCount} materials)${payment}`;
   },
   execute: async ctx => {
-    const { data, log, setStatus, requestTile, waitAct, complete, assert } = ctx;
+    const { data, log, setStatus, requestTile, waitAct, complete } = ctx;
+    const assert: AssertFn = ctx.assert;
 
     // Compute total tonnage for the preamble and payment logging.
     let totalTonnage = 0;
@@ -66,6 +67,8 @@ export const CONT_SEND = act.addActionStep<Data>({
       totalTonnage += material.weight * amount;
       materialDetails.push({ ticker, amount });
     }
+
+    assert(materialDetails.length > 0, 'Material group has no materials to ship');
 
     if (data.payment > 0 && totalTonnage > 0) {
       log.info(
