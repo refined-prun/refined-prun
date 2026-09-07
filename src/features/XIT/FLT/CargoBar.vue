@@ -264,7 +264,7 @@ function onClick() {
       <div
         v-for="segment in cargoBar.segments"
         :key="segment.name"
-        :class="[segment.class, segment.borderClasses]"
+        :class="[$style.segment, segment.class, segment.borderClasses]"
         :style="{ width: segment.width }"
         :data-tooltip="segment.title"
         data-tooltip-position="top">
@@ -323,6 +323,13 @@ function onClick() {
   width: 100%;
   height: 100%;
   display: flex;
+}
+
+/* Reset the game's tooltip padding so it does not widen cargo segments. */
+.segment {
+  display: block;
+  height: 100%;
+  padding: 0;
 }
 
 .miniBar {
