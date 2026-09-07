@@ -30,7 +30,7 @@ const staticLocations = useContLocations();
 
 const groupTargetOptions = computed(() =>
   pkg.groups
-    .filter(x => x.name)
+    .filter(x => x.name && x.planet)
     .map(x => ({
       label: `[${x.name}] target`,
       value: `${groupTargetPrefix}${x.name}`,
@@ -50,6 +50,10 @@ const currency = ref(action.currency ?? 'AIC');
 const daysToFulfill = ref(action.daysToFulfill ?? 3);
 
 function validate() {
+  const locations = locationOptions.value.map(x => (typeof x === 'string' ? x : x.value));
+  if (!locations.includes(contLocation.value)) {
+    return false;
+  }
   if (!materialGroup.value) {
     return false;
   }
