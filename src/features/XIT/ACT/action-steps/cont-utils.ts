@@ -115,13 +115,13 @@ export async function setDraftNameAndPreamble(
   name = name.length > 50 ? `${name.slice(0, 49)}…` : name;
   preamble = preamble.length > 250 ? `${preamble.slice(0, 249)}…` : preamble;
 
-  const nameInput = (await $(anchor, 'input')) as HTMLInputElement;
+  const nameInput = await $(anchor, 'input');
   focusElement(nameInput);
   nameInput.select();
   changeInputValue(nameInput, name);
   log.info(`Name set: ${name}`);
 
-  const preambleInput = _$(anchor, 'textarea') as HTMLTextAreaElement | undefined;
+  const preambleInput = _$(anchor, 'textarea');
   assert(preambleInput, 'Could not find preamble input');
   focusElement(preambleInput);
   changeTextAreaValue(preambleInput, preamble);
@@ -173,7 +173,7 @@ export async function openTemplate(assert: AssertFn, anchor: Element, setStatus:
   await clickElement(templateBtn);
 
   const container = await $(anchor, C.TemplateSelection.templateTypeSelect);
-  const select = _$(container, 'select') as HTMLSelectElement | undefined;
+  const select = _$(container, 'select');
   assert(select, 'Could not find template type select');
   return select;
 }
@@ -204,9 +204,7 @@ export async function setCurrency(
   currency: string,
 ) {
   const findCurrencySelect = () =>
-    (_$$(anchor, 'select') as HTMLSelectElement[]).find(x =>
-      Array.from(x.options).some(opt => opt.value === currency),
-    );
+    _$$(anchor, 'select').find(x => Array.from(x.options).some(opt => opt.value === currency));
 
   const select = await pollUntil(findCurrencySelect, 3000);
   assert(select, `Could not find currency select for ${currency}`);
@@ -245,7 +243,7 @@ export async function addMaterials(
         isText(L.TemplateSelection.action.addShipment())(x) ||
         isText(L.TemplateSelection.action.addCommodity())(x)
       );
-    }) as HTMLButtonElement | undefined;
+    });
 
   for (let i = 0; i < materials.length; i++) {
     const mat = materials[i];
