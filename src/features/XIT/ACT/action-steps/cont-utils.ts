@@ -10,10 +10,7 @@ import {
 } from '@src/util';
 import { sleep } from '@src/utils/sleep';
 import { contractDraftsStore } from '@src/infrastructure/prun-api/data/contract-drafts';
-import { AssertFn } from '@src/features/XIT/ACT/shared-types';
-import { Logger } from '@src/features/XIT/ACT/runner/logger';
-
-type SetStatus = (status: string) => void;
+import { ActionStepExecuteContext, AssertFn } from '@src/features/XIT/ACT/shared-types';
 
 // AddressSelector suggestions render in #autosuggest-portal outside the tile DOM.
 // Only one portal can be open at a time, so we search it directly.
@@ -42,10 +39,6 @@ export async function selectLocation(container: Element, locationName: string) {
   return true;
 }
 
-// --- Contract draft helpers. ---
-// Each helper takes the tile anchor it operates on plus an `assert` for hard
-// failures. Callers own status/log messages they want to surface.
-
 const isText = (text: string | undefined) => (x: Element) =>
   text !== undefined && x.textContent?.trim().toLowerCase() === text.trim().toLowerCase();
 
@@ -73,12 +66,9 @@ async function pollUntil<T>(
  * Clicks "Create New" in the requested CONTD tile and waits for the new draft to
  * appear in the store. Returns the new draft.
  */
-export async function createNewDraft(
-  assert: AssertFn,
-  log: Logger,
-  setStatus: SetStatus,
-  anchor: Element,
-) {
+export async function createNewDraft(ctx: ActionStepExecuteContext<unknown>, anchor: Element) {
+  const assert: AssertFn = ctx.assert;
+  const { log, setStatus } = ctx;
   setStatus('Looking for Create New button...');
 
   const findCreateBtn = () => findButton(anchor, L.ContractDrafts.actions.create());
@@ -103,13 +93,13 @@ export async function createNewDraft(
  * Sets the contract name (first input) and preamble (textarea).
  */
 export async function setDraftNameAndPreamble(
-  assert: AssertFn,
+  ctx: ActionStepExecuteContext<unknown>,
   anchor: Element,
-  log: Logger,
-  setStatus: SetStatus,
   name: string,
   preamble: string,
 ) {
+  const assert: AssertFn = ctx.assert;
+  const { log, setStatus } = ctx;
   setStatus('Setting contract name...');
 
   // Keep generated text within the contract form limits.
@@ -131,12 +121,12 @@ export async function setDraftNameAndPreamble(
  * Clicks the first "save" button (draft details / preamble save).
  */
 export async function saveDraftDetails(
-  assert: AssertFn,
+  ctx: ActionStepExecuteContext<unknown>,
   anchor: Element,
-  log: Logger,
-  setStatus: SetStatus,
   draftId: string,
 ) {
+  const assert: AssertFn = ctx.assert;
+  const { log, setStatus } = ctx;
   setStatus('Saving draft details...');
   const before = contractDraftsStore.getByNaturalId(draftId);
   const name = _$(anchor, 'input')?.value;
@@ -160,7 +150,9 @@ export async function saveDraftDetails(
 /**
  * Clicks "Select Template" and returns the template type <select>.
  */
-export async function openTemplate(assert: AssertFn, anchor: Element, setStatus: SetStatus) {
+export async function openTemplate(ctx: ActionStepExecuteContext<unknown>, anchor: Element) {
+  const assert: AssertFn = ctx.assert;
+  const { setStatus } = ctx;
   setStatus('Opening template selection...');
 
   const templateBtn = await pollUntil(
@@ -184,11 +176,12 @@ const templateValueMap: Record<string, string> = {
 };
 
 export function selectTemplateType(
-  assert: AssertFn,
-  log: Logger,
+  ctx: ActionStepExecuteContext<unknown>,
   select: HTMLSelectElement,
   value: string,
 ) {
+  const assert: AssertFn = ctx.assert;
+  const { log } = ctx;
   const mapped = templateValueMap[value] ?? value;
   const idx = Array.from(select.options).findIndex(x => x.value === mapped);
   assert(idx >= 0, `Template "${value}" not found in select`);
@@ -197,11 +190,12 @@ export function selectTemplateType(
 }
 
 export async function setCurrency(
-  assert: AssertFn,
+  ctx: ActionStepExecuteContext<unknown>,
   anchor: Element,
-  log: Logger,
   currency: string,
 ) {
+  const assert: AssertFn = ctx.assert;
+  const { log } = ctx;
   const findCurrencySelect = () =>
     _$$(anchor, 'select').find(x => Array.from(x.options).some(opt => opt.value === currency));
 
@@ -227,13 +221,13 @@ export interface AddMaterialsOptions {
  * for rows after the first, sets amount, selects material.
  */
 export async function addMaterials(
-  assert: AssertFn,
+  ctx: ActionStepExecuteContext<unknown>,
   anchor: Element,
-  log: Logger,
-  setStatus: SetStatus,
   materials: MaterialEntry[],
   options?: AddMaterialsOptions,
 ) {
+  const assert: AssertFn = ctx.assert;
+  const { log, setStatus } = ctx;
   setStatus('Adding materials to template...');
 
   const findAddButton = () =>
@@ -271,7 +265,9 @@ export async function addMaterials(
   }
 }
 
-export function setDeadline(assert: AssertFn, anchor: Element, log: Logger, days: number) {
+export function setDeadline(ctx: ActionStepExecuteContext<unknown>, anchor: Element, days: number) {
+  const assert: AssertFn = ctx.assert;
+  const { log } = ctx;
   assert(Number.isInteger(days) && days >= 1 && days <= 99, 'Deadline must be from 1 to 99 days');
 
   const input = anchor.querySelector<HTMLInputElement>('input[name="deadline"]');
@@ -282,12 +278,12 @@ export function setDeadline(assert: AssertFn, anchor: Element, log: Logger, days
 
 /** Clicks "Apply Template" and waits for conditions returned by the server. */
 export async function applyTemplate(
-  assert: AssertFn,
+  ctx: ActionStepExecuteContext<unknown>,
   anchor: Element,
-  log: Logger,
-  setStatus: SetStatus,
   draftId: string,
 ) {
+  const assert: AssertFn = ctx.assert;
+  const { log, setStatus } = ctx;
   setStatus('Applying template...');
   const applyBtn = await pollUntil(
     () => findButton(anchor, L.TemplateSelection.action.template()),
@@ -310,12 +306,12 @@ export async function applyTemplate(
 
 /** Clicks the conditions save button and waits for a valid, saved draft. */
 export async function saveConditions(
-  assert: AssertFn,
+  ctx: ActionStepExecuteContext<unknown>,
   anchor: Element,
-  log: Logger,
-  setStatus: SetStatus,
   draftId: string,
 ) {
+  const assert: AssertFn = ctx.assert;
+  const { log, setStatus } = ctx;
   setStatus('Saving conditions...');
   const before = contractDraftsStore.getByNaturalId(draftId);
   const condSaveBtn = (_$$(anchor, C.Button.btn) as HTMLButtonElement[]).findLast(

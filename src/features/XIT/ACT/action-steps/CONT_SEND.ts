@@ -83,7 +83,7 @@ export const CONT_SEND = act.addActionStep<Data>({
       return;
     }
 
-    const newDraft = await createNewDraft(assert, log, setStatus, listTile.anchor);
+    const newDraft = await createNewDraft(ctx, listTile.anchor);
     await waitActionFeedback(listTile);
 
     setStatus(`Loading draft ${newDraft.naturalId}...`);
@@ -106,18 +106,18 @@ export const CONT_SEND = act.addActionStep<Data>({
           : '') +
         (data.daysToFulfill > 0 ? `Delivery within ${fixed0(data.daysToFulfill)} days` : '');
 
-    await setDraftNameAndPreamble(assert, anchor, log, setStatus, contractName, preambleText);
+    await setDraftNameAndPreamble(ctx, anchor, contractName, preambleText);
 
     // Step 2: Save draft details (name/preamble).
     await waitAct('Save draft details?');
-    await saveDraftDetails(assert, anchor, log, setStatus, newDraft.naturalId);
+    await saveDraftDetails(ctx, anchor, newDraft.naturalId);
     await waitActionFeedback(draftTile);
 
-    const templateSelect = await openTemplate(assert, anchor, setStatus);
-    selectTemplateType(assert, log, templateSelect, 'SHIP');
-    await setCurrency(assert, anchor, log, data.currency);
+    const templateSelect = await openTemplate(ctx, anchor);
+    selectTemplateType(ctx, templateSelect, 'SHIP');
+    await setCurrency(ctx, anchor, data.currency);
 
-    await addMaterials(assert, anchor, log, setStatus, materialDetails);
+    await addMaterials(ctx, anchor, materialDetails);
 
     // The SHIP template price field is per-commodity. The game charges the
     // configured amount for each commodity row, so divide total payment by row count.
@@ -166,15 +166,15 @@ export const CONT_SEND = act.addActionStep<Data>({
       log.info(`Auto-provision store set: ${storeSelect.options[optionIndex].text}`);
     }
 
-    setDeadline(assert, anchor, log, data.daysToFulfill);
+    setDeadline(ctx, anchor, data.daysToFulfill);
 
     // Step 5: Apply template.
     await waitAct('Apply template?');
-    await applyTemplate(assert, anchor, log, setStatus, newDraft.naturalId);
+    await applyTemplate(ctx, anchor, newDraft.naturalId);
 
     // Step 6: Save conditions (after user review).
     await waitAct('Save conditions?');
-    await saveConditions(assert, anchor, log, setStatus, newDraft.naturalId);
+    await saveConditions(ctx, anchor, newDraft.naturalId);
     await waitActionFeedback(draftTile);
 
     log.success(`Contract draft ${newDraft.naturalId} ready to send`);

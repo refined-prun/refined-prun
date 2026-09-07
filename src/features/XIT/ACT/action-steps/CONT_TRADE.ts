@@ -45,7 +45,7 @@ export const CONT_TRADE = act.addActionStep<Data>({
       return;
     }
 
-    const newDraft = await createNewDraft(assert, log, setStatus, listTile.anchor);
+    const newDraft = await createNewDraft(ctx, listTile.anchor);
     await waitActionFeedback(listTile);
 
     setStatus(`Loading draft ${newDraft.naturalId}...`);
@@ -70,22 +70,22 @@ export const CONT_TRADE = act.addActionStep<Data>({
       `Materials: ${materialsList}\n` +
       (data.daysToFulfill > 0 ? `Fulfill within ${fixed0(data.daysToFulfill)} days` : '');
 
-    await setDraftNameAndPreamble(assert, anchor, log, setStatus, contractName, preambleText);
+    await setDraftNameAndPreamble(ctx, anchor, contractName, preambleText);
 
     // Step 2: Save draft details (name/preamble).
     await waitAct('Save draft details?');
-    await saveDraftDetails(assert, anchor, log, setStatus, newDraft.naturalId);
+    await saveDraftDetails(ctx, anchor, newDraft.naturalId);
     await waitActionFeedback(draftTile);
 
-    const templateSelect = await openTemplate(assert, anchor, setStatus);
-    selectTemplateType(assert, log, templateSelect, data.tradeType);
-    await setCurrency(assert, anchor, log, data.currency);
+    const templateSelect = await openTemplate(ctx, anchor);
+    selectTemplateType(ctx, templateSelect, data.tradeType);
+    await setCurrency(ctx, anchor, data.currency);
 
     const materialEntries = Object.entries(data.materials)
       .filter(([, material]) => material.quantity > 0)
       .map(([ticker, { quantity: amount }]) => ({ ticker, amount }));
 
-    await addMaterials(assert, anchor, log, setStatus, materialEntries, {
+    await addMaterials(ctx, anchor, materialEntries, {
       setPrice: (group, ticker) => {
         const price = data.materials[ticker].price;
         assert(
@@ -108,15 +108,15 @@ export const CONT_TRADE = act.addActionStep<Data>({
     assert(selected, `Could not select location: ${data.location}`);
     log.info(`Location set: ${data.location}`);
 
-    setDeadline(assert, anchor, log, data.daysToFulfill);
+    setDeadline(ctx, anchor, data.daysToFulfill);
 
     // Step 4: Apply template.
     await waitAct('Apply template?');
-    await applyTemplate(assert, anchor, log, setStatus, newDraft.naturalId);
+    await applyTemplate(ctx, anchor, newDraft.naturalId);
 
     // Step 5: Save conditions (after user review).
     await waitAct('Save conditions?');
-    await saveConditions(assert, anchor, log, setStatus, newDraft.naturalId);
+    await saveConditions(ctx, anchor, newDraft.naturalId);
     await waitActionFeedback(draftTile);
 
     log.success(`Contract draft ${newDraft.naturalId} ready to send`);
