@@ -47,13 +47,13 @@ const hasItems = computed(() => (inventory.value?.items.length ?? 0) > 0);
           ]"
           data-tooltip="Open inventory"
           @click.stop="showBuffer(`SHPI ${ship?.registration}`)">
-          {{ hasItems ? '⭱' : '⭳' }}
+          {{ hasItems ? '\u2b71' : '\u2b73' }}
         </span>
         <span
           :class="[$style.actionBtn, $style.bgGreen]"
           data-tooltip="Open flight control"
           @click.stop="showBuffer(`SFC ${ship?.registration}`)">
-          ✈
+          {{ '\u2708' }}
         </span>
       </div>
     </template>

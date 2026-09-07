@@ -44,7 +44,7 @@ const posData = computed(() => {
         data-tooltip="Open inventory"
         data-tooltip-position="top"
         @click.stop="showBuffer(posData.invCommand)"
-        >☒</span
+        >{{ '\u2612' }}</span
       >
       <span
         :class="$style.link"
