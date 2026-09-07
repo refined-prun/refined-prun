@@ -57,7 +57,8 @@ function validate() {
   if (!materialGroup.value) {
     return false;
   }
-  if (daysToFulfill.value < 1) {
+  const days = Number(daysToFulfill.value);
+  if (!Number.isInteger(days) || days < 1 || days > 99) {
     return false;
   }
   return true;
@@ -68,7 +69,7 @@ function save() {
   action.contTradeType = tradeTypeToValue[tradeType.value];
   action.contLocation = contLocation.value;
   action.currency = currency.value;
-  action.daysToFulfill = daysToFulfill.value;
+  action.daysToFulfill = Number(daysToFulfill.value);
 }
 
 defineExpose({ validate, save });
@@ -92,6 +93,6 @@ defineExpose({ validate, save });
   </Active>
 
   <Active label="Days to Fulfill">
-    <NumericInput v-model="daysToFulfill" :min="1" :max="30" :step="1" />
+    <NumericInput v-model="daysToFulfill" :min="1" :max="99" :step="1" />
   </Active>
 </template>

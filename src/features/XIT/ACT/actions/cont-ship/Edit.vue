@@ -52,10 +52,12 @@ function validate() {
   if (!materialGroup.value) {
     return false;
   }
-  if (daysToFulfill.value < 1) {
+  const days = Number(daysToFulfill.value);
+  if (!Number.isInteger(days) || days < 1 || days > 99) {
     return false;
   }
-  if (paymentPerTon.value < 0) {
+  const payment = Number(paymentPerTon.value);
+  if (String(paymentPerTon.value).trim() === '' || !Number.isFinite(payment) || payment < 0) {
     return false;
   }
   return true;
@@ -66,8 +68,8 @@ function save() {
   action.contOrigin = contOrigin.value;
   action.contDest = contDest.value;
   action.currency = currency.value;
-  action.paymentPerTon = paymentPerTon.value;
-  action.daysToFulfill = daysToFulfill.value;
+  action.paymentPerTon = Number(paymentPerTon.value);
+  action.daysToFulfill = Number(daysToFulfill.value);
   action.autoProvision = autoProvision.value;
   delete action.contractNote;
 }
@@ -97,7 +99,7 @@ defineExpose({ validate, save });
   </Active>
 
   <Active label="Days to Fulfill">
-    <NumericInput v-model="daysToFulfill" :min="1" :max="30" :step="1" />
+    <NumericInput v-model="daysToFulfill" :min="1" :max="99" :step="1" />
   </Active>
 
   <Active label="Auto-provision">
