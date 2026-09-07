@@ -366,12 +366,12 @@ function hasFtlFuelProblem(row: FlightRow) {
 }
 
 function hasFuelLevelProblem(ratio: number | undefined) {
-  if (ratio === undefined) {
+  if (ratio === undefined || problemFuelThreshold.value === 'any') {
     return false;
   }
 
   const threshold = problemFuelThresholdValue.value;
-  return problemFuelThreshold.value === 'any' ? ratio < threshold : ratio <= threshold;
+  return ratio <= threshold;
 }
 
 const hasAnyProblems = computed(() => {
