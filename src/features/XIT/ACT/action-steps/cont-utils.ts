@@ -1,3 +1,4 @@
+import { fixed0 } from '@src/utils/format';
 import {
   changeInputValue,
   changeSelectIndex,
@@ -276,7 +277,7 @@ export async function addMaterials(
     const selected = await selectMaterialInMaterialSelector(matSelector, mat.ticker);
     assert(selected, `Could not select material ${mat.ticker}`);
     await sleep(200);
-    log.info(`Added: ${mat.ticker} x${mat.amount}`);
+    log.info(`Added: ${mat.ticker} x${fixed0(mat.amount)}`);
 
     options?.setPrice?.(group, mat.ticker);
   }
@@ -290,7 +291,7 @@ export function setDeadline(assert: AssertFn, anchor: Element, log: Logger, days
   focusElement(input);
   input.select();
   changeInputValue(input, String(days));
-  log.info(`Deadline set: ${days} days`);
+  log.info(`Deadline set: ${fixed0(days)} days`);
 }
 
 /** Clicks "Apply Template" and waits for conditions returned by the server. */

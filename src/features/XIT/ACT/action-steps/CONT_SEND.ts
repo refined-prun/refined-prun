@@ -1,5 +1,5 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
-import { fixed0 } from '@src/utils/format';
+import { ddmm, fixed0, fixed2 } from '@src/utils/format';
 import { changeInputValue, changeSelectIndex, focusElement } from '@src/util';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { AssertFn, MaterialBill } from '@src/features/XIT/ACT/shared-types';
@@ -46,7 +46,7 @@ export const CONT_SEND = act.addActionStep<Data>({
   description: data => {
     const materialCount = Object.keys(data.materials).length;
     const payment = data.payment !== 0 ? ` for ${fixed0(data.payment)} ${data.currency}` : '';
-    return `Create contract draft (${materialCount} materials)${payment}`;
+    return `Create contract draft (${fixed0(materialCount)} materials)${payment}`;
   },
   execute: async ctx => {
     const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete } = ctx;
@@ -72,7 +72,7 @@ export const CONT_SEND = act.addActionStep<Data>({
 
     if (data.payment > 0 && totalTonnage > 0) {
       log.info(
-        `Total: ${totalTonnage.toFixed(2)}t, ${data.payment} ${data.currency} (${Math.round(data.payment / totalTonnage)} ${data.currency}/t)`,
+        `Total: ${fixed2(totalTonnage)}t, ${fixed0(data.payment)} ${data.currency} (${fixed0(data.payment / totalTonnage)} ${data.currency}/t)`,
       );
     }
 
@@ -93,18 +93,18 @@ export const CONT_SEND = act.addActionStep<Data>({
     }
     const anchor = draftTile.anchor;
 
-    const dateStr = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    const dateStr = ddmm();
     const contractName = `${data.packageName} - ${data.contDest ?? ''} - ${dateStr}`;
 
-    const materialsList = materialDetails.map(x => `${x.ticker} x${x.amount}`).join(', ');
+    const materialsList = materialDetails.map(x => `${x.ticker} x${fixed0(x.amount)}`).join(', ');
     const preambleText =
       data.contractNote ??
-      `Shipping contract for ${totalTonnage.toFixed(2)}t.\n` +
+      `Shipping contract for ${fixed2(totalTonnage)}t.\n` +
         `Materials: ${materialsList}\n` +
         (data.payment > 0
-          ? `Payment: ${data.payment} ${data.currency} (${Math.round(data.payment / totalTonnage)} ${data.currency}/t)\n`
+          ? `Payment: ${fixed0(data.payment)} ${data.currency} (${fixed0(data.payment / totalTonnage)} ${data.currency}/t)\n`
           : '') +
-        (data.daysToFulfill > 0 ? `Delivery within ${data.daysToFulfill} days` : '');
+        (data.daysToFulfill > 0 ? `Delivery within ${fixed0(data.daysToFulfill)} days` : '');
 
     await setDraftNameAndPreamble(assert, anchor, log, setStatus, contractName, preambleText);
 
@@ -129,7 +129,7 @@ export const CONT_SEND = act.addActionStep<Data>({
         priceInput.select();
         changeInputValue(priceInput, String(pricePerCommodity));
         log.info(
-          `Price set: ${pricePerCommodity} ${data.currency}/commodity x${materialDetails.length} = ${pricePerCommodity * materialDetails.length} ${data.currency} total`,
+          `Price set: ${fixed0(pricePerCommodity)} ${data.currency}/commodity x${fixed0(materialDetails.length)} = ${fixed0(pricePerCommodity * materialDetails.length)} ${data.currency} total`,
         );
       } else {
         assert(false, 'Could not find price input');

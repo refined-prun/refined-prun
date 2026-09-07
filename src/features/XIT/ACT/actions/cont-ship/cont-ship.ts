@@ -1,3 +1,4 @@
+import { fixed02 } from '@src/utils/format';
 import { act } from '@src/features/XIT/ACT/act-registry';
 import Edit from '@src/features/XIT/ACT/actions/cont-ship/Edit.vue';
 import Configure from '@src/features/XIT/ACT/actions/cont-ship/Configure.vue';
@@ -28,7 +29,7 @@ act.addAction<Config>({
         : displayLocationValue(action.contDest);
 
     const payment = action.paymentPerTon ?? 0;
-    const paymentStr = payment > 0 ? ` @ ${payment}/t` : '';
+    const paymentStr = payment > 0 ? ` @ ${fixed02(payment)}/t` : '';
 
     return `Send contract for [${action.group}] from ${origin} to ${dest}${paymentStr}`;
   },
