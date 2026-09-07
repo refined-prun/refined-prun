@@ -1,6 +1,6 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import { ddmm, fixed0, fixed2 } from '@src/utils/format';
-import { changeInputValue, changeSelectIndex, focusElement } from '@src/util';
+import { selectAndChangeInputValue, changeSelectIndex } from '@src/util';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { AssertFn, MaterialBill } from '@src/features/XIT/ACT/shared-types';
 import {
@@ -125,9 +125,7 @@ export const CONT_SEND = act.addActionStep<Data>({
       const pricePerCommodity = Math.round(data.payment / materialDetails.length);
       const priceInput = findPriceInput(anchor);
       if (priceInput) {
-        focusElement(priceInput);
-        priceInput.select();
-        changeInputValue(priceInput, String(pricePerCommodity));
+        selectAndChangeInputValue(priceInput, String(pricePerCommodity));
         log.info(
           `Price set: ${fixed0(pricePerCommodity)} ${data.currency}/commodity x${fixed0(materialDetails.length)} = ${fixed0(pricePerCommodity * materialDetails.length)} ${data.currency} total`,
         );

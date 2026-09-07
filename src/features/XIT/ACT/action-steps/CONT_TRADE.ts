@@ -1,6 +1,6 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import { ddmm, fixed0, fixed02 } from '@src/utils/format';
-import { changeInputValue, focusElement } from '@src/util';
+import { selectAndChangeInputValue } from '@src/util';
 import { AssertFn, MaterialBill } from '@src/features/XIT/ACT/shared-types';
 import {
   addMaterials,
@@ -94,10 +94,8 @@ export const CONT_TRADE = act.addActionStep<Data>({
         );
         const priceInput = group.querySelector<HTMLInputElement>('input[inputmode="decimal"]');
         assert(priceInput, `Could not find price input for ${ticker}`);
-        focusElement(priceInput);
-        priceInput.select();
         // Decimal inputs use the player’s locale for decimal and grouping separators.
-        changeInputValue(priceInput, fixed02(price));
+        selectAndChangeInputValue(priceInput, fixed02(price));
         log.info(`Price for ${ticker}: ${fixed02(price)} ${data.currency}`);
       },
     });

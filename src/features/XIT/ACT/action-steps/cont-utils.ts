@@ -6,6 +6,7 @@ import {
   clickElement,
   focusElement,
   selectMaterialInMaterialSelector,
+  selectAndChangeInputValue,
 } from '@src/util';
 import { sleep } from '@src/utils/sleep';
 import { contractDraftsStore } from '@src/infrastructure/prun-api/data/contract-drafts';
@@ -116,9 +117,7 @@ export async function setDraftNameAndPreamble(
   preamble = preamble.length > 250 ? `${preamble.slice(0, 249)}…` : preamble;
 
   const nameInput = await $(anchor, 'input');
-  focusElement(nameInput);
-  nameInput.select();
-  changeInputValue(nameInput, name);
+  selectAndChangeInputValue(nameInput, name);
   log.info(`Name set: ${name}`);
 
   const preambleInput = _$(anchor, 'textarea');
@@ -259,9 +258,7 @@ export async function addMaterials(
 
     const amountInput = group.querySelector<HTMLInputElement>('input[inputmode="numeric"]');
     assert(amountInput, `Could not find amount input for ${mat.ticker}`);
-    focusElement(amountInput);
-    amountInput.select();
-    changeInputValue(amountInput, String(mat.amount));
+    selectAndChangeInputValue(amountInput, String(mat.amount));
 
     const matSelector = _$(group, C.MaterialSelector.container);
     assert(matSelector, `Could not find material selector for ${mat.ticker}`);
@@ -279,9 +276,7 @@ export function setDeadline(assert: AssertFn, anchor: Element, log: Logger, days
 
   const input = anchor.querySelector<HTMLInputElement>('input[name="deadline"]');
   assert(input, 'Could not find deadline input');
-  focusElement(input);
-  input.select();
-  changeInputValue(input, String(days));
+  selectAndChangeInputValue(input, String(days));
   log.info(`Deadline set: ${fixed0(days)} days`);
 }
 
