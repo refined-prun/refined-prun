@@ -15,6 +15,7 @@ import TimeCell from './TimeCell.vue';
 import CargoBar from './CargoBar.vue';
 import { fixed0, percent0 } from '@src/utils/format';
 import { timestampEachMinute } from '@src/utils/dayjs';
+import coloredValue from '@src/infrastructure/prun-ui/css/colored-value.module.css';
 
 type SortKey =
   | 'name'
@@ -40,6 +41,7 @@ type FlightRow = {
   warningFuelRatio: number;
   statusSortValue: number;
   conditionText: string;
+  conditionClass: string;
   cargoSizeText: string;
   isFtlCapable: boolean;
   inFlight: boolean;
@@ -156,6 +158,7 @@ const rawRows = computed<FlightRow[] | undefined>(() => {
     const ftlFuelRatio = getFuelRatio(ftlStore);
 
     const conditionPercentage = ship.condition * 100;
+    const condition = Math.floor(conditionPercentage) / 100;
     const cargoCapacity = inventory
       ? Math.max(inventory.weightCapacity, inventory.volumeCapacity)
       : 0;
@@ -196,7 +199,8 @@ const rawRows = computed<FlightRow[] | undefined>(() => {
       fuelRatio,
       warningFuelRatio,
       statusSortValue,
-      conditionText: percent0(ship.condition),
+      conditionText: percent0(condition),
+      conditionClass: getConditionClass(condition),
       cargoSizeText: getCargoSizeText(inventory),
       isFtlCapable,
       inFlight,
@@ -732,6 +736,16 @@ function getShipClass(ship: PrunApi.Ship) {
   return 'UNK';
 }
 
+function getConditionClass(condition: number) {
+  if (condition <= 0.79) {
+    return C.ColoredValue.negative;
+  }
+  if (condition <= 0.81) {
+    return coloredValue.warning;
+  }
+  return C.ColoredValue.positive;
+}
+
 function getConditionBand(condition: number) {
   if (condition >= 90) {
     return '100-90';
@@ -1136,10 +1150,7 @@ function getCargoState(cargoRatio: number) {
         </div>
 
         <div v-if="showColRepair" :class="[$style.bodyCell, $style.colRepair]">
-          <span
-            :class="x.ship.condition < 0.8 ? C.ColoredValue.negative : C.ColoredValue.positive"
-            >{{ x.conditionText }}</span
-          >
+          <span :class="x.conditionClass">{{ x.conditionText }}</span>
         </div>
 
         <div v-if="showColFuel" :class="[$style.bodyCell, $style.colFuel]">
