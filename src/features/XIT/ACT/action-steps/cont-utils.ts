@@ -111,6 +111,10 @@ export async function setDraftNameAndPreamble(
 ) {
   setStatus('Setting contract name...');
 
+  // Keep generated text within the contract form limits.
+  name = name.length > 50 ? `${name.slice(0, 49)}…` : name;
+  preamble = preamble.length > 250 ? `${preamble.slice(0, 249)}…` : preamble;
+
   const nameInput = (await $(anchor, 'input')) as HTMLInputElement;
   focusElement(nameInput);
   nameInput.select();
