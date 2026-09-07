@@ -82,7 +82,7 @@ if (data.autoProvision && !config.autoProvisionStoreId && storeOptions.value.len
 
 watchEffect(() => {
   if (data.autoProvision) {
-    const ids = new Set(storeOptions.value.map(o => o.value));
+    const ids = new Set(storeOptions.value.map(x => x.value));
     if (config.autoProvisionStoreId && !ids.has(config.autoProvisionStoreId)) {
       config.autoProvisionStoreId = undefined;
     }
