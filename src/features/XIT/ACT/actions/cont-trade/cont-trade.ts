@@ -40,9 +40,17 @@ act.addAction<Config>({
     const materials = await getMaterialGroup(data.group);
     assert(materials, 'Invalid material group');
 
+    const includedMaterials = Object.values(materials).filter(x => x.quantity > 0);
+    assert(includedMaterials.length > 0, 'Material group has no materials to trade');
     assert(
-      Object.values(materials).some(x => x.price !== undefined),
-      `Material group [${data.group}] has no prices. Use a Paste group with 3 columns (ticker, amount, price).`,
+      includedMaterials.every(
+        x =>
+          x.price !== undefined &&
+          Number.isFinite(x.price) &&
+          x.price >= 0.01 &&
+          x.price <= 100000000,
+      ),
+      `Each included material in [${data.group}] must have a price from 0.01 to 100000000. Use a Paste group with 3 columns (ticker, amount, price).`,
     );
 
     assert(data.contLocation, 'Missing location');
