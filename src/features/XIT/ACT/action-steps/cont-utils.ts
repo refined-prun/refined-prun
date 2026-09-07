@@ -26,17 +26,14 @@ export async function selectLocation(container: Element, locationName: string) {
   focusElement(input);
   changeInputValue(input, locationName);
 
-  const appeared = await pollUntil(
-    () => _$$(portal, C.AddressSelector.suggestionContent).length > 0,
+  const lower = locationName.toLowerCase();
+  const match = await pollUntil(
+    () =>
+      _$$(portal, C.AddressSelector.suggestionContent).find(x =>
+        x.textContent?.trim().toLowerCase().includes(lower),
+      ),
     5000,
   );
-  if (!appeared) {
-    return false;
-  }
-
-  const suggestions = _$$(portal, C.AddressSelector.suggestionContent) as HTMLElement[];
-  const lower = locationName.toLowerCase();
-  const match = suggestions.find(x => x.textContent?.trim().toLowerCase().includes(lower));
   if (!match) {
     return false;
   }
@@ -55,15 +52,20 @@ function findButton(anchor: Element, text: string | undefined) {
   return _$$(anchor, C.Button.btn).find(isText(text)) as HTMLButtonElement | undefined;
 }
 
-async function pollUntil(condition: () => boolean, timeout: number, interval = 100) {
+async function pollUntil<T>(
+  condition: () => T,
+  timeout: number,
+  interval = 100,
+): Promise<T | undefined> {
   const deadline = Date.now() + timeout;
   while (Date.now() < deadline) {
-    if (condition()) {
-      return true;
+    const result = condition();
+    if (result) {
+      return result;
     }
     await sleep(interval);
   }
-  return false;
+  return undefined;
 }
 
 /**
@@ -80,20 +82,18 @@ export async function createNewDraft(
 
   const findCreateBtn = () => findButton(anchor, L.ContractDrafts.actions.create());
 
-  const ready = await pollUntil(() => findCreateBtn() !== undefined, 10000);
-  assert(ready, 'Could not find "Create New" button');
+  const createBtn = await pollUntil(findCreateBtn, 10000);
+  assert(createBtn, 'Could not find "Create New" button');
 
   const beforeIds = new Set((contractDraftsStore.all.value ?? []).map(x => x.naturalId));
-  await clickElement(findCreateBtn()!);
+  await clickElement(createBtn);
 
   setStatus('Waiting for draft to be created...');
-  const appeared = await pollUntil(
-    () => (contractDraftsStore.all.value ?? []).some(x => !beforeIds.has(x.naturalId)),
+  const newDraft = await pollUntil(
+    () => (contractDraftsStore.all.value ?? []).find(x => !beforeIds.has(x.naturalId)),
     8000,
   );
-  assert(appeared, 'Timed out waiting for new contract draft');
-
-  const newDraft = (contractDraftsStore.all.value ?? []).find(x => !beforeIds.has(x.naturalId))!;
+  assert(newDraft, 'Timed out waiting for new contract draft');
   log.info(`New draft created: ${newDraft.naturalId}`);
   return newDraft;
 }
@@ -164,13 +164,13 @@ export async function saveDraftDetails(
 export async function openTemplate(assert: AssertFn, anchor: Element, setStatus: SetStatus) {
   setStatus('Opening template selection...');
 
-  const ready = await pollUntil(
-    () => findButton(anchor, L.ContractDraft.action.template()) !== undefined,
+  const templateBtn = await pollUntil(
+    () => findButton(anchor, L.ContractDraft.action.template()),
     5000,
   );
-  assert(ready, 'Could not find "Select Template" button');
+  assert(templateBtn, 'Could not find "Select Template" button');
 
-  await clickElement(findButton(anchor, L.ContractDraft.action.template())!);
+  await clickElement(templateBtn);
 
   const container = await $(anchor, C.TemplateSelection.templateTypeSelect);
   const select = _$(container, 'select') as HTMLSelectElement | undefined;
@@ -208,10 +208,8 @@ export async function setCurrency(
       Array.from(x.options).some(opt => opt.value === currency),
     );
 
-  const ready = await pollUntil(() => findCurrencySelect() !== undefined, 3000);
-  assert(ready, `Could not find currency select for ${currency}`);
-
-  const select = findCurrencySelect()!;
+  const select = await pollUntil(findCurrencySelect, 3000);
+  assert(select, `Could not find currency select for ${currency}`);
   const idx = Array.from(select.options).findIndex(x => x.value === currency);
   changeSelectIndex(select, idx);
   log.info(`Currency set to ${currency}`);
@@ -256,14 +254,9 @@ export async function addMaterials(
       const addBtn = findAddButton();
       assert(addBtn, `Could not find add button for ${mat.ticker}`);
       await clickElement(addBtn);
-      const added = await pollUntil(
-        () => _$$(anchor, C.TemplateSelection.group).length >= i + 1,
-        2000,
-      );
-      assert(added, `Could not add row for ${mat.ticker}`);
     }
 
-    const group = _$$(anchor, C.TemplateSelection.group).at(-1);
+    const group = await pollUntil(() => _$$(anchor, C.TemplateSelection.group).at(i), 2000);
     assert(group, `Could not find group for ${mat.ticker}`);
 
     const amountInput = group.querySelector<HTMLInputElement>('input[inputmode="numeric"]');
@@ -303,12 +296,11 @@ export async function applyTemplate(
   draftId: string,
 ) {
   setStatus('Applying template...');
-  const ready = await pollUntil(
-    () => findButton(anchor, L.TemplateSelection.action.template()) !== undefined,
+  const applyBtn = await pollUntil(
+    () => findButton(anchor, L.TemplateSelection.action.template()),
     5000,
   );
-  assert(ready, 'Could not find "Apply Template" button');
-  const applyBtn = findButton(anchor, L.TemplateSelection.action.template())!;
+  assert(applyBtn, 'Could not find "Apply Template" button');
   assert(
     !applyBtn.disabled && !applyBtn.classList.contains(C.Button.disabled),
     'Template form is invalid',
