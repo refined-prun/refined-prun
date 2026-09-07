@@ -42,7 +42,7 @@ const posData = computed(() => {
         v-if="posData.invCommand"
         :class="[C.Link.link, $style.link]"
         data-tooltip="Open inventory"
-        data-tooltip-position="left"
+        data-tooltip-position="top"
         @click.stop="showBuffer(posData.invCommand)"
         >☒</span
       >
@@ -57,8 +57,6 @@ const posData = computed(() => {
     <div
       v-if="posData.command"
       :class="[C.Link.link, $style.link]"
-      data-tooltip="Open location"
-      data-tooltip-position="left"
       @click.stop="showBuffer(posData.command)">
       {{ posData.name }}
     </div>
