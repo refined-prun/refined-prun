@@ -1049,12 +1049,7 @@ function getCargoState(cargoRatio: number) {
         </div>
         <div
           v-if="showColTime"
-          :class="[
-            $style.headerCell,
-            $style.sortable,
-            $style.colTime,
-            layoutMode === 'whitespace' ? $style.colTimeExpanded : '',
-          ]"
+          :class="[$style.headerCell, $style.sortable, $style.colTime]"
           @click="setSort('eta')">
           ETA
           <span
@@ -1136,13 +1131,7 @@ function getCargoState(cargoRatio: number) {
           <StatusCell :ship-id="x.ship.id" />
         </div>
 
-        <div
-          v-if="showColTime"
-          :class="[
-            $style.bodyCell,
-            $style.colTime,
-            layoutMode === 'whitespace' ? $style.colTimeExpanded : '',
-          ]">
+        <div v-if="showColTime" :class="[$style.bodyCell, $style.colTime]">
           <TimeCell :ship-id="x.ship.id" />
         </div>
 
@@ -1380,9 +1369,6 @@ function getCargoState(cargoRatio: number) {
 .colTime {
   border-left: none;
   min-width: 80px;
-}
-
-.colTimeExpanded {
   justify-content: flex-end;
   text-align: right;
 }
