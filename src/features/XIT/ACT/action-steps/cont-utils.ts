@@ -47,9 +47,10 @@ export async function selectLocation(container: Element, locationName: string) {
 // Each helper takes the tile anchor it operates on plus an `assert` for hard
 // failures. Callers own status/log messages they want to surface.
 
-const isText = (text: string) => (x: Element) => x.textContent?.trim().toLowerCase() === text;
+const isText = (text: string | undefined) => (x: Element) =>
+  text !== undefined && x.textContent?.trim().toLowerCase() === text.trim().toLowerCase();
 
-function findButton(anchor: Element, text: string) {
+function findButton(anchor: Element, text: string | undefined) {
   return _$$(anchor, C.Button.btn).find(isText(text)) as HTMLButtonElement | undefined;
 }
 
@@ -73,7 +74,7 @@ export async function createNewDraft(assert: AssertFn, log: Logger, setStatus: S
 
   const findCreateBtn = () => {
     for (const tile of tiles.find('CONTD', true)) {
-      const btn = findButton(tile.anchor, 'create new');
+      const btn = findButton(tile.anchor, L.ContractDrafts.actions.create());
       if (btn) {
         return btn;
       }
@@ -135,7 +136,7 @@ export async function setDraftNameAndPreamble(
 export async function saveDraftDetails(anchor: Element, log: Logger, setStatus: SetStatus) {
   setStatus('Saving draft details...');
 
-  const saveBtn = findButton(anchor, 'save');
+  const saveBtn = findButton(anchor, L.ContractDraft.action.save());
   if (saveBtn) {
     await clickElement(saveBtn);
     log.info('Draft details saved');
@@ -150,10 +151,13 @@ export async function saveDraftDetails(anchor: Element, log: Logger, setStatus: 
 export async function openTemplate(assert: AssertFn, anchor: Element, setStatus: SetStatus) {
   setStatus('Opening template selection...');
 
-  const ready = await pollUntil(() => findButton(anchor, 'select template') !== undefined, 5000);
+  const ready = await pollUntil(
+    () => findButton(anchor, L.ContractDraft.action.template()) !== undefined,
+    5000,
+  );
   assert(ready, 'Could not find "Select Template" button');
 
-  await clickElement(findButton(anchor, 'select template')!);
+  await clickElement(findButton(anchor, L.ContractDraft.action.template())!);
 
   const container = await $(anchor, C.TemplateSelection.templateTypeSelect);
   const select = _$(container, 'select') as HTMLSelectElement | undefined;
@@ -221,8 +225,10 @@ export async function addMaterials(
 
   const findAddButton = () =>
     _$$(anchor, 'button').find(x => {
-      const t = x.textContent?.trim().toLowerCase();
-      return t === 'add shipment' || t === 'add commodity';
+      return (
+        isText(L.TemplateSelection.action.addShipment())(x) ||
+        isText(L.TemplateSelection.action.addCommodity())(x)
+      );
     }) as HTMLButtonElement | undefined;
 
   for (let i = 0; i < materials.length; i++) {
@@ -293,10 +299,13 @@ export async function applyTemplate(
 ) {
   setStatus('Applying template...');
 
-  const ready = await pollUntil(() => findButton(anchor, 'apply template') !== undefined, 5000);
+  const ready = await pollUntil(
+    () => findButton(anchor, L.TemplateSelection.action.template()) !== undefined,
+    5000,
+  );
   assert(ready, 'Could not find "Apply Template" button');
 
-  const applyBtn = findButton(anchor, 'apply template')!;
+  const applyBtn = findButton(anchor, L.TemplateSelection.action.template())!;
   await clickElement(applyBtn);
   await pollUntil(() => applyBtn.classList.contains(C.Button.disabled), 3000);
   await pollUntil(() => !applyBtn.classList.contains(C.Button.disabled), 5000);
@@ -309,7 +318,9 @@ export async function applyTemplate(
 export async function saveConditions(anchor: Element, log: Logger, setStatus: SetStatus) {
   setStatus('Saving conditions...');
 
-  const condSaveBtn = (_$$(anchor, C.Button.btn) as HTMLButtonElement[]).findLast(isText('save'));
+  const condSaveBtn = (_$$(anchor, C.Button.btn) as HTMLButtonElement[]).findLast(
+    isText(L.ContractDraftSend.action.save()),
+  );
   if (condSaveBtn && !condSaveBtn.classList.contains(C.Button.disabled)) {
     await clickElement(condSaveBtn);
     log.info('Conditions saved');
