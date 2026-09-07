@@ -46,7 +46,7 @@ const locationOptions = computed(() => [
 const currencies = computed(() => balancesStore.currencies.value ?? []);
 
 const contLocation = ref(action.contLocation ?? staticLocations.value[0] ?? '');
-const currency = ref(action.currency ?? 'NCC');
+const currency = ref(action.currency ?? 'AIC');
 const daysToFulfill = ref(action.daysToFulfill ?? 3);
 
 function validate() {

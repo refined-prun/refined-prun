@@ -51,7 +51,7 @@ act.addAction<Config>({
 
     const tradeType = data.contTradeType ?? 'BUYING';
     const daysToFulfill = data.daysToFulfill ?? 3;
-    const currency = data.currency ?? 'NCC';
+    const currency = data.currency ?? 'AIC';
 
     emitStep(
       CONT_TRADE({

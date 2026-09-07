@@ -59,7 +59,7 @@ act.addAction<Config>({
 
     const paymentPerTon = Number(data.paymentPerTon ?? 0);
     const daysToFulfill = data.daysToFulfill ?? 3;
-    const currency = data.currency ?? 'NCC';
+    const currency = data.currency ?? 'AIC';
 
     let totalTonnage = 0;
     for (const [ticker, { quantity }] of Object.entries(materials)) {

@@ -36,7 +36,7 @@ const currencies = computed(() => balancesStore.currencies.value ?? []);
 
 const contOrigin = ref(action.contOrigin ?? staticLocations.value[0] ?? '');
 const contDest = ref(action.contDest ?? staticLocations.value[0] ?? '');
-const currency = ref(action.currency ?? 'NCC');
+const currency = ref(action.currency ?? 'AIC');
 const paymentPerTon = ref(action.paymentPerTon ?? 0);
 const daysToFulfill = ref(action.daysToFulfill ?? 3);
 const autoProvision = ref(action.autoProvision ?? false);
