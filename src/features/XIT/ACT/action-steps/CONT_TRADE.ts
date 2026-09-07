@@ -1,7 +1,7 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import { fixed0, fixed02 } from '@src/utils/format';
 import { changeInputValue, focusElement } from '@src/util';
-import { MaterialBill } from '@src/features/XIT/ACT/shared-types';
+import { AssertFn, MaterialBill } from '@src/features/XIT/ACT/shared-types';
 import {
   addMaterials,
   applyTemplate,
@@ -33,7 +33,8 @@ export const CONT_TRADE = act.addActionStep<Data>({
     return `Create ${typeLabel} contract draft (${materialCount} materials)`;
   },
   execute: async ctx => {
-    const { data, log, setStatus, requestTile, waitAct, complete, assert } = ctx;
+    const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete } = ctx;
+    const assert: AssertFn = ctx.assert;
 
     const typeLabel = data.tradeType === 'BUYING' ? 'Buy' : 'Sell';
 
@@ -44,7 +45,8 @@ export const CONT_TRADE = act.addActionStep<Data>({
       return;
     }
 
-    const newDraft = await createNewDraft(assert, log, setStatus);
+    const newDraft = await createNewDraft(assert, log, setStatus, listTile.anchor);
+    await waitActionFeedback(listTile);
 
     setStatus(`Loading draft ${newDraft.naturalId}...`);
     const draftTile = await requestTile(`CONTD ${newDraft.naturalId}`);
@@ -68,60 +70,56 @@ export const CONT_TRADE = act.addActionStep<Data>({
       `Materials: ${materialsList}\n` +
       (data.daysToFulfill > 0 ? `Fulfill within ${data.daysToFulfill} days` : '');
 
-    await setDraftNameAndPreamble(anchor, log, setStatus, contractName, preambleText);
+    await setDraftNameAndPreamble(assert, anchor, log, setStatus, contractName, preambleText);
 
     // Step 2: Save draft details (name/preamble).
     await waitAct('Save draft details?');
-    await saveDraftDetails(anchor, log, setStatus);
+    await saveDraftDetails(assert, anchor, log, setStatus, newDraft.naturalId);
+    await waitActionFeedback(draftTile);
 
     const templateSelect = await openTemplate(assert, anchor, setStatus);
-    selectTemplateType(log, templateSelect, data.tradeType);
-    await setCurrency(anchor, log, data.currency);
+    selectTemplateType(assert, log, templateSelect, data.tradeType);
+    await setCurrency(assert, anchor, log, data.currency);
 
     const materialEntries = Object.entries(data.materials)
       .filter(([, material]) => material.quantity > 0)
       .map(([ticker, { quantity: amount }]) => ({ ticker, amount }));
 
-    await addMaterials(anchor, log, setStatus, materialEntries, {
+    await addMaterials(assert, anchor, log, setStatus, materialEntries, {
       setPrice: (group, ticker) => {
         const price = data.materials[ticker].price;
-        if (price === undefined || price <= 0) {
-          return;
-        }
+        assert(
+          price !== undefined && Number.isFinite(price) && price >= 0.01 && price <= 100000000,
+          `Invalid price for ${ticker}`,
+        );
         const priceInput = group.querySelector<HTMLInputElement>('input[inputmode="decimal"]');
-        if (priceInput) {
-          focusElement(priceInput);
-          priceInput.select();
-          // Decimal inputs use the player’s locale for decimal and grouping separators.
-          changeInputValue(priceInput, fixed02(price));
-          log.info(`Price for ${ticker}: ${price} ${data.currency}`);
-        } else {
-          log.warning(`Could not find price input for ${ticker}`);
-        }
+        assert(priceInput, `Could not find price input for ${ticker}`);
+        focusElement(priceInput);
+        priceInput.select();
+        // Decimal inputs use the player’s locale for decimal and grouping separators.
+        changeInputValue(priceInput, fixed02(price));
+        log.info(`Price for ${ticker}: ${price} ${data.currency}`);
       },
     });
 
     // Step 3: Set location address.
     const addressContainers = _$$(anchor, C.AddressSelector.container);
-    if (addressContainers.length >= 1 && data.location) {
-      await waitAct(`Set location to ${data.location}?`);
-      const ok = await selectLocation(addressContainers[0], data.location);
-      if (ok) {
-        log.info(`Location set: ${data.location}`);
-      } else {
-        log.warning(`Could not select location: ${data.location}`);
-      }
-    }
+    assert(addressContainers.length >= 1 && data.location, 'Could not find trade location control');
+    await waitAct(`Set location to ${data.location}?`);
+    const selected = await selectLocation(addressContainers[0], data.location);
+    assert(selected, `Could not select location: ${data.location}`);
+    log.info(`Location set: ${data.location}`);
 
-    setDeadline(anchor, log, data.daysToFulfill);
+    setDeadline(assert, anchor, log, data.daysToFulfill);
 
     // Step 4: Apply template.
     await waitAct('Apply template?');
-    await applyTemplate(assert, anchor, log, setStatus);
+    await applyTemplate(assert, anchor, log, setStatus, newDraft.naturalId);
 
     // Step 5: Save conditions (after user review).
     await waitAct('Save conditions?');
-    await saveConditions(anchor, log, setStatus);
+    await saveConditions(assert, anchor, log, setStatus, newDraft.naturalId);
+    await waitActionFeedback(draftTile);
 
     log.success(`Contract draft ${newDraft.naturalId} ready to send`);
     complete();
