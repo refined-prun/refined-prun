@@ -6,6 +6,7 @@ import { formatDenseEta, hhmm } from '@src/utils/format';
 import { timestampEachMinute } from '@src/utils/dayjs';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { getInvStore } from '@src/core/store-id';
+import fa from '@src/utils/font-awesome.module.css';
 
 const props = defineProps<{
   shipId: string;
@@ -40,20 +41,16 @@ const hasItems = computed(() => (inventory.value?.items.length ?? 0) > 0);
     <template v-else>
       <div :class="$style.actions">
         <span
-          :class="[
-            $style.actionBtn,
-            $style.inventoryAction,
-            hasItems ? $style.bgOrange : $style.bgBlue,
-          ]"
+          :class="[$style.actionBtn, hasItems ? $style.bgOrange : $style.bgBlue]"
           data-tooltip="Open inventory"
           @click.stop="showBuffer(`SHPI ${ship?.registration}`)">
-          {{ hasItems ? '\u2b71' : '\u2b73' }}
+          <span :class="fa.solid">{{ hasItems ? '\uf466' : '\uf49e' }}</span>
         </span>
         <span
           :class="[$style.actionBtn, $style.bgGreen]"
           data-tooltip="Open flight control"
           @click.stop="showBuffer(`SFC ${ship?.registration}`)">
-          {{ '\u2708' }}
+          <span :class="fa.solid">{{ '\uf072' }}</span>
         </span>
       </div>
     </template>
@@ -89,7 +86,8 @@ const hasItems = computed(() => (inventory.value?.items.length ?? 0) > 0);
 }
 
 .actionBtn {
-  font-size: 15px;
+  display: inline-flex;
+  font-size: 13px;
   height: 20px;
   width: 20px;
   padding: 2px;
@@ -97,10 +95,6 @@ const hasItems = computed(() => (inventory.value?.items.length ?? 0) > 0);
   align-items: center;
   justify-content: center;
   color: white;
-}
-
-.inventoryAction {
-  padding-right: 5px;
 }
 
 .bgOrange {
