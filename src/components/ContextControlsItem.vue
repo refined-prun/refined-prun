@@ -1,23 +1,23 @@
 <script setup lang="ts">
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
-const props = defineProps<{ cmd: string; label?: string }>();
+const { cmd, cmdText, label } = defineProps<{ cmd: string; cmdText?: string; label?: string }>();
 
 const commandParts = computed(() => {
-  const words = props.cmd.split(' ');
+  const words = (cmdText ?? cmd).split(' ');
   let command = words.shift();
   if (command === 'XIT') {
     command += ' ' + words.shift();
   }
   return [command, words.join(' ')];
 });
-
-const itemClasses = [C.ContextControls.item, C.fonts.fontRegular, C.type.typeSmall];
 </script>
 
 <template>
   <!-- The node structure is fully replicated from PrUn, don't mind unnecessary nodes. -->
-  <div :class="itemClasses" @click="() => showBuffer(cmd)">
+  <div
+    :class="[C.ContextControls.item, C.fonts.fontRegular, C.type.typeSmall]"
+    @click="() => showBuffer(cmd)">
     <span>
       <span :class="C.ContextControls.cmd">{{ commandParts[0] }}</span>
       {{ commandParts[1] }}

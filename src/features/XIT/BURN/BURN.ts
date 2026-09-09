@@ -9,11 +9,11 @@ xit.add({
       const site = sitesStore.getByPlanetNaturalIdOrName(parameters[0]);
       if (site) {
         const name = getEntityNameFromAddress(site.address);
-        return `ENHANCED BURN - ${name}`;
+        return `BURN - ${name}`;
       }
     }
 
-    return 'ENHANCED BURN';
+    return 'BURN';
   },
   description: 'Shows the number of days of consumables left.',
   optionalParameters: 'Planet Identifier(s), OVERALL, NOT',

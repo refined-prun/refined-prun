@@ -117,11 +117,11 @@ function compareRows(a: ElectionRow, b: ElectionRow) {
     return groupDiff;
   }
   if (
-    a.electionStart !== undefined &&
-    b.electionStart !== undefined &&
-    a.electionStart !== b.electionStart
+    a.electionEnd !== undefined &&
+    b.electionEnd !== undefined &&
+    a.electionEnd !== b.electionEnd
   ) {
-    return a.electionStart - b.electionStart;
+    return a.electionEnd - b.electionEnd;
   }
   const planetDiff = a.planetNaturalId.localeCompare(b.planetNaturalId);
   return planetDiff !== 0 ? planetDiff : a.type.localeCompare(b.type);

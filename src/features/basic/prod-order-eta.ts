@@ -12,7 +12,11 @@ function onTileReady(tile: PrunTile) {
     return;
   }
 
-  subscribe($$(tile.anchor, C.OrderSlot.container), x => onOrderSlotReady(x, tile.parameter!));
+  const site = sitesStore.find(tile.parameter);
+  if (!site) {
+    return;
+  }
+  subscribe($$(tile.anchor, C.OrderSlot.container), x => onOrderSlotReady(x, site.siteId));
 }
 
 function onOrderSlotReady(slot: HTMLElement, siteId: string) {

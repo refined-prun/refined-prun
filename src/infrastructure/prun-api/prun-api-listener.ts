@@ -5,7 +5,7 @@ import { startMeasure, stopMeasure } from '@src/utils/performance-measure';
 import { context } from '@src/infrastructure/prun-api/data/screens';
 import { watchUntil } from '@src/utils/watch';
 
-interface Message {
+export interface Message {
   messageType?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload?: { message: Message } | any;

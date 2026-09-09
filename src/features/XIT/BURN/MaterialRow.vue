@@ -2,8 +2,9 @@
 import { computeNeed, MaterialBurn } from '@src/core/burn';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
-import { fixed0, fixed1, fixed2 } from '@src/utils/format';
+import { fixed0, fixed1, fixed2, trunc0, trunc01, trunc02 } from '@src/utils/format';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
+import { getBurnThresholds } from '@src/features/XIT/BURN/utils';
 import PrunButton from '@src/components/PrunButton.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
@@ -15,13 +16,29 @@ const { alwaysVisible, burn, material } = defineProps<{
 }>();
 
 const production = computed(() => burn.dailyAmount);
-const invAmount = computed(() => burn.inventory ?? 0);
+const invAmount = computed(() => {
+  const amount = burn.inventory + burn.remainingAllocation;
+  // Truncate, don't round, so the shown amount never exceeds what you hold.
+  if (amount >= 100) {
+    return trunc0(amount);
+  }
+  if (amount >= 10) {
+    return trunc01(amount);
+  }
+  return trunc02(amount);
+});
+const invWhole = computed(() => {
+  const dot = invAmount.value.indexOf('.');
+  return dot === -1 ? invAmount.value : invAmount.value.slice(0, dot);
+});
+const invFraction = computed(() => {
+  const dot = invAmount.value.indexOf('.');
+  return dot === -1 ? '' : invAmount.value.slice(dot);
+});
 const isInf = computed(() => production.value >= 0);
-const days = computed(() => (isInf.value ? 1000 : burn.daysLeft));
+const days = computed(() => (isInf.value ? Number.POSITIVE_INFINITY : burn.daysLeft));
 
-const isRed = computed(() => days.value <= userData.settings.burn.red);
-const isYellow = computed(() => days.value <= userData.settings.burn.yellow);
-const isGreen = computed(() => days.value > userData.settings.burn.yellow);
+const thresholds = computed(() => getBurnThresholds(days.value));
 
 const red = useTileState('red');
 const yellow = useTileState('yellow');
@@ -36,9 +53,8 @@ const isVisible = computed(() => {
   if (isInf.value) {
     return inf.value;
   }
-  return (
-    (isRed.value && red.value) || (isYellow.value && yellow.value) || (isGreen.value && green.value)
-  );
+  const { isRed, isYellow, isGreen } = thresholds.value;
+  return (isRed && red.value) || (isYellow && yellow.value) || (isGreen && green.value);
 });
 
 function formatAmount(value: number) {
@@ -77,7 +93,9 @@ const needAmt = computed(() => computeNeed(burn, userData.settings.burn.resupply
       <MaterialIcon size="inline-table" :ticker="material.ticker" />
     </td>
     <td>
-      <span>{{ fixed0(invAmount) }}</span>
+      <span>
+        {{ invWhole }}<span :class="$style.fraction">{{ invFraction }}</span>
+      </span>
     </td>
     <template v-if="io">
       <td>
@@ -107,5 +125,9 @@ const needAmt = computed(() => computeNeed(burn, userData.settings.burn.resupply
 .materialContainer {
   width: 32px;
   padding: 0;
+}
+
+.fraction {
+  color: #999;
 }
 </style>

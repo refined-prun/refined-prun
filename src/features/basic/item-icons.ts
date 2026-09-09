@@ -2,7 +2,10 @@ import fa from '@src/utils/font-awesome.module.css';
 import $style from './item-icons.module.css';
 import { applyRawCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { objectKeys } from 'ts-extras';
-import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
+import {
+  sanitizeCategoryName,
+  CATEGORY_CSS_PREFIX,
+} from '@src/infrastructure/prun-ui/item-tracker';
 
 function init() {
   const container = C.ColoredIcon.container;
@@ -14,7 +17,10 @@ function init() {
   applyCssRule(`.${label}:before`, fa.solid);
 
   for (const category of objectKeys(categories)) {
-    applyIconRules(`.rp-category-${sanitizeCategoryName(category)}`, categories[category]);
+    applyIconRules(
+      `.${CATEGORY_CSS_PREFIX}${sanitizeCategoryName(category)}`,
+      categories[category],
+    );
   }
   for (const material of objectKeys(materials)) {
     applyIconRules(`.rp-ticker-${material}`, materials[material]);

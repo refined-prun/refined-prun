@@ -29,6 +29,22 @@ export function changeInputValue(input: HTMLInputElement, value: string) {
   input.dispatchEvent(changeEvent);
 }
 
+export function selectAndChangeInputValue(input: HTMLInputElement, value: string) {
+  focusElement(input);
+  input.select();
+  changeInputValue(input, value);
+}
+
+export function changeTextAreaValue(textarea: HTMLTextAreaElement, value: string) {
+  // React overrides the native property, so we can't use it directly.
+  const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value');
+  setter!.set!.call(textarea, value);
+  const event = new InputEvent('input', { bubbles: true, cancelable: true });
+  textarea.dispatchEvent(event);
+  const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+  textarea.dispatchEvent(changeEvent);
+}
+
 export function changeSelectIndex(input, selectIndex) {
   // React overrides the native property, so we can't use it directly.
   const setter = Object.getOwnPropertyDescriptor(
@@ -43,6 +59,33 @@ export function changeSelectIndex(input, selectIndex) {
 export function focusElement(input: HTMLElement) {
   const event = new FocusEvent('focusin', { bubbles: true, cancelable: false });
   input.dispatchEvent(event);
+}
+
+export async function selectMaterialInMaterialSelector(baseElement: Element, ticker: string) {
+  let container = baseElement;
+  if (!container.classList.contains(C.MaterialSelector.container)) {
+    container = await $(baseElement, C.MaterialSelector.container);
+  }
+  const input = await $(container, 'input');
+
+  const suggestionsContainer = await $(container, C.MaterialSelector.suggestionsContainer);
+  focusElement(input);
+  changeInputValue(input, ticker);
+
+  const suggestionsList = await $(container, C.MaterialSelector.suggestionsList);
+  suggestionsContainer.style.display = 'none';
+  const match = _$$(suggestionsList, C.MaterialSelector.suggestionEntry).find(
+    x => _$(x, C.ColoredIcon.label)?.textContent === ticker,
+  );
+
+  if (!match) {
+    suggestionsContainer.style.display = '';
+    return false;
+  }
+
+  await clickElement(match);
+  suggestionsContainer.style.display = '';
+  return true;
 }
 
 // A function to compare two planets (to be used in .sort() functions)

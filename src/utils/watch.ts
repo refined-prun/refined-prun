@@ -1,5 +1,5 @@
 import { WatchEffect, WatchOptionsBase, WatchStopHandle } from 'vue';
-import onNodeDisconnected from '@src/utils/on-node-disconnected';
+import { onNodeDisconnectedLazy } from '@src/utils/on-node-disconnected';
 
 export async function watchUntil(condition: Ref<boolean> | (() => boolean)) {
   await new Promise<void>(resolve => {
@@ -39,6 +39,6 @@ export function watchEffectWhileNodeAlive(
   options?: WatchOptionsBase,
 ) {
   const stop = watchEffect(effect, options);
-  onNodeDisconnected(node, stop);
+  onNodeDisconnectedLazy(node, stop);
   return stop;
 }

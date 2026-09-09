@@ -294,12 +294,13 @@ function handleClick() {
 
 <style module>
 .container {
-  margin: 0px;
+  margin: 0;
   display: flex;
+  min-width: 30px;
   width: 100%;
   min-height: 13px;
   height: 13px;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-start;
   background-color: #2a2a2a;
   --stripe-width: 10px;
@@ -339,8 +340,7 @@ function handleClick() {
   display: flex;
 }
 
-/* Override the inline-block applied by [data-tooltip] globally — flex items
-   still respect width, but we need block display for segment sizing. */
+/* Reset the game's tooltip padding so it does not widen cargo segments. */
 .segment {
   display: block;
   height: 100%;

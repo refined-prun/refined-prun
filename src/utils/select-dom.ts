@@ -1,8 +1,10 @@
 import type { ParseSelector } from 'typed-query-selector/parser';
 import {
-  streamElementOfHtmlCollection,
-  streamHtmlCollection,
-} from '@src/utils/stream-html-collection';
+  waitElementOfHtmlCollection,
+  observeHtmlCollection,
+} from '@src/utils/observe-html-collection';
+import { ElementTag } from '@src/infrastructure/prun-ui/tagger';
+import { Observable } from '@src/utils/observable';
 
 export function getElementByClassNameOrTag<
   Selector extends string,
@@ -12,12 +14,12 @@ export function getElementByClassNameOrTag<
   return collection.length === 0 ? undefined : (collection[0] as Selected);
 }
 
-export async function streamElementByClassNameOrTag<
+export async function waitElementByClassNameOrTag<
   Selector extends string,
   Selected extends Element = ParseSelector<Selector, HTMLElement>,
 >(baseElement: Element | Document, selector: Selector) {
   const collection = getHtmlCollection<Selector, Selected>(baseElement, selector);
-  return await streamElementOfHtmlCollection(baseElement, collection);
+  return await waitElementOfHtmlCollection(baseElement, collection);
 }
 
 export function getElementsByClassNameOrTag<
@@ -28,16 +30,12 @@ export function getElementsByClassNameOrTag<
   return Array.from(collection) as Selected[];
 }
 
-export function streamElementsByClassNameOrTag<
+export function observeElementsByClassNameOrTag<
   Selector extends string,
   Selected extends Element = ParseSelector<Selector, HTMLElement>,
->(baseElement: Element | Document, selector: Selector): AsyncIterable<Selected> {
+>(baseElement: Element | Document, selector: Selector): Observable<Selected> {
   const collection = getHtmlCollection<Selector, Selected>(baseElement, selector);
-  return {
-    [Symbol.asyncIterator]() {
-      return streamHtmlCollection(baseElement, collection);
-    },
-  };
+  return observeHtmlCollection(baseElement, collection);
 }
 
 const tagNames = new Set<string>([
@@ -68,6 +66,7 @@ const classNames = new Set<string>([
   'rc-slider-mark-text-active',
   'rc-slider-handle',
   'rc-slider-mark-text',
+  ...Object.values(ElementTag),
 ]);
 
 export function registerClassName(className: string) {
@@ -100,7 +99,7 @@ function isValidTag(name: string) {
   }
 }
 
-export const $ = streamElementByClassNameOrTag;
+export const $ = waitElementByClassNameOrTag;
 export const _$ = getElementByClassNameOrTag;
-export const $$ = streamElementsByClassNameOrTag;
+export const $$ = observeElementsByClassNameOrTag;
 export const _$$ = getElementsByClassNameOrTag;

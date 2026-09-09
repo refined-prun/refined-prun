@@ -71,4 +71,8 @@ function init() {
   tiles.observe(['INV', 'SHPI'], onTileReady);
 }
 
-features.add(import.meta.url, init, 'INV/SHPI: Adds a condition indicator to SHPT and BLCK items.');
+features.add(
+  import.meta.url,
+  init,
+  'INV/SHPI: Adds a contract condition indicator to SHPT and BLCK items.',
+);

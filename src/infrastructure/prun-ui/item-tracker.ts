@@ -43,7 +43,7 @@ function appendStylesheet() {
   const gradientEnd = defaultColor.brighten(10).toHexString();
   const fontColor = defaultColor.brighten(40).toHexString();
   const defaultStyle =
-    `.${C.ColoredIcon.container} {\n` +
+    `.${C.ColoredIcon.container}, .${CATEGORY_CSS_PREFIX}none {\n` +
     `  background: linear-gradient(135deg, ${gradientStart}, ${gradientEnd});\n` +
     `  color: ${fontColor};\n` +
     '}\n\n';
@@ -64,7 +64,6 @@ function createCssRule<T extends keyof typeof categoryColors>(category: T) {
   );
 }
 
-// Shared CSS class prefix for material category styling.
 export const CATEGORY_CSS_PREFIX = 'rp-category-';
 
 export function getMaterialCategoryCssClass(category: PrunApi.MaterialCategory) {

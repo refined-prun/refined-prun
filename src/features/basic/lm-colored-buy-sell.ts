@@ -9,10 +9,7 @@ async function onAdContainerReady(container: HTMLElement) {
   const element = await $(container, C.CommodityAd.text);
   const id = getPrunId(container);
   const ad = localAdsStore.getById(id);
-  if (!ad || (ad.type !== 'COMMODITY_BUYING' && ad.type !== 'COMMODITY_SELLING')) {
-    return;
-  }
-  if (ad.type !== 'COMMODITY_BUYING' && ad.type !== 'COMMODITY_SELLING') {
+  if (ad?.type !== 'COMMODITY_BUYING' && ad?.type !== 'COMMODITY_SELLING') {
     return;
   }
 

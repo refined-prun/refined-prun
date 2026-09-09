@@ -1,5 +1,4 @@
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { PrunI18N } from '@src/infrastructure/prun-ui/i18n';
 import Passive from '@src/components/forms/Passive.vue';
 import { getPrice } from '@src/infrastructure/fio/cx';
 import { fixed0, fixed01, fixed02, formatCurrency } from '@src/utils/format';
@@ -7,7 +6,7 @@ import { fixed0, fixed01, fixed02, formatCurrency } from '@src/utils/format';
 function onTileReady(tile: PrunTile) {
   const parameter = tile.parameter;
   const material = materialsStore.getByTicker(parameter);
-  const volumeLabelText = PrunI18N['MaterialInformation.label.volume']?.[0]?.value;
+  const volumeLabelText = L.MaterialInformation.label.volume();
 
   subscribe($$(tile.anchor, C.FormComponent.containerPassive), async container => {
     const label = await $(container, 'label');

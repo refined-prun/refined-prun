@@ -16,6 +16,7 @@ declare namespace PrunApi {
     satisfaction: number;
     unitsPerInterval: number;
     unitsPer100: number;
+    remainingAllocation: number;
   }
 
   type NeedCategory = 'CLOTHING' | 'FOOD' | 'HEALTH' | 'TOOLS' | 'WATER';
