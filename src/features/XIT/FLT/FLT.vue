@@ -538,10 +538,10 @@ function getSortIndicator(key: SortKey) {
   }
 
   if (primarySortKey.value === key) {
-    return direction === 'asc' ? '\u25b2' : '\u25bc';
+    return direction === 'asc' ? '▲' : '▼';
   }
   if (secondarySortKey.value === key && primarySortKey.value !== key) {
-    return direction === 'asc' ? '\u25b2' : '\u25bc';
+    return direction === 'asc' ? '▲' : '▼';
   }
   return undefined;
 }
