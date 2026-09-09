@@ -5,4 +5,5 @@ xit.add({
   name: 'FLEET',
   description: 'Enhanced fleet table with detailed status, cargo, fuel, and quick actions.',
   component: () => FLT,
+  bufferSize: [500, 300],
 });
