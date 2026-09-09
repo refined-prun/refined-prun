@@ -42,7 +42,6 @@ function appendStylesheet() {
   const gradientStart = defaultColor.darken(20).toHexString();
   const gradientEnd = defaultColor.brighten(10).toHexString();
   const fontColor = defaultColor.brighten(40).toHexString();
-  // Rp-category-none: fallback style for items without a category (see CATEGORY_CSS_PREFIX).
   const defaultStyle =
     `.${C.ColoredIcon.container}, .${CATEGORY_CSS_PREFIX}none {\n` +
     `  background: linear-gradient(135deg, ${gradientStart}, ${gradientEnd});\n` +
@@ -65,8 +64,6 @@ function createCssRule<T extends keyof typeof categoryColors>(category: T) {
   );
 }
 
-// Shared CSS class prefix for material category styling.
-// Used in item-tracker, CargoBar, better-item-colors, and item-icons.
 export const CATEGORY_CSS_PREFIX = 'rp-category-';
 
 export function getMaterialCategoryCssClass(category: PrunApi.MaterialCategory) {
