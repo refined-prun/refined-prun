@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
-import { displaytimeBetween, hhmm } from '@src/utils/format';
+import { formatDenseEta, hhmm } from '@src/utils/format';
 import { timestampEachMinute } from '@src/utils/dayjs';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { getInvStore } from '@src/core/store-id';
@@ -21,7 +21,7 @@ const timeData = computed(() => {
     return null;
   }
   return {
-    relative: displaytimeBetween(timestampEachMinute.value, arrival),
+    relative: formatDenseEta(timestampEachMinute.value, arrival),
     absolute: hhmm(arrival),
   };
 });

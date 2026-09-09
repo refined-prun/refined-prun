@@ -143,7 +143,7 @@ export function formatEta(from: number, to: number) {
 }
 
 // Compact duration format ("2d 3h 15m") for dense table cells.
-export function displaytimeBetween(from: number, to: number) {
+export function formatDenseEta(from: number, to: number) {
   const diffMs = to - from;
   if (diffMs <= 0) {
     return `${fixed0(0)}m`;
