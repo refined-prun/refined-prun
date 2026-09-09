@@ -63,7 +63,7 @@ type MultiOptionFilterGroup = {
 const DEFAULT_SORT_DIRECTION_BY_KEY: Record<SortKey, SortDirection> = {
   name: 'none',
   cargo: 'none',
-  status: 'none',
+  status: 'desc',
   eta: 'asc',
   fuel: 'none',
   none: 'none',
@@ -73,7 +73,7 @@ const DEFAULT_SORT_DIRECTION_BY_KEY: Record<SortKey, SortDirection> = {
 };
 
 const DEFAULTS = {
-  primarySortKey: 'shipClass' as SortKey,
+  primarySortKey: 'status' as SortKey,
   secondarySortKey: 'eta' as SortKey,
   showStlShips: true,
   showFtlShips: true,
@@ -81,16 +81,16 @@ const DEFAULTS = {
   showNotInFlightShips: true,
   hideReturningToCx: false,
   fuelAlertFilter: 'any' as FuelAlertFilter,
-  layoutMode: 'compact' as LayoutMode,
-  showColName: false,
-  showColShipClass: true,
+  layoutMode: 'cargo' as LayoutMode,
+  showColName: true,
+  showColShipClass: false,
   showColSize: false,
   showColCargo: true,
   showColCargoSize: false,
   showColTime: true,
   showColRepair: false,
-  showColFuel: false,
-  showColProblems: true,
+  showColFuel: true,
+  showColProblems: false,
   problemFuelThreshold: '50' as FuelAlertFilter,
 };
 
