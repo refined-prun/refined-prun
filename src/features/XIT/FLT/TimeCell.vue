@@ -7,6 +7,7 @@ import { timestampEachMinute } from '@src/utils/dayjs';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { getInvStore } from '@src/core/store-id';
 import fa from '@src/utils/font-awesome.module.css';
+import PrunButton from '@src/components/PrunButton.vue';
 
 const props = defineProps<{
   shipId: string;
@@ -40,18 +41,24 @@ const hasItems = computed(() => (inventory.value?.items.length ?? 0) > 0);
     </template>
     <template v-else>
       <div :class="$style.actions">
-        <span
+        <div
           :class="[$style.actionBtn, hasItems ? $style.bgOrange : $style.bgBlue]"
           data-tooltip="Open inventory"
+          data-tooltip-position="top"
           @click.stop="showBuffer(`SHPI ${ship?.registration}`)">
-          <span :class="fa.solid">{{ hasItems ? '\uf466' : '\uf49e' }}</span>
-        </span>
-        <span
+          <span :class="[$style.actionBtnIcon, fa.solid]">
+            {{ hasItems ? '\uf466' : '\uf49e' }}
+          </span>
+        </div>
+        <div
           :class="[$style.actionBtn, $style.bgGreen]"
           data-tooltip="Open flight control"
+          data-tooltip-position="top"
           @click.stop="showBuffer(`SFC ${ship?.registration}`)">
-          <span :class="fa.solid">{{ '\uf072' }}</span>
-        </span>
+          <span :class="[$style.actionBtnIcon, fa.solid]">
+            {{ '\uf072' }}
+          </span>
+        </div>
       </div>
     </template>
   </div>
@@ -86,14 +93,18 @@ const hasItems = computed(() => (inventory.value?.items.length ?? 0) > 0);
 }
 
 .actionBtn {
-  display: inline-flex;
-  font-size: 13px;
   height: 20px;
   width: 20px;
-  padding: 2px;
   cursor: pointer;
+}
+
+.actionBtnIcon {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 13px;
   color: white;
 }
 

@@ -49,7 +49,7 @@ const posData = computed(() => {
       <span
         :class="$style.link"
         data-tooltip="Open flight control"
-        data-tooltip-position="right"
+        data-tooltip-position="top"
         @click.stop="showBuffer(`SFC ${ship?.registration}`)"
         >{{ statusIcon }}</span
       >
