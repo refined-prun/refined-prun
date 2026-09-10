@@ -82,8 +82,7 @@ function formatFlowTable(rows: MaterialFlow[]) {
       .map(x => `${x.planetName} (${x.naturalId}): ${round(x.amount)}`)
       .join('; ');
   }
-  const price = (value: number | undefined, override: boolean) =>
-    value === undefined ? '' : round(value) + (override ? '*' : '');
+  const price = (x: number | undefined) => (x === undefined ? '' : round(x));
   const lines = ['Ticker\tProduction\tConsumption\tDelta\tBuy\tSell\tValue\tProducers\tConsumers'];
   for (const flow of rows) {
     lines.push(
@@ -92,9 +91,9 @@ function formatFlowTable(rows: MaterialFlow[]) {
         round(flow.production),
         round(flow.consumption),
         round(flow.delta),
-        price(flow.buy, flow.buyOverride),
-        price(flow.sell, flow.sellOverride),
-        price(flow.currencyDelta, false),
+        price(flow.buy),
+        price(flow.sell),
+        price(flow.currencyDelta),
         planets(flow.producers),
         planets(flow.consumers),
       ].join('\t'),
