@@ -34,18 +34,18 @@ const buttons: [string, string][] = [
               C.type.typeRegular,
               C.fonts.fontRegular,
               $style.exchangeSelect,
-            ]"
-            >{{ userData.settings.contextMenuExchange }}</span
-          >
+            ]">
+            {{ userData.settings.contextMenuExchange }}
+          </span>
           <span
             :class="[
               C.Frame.toggleLabel,
               C.type.typeRegular,
               C.fonts.fontRegular,
               $style.exchangeIcon,
-            ]"
-            >🞂</span
-          >
+            ]">
+            🞂
+          </span>
           <div :class="[$style.exchangeList, $style.contextMenu]">
             <PrunButton
               v-for="exchange in exchanges"
