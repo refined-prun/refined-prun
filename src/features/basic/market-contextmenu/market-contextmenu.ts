@@ -33,7 +33,7 @@ const store = reactive({
     top: '0px',
   },
   async showMenu(event: MouseEvent, ticker: string) {
-    // Clean up previous listener if rapid re-entry
+    // Clean up previous listener if rapid re-entry.
     if (clickOutsideListener !== null) {
       document.removeEventListener('click', clickOutsideListener);
       clickOutsideListener = null;
