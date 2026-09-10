@@ -63,7 +63,6 @@ const sorted = computed(() => {
         return aUnpriced ? 1 : -1;
       }
     }
-    // Same category-then-ticker order as XIT BURN.
     const byMaterial = compareMaterials(
       materialsStore.getByTicker(a.ticker),
       materialsStore.getByTicker(b.ticker),
