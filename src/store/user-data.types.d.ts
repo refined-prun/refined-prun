@@ -95,6 +95,15 @@ declare namespace UserData {
     contLocation?: string;
   }
 
+  interface ItemTotalsPresetData {
+    name: string;
+    items: ItemTotalsItemData[];
+  }
+
+  interface ItemTotalsItemData {
+    ticker: string;
+  }
+
   interface TaskList {
     id: string;
     name: string;
