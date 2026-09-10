@@ -8,6 +8,7 @@ import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import ConditionRow from '@src/features/XIT/CONTC/ConditionRow.vue';
 import { isEmpty } from 'ts-extras';
+import { compareConditions } from './compare-conditions';
 
 const partnerViolated = computed(() =>
   partnerCurrentConditions.value!.filter(
@@ -28,7 +29,9 @@ const currentNonViolated = computed(() => {
 });
 
 const nonCurrent = computed(() =>
-  selfNonCurrentConditions.value!.filter(x => x.dependencies.every(x => x.status === 'FULFILLED')),
+  selfNonCurrentConditions
+    .value!.filter(x => x.dependencies.every(x => x.status === 'FULFILLED'))
+    .toSorted((a, b) => compareConditions(a.condition, b.condition)),
 );
 </script>
 

@@ -6,7 +6,7 @@ import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
-import { configurableValue } from '@src/features/XIT/ACT/shared-types';
+import { configurableValue, MaterialBill } from '@src/features/XIT/ACT/shared-types';
 import { calculatePlanetBurn } from '@src/core/burn';
 import { watchWhile } from '@src/utils/watch';
 import {
@@ -16,6 +16,7 @@ import {
 
 act.addMaterialGroup<Config>({
   type: 'Resupply',
+  shortDescription: 'Calculate consumables needed based on burn rate',
   description: data => {
     if (!data.planet || data.days === undefined) {
       return '--';
@@ -64,7 +65,7 @@ act.addMaterialGroup<Config>({
       (data.useBaseInv ?? true) ? stores : undefined,
     );
 
-    const parsedGroup = {};
+    const parsedGroup: MaterialBill = {};
     for (const ticker of Object.keys(planetBurn)) {
       if (exclusions.includes(ticker)) {
         continue;
@@ -76,7 +77,7 @@ act.addMaterialGroup<Config>({
       const days = typeof data.days === 'number' ? data.days : parseFloat(data.days);
       const need = Math.ceil((matBurn.daysLeft - days) * matBurn.dailyAmount);
       if (need > 0) {
-        parsedGroup[ticker] = need;
+        parsedGroup[ticker] = { quantity: need };
       }
     }
     return parsedGroup;

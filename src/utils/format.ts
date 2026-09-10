@@ -98,6 +98,23 @@ export const fixed4 = numberFormat({
   maximumFractionDigits: 4,
 });
 
+export const trunc0 = numberFormat({
+  maximumFractionDigits: 0,
+  roundingMode: 'trunc',
+});
+
+export const trunc01 = numberFormat({
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 1,
+  roundingMode: 'trunc',
+});
+
+export const trunc02 = numberFormat({
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+  roundingMode: 'trunc',
+});
+
 export const percent0 = numberFormat({
   style: 'percent',
   maximumFractionDigits: 0,
@@ -115,6 +132,7 @@ export const percent2 = numberFormat({
   maximumFractionDigits: 2,
 });
 
+// Wall-clock time + day offset ("14:30 +2d").
 export function formatEta(from: number, to: number) {
   let ret = hhmm(to);
   const days = diffDays(from, to);
@@ -122,6 +140,32 @@ export function formatEta(from: number, to: number) {
     ret += ` +${days}d`;
   }
   return ret;
+}
+
+// Compact duration format ("2d 3h 15m") for dense table cells.
+export function formatDenseEta(from: number, to: number) {
+  const diffMs = to - from;
+  if (diffMs <= 0) {
+    return `${fixed0(0)}m`;
+  }
+
+  const totalSeconds = Math.floor(diffMs / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+  const parts: string[] = [];
+  if (days > 0) {
+    parts.push(`${fixed0(days)}d`);
+  }
+  if (hours > 0) {
+    parts.push(`${fixed0(hours)}h`);
+  }
+  if (minutes > 0 || parts.length === 0) {
+    parts.push(`${fixed0(minutes)}m`);
+  }
+
+  return parts.join(' ');
 }
 
 export function formatCurrency(currency?: number | null, format?: (value: number) => string) {

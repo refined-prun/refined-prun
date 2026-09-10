@@ -27,6 +27,9 @@ export const initialUserData = deepFreeze({
       yellow: 7,
       resupply: 16,
     },
+    flow: {
+      overrides: {} as Record<string, UserData.PriceOverride>,
+    },
     repair: {
       threshold: 60,
       offset: 10,
@@ -52,6 +55,7 @@ export const initialUserData = deepFreeze({
     ] as [string, string][],
     buffers: [] as [string, number, number][],
     audioVolume: 0.4,
+    contextMenuExchange: 'AI1' as UserData.Exchange,
   },
   sorting: {} as Record<string, UserData.StoreSortingData>,
   balanceHistory: {

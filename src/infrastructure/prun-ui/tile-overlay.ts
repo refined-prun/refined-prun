@@ -1,5 +1,5 @@
 import Overlay from '@src/components/Overlay.vue';
-import ActionConfirmationOverlay from '@src/components/ActionConfirmationOverlay.vue';
+import ActionFeedback from '@src/components/ActionFeedback.vue';
 
 export function showTileOverlay<T extends Component>(
   baseElementOrEvent: Element | Event,
@@ -46,14 +46,41 @@ export function showConfirmationOverlay(
   if (!container) {
     return;
   }
-  const fragmentApp = createFragmentApp(ActionConfirmationOverlay, {
+  const fragmentApp = createFragmentApp(ActionFeedback, {
+    status: 'confirmation',
     message,
     confirmLabel,
     onConfirm: () => {
       fragmentApp.unmount();
       onConfirm();
     },
-    onClose: () => fragmentApp.unmount(),
+    onDismiss: () => fragmentApp.unmount(),
+  });
+  fragmentApp.appendTo(container);
+}
+
+export function showErrorOverlay(baseElementOrEvent: Element | Event, message: string) {
+  const container = findMountContainer(baseElementOrEvent);
+  if (!container) {
+    return;
+  }
+  const fragmentApp = createFragmentApp(ActionFeedback, {
+    status: 'error',
+    message,
+    onDismiss: () => fragmentApp.unmount(),
+  });
+  fragmentApp.appendTo(container);
+}
+
+export function showSuccessOverlay(baseElementOrEvent: Element | Event, message?: string) {
+  const container = findMountContainer(baseElementOrEvent);
+  if (!container) {
+    return;
+  }
+  const fragmentApp = createFragmentApp(ActionFeedback, {
+    status: 'success',
+    message,
+    onDismiss: () => fragmentApp.unmount(),
   });
   fragmentApp.appendTo(container);
 }

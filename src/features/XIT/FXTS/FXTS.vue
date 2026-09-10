@@ -64,13 +64,16 @@ const days = computed(() => {
     }
 
     day.trades.push(trade);
-    const currency = trade.trade.price.quote;
-    const total = trade.trade.amount.amount * trade.trade.price.rate;
-    const totals = (day.totals[currency] ??= { purchases: 0, sales: 0 });
+    const amount = trade.trade.amount.amount;
+    const total = amount * trade.trade.price.rate;
+    const baseTotals = (day.totals[trade.trade.amount.currency] ??= { purchases: 0, sales: 0 });
+    const quoteTotals = (day.totals[trade.trade.price.quote] ??= { purchases: 0, sales: 0 });
     if (trade.order.type === 'SELLING') {
-      totals.sales += total;
+      baseTotals.purchases += amount;
+      quoteTotals.sales += total;
     } else {
-      totals.purchases += total;
+      baseTotals.sales += amount;
+      quoteTotals.purchases += total;
     }
   }
   return days;

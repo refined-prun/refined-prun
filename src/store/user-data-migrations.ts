@@ -17,6 +17,18 @@ function isCheckpoint(entry: MigrationEntry): entry is Checkpoint {
 // The date is for reference only, and it does not affect migration order.
 const migrations: MigrationEntry[] = [
   [
+    '10.09.2026 Add contextMenuExchange setting',
+    userData => {
+      userData.settings.contextMenuExchange ??= 'AI1';
+    },
+  ],
+  [
+    '25.08.2026 Add flow price overrides',
+    userData => {
+      userData.settings.flow = { overrides: {} };
+    },
+  ],
+  [
     '19.06.2026 Remove adm-hide-inactive-buttons',
     userData => {
       removeFeature(userData, 'adm-hide-inactive-buttons');

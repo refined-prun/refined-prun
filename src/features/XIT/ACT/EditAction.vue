@@ -4,6 +4,7 @@ import SectionHeader from '@src/components/SectionHeader.vue';
 import Active from '@src/components/forms/Active.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
 import Commands from '@src/components/forms/Commands.vue';
+import Passive from '@src/components/forms/Passive.vue';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import { act } from '@src/features/XIT/ACT/act-registry';
 
@@ -22,6 +23,7 @@ const nameError = ref(false);
 const typeOptions = act.getActionTypes();
 const type = ref(action.type);
 
+const shortDescription = computed(() => act.getActionInfo(type.value)?.shortDescription);
 const editFormComponent = computed(() => act.getActionInfo(type.value)?.editComponent);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const editForm = useTemplateRef<any>('editForm');
@@ -51,6 +53,9 @@ function onSaveClick() {
       <Active label="Type">
         <SelectInput v-model="type" :options="typeOptions" />
       </Active>
+      <Passive v-if="shortDescription" label="Description">
+        <span>{{ shortDescription }}</span>
+      </Passive>
       <Active label="Name" :error="nameError">
         <TextInput v-model="name" />
       </Active>

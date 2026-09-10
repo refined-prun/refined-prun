@@ -107,8 +107,7 @@ shortcut({
   description: 'Opens the PrUn Financial Report website.',
   url: parameters => {
     let url =
-      'https://pmmg-products.github.io/reports/?' +
-      parameters.map(param => param.replace('-', '=')).join('&');
+      'https://prun.raylu.net/stats/?' + parameters.map(param => param.replace('-', '=')).join('&');
     if (parameters.length > 0) {
       url += '&';
     }
