@@ -8,7 +8,7 @@ export function getSiteFromParameters(parameters: string[]) {
 }
 
 // Days ≥ 1000 collapse to "∞" so very-large values don't clutter the UI.
-export function formatDays(days: number): string {
+export function formatDays(days: number) {
   if (!isFinite(days) || days >= 1000) {
     return '∞';
   }
@@ -16,7 +16,7 @@ export function formatDays(days: number): string {
 }
 
 // Above 100 days, exact count stops mattering — render as "100+".
-export function formatDaysCompact(days: number): string {
+export function formatDaysCompact(days: number) {
   if (!isFinite(days) || days >= 1000) {
     return '∞';
   }
@@ -27,7 +27,7 @@ export function formatDaysCompact(days: number): string {
 }
 
 // CSS-class name based on a fill ratio. Reuses PrUn's workforce color palette.
-export function fillRatioClass(ratio: number): string {
+export function fillRatioClass(ratio: number) {
   if (ratio >= 0.95) {
     return C.Workforces.daysMissing;
   }
