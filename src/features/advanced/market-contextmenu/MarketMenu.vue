@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import fa from '@src/utils/font-awesome.module.css';
 import PrunButton from '@src/components/PrunButton.vue';
 import { userData } from '@src/store/user-data';
 import { store } from './market-contextmenu';
@@ -43,8 +44,9 @@ const buttons: [string, string][] = [
               C.type.typeRegular,
               C.fonts.fontRegular,
               $style.exchangeIcon,
+              fa.solid,
             ]">
-            🞂
+            {{ '\uf0da' }}
           </span>
           <div :class="[$style.exchangeList, $style.contextMenu]">
             <PrunButton
