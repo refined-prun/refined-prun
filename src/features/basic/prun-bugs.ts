@@ -73,6 +73,7 @@ function prepareTooltips() {
   function showTooltip(target: Element) {
     const text = target.getAttribute('data-tooltip');
     if (!text) {
+      hideTooltip(target);
       return;
     }
 
@@ -177,6 +178,22 @@ function prepareTooltips() {
     activeTarget = null;
     tooltip.hidePopover();
   }
+  const observer = new MutationObserver(x => {
+    for (const { target } of x) {
+      if (!(target instanceof Element)) {
+        continue;
+      }
+      if (target !== activeTarget && !target.matches(':hover, :focus-within')) {
+        continue;
+      }
+      showTooltip(target);
+    }
+  });
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-tooltip', 'data-tooltip-position'],
+    subtree: true,
+  });
   document.addEventListener('pointerover', e => {
     if (!(e.target instanceof Element)) {
       return;
