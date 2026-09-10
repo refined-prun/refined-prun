@@ -135,18 +135,7 @@ function prepareTooltips() {
       p.left + tooltipRect.width <= window.innerWidth - padding &&
       p.top + tooltipRect.height <= window.innerHeight - padding;
 
-    // Recursively find the first side that fits.
-    const findSide = (remaining: string[]): string => {
-      const side = remaining[0];
-
-      if (fits(position(side)) || remaining.length === 1) {
-        return side;
-      }
-
-      return findSide(remaining.slice(1));
-    };
-
-    const side = findSide(sides);
+    const side = sides.find(x => fits(position(x))) ?? sides[sides.length - 1];
     let { left, top } = position(side);
 
     // If nothing fits, keep the chosen side but clamp the tooltip.
