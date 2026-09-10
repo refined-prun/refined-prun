@@ -13,9 +13,9 @@ function onTileReady(tile: PrunTile) {
     () => contract.value?.conditions.filter(x => isFulfillable(contract.value, x)).length ?? 0,
   );
 
-  subscribe($$(tile.anchor, C.FormComponent.containerPassive), container => {
+  subscribe($$(tile.anchor, C.FormComponent.containerPassive), containerPassive => {
     // Some contracts don't have the "CMD" form component, so we create it manually.
-    const nextElement = container.nextElementSibling;
+    const nextElement = containerPassive.nextElementSibling;
     if (
       !nextElement ||
       nextElement.classList.contains(C.FormComponent.containerPassive) ||
@@ -24,11 +24,11 @@ function onTileReady(tile: PrunTile) {
       return;
     }
 
-    createFragmentApp(Commands, { class: $style.commands }).after(container);
+    createFragmentApp(Commands, { class: $style.commands }).after(containerPassive);
   });
 
-  subscribe($$(tile.anchor, C.FormComponent.containerCommand), container => {
-    if (container.nextElementSibling?.classList.contains(C.FormComponent.containerPassive)) {
+  subscribe($$(tile.anchor, C.FormComponent.containerCommand), containerCommand => {
+    if (containerCommand.nextElementSibling?.classList.contains(C.FormComponent.containerPassive)) {
       return;
     }
 
@@ -46,7 +46,7 @@ function onTileReady(tile: PrunTile) {
           button?.click();
         },
       }),
-    ).appendTo(container);
+    ).appendTo(containerCommand);
   });
 }
 
