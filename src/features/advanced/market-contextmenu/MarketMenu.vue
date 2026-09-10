@@ -17,6 +17,16 @@ const buttons: [string, string][] = [
   <div id="market_contextmenu" :class="$style.contextMenu" :style="store.menuStyle">
     <div v-if="store.materialID">
       <div>
+        <PrunButton
+          v-for="cmd in buttons"
+          :key="cmd[1]"
+          :dark="true"
+          :class="$style.prunButton"
+          @click="store.showBuffer(cmd[1])">
+          {{ cmd[0] }}
+        </PrunButton>
+      </div>
+      <div>
         <div :class="[C.Frame.toggle, $style.exchangeHover]">
           <span
             :class="[
@@ -49,16 +59,6 @@ const buttons: [string, string][] = [
           </div>
         </div>
       </div>
-      <div>
-        <PrunButton
-          v-for="cmd in buttons"
-          :key="cmd[1]"
-          :dark="true"
-          :class="$style.prunButton"
-          @click="store.showBuffer(cmd[1])">
-          {{ cmd[0] }}
-        </PrunButton>
-      </div>
     </div>
   </div>
 </template>
@@ -75,8 +75,13 @@ const buttons: [string, string][] = [
 }
 
 .exchangeHover {
-  border-bottom: 1px solid rgb(196, 132, 0);
+  border-top: 1px solid rgb(196, 132, 0);
   margin-bottom: 0;
+}
+
+.exchangeHover span {
+  font-size: 10px;
+  line-height: 11px;
 }
 
 .exchangeList {
@@ -95,10 +100,6 @@ const buttons: [string, string][] = [
 
 .exchangeIcon {
   padding-left: 0;
-}
-
-.market_contextmenu_divider {
-  border-bottom: 2px solid currentColor;
 }
 
 .prunButton {
