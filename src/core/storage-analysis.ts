@@ -220,9 +220,8 @@ export function getBaseStorageAnalysis(siteOrId?: PrunApi.Site | string | null) 
 }
 
 // Returns a synthetic Store representing the base's STORE after a full resupply
-// rotation: net-positive (producing) materials shipped out, consumed materials
-// topped up to their computeNeed amount. Capacity is unchanged. Used by
-// CargoBar to visualize projected fill.
+// rotation: producing materials shipped out, consumed materials
+// topped up to their computeNeed amount. Used by CargoBar to visualize projected fill.
 export function buildProjectedStore(
   siteOrId?: PrunApi.Site | string | null,
 ): PrunApi.Store | undefined {
@@ -243,8 +242,6 @@ export function buildProjectedStore(
   let weightLoad = 0;
   let volumeLoad = 0;
 
-  // Tickers that are strictly net-producing — their existing inventory is assumed
-  // shipped out during the rotation. Zero-daily materials (idle stock) are kept.
   const producedTickers = new Set<string>();
   if (planetBurn) {
     for (const ticker of Object.keys(planetBurn.burn)) {
@@ -263,7 +260,6 @@ export function buildProjectedStore(
     }
     const ticker = item.quantity?.material.ticker;
     if (ticker && producedTickers.has(ticker)) {
-      // Producing material — ships out, contributes nothing to projected load.
       continue;
     }
     items.push(item);
@@ -271,7 +267,6 @@ export function buildProjectedStore(
     volumeLoad += item.volume;
   }
 
-  // Add Need top-ups for consumed materials.
   if (planetBurn) {
     for (const ticker of Object.keys(planetBurn.burn)) {
       const mb = planetBurn.burn[ticker];

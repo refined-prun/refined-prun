@@ -376,7 +376,7 @@ function handleClick() {
 
 .overflow {
   /* Hazard-tape pattern: saturated bright yellow + black diagonal stripes
-     with a thick red outline and glow. Universal "warning zone" idiom. */
+   with a thick red outline and glow. */
   background-image: repeating-linear-gradient(
     45deg,
     #000 0,
@@ -394,8 +394,6 @@ function handleClick() {
   min-width: 24px;
 }
 
-/* When the bar is overflowing, mute category segments and stamp a subtle
-   hazard overlay across the whole bar so the whole row reads as "danger." */
 .isHazard .segment {
   filter: saturate(0.35) brightness(0.7);
 }
