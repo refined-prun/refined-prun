@@ -49,7 +49,7 @@ const nonCurrent = computed(() =>
     <template v-if="partnerViolated.length > 0">
       <thead>
         <tr>
-          <th colspan="3">Violated Conditions (Partner)</th>
+          <th colspan="4">Violated Conditions (Partner)</th>
         </tr>
       </thead>
       <tbody>
@@ -64,7 +64,7 @@ const nonCurrent = computed(() =>
     <template v-if="currentViolated.length > 0">
       <thead>
         <tr>
-          <th colspan="3">Violated Conditions (Self)</th>
+          <th colspan="4">Violated Conditions (Self)</th>
         </tr>
       </thead>
       <tbody>
