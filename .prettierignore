@@ -12,3 +12,5 @@ LICENSE
 *.md
 pnpm-lock.yaml
 src/types/unimport.d.ts
+.claude/worktrees
+.local

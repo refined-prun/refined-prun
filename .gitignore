@@ -19,3 +19,6 @@
 **/.turbo
 vite.config.mts.timestamp-*.mjs
 .tmp
+
+.local
+.claude/settings.local.json

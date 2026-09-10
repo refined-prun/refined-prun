@@ -124,6 +124,13 @@ export default ts.config(
   },
 
   {
-    ignores: ['dist/**/*', '.tmp/**/*', 'eslint.config.mjs', 'src/types/unimport.d.ts'],
+    ignores: [
+      'dist/**/*',
+      '.tmp/**/*',
+      'eslint.config.mjs',
+      'src/types/unimport.d.ts',
+      '.local/**/*',
+      '.claude/worktrees/**/*',
+    ],
   },
 );
