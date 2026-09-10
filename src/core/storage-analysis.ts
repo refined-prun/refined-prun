@@ -29,10 +29,6 @@ export interface BaseStorageAnalysis {
   fillPercentWeight: number;
   fillPercentVolume: number;
 
-  // Current fill excluding inventory of net-positive (infinity-days) materials.
-  fillPercentWeightNoInf: number;
-  fillPercentVolumeNoInf: number;
-
   // Projected fill after delivering Need amount for every consumed material.
   needFillPercentWeight: number;
   needFillPercentVolume: number;
@@ -84,8 +80,6 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
   let importVolume = 0;
   let exportWeight = 0;
   let exportVolume = 0;
-  let infWeight = 0;
-  let infVolume = 0;
   let addedWeight = 0;
   let addedVolume = 0;
   // Weight/volume of current inventory for strictly-producing (dailyAmount > 0)
@@ -117,8 +111,6 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
         // Net-positive or zero material.
         exportWeight += daily * mat.weight;
         exportVolume += daily * mat.volume;
-        infWeight += mb.inventory * mat.weight;
-        infVolume += mb.inventory * mat.volume;
       }
 
       if (daily > 0) {
@@ -136,11 +128,6 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
 
   const fillPercentWeight = store.weightCapacity > 0 ? store.weightLoad / store.weightCapacity : 0;
   const fillPercentVolume = store.volumeCapacity > 0 ? store.volumeLoad / store.volumeCapacity : 0;
-
-  const fillPercentWeightNoInf =
-    store.weightCapacity > 0 ? Math.max(store.weightLoad - infWeight, 0) / store.weightCapacity : 0;
-  const fillPercentVolumeNoInf =
-    store.volumeCapacity > 0 ? Math.max(store.volumeLoad - infVolume, 0) / store.volumeCapacity : 0;
 
   const needFillPercentWeight =
     store.weightCapacity > 0 ? (store.weightLoad + addedWeight) / store.weightCapacity : 0;
@@ -212,8 +199,6 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
     exportVolume,
     fillPercentWeight,
     fillPercentVolume,
-    fillPercentWeightNoInf,
-    fillPercentVolumeNoInf,
     needFillPercentWeight,
     needFillPercentVolume,
     needFillRatio,

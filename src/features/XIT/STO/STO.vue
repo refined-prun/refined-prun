@@ -26,8 +26,6 @@ const fakeAnalysis: BaseStorageAnalysis = {
   exportVolume: 0,
   fillPercentWeight: 0.5,
   fillPercentVolume: 0.5,
-  fillPercentWeightNoInf: 0.5,
-  fillPercentVolumeNoInf: 0.5,
   needFillPercentWeight: 0.5,
   needFillPercentVolume: 0.5,
   needFillRatio: 0.5,
