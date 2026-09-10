@@ -11,6 +11,7 @@ const { deadline, contract, condition } = defineProps<{
   condition: PrunApi.ContractCondition;
   contract: PrunApi.Contract;
   deadline: number;
+  showFulfill: boolean;
 }>();
 
 function onFulfillClick(event: MouseEvent) {
@@ -56,7 +57,7 @@ const eta = computed(() => {
     <td>
       <ConditionText :condition="condition" />
     </td>
-    <td :class="$style.fulfillCell">
+    <td v-if="showFulfill" :class="$style.fulfillCell">
       <PrunButton v-if="isFulfillable(contract, condition)" success inline @click="onFulfillClick">
         {{ L.ContractCondition.fulfill() }}
       </PrunButton>
