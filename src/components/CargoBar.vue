@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
-import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import {
   getMaterialCategoryCssClass,
   CATEGORY_CSS_PREFIX,
 } from '@src/infrastructure/prun-ui/item-tracker';
 import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/material-categories';
 import { fixed02 } from '@src/utils/format';
-import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { ref, watch, computed, onUnmounted } from 'vue';
 
 const props = defineProps<{
-  shipId: string | null;
+  store: PrunApi.Store | null | undefined;
   tall?: boolean;
+  onClick?: () => void;
+  // When true, disables the auto-shrink behavior for very low fill ratios.
+  // STO uses this so the two bars (current and projected) always render at
+  // the same height regardless of load.
+  disableMiniMode?: boolean;
 }>();
 
 const $style = useCssModule();
@@ -29,15 +31,16 @@ interface Segment {
 interface CargoBarData {
   segments: Segment[];
   miniMode: boolean;
+  isOverflowing: boolean;
 }
 
 const cargoBar = computed<CargoBarData>(() => {
-  const ship = shipsStore.getById(props.shipId);
-  const inv = storagesStore.getById(ship?.idShipStore);
+  const inv = props.store;
   if (!inv || inv.items.length === 0) {
     return {
       segments: [],
       miniMode: false,
+      isOverflowing: false,
     };
   }
 
@@ -46,14 +49,18 @@ const cargoBar = computed<CargoBarData>(() => {
   const wLoad = inv.weightLoad;
   const vLoad = inv.volumeLoad;
 
-  const weightRatio = wLoad / wCap;
-  const volumeRatio = vLoad / vCap;
+  const weightRatio = wCap > 0 ? wLoad / wCap : 0;
+  const volumeRatio = vCap > 0 ? vLoad / vCap : 0;
   const maxRatio = Math.max(weightRatio, volumeRatio);
   const useVolume = volumeRatio > weightRatio;
 
-  const isMiniMode = maxRatio <= 0.05 && maxRatio > 0;
+  const isMiniMode = !props.disableMiniMode && maxRatio <= 0.05 && maxRatio > 0;
   const activeLoad = useVolume ? vLoad : wLoad;
   const activeCapacity = useVolume ? vCap : wCap;
+  const isOverflowing = maxRatio > 1;
+  // Scale factor applied to all category widths when overflowing, so the
+  // category segments plus the final overflow segment add up to 100%.
+  const overflowScale = isOverflowing ? 1 / maxRatio : 1;
   let divisor = isMiniMode ? activeLoad : activeCapacity;
   if (divisor === 0) {
     divisor = 1;
@@ -71,7 +78,7 @@ const cargoBar = computed<CargoBarData>(() => {
   for (const category of categories) {
     const categorySummary = summary.categories.get(category)!;
     const value = useVolume ? categorySummary.volume : categorySummary.weight;
-    const percentage = (value * 100) / divisor;
+    const percentage = ((value * 100) / divisor) * overflowScale;
     segments.push({
       name: category.name,
       class: getMaterialCategoryCssClass(category),
@@ -82,12 +89,24 @@ const cargoBar = computed<CargoBarData>(() => {
 
   if (summary.shipments.weight > 0 || summary.shipments.volume > 0) {
     const value = useVolume ? summary.shipments.volume : summary.shipments.weight;
-    const percentage = (value * 100) / divisor;
+    const percentage = ((value * 100) / divisor) * overflowScale;
     segments.push({
       name: 'shipments',
       class: `${CATEGORY_CSS_PREFIX}none`,
       width: `${percentage}%`,
       title: formatTitle('shipments', summary.shipments.weight, summary.shipments.volume),
+    });
+  }
+
+  if (isOverflowing) {
+    const overflowPercent = ((maxRatio - 1) / maxRatio) * 100;
+    const overAmount = useVolume ? vLoad - vCap : wLoad - wCap;
+    const unit = useVolume ? 'm³' : 't';
+    segments.push({
+      name: 'overflow',
+      class: $style.overflow,
+      width: `${overflowPercent}%`,
+      title: `Over capacity by ${fixed02(overAmount)}${unit}`,
     });
   }
 
@@ -98,10 +117,15 @@ const cargoBar = computed<CargoBarData>(() => {
   return {
     segments: segments,
     miniMode: isMiniMode,
+    isOverflowing,
   };
 });
 
 function enhanceSegmentVisibility(segments: Segment[], loadRatio: number) {
+  if (segments.length === 0) {
+    return;
+  }
+
   const lowContrastCategories = new Set(['elements', 'metals', 'shipments', 'unit prefabs']);
 
   const isAlmostFull = loadRatio > 0.98;
@@ -182,9 +206,7 @@ watch(
     if (animationTimeout) {
       clearTimeout(animationTimeout);
     }
-
     isAnimating.value = true;
-
     animationTimeout = setTimeout(() => {
       isAnimating.value = false;
     }, 1000);
@@ -199,55 +221,45 @@ onUnmounted(() => {
 });
 
 const totalLoadRatio = computed(() => {
-  const ship = shipsStore.getById(props.shipId);
-  const inv = storagesStore.getById(ship?.idShipStore);
+  const inv = props.store;
   if (!inv) {
     return 0;
   }
-  return Math.max(inv.weightLoad / inv.weightCapacity, inv.volumeLoad / inv.volumeCapacity);
+  const w = inv.weightCapacity > 0 ? inv.weightLoad / inv.weightCapacity : 0;
+  const v = inv.volumeCapacity > 0 ? inv.volumeLoad / inv.volumeCapacity : 0;
+  return Math.max(w, v);
 });
 
 const stripeAlertColor = computed(() => {
   const ratio = totalLoadRatio.value;
-
   const start = { r: 50, g: 50, b: 50 };
   const target = { r: 100, g: 100, b: 100 };
-
   if (ratio < 0.7) {
     return `rgb(${start.r}, ${start.g}, ${start.b})`;
   }
-
   const normalized = (ratio - 0.7) / 0.3;
-
   const r = Math.round(start.r + (target.r - start.r) * normalized);
   const g = Math.round(start.g + (target.g - start.g) * normalized);
   const b = Math.round(start.b + (target.b - start.b) * normalized);
-
   return `rgb(${r}, ${g}, ${b})`;
 });
 
 const stripeWidth = computed(() => {
   const ratio = totalLoadRatio.value;
-
   const startWidth = 10;
   const smallWidth = 2;
-
   if (ratio < 0.7) {
     return `${startWidth}px`;
   }
-
   const normalized = (ratio - 0.7) / 0.3;
-
   const width = startWidth - (startWidth - smallWidth) * normalized;
-
   return `${width}px`;
 });
 
-function onClick() {
-  const ship = shipsStore.getById(props.shipId);
-  if (ship) {
-    showBuffer(`SHPI ${ship.registration}`);
-  }
+const containerCursor = computed(() => (props.onClick ? 'pointer' : 'default'));
+
+function handleClick() {
+  props.onClick?.();
 }
 </script>
 
@@ -256,10 +268,18 @@ function onClick() {
     :class="[
       C.ProgressBar.progress,
       $style.container,
-      { [$style.isUpdating]: isAnimating, [$style.tall]: tall },
+      {
+        [$style.isUpdating]: isAnimating,
+        [$style.tall]: tall,
+        [$style.isHazard]: cargoBar.isOverflowing,
+      },
     ]"
-    :style="{ '--stripe-color': stripeAlertColor, '--stripe-width': stripeWidth }"
-    @click="onClick">
+    :style="{
+      '--stripe-color': stripeAlertColor,
+      '--stripe-width': stripeWidth,
+      cursor: containerCursor,
+    }"
+    @click="handleClick">
     <div :class="[$style.bar, miniBarClass]">
       <div
         v-for="segment in cargoBar.segments"
@@ -279,7 +299,6 @@ function onClick() {
 <style module>
 .container {
   margin: 0;
-  cursor: pointer;
   display: flex;
   min-width: 30px;
   width: 100%;
@@ -353,5 +372,48 @@ function onClick() {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.overflow {
+  /* Hazard-tape pattern: saturated bright yellow + black diagonal stripes
+   with a thick red outline and glow. */
+  background-image: repeating-linear-gradient(
+    45deg,
+    #000 0,
+    #000 6px,
+    #fff200 6px,
+    #fff200 12px
+  ) !important;
+  background-color: #fff200 !important;
+  outline: 2px solid #d9534f;
+  outline-offset: -2px;
+  box-shadow: 0 0 6px 2px rgba(255, 242, 0, 0.6);
+  z-index: 2;
+  /* Ensure the overflow indicator is always visible even when the overflow
+     percentage is tiny (e.g. 5% over capacity would otherwise be a sliver). */
+  min-width: 24px;
+}
+
+.isHazard .segment {
+  filter: saturate(0.35) brightness(0.7);
+}
+
+.isHazard .bar {
+  position: relative;
+}
+
+.isHazard .bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0,
+    transparent 6px,
+    rgba(255, 242, 0, 0.35) 6px,
+    rgba(255, 242, 0, 0.35) 12px
+  );
+  pointer-events: none;
+  z-index: 1;
 }
 </style>

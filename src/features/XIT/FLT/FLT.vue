@@ -12,7 +12,7 @@ import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import StatusCell from './StatusCell.vue';
 import TimeCell from './TimeCell.vue';
-import CargoBar from './CargoBar.vue';
+import CargoBar from '@src/components/CargoBar.vue';
 import { fixed0, percent0 } from '@src/utils/format';
 import { timestampEachMinute } from '@src/utils/dayjs';
 import coloredValue from '@src/infrastructure/prun-ui/css/colored-value.module.css';
@@ -1129,11 +1129,16 @@ function getCargoState(cargoRatio: number) {
         </div>
 
         <div v-if="showColCargo" :class="[$style.bodyCell, $style.cargoCell]">
-          <CargoBar :ship-id="x.ship.id" tall />
+          <CargoBar
+            :store="storagesStore.getById(x.ship.idShipStore)"
+            tall
+            @click="showBuffer(`SHPI ${x.ship.registration}`)" />
         </div>
 
         <div v-if="showColCargoSize" :class="[$style.bodyCell, $style.cargoCombinedCell]">
-          <CargoBar :ship-id="x.ship.id" />
+          <CargoBar
+            :store="storagesStore.getById(x.ship.idShipStore)"
+            @click="showBuffer(`SHPI ${x.ship.registration}`)" />
           <div
             :class="[C.ShipStore.pointer, C.ShipStore.store, $style.cargoCombinedSize]"
             @click="showBuffer(`SHPI ${x.ship.registration}`)">

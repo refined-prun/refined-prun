@@ -7,7 +7,6 @@ import { timestampEachMinute } from '@src/utils/dayjs';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { getInvStore } from '@src/core/store-id';
 import fa from '@src/utils/font-awesome.module.css';
-import PrunButton from '@src/components/PrunButton.vue';
 
 const props = defineProps<{
   shipId: string;

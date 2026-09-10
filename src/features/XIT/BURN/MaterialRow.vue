@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MaterialBurn } from '@src/core/burn';
+import { computeNeed, MaterialBurn } from '@src/core/burn';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
 import { fixed0, fixed1, fixed2, trunc0, trunc01, trunc02 } from '@src/utils/format';
@@ -84,16 +84,7 @@ const outClass = computed(() => ({
   [C.ColoredValue.positive]: outAmount.value > 0,
 }));
 
-const needAmt = computed(() => {
-  const resupply = userData.settings.burn.resupply;
-  if (days.value > resupply || production.value >= 0) {
-    return 0;
-  }
-  let need = Math.ceil((days.value - resupply) * production.value);
-  // Math.abs is needed to prevent a "-0" value that can happen
-  // in situations like: 0 * -0.25 => -0.
-  return Math.abs(need);
-});
+const needAmt = computed(() => computeNeed(burn, userData.settings.burn.resupply));
 </script>
 
 <template>
