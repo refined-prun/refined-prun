@@ -82,12 +82,6 @@ Core principle: Everything is a **command** (all-caps 2–6 letter codes). Comma
 - Modal dialogs pause interaction with background
 - Require user to confirm or cancel before proceeding
 
-### Contract Conditions (CONT buffer)
-- Conditions are displayed in a plain `<table>` with rows, not SectionList components
-- The native "FULFILL" button appears for the player's own conditions when the contract status is `CLOSED` or `PARTIALLY_FULFILLED` and the condition status is `PENDING`, `PARTLY_FULFILLED`, or `FULFILLMENT_ATTEMPTED`
-- If a displayed condition cannot be fulfilled yet (e.g., missing materials, funds, or dependencies), the button remains visible but disabled. Other conditions show an empty Cmds cell
-- An active FULFILL button uses `C.Button.success`; an unavailable button uses `C.Button.disabled`. Availability can change through a class change without adding or removing the button
-
 ## Accessibility Notes
 
 - All-caps command language may appear cryptic but is intentional: precise, searchable, unmistakable.
