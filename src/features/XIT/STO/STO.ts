@@ -13,8 +13,7 @@ xit.add({
     }
     return 'Storage Analysis';
   },
-  description:
-    'Per-base storage analysis: current fill %, days-until-full at current production rate, and ship visitation frequency derived from your fleet.',
+  description: 'Per-base storage analysis.',
   optionalParameters: 'PLANET',
   component: () => STO,
   bufferSize: [900, 500],
