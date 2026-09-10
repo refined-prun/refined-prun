@@ -1,6 +1,7 @@
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { stationsStore } from '@src/infrastructure/prun-api/data/stations';
 import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
+import { getBaseStore } from '@src/core/store-id';
 
 const correctableCommands = new Set([
   'ADM',
@@ -37,6 +38,9 @@ export function correctPlanetCommand(parts: string[]) {
   if (args.length === 1) {
     // For example, `LM VH-331a`
     if (planetsStore.getByNaturalId(args[0])) {
+      if (command === 'INV') {
+        redirectInvToBaseStore(parts, args[0]);
+      }
       return;
     }
     // For example, `LM HRT`
@@ -50,5 +54,21 @@ export function correctPlanetCommand(parts: string[]) {
   if (naturalId && joinedArgs !== naturalId) {
     parts.splice(1);
     parts.push(naturalId);
+    if (command === 'INV') {
+      redirectInvToBaseStore(parts, naturalId);
+    }
   }
+}
+
+// Native `INV <planet>` lists every store at the address (base, docked ships,
+// warehouse) whenever more than one is present. Players open those other
+// inventories through their own commands, so redirect straight to the base
+// store here instead.
+function redirectInvToBaseStore(parts: string[], naturalId: string) {
+  const store = getBaseStore(naturalId);
+  if (store === undefined) {
+    return;
+  }
+  parts.splice(1);
+  parts.push(store.id.substring(0, 8));
 }
