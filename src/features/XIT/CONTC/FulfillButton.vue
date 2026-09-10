@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import PrunButton from '@src/components/PrunButton.vue';
-import { fulfillCondition, isFulfillable } from '@src/features/XIT/CONTC/fulfill-condition';
+import { isFulfillable } from '@src/core/contract-conditions';
+import { fulfillCondition } from '@src/infrastructure/prun-ui/utils/fulfill-condition';
 
 const { contract, condition } = defineProps<{
   contract: PrunApi.Contract;

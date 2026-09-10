@@ -3,32 +3,6 @@ import { clickElement } from '@src/util';
 import { waitActionFeedback } from '@src/utils/action-feedback';
 import css from '@src/utils/css-utils.module.css';
 
-const FULFILLABLE_TYPES: ReadonlySet<PrunApi.ContractConditionType> = new Set([
-  'PROVISION',
-  'DELIVERY',
-  'PAYMENT',
-  'PICKUP',
-  'PICKUP_SHIPMENT',
-  'DELIVERY_SHIPMENT',
-  'COMEX_PURCHASE_PICKUP',
-  'PROVISION_SHIPMENT',
-  'LOAN_PAYOUT',
-  'LOAN_INSTALLMENT',
-  'GATEWAY_FUEL',
-  'INFRASTRUCTURE_UPKEEP',
-  'WORKFORCE_PROGRAM_PAYMENT',
-]);
-
-export function isFulfillable(
-  contract: PrunApi.Contract,
-  condition: PrunApi.ContractCondition,
-): boolean {
-  if (contract.status === 'OPEN') {
-    return false;
-  }
-  return FULFILLABLE_TYPES.has(condition.type);
-}
-
 export async function fulfillCondition(
   contract: PrunApi.Contract,
   condition: PrunApi.ContractCondition,
