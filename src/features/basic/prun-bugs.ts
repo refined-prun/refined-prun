@@ -313,7 +313,7 @@ function init() {
   applyCssRule('[data-tooltip-position="bottom"]', $style.tooltipBottom);
   applyCssRule('[data-tooltip-position="right"]', $style.tooltipRight);
 
-  // Fix tooltip clipping
+  // Fix tooltip clipping.
   applyCssRule('[data-tooltip]', $style.hideTooltip);
 
   prepareTooltips();
