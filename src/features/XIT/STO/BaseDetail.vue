@@ -256,7 +256,7 @@ const overflowAmount = computed(() => {
 <style module>
 .detail {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 0.75rem;
   padding: 0.75rem;
 }
