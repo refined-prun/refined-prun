@@ -71,14 +71,7 @@ const analyses = computed<BaseStorageAnalysis[] | undefined>(() => {
   return result;
 });
 
-watchEffect(() => {
-  if (parameters[0] && analyses.value?.length === 1) {
-    const naturalId = analyses.value[0].naturalId;
-    if (!expand.value.includes(naturalId)) {
-      expand.value = [...expand.value, naturalId];
-    }
-  }
-});
+const canMinimize = computed(() => (analyses.value?.length ?? 0) > 1);
 
 const noMatch = computed(
   () => !!parameters[0] && analyses.value !== undefined && analyses.value.length === 0,
@@ -134,7 +127,7 @@ const noMatch = computed(
     <BaseSection
       v-for="analysis in analyses"
       :key="analysis.siteId"
-      can-minimize
+      :can-minimize="canMinimize"
       :analysis="analysis" />
   </table>
 </template>
