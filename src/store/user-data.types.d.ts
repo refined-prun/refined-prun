@@ -7,6 +7,11 @@ declare namespace UserData {
 
   type PricingMethod = 'ASK' | 'BID' | 'AVG' | 'VWAP7D' | 'VWAP30D' | 'DEFAULT' | string;
 
+  interface PriceOverride {
+    buy?: number;
+    sell?: number;
+  }
+
   interface StoreSortingData {
     modes: SortingMode[];
     active?: string;
