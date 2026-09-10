@@ -69,6 +69,13 @@ export function getPlanetBurn(siteOrId?: PrunApi.Site | string | null) {
   return burnBySiteId.value?.get(site.siteId)?.value;
 }
 
+// Treat net daily rates below 0.01 in magnitude as zero.
+const nearZeroDailyAmount = 0.01;
+
+export function clampNearZeroDailyAmount(dailyAmount: number) {
+  return dailyAmount > -nearZeroDailyAmount && dailyAmount < nearZeroDailyAmount ? 0 : dailyAmount;
+}
+
 export function calculatePlanetBurn(
   production: PrunApi.ProductionLine[] | undefined,
   workforces: PrunApi.Workforce[] | undefined,
@@ -156,6 +163,7 @@ export function calculatePlanetBurn(
     if (mat.input > 0 && mat.dailyAmount <= 0) {
       mat.type = 'input';
     }
+    mat.dailyAmount = clampNearZeroDailyAmount(mat.dailyAmount);
     const inv = mat.remainingAllocation + mat.inventory;
     mat.daysLeft = mat.dailyAmount >= 0 ? Number.POSITIVE_INFINITY : inv / -mat.dailyAmount;
   }
