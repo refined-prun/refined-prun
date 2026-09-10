@@ -32,7 +32,7 @@ export interface BaseStorageAnalysis {
   // Projected fill after delivering Need amount for every consumed material.
   needFillPercentWeight: number;
   needFillPercentVolume: number;
-  // Max of the two — the color driver.
+  // Max of the two - the color driver.
   needFillRatio: number;
 
   // Headroom after shipping out produced goods but BEFORE any delivery.
@@ -83,11 +83,11 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
   let addedWeight = 0;
   let addedVolume = 0;
   // Weight/volume of current inventory for strictly-producing (dailyAmount > 0)
-  // materials — these get shipped out during rotation.
+  // materials - these get shipped out during rotation.
   let shippedOutWeight = 0;
   let shippedOutVolume = 0;
   // Weight/volume of current inventory for net-consuming (dailyAmount < 0)
-  // materials — counted toward the "supplies that fit" total (not against).
+  // materials - counted toward the "supplies that fit" total (not against).
   let consumerInventoryWeight = 0;
   let consumerInventoryVolume = 0;
 
@@ -101,7 +101,7 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
       const daily = mb.dailyAmount;
 
       if (daily < 0) {
-        // Net consumer — contributes to import rate.
+        // Net consumer - contributes to import rate.
         const consumption = -daily;
         importWeight += consumption * mat.weight;
         importVolume += consumption * mat.volume;
@@ -163,7 +163,7 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
   // Total consumables the base could hold after ship-out: fill capacity up to
   // (1 - reserve), minus the idle non-consumable load that stays in storage
   // (zero-daily stock that isn't shipped out and isn't consumed). Consumer
-  // inventory counts toward the total — that's what the user is measuring.
+  // inventory counts toward the total - that's what the user is measuring.
   const idleNonConsumableWeight = Math.max(
     store.weightLoad - shippedOutWeight - consumerInventoryWeight,
     0,

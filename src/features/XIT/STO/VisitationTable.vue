@@ -74,9 +74,9 @@ const rows = computed<ShipRow[]>(() => {
         <td>{{ fixed0(row.shipT) }}</td>
         <td>{{ fixed0(row.shipM3) }}</td>
         <td>{{ formatDays(row.exportDays) }}</td>
-        <td>{{ row.exportLimit ?? '—' }}</td>
+        <td>{{ row.exportLimit ?? '-' }}</td>
         <td>{{ formatDays(row.importDays) }}</td>
-        <td>{{ row.importLimit ?? '—' }}</td>
+        <td>{{ row.importLimit ?? '-' }}</td>
       </tr>
     </tbody>
   </table>

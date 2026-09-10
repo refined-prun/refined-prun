@@ -8,7 +8,7 @@ xit.add({
     if (parameters[0]) {
       const site = getSiteFromParameters(parameters);
       if (site) {
-        return `Storage — ${getEntityNameFromAddress(site.address)}`;
+        return `Storage - ${getEntityNameFromAddress(site.address)}`;
       }
     }
     return 'Storage Analysis';

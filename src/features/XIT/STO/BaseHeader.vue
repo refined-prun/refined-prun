@@ -27,7 +27,7 @@ const stripeClass = computed(() => {
 
 const limitTooltip = computed(() => {
   if (analysis.bindingLimit === undefined) {
-    return 'Storage draining — not filling.';
+    return 'Storage draining - not filling.';
   }
   return analysis.bindingLimit === 't'
     ? 'Weight is the binding limit.'
@@ -36,7 +36,7 @@ const limitTooltip = computed(() => {
 
 const supplyTooltip = computed(() => {
   if (!isFinite(analysis.daysOfSuppliesFit)) {
-    return 'No active consumers — no supplies needed.';
+    return 'No active consumers - no supplies needed.';
   }
   const pct = Math.round((1 - analysis.suppliesReserveFraction) * 100);
   const reason =
@@ -136,7 +136,7 @@ const supplyClass = computed(() => {
 
 /* Equal width for both CargoBar cells. Using width:50% on each cell makes
    them split the remaining table width after fixed-size columns (planet,
-   days, cmd) — the bar cells dominate and split evenly. */
+   days, cmd) - the bar cells dominate and split evenly. */
 .barCell {
   width: 50%;
   vertical-align: middle;

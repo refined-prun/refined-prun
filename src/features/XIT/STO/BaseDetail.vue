@@ -99,7 +99,7 @@ const bindingLabel = computed(() => {
   if (analysis.bindingLimit === 'm³') {
     return 'Volume (m³) is the binding dimension';
   }
-  return 'Storage draining — nothing is actively filling it';
+  return 'Storage draining - nothing is actively filling it';
 });
 
 const overflowAmount = computed(() => {
@@ -127,9 +127,9 @@ const overflowAmount = computed(() => {
           <tr>
             <th :class="$style.rowLabel">Capacity</th>
             <td>{{ fixed0(analysis.weightCapacity) }}</td>
-            <td>—</td>
+            <td>-</td>
             <td>{{ fixed0(analysis.volumeCapacity) }}</td>
-            <td>—</td>
+            <td>-</td>
           </tr>
           <tr>
             <th :class="$style.rowLabel">Now</th>
@@ -229,7 +229,7 @@ const overflowAmount = computed(() => {
     </section>
 
     <section :class="[$style.panel, $style.purple]">
-      <h3 :class="$style.title">Adding — Resupply Needs ({{ adding.length }} materials)</h3>
+      <h3 :class="$style.title">Adding - Resupply Needs ({{ adding.length }} materials)</h3>
       <div v-if="adding.length === 0" :class="$style.empty">Nothing needs resupply right now.</div>
       <table v-else :class="$style.numTable">
         <thead>
