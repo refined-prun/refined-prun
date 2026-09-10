@@ -25,7 +25,7 @@ function setLocation(event: MouseEvent) {
   }
 }
 
-export const store = reactive({
+const store = reactive({
   materialID: '',
   menuStyle: {
     display: 'none',
@@ -76,7 +76,18 @@ async function init() {
   materialSelector = `.${C.ColoredIcon.container}`;
   const container = document.getElementById('container');
   if (container?.parentElement) {
-    const componentInstance = createFragmentApp(MarketMenu).appendTo(container);
+    const componentInstance = createFragmentApp(
+      MarketMenu,
+      reactive({
+        materialID: computed(() => store.materialID),
+        menuStyle: store.menuStyle,
+        selectedExchange: computed(() => userData.settings.contextMenuExchange),
+        onCommand: (x: string) => store.showBuffer(x),
+        onExchangeChange: (x: UserData.Exchange) => {
+          userData.settings.contextMenuExchange = x;
+        },
+      }),
+    ).appendTo(container);
     menuElement = componentInstance.$el as HTMLElement;
   }
   document.addEventListener('contextmenu', event => {

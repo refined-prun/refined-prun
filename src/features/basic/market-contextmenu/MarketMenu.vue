@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import fa from '@src/utils/font-awesome.module.css';
 import PrunButton from '@src/components/PrunButton.vue';
-import { userData } from '@src/store/user-data';
-import { store } from './market-contextmenu';
+import { CSSProperties } from 'vue';
+
+const { materialID, menuStyle, selectedExchange, onCommand, onExchangeChange } = defineProps<{
+  materialID: string;
+  menuStyle: CSSProperties;
+  selectedExchange: UserData.Exchange;
+  onCommand: (cmd: string) => void;
+  onExchangeChange: (exchange: UserData.Exchange) => void;
+}>();
 
 const exchanges: UserData.Exchange[] = ['AI1', 'CI1', 'CI2', 'IC1', 'NC1', 'NC2'];
 const buttons: [string, string][] = [
@@ -15,15 +22,15 @@ const buttons: [string, string][] = [
 </script>
 
 <template>
-  <div id="market_contextmenu" :class="$style.contextMenu" :style="store.menuStyle">
-    <div v-if="store.materialID">
+  <div id="market_contextmenu" :class="$style.contextMenu" :style="menuStyle">
+    <div v-if="materialID">
       <div>
         <PrunButton
           v-for="cmd in buttons"
           :key="cmd[1]"
           :dark="true"
           :class="$style.prunButton"
-          @click="store.showBuffer(cmd[1])">
+          @click="onCommand(cmd[1])">
           {{ cmd[0] }}
         </PrunButton>
       </div>
@@ -36,7 +43,7 @@ const buttons: [string, string][] = [
               C.fonts.fontRegular,
               $style.exchangeSelect,
             ]">
-            {{ userData.settings.contextMenuExchange }}
+            {{ selectedExchange }}
           </span>
           <span
             :class="[
@@ -52,10 +59,10 @@ const buttons: [string, string][] = [
             <PrunButton
               v-for="exchange in exchanges"
               :key="exchange"
-              :dark="userData.settings.contextMenuExchange !== exchange"
-              :primary="userData.settings.contextMenuExchange === exchange"
+              :dark="selectedExchange !== exchange"
+              :primary="selectedExchange === exchange"
               :class="$style.prunButton"
-              @click="userData.settings.contextMenuExchange = exchange">
+              @click="onExchangeChange(exchange)">
               {{ exchange }}
             </PrunButton>
           </div>
