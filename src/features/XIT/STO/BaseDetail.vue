@@ -200,9 +200,9 @@ const overflowAmount = computed(() => {
           reservePercent
         }}% reserved for {{ reserveReason }}). Includes consumables already in storage.
       </div>
-      <div :class="$style.note"
-        >Current resupply target: {{ userData.settings.burn.resupply }} days.</div
-      >
+      <div :class="$style.note">
+        Current resupply target: {{ userData.settings.burn.resupply }} days.
+      </div>
     </section>
 
     <section :class="[$style.panel, $style.orange]">
