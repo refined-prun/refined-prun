@@ -9,8 +9,9 @@ function formatCogcLabel(programType?: string | null) {
     lookupLocalization(L.CoGCProgram, `${programType}_SHORT`)() ??
     programType
       .replace(/^(ADVERTISING|WORKFORCE)_/, '')
-      .replace(/^\w/, c => c.toUpperCase())
-      .replace(/\w+$/, c => c.toLowerCase());
+      .split('_')
+      .map(word => word.charAt(0) + word.slice(1).toLowerCase())
+      .join(' ');
   return `CoGC (${localized})`;
 }
 
