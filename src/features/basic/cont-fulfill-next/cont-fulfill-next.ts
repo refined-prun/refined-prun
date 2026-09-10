@@ -1,8 +1,18 @@
 import FulfillButton from './FulfillButton.vue';
 import Commands from '@src/components/forms/Commands.vue';
 import $style from './cont-fulfill-next.module.css';
+import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
+import { isFulfillable } from '@src/core/contract-conditions';
 
 function onTileReady(tile: PrunTile) {
+  const contract = computed(() => contractsStore.getByLocalId(tile.parameter!));
+  const isVisible = computed(
+    () => contract.value?.status === 'CLOSED' || contract.value?.status === 'PARTIALLY_FULFILLED',
+  );
+  const count = computed(
+    () => contract.value?.conditions.filter(x => isFulfillable(contract.value, x)).length ?? 0,
+  );
+
   subscribe($$(tile.anchor, C.FormComponent.containerPassive), container => {
     // Some contracts don't have the "CMD" form component, so we create it manually.
     const nextElement = container.nextElementSibling;
@@ -25,7 +35,8 @@ function onTileReady(tile: PrunTile) {
     createFragmentApp(
       FulfillButton,
       reactive({
-        contractId: tile.parameter!,
+        isVisible,
+        count,
         onClick: () => {
           const table = _$(tile.anchor, 'table');
           if (!table) {
