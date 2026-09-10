@@ -1,5 +1,6 @@
 import FulfillButton from './FulfillButton.vue';
 import Commands from '@src/components/forms/Commands.vue';
+import $style from './cont-fulfill-next.module.css';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.FormComponent.containerPassive), container => {
@@ -13,7 +14,7 @@ function onTileReady(tile: PrunTile) {
       return;
     }
 
-    createFragmentApp(Commands).after(container);
+    createFragmentApp(Commands, { class: $style.commands }).after(container);
   });
 
   subscribe($$(tile.anchor, C.FormComponent.containerCommand), container => {
