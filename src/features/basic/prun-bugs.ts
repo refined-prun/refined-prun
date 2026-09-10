@@ -194,42 +194,42 @@ function prepareTooltips() {
     attributeFilter: ['data-tooltip', 'data-tooltip-position'],
     subtree: true,
   });
-  document.addEventListener('pointerover', e => {
-    if (!(e.target instanceof Element)) {
+  document.addEventListener('pointerover', x => {
+    if (!(x.target instanceof Element)) {
       return;
     }
-    const target = e.target.closest('[data-tooltip]');
+    const target = x.target.closest('[data-tooltip]');
     if (!target || activeTarget === target) {
       return;
     }
     showTooltip(target);
   });
-  document.addEventListener('pointerout', e => {
-    if (!(e.target instanceof Element)) {
+  document.addEventListener('pointerout', x => {
+    if (!(x.target instanceof Element)) {
       return;
     }
-    const target = e.target.closest('[data-tooltip]');
-    if (!target || (e.relatedTarget instanceof Node && target.contains(e.relatedTarget))) {
+    const target = x.target.closest('[data-tooltip]');
+    if (!target || (x.relatedTarget instanceof Node && target.contains(x.relatedTarget))) {
       return;
     }
     hideTooltip(target);
   });
-  document.addEventListener('focusin', e => {
-    if (!(e.target instanceof Element)) {
+  document.addEventListener('focusin', x => {
+    if (!(x.target instanceof Element)) {
       return;
     }
-    const target = e.target.closest('[data-tooltip]');
+    const target = x.target.closest('[data-tooltip]');
     if (!target || activeTarget === target) {
       return;
     }
     showTooltip(target);
   });
-  document.addEventListener('focusout', e => {
-    if (!(e.target instanceof Element)) {
+  document.addEventListener('focusout', x => {
+    if (!(x.target instanceof Element)) {
       return;
     }
-    const target = e.target.closest('[data-tooltip]');
-    if (!target || (e.relatedTarget instanceof Node && target.contains(e.relatedTarget))) {
+    const target = x.target.closest('[data-tooltip]');
+    if (!target || (x.relatedTarget instanceof Node && target.contains(x.relatedTarget))) {
       return;
     }
     hideTooltip(target);
