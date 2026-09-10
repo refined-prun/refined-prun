@@ -16,7 +16,7 @@ interface StepMachineOptions {
   onActReady: () => void;
 }
 
-const AssertionError = new Error('Assertion failed');
+const CancellationError = new Error('The action was cancelled');
 
 export class StepMachine {
   private next?: ActionStep;
@@ -105,15 +105,13 @@ export class StepMachine {
           });
           if (result === 'cancel') {
             log.cancel('Action Package execution canceled');
-            this.stop();
-            return;
+            throw CancellationError;
           }
           if (result === 'error') {
             log.error(message);
             log.error(description ?? info.description(next));
             log.error('Action Package execution failed');
-            this.stop();
-            return;
+            throw CancellationError;
           }
         },
         cacheDescription: () => {
@@ -132,19 +130,18 @@ export class StepMachine {
             log.error(message);
           }
           log.error('Action Package execution failed');
-          this.stop();
-          return;
+          throw CancellationError;
         },
         assert: (condition, message) => {
           if (!condition) {
             log.error(message);
-            throw AssertionError;
+            throw CancellationError;
           }
         },
         requestTile: async command => await this.requestTile(command),
       });
     } catch (e) {
-      if (e !== AssertionError) {
+      if (e !== CancellationError) {
         log.runtimeError(e);
       }
       this.stop();
@@ -161,7 +158,7 @@ export class StepMachine {
     tile = await this.options.tileAllocator.requestTile(command);
     if (tile === undefined) {
       this.log.error(`Failed to open ${command}`);
-      this.stop();
+      throw CancellationError;
     }
     return tile;
   }

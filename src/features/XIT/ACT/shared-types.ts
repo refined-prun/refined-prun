@@ -51,7 +51,7 @@ export interface ActionStepExecuteContext<T> extends ActionRunnerContext<T> {
   cacheDescription: () => void;
   complete: () => void;
   skip: () => void;
-  fail: (message?: string) => void;
+  fail: (message?: string) => never;
   assert: AssertFn;
   requestTile: (Command: string) => Promise<PrunTile | undefined>;
 }
