@@ -44,10 +44,6 @@ async function onClick() {
 </template>
 
 <style module>
-.button {
-  margin-left: 4px;
-}
-
 .error {
   background-image: repeating-linear-gradient(
     -45deg,

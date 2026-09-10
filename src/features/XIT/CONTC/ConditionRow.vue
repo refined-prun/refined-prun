@@ -50,8 +50,16 @@ const eta = computed(() => {
     <td>
       <ConditionText :condition="condition" />
     </td>
-    <td>
+    <td :class="$style.fulfillCell">
       <FulfillButton :contract="contract" :condition="condition" />
     </td>
   </tr>
 </template>
+
+<style module>
+.fulfillCell {
+  padding: 2px 4px;
+  width: 0;
+  height: 0;
+}
+</style>
