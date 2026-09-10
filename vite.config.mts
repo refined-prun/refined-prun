@@ -7,7 +7,7 @@ import { createHash } from 'crypto';
 
 const isDev = process.env.NODE_ENV === 'development';
 
-const srcDir = resolve(__dirname, 'src');
+const srcDir = resolve(import.meta.dirname, 'src');
 
 const noise = new Set([
   'index',
@@ -24,7 +24,7 @@ const noise = new Set([
   'built',
 ]);
 
-const outDir = resolve(__dirname, 'dist');
+const outDir = resolve(import.meta.dirname, 'dist');
 
 export default defineConfig({
   resolve: {
@@ -63,7 +63,7 @@ export default defineConfig({
       },
     }),
   ],
-  publicDir: resolve(__dirname, 'public'),
+  publicDir: resolve(import.meta.dirname, 'public'),
   build: {
     outDir,
     emptyOutDir: true,

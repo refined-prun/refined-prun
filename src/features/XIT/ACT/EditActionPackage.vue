@@ -17,6 +17,7 @@ import { vDraggable } from 'vue-draggable-plus';
 import { grip } from '@src/components/grip';
 import GripCell from '@src/components/grip/GripCell.vue';
 import GripHeaderCell from '@src/components/grip/GripHeaderCell.vue';
+import { isValidPackageName } from '@src/features/XIT/ACT/utils';
 
 const { pkg } = defineProps<{ pkg: UserData.ActionPackageData }>();
 
@@ -77,6 +78,12 @@ function getActionDescription(action: UserData.ActionData) {
   return info ? info.description(action) : '--';
 }
 
+function validatePackageName(name: string) {
+  return isValidPackageName(name)
+    ? true
+    : 'Invalid action package name. Use only letters, numbers, spaces, periods, and hyphens.';
+}
+
 function onRenameClick(ev: Event) {
   showTileOverlay(ev, RenameActionPackage, {
     name: pkg.global.name,
@@ -95,7 +102,11 @@ function onExportClick() {
 </script>
 
 <template>
-  <Header v-model="pkg.global.name" editable :class="$style.header" />
+  <Header
+    v-model="pkg.global.name"
+    editable
+    :validate="validatePackageName"
+    :class="$style.header" />
   <SectionHeader>Material Groups</SectionHeader>
   <table>
     <thead>

@@ -167,6 +167,7 @@ Selectors are **not CSS selector strings**. Internally they resolve to `getEleme
 
 Valid selectors:
 - `C.ComponentName.className` — a PrUn CSS class name (preferred)
+- `ElementTag.*` — a semantic Refined PrUn tag registered in `tagger.ts`
 - HTML tag names: `'div'`, `'tr'`, `'td'`, etc
 
 ### `$` — Async Single Element (Gate Pattern)
@@ -418,6 +419,26 @@ const line = computed(() => productionStore.getById(tile.parameter));
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 showBuffer('CXM AI1.RAT');  // opens a buffer with the given command
+```
+
+---
+
+## Tile Overlays
+
+```ts
+import {
+  showTileOverlay,
+  showConfirmationOverlay,
+  showErrorOverlay,
+  showSuccessOverlay,
+} from '@src/infrastructure/prun-ui/tile-overlay';
+
+// Pass the event from the user action so that the show function can find the correct tile.
+showTileOverlay(event, EditorComponent, props);
+showConfirmationOverlay(event, onConfirm, { message: 'Are you sure?' });
+showErrorOverlay(event, 'Illegal arguments.');
+showSuccessOverlay(event); // Uses the localized default message.
+showSuccessOverlay(event, 'Package renamed.');
 ```
 
 ---

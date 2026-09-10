@@ -29,6 +29,22 @@ export function changeInputValue(input: HTMLInputElement, value: string) {
   input.dispatchEvent(changeEvent);
 }
 
+export function selectAndChangeInputValue(input: HTMLInputElement, value: string) {
+  focusElement(input);
+  input.select();
+  changeInputValue(input, value);
+}
+
+export function changeTextAreaValue(textarea: HTMLTextAreaElement, value: string) {
+  // React overrides the native property, so we can't use it directly.
+  const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value');
+  setter!.set!.call(textarea, value);
+  const event = new InputEvent('input', { bubbles: true, cancelable: true });
+  textarea.dispatchEvent(event);
+  const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+  textarea.dispatchEvent(changeEvent);
+}
+
 export function changeSelectIndex(input, selectIndex) {
   // React overrides the native property, so we can't use it directly.
   const setter = Object.getOwnPropertyDescriptor(
