@@ -48,8 +48,8 @@ export function deserializeStorage(serializedName: string | undefined) {
       .getByAddressableId(warehouse?.warehouseId)
       ?.find(x => x.type === 'WAREHOUSE_STORE');
   }
-  const ship = shipsStore.getByName(name);
   name = extractName(serializedName, 'Cargo');
+  const ship = shipsStore.getByName(name);
   if (name) {
     return storagesStore.getById(ship?.idShipStore);
   }

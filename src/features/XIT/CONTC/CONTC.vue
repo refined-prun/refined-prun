@@ -9,6 +9,7 @@ import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import ConditionRow from '@src/features/XIT/CONTC/ConditionRow.vue';
 import { isEmpty } from 'ts-extras';
 import { compareConditions } from './compare-conditions';
+import { isFulfillable } from '@src/core/contract-conditions';
 
 const partnerViolated = computed(() =>
   partnerCurrentConditions.value!.filter(
@@ -33,6 +34,11 @@ const nonCurrent = computed(() =>
     .value!.filter(x => x.dependencies.every(x => x.status === 'FULFILLED'))
     .toSorted((a, b) => compareConditions(a.condition, b.condition)),
 );
+
+const showFulfill = computed(() =>
+  [...current.value, ...nonCurrent.value].some(x => isFulfillable(x.contract, x.condition)),
+);
+const columnCount = computed(() => (showFulfill.value ? 4 : 3));
 </script>
 
 <template>
@@ -43,12 +49,13 @@ const nonCurrent = computed(() =>
         <th>Contract</th>
         <th>Deadline</th>
         <th>Condition</th>
+        <th v-if="showFulfill"></th>
       </tr>
     </thead>
     <template v-if="partnerViolated.length > 0">
       <thead>
         <tr>
-          <th colspan="3">Violated Conditions (Partner)</th>
+          <th :colspan="columnCount">Violated Conditions (Partner)</th>
         </tr>
       </thead>
       <tbody>
@@ -57,13 +64,14 @@ const nonCurrent = computed(() =>
           :key="x.condition.id"
           :contract="x.contract"
           :condition="x.condition"
-          :deadline="x.deadline" />
+          :deadline="x.deadline"
+          :show-fulfill="showFulfill" />
       </tbody>
     </template>
     <template v-if="currentViolated.length > 0">
       <thead>
         <tr>
-          <th colspan="3">Violated Conditions (Self)</th>
+          <th :colspan="columnCount">Violated Conditions (Self)</th>
         </tr>
       </thead>
       <tbody>
@@ -72,17 +80,18 @@ const nonCurrent = computed(() =>
           :key="x.condition.id"
           :contract="x.contract"
           :condition="x.condition"
-          :deadline="x.deadline" />
+          :deadline="x.deadline"
+          :show-fulfill="showFulfill" />
       </tbody>
     </template>
     <thead>
       <tr>
-        <th colspan="3">Current Conditions</th>
+        <th :colspan="columnCount">Current Conditions</th>
       </tr>
     </thead>
     <tbody>
       <tr v-if="isEmpty(currentNonViolated)">
-        <td colspan="3">No pending conditions</td>
+        <td :colspan="columnCount">No pending conditions</td>
       </tr>
       <template v-else>
         <ConditionRow
@@ -90,17 +99,18 @@ const nonCurrent = computed(() =>
           :key="x.condition.id"
           :contract="x.contract"
           :condition="x.condition"
-          :deadline="x.deadline" />
+          :deadline="x.deadline"
+          :show-fulfill="showFulfill" />
       </template>
     </tbody>
     <thead>
       <tr>
-        <th colspan="3">Non-Current Conditions</th>
+        <th :colspan="columnCount">Non-Current Conditions</th>
       </tr>
     </thead>
     <tbody>
       <tr v-if="isEmpty(nonCurrent)">
-        <td colspan="3">No pending conditions</td>
+        <td :colspan="columnCount">No pending conditions</td>
       </tr>
       <template v-else>
         <ConditionRow
@@ -108,7 +118,8 @@ const nonCurrent = computed(() =>
           :key="x.condition.id"
           :contract="x.contract"
           :condition="x.condition"
-          :deadline="x.deadline" />
+          :deadline="x.deadline"
+          :show-fulfill="showFulfill" />
       </template>
     </tbody>
   </table>

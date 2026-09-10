@@ -173,12 +173,14 @@ Experts provide fixed bonus multipliers to production line efficiency in their i
 - Custom ships built via blueprints at planetary shipyards.
 - Ship components: STL engine, FTL reactor, fuel tanks, cargo bay, hull/shielding/stability upgrades.
 - Mandatory components: STL engine, STL fuel tank, cargo bay, hull plates.
+- A ship can only have an FTL or Vortex fuel store; one ship cannot have both.
 - Ships take damage from: STL/FTL flight, atmospheric conditions, gravity stress, radiation.
 - Ships below 80% condition become slower; repair via SHP command (can be done at the shipyard or space station).
 
 ### Flight
 - **STL (Slower Than Light)**: Travel within systems. Uses STL fuel. Lower fuel usage = longer flight, lower cost. STL flight uses simulated orbital mechanics.
 - **FTL (Faster Than Light)**: Jump between systems via FTL routes (shown as lines on universe map). Uses FTL fuel. Ships must be far enough from celestial bodies before FTL jump, drop out safely away from targets. Reactor overcharge increases damage for faster jumps. FTL flight is a linear path, compared to STL.
+- **Vortex**: Colony Ships with Vortex engines can cross interstellar distances without established FTL links. They can reach frontier sectors that conventional FTL routes do not connect.
 - Flights are split in segments, for example: DEP (departure from planet), JMP (jump), CHRG (charging FTL engine), APP (approach to target).
 - Aborting flight: finishes current segment; CHRG aborts still complete the ensuing jump; JMP aborts land in random orbit.
 - Fuel deducted per segment at segment start.

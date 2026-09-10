@@ -4,12 +4,29 @@
 
 ### Added
 
+- `CONT`: Added a fulfill-next button with pending condition count (`cont-fulfill-next`)
+- `INV`: Added in-flight ship destinations to the Location column (`inv-ship-destination-location`)
+- `INV`: Added ship names to the Name column (`inv-ship-names`)
+- `XIT ACT`: Added descriptions to the action and material group type fields
+- `XIT ACT`: Added "Paste" material group
+- `XIT ACT`: Added "CONT Ship" and "CONT Trade" actions
+- `XIT CONTC`: Added fulfill buttons to fulfillable conditions
+- `XIT FLT`: Enhanced fleet table with detailed status, cargo, fuel, and quick actions
+- `XIT FLOW`: Shows daily production, consumption, and value of each material across bases
+- `XIT STO`: Per-base storage analysis
 - Added a notification count badge to the browser tab favicon (`favicon-notification-badge`)
+- Added a right-click market context menu for materials (`market-context-menu`)
 
 ### Changed
 
+- `COM`: The text in backticks now renders as command links (`chat-command-links`)
 - `FXPO`: The "Maximum Lot Size" field now sets a more precise price (`fxpo-maximum-lot-size`)
+- `SFC`: The buffer now closes without delay on flight start (`sfc-auto-close`)
+- `XIT ACT`: The package name title now validates the new name before saving
 - `XIT CONTC`: The conditions with no deadline are now grouped and sorted
+- `XIT CONTS`: Fulfillable conditions can now be clicked to fulfill
+- `XIT FXTS`: Day totals now include both sides of trades
+- `XIT PRUNSTAT`: Switched to raylu's fork
 
 ### Fixed
 
@@ -19,6 +36,8 @@
 - `XIT ACT`: Fixed the "Unknown action feedback overlay" error when CX Buy places an order outside the price band
 - `XIT BURN`: Fixed the TSV export reporting double the inventory in the "Inv" column
 - `XIT BURN`: Fixed workforce allocation accumulation across tiers
+- `XIT BURN`: Fixed color filters not matching fractional-day colors
+- `XIT BURN`: Fixed inventory values rounding up
 
 ## 26.6.22.2033
 
