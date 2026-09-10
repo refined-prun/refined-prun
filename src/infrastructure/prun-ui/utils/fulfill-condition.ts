@@ -29,10 +29,8 @@ export async function fulfillCondition(
     // Wait for the conditions table to render.
     await $(tile.anchor, 'tbody');
 
-    // Find the row matching our condition's index.
-    // Conditions are sorted by index in the CONT table.
-    const sorted = [...contract.conditions].sort((a, b) => a.index - b.index);
-    const idx = sorted.findIndex(x => x.id === condition.id);
+    // The CONT table renders conditions in their array order.
+    const idx = contract.conditions.findIndex(x => x.id === condition.id);
     if (idx < 0) {
       return { success: false, error: 'Could not find condition in contract.' };
     }
