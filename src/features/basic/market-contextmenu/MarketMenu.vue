@@ -96,7 +96,7 @@ const buttons: [string, string][] = [
 .exchangeList {
   position: absolute;
   display: none;
-  top: 0%;
+  top: 0;
   left: 100%;
 }
 
@@ -117,10 +117,7 @@ const buttons: [string, string][] = [
   font-size: 10px;
   line-height: 11px;
   text-transform: none;
-  padding-top: 1px;
-  padding-bottom: 1px;
-  padding-left: 6px;
-  padding-right: 6px;
+  padding: 1px 6px;
   width: 100%;
 }
 
