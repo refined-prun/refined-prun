@@ -1,15 +1,10 @@
 import FulfillButton from './FulfillButton.vue';
 import Commands from '@src/components/forms/Commands.vue';
-import { refAnimationFrame } from '@src/utils/reactive-dom';
+import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
+import { isFulfillable } from '@src/core/contract-conditions';
 
 function onTileReady(tile: PrunTile) {
-  let fulfillButtons: HTMLCollectionOf<HTMLButtonElement> | undefined = undefined;
-
-  subscribe($$(tile.anchor, 'table'), table => {
-    fulfillButtons = table.getElementsByClassName(
-      C.Button.success,
-    ) as HTMLCollectionOf<HTMLButtonElement>;
-  });
+  const contract = computed(() => contractsStore.getByLocalId(tile.parameter));
 
   subscribe($$(tile.anchor, C.FormComponent.containerPassive), container => {
     // Some contracts don't have the "CMD" form component, so we create it manually.
@@ -25,15 +20,13 @@ function onTileReady(tile: PrunTile) {
     createFragmentApp(Commands).after(container);
   });
 
-  const fulfillableCount = refAnimationFrame(tile.anchor, () => fulfillButtons?.length ?? 0);
-
-  const onFulfillNext = () => {
-    const buttons = _$$(tile.anchor, C.Button.success);
-    const fulfillBtn = buttons.find(x => x.textContent?.trim().toLowerCase() === 'fulfill');
-    if (fulfillBtn) {
-      fulfillBtn.click();
+  const fulfillableCount = computed(() => {
+    if (!contract.value) {
+      return 0;
     }
-  };
+
+    return contract.value.conditions.filter(x => isFulfillable(contract.value!, x)).length;
+  });
 
   subscribe($$(tile.anchor, C.FormComponent.containerCommand), container => {
     if (container.nextElementSibling?.classList.contains(C.FormComponent.containerPassive)) {
@@ -42,7 +35,17 @@ function onTileReady(tile: PrunTile) {
 
     createFragmentApp(
       FulfillButton,
-      reactive({ count: fulfillableCount, onClick: onFulfillNext }),
+      reactive({
+        count: fulfillableCount,
+        onClick: () => {
+          const table = _$(tile.anchor, 'table');
+          if (!table) {
+            return;
+          }
+          const button = _$(table, C.Button.success);
+          button?.click();
+        },
+      }),
     ).appendTo(container);
   });
 }
