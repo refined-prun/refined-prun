@@ -10,6 +10,7 @@
 - `XIT ACT`: Added "Paste" material group
 - `XIT ACT`: Added "CONT Ship" and "CONT Trade" actions
 - `XIT FLT`: Enhanced fleet table with detailed status, cargo, fuel, and quick actions
+- `XIT FLOW`: Shows daily production, consumption, and value of each material across bases
 - `XIT STO`: Per-base storage analysis
 - Added a notification count badge to the browser tab favicon (`favicon-notification-badge`)
 
