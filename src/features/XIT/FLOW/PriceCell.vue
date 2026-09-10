@@ -100,18 +100,15 @@ function cancel() {
 /* Overlay the editor on the cell so opening it never changes the table layout. */
 .input {
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: stretch;
-
-  & > div {
-    display: flex;
-    width: 100%;
-  }
+  top: 50%;
+  right: 5px;
+  width: 12ch;
+  max-width: calc(100% - 10px);
+  transform: translateY(-50%);
 
   & input {
     width: 100%;
-    height: 100%;
+    min-width: 0;
     box-sizing: border-box;
     text-align: right;
   }
