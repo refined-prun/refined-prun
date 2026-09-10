@@ -3,7 +3,7 @@ import { ActionStep } from '@src/features/XIT/ACT/shared-types';
 import { Logger } from '@src/features/XIT/ACT/runner/logger';
 import { TileAllocator } from '@src/features/XIT/ACT/runner/tile-allocator';
 import { sleep } from '@src/utils/sleep';
-import { waitActionFeedback } from '@src/utils/action-feedback';
+import { waitActionFeedback } from '@src/infrastructure/prun-ui/utils/action-feedback';
 
 interface StepMachineOptions {
   tile: PrunTile;

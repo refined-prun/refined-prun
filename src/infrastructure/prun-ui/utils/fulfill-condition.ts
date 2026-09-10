@@ -1,6 +1,6 @@
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { clickElement } from '@src/util';
-import { waitActionFeedback } from '@src/utils/action-feedback';
+import { waitActionFeedback } from '@src/infrastructure/prun-ui/utils/action-feedback';
 import css from '@src/utils/css-utils.module.css';
 
 export async function fulfillCondition(
