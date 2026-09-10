@@ -50,4 +50,8 @@ function init() {
   tiles.observe('CONT', onTileReady);
 }
 
-features.add(import.meta.url, init, 'CONT: Adds fulfill-next button and pending condition count.');
+features.add(
+  import.meta.url,
+  init,
+  'CONT: Adds a fulfill-next button with pending condition count.',
+);
