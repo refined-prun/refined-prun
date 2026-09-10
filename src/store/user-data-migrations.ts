@@ -19,7 +19,7 @@ const migrations: MigrationEntry[] = [
   [
     '10.09.2026 Add contextMenuExchange setting',
     userData => {
-      userData.settings.contextMenuExchange ??= 'AI1' as UserData.Exchange;
+      userData.settings.contextMenuExchange ??= 'AI1';
     },
   ],
   [
