@@ -18,7 +18,7 @@ interface MaterialRow {
 
 const planetBurn = computed(() => getPlanetBurn(analysis.siteId));
 
-const shippingOut = computed<MaterialRow[]>(() => {
+const shippingOut = computed(() => {
   const pb = planetBurn.value;
   if (!pb) {
     return [];
@@ -44,7 +44,7 @@ const shippingOut = computed<MaterialRow[]>(() => {
   return rows;
 });
 
-const adding = computed<MaterialRow[]>(() => {
+const adding = computed(() => {
   const pb = planetBurn.value;
   if (!pb) {
     return [];

@@ -40,7 +40,7 @@ const fakeAnalysis: BaseStorageAnalysis = {
 const parameters = useXitParameters();
 const planetParameter = parameters.join(' ');
 
-const analyses = computed<BaseStorageAnalysis[] | undefined>(() => {
+const analyses = computed(() => {
   if (!sitesStore.all.value) {
     return undefined;
   }
@@ -49,7 +49,7 @@ const analyses = computed<BaseStorageAnalysis[] | undefined>(() => {
     const match = getSiteFromParameters(parameters);
     sites = match ? [match] : [];
   }
-  const result = sites.map(getBaseStorageAnalysis).filter((x): x is BaseStorageAnalysis => !!x);
+  const result = sites.map(getBaseStorageAnalysis).filter(x => !!x);
   result.sort((a, b) => {
     const aInf = !isFinite(a.daysUntilFull);
     const bInf = !isFinite(b.daysUntilFull);
