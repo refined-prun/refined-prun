@@ -1,4 +1,11 @@
 import { fixed01 } from '@src/utils/format';
+import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
+import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
+
+export function getSiteFromParameters(parameters: string[]) {
+  const naturalId = convertToPlanetNaturalId(parameters.join(' '), parameters);
+  return sitesStore.getByPlanetNaturalId(naturalId);
+}
 
 // Days ≥ 1000 collapse to "∞" so very-large values don't clutter the UI.
 export function formatDays(days: number): string {

@@ -5,7 +5,7 @@ import BaseSection from '@src/features/XIT/STO/BaseSection.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import InlineFlex from '@src/components/InlineFlex.vue';
 import Tooltip from '@src/components/Tooltip.vue';
-import { useTileState } from '@src/features/XIT/STO/tile-state';
+import { getSiteFromParameters } from '@src/features/XIT/STO/utils';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { comparePlanets } from '@src/util';
@@ -40,7 +40,7 @@ const fakeAnalysis: BaseStorageAnalysis = {
 };
 
 const parameters = useXitParameters();
-const expand = useTileState('expand');
+const planetParameter = parameters.join(' ');
 
 const analyses = computed<BaseStorageAnalysis[] | undefined>(() => {
   if (!sitesStore.all.value) {
@@ -48,7 +48,7 @@ const analyses = computed<BaseStorageAnalysis[] | undefined>(() => {
   }
   let sites = sitesStore.all.value;
   if (parameters[0]) {
-    const match = sitesStore.getByPlanetNaturalIdOrName(parameters[0]);
+    const match = getSiteFromParameters(parameters);
     sites = match ? [match] : [];
   }
   const result = sites.map(getBaseStorageAnalysis).filter((x): x is BaseStorageAnalysis => !!x);
@@ -80,7 +80,7 @@ const noMatch = computed(
 
 <template>
   <LoadingSpinner v-if="analyses === undefined" />
-  <div v-else-if="noMatch" :class="$style.empty">No base matches "{{ parameters[0] }}"</div>
+  <div v-else-if="noMatch" :class="$style.empty">No base matches "{{ planetParameter }}"</div>
   <div v-else-if="analyses.length === 0" :class="$style.empty">No bases yet</div>
   <table v-else>
     <thead>
