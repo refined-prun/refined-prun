@@ -7,7 +7,12 @@ declare namespace UserData {
 
   type PricingMethod = 'ASK' | 'BID' | 'AVG' | 'VWAP7D' | 'VWAP30D' | 'DEFAULT' | string;
 
-  export type Exchange = 'AI1' | 'CI1' | 'CI2' | 'IC1' | 'NC1' | 'NC2';
+  type Exchange = 'AI1' | 'CI1' | 'CI2' | 'IC1' | 'NC1' | 'NC2';
+
+  interface PriceOverride {
+    buy?: number;
+    sell?: number;
+  }
 
   interface StoreSortingData {
     modes: SortingMode[];
@@ -50,7 +55,7 @@ declare namespace UserData {
     };
   }
 
-  type MaterialGroupType = 'Manual' | 'Resupply' | 'Repair';
+  type MaterialGroupType = 'Manual' | 'Resupply' | 'Repair' | 'Paste';
 
   interface MaterialGroupData {
     type: MaterialGroupType;
@@ -64,7 +69,7 @@ declare namespace UserData {
     consumablesOnly?: boolean;
   }
 
-  type ActionType = 'CX Buy' | 'MTRA';
+  type ActionType = 'CX Buy' | 'MTRA' | 'Refuel' | 'CONT Ship' | 'CONT Trade';
 
   interface ActionData {
     type: ActionType;
@@ -72,22 +77,38 @@ declare namespace UserData {
     name?: string;
     group?: string;
 
+    allowUnfilled?: boolean;
     buyPartial?: boolean;
     exchange?: string;
     useCXInv?: boolean;
     priceLimits?: Record<string, number>;
 
+    buyMissingFuel?: boolean;
+
     origin?: string;
     dest?: string;
+
+    // CONT Ship specific.
+    currency?: string;
+    contractNote?: string;
+    paymentPerTon?: number;
+    daysToFulfill?: number;
+    contOrigin?: string;
+    contDest?: string;
+    autoProvision?: boolean;
+
+    // CONT Trade specific.
+    contTradeType?: 'BUYING' | 'SELLING';
+    contLocation?: string;
   }
 
-  export interface TaskList {
+  interface TaskList {
     id: string;
     name: string;
     tasks: Task[];
   }
 
-  export interface Task {
+  interface Task {
     id: string;
     type: TaskType;
     completed?: boolean;
@@ -100,9 +121,9 @@ declare namespace UserData {
     subtasks?: Task[];
   }
 
-  export type TaskType = 'Text' | 'Resupply' | 'Repair';
+  type TaskType = 'Text' | 'Resupply' | 'Repair';
 
-  export interface CommandList {
+  interface CommandList {
     id: string;
     name: string;
     commands: Command[];
@@ -113,4 +134,6 @@ declare namespace UserData {
     label: string;
     command: string;
   }
+
+  type ExchangeChartType = 'SMOOTH' | 'ALIGNED' | 'RAW';
 }

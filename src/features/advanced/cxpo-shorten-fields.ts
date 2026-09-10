@@ -1,5 +1,3 @@
-import features from '@src/features/feature-registry';
-
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.ComExPlaceOrderForm.form), form => {
     const parts = tile.parameter!.split('.');

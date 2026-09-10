@@ -72,7 +72,7 @@ function validateJson(json: any) {
         <SelectInput v-model="type" :options="typeOptions" />
       </Active>
       <Active v-if="type === 'TEXT'" label="JSON" :error="error">
-        <TextInput v-model="text" />
+        <TextInput v-model="text" focus-on-mount />
       </Active>
       <Commands>
         <PrunButton v-if="type === 'FILE'" primary @click="onUploadClick">UPLOAD</PrunButton>

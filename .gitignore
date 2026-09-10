@@ -1,5 +1,6 @@
 # dependencies
 **/node_modules
+.pnpm-store
 
 # testing
 **/coverage
@@ -17,3 +18,4 @@
 .idea
 **/.turbo
 vite.config.mts.timestamp-*.mjs
+.tmp

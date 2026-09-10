@@ -10,7 +10,8 @@ const { inline, autoSubmit = true } = defineProps<{
 
 const $style = useCssModule();
 const classes = computed(() => ({
-  [$style.link]: true,
+  [C.Link.link]: true,
+  [$style.block]: !inline,
   [$style.inline]: inline,
 }));
 </script>
@@ -27,17 +28,11 @@ const classes = computed(() => ({
 </template>
 
 <style module>
-.link {
-  color: #3fa2de;
-  cursor: pointer;
+.block {
   display: block;
 }
 
 .inline {
   display: inline-block;
-}
-
-.link:hover {
-  color: #f7a600 !important;
 }
 </style>

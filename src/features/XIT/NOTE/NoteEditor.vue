@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import Header from '@src/components/Header.vue';
 
 const { note } = defineProps<{ note: UserData.Note }>();
 
@@ -28,7 +29,10 @@ function processText(text?: string) {
       break;
     }
 
-    text = text.replaceAll(regexp, `<span class="${$style.link}">${matches[0]}</span>`);
+    text = text.replaceAll(
+      regexp,
+      match => `<span class="${C.Link.link} ${$style.link}">${match}</span>`,
+    );
 
     counter++;
     if (counter > 100) {
@@ -64,7 +68,8 @@ watch(
 </script>
 
 <template>
-  <div :class="$style.title" :style="{ paddingLeft: '10px' }">{{ note.name }}</div>
+  <Header v-model="note.name" editable :class="$style.header" />
+  <div :class="$style.header">{{ note.name }}</div>
   <div>
     <textarea ref="textbox" v-model="note.text" :class="$style.textarea" spellcheck="false" />
     <!-- eslint-disable-next-line vue/no-v-html -->
@@ -73,12 +78,10 @@ watch(
 </template>
 
 <style module>
-.title {
+.header {
   padding-top: 5px;
-  font-weight: bold;
-  display: block;
-  font-size: 16px;
-  padding-left: 5px;
+  margin-left: 10px;
+  margin-bottom: 2px;
 }
 
 .textarea {
@@ -135,13 +138,7 @@ watch(
 }
 
 .link {
-  color: #3fa2de;
-  cursor: pointer;
   position: relative;
   z-index: 2;
-}
-
-.link:hover {
-  color: #f7a600;
 }
 </style>

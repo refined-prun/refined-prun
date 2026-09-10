@@ -14,7 +14,7 @@ onApiMessage({
     store.addOne(data);
   },
   FOREX_TRADER_ORDER_UPDATED(data: PrunApi.FXOrder) {
-    store.setOne(data);
+    store.updateOne(data);
   },
   FOREX_TRADER_ORDER_REMOVED(data: { orderId: string }) {
     store.removeOne(data.orderId);

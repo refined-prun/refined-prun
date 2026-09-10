@@ -1,4 +1,3 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import TileControlsButton from '@src/components/TileControlsButton.vue';
 
@@ -8,7 +7,7 @@ async function onTileReady(tile: PrunTile) {
     icon: '\uf1ec',
     onClick: () => showBuffer('XIT CALC'),
     marginTop: 4,
-  }).before(tileControls.children[0]);
+  }).prependTo(tileControls);
   return;
 }
 

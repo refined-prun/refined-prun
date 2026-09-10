@@ -2,6 +2,7 @@ import { diffDays } from '@src/utils/time-diff';
 import { userData } from '@src/store/user-data';
 import { isPresent } from 'ts-extras';
 import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
+import { userDataStore } from '@src/infrastructure/prun-api/data/user-data';
 
 const hour12 = computed(() => {
   switch (userData.settings.time) {
@@ -14,79 +15,124 @@ const hour12 = computed(() => {
   }
 });
 
-const hhmmRef = computed(() => {
-  return new Intl.DateTimeFormat(undefined, {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: hour12.value,
-  }).format;
+const locale = computed(() => {
+  let preferredLocale = userDataStore.preferredLocale;
+  if (!preferredLocale) {
+    return undefined;
+  }
+  preferredLocale = preferredLocale.replace('_', '-');
+  return navigator.language.startsWith(preferredLocale) ? navigator.language : preferredLocale;
 });
 
-export const hhmm = (date?: number | Date | undefined) => hhmmRef.value(date);
+function dateTimeFormat(options: Intl.DateTimeFormatOptions | (() => Intl.DateTimeFormatOptions)) {
+  const format = computed(() => {
+    return new Intl.DateTimeFormat(
+      locale.value,
+      typeof options === 'function' ? options() : options,
+    );
+  });
+  return (date?: number | Date | undefined) => format.value.format(date);
+}
 
-const hhmmssRef = computed(() => {
-  return new Intl.DateTimeFormat(undefined, {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: hour12.value,
-  }).format;
+function numberFormat(options: Intl.NumberFormatOptions | (() => Intl.NumberFormatOptions)) {
+  const format = computed(() => {
+    return new Intl.NumberFormat(locale.value, typeof options === 'function' ? options() : options);
+  });
+  return (value: number) => format.value.format(value);
+}
+
+export const hhForXitSet = computed(() => {
+  return new Intl.DateTimeFormat(locale.value, { hour: '2-digit' }).format;
 });
 
-export const hhmmss = (date?: number | Date | undefined) => hhmmssRef.value(date);
+export const hhmm = dateTimeFormat(() => ({
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: hour12.value,
+}));
 
-export const ddmm = new Intl.DateTimeFormat(undefined, {
+export const hhmmss = dateTimeFormat(() => ({
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: hour12.value,
+}));
+
+export const ddmm = dateTimeFormat({
   month: '2-digit',
   day: '2-digit',
-}).format;
+});
 
-export const ddmmyyyy = new Intl.DateTimeFormat(undefined, {
+export const ddmmyyyy = dateTimeFormat({
   month: '2-digit',
   day: '2-digit',
   year: 'numeric',
-}).format;
+});
 
-export const fixed0 = new Intl.NumberFormat(undefined, {
+export const fixed0 = numberFormat({
   maximumFractionDigits: 0,
-}).format;
+});
 
-export const fixed02 = new Intl.NumberFormat(undefined, {
+export const fixed02 = numberFormat({
   minimumFractionDigits: 0,
   maximumFractionDigits: 2,
-}).format;
+});
 
-export const fixed1 = new Intl.NumberFormat(undefined, {
+export const fixed1 = numberFormat({
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
-}).format;
+});
 
-export const fixed01 = new Intl.NumberFormat(undefined, {
+export const fixed01 = numberFormat({
   minimumFractionDigits: 0,
   maximumFractionDigits: 1,
-}).format;
+});
 
-export const fixed2 = new Intl.NumberFormat(undefined, {
+export const fixed2 = numberFormat({
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
-}).format;
+});
 
-export const percent0 = new Intl.NumberFormat(undefined, {
+export const fixed4 = numberFormat({
+  minimumFractionDigits: 4,
+  maximumFractionDigits: 4,
+});
+
+export const trunc0 = numberFormat({
+  maximumFractionDigits: 0,
+  roundingMode: 'trunc',
+});
+
+export const trunc01 = numberFormat({
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 1,
+  roundingMode: 'trunc',
+});
+
+export const trunc02 = numberFormat({
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+  roundingMode: 'trunc',
+});
+
+export const percent0 = numberFormat({
   style: 'percent',
   maximumFractionDigits: 0,
-}).format;
+});
 
-export const percent1 = new Intl.NumberFormat(undefined, {
+export const percent1 = numberFormat({
   style: 'percent',
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
-}).format;
+});
 
-export const percent2 = new Intl.NumberFormat(undefined, {
+export const percent2 = numberFormat({
   style: 'percent',
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
-}).format;
+});
 
+// Wall-clock time + day offset ("14:30 +2d").
 export function formatEta(from: number, to: number) {
   let ret = hhmm(to);
   const days = diffDays(from, to);
@@ -94,6 +140,32 @@ export function formatEta(from: number, to: number) {
     ret += ` +${days}d`;
   }
   return ret;
+}
+
+// Compact duration format ("2d 3h 15m") for dense table cells.
+export function formatDenseEta(from: number, to: number) {
+  const diffMs = to - from;
+  if (diffMs <= 0) {
+    return `${fixed0(0)}m`;
+  }
+
+  const totalSeconds = Math.floor(diffMs / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+  const parts: string[] = [];
+  if (days > 0) {
+    parts.push(`${fixed0(days)}d`);
+  }
+  if (hours > 0) {
+    parts.push(`${fixed0(hours)}h`);
+  }
+  if (minutes > 0 || parts.length === 0) {
+    parts.push(`${fixed0(minutes)}m`);
+  }
+
+  return parts.join(' ');
 }
 
 export function formatCurrency(currency?: number | null, format?: (value: number) => string) {

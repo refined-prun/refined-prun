@@ -7,9 +7,9 @@ if (import.meta.env.PROD) {
     if (!manifest.version || config.version === manifest.version) {
       return;
     }
-    void setTimeout(() => window.location.reload(), 2000);
+    void setTimeout(() => window.location.reload(), 3000);
     clearInterval(id);
-    if (!C.Connecting) {
+    if (C.Connecting === undefined) {
       // There might be a case where PrUn CSS was not parsed yet.
       return;
     }

@@ -14,7 +14,7 @@ onApiMessage({
     store.addOne(data);
   },
   COMEX_TRADER_ORDER_UPDATED(data: PrunApi.CXOrder) {
-    store.setOne(data);
+    store.updateOne(data);
   },
   COMEX_TRADER_ORDER_REMOVED(data: { orderId: string }) {
     store.removeOne(data.orderId);

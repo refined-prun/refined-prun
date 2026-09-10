@@ -4,8 +4,12 @@ function onTileReady(tile: PrunTile) {
   }
   subscribe($$(tile.anchor, 'input'), input => {
     if (input.type === 'text') {
-      input.focus();
-      input.select();
+      // Use setTimeout because something is messing with focus
+      // immediately after input element creation.
+      setTimeout(() => {
+        input.focus();
+        input.select();
+      });
     }
   });
 }

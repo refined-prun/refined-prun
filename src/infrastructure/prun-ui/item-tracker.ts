@@ -8,7 +8,7 @@ import { materialCategoriesStore } from '@src/infrastructure/prun-api/data/mater
 export function trackItemTickers() {
   appendStylesheet();
   subscribe($$(document, C.ColoredIcon.label), label => {
-    const container = label.closest(`.${C.ColoredIcon.container}`) as HTMLElement;
+    const container = label.closest(`.${C.ColoredIcon.container}`);
     if (!container) {
       return;
     }
@@ -26,7 +26,7 @@ export function trackItemTickers() {
       const material = materialsStore.getByTicker(ticker.value);
       const category = materialCategoriesStore.getById(material?.category);
       if (category) {
-        currentClasses.push('rp-category-' + sanitizeCategoryName(category.name));
+        currentClasses.push(CATEGORY_CSS_PREFIX + sanitizeCategoryName(category.name));
       }
       for (const className of currentClasses) {
         container.classList.add(className);
@@ -43,7 +43,7 @@ function appendStylesheet() {
   const gradientEnd = defaultColor.brighten(10).toHexString();
   const fontColor = defaultColor.brighten(40).toHexString();
   const defaultStyle =
-    `.rp-category- {\n` +
+    `.${C.ColoredIcon.container}, .${CATEGORY_CSS_PREFIX}none {\n` +
     `  background: linear-gradient(135deg, ${gradientStart}, ${gradientEnd});\n` +
     `  color: ${fontColor};\n` +
     '}\n\n';
@@ -57,11 +57,17 @@ function createCssRule<T extends keyof typeof categoryColors>(category: T) {
   const gradientEnd = color.brighten(10).toHexString();
   const fontColor = color.brighten(40).toHexString();
   return (
-    `.rp-category-${sanitizeCategoryName(category)} {\n` +
+    `.${CATEGORY_CSS_PREFIX}${sanitizeCategoryName(category)} {\n` +
     `  background: linear-gradient(135deg, ${gradientStart}, ${gradientEnd});\n` +
     `  color: ${fontColor};\n` +
     '}'
   );
+}
+
+export const CATEGORY_CSS_PREFIX = 'rp-category-';
+
+export function getMaterialCategoryCssClass(category: PrunApi.MaterialCategory) {
+  return CATEGORY_CSS_PREFIX + sanitizeCategoryName(category.name);
 }
 
 export function sanitizeCategoryName(name: string) {
@@ -87,6 +93,9 @@ const categoryColors = {
   },
   'construction prefabs': {
     color: '1c39bb',
+  },
+  'consumable bundles': {
+    color: '971728',
   },
   'consumables (basic)': {
     color: 'cd5c5c',
@@ -120,6 +129,9 @@ const categoryColors = {
   },
   gases: {
     color: '00ced1',
+  },
+  infrastructure: {
+    color: '1e1e8c',
   },
   liquids: {
     color: 'bcd4e6',

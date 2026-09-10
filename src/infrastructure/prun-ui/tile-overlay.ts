@@ -1,6 +1,5 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import Overlay from '@src/components/Overlay.vue';
-import ActionConfirmationOverlay from '@src/components/ActionConfirmationOverlay.vue';
+import ActionFeedback from '@src/components/ActionFeedback.vue';
 
 export function showTileOverlay<T extends Component>(
   baseElementOrEvent: Element | Event,
@@ -15,7 +14,7 @@ export function showTileOverlay<T extends Component>(
   if (!scrollView) {
     return;
   }
-  const content = scrollView.children[0] as HTMLElement;
+  const content = scrollView.lastChild as HTMLElement | null;
   if (content) {
     content.style.display = 'none';
   }
@@ -24,8 +23,8 @@ export function showTileOverlay<T extends Component>(
     props: rootProps,
     onClose: () => {
       fragmentApp.unmount();
-      scrollView.appendChild(content);
       if (content) {
+        scrollView.appendChild(content);
         content.style.display = '';
       }
     },
@@ -47,14 +46,41 @@ export function showConfirmationOverlay(
   if (!container) {
     return;
   }
-  const fragmentApp = createFragmentApp(ActionConfirmationOverlay, {
+  const fragmentApp = createFragmentApp(ActionFeedback, {
+    status: 'confirmation',
     message,
     confirmLabel,
     onConfirm: () => {
       fragmentApp.unmount();
       onConfirm();
     },
-    onClose: () => fragmentApp.unmount(),
+    onDismiss: () => fragmentApp.unmount(),
+  });
+  fragmentApp.appendTo(container);
+}
+
+export function showErrorOverlay(baseElementOrEvent: Element | Event, message: string) {
+  const container = findMountContainer(baseElementOrEvent);
+  if (!container) {
+    return;
+  }
+  const fragmentApp = createFragmentApp(ActionFeedback, {
+    status: 'error',
+    message,
+    onDismiss: () => fragmentApp.unmount(),
+  });
+  fragmentApp.appendTo(container);
+}
+
+export function showSuccessOverlay(baseElementOrEvent: Element | Event, message?: string) {
+  const container = findMountContainer(baseElementOrEvent);
+  if (!container) {
+    return;
+  }
+  const fragmentApp = createFragmentApp(ActionFeedback, {
+    status: 'success',
+    message,
+    onDismiss: () => fragmentApp.unmount(),
   });
   fragmentApp.appendTo(container);
 }

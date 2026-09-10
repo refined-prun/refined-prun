@@ -1,0 +1,119 @@
+Command,Description,Mandatory parameters,Optional parameters
+ADM,General information about a planetary administration center.,Planet Identifier,
+APEXM,Entrypoint for the mobile version of APEX.,,
+ARC,Shows information about and allows to upgrade the APEX representation center.,,
+ASTS,An overview of all infrastructure assets both in construction and completed.,,
+BBC,Construct a new building at one of your bases.,Base,
+BBL,Has a list of all buildings at one of your bases.,Base,
+BDGS,A list of all user badges.,,
+BLU,Shows a list of all blueprints or details of a specific blueprint.,,Blueprint
+BRA,Repair multiple buildings at once.,,Base
+BS,Display one or all of your bases.,,Base
+BSC,Allows to construct a new base on a planet.,Planet Identifier,
+BTF,Blueprint test flight controls.,Blueprint,
+BUI,Information about buildings.,Building Ticker,
+CMDS,List of available commands.,,
+CO,Company information.,Company Code or Company Id,
+COGC,The Chamber of Global Commerce and its programs.,Planet Identifier,
+COGCPD,The Chamber of Global Commerce program details.,"Planet Identifier, Program Name",
+COGCPEX,The Chamber of Global Commerce program execution query and voting.,Planet Identifier,
+COGCU,Upkeep of the Chamber of Global Commerce.,Planet Identifier,
+COLIQ,Liquidate your company.,,
+COM,Communications.,,
+COMC,Catalog of public communication channels.,,
+COMF,List of muted users.,,
+COMG,A private group conversation.,Channel Identifier,
+COMP,A public communication channel.,Channel Identifier,
+COMU,Direct communication channel to another user.,Username,
+CONS,List of currently connected users.,,
+CONT,Displays a contract.,Contract,
+CONTD,Displays the list of all or a specific contract draft.,,Draft Identifier
+CONTS,Displays all contracts.,,
+CORP,Information about your primary corporation.,,
+CORPARC,Shows information about and allows to upgrade the corporation's APEX representation center.,,
+CORPFIN,Information about your primary corporation's finances.,,
+CORPIVS,Pending invites of your corporation.,,Company Code
+CORPNP,Starting a new project for your corporation.,,
+CORPP,Detailed information about corporation projects.,,Project Identifier
+CORPS,Displays a list of all corporations or details of a single corporation.,,Corporation Code
+CS,Create a new screen.,,
+CX,General information about a commodity exchange.,Market Identifier Code,
+CXL,List of all commodity exchanges.,,
+CXM,Compare commodity information across all exchanges.,Material Ticker,Planet to determine distance from
+CXO,View a commodity exchange order.,Order Identifier,
+CXOB,Order book for a given commodity exchange ticker.,Ticker,
+CXOS,Manage your commodity exchange orders.,,Pagesize
+CXP,Commodity price information.,Ticker,
+CXPC,Chart: Commodity price plotted over time.,Ticker,
+CXPO,Commodity exchange order form.,Ticker,
+EXP,Display and manage the experts at a given base.,Base,
+FA,Faction information.,Faction Code,
+FIN,Basic financial overview and recent cash bookings.,,
+FINBS,Balance statement showing your assets and liabilities.,,
+FINIS,Income statement showing profit and loss.,,
+FINLA,Balance statement showing liquid assets (e.g. cash).,,
+FLT,Overview of the whole fleet or fleets at specific locations.,,Address
+FLTP,Overview of the fleet at the given planet.,Planet Identifier,
+FLTS,Overview of the fleet in the given system.,System Identifier,
+FX,A matrix of foreign exchange conversion rates.,,
+FXO,Shows a foreign exchange order.,Order Identifier,
+FXOB,Order book for a given currency pair.,Ticker,
+FXOS,List of your foreign exchange orders.,,
+FXP,Exchange rate information.,Ticker,
+FXPC,Chart: Exchange rate plotted over time.,Ticker,
+FXPO,Place foreign exchange order.,Ticker,
+GIFT,Allows to gift PRO license time to another user.,,
+GOV,Shows information about the current and past governments.,Planet Identifier,
+GTW,Displays information about a FTL gateway.,,Address or specific gateway id.
+GTWI,Allows to plan gateway projects.,,
+GTWT,Displays traffic information about a FTL gateway.,Gateway Identifier,
+HELP,Links to the Handbook with useful information on how to get started.,,
+HQ,Allows to upgrade and relocate your company headquarters.,,
+INF,Displays information about a system's infrastructure.,,System Identifier
+INFU,Displays information about an infrastructure's upkeep.,Infrastructure Identifier,
+INV,"Display all inventories, those located at the specified address, or a specific inventory.",,Inventory or Address
+LEAD,Shows the company leaderboards.,,
+LIC,Information about your APEX license/subscription status.,,
+LM,General info about a local market and its list of ads.,Local Market Identifier,
+LMA,Detailed view of a local market ad.,Local Market Ad Identifier,
+LMBL,Local market blocklist.,,
+LMOS,List of your local market ads.,,
+LMP,Form to create local market ads.,Local Market Identifier,
+LR,"Listing of local rules like production fees, etc.",Planet Identifier,
+MAT,Information about commodities and materials.,Material Ticker,
+MOT,Motion,"Administration Center Identifier, Motion Identifier",
+MOTS,Motions,,Motion Identifier
+MS,Map: Star System,System Identifier,
+MTRA,Transfer a specific amount of a commodity between inventories.,,"Material Ticker, Origin Store Identifier, Target Store Identifier"
+MU,Map: Universe,,Mode
+NOTIG,In-game notification settings.,,
+NOTPNS,Push notification settings.,,
+NOTS,List of notifications.,,
+PLI,Allows to search for and display information about a planet.,,Planet Identifier
+PLNM,Name a planet.,Planet Identifier,
+POL,Shows recent and past offices a user held.,,Username
+POPI,"Shows recent population reports containing information like population size, growth, unemployment rate, ..",Planet Identifier,
+POPID,Shows details of a certain population infrastructure project and allows to contribute upkeep materials as well as building materials to upgrade the project.,"Planet Identifier, Infrastructure Type",
+POPR,"Shows recent population reports containing information like population size, growth, unemployment rate, ..",Planet Identifier,
+PP,Detailed information about a planetary project.,"Planet Identifier, Planetary Project",
+PPI,Displays information about a planetary plot.,Plot,
+PPS,List of all planetary projects of the given planet.,Planet Identifier,
+PROD,Display one or all of your production lines.,,Base
+PRODCO,Queue a new production order for a production line.,Base,
+PRODQ,Order queue of a production line.,Production Line,
+RSB,Has a list of recommended starter buildings for your selected starting package.,,
+SFC,Ship flight controls.,Ship Transponder,
+SHP,Ship detail information,Ship Transponder,
+SHPF,Ship fuel tanks.,Ship Transponder,
+SHPI,Ship inventory.,Ship Transponder,
+SHY,General information about planetary shipyards.,,Address
+SHYP,An overview of all shipyard projects and details for specific ones.,,Shipyard Project Identifier
+SI,Public ship information.,Ship Transponder,
+STNS,Displays a list of all space stations or public information of a single station.,,Station Identifier
+SYSI,Allows to search for and display information about a system.,,System Identifier
+SYSNM,Name a system.,System Identifier,
+TRA,Display a list of recent transmissions.,,
+UPCK,Allows unpacking of consumable bundles.,Store Identifier,
+USR,User information.,Username,
+WAR,General information about a warehouse.,Warehouse Identifier,
+WF,Display the workforce at a given base.,Base,

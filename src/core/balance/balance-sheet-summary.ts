@@ -1,6 +1,7 @@
 import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
 import { map } from '@src/utils/map-values';
 import { sum } from '@src/utils/sum';
+import { userData } from '@src/store/user-data';
 
 interface BalanceSheetSection {
   [key: string]: BalanceSheetSection | number | undefined;
@@ -129,12 +130,19 @@ export function calcTotalIntangibleAssets(sheet: PartialBalanceSheet) {
 }
 
 export function calcTotalNonCurrentAssets(sheet: PartialBalanceSheet) {
+  if (userData.fullEquityMode) {
+    return calcSectionTotal(
+      sheet.assets?.nonCurrent,
+      () => calcTotalBuildings(sheet),
+      () => calcTotalShips(sheet),
+      () => calcTotalLongTermReceivables(sheet),
+      () => calcTotalIntangibleAssets(sheet),
+    );
+  }
   return calcSectionTotal(
     sheet.assets?.nonCurrent,
     () => calcTotalBuildings(sheet),
-    () => calcTotalShips(sheet),
     () => calcTotalLongTermReceivables(sheet),
-    () => calcTotalIntangibleAssets(sheet),
   );
 }
 

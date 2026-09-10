@@ -4,5 +4,6 @@ xit.add({
   command: ['CXTS'],
   name: 'COMMODITY EXCHANGE TRADES',
   description: 'List of all your commodity exchange trades.',
+  optionalParameters: 'Page Size',
   component: () => CXTS,
 });

@@ -2,14 +2,13 @@
 const model = defineModel<boolean>();
 
 const $style = useCssModule();
-const classes = computed(() => ({
-  [$style.button]: true,
+const buttonClass = computed(() => ({
   [$style.expanded]: model.value,
 }));
 </script>
 
 <template>
-  <span :class="classes" @click="model = !model">▶</span>
+  <span :class="[$style.button, buttonClass]" @click="model = !model">▶</span>
 </template>
 
 <style module>

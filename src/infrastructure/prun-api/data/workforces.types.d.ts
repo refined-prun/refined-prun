@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface Workforce {
+  interface Workforce {
     level: string;
     population: number;
     reserve: number;
@@ -9,14 +9,15 @@ declare namespace PrunApi {
     needs: Need[];
   }
 
-  export interface Need {
+  interface Need {
     category: NeedCategory;
     essential: boolean;
     material: Material;
     satisfaction: number;
     unitsPerInterval: number;
     unitsPer100: number;
+    remainingAllocation: number;
   }
 
-  declare type NeedCategory = 'CLOTHING' | 'FOOD' | 'HEALTH' | 'TOOLS' | 'WATER';
+  type NeedCategory = 'CLOTHING' | 'FOOD' | 'HEALTH' | 'TOOLS' | 'WATER';
 }

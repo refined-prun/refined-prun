@@ -14,9 +14,7 @@ import removeArrayElement from '@src/utils/remove-array-element';
 import { saveUserData } from '@src/infrastructure/storage/user-data-serializer';
 import Commands from '@src/components/forms/Commands.vue';
 
-if (userData.settings.mode === undefined) {
-  userData.settings.mode = 'BASIC';
-}
+userData.settings.mode ??= 'BASIC';
 
 const isFullMode = userData.settings.mode === 'FULL';
 
@@ -50,7 +48,7 @@ const filtered = computed(() => {
     .toLowerCase()
     .replaceAll(/\W/g, ' ')
     .split(/\s+/)
-    .filter(Boolean); // Ignore empty strings
+    .filter(Boolean);
   if (keywords.length === 0) {
     return sorted;
   }

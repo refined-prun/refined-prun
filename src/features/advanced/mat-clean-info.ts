@@ -1,16 +1,20 @@
 import css from '@src/utils/css-utils.module.css';
 
+function onTileReady(tile: PrunTile) {
+  subscribe($$(tile.anchor, C.FormComponent.containerPassive), async container => {
+    const label = await $(container, 'label');
+    if (
+      label?.textContent === L.MaterialInformation.ticker() ||
+      label?.textContent === L.MaterialInformation.resource()
+    ) {
+      container.classList.add(css.hidden);
+      return;
+    }
+  });
+}
+
 function init() {
-  applyCssRule(
-    'MAT',
-    `.${C.MaterialInformation.container} > .${C.FormComponent.containerPassive}:nth-child(2)`,
-    css.hidden,
-  );
-  applyCssRule(
-    'MAT',
-    `.${C.MaterialInformation.container} > .${C.FormComponent.containerPassive}:nth-child(6)`,
-    css.hidden,
-  );
+  tiles.observe('MAT', onTileReady);
 }
 
 features.add(import.meta.url, init, 'MAT: Hides "Ticker" and "Natural resource" fields.');

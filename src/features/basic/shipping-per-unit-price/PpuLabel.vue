@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { CurrencySymbols } from '@src/legacy';
 import { fixed0 } from '@src/utils/format';
 import { getMaterialByName } from '@src/infrastructure/prun-ui/i18n';
 
-const { amountInput, currencyInput, materialName, totalPriceInput } = defineProps<{
+const { amountInput, materialName, totalPriceInput } = defineProps<{
   amountInput: string;
-  currencyInput: string;
   materialName: string;
   totalPriceInput: string;
 }>();
@@ -27,7 +25,7 @@ const amount = computed(() => {
 });
 
 const totalSize = computed(() => {
-  if (unit.value && amount.value) {
+  if (unit.value && amount.value !== undefined) {
     return fixed0(amount.value * unit.value.size);
   }
 
@@ -40,22 +38,18 @@ const totalPrice = computed(() => {
 });
 
 const perUnit = computed(() => {
-  if (unit.value && amount.value && totalPrice.value) {
+  if (unit.value && amount.value !== undefined && totalPrice.value !== undefined) {
     return fixed0(totalPrice.value / (amount.value * unit.value.size));
   }
 
   return '--';
-});
-
-const currency = computed(() => {
-  return CurrencySymbols[currencyInput] ?? '';
 });
 </script>
 
 <template>
   <span>
     <template v-if="material">
-      {{ totalSize }} {{ unit?.symbol }} | {{ currency }}{{ perUnit }}/{{ unit?.symbol }}
+      {{ totalSize }} {{ unit?.symbol }} | {{ perUnit }}/{{ unit?.symbol }}
     </template>
     <template v-else>--</template>
   </span>

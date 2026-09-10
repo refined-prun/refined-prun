@@ -1,14 +1,27 @@
 <script setup lang="ts">
-import { userData } from '@src/store/user-data';
+import { getBurnThresholds } from '@src/features/XIT/BURN/utils';
+import { trunc0, trunc01 } from '@src/utils/format';
 
 const { days } = defineProps<{ days: number }>();
 
-const flooredDays = computed(() => Math.floor(days));
-const burnClass = computed(() => ({
-  [C.Workforces.daysMissing]: flooredDays.value <= userData.settings.burn.red,
-  [C.Workforces.daysWarning]: flooredDays.value <= userData.settings.burn.yellow,
-  [C.Workforces.daysSupplied]: flooredDays.value > userData.settings.burn.yellow,
-}));
+const formattedDays = computed(() => {
+  if (days > 999) {
+    return '∞';
+  }
+  if (days >= 10) {
+    return trunc0(days);
+  }
+  return trunc01(days);
+});
+
+const burnClass = computed(() => {
+  const { isRed, isYellow, isGreen } = getBurnThresholds(days);
+  return {
+    [C.Workforces.daysMissing]: isRed,
+    [C.Workforces.daysWarning]: isYellow,
+    [C.Workforces.daysSupplied]: isGreen,
+  };
+});
 </script>
 
 <template>
@@ -16,6 +29,6 @@ const burnClass = computed(() => ({
     <div
       :style="{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%' }"
       :class="burnClass" />
-    <span>{{ flooredDays < 500 ? flooredDays : '∞' }}</span>
+    <span>{{ formattedDays }}</span>
   </td>
 </template>

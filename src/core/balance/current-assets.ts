@@ -1,4 +1,3 @@
-import { sumBy } from '@src/utils/sum-by';
 import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
 import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
@@ -18,7 +17,7 @@ type Currency = string;
 
 const cxDeposits = computed(() => {
   const orders = cxosStore.active.value;
-  if (orders === undefined) {
+  if (!orders) {
     return undefined;
   }
   const deposits = new Map<Currency, number>();
@@ -37,7 +36,7 @@ const cxDepositsTotal = computed(() => sumMapValues(cxDeposits.value));
 
 const fxDeposits = computed(() => {
   const orders = fxosStore.active.value;
-  if (orders === undefined) {
+  if (!orders) {
     return undefined;
   }
   const deposits = new Map<Currency, number>();

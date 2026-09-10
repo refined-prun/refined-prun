@@ -11,10 +11,6 @@ function onTileReady(tile: PrunTile) {
   }
 
   subscribe($$(tile.anchor, C.Site.container), () => {
-    subscribe($$(tile.anchor, 'th'), header => {
-      header.innerText = header.innerText.replace('Current Workforce', 'Current');
-    });
-
     subscribe($$(tile.anchor, 'tr'), row => {
       if (isEmpty(_$$(row, 'td'))) {
         return;
@@ -36,6 +32,9 @@ function onTileReady(tile: PrunTile) {
 }
 
 function init() {
+  applyLocalizationPatch(L.SiteWorkforces.table.currentWorkforce, value =>
+    value.replace('Current Workforce', 'Current'),
+  );
   tiles.observe('BS', onTileReady);
 }
 

@@ -1,0 +1,5 @@
+.ownOrder {
+  > td {
+    font-weight: bold;
+  }
+}

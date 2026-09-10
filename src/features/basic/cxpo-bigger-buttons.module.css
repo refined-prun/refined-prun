@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 10px;
+
+  > button {
+    flex: 0 1 75px;
+    margin: 0;
+  }
+}

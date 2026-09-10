@@ -12,6 +12,11 @@ onApiMessage({
   ALERTS_ALERT(data: PrunApi.Alert) {
     store.setOne(data);
   },
+  ALERTS_ALERTS_DELETED(data: { alertIds: string[] }) {
+    for (const id of data.alertIds) {
+      store.removeOne(id);
+    }
+  },
 });
 
 export const alertsStore = {

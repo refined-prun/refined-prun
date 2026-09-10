@@ -1,78 +1,19 @@
-import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
-import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
-import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
-import { isEmpty } from 'ts-extras';
-
-function onTileReady(tile: PrunTile) {
-  // Shorten flight status
-  subscribe($$(tile.anchor, 'tr'), row => {
-    const id = refPrunId(row);
-    const ship = computed(() => shipsStore.getById(id.value));
-    const flight = computed(() => flightsStore.getById(ship.value?.flightId));
-
-    const labels = {
-      TAKE_OFF: '↑',
-      DEPARTURE: '↗',
-      CHARGE: '±',
-      JUMP: '⟿',
-      TRANSIT: '⟶',
-      APPROACH: '↘',
-      LANDING: '↓',
-    };
-
-    const statusLabel = computed(() => {
-      if (!ship.value) {
-        return undefined;
-      }
-
-      if (!flight.value) {
-        return '⦁';
-      }
-
-      const segment = flight.value.segments[flight.value.currentSegmentIndex];
-      if (!segment) {
-        return undefined;
-      }
-
-      return labels[segment.type] ?? undefined;
-    });
-
-    function replaceStatus() {
-      if (statusLabel.value === undefined) {
-        return;
-      }
-      const statusCell = row.children[3] as HTMLTableCellElement;
-      if (!statusCell) {
-        return;
-      }
-
-      const nodes = Array.from(statusCell.childNodes).filter(
-        x => x.nodeType === Node.TEXT_NODE || x.nodeType === Node.ELEMENT_NODE,
-      );
-      if (isEmpty(nodes)) {
-        return;
-      }
-      if (statusCell.style.textAlign !== 'center') {
-        statusCell.style.textAlign = 'center';
-      }
-      if (nodes[0].textContent !== statusLabel.value) {
-        nodes[0].textContent = statusLabel.value;
-      }
-      for (const node of nodes.slice(1)) {
-        if (node.textContent) {
-          node.textContent = '';
-        }
-      }
-    }
-
-    replaceStatus();
-    const observer = new MutationObserver(replaceStatus);
-    observer.observe(row, { childList: true, subtree: true, characterData: true });
-  });
-}
+import $style from './flt-flight-status-icons.module.css';
 
 function init() {
-  tiles.observe(['FLT', 'FLTS', 'FLTP'], onTileReady);
+  applyLocalizationPatch(L.ships.status.stationary, () => '⦁');
+  applyLocalizationPatch(L.ShipStatus.takeoff, () => '↑');
+  applyLocalizationPatch(L.ShipStatus.departure, () => '↗');
+  applyLocalizationPatch(L.ShipStatus.transit, () => '⟶');
+  applyLocalizationPatch(L.ShipStatus.charge, () => '±');
+  applyLocalizationPatch(L.ShipStatus.jump, () => '➾');
+  applyLocalizationPatch(L.ShipStatus._float, () => '↑');
+  applyLocalizationPatch(L.ShipStatus.approach, () => '↘');
+  applyLocalizationPatch(L.ShipStatus.landing, () => '↓');
+  applyLocalizationPatch(L.ShipStatus.lock, () => '⟴');
+  applyLocalizationPatch(L.ShipStatus.decay, () => '⟴');
+  applyLocalizationPatch(L.ShipStatus.jumpgateway, () => '⟴');
+  applyCssRule(['FLT', 'FLTS', 'FLTP'], `td:nth-child(4)`, $style.status);
 }
 
 features.add(import.meta.url, init, 'FLT: Replaces the flight status text with arrow icons.');

@@ -4,6 +4,11 @@ xit.add({
   command: ['FINPR'],
   name: 'Profitability Report',
   description: 'Base profitability report.',
-  contextItems: () => [{ cmd: 'XIT FIN' }, { cmd: 'XIT FINCH' }, { cmd: 'XIT SET FIN' }],
+  contextItems: () => [
+    { cmd: 'XIT FIN' },
+    { cmd: 'XIT FINBS' },
+    { cmd: 'XIT FINCH' },
+    { cmd: 'XIT SET FIN' },
+  ],
   component: () => FINPR,
 });

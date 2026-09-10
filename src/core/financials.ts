@@ -26,7 +26,7 @@ export function calculateLocationAssets() {
     return location;
   }
 
-  if (inventory.byLocation.value === undefined) {
+  if (!inventory.byLocation.value) {
     return undefined;
   }
   for (const [name, value] of inventory.byLocation.value) {
@@ -35,7 +35,7 @@ export function calculateLocationAssets() {
     location.total += value;
   }
 
-  if (workInProgressByLocation.value === undefined) {
+  if (!workInProgressByLocation.value) {
     return undefined;
   }
   for (const [name, value] of workInProgressByLocation.value) {
@@ -44,7 +44,7 @@ export function calculateLocationAssets() {
     location.total += value;
   }
 
-  if (nonCurrentAssets.buildingsNetValueByLocation.value === undefined) {
+  if (!nonCurrentAssets.buildingsNetValueByLocation.value) {
     return undefined;
   }
   for (const [name, value] of nonCurrentAssets.buildingsNetValueByLocation.value) {

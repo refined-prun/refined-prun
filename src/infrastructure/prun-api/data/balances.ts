@@ -6,7 +6,7 @@ interface Payload {
   currencyAccounts: PrunApi.CurrencyAccount[];
 }
 
-const store = createEntityStore<PrunApi.CurrencyAmount>(x => x.currency);
+const store = createEntityStore<PrunApi.CurrencyAmount>({ selectId: x => x.currency });
 const state = store.state;
 const ownCurrency = ref('');
 

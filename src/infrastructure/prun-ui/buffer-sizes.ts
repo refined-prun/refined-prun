@@ -4,16 +4,16 @@ let matchers: [RegExp, number, number][] | null = null;
 
 watch(userData, () => (matchers = null), { immediate: true, deep: true });
 
+const defaultSize = [450, 300];
+
 export function matchBufferSize(command: string): [number, number] | undefined {
-  if (!matchers) {
-    matchers = userData.settings.buffers
-      .filter(x => x[0] && typeof x[1] === 'number' && typeof x[2] === 'number')
-      .map(x => {
-        // '*' is not a valid regex.
-        const rule = x[0] === '*' ? '.*' : x[0];
-        return [new RegExp(rule.toUpperCase()), x[1], x[2]];
-      });
-  }
+  matchers ??= userData.settings.buffers
+    .filter(x => !!x[0] && typeof x[1] === 'number' && typeof x[2] === 'number')
+    .map(x => {
+      // '*' is not a valid regex.
+      const rule = x[0] === '*' ? '.*' : x[0];
+      return [new RegExp(rule.toUpperCase()), x[1], x[2]];
+    });
   const commandUpper = command.toUpperCase().trim();
   for (const matcher of matchers) {
     const match = commandUpper.match(matcher[0]);
@@ -24,17 +24,32 @@ export function matchBufferSize(command: string): [number, number] | undefined {
 
   if (commandUpper === 'PLI' || commandUpper === 'SYSI') {
     // PLI and SYSI without parameters have the default buffer size.
-    return [450, 300];
+    return defaultSize.slice() as [number, number];
   }
-  let keyword = commandUpper.split(' ')[0];
-  if (keyword === 'XIT') {
-    keyword = commandUpper.split(' ')[1];
-    return defaultXitBufferSizes[keyword];
+  const commandParts = commandUpper.split(' ');
+  let keyword = commandParts[0];
+  if (keyword === 'XIT' && commandParts.length > 1) {
+    keyword = commandParts[1].split('_')[0];
+    const xitCommand = xit.get(keyword);
+    return xitCommand?.bufferSize;
   }
   return defaultBufferSizes[keyword];
 }
 
-const defaultBufferSizes = {
+export function increaseDefaultBufferSize(
+  keyword: string,
+  delta: { width?: number; height?: number },
+) {
+  let size = defaultBufferSizes[keyword];
+  if (size === undefined) {
+    size = defaultSize.slice() as [number, number];
+    defaultBufferSizes[keyword] = size;
+  }
+  size[0] += delta.width ?? 0;
+  size[1] += delta.height ?? 0;
+}
+
+const defaultBufferSizes: Record<string, [number, number]> = {
   ADM: [380, 550],
   BBC: [500, 450],
   BLU: [550, 600],
@@ -55,6 +70,7 @@ const defaultBufferSizes = {
   CXOS: [750, 300],
   CXPO: [450, 310],
   FLT: [650, 180],
+  FXPO: [330, 350],
   GOV: [470, 550],
   HQ: [450, 600],
   INV: [530, 250],
@@ -75,15 +91,11 @@ const defaultBufferSizes = {
   PRODCO: [415, 600],
   PRODQ: [650, 300],
   SHP: [450, 450],
+  SFC: [530, 640],
   SHY: [450, 450],
   STEAM: [300, 450],
   STNS: [400, 280],
   SYSI: [600, 600],
   WAR: [400, 580],
   WF: [710, 300],
-};
-
-const defaultXitBufferSizes = {
-  CALC: [275, 326],
-  YAPT: [1100, 700],
 };

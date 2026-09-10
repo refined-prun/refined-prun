@@ -1,20 +1,16 @@
 <script setup lang="ts">
-import ColoredIconDetail from '@src/components/ColoredIconDetail.vue';
-import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
-
 export type ColoredIconSize = 'large' | 'medium' | 'small' | 'inline' | 'inline-table';
 
 const {
   background,
-  category,
   color,
   label,
+  subLabel,
   size = 'large',
 } = defineProps<{
   background?: string;
-  category?: string;
   color?: string;
-  detail?: string;
+  subLabel?: string;
   label: string;
   size?: ColoredIconSize;
   title: string;
@@ -22,23 +18,33 @@ const {
 
 const $style = useCssModule();
 
-const classes = computed(() => ({
-  [C.ColoredIcon.container]: true,
+const containerClass = computed(() => ({
   [$style.large]: size === 'large',
   [$style.medium]: size === 'medium',
   [$style.small]: size === 'small',
   [$style.inline]: size === 'inline',
   [$style.inlineTable]: size === 'inline-table',
-  [`rp-ticker-${label}`]: true,
-  [`rp-category-${sanitizeCategoryName(category ?? '')}`]: category !== undefined,
 }));
+
+const isSubLabelVisible = computed(() => subLabel && (size === 'large' || size === 'medium'));
+
+const subLabelClasses = [
+  C.ColoredIcon.subLabel,
+  C.type.typeVerySmall,
+  {
+    [$style.mediumSubLabel]: size === 'medium',
+  },
+];
 </script>
 
 <template>
-  <div :class="classes" :style="{ background, color }" :title="title">
+  <div
+    :class="[C.ColoredIcon.container, containerClass]"
+    :style="{ background, color }"
+    :title="title">
     <div :class="C.ColoredIcon.labelContainer">
       <span :class="C.ColoredIcon.label">{{ label }}</span>
-      <ColoredIconDetail :detail="detail" />
+      <span v-if="isSubLabelVisible" :class="subLabelClasses">{{ subLabel }}</span>
     </div>
   </div>
 </template>
@@ -72,5 +78,9 @@ const classes = computed(() => ({
   height: 18px;
   width: 32px;
   font-size: 11px;
+}
+
+.mediumSubLabel {
+  font-size: 7px;
 }
 </style>

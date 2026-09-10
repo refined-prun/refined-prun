@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface Store {
+  interface Store {
     id: string;
     addressableId: string;
     name: null | string;
@@ -15,7 +15,7 @@ declare namespace PrunApi {
     type: StoreType;
   }
 
-  export interface StoreItem {
+  interface StoreItem {
     quantity?: MaterialAmountValue | null;
     id: string;
     type: 'INVENTORY' | 'SHIPMENT';
@@ -23,10 +23,13 @@ declare namespace PrunApi {
     volume: number;
   }
 
-  declare type StoreType =
+  type StoreType =
     | 'STORE'
-    | 'WAREHOUSE_STORE'
     | 'SHIP_STORE'
     | 'STL_FUEL_STORE'
-    | 'FTL_FUEL_STORE';
+    | 'FTL_FUEL_STORE'
+    | 'WAREHOUSE_STORE'
+    | 'CONSTRUCTION_STORE'
+    | 'UPKEEP_STORE'
+    | 'VORTEX_FUEL_STORE';
 }

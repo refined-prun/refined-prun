@@ -2,7 +2,10 @@ import fa from '@src/utils/font-awesome.module.css';
 import $style from './item-icons.module.css';
 import { applyRawCssRule } from '@src/infrastructure/prun-ui/refined-prun-css';
 import { objectKeys } from 'ts-extras';
-import { sanitizeCategoryName } from '@src/infrastructure/prun-ui/item-tracker';
+import {
+  sanitizeCategoryName,
+  CATEGORY_CSS_PREFIX,
+} from '@src/infrastructure/prun-ui/item-tracker';
 
 function init() {
   const container = C.ColoredIcon.container;
@@ -14,7 +17,10 @@ function init() {
   applyCssRule(`.${label}:before`, fa.solid);
 
   for (const category of objectKeys(categories)) {
-    applyIconRules(`.rp-category-${sanitizeCategoryName(category)}`, categories[category]);
+    applyIconRules(
+      `.${CATEGORY_CSS_PREFIX}${sanitizeCategoryName(category)}`,
+      categories[category],
+    );
   }
   for (const material of objectKeys(materials)) {
     applyIconRules(`.rp-ticker-${material}`, materials[material]);
@@ -22,14 +28,14 @@ function init() {
 }
 
 function applyIconRules(root: string, icon: Icon) {
-  const selector = `${root}:before `;
+  const selector = `.${C.ColoredIcon.container}${root}:before `;
   const rule = createRule(icon, 2.2);
   if (rule) {
     applyRawCssRule(selector + rule);
   }
   if (typeof icon !== 'string') {
     const detail = icon[1].detail;
-    if (detail) {
+    if (detail !== undefined) {
       const selector = `${root} .${C.ColoredIcon.label}:before `;
       const rule = createRule(detail, 1);
       if (rule) {
@@ -51,10 +57,10 @@ function createRule(icon: Icon, baseFontSize: number) {
   };
   if (hasOptions) {
     const options = icon[1];
-    if (options.opacity) {
+    if (options.opacity !== undefined) {
       addRule(`opacity: ${options.opacity}`);
     }
-    if (options.fontSize) {
+    if (options.fontSize !== undefined) {
       fontSize = options.fontSize;
     }
     if (options.regular) {
@@ -67,7 +73,7 @@ function createRule(icon: Icon, baseFontSize: number) {
   if (character) {
     addRule(`content: '\\${character}'`);
   }
-  if (fontSize) {
+  if (fontSize !== undefined) {
     addRule(`font-size: calc(${fontSize} * ${baseFontSize}em)`);
   }
   contents += ' }';
@@ -94,6 +100,7 @@ const categories: Record<string, Icon> = {
   'agricultural products': 'f4d8',
   alloys: 'f219',
   chemicals: 'f492',
+  'consumable bundles': 'f466',
   'construction materials': '',
   'construction parts': '',
   'construction prefabs': '',
@@ -108,6 +115,7 @@ const categories: Record<string, Icon> = {
   'energy systems': '',
   fuels: '',
   gases: 'f0c2',
+  infrastructure: 'f085',
   liquids: '',
   'medical equipment': '',
   metals: 'f0c8',
@@ -171,6 +179,7 @@ const materials: Record<string, Icon> = {
   BRS: 'f120',
   BSC: 'f030',
   BSE: 'f0c1',
+  BSU: 'f4d8',
   BTA: ['f0c8', { regular: true }],
   BTS: 'e059',
   BWH: shield(['f753', { fontSize: 1 }]),
@@ -187,6 +196,7 @@ const materials: Record<string, Icon> = {
   CHA: 'f0f2',
   COF: 'f7b6',
   COM: 'f2a0',
+  CPU: ['f2db', { detail: ['f2dc', { regular: true }] }],
   CQL: 'f4b8',
   CQM: 'f236',
   CQS: 'e525',
@@ -236,6 +246,7 @@ const materials: Record<string, Icon> = {
   H: ['f185', { regular: true }],
   H2O: 'f043',
   HAB: 'f015',
+  HAM: 'f7e5',
   HCB: ['f468', { fontSize: 1.2 }],
   HCC: 'e55b',
   HCP: 'f1bb',
@@ -258,7 +269,7 @@ const materials: Record<string, Icon> = {
   IDC: 'f7c2',
   IMM: 'f1c0',
   IND: 'f5bd',
-  INS: 'f5bd',
+  INS: ['f5bd', { detail: 'f2dc' }],
   KOM: 'e516',
   KV: ['', { detail: 'f132' }],
   LBH: 'e583',
@@ -395,8 +406,12 @@ const materials: Record<string, Icon> = {
   UTS: 'f7d9',
   VCB: ['f468', { fontSize: 1.1 }],
   VEG: 'f5d1',
+  VF: 'f0a3',
+  VFT: ['f52f', { detail: 'f0a3' }],
   VG: 'e06a',
   VIT: 'f517',
+  VOE: 'f135',
+  VOR: 'f5d2',
   VSC: ['f468', { fontSize: 0.8 }],
   WAI: 'f5dc',
   WCB: ['f468', { fontSize: 1.1 }],
@@ -408,11 +423,11 @@ const materials: Record<string, Icon> = {
 };
 
 function circle(detail?: Icon): Icon {
-  return detail ? ['f111', { detail }] : 'f111';
+  return detail !== undefined ? ['f111', { detail }] : 'f111';
 }
 
 function shield(detail?: Icon): Icon {
-  return detail ? ['f132', { detail }] : 'f132';
+  return detail !== undefined ? ['f132', { detail }] : 'f132';
 }
 
 features.add(import.meta.url, init, 'Adds icons to items.');

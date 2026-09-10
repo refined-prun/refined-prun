@@ -1,11 +1,9 @@
 import { AllowedComponentProps, ComponentCustomProps, VNodeProps } from 'vue';
 
 declare global {
-  type Arrayable<X> = X | X[];
+  export { Arrayable, PartialDeep } from 'type-fest';
 
-  type DeepPartial<T> = T extends object ? { [P in keyof T]?: DeepPartial<T[P]> } : T;
-
-  type ExtractComponentProps<T> = T extends { new (): { $props: infer Props } }
+  export type ExtractComponentProps<T> = T extends { new (): { $props: infer Props } }
     ? {
         -readonly [K in keyof Omit<
           Props,

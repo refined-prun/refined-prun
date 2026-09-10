@@ -1,4 +1,3 @@
-import { createFragmentApp } from '@src/utils/vue-fragment-app';
 import PpuLabel from './PpuLabel.vue';
 import { refValue } from '@src/utils/reactive-dom';
 import { fixed2 } from '@src/utils/format';
@@ -17,9 +16,9 @@ async function onAdContainerReady(container: HTMLElement) {
     return;
   }
 
-  const weight = ad.cargoWeight;
-  const volume = ad.cargoVolume;
-  if (!weight || !volume) {
+  const weight = ad.cargoWeight ?? 0;
+  const volume = ad.cargoVolume ?? 0;
+  if (weight === 0 && volume === 0) {
     return;
   }
   const unit = weight > volume ? 't' : 'm³';
@@ -54,7 +53,6 @@ function onFormReady(form: HTMLElement) {
   const commodityInput = selectInput("div[label/span[text()='Commodity']]//input");
   const amountInput = selectInput("div[label/span[text()='Amount']]//input");
   const totalPriceInput = selectInput("div[label/span[text()='Total price']]//input");
-  const currencyInput = selectInput("div[label/span[text()='Currency']]//select");
 
   createFragmentApp(
     PpuLabel,
@@ -62,7 +60,6 @@ function onFormReady(form: HTMLElement) {
       materialName: refValue(commodityInput),
       amountInput: refValue(amountInput),
       totalPriceInput: refValue(totalPriceInput),
-      currencyInput: refValue(currencyInput),
     }),
   ).before(totalPriceInput.parentElement!);
 }

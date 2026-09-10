@@ -6,7 +6,7 @@ import {
   isFactionContract,
 } from '@src/features/XIT/CONTS/utils';
 import fa from '@src/utils/font-awesome.module.css';
-import coloredValue from '@src/infrastructure/prun-ui/colored-value.module.css';
+import coloredValue from '@src/infrastructure/prun-ui/css/colored-value.module.css';
 
 const { contract } = defineProps<{ contract: PrunApi.Contract }>();
 

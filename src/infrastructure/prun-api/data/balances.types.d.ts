@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface CurrencyAccount {
+  interface CurrencyAccount {
     category: string;
     type: number;
     number: number;
@@ -7,7 +7,7 @@ declare namespace PrunApi {
     currencyBalance: CurrencyAmount;
   }
 
-  export interface BookingItem {
+  interface BookingItem {
     period: number;
     number: number;
     item: number;
@@ -24,5 +24,5 @@ declare namespace PrunApi {
     cash: boolean;
   }
 
-  declare type AccountCategory = 'LIQUID_ASSETS' | string;
+  type AccountCategory = 'LIQUID_ASSETS' | string;
 }

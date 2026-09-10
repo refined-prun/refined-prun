@@ -5,4 +5,5 @@ xit.add({
   name: 'CALCULATOR',
   description: 'Provides an in-game calculator.',
   component: () => CALC,
+  bufferSize: [275, 326],
 });

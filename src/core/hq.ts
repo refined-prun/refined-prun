@@ -165,7 +165,7 @@ const hqUpgradeMaterials: UpgradeMap = [
 
 // HQ level 21 onward
 function getHQUpgradeMaterials(level: number) {
-  if (!hqUpgradeMaterials[level]) {
+  if (hqUpgradeMaterials[level] === undefined) {
     const x = level - 20;
     hqUpgradeMaterials[level] = [
       [Math.floor(100 * (x + Math.pow(2, x / 5))), 'MCG'],

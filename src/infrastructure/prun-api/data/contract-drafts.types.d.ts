@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface ContractDraft {
+  interface ContractDraft {
     id: string;
     name: string;
     naturalId: string;
@@ -9,5 +9,5 @@ declare namespace PrunApi {
     conditions: ContractCondition[];
   }
 
-  export type ContractDraftStatus = 'VALID' | 'IN_PROGRESS';
+  type ContractDraftStatus = 'VALID' | 'IN_PROGRESS';
 }

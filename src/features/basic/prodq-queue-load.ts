@@ -1,4 +1,3 @@
-import { sumBy } from '@src/utils/sum-by';
 import { percent2 } from '@src/utils/format';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
@@ -19,7 +18,7 @@ function onRowReady(row: HTMLTableRowElement, lineId: string) {
   const orderId = refPrunId(row);
   const load = computed(() => {
     const line = productionStore.getById(lineId);
-    const queue = line?.orders.filter(x => !x.started && x.duration);
+    const queue = line?.orders.filter(x => !x.started && !!x.duration);
     if (!queue) {
       return undefined;
     }

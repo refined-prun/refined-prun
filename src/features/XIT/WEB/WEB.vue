@@ -34,6 +34,12 @@ const loading = ref(true);
   <div v-else-if="!isValidUrl(url)">Url {{ url }} is invalid!</div>
   <template v-else>
     <LoadingSpinner v-if="loading" />
-    <iframe :src="url" width="100%" height="100%" style="border-width: 0" @load="loading = false" />
+    <iframe
+      :src="url"
+      allow="clipboard-write"
+      width="100%"
+      height="99.65%"
+      style="border-width: 0"
+      @load="loading = false" />
   </template>
 </template>

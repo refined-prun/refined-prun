@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface Blueprint {
+  interface Blueprint {
     id: string;
     naturalId: string;
     created: DateTime;
@@ -11,7 +11,7 @@ declare namespace PrunApi {
     buildTime: number;
   }
 
-  export interface BlueprintSelection {
+  interface BlueprintSelection {
     id: string;
     type: string;
     cardinality: Cardinality;
@@ -22,9 +22,9 @@ declare namespace PrunApi {
     modifiers: BlueprintSelectionModifier[];
   }
 
-  declare type Cardinality = 'ONE' | 'ONE_OR_MANY' | 'ZERO_OR_MANY' | 'ZERO_OR_ONE';
+  type Cardinality = 'ONE' | 'ONE_OR_MANY' | 'ZERO_OR_MANY' | 'ZERO_OR_ONE';
 
-  export interface BlueprintSelectionModifier {
+  interface BlueprintSelectionModifier {
     type: string;
     value: number;
   }

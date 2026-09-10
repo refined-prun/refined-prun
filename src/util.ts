@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { planetsStore } from '@src/infrastructure/prun-api/data/planets';
 import { getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/stars';
-import { Stations, Selector, Style } from '@src/legacy';
+import { stationsStore } from '@src/infrastructure/prun-api/data/stations';
 import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
 import { sleep } from './utils/sleep';
 
@@ -20,39 +19,6 @@ export function downloadFile(fileData, fileName, isJSON: boolean = true) {
   return;
 }
 
-// Create an option element for a select list
-export function createSelectOption(optionLabel, optionValue, rightAlign?) {
-  const option = document.createElement('option');
-  option.value = optionValue;
-  option.textContent = optionLabel;
-  if (rightAlign) {
-    option.style.direction = 'rtl';
-  }
-  return option;
-}
-
-/**
- * Create a span with the given text
- * @param text
- * @param className
- * @returns {HTMLSpanElement}
- */
-export function createTextSpan(text, className: string = 'prun-remove-js') {
-  const newSpan = document.createElement('span');
-  newSpan.classList.add(className);
-  newSpan.textContent = text;
-  return newSpan;
-}
-
-// Remove all the children of a given element
-export function clearChildren(elem) {
-  elem.textContent = '';
-  while (elem.children[0]) {
-    elem.removeChild(elem.children[0]);
-  }
-  return;
-}
-
 export function changeInputValue(input: HTMLInputElement, value: string) {
   // React overrides the native property, so we can't use it directly.
   const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value');
@@ -61,6 +27,22 @@ export function changeInputValue(input: HTMLInputElement, value: string) {
   input.dispatchEvent(event);
   const changeEvent = new Event('change', { bubbles: true, cancelable: true });
   input.dispatchEvent(changeEvent);
+}
+
+export function selectAndChangeInputValue(input: HTMLInputElement, value: string) {
+  focusElement(input);
+  input.select();
+  changeInputValue(input, value);
+}
+
+export function changeTextAreaValue(textarea: HTMLTextAreaElement, value: string) {
+  // React overrides the native property, so we can't use it directly.
+  const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value');
+  setter!.set!.call(textarea, value);
+  const event = new InputEvent('input', { bubbles: true, cancelable: true });
+  textarea.dispatchEvent(event);
+  const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+  textarea.dispatchEvent(changeEvent);
 }
 
 export function changeSelectIndex(input, selectIndex) {
@@ -79,56 +61,31 @@ export function focusElement(input: HTMLElement) {
   input.dispatchEvent(event);
 }
 
-// Return all matching buffers
-export function getBuffers(bufferCode: string): HTMLElement[] {
-  const nodes = document.evaluate(
-    `//div[@class='${Selector.BufferHeaderClass}'][starts-with(translate(., 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), '${bufferCode}')]/../..`,
-    document,
-    null,
-    XPathResult.ANY_TYPE,
-    null,
-  );
-  const buffers = [];
-  let node;
-
-  while ((node = nodes.iterateNext())) {
-    buffers.push(node as never);
+export async function selectMaterialInMaterialSelector(baseElement: Element, ticker: string) {
+  let container = baseElement;
+  if (!container.classList.contains(C.MaterialSelector.container)) {
+    container = await $(baseElement, C.MaterialSelector.container);
   }
-  return buffers;
-}
+  const input = await $(container, 'input');
 
-// Return all matching buffers from prefound buffer list
-export function getBuffersFromList(bufferCode: string, buffers: any[]): any[] {
-  return buffers
-    .filter(([firstElement]) => firstElement.toLowerCase().startsWith(bufferCode.toLowerCase()))
-    .map(([, secondElement]) => secondElement);
-}
+  const suggestionsContainer = await $(container, C.MaterialSelector.suggestionsContainer);
+  focusElement(input);
+  changeInputValue(input, ticker);
 
-// Create a success dialog with a dismiss button
-export function showSuccessDialog(tile, message: string = 'Action succeeded!') {
-  const displayTile = tile.parentElement.parentElement.parentElement;
+  const suggestionsList = await $(container, C.MaterialSelector.suggestionsList);
+  suggestionsContainer.style.display = 'none';
+  const match = _$$(suggestionsList, C.MaterialSelector.suggestionEntry).find(
+    x => _$(x, C.ColoredIcon.label)?.textContent === ticker,
+  );
 
-  const overlay = document.createElement('div'); // Main striped overlay
-  displayTile.appendChild(overlay);
-  overlay.classList.add(...Style.ActionSuccess);
+  if (!match) {
+    suggestionsContainer.style.display = '';
+    return false;
+  }
 
-  const centerInterface = document.createElement('span'); // Center green block with message
-  overlay.appendChild(centerInterface);
-  centerInterface.classList.add(...Style.ActionMessage);
-  centerInterface.textContent = message;
-
-  const dismissMessage = document.createElement('span'); // Dismiss message
-  centerInterface.appendChild(dismissMessage);
-  dismissMessage.textContent = '(click to dismiss)';
-  dismissMessage.classList.add(...Style.ActionDismiss);
-
-  overlay.addEventListener('click', () => {
-    // Just remove the overlay to dismiss
-    displayTile.removeChild(overlay);
-    return;
-  });
-
-  return;
+  await clickElement(match);
+  suggestionsContainer.style.display = '';
+  return true;
 }
 
 // A function to compare two planets (to be used in .sort() functions)
@@ -178,7 +135,7 @@ export function comparePlanets(idOrNameA: string, idOrNameB: string) {
   if (isPlanetANamed && !isPlanetBNamed) {
     return -1;
   }
-  if (isPlanetANamed && !isPlanetBNamed) {
+  if (isPlanetBNamed && !isPlanetANamed) {
     return 1;
   }
 
@@ -202,7 +159,7 @@ export function extractPlanetName(text: string | null) {
     .replace(/(\d)\s+(?=[a-zA-Z])/, '$1')
     // Clear system name in named systems
     .replace(/.*\s-\s/, '');
-  return (Stations[text] ?? text) as string;
+  return (stationsStore.getNaturalIdFromName(text) ?? text) as string;
 }
 
 export function getMaterialNameByTicker(ticker?: string | null) {

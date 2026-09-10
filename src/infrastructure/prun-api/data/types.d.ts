@@ -1,31 +1,31 @@
 declare namespace PrunApi {
-  export interface DateTime {
+  interface DateTime {
     timestamp: number;
   }
 
-  export interface TimeSpan {
+  interface TimeSpan {
     millis: number;
   }
 
-  export interface CurrencyAmount {
+  interface CurrencyAmount {
     currency: string;
     amount: number;
   }
 
-  export interface Position {
+  interface Position {
     x: number;
     y: number;
     z: number;
   }
 
-  export interface Currency {
+  interface Currency {
     numericCode: number;
     code: string;
     name: string;
     decimals: number;
   }
 
-  export interface ExchangeEntity {
+  interface ExchangeEntity {
     id: string;
     name: string;
     code: string;

@@ -6,7 +6,7 @@ import { createEntityStore } from '@src/infrastructure/prun-api/data/create-enti
 import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-getter';
 
-const store = createEntityStore<PrunApi.Site>(x => x.siteId);
+const store = createEntityStore<PrunApi.Site>({ selectId: x => x.siteId });
 const state = store.state;
 
 onApiMessage({
@@ -19,7 +19,7 @@ onApiMessage({
   },
   SITE_PLATFORM_BUILT(data: PrunApi.Platform) {
     const site = state.getById(data.siteId);
-    if (site !== undefined) {
+    if (site !== undefined && !site.platforms.some(x => x.id === data.id)) {
       store.setOne({
         ...site,
         platforms: [...site.platforms, data],
@@ -31,7 +31,7 @@ onApiMessage({
     if (site !== undefined) {
       store.setOne({
         ...site,
-        platforms: site.platforms.map(x => (x.id === data.id ? data : x)),
+        platforms: site.platforms.map(x => (x.id === data.id ? { ...x, ...data } : x)),
       });
     }
   },
@@ -46,10 +46,6 @@ onApiMessage({
   },
 });
 
-const getByShortId = createMapGetter(state.all, x => x.siteId.substring(0, 8));
-
-const getById = (value?: string | null) => state.getById(value) ?? getByShortId(value);
-
 const getByPlanetNaturalId = createMapGetter(
   state.all,
   x => getEntityNaturalIdFromAddress(x.address)!,
@@ -63,9 +59,12 @@ const getByPlanetNaturalIdOrName = (value?: string | null) =>
 export const getBuildingLastRepair = (building: PrunApi.Platform) =>
   building.lastRepair?.timestamp ?? building.creationTime.timestamp;
 
+const find = (idOrNaturalIdOrName?: string | null) =>
+  state.getById(idOrNaturalIdOrName) ?? getByPlanetNaturalIdOrName(idOrNaturalIdOrName);
+
 export const sitesStore = {
   ...state,
-  getById,
+  find,
   getByPlanetNaturalId,
   getByPlanetName,
   getByPlanetNaturalIdOrName,

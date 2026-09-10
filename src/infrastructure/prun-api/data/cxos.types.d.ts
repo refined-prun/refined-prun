@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface CXOrder {
+  interface CXOrder {
     id: string;
     exchange: ExchangeEntity;
     brokerId: string;
@@ -13,9 +13,9 @@ declare namespace PrunApi {
     trades: CXTrade[];
   }
 
-  declare type CXOrderStatus = 'PLACED' | 'PARTIALLY_FILLED' | 'FILLED';
+  type CXOrderStatus = 'PLACED' | 'PARTIALLY_FILLED' | 'FILLED';
 
-  export interface CXTrade {
+  interface CXTrade {
     id: string;
     amount: number;
     price: CurrencyAmount;
@@ -23,5 +23,5 @@ declare namespace PrunApi {
     partner: ExchangeEntity;
   }
 
-  declare type CXOrderType = 'BUYING' | 'SELLING';
+  type CXOrderType = 'BUYING' | 'SELLING';
 }

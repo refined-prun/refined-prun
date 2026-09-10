@@ -7,6 +7,10 @@
   padding-top: 2px;
 }
 
+.storeViewCentered {
+  margin-right: 10px;
+}
+
 .capacityContainer {
   display: flex;
   flex-direction: row;

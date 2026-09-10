@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface Exchange {
+  interface Exchange {
     name: string;
     code: string;
     operator: ExchangeOperator;
@@ -8,7 +8,7 @@ declare namespace PrunApi {
     id: string;
   }
 
-  export interface ExchangeOperator {
+  interface ExchangeOperator {
     id: string;
     code: string;
     name: string;

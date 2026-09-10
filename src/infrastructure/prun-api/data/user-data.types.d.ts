@@ -1,5 +1,5 @@
 declare namespace PrunApi {
-  export interface UserData {
+  interface UserData {
     id: string;
     username: string;
     subscriptionLevel: string;
@@ -23,7 +23,7 @@ declare namespace PrunApi {
     preferredLocale: string;
   }
 
-  export interface UserContext {
+  interface UserContext {
     id: string;
     type: string;
     creation: DateTime;

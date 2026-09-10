@@ -1,7 +1,6 @@
 import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { createRequestStore, request } from '@src/infrastructure/prun-api/data/request-hooks';
-
 const store = createEntityStore<PrunApi.ShipyardProject>();
 const state = store.state;
 

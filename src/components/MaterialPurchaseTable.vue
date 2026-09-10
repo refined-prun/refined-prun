@@ -3,7 +3,6 @@ import { fixed0, fixed2, formatCurrency } from '@src/utils/format';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import { calcMaterialAmountPrice } from '@src/infrastructure/fio/cx';
 import { sortMaterialAmounts } from '@src/core/sort-materials';
-import { sumBy } from '@src/utils/sum-by';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import PrunButton from '@src/components/PrunButton.vue';
 

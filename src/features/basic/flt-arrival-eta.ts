@@ -18,7 +18,9 @@ function onRowReady(row: HTMLTableRowElement) {
     return flight?.arrival.timestamp;
   });
   const eta = computed(() =>
-    arrival.value ? ` (${formatEta(timestampEachMinute.value, arrival.value)})` : undefined,
+    arrival.value !== undefined
+      ? ` (${formatEta(timestampEachMinute.value, arrival.value)})`
+      : undefined,
   );
   const span = createReactiveSpan(row, eta);
   keepLast(row, () => row.children[7], span);

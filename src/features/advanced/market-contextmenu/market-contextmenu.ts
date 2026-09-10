@@ -1,7 +1,6 @@
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { userData } from '@src/store/user-data';
 import { refTextContent } from '@src/utils/reactive-dom';
-import { ComponentPublicInstance, reactive } from 'vue';
 import MarketMenu from './MarketMenu.vue';
 
 export const store = reactive({
@@ -49,7 +48,7 @@ export const store = reactive({
   },
   checkClickedMenu(event: MouseEvent): void {
     const target = event.target as Node;
-    if (target && !this.menuElement.contains(target)) {
+    if (!this.menuElement.contains(target)) {
       this.hideMenu();
     }
   },
@@ -62,10 +61,10 @@ async function init() {
     container.addEventListener('click', event => store.checkClickedMenu(event));
   }
   document.addEventListener('contextmenu', event => {
-    const container = (event.target as HTMLElement).closest(
+    const container = (event.target as HTMLElement).closest<HTMLElement>(
       `.${C.ColoredIcon.container}`,
-    ) as HTMLElement;
-    if (container) {
+    );
+    if (container !== null) {
       event.preventDefault();
       const ticker = refTextContent(container);
       store.showMenu(event, ticker.value!);

@@ -4,6 +4,7 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import PrunButton from '@src/components/PrunButton.vue';
 import { PlanetBurn } from '@src/core/burn';
 import { countDays } from '@src/features/XIT/BURN/utils';
+import { useTileState } from '@src/features/XIT/BURN/tile-state';
 
 const { burn } = defineProps<{
   burn: PlanetBurn;
@@ -12,12 +13,14 @@ const { burn } = defineProps<{
   onClick: () => void;
 }>();
 
+const io = useTileState('io');
 const days = computed(() => countDays(burn.burn));
+const nameColspan = computed(() => (io.value ? 6 : 4));
 </script>
 
 <template>
   <tr :class="$style.row">
-    <td colspan="4" :class="$style.cell" @click="onClick">
+    <td :colspan="nameColspan" :class="$style.cell" @click="onClick">
       <span v-if="hasMinimize" :class="$style.minimize">
         {{ minimized ? '+' : '-' }}
       </span>

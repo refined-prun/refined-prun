@@ -4,7 +4,6 @@ import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addr
 import { timestampEachMinute } from '@src/utils/dayjs';
 import { calcBuildingCondition, calcBuildingMarketValue } from '@src/core/buildings';
 import { diffDays } from '@src/utils/time-diff';
-import { sumBy } from '@src/utils/sum-by';
 
 interface Entry {
   location: string;
@@ -14,7 +13,7 @@ interface Entry {
 
 const buildingsMarketValue = computed(() => {
   const sites = sitesStore.all.value;
-  if (sites === undefined) {
+  if (!sites) {
     return undefined;
   }
   const buildings: Entry[] = [];

@@ -6,17 +6,17 @@ import {
   getEntityNameFromAddress,
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
-import { sumBy } from '@src/utils/sum-by';
-import { isEmpty } from 'ts-extras';
+import { getRecurringOrders } from '@src/core/orders';
 
 export interface MaterialBurn {
   input: number;
   output: number;
   workforce: number;
-  DailyAmount: number;
-  Inventory: number;
-  DaysLeft: number;
-  Type: 'input' | 'output' | 'workforce';
+  dailyAmount: number;
+  remainingAllocation: number;
+  inventory: number;
+  daysLeft: number;
+  type: 'input' | 'output' | 'workforce';
 }
 
 export interface BurnValues {
@@ -31,7 +31,7 @@ export interface PlanetBurn {
 }
 
 const burnBySiteId = computed(() => {
-  if (sitesStore.all.value === undefined) {
+  if (!sitesStore.all.value) {
     return undefined;
   }
 
@@ -69,6 +69,13 @@ export function getPlanetBurn(siteOrId?: PrunApi.Site | string | null) {
   return burnBySiteId.value?.get(site.siteId)?.value;
 }
 
+// Treat net daily rates below 0.01 in magnitude as zero.
+const nearZeroDailyAmount = 0.01;
+
+export function clampNearZeroDailyAmount(dailyAmount: number) {
+  return dailyAmount > -nearZeroDailyAmount && dailyAmount < nearZeroDailyAmount ? 0 : dailyAmount;
+}
+
 export function calculatePlanetBurn(
   production: PrunApi.ProductionLine[] | undefined,
   workforces: PrunApi.Workforce[] | undefined,
@@ -76,41 +83,35 @@ export function calculatePlanetBurn(
 ) {
   const burnValues: BurnValues = {};
 
-  function getBurnValue(ticker: string) {
-    let burnValue = burnValues[ticker];
-    if (!burnValue) {
-      burnValue = {
-        input: 0,
-        output: 0,
-        workforce: 0,
-        DailyAmount: 0,
-        Inventory: 0,
-        DaysLeft: 0,
-        Type: 'output',
-      };
-      burnValues[ticker] = burnValue;
-    }
-    return burnValue;
+  function getBurnValue(material: PrunApi.Material) {
+    const ticker = material.ticker;
+    burnValues[ticker] ??= {
+      input: 0,
+      output: 0,
+      workforce: 0,
+      dailyAmount: 0,
+      remainingAllocation: 0,
+      inventory: 0,
+      daysLeft: 0,
+      type: 'output',
+    };
+    return burnValues[ticker];
   }
 
   if (production) {
     for (const line of production) {
       const capacity = line.capacity;
-      const queuedOrders = line.orders.filter(x => !x.started);
-      const recurringOrders = queuedOrders.filter(x => x.recurring);
-      const burnOrders = isEmpty(recurringOrders) ? queuedOrders : recurringOrders;
+      const burnOrders = getRecurringOrders(line);
       let totalDuration = sumBy(burnOrders, x => x.duration?.millis ?? Infinity);
       // Convert to days
       totalDuration /= 86400000;
 
       for (const order of burnOrders) {
-        for (const mat of order.outputs) {
-          const materialBurn = getBurnValue(mat.material.ticker);
-          materialBurn.output += (mat.amount * capacity) / totalDuration;
+        for (const amount of order.outputs) {
+          getBurnValue(amount.material).output += (amount.amount * capacity) / totalDuration;
         }
-        for (const mat of order.inputs) {
-          const materialBurn = getBurnValue(mat.material.ticker);
-          materialBurn.input += (mat.amount * capacity) / totalDuration;
+        for (const amount of order.inputs) {
+          getBurnValue(amount.material).input += (amount.amount * capacity) / totalDuration;
         }
       }
     }
@@ -127,23 +128,10 @@ export function calculatePlanetBurn(
         continue;
       }
       for (const need of tier.needs) {
-        const materialBurn = getBurnValue(need.material.ticker);
-        materialBurn.workforce += need.unitsPerInterval;
+        const mat = getBurnValue(need.material);
+        mat.workforce += need.unitsPerInterval;
+        mat.remainingAllocation += need.remainingAllocation;
       }
-    }
-  }
-
-  for (const ticker of Object.keys(burnValues)) {
-    const burnValue = burnValues[ticker];
-    burnValue.DailyAmount = burnValue.output;
-    burnValue.Type = 'output';
-    burnValue.DailyAmount -= burnValue.workforce;
-    if (burnValue.workforce > 0 && burnValue.DailyAmount <= 0) {
-      burnValue.Type = 'workforce';
-    }
-    burnValue.DailyAmount -= burnValue.input;
-    if (burnValue.input > 0 && burnValue.DailyAmount <= 0) {
-      burnValue.Type = 'input';
     }
   }
 
@@ -155,19 +143,42 @@ export function calculatePlanetBurn(
           continue;
         }
         const materialBurn = burnValues[quantity.material.ticker];
-        if (!materialBurn) {
+        if (materialBurn === undefined) {
           continue;
         }
-        materialBurn.Inventory += quantity.amount;
-        if (quantity.amount != 0) {
-          materialBurn.DaysLeft =
-            materialBurn.DailyAmount > 0
-              ? 1000
-              : Math.floor(-materialBurn.Inventory / materialBurn.DailyAmount);
-        }
+        materialBurn.inventory += quantity.amount;
       }
     }
   }
 
+  for (const ticker in burnValues) {
+    const mat = burnValues[ticker];
+    mat.dailyAmount = mat.output;
+    mat.type = 'output';
+    mat.dailyAmount -= mat.workforce;
+    if (mat.workforce > 0 && mat.dailyAmount <= 0) {
+      mat.type = 'workforce';
+    }
+    mat.dailyAmount -= mat.input;
+    if (mat.input > 0 && mat.dailyAmount <= 0) {
+      mat.type = 'input';
+    }
+    mat.dailyAmount = clampNearZeroDailyAmount(mat.dailyAmount);
+    const inv = mat.remainingAllocation + mat.inventory;
+    mat.daysLeft = mat.dailyAmount >= 0 ? Number.POSITIVE_INFINITY : inv / -mat.dailyAmount;
+  }
+
   return burnValues;
+}
+
+export function computeNeed(mat: MaterialBurn, resupplyDays: number) {
+  const production = mat.dailyAmount;
+  const days = mat.daysLeft;
+  if (days > resupplyDays || production >= 0) {
+    return 0;
+  }
+  const need = Math.ceil((days - resupplyDays) * production);
+  // Math.abs is needed to prevent a "-0" value that can happen
+  // in situations like: 0 * -0.25 => -0.
+  return Math.abs(need);
 }

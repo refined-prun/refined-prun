@@ -1,13 +1,13 @@
 import { deepFreeze } from '@src/utils/deep-freeze';
 
 export const initialUserData = deepFreeze({
-  version: 0,
   firstLoad: Date.now(),
   tileState: {} as Record<string, UserData.TileState | undefined>,
   settings: {
     mode: undefined as 'BASIC' | 'FULL' | undefined,
     disabled: [] as string[],
     time: 'DEFAULT' as UserData.TimeFormat,
+    defaultChartType: 'SMOOTH' as UserData.ExchangeChartType,
     currency: {
       preset: 'DEFAULT' as UserData.CurrencyPreset,
       custom: '$',
@@ -27,6 +27,9 @@ export const initialUserData = deepFreeze({
       yellow: 7,
       resupply: 16,
     },
+    flow: {
+      overrides: {} as Record<string, UserData.PriceOverride>,
+    },
     repair: {
       threshold: 60,
       offset: 10,
@@ -44,10 +47,14 @@ export const initialUserData = deepFreeze({
       ['PROD', 'PROD'],
       ['LEAD', 'LEAD'],
       ['CMDS', 'CMDS'],
+      ['ACT', 'XIT ACT'],
+      ['BURN', 'XIT BURN'],
+      ['REP', 'XIT REP'],
       ['SET', 'XIT SET'],
       ['HELP', 'XIT HELP'],
     ] as [string, string][],
     buffers: [] as [string, number, number][],
+    audioVolume: 0.4,
     contextMenuExchange: 'AI1' as UserData.Exchange,
   },
   sorting: {} as Record<string, UserData.StoreSortingData>,
@@ -55,6 +62,7 @@ export const initialUserData = deepFreeze({
     v1: [],
     v2: [],
   } as UserData.BalanceHistory,
+  fullEquityMode: true,
   notes: [] as UserData.Note[],
   actionPackages: [] as UserData.ActionPackageData[],
   systemMessages: [] as UserData.SystemMessages[],
@@ -62,8 +70,12 @@ export const initialUserData = deepFreeze({
   tabs: {
     order: [] as string[],
     hidden: [] as string[],
+    locked: [] as string[],
   },
   commandLists: [] as UserData.CommandList[],
+
+  // Used in user-data-migrations.ts
+  migrations: undefined,
 });
 
 export const userData = reactive({} as typeof initialUserData);

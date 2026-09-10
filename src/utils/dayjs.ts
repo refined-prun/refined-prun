@@ -19,8 +19,6 @@ export const timestampEachSecond = computed(() => live(Date.now(), eachSecond));
 export const timestampEachMinute = computed(() => live(Date.now(), eachMinute));
 
 function live<T>(value: T, tick: Ref<number>): T {
-  // Touch reactive value
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _ = tick.value;
+  void tick.value;
   return value;
 }

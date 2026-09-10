@@ -12,7 +12,11 @@ function onTileReady(tile: PrunTile) {
     return;
   }
 
-  subscribe($$(tile.anchor, C.OrderSlot.container), x => onOrderSlotReady(x, tile.parameter!));
+  const site = sitesStore.find(tile.parameter);
+  if (!site) {
+    return;
+  }
+  subscribe($$(tile.anchor, C.OrderSlot.container), x => onOrderSlotReady(x, site.siteId));
 }
 
 function onOrderSlotReady(slot: HTMLElement, siteId: string) {
@@ -30,11 +34,9 @@ function onOrderSlotReady(slot: HTMLElement, siteId: string) {
     return undefined;
   });
   const eta = computed(() => {
-    if (!completion.value) {
-      return undefined;
-    }
-
-    return `(${formatEta(timestampEachMinute.value, completion.value)})`;
+    return completion.value !== undefined
+      ? `(${formatEta(timestampEachMinute.value, completion.value)})`
+      : undefined;
   });
   const div = createReactiveDiv(slot, eta);
   keepLast(slot, () => _$(slot, C.OrderSlot.info), div);
