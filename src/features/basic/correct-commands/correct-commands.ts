@@ -15,6 +15,10 @@ const transformers = [
   correctXitArgs,
 ];
 
+export function addCommandTransformer(transform: (parts: string[]) => void) {
+  transformers.push(transform);
+}
+
 async function onSelectorReady(selector: HTMLElement) {
   const input: HTMLInputElement = await $(selector, C.PanelSelector.input);
   const form = input.form!;
