@@ -22,6 +22,9 @@ function onTileReady(tile: PrunTile) {
       }),
     ).before(header);
   });
+  subscribe($$(tile.anchor, C.FormComponent.containerPassive), () =>
+    setHeaders(tile, isMinimized.value),
+  );
 }
 
 function setHeaders(tile: PrunTile, isMinimized: boolean) {
