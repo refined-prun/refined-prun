@@ -58,7 +58,7 @@ const eta = computed(() => {
     </td>
     <td :class="$style.fulfillCell">
       <PrunButton v-if="isFulfillable(contract, condition)" success inline @click="onFulfillClick">
-        fulfill
+        {{ L.ContractCondition.fulfill() }}
       </PrunButton>
     </td>
   </tr>
