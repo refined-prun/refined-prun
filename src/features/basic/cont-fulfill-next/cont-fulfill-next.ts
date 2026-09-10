@@ -20,13 +20,9 @@ function onTileReady(tile: PrunTile) {
     createFragmentApp(Commands).after(container);
   });
 
-  const fulfillableCount = computed(() => {
-    if (!contract.value) {
-      return 0;
-    }
-
-    return contract.value.conditions.filter(x => isFulfillable(contract.value!, x)).length;
-  });
+  const fulfillableCount = computed(
+    () => contract.value?.conditions.filter(x => isFulfillable(contract.value, x)).length ?? 0,
+  );
 
   subscribe($$(tile.anchor, C.FormComponent.containerCommand), container => {
     if (container.nextElementSibling?.classList.contains(C.FormComponent.containerPassive)) {

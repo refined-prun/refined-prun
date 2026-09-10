@@ -3,7 +3,13 @@ import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 
-export function isFulfillable(contract: PrunApi.Contract, condition: PrunApi.ContractCondition) {
+export function isFulfillable(
+  contract?: PrunApi.Contract | null,
+  condition?: PrunApi.ContractCondition | null,
+) {
+  if (!condition || !contract) {
+    return false;
+  }
   if (condition.party !== contract.party) {
     return false;
   }
