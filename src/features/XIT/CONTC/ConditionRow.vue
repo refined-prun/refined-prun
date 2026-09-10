@@ -3,13 +3,19 @@ import ContractLink from '@src/features/XIT/CONTC/ContractLink.vue';
 import { timestampEachSecond } from '@src/utils/dayjs';
 import dayjs from 'dayjs';
 import ConditionText from '@src/features/XIT/CONTC/ConditionText.vue';
-import FulfillButton from '@src/features/XIT/CONTC/FulfillButton.vue';
+import PrunButton from '@src/components/PrunButton.vue';
+import { isFulfillable } from '@src/core/contract-conditions';
+import { fulfillCondition } from '@src/infrastructure/prun-ui/utils/fulfill-condition';
 
-const { deadline } = defineProps<{
+const { deadline, contract, condition } = defineProps<{
   condition: PrunApi.ContractCondition;
   contract: PrunApi.Contract;
   deadline: number;
 }>();
+
+function onFulfillClick(event: MouseEvent) {
+  void fulfillCondition(event.currentTarget as Element, contract, condition, event.shiftKey);
+}
 
 const eta = computed(() => {
   if (!isFinite(deadline)) {
@@ -51,7 +57,9 @@ const eta = computed(() => {
       <ConditionText :condition="condition" />
     </td>
     <td :class="$style.fulfillCell">
-      <FulfillButton :contract="contract" :condition="condition" />
+      <PrunButton v-if="isFulfillable(contract, condition)" success inline @click="onFulfillClick">
+        fulfill
+      </PrunButton>
     </td>
   </tr>
 </template>

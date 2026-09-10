@@ -1,7 +1,7 @@
 import { changeInputValue, clickElement } from '@src/util';
 import { sleep } from '@src/utils/sleep';
 import css from '@src/utils/css-utils.module.css';
-import { onNodeDisconnected } from '@src/utils/on-node-disconnected';
+import { waitNodeDisconnected } from '@src/utils/on-node-disconnected';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { watchUntil } from '@src/utils/watch';
 import { isEmpty } from 'ts-extras';
@@ -113,10 +113,7 @@ async function processWindow(window: HTMLDivElement, command: string, options?: 
     form.requestSubmit();
   }
   const selector = await $(window, C.Tile.selector);
-  await Promise.any([
-    new Promise<void>(resolve => onNodeDisconnected(input, resolve)),
-    $(selector, C.Tile.warning),
-  ]);
+  await Promise.any([waitNodeDisconnected(input), $(selector, C.Tile.warning)]);
   if (!options?.autoClose) {
     window.classList.remove(css.hidden);
     return;
@@ -131,7 +128,7 @@ async function closeWhenDone(window: HTMLDivElement, options?: ShowBufferOptions
     await watchUntil(closeWhen);
   }
   closePrunWindow(window);
-  await new Promise<void>(resolve => onNodeDisconnected(window, resolve));
+  await waitNodeDisconnected(window);
 }
 
 export function correctXitArgs(parts: string[]) {

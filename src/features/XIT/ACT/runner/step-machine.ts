@@ -99,9 +99,17 @@ export class StepMachine {
         },
         waitActionFeedback: async tile => {
           this.options.onStatusChanged('Waiting for action feedback...');
-          const error = await waitActionFeedback(tile.frame);
-          if (error) {
-            log.error(error);
+          const { result, message } = await waitActionFeedback(tile.frame, {
+            autoConfirm: true,
+            dismissSuccess: true,
+          });
+          if (result === 'cancel') {
+            log.cancel('Action Package execution canceled');
+            this.stop();
+            return;
+          }
+          if (result === 'error') {
+            log.error(message);
             log.error(description ?? info.description(next));
             log.error('Action Package execution failed');
             this.stop();

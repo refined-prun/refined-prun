@@ -34,6 +34,13 @@ function checkConnected(mutations: MutationRecord[]) {
   }
 }
 
+export async function waitNodeDisconnected(node?: Node | null) {
+  if (!node) {
+    return;
+  }
+  await new Promise<void>(resolve => onNodeDisconnected(node, resolve));
+}
+
 let elementsLazy: [Node, () => void][] = [];
 
 // Cheaper alternative to onNodeDisconnected. Use when you don't need the callback to be called immediately.
@@ -45,6 +52,10 @@ export function onNodeDisconnectedLazy(node: Node, callback: () => void) {
 
   setupObserverLazy();
   elementsLazy.push([node, callback]);
+}
+
+export async function waitNodeDisconnectedLazy(node: Node) {
+  await new Promise<void>(resolve => onNodeDisconnectedLazy(node, resolve));
 }
 
 const setupObserverLazy = onetime(() => setInterval(checkConnectedLazy, 1000));

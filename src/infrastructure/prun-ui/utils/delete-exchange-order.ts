@@ -2,9 +2,12 @@ import { clickElement, selectMaterialInMaterialSelector } from '@src/util';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { mirrorConfirmationOverlay } from '@src/infrastructure/prun-ui/utils/mirror-confirmation-overlay';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
-import { onNodeDisconnected } from '@src/utils/on-node-disconnected';
-import { showConfirmationOverlay } from '@src/infrastructure/prun-ui/tile-overlay';
-import ActionFeedback from '@src/components/ActionFeedback.vue';
+import { waitNodeDisconnected } from '@src/utils/on-node-disconnected';
+import { waitActionFeedback } from '@src/infrastructure/prun-ui/utils/action-feedback';
+import {
+  showConfirmationOverlay,
+  showProgressOverlay,
+} from '@src/infrastructure/prun-ui/tile-overlay';
 import { watchUntil } from '@src/utils/watch';
 import { cxosStore } from '@src/infrastructure/prun-api/data/cxos';
 import { fxosStore } from '@src/infrastructure/prun-api/data/fxos';
@@ -46,7 +49,7 @@ export async function deleteExchangeOrder(
   autoClose: boolean,
 ) {
   orderId = orderId.toLowerCase();
-  const dismissProgress = showManualProgressOverlay(target);
+  const dismissProgress = showProgressOverlay(target);
 
   const shouldClose = ref(false);
   const stopWatch = watch(shouldClose, value => {
@@ -77,71 +80,22 @@ export async function deleteExchangeOrder(
     shouldClose.value = true;
     return false;
   }
-  mirrorConfirmationOverlay(window, target);
-  await clickElement(button);
-  const outcome = await awaitActionOutcome(window);
-  onNodeDisconnected(outcome, () => {
+  mirrorConfirmationOverlay(window, target, dismissProgress);
+  try {
+    await clickElement(button);
+    const { result } = await waitActionFeedback(window, {
+      dismissSuccess: autoClose,
+      dismissError: autoClose,
+    });
+    return result === 'success';
+  } finally {
     shouldClose.value = true;
-  });
-  const isSuccess = outcome.classList.contains(C.ActionFeedback.success);
-  if (autoClose) {
-    await clickElement(outcome);
   }
-  return isSuccess;
-}
-
-async function awaitActionOutcome(window: Element) {
-  return await Promise.race([
-    $(window, C.ActionFeedback.error),
-    $(window, C.ActionFeedback.success),
-  ]);
-}
-
-function showManualProgressOverlay(target: Element) {
-  const targetBody = target.closest(`.${C.TileFrame.body}`);
-  if (!targetBody) {
-    return () => {};
-  }
-  const before = new Set(Array.from(targetBody.children));
-  const progressApp = createFragmentApp(ActionFeedback, { status: 'progress' });
-  progressApp.appendTo(targetBody);
-  const manual = Array.from(targetBody.children).filter(x => !before.has(x));
-
-  let dismissed = false;
-  const dismiss = () => {
-    if (dismissed) {
-      return;
-    }
-    dismissed = true;
-    progressApp.unmount();
-    observer.disconnect();
-  };
-
-  const observer = new MutationObserver(mutations => {
-    for (const mutation of mutations) {
-      for (const added of Array.from(mutation.addedNodes)) {
-        if (
-          added instanceof Element &&
-          added.classList.contains(C.ActionFeedback.overlay) &&
-          !manual.includes(added)
-        ) {
-          dismiss();
-          return;
-        }
-      }
-    }
-  });
-  observer.observe(targetBody, { childList: true });
-  return dismiss;
 }
 
 async function awaitBufferLoad(window: Element) {
   const loading = _$(window, C.Loading.loader);
-  if (loading) {
-    await new Promise<void>(resolve => {
-      onNodeDisconnected(loading, resolve);
-    });
-  }
+  await waitNodeDisconnected(loading);
 }
 
 async function setCxosFilters(window: Element, orderId: string) {

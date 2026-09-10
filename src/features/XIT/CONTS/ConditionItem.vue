@@ -1,14 +1,21 @@
 <script setup lang="ts">
 import fa from '@src/utils/font-awesome.module.css';
-import { friendlyConditionText, isSelfCondition } from '@src/features/XIT/CONTS/utils';
-import FulfillButton from '@src/features/XIT/CONTC/FulfillButton.vue';
+import { friendlyConditionText } from '@src/features/XIT/CONTS/utils';
+import { fulfillCondition } from '@src/infrastructure/prun-ui/utils/fulfill-condition';
+import { isFulfillable } from '@src/core/contract-conditions';
 
 const { condition, contract } = defineProps<{
   condition: PrunApi.ContractCondition;
   contract: PrunApi.Contract;
 }>();
 
+function onFulfillClick(event: MouseEvent) {
+  void fulfillCondition(event.currentTarget as Element, contract, condition, event.shiftKey);
+}
+
 const $style = useCssModule();
+const label = computed(() => friendlyConditionText(condition.type));
+const tooltip = computed(() => `Fulfill ${label.value}`);
 
 const iconClass = computed(() => {
   switch (condition.status) {
@@ -36,18 +43,67 @@ const icon = computed(() => (condition.status === 'FULFILLED' ? '\uf00c' : '\uf0
 
 <template>
   <div>
-    <span :class="iconClass">
-      <span :class="[fa.solid]">{{ icon }}</span
-      >&nbsp;{{ friendlyConditionText(condition.type) }}
+    <button
+      v-if="isFulfillable(contract, condition)"
+      :class="[$style.condition, $style.action, iconClass]"
+      :data-tooltip="tooltip"
+      data-tooltip-position="left"
+      @click="onFulfillClick">
+      <span :class="$style.icon">
+        <span :class="fa.solid">{{ '\uf04b' }}</span>
+      </span>
+      <span :class="$style.actionLabel">{{ label }}</span>
+    </button>
+    <span v-else :class="[$style.condition, iconClass]">
+      <span :class="$style.icon">
+        <span :class="fa.solid">{{ icon }}</span>
+      </span>
+      <span>{{ label }}</span>
     </span>
-    <FulfillButton
-      v-if="condition.status !== 'FULFILLED' && isSelfCondition(contract, condition)"
-      :contract="contract"
-      :condition="condition" />
   </div>
 </template>
 
 <style module>
+.condition {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.125em;
+}
+
+.action {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 2px;
+  }
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.75em;
+  height: 1lh;
+  flex-shrink: 0;
+
+  > span {
+    font-size: 0.75em;
+    line-height: 1;
+  }
+}
+
+.actionLabel {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 0.15em;
+}
+
 .pending {
   color: var(--rp-color-orange);
 }
