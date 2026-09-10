@@ -8,6 +8,7 @@ import RangeInput from '@src/components/forms/RangeInput.vue';
 import Active from '@src/components/forms/Active.vue';
 import SelectInput from '@src/components/forms/SelectInput.vue';
 import { ChartDef, charts } from '@src/features/XIT/FINCH/charts';
+import { ChartSeries } from '@src/features/XIT/FINCH/growth-rate';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import Passive from '@src/components/forms/Passive.vue';
 
@@ -40,37 +41,35 @@ const yLabel = computed(() => {
   }
   return label;
 });
+const unit = computed(() => selectedChartDef.value?.unit ?? 'currency');
 
-const lineChartData = computed(() => {
-  const date: number[] = [];
-  const equityValues: number[] = [];
-  if (!selectedChartDef.value) {
-    return {
-      date,
-      equity: equityValues,
-    };
+const lineChartData = computed<ChartSeries>(() => {
+  const timestamps: number[] = [];
+  const values: number[] = [];
+  const def = selectedChartDef.value;
+  if (def === undefined) {
+    return { timestamps, values };
   }
 
   for (const entry of balanceHistory.value) {
-    const value = selectedChartDef.value.getValue(entry);
+    const value = def.getValue(entry);
     if (value === undefined) {
       continue;
     }
 
-    const previousDay = date[date.length - 1];
+    const previousDay = timestamps[timestamps.length - 1];
     if (previousDay !== undefined && dayjs(previousDay).isSame(entry.timestamp, 'day')) {
-      date[date.length - 1] = entry.timestamp;
-      equityValues[equityValues.length - 1] = value;
+      timestamps[timestamps.length - 1] = entry.timestamp;
+      values[values.length - 1] = value;
     } else {
-      date.push(entry.timestamp);
-      equityValues.push(value);
+      timestamps.push(entry.timestamp);
+      values.push(value);
     }
   }
 
-  return {
-    date,
-    equity: equityValues,
-  };
+  return def.deriveSeries === undefined
+    ? { timestamps, values }
+    : def.deriveSeries({ timestamps, values });
 });
 
 function onChartClick() {
@@ -95,9 +94,10 @@ function onChartClick() {
   <LineChart
     :maintain-aspect-ratio="maintainAspectRatio"
     :average-factor="averageFactor"
-    :ydata="lineChartData.equity"
-    :xdata="lineChartData.date"
+    :ydata="lineChartData.values"
+    :xdata="lineChartData.timestamps"
     :y-label="yLabel"
+    :unit="unit"
     :pan="pan"
     :zoom="zoom"
     @click="onChartClick" />

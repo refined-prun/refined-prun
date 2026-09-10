@@ -1,12 +1,16 @@
 import { PartialBalanceSheet } from '@src/core/balance/balance-sheet';
 import * as summary from '@src/core/balance/balance-sheet-summary';
 import { userData } from '@src/store/user-data';
+import { calcDailyGrowthRate, ChartSeries } from '@src/features/XIT/FINCH/growth-rate';
 
 export type ChartDef = {
   value: string;
   label: string;
   getValue: (x: PartialBalanceSheet) => number | undefined;
   less?: boolean;
+  // Rewrites the daily series into a derived one.
+  deriveSeries?: (series: ChartSeries) => ChartSeries;
+  unit?: 'currency' | 'percent';
 };
 
 export const charts = computed<ChartDef[]>(() => {
@@ -15,6 +19,13 @@ export const charts = computed<ChartDef[]>(() => {
       value: 'EQUITY',
       label: userData.fullEquityMode ? 'Equity' : 'Equity (Partial)',
       getValue: summary.calcEquity,
+    },
+    {
+      value: 'EQUITY GROWTH',
+      label: userData.fullEquityMode ? 'Equity Growth' : 'Equity Growth (Partial)',
+      getValue: summary.calcEquity,
+      deriveSeries: calcDailyGrowthRate,
+      unit: 'percent',
     },
 
     // =========================

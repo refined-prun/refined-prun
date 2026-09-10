@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
-import { fixed0, fixed01, hhmm, ddmm, ddmmyyyy, formatCurrency } from '@src/utils/format';
+import { fixed0, fixed01, hhmm, ddmm, ddmmyyyy, formatCurrency, percent2 } from '@src/utils/format';
 
 Chart.register(
   LineController,
@@ -31,6 +31,7 @@ const {
   averageFactor = 0.2,
   maintainAspectRatio,
   pan,
+  unit = 'currency',
   xdata,
   ydata,
   yLabel,
@@ -39,6 +40,7 @@ const {
   averageFactor?: number;
   maintainAspectRatio?: boolean;
   pan?: boolean;
+  unit?: 'currency' | 'percent';
   xdata: number[];
   ydata: number[];
   yLabel?: string;
@@ -46,7 +48,14 @@ const {
 }>();
 
 const sortedYData = computed(() => ydata.slice().sort((a, b) => a - b));
-const maxY = computed(() => sortedYData.value[sortedYData.value.length - 1]);
+const minY = computed(() => sortedYData.value[0] ?? 0);
+const maxY = computed(() => sortedYData.value[sortedYData.value.length - 1] ?? 0);
+
+// Growth rates sit close to zero, so two decimals keep neighbouring axis ticks
+// distinct instead of collapsing them into a run of identical labels.
+function formatValue(value: number) {
+  return unit === 'percent' ? percent2(value) : formatCurrency(value);
+}
 
 function calculateMovingAverage(data: number[], factor: number) {
   factor = Math.min(Math.max(factor, 0), 1);
@@ -101,7 +110,7 @@ const chartData = computed<ChartData<'line', number[], number | string | Date>>(
       data: ydata,
       borderColor: '#f7a600',
       fill: false,
-      pointRadius: 0.25,
+      pointRadius: unit === 'percent' ? 2.5 : 0.25,
       pointBackgroundColor: '#f7a600',
       showLine: false,
     },
@@ -155,19 +164,22 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
       ticks: {
         color: '#999',
         callback(value: string | number) {
-          if (typeof value === 'number') {
-            if (value >= 1_000_000_000) {
-              return formatY(value, 1_000_000_000, 'B');
-            }
-            if (value >= 1_000_000) {
-              return formatY(value, 1_000_000, 'M');
-            }
-            if (value >= 1_000) {
-              return formatY(value, 1_000, 'K');
-            }
-            return fixed0(value);
+          if (typeof value !== 'number') {
+            return value;
           }
-          return value;
+          if (unit === 'percent') {
+            return percent2(value);
+          }
+          if (value >= 1_000_000_000) {
+            return formatY(value, 1_000_000_000, 'B');
+          }
+          if (value >= 1_000_000) {
+            return formatY(value, 1_000_000, 'M');
+          }
+          if (value >= 1_000) {
+            return formatY(value, 1_000, 'K');
+          }
+          return fixed0(value);
         },
       },
     },
@@ -195,7 +207,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
           if (label) {
             label += ': ';
           }
-          label += formatCurrency(item.parsed.y);
+          label += formatValue(item.parsed.y);
           return label;
         },
       },
@@ -204,7 +216,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
     zoom: {
       limits: {
         x: { min: xdata[0], max: xdata[xdata.length - 1] },
-        y: { min: 0, max: maxY.value * 1.1 },
+        y: { min: Math.min(0, minY.value * 1.1), max: Math.max(0, maxY.value * 1.1) },
       },
       pan: {
         enabled: pan,
