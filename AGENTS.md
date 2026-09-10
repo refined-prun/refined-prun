@@ -34,6 +34,9 @@ ALL STEPS ARE MANDATORY. DO NOT SKIP ANY.
 - Execute, use skills and commands that can help solve the task
 - Once the task is complete, use the distill skill
 
+For small tasks (one-line fixes, running tests, infra chores, questions): skip the plan-approval round trip.
+Still read the docs relevant to whatever you touch.
+
 ## MEMORY
 
 `MEMORY.md` is managed exclusively by the auto-memory system.
