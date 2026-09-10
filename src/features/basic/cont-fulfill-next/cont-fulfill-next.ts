@@ -1,30 +1,31 @@
-import ContFulfillInfo from './ContFulfillInfo.vue';
-import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
+import FulfillButton from './FulfillButton.vue';
+import Commands from '@src/components/forms/Commands.vue';
+import { refAnimationFrame } from '@src/utils/reactive-dom';
 
 function onTileReady(tile: PrunTile) {
-  const contract = computed(() => contractsStore.getByLocalId(tile.parameter));
+  let fulfillButtons: HTMLCollectionOf<HTMLButtonElement> | undefined = undefined;
 
-  const pendingCount = computed(() => {
-    const c = contract.value;
-    if (!c) {
-      return 0;
+  subscribe($$(tile.anchor, 'table'), table => {
+    fulfillButtons = table.getElementsByClassName(
+      C.Button.success,
+    ) as HTMLCollectionOf<HTMLButtonElement>;
+  });
+
+  subscribe($$(tile.anchor, C.FormComponent.containerPassive), container => {
+    // Some contracts don't have the "CMD" form component, so we create it manually.
+    const nextElement = container.nextElementSibling;
+    if (
+      !nextElement ||
+      nextElement.classList.contains(C.FormComponent.containerPassive) ||
+      nextElement.classList.contains(C.FormComponent.containerCommand)
+    ) {
+      return;
     }
-    return c.conditions.filter(x => x.status !== 'FULFILLED' && x.party === c.party).length;
+
+    createFragmentApp(Commands).after(container);
   });
 
-  // Observe DOM mutations to keep fulfillableCount reactive.
-  const domVersion = ref(0);
-  const observer = new MutationObserver(() => {
-    domVersion.value++;
-  });
-  observer.observe(tile.anchor, { childList: true, subtree: true });
-
-  const fulfillableCount = computed(() => {
-    // Touch domVersion to re-evaluate when DOM changes.
-    void domVersion.value;
-    const buttons = _$$(tile.anchor, C.Button.success);
-    return buttons.filter(x => x.textContent?.trim().toLowerCase() === 'fulfill').length;
-  });
+  const fulfillableCount = refAnimationFrame(tile.anchor, () => fulfillButtons?.length ?? 0);
 
   const onFulfillNext = () => {
     const buttons = _$$(tile.anchor, C.Button.success);
@@ -34,16 +35,16 @@ function onTileReady(tile: PrunTile) {
     }
   };
 
-  // Place after the CMD row.
-  const cmdRow = _$$(tile.anchor, C.FormComponent.containerCommand)[0];
-  if (cmdRow === undefined) {
-    return;
-  }
+  subscribe($$(tile.anchor, C.FormComponent.containerCommand), container => {
+    if (container.nextElementSibling?.classList.contains(C.FormComponent.containerPassive)) {
+      return;
+    }
 
-  createFragmentApp(
-    ContFulfillInfo,
-    reactive({ pendingCount, fulfillableCount, onFulfillNext }),
-  ).after(cmdRow);
+    createFragmentApp(
+      FulfillButton,
+      reactive({ count: fulfillableCount, onClick: onFulfillNext }),
+    ).appendTo(container);
+  });
 }
 
 function init() {
