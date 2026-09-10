@@ -32,12 +32,16 @@ function onHeaderClick() {
       :analysis="analysis"
       :minimized="isMinimized"
       :on-click="onHeaderClick" />
-  </tbody>
-  <tbody v-if="!isMinimized">
-    <tr>
+    <tr v-if="!isMinimized" :class="$style.detailRow">
       <td colspan="6">
         <BaseDetail :analysis="analysis" />
       </td>
     </tr>
   </tbody>
 </template>
+
+<style module>
+.detailRow td {
+  background-color: transparent !important;
+}
+</style>
