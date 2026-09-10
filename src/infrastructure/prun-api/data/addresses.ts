@@ -5,6 +5,18 @@ type State = Record<string, PrunApi.Address | null | undefined>;
 const state = shallowReactive<State>({});
 
 onApiMessage({
+  CLIENT_CONNECTION_OPENED() {
+    for (const id of Object.keys(state)) {
+      delete state[id];
+    }
+  },
+  ADDRESS_ADDRESSABLE_MAPPING(data: {
+    mappings: { addressableId: string; address: PrunApi.Address | null }[];
+  }) {
+    for (const mapping of data.mappings) {
+      state[mapping.addressableId] = mapping.address;
+    }
+  },
   SHIP_SHIPS(data: { ships: PrunApi.Ship[] }) {
     for (const ship of data.ships) {
       state[ship.id] = ship.address;
@@ -12,6 +24,12 @@ onApiMessage({
   },
   SHIP_DATA(data: PrunApi.Ship) {
     state[data.id] = data.address;
+  },
+  SHIP_FLIGHT_FLIGHT(data: PrunApi.Flight) {
+    state[data.shipId] = null;
+  },
+  SHIP_FLIGHT_FLIGHT_ENDED(data: PrunApi.Flight) {
+    state[data.shipId] = data.destination;
   },
   SITE_SITES(data: { sites: PrunApi.Site[] }) {
     for (const storage of data.sites) {
@@ -23,17 +41,25 @@ onApiMessage({
   },
   WAREHOUSE_STORAGES(data: { storages: PrunApi.Warehouse[] }) {
     for (const storage of data.storages) {
-      state[storage.storeId] = storage.address;
+      state[storage.warehouseId] = storage.address;
     }
   },
   WAREHOUSE_STORAGE(data: PrunApi.Warehouse) {
-    state[data.storeId] = data.address;
+    state[data.warehouseId] = data.address;
+  },
+  DATA_DATA(data: { path: string[]; body: { id: string; address: PrunApi.Address } }) {
+    if (data.path.length === 2 && data.path[0] === 'warehouses') {
+      state[data.body.id] = data.body.address;
+    }
+  },
+  ASSETS_ASSETS(data: { assets: { infrastructureId: string; address: PrunApi.Address }[] }) {
+    for (const asset of data.assets) {
+      state[asset.infrastructureId] = asset.address;
+    }
   },
 });
 
-export const addressesStore = {
-  ...state,
-};
+export const addressesStore = state;
 
 export const getEntityNaturalIdFromAddress = (address?: PrunApi.Address | null) => {
   return getLocationLineFromAddress(address)?.entity.naturalId;
@@ -137,12 +163,8 @@ export function isSameAddress(
   addressA?: PrunApi.Address | null,
   addressB?: PrunApi.Address | null,
 ) {
-  if (!addressA || !addressB) {
+  if (!addressA || !addressB || addressA.lines.length === 0 || addressB.lines.length === 0) {
     return false;
-  }
-
-  if (addressA === addressB) {
-    return true;
   }
 
   if (addressA.lines.length !== addressB.lines.length) {
@@ -150,9 +172,28 @@ export function isSameAddress(
   }
 
   for (let i = 0; i < addressA.lines.length; i++) {
-    const entityA = addressA.lines[i]?.entity;
-    const entityB = addressB.lines[i]?.entity;
-    if (!entityA || !entityB || entityA.id !== entityB.id) {
+    const lineA = addressA.lines[i];
+    const lineB = addressB.lines[i];
+    if (lineA.type !== lineB.type) {
+      return false;
+    }
+    if (lineA.type === 'ORBIT') {
+      const orbitA = lineA.orbit;
+      const orbitB = lineB.orbit;
+      if (
+        !orbitA ||
+        !orbitB ||
+        orbitA.semiMajorAxis !== orbitB.semiMajorAxis ||
+        orbitA.eccentricity !== orbitB.eccentricity ||
+        orbitA.inclination !== orbitB.inclination ||
+        orbitA.rightAscension !== orbitB.rightAscension ||
+        orbitA.periapsis !== orbitB.periapsis
+      ) {
+        return false;
+      }
+      continue;
+    }
+    if (!lineA.entity?.id || lineA.entity.id !== lineB.entity?.id) {
       return false;
     }
   }

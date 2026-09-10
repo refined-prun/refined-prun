@@ -85,6 +85,24 @@ export function showSuccessOverlay(baseElementOrEvent: Element | Event, message?
   fragmentApp.appendTo(container);
 }
 
+export function showProgressOverlay(baseElementOrEvent: Element | Event) {
+  const container = findMountContainer(baseElementOrEvent);
+  if (!container) {
+    return () => {};
+  }
+  const fragmentApp = createFragmentApp(ActionFeedback, { status: 'progress' });
+  fragmentApp.appendTo(container);
+
+  let dismissed = false;
+  return () => {
+    if (dismissed) {
+      return;
+    }
+    dismissed = true;
+    fragmentApp.unmount();
+  };
+}
+
 function findMountContainer(baseElementOrEvent: Element | Event) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const target = (baseElementOrEvent as any).target

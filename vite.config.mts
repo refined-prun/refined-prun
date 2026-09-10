@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
-import { resolve } from 'path';
+import { defineConfig, normalizePath } from 'vite';
+import { relative, resolve } from 'path';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import unimport from 'unimport/unplugin';
@@ -114,7 +114,8 @@ function sanitizeModuleClassname(name: string, filename: string | undefined): st
     throw new Error('The filename must be string and cannot be undefined.');
   }
 
-  const parts = filename.split('?')[0].split('/');
+  const modulePath = normalizePath(relative(import.meta.dirname, filename.split('?')[0]));
+  const parts = modulePath.split('/');
   const lastSegment = parts.pop();
 
   if (!lastSegment) {
@@ -124,7 +125,7 @@ function sanitizeModuleClassname(name: string, filename: string | undefined): st
   const baseFilename = lastSegment.replace(/(\.vue|\.module)?(\.\w+)$/, '');
 
   const classname = `${baseFilename}__${name}`;
-  const hash = getHash(classname);
+  const hash = getHash(`${modulePath}:${name}`);
 
   return `rp-${classname}___${hash}`;
 }

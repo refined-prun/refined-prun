@@ -1,12 +1,12 @@
 import { mirrorSubtree } from '@src/utils/mirror-subtree';
 
-export function mirrorConfirmationOverlay(origin: Element, target: Element) {
+export function mirrorConfirmationOverlay(origin: Element, target: Element, onMirror?: () => void) {
   const originFrame = findTileFrame(origin);
   const targetFrame = findTileFrame(target);
   if (!originFrame || !targetFrame) {
     return;
   }
-  mirrorSubtree(originFrame, targetFrame, [C.ActionFeedback.overlay]);
+  mirrorSubtree(originFrame, targetFrame, [C.ActionFeedback.overlay], onMirror);
 }
 
 function findTileFrame(element: Element) {
