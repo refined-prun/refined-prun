@@ -42,7 +42,7 @@ function formatContribution(contribution: PlanetContribution) {
 <template>
   <tr>
     <td :class="$style.materialContainer">
-      <MaterialIcon size="inline-table" :ticker="flow.ticker" />
+      <MaterialIcon :class="$style.material" size="inline-table" :ticker="flow.ticker" />
     </td>
     <td :class="signClass(flow.delta)">{{ formatAmount(flow.delta) }}</td>
     <td>{{ formatAmount(flow.production) }}</td>
@@ -73,6 +73,11 @@ function formatContribution(contribution: PlanetContribution) {
 .materialContainer {
   width: 32px;
   padding: 0;
+  vertical-align: middle;
+}
+
+.material {
+  margin-inline: auto;
 }
 
 .planets {
