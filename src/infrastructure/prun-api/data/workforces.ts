@@ -1,6 +1,7 @@
 import { createEntityStore } from '@src/infrastructure/prun-api/data/create-entity-store';
 import { onApiMessage } from '@src/infrastructure/prun-api/data/api-messages';
 import { createRequestGetter, request } from '@src/infrastructure/prun-api/data/request-hooks';
+
 interface Entity {
   address: PrunApi.Address;
   siteId: string;
@@ -25,4 +26,5 @@ const getById = createRequestGetter(state.getById, x => request.workforce(x));
 export const workforcesStore = {
   ...state,
   getById,
+  passiveGetById: state.getById,
 };

@@ -38,4 +38,5 @@ export const cxosStore = {
   ...state,
   all,
   active,
+  passiveAll: state.all,
 };

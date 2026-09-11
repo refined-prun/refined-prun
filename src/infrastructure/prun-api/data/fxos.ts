@@ -38,4 +38,5 @@ export const fxosStore = {
   ...state,
   all,
   active,
+  passiveAll: state.all,
 };
