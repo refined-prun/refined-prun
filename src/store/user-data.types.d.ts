@@ -7,6 +7,13 @@ declare namespace UserData {
 
   type PricingMethod = 'ASK' | 'BID' | 'AVG' | 'VWAP7D' | 'VWAP30D' | 'DEFAULT' | string;
 
+  type Exchange = 'AI1' | 'CI1' | 'CI2' | 'IC1' | 'NC1' | 'NC2';
+
+  interface PriceOverride {
+    buy?: number;
+    sell?: number;
+  }
+
   interface StoreSortingData {
     modes: SortingMode[];
     active?: string;
@@ -48,7 +55,7 @@ declare namespace UserData {
     };
   }
 
-  type MaterialGroupType = 'Manual' | 'Resupply' | 'Repair';
+  type MaterialGroupType = 'Manual' | 'Resupply' | 'Repair' | 'Paste';
 
   interface MaterialGroupData {
     type: MaterialGroupType;
@@ -62,7 +69,7 @@ declare namespace UserData {
     consumablesOnly?: boolean;
   }
 
-  type ActionType = 'CX Buy' | 'MTRA' | 'Refuel';
+  type ActionType = 'CX Buy' | 'MTRA' | 'Refuel' | 'CONT Ship' | 'CONT Trade';
 
   interface ActionData {
     type: ActionType;
@@ -80,6 +87,19 @@ declare namespace UserData {
 
     origin?: string;
     dest?: string;
+
+    // CONT Ship specific.
+    currency?: string;
+    contractNote?: string;
+    paymentPerTon?: number;
+    daysToFulfill?: number;
+    contOrigin?: string;
+    contDest?: string;
+    autoProvision?: boolean;
+
+    // CONT Trade specific.
+    contTradeType?: 'BUYING' | 'SELLING';
+    contLocation?: string;
   }
 
   interface TaskList {

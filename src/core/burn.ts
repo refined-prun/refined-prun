@@ -69,6 +69,13 @@ export function getPlanetBurn(siteOrId?: PrunApi.Site | string | null) {
   return burnBySiteId.value?.get(site.siteId)?.value;
 }
 
+// Treat net daily rates below 0.01 in magnitude as zero.
+const nearZeroDailyAmount = 0.01;
+
+export function clampNearZeroDailyAmount(dailyAmount: number) {
+  return dailyAmount > -nearZeroDailyAmount && dailyAmount < nearZeroDailyAmount ? 0 : dailyAmount;
+}
+
 export function calculatePlanetBurn(
   production: PrunApi.ProductionLine[] | undefined,
   workforces: PrunApi.Workforce[] | undefined,
@@ -123,7 +130,7 @@ export function calculatePlanetBurn(
       for (const need of tier.needs) {
         const mat = getBurnValue(need.material);
         mat.workforce += need.unitsPerInterval;
-        mat.remainingAllocation = need.remainingAllocation;
+        mat.remainingAllocation += need.remainingAllocation;
       }
     }
   }
@@ -156,9 +163,22 @@ export function calculatePlanetBurn(
     if (mat.input > 0 && mat.dailyAmount <= 0) {
       mat.type = 'input';
     }
+    mat.dailyAmount = clampNearZeroDailyAmount(mat.dailyAmount);
     const inv = mat.remainingAllocation + mat.inventory;
     mat.daysLeft = mat.dailyAmount >= 0 ? Number.POSITIVE_INFINITY : inv / -mat.dailyAmount;
   }
 
   return burnValues;
+}
+
+export function computeNeed(mat: MaterialBurn, resupplyDays: number) {
+  const production = mat.dailyAmount;
+  const days = mat.daysLeft;
+  if (days > resupplyDays || production >= 0) {
+    return 0;
+  }
+  const need = Math.ceil((days - resupplyDays) * production);
+  // Math.abs is needed to prevent a "-0" value that can happen
+  // in situations like: 0 * -0.25 => -0.
+  return Math.abs(need);
 }

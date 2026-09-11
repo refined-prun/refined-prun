@@ -93,7 +93,9 @@ The command should be short. Refer to `docs/game/commands.csv` for an example of
 | Vue composables (`ref`, `computed`, `reactive`, `watch`, …) | `vue` |
 | `$`, `$$`, `_$`, `_$$` | `@src/utils/select-dom` |
 | `C` | `@src/infrastructure/prun-ui/prun-css` |
-| `subscribe` | `@src/utils/subscribe-async-generator` |
+| `subscribe` | `@src/utils/observable` |
+| `sumBy` | `@src/utils/sum-by` |
+| `L`, `applyLocalizationPatch` | `@src/infrastructure/prun-ui/i18n` |
 | `tiles` | `@src/infrastructure/prun-ui/tiles` |
 | `features` | `@src/features/feature-registry` |
 | `xit` | `@src/features/XIT/xit-registry` |
@@ -165,6 +167,7 @@ Selectors are **not CSS selector strings**. Internally they resolve to `getEleme
 
 Valid selectors:
 - `C.ComponentName.className` — a PrUn CSS class name (preferred)
+- `ElementTag.*` — a semantic Refined PrUn tag registered in `tagger.ts`
 - HTML tag names: `'div'`, `'tr'`, `'td'`, etc
 
 ### `$` — Async Single Element (Gate Pattern)
@@ -416,6 +419,26 @@ const line = computed(() => productionStore.getById(tile.parameter));
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
 showBuffer('CXM AI1.RAT');  // opens a buffer with the given command
+```
+
+---
+
+## Tile Overlays
+
+```ts
+import {
+  showTileOverlay,
+  showConfirmationOverlay,
+  showErrorOverlay,
+  showSuccessOverlay,
+} from '@src/infrastructure/prun-ui/tile-overlay';
+
+// Pass the event from the user action so that the show function can find the correct tile.
+showTileOverlay(event, EditorComponent, props);
+showConfirmationOverlay(event, onConfirm, { message: 'Are you sure?' });
+showErrorOverlay(event, 'Illegal arguments.');
+showSuccessOverlay(event); // Uses the localized default message.
+showSuccessOverlay(event, 'Package renamed.');
 ```
 
 ---

@@ -1,0 +1,5 @@
+.commands {
+  &:not(:has(button)) {
+    display: none;
+  }
+}

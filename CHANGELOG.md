@@ -1,5 +1,45 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `CONT`: Added a fulfill-next button with pending condition count (`cont-fulfill-next`)
+- `INV`: Added in-flight ship destinations to the Location column (`inv-ship-destination-location`)
+- `INV`: Added ship names to the Name column (`inv-ship-names`)
+- `XIT ACT`: Added descriptions to the action and material group type fields
+- `XIT ACT`: Added "Paste" material group
+- `XIT ACT`: Added "CONT Ship" and "CONT Trade" actions
+- `XIT CONTC`: Added fulfill buttons to fulfillable conditions
+- `XIT FLT`: Enhanced fleet table with detailed status, cargo, fuel, and quick actions
+- `XIT FLOW`: Shows daily production, consumption, and value of each material across bases
+- `XIT STO`: Per-base storage analysis
+- Added a notification count badge to the browser tab favicon (`favicon-notification-badge`)
+- Added a right-click market context menu for materials (`market-context-menu`)
+
+### Changed
+
+- `COM`: The text in backticks now renders as command links (`chat-command-links`)
+- `FXPO`: The "Maximum Lot Size" field now sets a more precise price (`fxpo-maximum-lot-size`)
+- `SFC`: The buffer now closes without delay on flight start (`sfc-auto-close`)
+- `XIT ACT`: The package name title now validates the new name before saving
+- `XIT CONTC`: The conditions with no deadline are now grouped and sorted
+- `XIT CONTS`: Fulfillable conditions can now be clicked to fulfill
+- `XIT FXTS`: Day totals now include both sides of trades
+- `XIT PRUNSTAT`: Switched to raylu's fork
+
+### Fixed
+
+- `CXPC`: Fixed the chart not respecting the "Default CX Chart Type" setting (`cxpc-chart-types`)
+- `POPID`: Fixed ALL contribution selection exceeding full reserves (`contribution-bulk-controls`)
+- `PROD`: Fixed order completion time not displaying for `PROD {planet id}` (`prod-order-eta`)
+- `XIT ACT`: Fixed the "Unknown action feedback overlay" error when CX Buy places an order outside the price band
+- `XIT BURN`: Fixed the TSV export reporting double the inventory in the "Inv" column
+- `XIT BURN`: Fixed workforce allocation accumulation across tiers
+- `XIT BURN`: Fixed color filters not matching fractional-day colors
+- `XIT BURN`: Fixed inventory values rounding up
+- Tooltips no longer get clipped by tile/window boundaries (`unclipped-tooltips`)
+
 ## 26.6.22.2033
 
 ### Fixed
@@ -17,7 +57,7 @@
 
 - `ADM`: The "Withdraw" vote button now has a gray color (`adm-neutral-withdraw-button`)
 - `CONT`: The preamble of user-made contracts is no longer minimized (`minimize-headers`)
-- `FXPO`: The Current Price field is now set to the order book price (`fxpo-better-current-price`)
+- `FXPO`: The "Current Price" field is now set to the order book price (`fxpo-better-current-price`)
 - `SFC`: The window now auto-closes on success (`sfc-auto-close`)
 - `XIT BURN`: Workforce consumables now include remaining fractional allocations
 - `XIT BURN`: The "Days" column now displays fractional days when less than 10 days remain

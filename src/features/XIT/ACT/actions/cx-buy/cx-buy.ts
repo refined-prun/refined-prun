@@ -7,6 +7,7 @@ import { AssertFn } from '@src/features/XIT/ACT/shared-types';
 
 act.addAction({
   type: 'CX Buy',
+  shortDescription: 'Buy materials from a commodity exchange',
   description: action => {
     if (!action.group || !action.exchange) {
       return '--';
@@ -33,8 +34,8 @@ act.addAction({
         for (const CXMat of Object.keys(state.WAR[data.exchange])) {
           if (CXMat === mat) {
             // Amount of material used (minimum of needed and had on hand)
-            const used = Math.min(materials[mat], state.WAR[data.exchange][CXMat]);
-            materials[mat] -= used;
+            const used = Math.min(materials[mat].quantity, state.WAR[data.exchange][CXMat]);
+            materials[mat].quantity -= used;
             state.WAR[data.exchange][CXMat] -= used;
             if (state.WAR[data.exchange][mat] <= 0) {
               // Remove material from CX Inv is already allocated
@@ -42,7 +43,7 @@ act.addAction({
             }
           }
         }
-        if (materials[mat] <= 0) {
+        if (materials[mat].quantity <= 0) {
           // Remove material from list if you already have enough on the CX
           delete materials[mat];
         }
@@ -50,8 +51,9 @@ act.addAction({
     }
 
     for (const ticker of Object.keys(materials)) {
-      const amount = materials[ticker];
-      const priceLimit = data.priceLimits?.[ticker] ?? Infinity;
+      const { quantity: amount, price } = materials[ticker];
+      // Group prices take precedence; manual limits act as a fallback.
+      const priceLimit = price ?? data.priceLimits?.[ticker] ?? Infinity;
       if (isNaN(priceLimit)) {
         log.error('Non-numerical price limit on ' + ticker);
         continue;

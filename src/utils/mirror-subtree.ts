@@ -1,7 +1,12 @@
 import { clickElement } from '@src/util';
 import { onNodeDisconnected } from '@src/utils/on-node-disconnected';
 
-export function mirrorSubtree(origin: Element, target: Element, classes: string[]) {
+export function mirrorSubtree(
+  origin: Element,
+  target: Element,
+  classes: string[],
+  onMirror?: () => void,
+) {
   const cloneOf = new WeakMap<Node, Node>();
   const originOf = new WeakMap<Node, Node>();
   const mirroredRoots = new Map<Element, Element>();
@@ -68,6 +73,7 @@ export function mirrorSubtree(origin: Element, target: Element, classes: string[
       attributes: true,
       characterData: true,
     });
+    onMirror?.();
   }
 
   function removeMirror(child: Element) {
