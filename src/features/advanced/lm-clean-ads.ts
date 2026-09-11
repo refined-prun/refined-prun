@@ -2,6 +2,7 @@ import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { localAdsStore } from '@src/infrastructure/prun-api/data/local-ads';
 import { extractPlanetName } from '@src/util';
 import { applyLocalizationPatch } from '@src/infrastructure/prun-ui/i18n';
+import Tiles from '@src/infrastructure/prun-ui/tiles';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.CommodityAd.container), async container => {
@@ -13,23 +14,17 @@ function onTileReady(tile: PrunTile) {
     }
 
     const type = ad.type;
-    const quantity = ad.quantity;
 
     if (type === 'COMMODITY_SHIPPING') {
       // Shorten planet names
       const links = _$$(text, C.Link.link);
       if (links.length === 2) {
         links[0].textContent = extractPlanetName(links[0].textContent);
-        links[0].previousSibling!.textContent = ' ';
-        links[0].nextSibling!.textContent = ' → ';
         links[1].textContent = extractPlanetName(links[1].textContent);
       }
     }
-    if ((type === 'COMMODITY_BUYING' || type === 'COMMODITY_SELLING') && quantity) {
-      const amount = quantity.amount;
-      text.childNodes[1].textContent = ` ${amount} @ `;
-    }
 
+    // We cannot use localization patching for this because the numbers are passed in as strings rather than numbers, limiting our formatting options.
     for (const node of Array.from(text.childNodes)) {
       if (!node.textContent) {
         continue;
@@ -42,47 +37,35 @@ function onTileReady(tile: PrunTile) {
       if (node.textContent.endsWith(',00')) {
         node.textContent = node.textContent.replace(',00', '');
       }
-      node.textContent = node.textContent
-        .replace(' for ', '')
-        .replace('delivery', '')
-        .replace('collection', '')
-        .replace(' within ', ' in ')
-        .replace('for delivery within', 'in');
-      node.textContent = node.textContent.replace(/(\d+)\s+days*/i, '$1d');
     }
-    cleanContractType(text, ad);
   });
-}
-
-function cleanContractType(text: HTMLElement, ad: PrunApi.LocalAd) {
-  if (!text.firstChild) {
-    return;
-  }
-  switch (ad.type) {
-    case 'COMMODITY_SHIPPING':
-      text.firstChild.textContent = '';
-      break;
-    case 'COMMODITY_BUYING':
-      text.firstChild.textContent = 'BUY';
-      break;
-    case 'COMMODITY_SELLING':
-      text.firstChild.textContent = 'SELL';
-      break;
-  }
 }
 
 function init() {
-  // Tiles.observe('LM', onTileReady);
+  Tiles.observe('LM', onTileReady);
   applyLocalizationPatch(L.CommodityShippingAd.text.perspectiveSender, {
-    en: () =>
-      '{action} {amount} {commodity} @ {price} from {origin} to {destination} in {adviceTime}',
+    en: () => '{action} {amount} {commodity} @ {price} {origin} → {destination} in {adviceTime}',
   });
   applyLocalizationPatch(L.CommodityShippingAd.text.perspectiveShipper, {
-    en: () =>
-      '{action} {weight}t / {volume}m³ @ {price} from {origin} to {destination} in {adviceTime}',
+    en: () => '{action} {weight}t / {volume}m³ @ {price} {origin} → {destination} in {adviceTime}',
   });
   applyLocalizationPatch(L.CommodityAd.text, {
-    en: () => '{action} {amount} {commodity} ({ticker}) @ {price} {advice} in {adviceTime}',
+    en: () => '{action} {amount} {commodity} ({ticker}) @ {price} in {adviceTime}',
+  });
+  applyLocalizationPatch(L.CommodityAd.text.advice, {
+    en: () => '{advice, number}d',
+  });
+  applyLocalizationPatch(L.CommodityShippingAd.text.collection, {
+    en: () => '{advice, number}d',
+  });
+  applyLocalizationPatch(L.LocalMarket.adType.shipping, {
+    default: () => '',
+  });
+  applyLocalizationPatch(L.LocalMarket.adType.buying, {
+    default: () => 'BUY',
+  });
+  applyLocalizationPatch(L.LocalMarket.adType.selling, {
+    default: () => 'SELL',
   });
 }
 
