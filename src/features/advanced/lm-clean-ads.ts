@@ -45,27 +45,34 @@ function init() {
   Tiles.observe('LM', onTileReady);
   applyLocalizationPatch(L.CommodityShippingAd.text.perspectiveSender, {
     en: () => '{action} {amount} {commodity} @ {price} {origin} → {destination} in {adviceTime}',
+    ja: () => '{action} {amount} {commodity} @ {price} {origin} → {destination} {adviceTime}以内',
   });
   applyLocalizationPatch(L.CommodityShippingAd.text.perspectiveShipper, {
     en: () => '{action} {weight}t / {volume}m³ @ {price} {origin} → {destination} in {adviceTime}',
+    ja: () => '{action} {weight}t / {volume}m³ @ {price} {origin} → {destination} {adviceTime}以内',
   });
   applyLocalizationPatch(L.CommodityAd.text, {
     en: () => '{action} {amount} {commodity} ({ticker}) @ {price} in {adviceTime}',
+    ja: () => '{action} {amount} {commodity} ({ticker}) @ {price} {adviceTime}以内',
   });
   applyLocalizationPatch(L.CommodityAd.text.advice, {
     en: () => '{advice, number}d',
+    ja: () => '{advice, number}日間',
   });
   applyLocalizationPatch(L.CommodityShippingAd.text.collection, {
     en: () => '{advice, number}d',
+    ja: () => '{advice, number}日間',
   });
   applyLocalizationPatch(L.LocalMarket.adType.shipping, {
     default: () => '',
   });
   applyLocalizationPatch(L.LocalMarket.adType.buying, {
-    default: () => 'BUY',
+    en: () => 'BUY',
+    ja: () => '買',
   });
   applyLocalizationPatch(L.LocalMarket.adType.selling, {
-    default: () => 'SELL',
+    en: () => 'SELL',
+    ja: () => '売',
   });
 }
 
