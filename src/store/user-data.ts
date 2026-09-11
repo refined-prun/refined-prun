@@ -26,6 +26,9 @@ export const initialUserData = deepFreeze({
       red: 3,
       yellow: 7,
       resupply: 16,
+      planetResupply: {} as Record<string, number>,
+      // Planet natural id -> ship-size label from core/ship-sizes.
+      planetPickup: {} as Record<string, string>,
     },
     flow: {
       overrides: {} as Record<string, UserData.PriceOverride>,
@@ -33,6 +36,7 @@ export const initialUserData = deepFreeze({
     repair: {
       threshold: 60,
       offset: 10,
+      planetOverrides: {} as Record<string, { threshold?: number; offset?: number }>,
     },
     sidebar: [
       ['BS', 'BS'],
