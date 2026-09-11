@@ -2,8 +2,15 @@ import { oneMicrotask } from '@src/utils/one-microtask';
 
 type MutationCallback = (mutations: MutationRecord[]) => boolean | void;
 
-const callbackMap = new WeakMap<Node, MutationCallback[]>();
-const removed = new Set<MutationCallback>();
+interface Subscription {
+  callback: MutationCallback;
+  stop: () => void;
+}
+
+const observers = new WeakMap<
+  Node,
+  { observer: MutationObserver; subscriptions: Set<Subscription> }
+>();
 
 const pendingProcessors = new Set<() => void>();
 
@@ -20,9 +27,9 @@ export function onNodeTreeMutation(
   callback: MutationCallback,
   observeClass: boolean = false,
 ) {
-  let callbacks = callbackMap.get(node) ?? [];
-  if (callbacks.length === 0) {
-    callbackMap.set(node, callbacks);
+  let state = observers.get(node);
+  if (state === undefined) {
+    const subscriptions = new Set<Subscription>();
     let pending: MutationRecord[] = [];
     const observer = new MutationObserver(mutations => {
       for (const mutation of mutations) {
@@ -34,27 +41,19 @@ export function onNodeTreeMutation(
     const process = () => {
       const mutations = pending;
       pending = [];
-      for (const callback of callbacks) {
+      for (const subscription of Array.from(subscriptions)) {
+        if (!subscriptions.has(subscription)) {
+          continue;
+        }
         try {
-          if (callback(mutations)) {
-            removed.add(callback);
+          if (subscription.callback(mutations)) {
+            subscription.stop();
           }
         } catch (e) {
           console.error(e);
-          removed.add(callback);
+          subscription.stop();
         }
       }
-      if (removed.size > 0) {
-        const next = callbacks.filter(x => !removed.has(x));
-        if (next.length === 0) {
-          callbackMap.delete(node);
-          observer.disconnect();
-        } else {
-          callbacks = next;
-          callbackMap.set(node, callbacks);
-        }
-      }
-      removed.clear();
     };
     const options: MutationObserverInit = {
       childList: true,
@@ -63,7 +62,23 @@ export function onNodeTreeMutation(
     if (observeClass) {
       options.attributeFilter = ['class'];
     }
+    state = { observer, subscriptions };
+    observers.set(node, state);
     observer.observe(node, options);
   }
-  callbacks.push(callback);
+  const { observer, subscriptions } = state;
+  const subscription: Subscription = {
+    callback,
+    stop: () => {
+      if (!subscriptions.delete(subscription)) {
+        return;
+      }
+      if (subscriptions.size === 0) {
+        observers.delete(node);
+        observer.disconnect();
+      }
+    },
+  };
+  subscriptions.add(subscription);
+  return subscription.stop;
 }
