@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
-const { cmd, cmdText, label } = defineProps<{ cmd: string; cmdText?: string; label?: string }>();
+const { cmd, cmdText, label, onClick, onShiftClick } = defineProps<{
+  cmd: string;
+  cmdText?: string;
+  label?: string;
+  onClick?: (event: MouseEvent) => void;
+  onShiftClick?: (event: MouseEvent) => void;
+}>();
 
 const commandParts = computed(() => {
   const words = (cmdText ?? cmd).split(' ');
@@ -11,13 +17,25 @@ const commandParts = computed(() => {
   }
   return [command, words.join(' ')];
 });
+
+function handleClick(event: MouseEvent) {
+  if (event.shiftKey && onShiftClick !== undefined) {
+    onShiftClick(event);
+    return;
+  }
+  if (onClick !== undefined) {
+    onClick(event);
+    return;
+  }
+  void showBuffer(cmd);
+}
 </script>
 
 <template>
   <!-- The node structure is fully replicated from PrUn, don't mind unnecessary nodes. -->
   <div
     :class="[C.ContextControls.item, C.fonts.fontRegular, C.type.typeSmall]"
-    @click="() => showBuffer(cmd)">
+    @click="handleClick">
     <span>
       <span :class="C.ContextControls.cmd">{{ commandParts[0] }}</span>
       {{ commandParts[1] }}

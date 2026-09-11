@@ -9,6 +9,7 @@
 - `CXM`: Added drag-and-drop to reorder exchanges (`cxm-reorder`)
 - `INV`: Added in-flight ship destinations to the Location column (`inv-ship-destination-location`)
 - `INV`: Added ship names to the Name column (`inv-ship-names`)
+- `INV`: Added an "Analysis" button that shows a `XIT STO` summary pane (`inv-analysis-button`)
 - `XIT ACT`: Added descriptions to the action and material group type fields
 - `XIT ACT`: Added "Paste" material group
 - `XIT ACT`: Added "CONT Ship" and "CONT Trade" actions
