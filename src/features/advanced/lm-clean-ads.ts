@@ -56,11 +56,11 @@ function init() {
   });
   applyLocalizationPatch(L.CommodityAd.text.advice, {
     en: () => '{advice, number}d',
-    ja: () => '{advice, number}日間',
+    ja: () => '{advice, number}日',
   });
   applyLocalizationPatch(L.CommodityShippingAd.text.collection, {
     en: () => '{advice, number}d',
-    ja: () => '{advice, number}日間',
+    ja: () => '{advice, number}日',
   });
   applyLocalizationPatch(L.LocalMarket.adType.shipping, {
     default: () => '',
