@@ -1,17 +1,17 @@
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
+import ContextControlsItem from '@src/components/ContextControlsItem.vue';
 import { getInvStore } from '@src/core/store-id';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
-import ContextControlsItem from '@src/components/ContextControlsItem.vue';
+import { openCompanionBuffer } from '@src/infrastructure/prun-ui/companion-buffer';
 
 async function onTileReady(tile: PrunTile) {
-  // Only process INV tiles with parameter
   if (!tile.parameter) {
     return;
   }
 
-  const locationNaturalId = computed(() => {
+  const naturalId = computed(() => {
     const store = getInvStore(tile.parameter);
     if (store?.type !== 'STORE') {
       return;
@@ -21,22 +21,33 @@ async function onTileReady(tile: PrunTile) {
     return getEntityNaturalIdFromAddress(site?.address);
   });
 
-  const warehouse = computed(() => {
-    const warehouse = warehousesStore.getByEntityNaturalId(locationNaturalId.value);
-    return storagesStore.getById(warehouse?.storeId);
-  });
-
   const contextBar = await $(tile.frame, C.ContextControls.container);
 
-  createFragmentApp(() => {
-    const naturalId = locationNaturalId.value;
-    if (!naturalId) {
+  // Insert after the analysis button (first child, prepended by inv-analysis-button)
+  // so the order is: ANALYSIS, WAR, game buttons
+  const anchorNode = contextBar.firstChild;
+  const app = createFragmentApp(() => {
+    const id = naturalId.value;
+    if (!id) {
       return null;
     }
-    const storageId = warehouse.value?.id.substring(0, 8);
-    const cmd = storageId ? `INV ${storageId}` : `WAR ${naturalId}`;
-    return <ContextControlsItem cmd={cmd} cmdText={`WAR ${naturalId}`} />;
-  }).prependTo(contextBar);
+    const warehouse = warehousesStore.getByEntityNaturalId(id);
+    const storageId = storagesStore.getById(warehouse?.storeId)?.id?.substring(0, 8);
+    const cmd = storageId ? `INV ${storageId}` : `WAR ${id}`;
+    return (
+      <ContextControlsItem
+        cmd={cmd}
+        cmdText={`WAR ${id}`}
+        onShiftClick={() => openCompanionBuffer(tile, cmd)}
+      />
+    );
+  });
+
+  if (anchorNode) {
+    app.after(anchorNode);
+  } else {
+    app.prependTo(contextBar);
+  }
 }
 
 function init() {

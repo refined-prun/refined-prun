@@ -3,17 +3,22 @@ import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import PrunButton from '@src/components/PrunButton.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { increaseDefaultBufferSize } from '@src/infrastructure/prun-ui/buffer-sizes';
+import { openCompanionBuffer } from '@src/infrastructure/prun-ui/companion-buffer';
 
 function onTileReady(tile: PrunTile) {
-  // Only process BS tiles with parameter
   if (!tile.parameter) {
     return;
   }
 
-  const onClick = () => {
+  const onClick = (e: MouseEvent) => {
     const warehouse = warehousesStore.getByEntityNaturalId(tile.parameter);
     const storageId = storagesStore.getById(warehouse?.storeId)?.id?.substring(0, 8);
-    void showBuffer(storageId ? `INV ${storageId}` : `WAR ${tile.parameter}`);
+    const cmd = storageId ? `INV ${storageId}` : `WAR ${tile.parameter}`;
+    if (e.shiftKey) {
+      void openCompanionBuffer(tile, cmd);
+    } else {
+      void showBuffer(cmd);
+    }
   };
 
   subscribe($$(tile.anchor, C.ActionBar.container), container => {

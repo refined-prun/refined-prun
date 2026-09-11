@@ -3,6 +3,7 @@ import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { getLocationLineFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import ContextControlsItem from '@src/components/ContextControlsItem.vue';
+import { openCompanionBuffer } from '@src/infrastructure/prun-ui/companion-buffer';
 
 async function onTileReady(tile: PrunTile) {
   const ship = computed(() => shipsStore.getByRegistration(tile.parameter));
@@ -28,7 +29,14 @@ async function onTileReady(tile: PrunTile) {
     if (!war || !id) {
       return null;
     }
-    return <ContextControlsItem cmd={`INV ${war.id.substring(0, 8)}`} cmdText={`WAR ${id}`} />;
+    const cmd = `INV ${war.id.substring(0, 8)}`;
+    return (
+      <ContextControlsItem
+        cmd={cmd}
+        cmdText={`WAR ${id}`}
+        onShiftClick={() => openCompanionBuffer(tile, cmd)}
+      />
+    );
   }).prependTo(contextBar);
 }
 
