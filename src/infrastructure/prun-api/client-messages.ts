@@ -21,6 +21,16 @@ export function UI_TILES_CHANGE_COMMAND(id: string, command: string | null) {
   };
 }
 
+export function UI_TILES_CHANGE_SIZE(id: string, newDividerPosition: number) {
+  return {
+    messageType: 'UI_TILES_CHANGE_SIZE',
+    payload: {
+      id: id,
+      newDividerPosition: newDividerPosition,
+    },
+  };
+}
+
 export function UI_WINDOWS_REQUEST_FOCUS(id: string) {
   return {
     messageType: 'UI_WINDOWS_REQUEST_FOCUS',
