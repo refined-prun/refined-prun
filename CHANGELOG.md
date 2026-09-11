@@ -6,6 +6,7 @@
 
 - `CONT`: Added a fulfill-next button with pending condition count (`cont-fulfill-next`)
 - `CONTD`: Added a count input to add multiple commodity/shipment rows at once (`contd-bulk-add-commodity`)
+- `CXM`: Added drag-and-drop to reorder exchanges (`cxm-reorder`)
 - `INV`: Added in-flight ship destinations to the Location column (`inv-ship-destination-location`)
 - `INV`: Added ship names to the Name column (`inv-ship-names`)
 - `XIT ACT`: Added descriptions to the action and material group type fields
