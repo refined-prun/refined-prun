@@ -2,7 +2,6 @@ import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
 import { localAdsStore } from '@src/infrastructure/prun-api/data/local-ads';
 import { extractPlanetName } from '@src/util';
 import { applyLocalizationPatch } from '@src/infrastructure/prun-ui/i18n';
-import Tiles from '@src/infrastructure/prun-ui/tiles';
 
 function onTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.CommodityAd.container), async container => {
@@ -42,7 +41,7 @@ function onTileReady(tile: PrunTile) {
 }
 
 function init() {
-  Tiles.observe('LM', onTileReady);
+  tiles.observe('LM', onTileReady);
   applyLocalizationPatch(L.CommodityShippingAd.text.perspectiveSender, {
     en: () => '{action} {amount} {commodity} @ {price} {origin} → {destination} in {adviceTime}',
     ja: () => '{action} {amount} {commodity} @ {price} {origin} → {destination} {adviceTime}以内',
