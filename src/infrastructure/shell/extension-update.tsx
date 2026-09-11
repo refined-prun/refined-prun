@@ -3,7 +3,13 @@ import { fetchJson } from '@src/utils/fetch';
 if (import.meta.env.PROD) {
   const container = document.getElementById('container')!;
   const id = setInterval(async () => {
-    const manifest = (await fetchJson(config.url.manifest)) as chrome.runtime.ManifestV3;
+    let manifest: chrome.runtime.ManifestV3;
+    try {
+      manifest = (await fetchJson(config.url.manifest)) as chrome.runtime.ManifestV3;
+    } catch {
+      clearInterval(id);
+      return;
+    }
     if (!manifest.version || config.version === manifest.version) {
       return;
     }
