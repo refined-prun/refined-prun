@@ -1,4 +1,14 @@
-import { computeNeed, getPlanetBurn } from '@src/core/burn';
+import {
+  computeNeed,
+  getInboundShips,
+  getInboundShipStores,
+  getMinDaysLeft,
+  getPlanetBurn,
+  getResupplyDays,
+} from '@src/core/burn';
+import { getShipSize, ShipSize } from '@src/core/ship-sizes';
+import { userData } from '@src/store/user-data';
+import { fixed02 } from '@src/utils/format';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
@@ -6,7 +16,6 @@ import {
   getEntityNameFromAddress,
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
-import { userData } from '@src/store/user-data';
 
 export interface BaseStorageAnalysis {
   siteId: string;
@@ -25,11 +34,16 @@ export interface BaseStorageAnalysis {
   exportWeight: number;
   exportVolume: number;
 
+  // Current inventory of strictly net-producing (dailyAmount > 0) materials -
+  // the goods a pickup run would actually carry away.
+  producedWeight: number;
+  producedVolume: number;
+
   // Current fill.
   fillPercentWeight: number;
   fillPercentVolume: number;
 
-  // Projected fill after delivering Need amount for every consumed material.
+  // Projected fill after inbound cargo and remaining Need amounts are delivered.
   needFillPercentWeight: number;
   needFillPercentVolume: number;
   // Max of the two - the color driver.
@@ -74,14 +88,16 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
   }
 
   const planetBurn = getPlanetBurn(site);
-  const resupplyDays = userData.settings.burn.resupply;
+  const naturalId = getEntityNaturalIdFromAddress(site.address);
+  const resupplyDays = getResupplyDays(naturalId);
+  const inboundItems = getInboundInventory(naturalId);
 
   let importWeight = 0;
   let importVolume = 0;
   let exportWeight = 0;
   let exportVolume = 0;
-  let addedWeight = 0;
-  let addedVolume = 0;
+  let addedWeight = sumBy(inboundItems, x => x.weight);
+  let addedVolume = sumBy(inboundItems, x => x.volume);
   // Weight/volume of current inventory for strictly-producing (dailyAmount > 0)
   // materials - these get shipped out during rotation.
   let shippedOutWeight = 0;
@@ -197,6 +213,8 @@ function computeAnalysis(site: PrunApi.Site): BaseStorageAnalysis | undefined {
     importVolume,
     exportWeight,
     exportVolume,
+    producedWeight: shippedOutWeight,
+    producedVolume: shippedOutVolume,
     fillPercentWeight,
     fillPercentVolume,
     needFillPercentWeight,
@@ -219,9 +237,142 @@ export function getBaseStorageAnalysis(siteOrId?: PrunApi.Site | string | null) 
   return analysisBySiteId.value?.get(site.siteId)?.value;
 }
 
+export type StorageAlarmLevel = 'red' | 'yellow' | 'none';
+
+export interface StorageAlarm {
+  level: StorageAlarmLevel;
+  // Short human-readable explanation, set for 'red'/'yellow' only.
+  reason?: string;
+  // Raw days until full, set for 'yellow' only.
+  days?: number;
+}
+
+// Item sizes make exact 100% fill rare and overflow impossible - treat anything
+// past this as full.
+const STORAGE_FULL_THRESHOLD = 0.99;
+
+// Yellow only fires this close to actually filling up - otherwise every
+// slowly-filling base would flag days out, well before it's actionable.
+const YELLOW_DAYS_THRESHOLD = 2.9;
+
+function formatDaysShort(days: number) {
+  return days >= 500 ? '∞' : `${Math.floor(days)}d`;
+}
+
+// Alarm for XIT BS's Inv column: red once storage is (near-)full, yellow once
+// it's within YELLOW_DAYS_THRESHOLD days of filling AND on track to do so
+// before the base's next expected resupply (the point its most urgent
+// consumable burn hits 1 day left). A ship inbound to the base counts its
+// full cargo capacity as extra storage room, since it will carry
+// away produced goods once it arrives - this both prevents and clears the alarm
+// once a ship has been dispatched.
+export function getStorageAlarmLevel(
+  siteOrId?: PrunApi.Site | string | null,
+): StorageAlarm | undefined {
+  const analysis = getBaseStorageAnalysis(siteOrId);
+  if (!analysis) {
+    return undefined;
+  }
+
+  const inboundShips = getInboundShipStores(analysis.naturalId);
+  const shipWeightCapacity = sumBy(inboundShips, s => s.weightCapacity);
+  const shipVolumeCapacity = sumBy(inboundShips, s => s.volumeCapacity);
+
+  const adjustedWeightCapacity = analysis.weightCapacity + shipWeightCapacity;
+  const adjustedVolumeCapacity = analysis.volumeCapacity + shipVolumeCapacity;
+
+  const fillWeight = adjustedWeightCapacity > 0 ? analysis.weightLoad / adjustedWeightCapacity : 0;
+  const fillVolume = adjustedVolumeCapacity > 0 ? analysis.volumeLoad / adjustedVolumeCapacity : 0;
+  if (fillWeight >= STORAGE_FULL_THRESHOLD || fillVolume >= STORAGE_FULL_THRESHOLD) {
+    const binding = fillWeight >= fillVolume ? 'weight' : 'volume';
+    return { level: 'red', reason: `Storage full (${binding})` };
+  }
+
+  const availableWeight = Math.max(adjustedWeightCapacity - analysis.weightLoad, 0);
+  const availableVolume = Math.max(adjustedVolumeCapacity - analysis.volumeLoad, 0);
+  const netWeight = analysis.exportWeight - analysis.importWeight;
+  const netVolume = analysis.exportVolume - analysis.importVolume;
+  const daysW = netWeight > 0 ? availableWeight / netWeight : Infinity;
+  const daysV = netVolume > 0 ? availableVolume / netVolume : Infinity;
+  const daysUntilFull = Math.min(daysW, daysV);
+
+  const planetBurn = getPlanetBurn(analysis.siteId);
+  const burnDays = planetBurn ? getMinDaysLeft(planetBurn.burn) : 1000;
+  const nextResupplyDays = burnDays >= 1000 ? Infinity : Math.max(burnDays - 1, 0);
+
+  if (daysUntilFull <= YELLOW_DAYS_THRESHOLD && daysUntilFull < nextResupplyDays) {
+    return {
+      level: 'yellow',
+      reason: `Fills in ${formatDaysShort(daysUntilFull)}, before next resupply (${formatDaysShort(nextResupplyDays)})`,
+      days: daysUntilFull,
+    };
+  }
+  return { level: 'none' };
+}
+
+export interface PickupAlarm {
+  // The ship size the base is waiting for.
+  shipSize: ShipSize;
+  // Short human-readable explanation of what fills the ship.
+  reason: string;
+}
+
+// How far ahead the alarm looks. A pickup run takes time to arrange, so the
+// badge lights up a day before the produced goods actually fill the ship.
+const PICKUP_LEAD_DAYS = 1;
+
+// Alarm for XIT BS's Inv column: a base whose accumulated produced goods fill -
+// or within PICKUP_LEAD_DAYS will fill - the pickup ship picked for it in XIT
+// PLNT. Returns undefined when no ship size is configured, when the pile is
+// still too small, or when a ship is already in flight to the planet - a
+// dispatched ship clears the alarm so the player doesn't send a second one,
+// while a ship that has already landed does not (its cargo run isn't done until
+// it leaves).
+export function getPickupAlarm(siteOrId?: PrunApi.Site | string | null): PickupAlarm | undefined {
+  const analysis = getBaseStorageAnalysis(siteOrId);
+  if (!analysis) {
+    return undefined;
+  }
+
+  const shipSize = getShipSize(userData.settings.burn.planetPickup?.[analysis.naturalId]);
+  if (!shipSize) {
+    return undefined;
+  }
+
+  if (getInboundShips(analysis.naturalId).length > 0) {
+    return undefined;
+  }
+
+  // The analysis' export rates are the per-day rate at which net-produced goods
+  // pile up, so this is the stock PICKUP_LEAD_DAYS from now.
+  const projectedWeight = analysis.producedWeight + analysis.exportWeight * PICKUP_LEAD_DAYS;
+  const projectedVolume = analysis.producedVolume + analysis.exportVolume * PICKUP_LEAD_DAYS;
+
+  const fillsWeight = projectedWeight >= shipSize.weight;
+  const fillsVolume = projectedVolume >= shipSize.volume;
+  if (!fillsWeight && !fillsVolume) {
+    return undefined;
+  }
+
+  const fullWeight = analysis.producedWeight >= shipSize.weight;
+  const fullVolume = analysis.producedVolume >= shipSize.volume;
+  const full = fullWeight || fullVolume;
+  const binding = (full ? fullWeight : fillsWeight) ? 'weight' : 'volume';
+  const current = `${fixed02(analysis.producedWeight)}t / ${fixed02(analysis.producedVolume)}m³`;
+  const projected = `${fixed02(projectedWeight)}t / ${fixed02(projectedVolume)}m³`;
+  return {
+    shipSize,
+    reason: full
+      ? `Pickup ready: ${current} fills a ${shipSize.id} ship (${binding})`
+      : `Pickup ready within 24h: ${current} now, ${projected} in 24h - ` +
+        `fills a ${shipSize.id} ship (${binding})`,
+  };
+}
+
 // Returns a synthetic Store representing the base's STORE after a full resupply
-// rotation: producing materials shipped out, consumed materials
-// topped up to their computeNeed amount. Used by CargoBar to visualize projected fill.
+// rotation: inbound inventory delivered, net-positive materials shipped out,
+// consumed materials topped up to their computeNeed amount. Capacity is unchanged. Used by
+// CargoBar to visualize projected fill.
 export function buildProjectedStore(
   siteOrId?: PrunApi.Site | string | null,
 ): PrunApi.Store | undefined {
@@ -236,12 +387,14 @@ export function buildProjectedStore(
   }
 
   const planetBurn = getPlanetBurn(site);
-  const resupplyDays = userData.settings.burn.resupply;
+  const resupplyDays = getResupplyDays(getEntityNaturalIdFromAddress(site.address));
 
   const items: PrunApi.StoreItem[] = [];
   let weightLoad = 0;
   let volumeLoad = 0;
 
+  // Tickers that are strictly net-producing - their existing inventory is assumed
+  // shipped out during the rotation. Zero-daily materials (idle stock) are kept.
   const producedTickers = new Set<string>();
   if (planetBurn) {
     for (const ticker of Object.keys(planetBurn.burn)) {
@@ -251,7 +404,8 @@ export function buildProjectedStore(
     }
   }
 
-  for (const item of store.items) {
+  const inboundItems = getInboundInventory(getEntityNaturalIdFromAddress(site.address));
+  for (const item of [...store.items, ...inboundItems]) {
     if (item.type === 'SHIPMENT') {
       items.push(item);
       weightLoad += item.weight;
@@ -260,6 +414,7 @@ export function buildProjectedStore(
     }
     const ticker = item.quantity?.material.ticker;
     if (ticker && producedTickers.has(ticker)) {
+      // Producing material - ships out, contributes nothing to projected load.
       continue;
     }
     items.push(item);
@@ -267,6 +422,7 @@ export function buildProjectedStore(
     volumeLoad += item.volume;
   }
 
+  // Add Need top-ups for consumed materials.
   if (planetBurn) {
     for (const ticker of Object.keys(planetBurn.burn)) {
       const mb = planetBurn.burn[ticker];
@@ -302,4 +458,8 @@ export function buildProjectedStore(
     weightLoad,
     volumeLoad,
   };
+}
+
+function getInboundInventory(naturalId: string | undefined) {
+  return getInboundShipStores(naturalId).flatMap(x => x.items.filter(x => x.type === 'INVENTORY'));
 }

@@ -17,7 +17,7 @@ const { alwaysVisible, burn, material } = defineProps<{
 
 const production = computed(() => burn.dailyAmount);
 const invAmount = computed(() => {
-  const amount = burn.inventory + burn.remainingAllocation;
+  const amount = burn.inventory + burn.inboundInventory + burn.remainingAllocation;
   // Truncate, don't round, so the shown amount never exceeds what you hold.
   if (amount >= 100) {
     return trunc0(amount);

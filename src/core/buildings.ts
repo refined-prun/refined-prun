@@ -1,5 +1,6 @@
 import { mergeMaterialAmounts } from '@src/core/sort-materials';
 import { sumMaterialAmountPrice } from '@src/infrastructure/fio/cx';
+import { userData } from '@src/store/user-data';
 
 export function calcBuildingCondition(age: number) {
   // This isn't quite right, but will be off by only 1 MCG at most
@@ -24,4 +25,24 @@ export function getBuildingBuildMaterials(building: PrunApi.Platform, site: Prun
 
 export function calcBuildingMarketValue(building: PrunApi.Platform, site: PrunApi.Site) {
   return sumMaterialAmountPrice(getBuildingBuildMaterials(building, site));
+}
+
+export function getRepairThreshold(planetNaturalId?: string | null) {
+  if (planetNaturalId) {
+    const override = userData.settings.repair.planetOverrides[planetNaturalId]?.threshold;
+    if (override !== undefined) {
+      return override;
+    }
+  }
+  return userData.settings.repair.threshold;
+}
+
+export function getRepairOffset(planetNaturalId?: string | null) {
+  if (planetNaturalId) {
+    const override = userData.settings.repair.planetOverrides[planetNaturalId]?.offset;
+    if (override !== undefined) {
+      return override;
+    }
+  }
+  return userData.settings.repair.offset;
 }

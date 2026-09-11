@@ -29,6 +29,7 @@
 - `INV`: Shortcuts (like "INV Deimos") now open the base inventory if more than one inventory is available at the address (`correct-commands`)
 - `SFC`: The buffer now closes without delay on flight start (`sfc-auto-close`)
 - `XIT ACT`: The package name title now validates the new name before saving
+- `XIT BURN`: Inventory and resupply calculations now include cargo on ships flying to the base's planet
 - `XIT CONTC`: The conditions with no deadline are now grouped and sorted
 - `XIT CONTS`: Fulfillable conditions can now be clicked to fulfill
 - `XIT FXTS`: Day totals now include both sides of trades

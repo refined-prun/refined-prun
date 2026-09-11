@@ -143,6 +143,7 @@ const planetBurn = computed(() => {
         dailyAmount: 0,
         remainingAllocation: 0,
         inventory: 0,
+        inboundInventory: 0,
         daysLeft: 0,
         type: 'output',
       };
@@ -151,13 +152,14 @@ const planetBurn = computed(() => {
       overallBurn[ticker].workforce += mat.workforce;
       overallBurn[ticker].remainingAllocation += mat.remainingAllocation;
       overallBurn[ticker].inventory += mat.inventory;
+      overallBurn[ticker].inboundInventory += mat.inboundInventory;
     }
   }
 
   for (const ticker of Object.keys(overallBurn)) {
     const mat = overallBurn[ticker];
     mat.dailyAmount = clampNearZeroDailyAmount(mat.output - mat.input - mat.workforce);
-    const remaining = mat.inventory + mat.remainingAllocation;
+    const remaining = mat.inventory + mat.inboundInventory + mat.remainingAllocation;
     mat.daysLeft = mat.dailyAmount >= 0 ? Number.POSITIVE_INFINITY : remaining / -mat.dailyAmount;
   }
 
@@ -178,6 +180,7 @@ const fakeBurn: MaterialBurn = {
   daysLeft: 10,
   remainingAllocation: 0,
   inventory: 100000,
+  inboundInventory: 0,
   type: 'input',
   input: 100000,
   output: 100000,
@@ -213,7 +216,7 @@ function formatBurnTable(burns: PlanetBurn[]) {
       const mat = planet.burn[material.ticker];
       const days = mat.dailyAmount >= 0 ? '' : Math.floor(mat.daysLeft).toString();
       const burn = round(mat.dailyAmount);
-      const inv = mat.inventory + mat.remainingAllocation;
+      const inv = mat.inventory + mat.inboundInventory + mat.remainingAllocation;
       const need =
         mat.dailyAmount >= 0 || mat.daysLeft > resupply
           ? 0
@@ -282,7 +285,7 @@ function copyBurnTable() {
               Inv
               <Tooltip
                 position="right"
-                tooltip="How much of a material the inventory still has. Fractional amount
+                tooltip="Stock at the base plus cargo on inbound ships. Fractional amount
                  represents the leftover materials since the last workforce consumption event." />
             </InlineFlex>
           </th>
