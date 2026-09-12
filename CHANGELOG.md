@@ -7,6 +7,7 @@
 - `CONT`: Added a fulfill-next button with pending condition count (`cont-fulfill-next`)
 - `CONTD`: Added a count input to add multiple commodity/shipment rows at once (`contd-bulk-add-commodity`)
 - `CONTD`: Added "all" buttons next to the first commodity fields to copy values to every other commodity (`contd-bulk-add-commodity`)
+- `CONTD`: Added importing and exporting of contract templates (`contd-import-export`)
 - `CXM`: Added drag-and-drop to reorder exchanges (`cxm-reorder`)
 - `INV`: Added in-flight ship destinations to the Location column (`inv-ship-destination-location`)
 - `INV`: Added ship names to the Name column (`inv-ship-names`)

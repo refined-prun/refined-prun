@@ -1,0 +1,82 @@
+.container {
+  /* Use the unused close-icon space above the template. */
+  margin-top: -22px;
+  margin-bottom: 8px;
+  /* The size query needs an ancestor of the elements it changes. */
+  container-type: inline-size;
+}
+
+.compactContainer {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.tabRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+/* Separate the tabs from the native adjacent-button margin rule. */
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.textarea {
+  min-height: 80px;
+  width: 100%;
+  /* Remove the inline baseline gap below the textarea. */
+  display: block;
+  resize: vertical;
+  /* Match the game scrollbar. */
+  scrollbar-width: thin;
+  scrollbar-color: rgb(51, 51, 51) transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgb(51, 51, 51);
+    border-radius: 5px;
+  }
+}
+
+/* Match the drag pane height in narrow buffers. */
+@container (max-width: 360px) {
+  .textarea {
+    min-height: 100px;
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.status {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* Marker for the scoped Export row rule. */
+.exportRow {
+  isolation: auto;
+}
+
+/* Applied to the native input container inside the Export row. */
+.exportInputRowRule {
+  display: flex;
+  align-items: center;
+  /* Keep the native command-row alignment. */
+  justify-content: flex-end;
+}
