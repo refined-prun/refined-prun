@@ -84,6 +84,18 @@ The file is auto-imported via `import.meta.glob` in `src/features/index.ts` — 
 
 The command should be short. Refer to `docs/game/commands.csv` for an example of game commands. Alias is usually added for backwards compatibility or if the community REALLY wants it.
 
+### Parameters
+
+The panel receives `parameters: string[]`, produced by splitting the raw parameter on `/[_ ]+/` (both underscores and spaces are separators — see `xit-commands.ts`). So `XIT CMD_EDIT_My_Preset` yields `['EDIT', 'My', 'Preset']`. Rejoin multi-word names with `.join(' ')`.
+
+### Multi-preset screens (ACT, STOCK)
+
+Screens that manage several named, user-defined presets share one convention:
+
+- Persist presets as an array in `userData` (e.g. `userData.actionPackages`, `userData.stockPresets`).
+- Route by parameter: `XIT CMD_<name>` views/executes a preset, `XIT CMD_EDIT_<name>` edits it, no params shows the list. The root component `unshift`s the command onto `parameters` so it can index `parameters[1]` uniformly, then delegates to List / Display / Edit components (see `ACT.vue`, `STOCK.vue`).
+- Preset names are validated with `isValidPackageName` (`src/features/XIT/ACT/utils.ts`) — spaces allowed, underscores are not (they are the param separator, mapped to/from spaces via `.split('_').join(' ')`).
+
 ---
 
 ## Auto-Imports (no explicit import needed)

@@ -65,6 +65,7 @@ export const initialUserData = deepFreeze({
   fullEquityMode: true,
   notes: [] as UserData.Note[],
   actionPackages: [] as UserData.ActionPackageData[],
+  stockPresets: [] as UserData.StockPresetData[],
   systemMessages: [] as UserData.SystemMessages[],
   todo: [] as UserData.TaskList[],
   tabs: {
