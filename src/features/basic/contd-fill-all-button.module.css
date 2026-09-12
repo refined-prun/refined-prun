@@ -1,0 +1,6 @@
+.allButton {
+  margin-right: 4px;
+  /* Keeps the button above the input focus overlay. */
+  position: relative;
+  z-index: 1;
+}
