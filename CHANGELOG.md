@@ -15,6 +15,7 @@
 - `XIT ACT`: Added descriptions to the action and material group type fields
 - `XIT ACT`: Added "Paste" material group
 - `XIT ACT`: Added "CONT Ship" and "CONT Trade" actions
+- `XIT BURN`: Added a right-click context menu for planets
 - `XIT CONTC`: Added fulfill buttons to fulfillable conditions
 - `XIT FLT`: Enhanced fleet table with detailed status, cargo, fuel, and quick actions
 - `XIT FINCH`: Added an "Equity Growth" chart
