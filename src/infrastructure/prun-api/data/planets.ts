@@ -6,6 +6,7 @@ interface Planet {
   naturalId: string;
   name: string;
   cogcProgramType?: string | null;
+  populationId?: string;
 }
 
 const store = createEntityStore<Planet>({
@@ -20,7 +21,11 @@ onApiMessage({
     store.setFetched();
   },
   DATA_DATA(data: {
-    body: { naturalId: string; cogcProgramType?: string | null };
+    body: {
+      naturalId: string;
+      cogcProgramType?: string | null;
+      populationId?: string;
+    };
     path: string[];
   }) {
     if (data.path[0] !== 'planets' || data.path.length !== 2) {
@@ -28,7 +33,11 @@ onApiMessage({
     }
     const existing = state.getById(data.body.naturalId);
     if (existing) {
-      store.updateOne({ ...existing, cogcProgramType: data.body.cogcProgramType });
+      store.updateOne({
+        ...existing,
+        cogcProgramType: data.body.cogcProgramType,
+        populationId: data.body.populationId ?? existing.populationId,
+      });
     }
   },
 });
