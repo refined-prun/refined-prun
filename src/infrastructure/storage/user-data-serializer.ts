@@ -6,7 +6,7 @@ import { backupUserData, getUserDataBackups } from '@src/infrastructure/storage/
 import { userDataStore } from '@src/infrastructure/prun-api/data/user-data';
 import dayjs from 'dayjs';
 
-const fileType = 'rp-user-data';
+export const fileType = 'rp-user-data';
 
 export function loadUserData() {
   let loaded = false;

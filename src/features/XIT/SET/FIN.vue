@@ -16,8 +16,10 @@ import Active from '@src/components/forms/Active.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
 import { objectId } from '@src/utils/object-id';
 import RadioItem from '@src/components/forms/RadioItem.vue';
+import MergeFinancialBackups from './MergeFinancialBackups.vue';
 
 const sortedData = computed(() => balanceHistory.value.slice().reverse());
+const showBackupMerge = ref(false);
 
 function confirmDataPointDelete(ev: Event, index: number) {
   index = balanceHistory.value.length - index - 1;
@@ -99,8 +101,14 @@ function onIgnoredMaterialsSubmit() {
       <PrunButton primary :disabled="!canCollectFinDataPoint()" @click="collectFinDataPoint">
         Collect Data Point
       </PrunButton>
+      <PrunButton primary @click="showBackupMerge = !showBackupMerge">
+        {{ showBackupMerge ? 'Hide Backup Merge' : 'Merge Financial Backups' }}
+      </PrunButton>
     </Commands>
   </form>
+  <div v-show="showBackupMerge">
+    <MergeFinancialBackups />
+  </div>
   <table>
     <thead>
       <tr>
