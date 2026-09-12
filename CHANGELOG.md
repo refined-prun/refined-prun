@@ -22,6 +22,7 @@
 - `XIT STO`: Per-base storage analysis
 - Added a notification count badge to the browser tab favicon (`favicon-notification-badge`)
 - Added a right-click market context menu for materials (`market-context-menu`)
+- Added tab folders (`screen-tab-bar-folders`)
 
 ### Changed
 

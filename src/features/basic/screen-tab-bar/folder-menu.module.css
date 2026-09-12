@@ -1,0 +1,13 @@
+.tab {
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.name {
+  color: #7fa8e0;
+}
+
+.action {
+  width: 26px;
+  text-align: center;
+}

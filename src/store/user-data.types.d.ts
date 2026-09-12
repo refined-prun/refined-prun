@@ -136,4 +136,10 @@ declare namespace UserData {
   }
 
   type ExchangeChartType = 'SMOOTH' | 'ALIGNED' | 'RAW';
+
+  interface TabFolder {
+    id: string;
+    name: string;
+    screenIds: string[];
+  }
 }
