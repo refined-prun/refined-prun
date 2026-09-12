@@ -2,6 +2,7 @@ declare namespace PrunApi {
   interface FlightPlan {
     missionId: string;
     segments: FlightSegment[];
+    costs?: CurrencyAmount[] | null;
     status: string;
     eta: TimeSpan;
     chargeTime: TimeSpan;

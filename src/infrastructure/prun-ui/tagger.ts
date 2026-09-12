@@ -6,6 +6,7 @@ export enum ElementTag {
   INV_LOCATION_CELL = 'rp-inv-location-cell',
   INV_NAME_CELL = 'rp-inv-name-cell',
   POPID_RESERVE_CELL = 'rp-popid-reserve-cell',
+  SFC_CONSUMPTION_CELL = 'rp-sfc-consumption-cell',
 }
 
 export function tagUI() {
@@ -22,6 +23,11 @@ export function tagUI() {
   ]);
 
   tagTileTable('POPID', [[L.Contribution.table.reserve(), ElementTag.POPID_RESERVE_CELL]]);
+
+  tagTileTable('SFC', [
+    [L.MissionPlan.consumption(), ElementTag.SFC_CONSUMPTION_CELL],
+    [L.FlightPlan.consumption(), ElementTag.SFC_CONSUMPTION_CELL],
+  ]);
 }
 
 function tagTileFormFields(command: string, mapItems: MapItems) {
