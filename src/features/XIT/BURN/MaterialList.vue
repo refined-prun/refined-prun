@@ -13,5 +13,6 @@ const sorted = computed(() => getSortedTickers(burn));
     v-for="material in sorted"
     :key="material.id"
     :burn="burn.burn[material.ticker]"
-    :material="material" />
+    :material="material"
+    :natural-id="burn.naturalId" />
 </template>

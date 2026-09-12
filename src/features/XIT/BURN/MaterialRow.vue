@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computeNeed, MaterialBurn } from '@src/core/burn';
+import { computeNeed, getResupplyDays, MaterialBurn } from '@src/core/burn';
 import MaterialIcon from '@src/components/MaterialIcon.vue';
 import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
 import { fixed0, fixed1, fixed2, trunc0, trunc01, trunc02 } from '@src/utils/format';
@@ -7,12 +7,12 @@ import { useTileState } from '@src/features/XIT/BURN/tile-state';
 import { getBurnThresholds } from '@src/features/XIT/BURN/utils';
 import PrunButton from '@src/components/PrunButton.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
-import { userData } from '@src/store/user-data';
 
-const { alwaysVisible, burn, material } = defineProps<{
+const { alwaysVisible, burn, material, naturalId } = defineProps<{
   alwaysVisible?: boolean;
   burn: MaterialBurn;
   material: PrunApi.Material;
+  naturalId?: string;
 }>();
 
 const production = computed(() => burn.dailyAmount);
@@ -84,7 +84,7 @@ const outClass = computed(() => ({
   [C.ColoredValue.positive]: outAmount.value > 0,
 }));
 
-const needAmt = computed(() => computeNeed(burn, userData.settings.burn.resupply));
+const needAmt = computed(() => computeNeed(burn, getResupplyDays(naturalId)));
 </script>
 
 <template>

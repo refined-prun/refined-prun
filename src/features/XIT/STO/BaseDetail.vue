@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { BaseStorageAnalysis } from '@src/core/storage-analysis';
-import { computeNeed, getPlanetBurn } from '@src/core/burn';
+import { computeNeed, getPlanetBurn, getResupplyDays } from '@src/core/burn';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
-import { userData } from '@src/store/user-data';
 import VisitationTable from '@src/features/XIT/STO/VisitationTable.vue';
 import { fixed01, fixed0, percent0 } from '@src/utils/format';
 import { formatDays } from '@src/features/XIT/STO/utils';
@@ -44,12 +43,14 @@ const shippingOut = computed(() => {
   return rows;
 });
 
+const resupplyDays = computed(() => getResupplyDays(analysis.naturalId));
+
 const adding = computed(() => {
   const pb = planetBurn.value;
   if (!pb) {
     return [];
   }
-  const resupply = userData.settings.burn.resupply;
+  const resupply = resupplyDays.value;
   const rows: MaterialRow[] = [];
   for (const ticker of Object.keys(pb.burn)) {
     const mb = pb.burn[ticker];
@@ -200,9 +201,7 @@ const overflowAmount = computed(() => {
           reservePercent
         }}% reserved for {{ reserveReason }}). Includes consumables already in storage.
       </div>
-      <div :class="$style.note">
-        Current resupply target: {{ userData.settings.burn.resupply }} days.
-      </div>
+      <div :class="$style.note">Current resupply target: {{ resupplyDays }} days.</div>
     </section>
 
     <section :class="[$style.panel, $style.orange]">
