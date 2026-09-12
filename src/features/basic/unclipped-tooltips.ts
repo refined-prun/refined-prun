@@ -19,6 +19,7 @@ function prepareTooltips() {
 
     activeTarget = target;
     tooltip.textContent = text;
+    tooltip.style.whiteSpace = getComputedStyle(target).whiteSpace;
     // Reset the tooltip position to maintain deterministic behavior.
     tooltip.style.left = '0px';
     tooltip.style.top = '0px';
