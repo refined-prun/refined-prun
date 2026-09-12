@@ -10,11 +10,7 @@ import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { exchangesStore } from '@src/infrastructure/prun-api/data/exchanges';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
-import {
-  atSameLocation,
-  serializeStorage,
-  storageSort,
-} from '@src/features/XIT/ACT/actions/utils';
+import { atSameLocation, serializeStorage, storageSort } from '@src/features/XIT/ACT/actions/utils';
 import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 
 const { action, pkg } = defineProps<{

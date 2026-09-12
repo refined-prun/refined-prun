@@ -6,11 +6,7 @@ import { CXPO_SELL } from '@src/features/XIT/ACT/action-steps/CXPO_SELL';
 import { fixed0, fixed02 } from '@src/utils/format';
 import { fillAmount } from '@src/features/XIT/ACT/actions/cx-sell/utils';
 import { AssertFn, configurableValue } from '@src/features/XIT/ACT/shared-types';
-import {
-  atSameLocation,
-  deserializeStorage,
-  serializeStorage,
-} from '@src/features/XIT/ACT/actions/utils';
+import { deserializeStorage, serializeStorage } from '@src/features/XIT/ACT/actions/utils';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { exchangesStore } from '@src/infrastructure/prun-api/data/exchanges';
 import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
@@ -65,7 +61,7 @@ act.addAction<Config>({
     assert(origin, 'Invalid origin');
 
     for (const ticker of Object.keys(materials)) {
-      const amount = materials[ticker];
+      const bill = materials[ticker];
       const priceLimit = data.priceLimits?.[ticker] ?? 0;
       if (isNaN(priceLimit)) {
         log.error('Non-numerical price limit on ' + ticker);
@@ -73,12 +69,12 @@ act.addAction<Config>({
       }
 
       const cxTicker = `${ticker}.${data.exchange}`;
-      const filled = fillAmount(cxTicker, amount, priceLimit);
-      let askAmount = amount;
+      const filled = fillAmount(cxTicker, bill.quantity, priceLimit);
+      let askAmount = bill.quantity;
 
-      if (filled && filled.amount < amount && !allowUnfilled) {
+      if (filled && filled.amount < bill.quantity && !allowUnfilled) {
         if (!sellPartial) {
-          let message = `Not enough demand on ${exchange} to sell ${fixed0(amount)} ${ticker}`;
+          let message = `Not enough demand on ${exchange} to sell ${fixed0(bill.quantity)} ${ticker}`;
           if (priceLimit > 0) {
             message += ` with minimum price ${fixed02(priceLimit)}/u`;
           }
@@ -86,10 +82,10 @@ act.addAction<Config>({
           return;
         }
 
-        const leftover = amount - filled.amount;
+        const leftover = bill.quantity - filled.amount;
         let message =
           `${fixed0(leftover)} ${ticker} will not be sold on ${exchange} ` +
-          `(${fixed0(filled.amount)} of ${fixed0(amount)} demand available`;
+          `(${fixed0(filled.amount)} of ${fixed0(bill.quantity)} demand available`;
         if (priceLimit > 0) {
           message += ` with minimum price ${fixed02(priceLimit)}/u`;
         }
