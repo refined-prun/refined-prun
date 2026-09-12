@@ -82,10 +82,10 @@ function calculateAge(lastRepair: number) {
   <template v-else>
     <form>
       <Active label="Age Threshold">
-        <NumberInput v-model="userData.settings.repair.threshold" />
+        <NumberInput v-model="userData.settings.repair.threshold" float />
       </Active>
       <Active label="Time Offset">
-        <NumberInput v-model="userData.settings.repair.offset" />
+        <NumberInput v-model="userData.settings.repair.offset" float />
       </Active>
     </form>
     <SectionHeader>Shopping Cart</SectionHeader>

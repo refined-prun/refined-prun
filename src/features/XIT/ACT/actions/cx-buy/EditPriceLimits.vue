@@ -27,7 +27,7 @@ function onAddClick() {
           <TextInput v-model="pair[0]" />
         </Active>
         <Active :label="`Price Limit #${i + 1}`">
-          <NumberInput v-model="pair[1]" />
+          <NumberInput v-model="pair[1]" float />
         </Active>
       </template>
       <Commands>

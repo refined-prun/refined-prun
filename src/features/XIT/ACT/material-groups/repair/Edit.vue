@@ -56,12 +56,12 @@ defineExpose({ validate, save });
     label="Day Threshold"
     tooltip="All buildings older than this threshold will be repaired.
      If no number is provided all buildings are repaired.">
-    <NumberInput v-model="days" optional />
+    <NumberInput v-model="days" optional float />
   </Active>
   <Active
     label="Time Offset"
     tooltip="The number of days in the future this repair will be conducted."
     :error="advanceDaysError">
-    <NumberInput v-model="advanceDays" />
+    <NumberInput v-model="advanceDays" float />
   </Active>
 </template>

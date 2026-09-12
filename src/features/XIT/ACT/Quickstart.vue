@@ -120,7 +120,7 @@ const ExchangeTickers = {
         <SelectInput v-model="planet" :options="planets" />
       </Active>
       <Active label="Resupply Days">
-        <NumberInput v-model="days" />
+        <NumberInput v-model="days" float />
       </Active>
       <Commands>
         <PrunButton primary @click="onCreateClick">CREATE</PrunButton>

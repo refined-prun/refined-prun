@@ -172,7 +172,7 @@ function onDeleteClick() {
           <SelectInput v-model="planet" :options="planets" />
         </Active>
         <Active label="Days" tooltip="The number of days of supplies.">
-          <NumberInput v-model="days" />
+          <NumberInput v-model="days" float />
         </Active>
       </template>
       <template v-if="type === 'Repair'">
@@ -180,7 +180,7 @@ function onDeleteClick() {
           <SelectInput v-model="planet" :options="planets" />
         </Active>
         <Active label="Building age" tooltip="The minimum building age to be included in the list.">
-          <NumberInput v-model="buildingAge" />
+          <NumberInput v-model="buildingAge" float />
         </Active>
       </template>
       <Commands>
