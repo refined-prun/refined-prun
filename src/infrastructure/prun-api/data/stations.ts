@@ -4,7 +4,10 @@ import { createMapGetter } from '@src/infrastructure/prun-api/data/create-map-ge
 import { castArray } from '@src/utils/cast-array';
 import { isEmpty } from 'ts-extras';
 import { defaultStations } from '@src/infrastructure/prun-api/data/stations.default';
-import { getEntityNaturalIdFromAddress } from '@src/infrastructure/prun-api/data/addresses';
+import {
+  getEntityNaturalIdFromAddress,
+  getSystemLineFromAddress,
+} from '@src/infrastructure/prun-api/data/addresses';
 
 const store = createEntityStore<PrunApi.Station>({ preserveOnConnectionOpen: true });
 const state = store.state;
@@ -24,6 +27,11 @@ onApiMessage({
 
 const getByNaturalId = createMapGetter(state.all, x => getEntityNaturalIdFromAddress(x.address)!);
 
+const getBySystemNaturalId = createMapGetter(
+  state.all,
+  x => getSystemLineFromAddress(x.address)!.entity.naturalId,
+);
+
 const getByName = createMapGetter(state.all, x => x.name);
 
 const getNaturalIdFromName = (name?: string | null) =>
@@ -32,6 +40,7 @@ const getNaturalIdFromName = (name?: string | null) =>
 export const stationsStore = {
   ...state,
   getByNaturalId,
+  getBySystemNaturalId,
   getByName,
   getNaturalIdFromName,
 };
