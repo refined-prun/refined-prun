@@ -9,6 +9,7 @@ import { getInvStore } from '@src/core/store-id';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { useTileState } from '@src/store/user-data-tiles';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
+import PrunLink from '@src/components/PrunLink.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import StatusCell from './StatusCell.vue';
 import TimeCell from './TimeCell.vue';
@@ -16,20 +17,15 @@ import CargoBar from '@src/components/CargoBar.vue';
 import { fixed0, percent0 } from '@src/utils/format';
 import { timestampEachMinute } from '@src/utils/dayjs';
 import coloredValue from '@src/infrastructure/prun-ui/css/colored-value.module.css';
-
-type SortKey =
-  | 'name'
-  | 'cargo'
-  | 'status'
-  | 'eta'
-  | 'fuel'
-  | 'none'
-  | 'repair'
-  | 'size'
-  | 'shipClass';
-type SortDirection = 'asc' | 'desc' | 'none';
-type FuelAlertThreshold = '75' | '50' | '35' | '25' | '10';
-type FuelAlertFilter = 'any' | FuelAlertThreshold;
+import {
+  DEFAULTS,
+  DEFAULT_SORT_DIRECTION_BY_KEY,
+  type FuelAlertFilter,
+  type FuelAlertThreshold,
+  type LayoutMode,
+  type SortDirection,
+  type SortKey,
+} from './defaults';
 
 type FlightRow = {
   ship: PrunApi.Ship;
@@ -60,40 +56,6 @@ type MultiOptionFilterGroup = {
   onToggle: (option: string) => void;
 };
 
-const DEFAULT_SORT_DIRECTION_BY_KEY: Record<SortKey, SortDirection> = {
-  name: 'none',
-  cargo: 'none',
-  status: 'desc',
-  eta: 'asc',
-  fuel: 'none',
-  none: 'none',
-  repair: 'none',
-  size: 'none',
-  shipClass: 'asc',
-};
-
-const DEFAULTS = {
-  primarySortKey: 'status' as SortKey,
-  secondarySortKey: 'eta' as SortKey,
-  showStlShips: true,
-  showFtlShips: true,
-  showInFlightShips: true,
-  showNotInFlightShips: true,
-  hideReturningToCx: false,
-  fuelAlertFilter: 'any' as FuelAlertFilter,
-  layoutMode: 'cargo' as LayoutMode,
-  showColName: true,
-  showColShipClass: false,
-  showColSize: false,
-  showColCargo: true,
-  showColCargoSize: false,
-  showColTime: true,
-  showColRepair: false,
-  showColFuel: true,
-  showColProblems: false,
-  problemFuelThreshold: '50' as FuelAlertFilter,
-};
-
 const primarySortKey = useTileState<SortKey>('primarySortKey', DEFAULTS.primarySortKey);
 const secondarySortKey = useTileState<SortKey>('secondarySortKey', DEFAULTS.secondarySortKey);
 const sortDirectionByKey = useTileState<Record<SortKey, SortDirection>>(
@@ -111,7 +73,7 @@ const shipClassFilters = useTileState<string[]>('shipClassFilters', []);
 const conditionFilters = useTileState<string[]>('conditionFilters', []);
 const cargoStateFilters = useTileState<string[]>('cargoStateFilters', []);
 const etaFilters = useTileState<string[]>('etaFilters', []);
-type LayoutMode = 'compact' | 'whitespace' | 'cargo';
+const $style = useCssModule();
 
 const fuelAlertFilter = useTileState<FuelAlertFilter>('fuelAlertFilter', DEFAULTS.fuelAlertFilter);
 const layoutMode = useTileState<LayoutMode>('layoutMode', DEFAULTS.layoutMode);
@@ -305,16 +267,11 @@ const rows = computed(() => {
   let activeSecondaryDirection: SortDirection = 'asc';
 
   if (primaryDirection === 'none') {
-    if (secondaryDirection !== 'none') {
-      activePrimaryKey = secondaryKey;
-      activePrimaryDirection = secondaryDirection;
-      activeSecondaryKey = undefined;
-    }
-  } else {
-    if (secondaryDirection !== 'none' && secondaryKey !== primaryKey) {
-      activeSecondaryKey = secondaryKey;
-      activeSecondaryDirection = secondaryDirection;
-    }
+    activePrimaryKey = secondaryKey;
+    activePrimaryDirection = secondaryDirection;
+  } else if (secondaryDirection !== 'none' && secondaryKey !== primaryKey) {
+    activeSecondaryKey = secondaryKey;
+    activeSecondaryDirection = secondaryDirection;
   }
 
   const primaryDirMultiplier = activePrimaryDirection === 'asc' ? 1 : -1;
@@ -418,6 +375,13 @@ const gridTemplateColumns = computed(() => {
     cols.push('auto');
   }
   return cols.join(' ');
+});
+
+const layoutClass = computed(() => {
+  if (layoutMode.value === 'legacy') {
+    return $style.legacyTable;
+  }
+  return layoutMode.value === 'compact' ? $style.tableContainer : $style.tableContainerFill;
 });
 
 const filterSymbol = computed(() => (showFilters.value ? '-' : '+'));
@@ -562,6 +526,9 @@ function getSortDirection(key: SortKey) {
   return sortDirectionByKey.value[key] ?? 'asc';
 }
 
+// Ties must stay at 0 so the caller can fall through to the secondary key. Folding a
+// name comparison in here made every key return a non-zero result and the secondary
+// sort never ran.
 function compareByKey(a: FlightRow, b: FlightRow, key: SortKey) {
   switch (key) {
     case 'none':
@@ -715,6 +682,16 @@ function clearFilters() {
   problemFuelThreshold.value = DEFAULTS.problemFuelThreshold;
 }
 
+function getConditionClass(condition: number) {
+  if (condition <= 0.79) {
+    return C.ColoredValue.negative;
+  }
+  if (condition <= 0.81) {
+    return coloredValue.warning;
+  }
+  return C.ColoredValue.positive;
+}
+
 // Use a 2–6 letter or digit prefix, such as "[HAUL] Atlas" or "(HAUL) Atlas".
 // Names like "HAUL Atlas", "HAUL-Atlas", and "HAUL_Atlas" also define class HAUL.
 // Without a name prefix, the class uses up to six leading registration letters or digits.
@@ -734,16 +711,6 @@ function getShipClass(ship: PrunApi.Ship) {
     return match[1];
   }
   return 'UNK';
-}
-
-function getConditionClass(condition: number) {
-  if (condition <= 0.79) {
-    return C.ColoredValue.negative;
-  }
-  if (condition <= 0.81) {
-    return coloredValue.warning;
-  }
-  return C.ColoredValue.positive;
 }
 
 function getConditionBand(condition: number) {
@@ -863,9 +830,9 @@ function getCargoState(cargoRatio: number) {
       <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Reset</div>
         <div :class="C.ComExOrdersPanel.filter">
-          <RadioItem :model-value="false" horizontal @update:model-value="clearFilters"
-            >RESET ALL FILTERS</RadioItem
-          >
+          <RadioItem :model-value="false" horizontal @update:model-value="clearFilters">
+            RESET ALL FILTERS
+          </RadioItem>
         </div>
       </div>
 
@@ -925,21 +892,27 @@ function getCargoState(cargoRatio: number) {
           <RadioItem
             :model-value="layoutMode === 'compact'"
             horizontal
-            @update:model-value="layoutMode = 'compact'"
-            >COMPACT</RadioItem
-          >
+            @update:model-value="layoutMode = 'compact'">
+            COMPACT
+          </RadioItem>
           <RadioItem
             :model-value="layoutMode === 'whitespace'"
             horizontal
-            @update:model-value="layoutMode = 'whitespace'"
-            >WHITESPACE</RadioItem
-          >
+            @update:model-value="layoutMode = 'whitespace'">
+            WHITESPACE
+          </RadioItem>
           <RadioItem
             :model-value="layoutMode === 'cargo'"
             horizontal
-            @update:model-value="layoutMode = 'cargo'"
-            >CARGO</RadioItem
-          >
+            @update:model-value="layoutMode = 'cargo'">
+            CARGO
+          </RadioItem>
+          <RadioItem
+            :model-value="layoutMode === 'legacy'"
+            horizontal
+            @update:model-value="layoutMode = 'legacy'">
+            LEGACY
+          </RadioItem>
         </div>
       </div>
 
@@ -979,238 +952,237 @@ function getCargoState(cargoRatio: number) {
       </div>
     </div>
 
-    <div
-      :class="[layoutMode !== 'compact' ? $style.tableContainerFill : $style.tableContainer]"
-      :style="{ gridTemplateColumns }">
-      <!-- Header row. -->
-      <div :class="$style.headerRow">
-        <div
-          v-if="showColName"
-          :class="[$style.headerCell, $style.sortable]"
-          @click="setSort('name')">
-          Name
-          <span
-            :class="{
-              [$style.sortPrimary]: isPrimarySort('name'),
-              [$style.sortSecondary]: isSecondarySort('name'),
-            }">
-            {{ getSortIndicator('name') }}
-          </span>
-        </div>
-        <div
-          v-if="showColShipClass"
-          :class="[$style.headerCell, $style.sortable, $style.colShipClass]"
-          @click="setSort('shipClass')">
-          Class
-          <span
-            :class="{
-              [$style.sortPrimary]: isPrimarySort('shipClass'),
-              [$style.sortSecondary]: isSecondarySort('shipClass'),
-            }">
-            {{ getSortIndicator('shipClass') }}
-          </span>
-        </div>
-        <div
-          v-if="showColSize"
-          :class="[$style.headerCell, $style.sortable, $style.colSize]"
-          @click="setSort('size')">
-          Size
-          <span
-            :class="{
-              [$style.sortPrimary]: isPrimarySort('size'),
-              [$style.sortSecondary]: isSecondarySort('size'),
-            }">
-            {{ getSortIndicator('size') }}
-          </span>
-        </div>
-        <div
-          v-if="showColCargo"
-          :class="[$style.headerCell, $style.sortable]"
-          @click="setSort('cargo')">
-          Cargo
-          <span
-            :class="{
-              [$style.sortPrimary]: isPrimarySort('cargo'),
-              [$style.sortSecondary]: isSecondarySort('cargo'),
-            }">
-            {{ getSortIndicator('cargo') }}
-          </span>
-        </div>
-        <div
-          v-if="showColCargoSize"
-          :class="[$style.headerCell, $style.sortable]"
-          @click="setSort('cargo')">
-          Cargo/Size
-          <span
-            :class="{
-              [$style.sortPrimary]: isPrimarySort('cargo'),
-              [$style.sortSecondary]: isSecondarySort('cargo'),
-            }">
-            {{ getSortIndicator('cargo') }}
-          </span>
-        </div>
-        <div
-          :class="[$style.headerCell, $style.sortable, $style.colStatus]"
-          @click="setSort('status')">
-          Status
-          <span
-            :class="{
-              [$style.sortPrimary]: isPrimarySort('status'),
-              [$style.sortSecondary]: isSecondarySort('status'),
-            }">
-            {{ getSortIndicator('status') }}
-          </span>
-        </div>
-        <div
-          v-if="showColTime"
-          :class="[$style.headerCell, $style.sortable, $style.colTime]"
-          @click="setSort('eta')">
-          ETA
-          <span
-            :class="{
-              [$style.sortPrimary]: isPrimarySort('eta'),
-              [$style.sortSecondary]: isSecondarySort('eta'),
-            }">
-            {{ getSortIndicator('eta') }}
-          </span>
-        </div>
-        <div
-          v-if="showColRepair"
-          :class="[$style.headerCell, $style.sortable, $style.colRepair]"
-          @click="setSort('repair')">
-          Repair
-          <span
-            :class="{
-              [$style.sortPrimary]: isPrimarySort('repair'),
-              [$style.sortSecondary]: isSecondarySort('repair'),
-            }">
-            {{ getSortIndicator('repair') }}
-          </span>
-        </div>
-        <div
-          v-if="showColFuel"
-          :class="[$style.headerCell, $style.sortable, $style.colFuel]"
-          @click="setSort('fuel')">
-          Fuel
-          <span
-            :class="{
-              [$style.sortPrimary]: isPrimarySort('fuel'),
-              [$style.sortSecondary]: isSecondarySort('fuel'),
-            }">
-            {{ getSortIndicator('fuel') }}
-          </span>
-        </div>
-        <div
-          v-if="showColProblems && hasAnyProblems"
-          :class="[$style.headerCell, $style.colProblems]">
-          Problems
-        </div>
-      </div>
+    <table :class="[$style.table, layoutClass]" :style="{ gridTemplateColumns }">
+      <thead>
+        <tr :class="$style.headerRow">
+          <th
+            v-if="showColName"
+            :class="[$style.headerCell, $style.sortable]"
+            @click="setSort('name')">
+            Name
+            <span
+              :class="{
+                [$style.sortPrimary]: isPrimarySort('name'),
+                [$style.sortSecondary]: isSecondarySort('name'),
+              }">
+              {{ getSortIndicator('name') }}
+            </span>
+          </th>
+          <th
+            v-if="showColShipClass"
+            :class="[$style.headerCell, $style.sortable, $style.colShipClass]"
+            @click="setSort('shipClass')">
+            Class
+            <span
+              :class="{
+                [$style.sortPrimary]: isPrimarySort('shipClass'),
+                [$style.sortSecondary]: isSecondarySort('shipClass'),
+              }">
+              {{ getSortIndicator('shipClass') }}
+            </span>
+          </th>
+          <th
+            v-if="showColSize"
+            :class="[$style.headerCell, $style.sortable, $style.colSize]"
+            @click="setSort('size')">
+            Size
+            <span
+              :class="{
+                [$style.sortPrimary]: isPrimarySort('size'),
+                [$style.sortSecondary]: isSecondarySort('size'),
+              }">
+              {{ getSortIndicator('size') }}
+            </span>
+          </th>
+          <th
+            v-if="showColCargo"
+            :class="[$style.headerCell, $style.sortable]"
+            @click="setSort('cargo')">
+            Cargo
+            <span
+              :class="{
+                [$style.sortPrimary]: isPrimarySort('cargo'),
+                [$style.sortSecondary]: isSecondarySort('cargo'),
+              }">
+              {{ getSortIndicator('cargo') }}
+            </span>
+          </th>
+          <th
+            v-if="showColCargoSize"
+            :class="[$style.headerCell, $style.sortable]"
+            @click="setSort('cargo')">
+            Cargo/Size
+            <span
+              :class="{
+                [$style.sortPrimary]: isPrimarySort('cargo'),
+                [$style.sortSecondary]: isSecondarySort('cargo'),
+              }">
+              {{ getSortIndicator('cargo') }}
+            </span>
+          </th>
+          <th
+            :class="[$style.headerCell, $style.sortable, $style.colStatus]"
+            @click="setSort('status')">
+            Status
+            <span
+              :class="{
+                [$style.sortPrimary]: isPrimarySort('status'),
+                [$style.sortSecondary]: isSecondarySort('status'),
+              }">
+              {{ getSortIndicator('status') }}
+            </span>
+          </th>
+          <th
+            v-if="showColTime"
+            :class="[$style.headerCell, $style.sortable, $style.colTime]"
+            @click="setSort('eta')">
+            ETA
+            <span
+              :class="{
+                [$style.sortPrimary]: isPrimarySort('eta'),
+                [$style.sortSecondary]: isSecondarySort('eta'),
+              }">
+              {{ getSortIndicator('eta') }}
+            </span>
+          </th>
+          <th
+            v-if="showColRepair"
+            :class="[$style.headerCell, $style.sortable, $style.colRepair]"
+            @click="setSort('repair')">
+            Repair
+            <span
+              :class="{
+                [$style.sortPrimary]: isPrimarySort('repair'),
+                [$style.sortSecondary]: isSecondarySort('repair'),
+              }">
+              {{ getSortIndicator('repair') }}
+            </span>
+          </th>
+          <th
+            v-if="showColFuel"
+            :class="[$style.headerCell, $style.sortable, $style.colFuel]"
+            @click="setSort('fuel')">
+            Fuel
+            <span
+              :class="{
+                [$style.sortPrimary]: isPrimarySort('fuel'),
+                [$style.sortSecondary]: isSecondarySort('fuel'),
+              }">
+              {{ getSortIndicator('fuel') }}
+            </span>
+          </th>
+          <th
+            v-if="showColProblems && hasAnyProblems"
+            :class="[$style.headerCell, $style.colProblems]">
+            Problems
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="x in rows" :key="x.ship.id" :class="$style.row">
+          <td v-if="showColName" :class="[$style.bodyCell]">
+            <span :class="C.Link.link" @click="showBuffer(`SFC ${x.ship.registration}`)">
+              {{ x.ship.name || x.ship.registration }}
+            </span>
+          </td>
 
-      <!-- Body rows. -->
-      <div v-for="x in rows" :key="x.ship.id" :class="$style.row">
-        <div v-if="showColName" :class="[$style.bodyCell]">
-          <span :class="C.Link.link" @click="showBuffer(`SFC ${x.ship.registration}`)">
-            {{ x.ship.name || x.ship.registration }}
-          </span>
-        </div>
+          <td v-if="showColShipClass" :class="[$style.bodyCell, $style.colShipClass]">
+            <PrunLink inline :command="`SFC ${x.ship.registration}`">
+              {{ x.shipClass }}
+            </PrunLink>
+          </td>
 
-        <div v-if="showColShipClass" :class="[$style.bodyCell, $style.colShipClass]">
-          <span :class="C.Link.link" @click.stop="showBuffer(`SFC ${x.ship.registration}`)">
-            {{ x.shipClass }}
-          </span>
-        </div>
-
-        <div
-          v-if="showColSize"
-          :class="[$style.bodyCell, $style.colSize, C.ShipStore.pointer]"
-          @click="showBuffer(`SHPI ${x.ship.registration}`)">
-          {{ x.cargoSizeText }}
-        </div>
-
-        <div v-if="showColCargo" :class="[$style.bodyCell, $style.cargoCell]">
-          <CargoBar
-            :store="storagesStore.getById(x.ship.idShipStore)"
-            tall
-            @click="showBuffer(`SHPI ${x.ship.registration}`)" />
-        </div>
-
-        <div v-if="showColCargoSize" :class="[$style.bodyCell, $style.cargoCombinedCell]">
-          <CargoBar
-            :store="storagesStore.getById(x.ship.idShipStore)"
-            @click="showBuffer(`SHPI ${x.ship.registration}`)" />
-          <div
-            :class="[C.ShipStore.pointer, C.ShipStore.store, $style.cargoCombinedSize]"
+          <td
+            v-if="showColSize"
+            :class="[$style.bodyCell, $style.colSize, C.ShipStore.pointer]"
             @click="showBuffer(`SHPI ${x.ship.registration}`)">
             {{ x.cargoSizeText }}
-          </div>
-        </div>
+          </td>
 
-        <div :class="[$style.bodyCell, $style.colStatus]">
-          <StatusCell :ship-id="x.ship.id" />
-        </div>
+          <td v-if="showColCargo" :class="[$style.bodyCell, $style.cargoCell]">
+            <CargoBar
+              :store="storagesStore.getById(x.ship.idShipStore)"
+              tall
+              @click="showBuffer(`SHPI ${x.ship.registration}`)" />
+          </td>
 
-        <div v-if="showColTime" :class="[$style.bodyCell, $style.colTime]">
-          <TimeCell :ship-id="x.ship.id" />
-        </div>
-
-        <div v-if="showColRepair" :class="[$style.bodyCell, $style.colRepair]">
-          <span :class="x.conditionClass">{{ x.conditionText }}</span>
-        </div>
-
-        <div v-if="showColFuel" :class="[$style.bodyCell, $style.colFuel]">
-          <div
-            :class="[C.ShipFuel.container, C.ShipFuel.pointer, $style.fuelBars]"
-            @click="onFuel(x.ship.registration)">
-            <div :class="C.ProgressBar.container">
-              <progress
-                :class="[C.ProgressBar.primary, C.ProgressBar.progress]"
-                :value="x.stlFuelRatio ?? 0"
-                max="1" />
+          <td v-if="showColCargoSize" :class="[$style.bodyCell, $style.cargoCombinedCell]">
+            <CargoBar
+              :store="storagesStore.getById(x.ship.idShipStore)"
+              @click="showBuffer(`SHPI ${x.ship.registration}`)" />
+            <div
+              :class="[C.ShipStore.pointer, C.ShipStore.store, $style.cargoCombinedSize]"
+              @click="showBuffer(`SHPI ${x.ship.registration}`)">
+              {{ x.cargoSizeText }}
             </div>
-            <div :class="C.ProgressBar.container">
-              <progress
-                :class="[
-                  C.ProgressBar.secondary,
-                  C.ProgressBar.progress,
-                  !x.isFtlCapable ? C.ProgressBar.warning : undefined,
-                ]"
-                :value="x.ftlFuelRatio ?? 0"
-                max="1" />
-            </div>
-          </div>
-        </div>
+          </td>
 
-        <div
-          v-if="showColProblems && hasAnyProblems"
-          :class="[$style.bodyCell, $style.colProblems]">
-          <span v-if="x.ship.condition < 0.8" :class="C.ColoredValue.negative">{{
-            x.conditionText
-          }}</span>
-          <div
-            v-if="hasFuelProblem(x)"
-            :class="[C.ShipFuel.container, C.ShipFuel.pointer, $style.fuelBars]"
-            @click="onFuel(x.ship.registration)">
-            <div v-if="hasStlFuelProblem(x)" :class="C.ProgressBar.container">
-              <progress
-                :class="[C.ProgressBar.primary, C.ProgressBar.progress]"
-                :value="x.stlFuelRatio ?? 0"
-                max="1" />
+          <td :class="[$style.bodyCell, $style.colStatus]">
+            <StatusCell :ship-id="x.ship.id" />
+          </td>
+
+          <td v-if="showColTime" :class="[$style.bodyCell, $style.colTime]">
+            <TimeCell :ship-id="x.ship.id" />
+          </td>
+
+          <td v-if="showColRepair" :class="[$style.bodyCell, $style.colRepair]">
+            <span :class="x.conditionClass">{{ x.conditionText }}</span>
+          </td>
+
+          <td v-if="showColFuel" :class="[$style.bodyCell, $style.colFuel]">
+            <div
+              :class="[C.ShipFuel.container, C.ShipFuel.pointer, $style.fuelBars]"
+              @click="onFuel(x.ship.registration)">
+              <div :class="C.ProgressBar.container">
+                <progress
+                  :class="[C.ProgressBar.primary, C.ProgressBar.progress]"
+                  :value="x.stlFuelRatio ?? 0"
+                  max="1" />
+              </div>
+              <div :class="C.ProgressBar.container">
+                <progress
+                  :class="[
+                    C.ProgressBar.secondary,
+                    C.ProgressBar.progress,
+                    !x.isFtlCapable ? C.ProgressBar.warning : undefined,
+                  ]"
+                  :value="x.ftlFuelRatio ?? 0"
+                  max="1" />
+              </div>
             </div>
-            <div v-if="hasFtlFuelProblem(x)" :class="C.ProgressBar.container">
-              <progress
-                :class="[
-                  C.ProgressBar.secondary,
-                  C.ProgressBar.progress,
-                  !x.isFtlCapable ? C.ProgressBar.warning : undefined,
-                ]"
-                :value="x.ftlFuelRatio ?? 0"
-                max="1" />
+          </td>
+
+          <td
+            v-if="showColProblems && hasAnyProblems"
+            :class="[$style.bodyCell, $style.colProblems]">
+            <span v-if="x.ship.condition < 0.8" :class="x.conditionClass">
+              {{ x.conditionText }}
+            </span>
+            <div
+              v-if="hasFuelProblem(x)"
+              :class="[C.ShipFuel.container, C.ShipFuel.pointer, $style.fuelBars]"
+              @click="onFuel(x.ship.registration)">
+              <div v-if="hasStlFuelProblem(x)" :class="C.ProgressBar.container">
+                <progress
+                  :class="[C.ProgressBar.primary, C.ProgressBar.progress]"
+                  :value="x.stlFuelRatio ?? 0"
+                  max="1" />
+              </div>
+              <div v-if="hasFtlFuelProblem(x)" :class="C.ProgressBar.container">
+                <progress
+                  :class="[
+                    C.ProgressBar.secondary,
+                    C.ProgressBar.progress,
+                    !x.isFtlCapable ? C.ProgressBar.warning : undefined,
+                  ]"
+                  :value="x.ftlFuelRatio ?? 0"
+                  max="1" />
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -1281,15 +1253,31 @@ function getCargoState(cargoRatio: number) {
   margin-bottom: 4px;
 }
 
+.table {
+  border-bottom: 1px solid #2b485a;
+}
+
+.table > tbody {
+  border-bottom: none;
+}
+
 .tableContainer,
 .tableContainerFill {
-  border-bottom: 1px solid #2b485a;
+  font: inherit;
   container-type: inline-size;
+}
+
+.tableContainer > thead,
+.tableContainer > tbody,
+.tableContainerFill > thead,
+.tableContainerFill > tbody {
+  display: contents;
 }
 
 /* Grid table structure. */
 .tableContainer {
   display: inline-grid;
+  width: auto;
 }
 
 .tableContainerFill {
@@ -1323,6 +1311,8 @@ function getCargoState(cargoRatio: number) {
 }
 
 .headerCell {
+  border-bottom: none;
+  text-align: inherit;
   padding: 5px 8px 2px;
   font-weight: normal;
 }
@@ -1382,6 +1372,8 @@ function getCargoState(cargoRatio: number) {
   border-right: none;
 }
 
+/* TimeCell right-aligns its own content, so the header has to follow suit in every
+   layout or it drifts to the left edge of the column. */
 .colTime {
   border-left: none;
   min-width: 80px;
@@ -1405,7 +1397,11 @@ function getCargoState(cargoRatio: number) {
   justify-content: center;
 }
 
-.row:nth-child(even) > .bodyCell {
+.row > .bodyCell {
+  background-color: transparent;
+}
+
+.row:nth-child(odd) > .bodyCell {
   background-color: rgba(255, 255, 255, 0.02);
 }
 
@@ -1419,5 +1415,56 @@ function getCargoState(cargoRatio: number) {
   align-items: stretch;
   justify-content: space-around;
   width: 100%;
+}
+
+/* Legacy layout uses the native table sizing algorithm. */
+.legacyTable .headerRow,
+.legacyTable .row {
+  display: table-row;
+}
+
+.legacyTable .headerCell,
+.legacyTable .bodyCell {
+  display: table-cell;
+  vertical-align: middle;
+  min-width: 0;
+}
+
+.legacyTable .headerCell {
+  padding: 4px 6px;
+  text-align: left;
+}
+
+/* Flex alignment no longer applies to table cells, so restore the centered and
+   right-aligned columns with text-align. */
+.legacyTable .colShipClass,
+.legacyTable .colSize,
+.legacyTable .colRepair {
+  text-align: center;
+}
+
+/* Overrides the left-aligned .legacyTable .headerCell rule above. */
+.legacyTable .colTime {
+  text-align: right;
+}
+
+.legacyTable .cargoCell,
+.legacyTable .cargoCombinedCell {
+  min-width: 70px;
+  padding: 2px 2px 0;
+}
+
+.legacyTable .colFuel {
+  min-width: 120px;
+}
+
+.legacyTable .colFuel .fuelBars {
+  justify-content: flex-start;
+  gap: 2px;
+}
+
+.legacyTable .colFuel .fuelBars > div {
+  width: 40px;
+  flex: 0 0 40px;
 }
 </style>

@@ -6,6 +6,7 @@ import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { getShipStatusIcon, stationaryShipStatusIcon } from '@src/core/ship-status-icons';
 import { getLocationLineFromAddress } from '@src/infrastructure/prun-api/data/addresses';
 import { getDestinationInfo } from '@src/core/addresses';
+import PrunLink from '@src/components/PrunLink.vue';
 
 const props = defineProps<{
   shipId: string;
@@ -38,28 +39,26 @@ const posData = computed(() => {
 <template>
   <div :class="$style.container">
     <div :class="$style.icons">
-      <span
+      <PrunLink
         v-if="posData.invCommand"
-        :class="[C.Link.link, $style.link]"
+        inline
+        :command="posData.invCommand"
+        :class="$style.link"
         data-tooltip="Open inventory"
-        data-tooltip-position="top"
-        @click.stop="showBuffer(posData.invCommand)"
-        >{{ '\u2612' }}</span
-      >
+        data-tooltip-position="top">
+        {{ '\u2612' }}
+      </PrunLink>
       <span
         :class="$style.link"
         data-tooltip="Open flight control"
         data-tooltip-position="top"
-        @click.stop="showBuffer(`SFC ${ship?.registration}`)"
-        >{{ statusIcon }}</span
-      >
+        @click.stop="showBuffer(`SFC ${ship?.registration}`)">
+        {{ statusIcon }}
+      </span>
     </div>
-    <div
-      v-if="posData.command"
-      :class="[C.Link.link, $style.link]"
-      @click.stop="showBuffer(posData.command)">
+    <PrunLink v-if="posData.command" :class="$style.link" :command="posData.command">
       {{ posData.name }}
-    </div>
+    </PrunLink>
   </div>
 </template>
 
