@@ -3,8 +3,9 @@ import {
   getEntityNameFromAddress,
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
-import { getBuildingLastRepair } from '@src/infrastructure/prun-api/data/sites';
+import { getBuildingLastRepair, sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { getShipLastRepair } from '@src/infrastructure/prun-api/data/ships';
+import { diffDays } from '@src/utils/time-diff';
 
 export interface RepairEntry {
   ticker: string;
@@ -58,4 +59,23 @@ export function calculateShipEntries(ships?: PrunApi.Ship[]) {
   }
   entries.sort((a, b) => a.condition - b.condition);
   return entries;
+}
+
+export function getPlanetRepairAge(siteId: string, now: number) {
+  const site = sitesStore.getById(siteId);
+  if (!site) {
+    return undefined;
+  }
+  const buildings = site.platforms.filter(isRepairableBuilding);
+  if (buildings.length === 0) {
+    return undefined;
+  }
+  let maxAge = 0;
+  for (const building of buildings) {
+    const age = diffDays(getBuildingLastRepair(building), now, true);
+    if (age > maxAge) {
+      maxAge = age;
+    }
+  }
+  return maxAge;
 }
