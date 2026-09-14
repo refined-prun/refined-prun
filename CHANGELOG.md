@@ -6,8 +6,12 @@
 
 - `XIT AGENT`: Lists action packages synced via the private refined-agent channel (not AI-related)
 - `XIT BURNACT`: Executes a resupply action package for a planet from the burn screen
+- `XIT FLT`: Enhanced fleet table with detailed status, cargo, fuel, and quick actions
+- `XIT FLOW`: Shows daily production, consumption, and value of each material across bases
+- `XIT PLNT`: Per-planet settings for bases you own
+- `XIT REPAIRACT`: Executes a repair action package for a planet using XIT REP settings
 - `XIT REFUELACT`: Executes a refuel action package for all ships docked at exchanges
-- 
+- `XIT STO`: Per-base storage analysis
 
 ### Added
 
@@ -33,13 +37,9 @@
 - `XIT ACT`: Added resupply weight/volume totals and buttons to fit supplies to a ship size or the selected ship's free cargo capacity
 - `XIT BURN`: Added a right-click context menu for planets
 - `XIT CONTC`: Added fulfill buttons to fulfillable conditions
-- `XIT FLT`: Enhanced fleet table with detailed status, cargo, fuel, and quick actions
 - `XIT FINCH`: Added an "Equity Growth" chart
-- `XIT FLOW`: Shows daily production, consumption, and value of each material across bases
-- `XIT PLNT`: Per-planet settings for bases you own
 - `XIT SET`: Added global `XIT ACT` configuration in `XIT SET ACT`
 - `XIT SET`: Added financial data merging tool in `XIT SET FIN`
-- `XIT STO`: Per-base storage analysis
 - Added a notification count badge to the browser tab favicon (`favicon-notification-badge`)
 - Added a right-click market context menu for materials (`market-context-menu`)
 - Added tab folders (`screen-tab-bar-folders`)
