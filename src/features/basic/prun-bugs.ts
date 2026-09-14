@@ -138,11 +138,11 @@ function init() {
   applyCssRule('[data-tooltip-position="right"]', $style.tooltipRight);
 
   // Fix missing options for certain localizations.
-  applyLocalizationPatch(L.GroupChannelMembershipPanel.title, { en: text => text }, true);
-  applyLocalizationPatch(L.PublicChannelMembershipPanel.title._default, { en: text => text }, true);
-  applyLocalizationPatch(L.Warehouse.error.id, { en: text => text }, true);
-  applyLocalizationPatch(L.chat.messages.renamed, { en: text => text }, true);
-  applyLocalizationPatch(L.chat.messages.renamed.auto, { en: text => text }, true);
+  applyLocalizationPatch(L.GroupChannelMembershipPanel.title, { en: x => x }, true);
+  applyLocalizationPatch(L.PublicChannelMembershipPanel.title._default, { en: x => x }, true);
+  applyLocalizationPatch(L.Warehouse.error.id, { en: x => x }, true);
+  applyLocalizationPatch(L.chat.messages.renamed, { en: x => x }, true);
+  applyLocalizationPatch(L.chat.messages.renamed.auto, { en: x => x }, true);
 
   tiles.observe('POPID', disableInvalidPopidSliders);
 }
