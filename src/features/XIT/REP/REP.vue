@@ -144,6 +144,7 @@ const singleSiteInfo = computed(() => {
           <th v-if="isMultiTarget">Target</th>
           <th>Age (days)</th>
           <th>Condition</th>
+          <th>CMD</th>
         </tr>
       </thead>
       <tbody>
@@ -154,12 +155,18 @@ const singleSiteInfo = computed(() => {
           </td>
           <td>{{ fixed1(calculateAge(entry.lastRepair)) }}</td>
           <td>{{ percent1(entry.condition) }}</td>
+          <td>
+            <PrunButton dark inline @click="showBuffer(`XIT REPAIRACT ${entry.naturalId}`)">
+              ACT
+            </PrunButton>
+          </td>
         </tr>
         <tr v-for="entry in visibleShips" :key="objectId(entry)">
           <td>(Ship)</td>
           <td>{{ entry.target }}</td>
           <td>{{ fixed1(calculateAge(entry.lastRepair)) }}</td>
           <td>{{ percent1(entry.condition) }}</td>
+          <td />
         </tr>
       </tbody>
     </table>

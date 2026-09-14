@@ -17,6 +17,12 @@ function isCheckpoint(entry: MigrationEntry): entry is Checkpoint {
 // The date is for reference only, and it does not affect migration order.
 const migrations: MigrationEntry[] = [
   [
+    '14.09.2026 Add noBuy setting',
+    userData => {
+      userData.settings.noBuy ??= [];
+    },
+  ],
+  [
     '12.09.2026 Add tab folders',
     userData => {
       userData.tabs.folders ??= [];

@@ -1,20 +1,21 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import { ddmm, fixed0, fixed2 } from '@src/utils/format';
-import { selectAndChangeInputValue, changeSelectIndex } from '@src/util';
+import { changeSelectIndex, selectAndChangeInputValue } from '@src/util';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
+import { selectAddress } from '@src/infrastructure/prun-ui/utils/select-address';
 import { AssertFn, MaterialBill } from '@src/features/XIT/ACT/shared-types';
 import {
-  addMaterials,
-  applyTemplate,
+  pollUntil,
   createNewDraft,
-  openTemplate,
-  saveConditions,
+  setDraftNameAndPreamble,
   saveDraftDetails,
-  selectLocation,
+  openTemplate,
   selectTemplateType,
   setCurrency,
+  addMaterials,
   setDeadline,
-  setDraftNameAndPreamble,
+  applyTemplate,
+  saveConditions,
 } from '@src/features/XIT/ACT/action-steps/cont-utils';
 
 interface Data {
@@ -30,31 +31,37 @@ interface Data {
 }
 
 function findPriceInput(anchor: Element) {
-  const named = anchor.querySelector<HTMLInputElement>('input[name="price"]');
+  const named = _$$(anchor, 'input').find(x => x.name === 'price');
   if (named) {
     return named;
   }
-  // Fall back to the first decimal input that's outside the per-commodity groups.
   const groups = _$$(anchor, C.TemplateSelection.group);
-  return Array.from(anchor.querySelectorAll<HTMLInputElement>('input[inputmode="decimal"]')).find(
-    x => !groups.some(g => g.contains(x)),
+  return _$$(anchor, 'input').find(
+    x => x.inputMode === 'decimal' && !groups.some(group => group.contains(x)),
   );
 }
 
 export const CONT_SEND = act.addActionStep<Data>({
   type: 'CONT_SEND',
+  totalMaterials: data =>
+    Object.fromEntries(
+      Object.entries(data.materials)
+        .filter(([, x]) => x.quantity > 0)
+        .map(([ticker, x]) => [ticker, x.quantity]),
+    ),
   description: data => {
     const materialCount = Object.keys(data.materials).length;
     const payment = data.payment !== 0 ? ` for ${fixed0(data.payment)} ${data.currency}` : '';
     return `Create contract draft (${fixed0(materialCount)} materials)${payment}`;
   },
   execute: async ctx => {
-    const { data, log, setStatus, requestTile, waitAct, waitActionFeedback, complete } = ctx;
+    const { data, log, setStatus, requestTile, waitAct, complete } = ctx;
     const assert: AssertFn = ctx.assert;
 
     // Compute total tonnage for the preamble and payment logging.
     let totalTonnage = 0;
     const materialDetails: Array<{ ticker: string; amount: number }> = [];
+
     for (const [ticker, { quantity: amount }] of Object.entries(data.materials)) {
       if (amount <= 0) {
         continue;
@@ -76,15 +83,13 @@ export const CONT_SEND = act.addActionStep<Data>({
       );
     }
 
-    // Step 1: Create new draft.
-    await waitAct('Create new draft?');
+    // Create new draft.
     const listTile = await requestTile('CONTD');
     if (!listTile) {
       return;
     }
 
-    const newDraft = await createNewDraft(ctx, listTile.anchor);
-    await waitActionFeedback(listTile);
+    const newDraft = await createNewDraft(ctx, listTile);
 
     setStatus(`Loading draft ${newDraft.naturalId}...`);
     const draftTile = await requestTile(`CONTD ${newDraft.naturalId}`);
@@ -108,10 +113,9 @@ export const CONT_SEND = act.addActionStep<Data>({
 
     await setDraftNameAndPreamble(ctx, anchor, contractName, preambleText);
 
-    // Step 2: Save draft details (name/preamble).
+    // Save draft details (name/preamble).
     await waitAct('Save draft details?');
-    await saveDraftDetails(ctx, anchor, newDraft.naturalId);
-    await waitActionFeedback(draftTile);
+    await saveDraftDetails(ctx, draftTile, newDraft.naturalId);
 
     const templateSelect = await openTemplate(ctx, anchor);
     selectTemplateType(ctx, templateSelect, 'SHIP');
@@ -119,41 +123,49 @@ export const CONT_SEND = act.addActionStep<Data>({
 
     await addMaterials(ctx, anchor, materialDetails);
 
-    // The SHIP template price field is per-commodity. The game charges the
-    // configured amount for each commodity row, so divide total payment by row count.
+    // The SHIP template price field is per-commodity - the game charges this
+    // amount for each commodity row. Divide total payment by number of commodities.
     if (data.payment > 0 && materialDetails.length > 0) {
       const pricePerCommodity = Math.round(data.payment / materialDetails.length);
       const priceInput = findPriceInput(anchor);
-      if (priceInput) {
-        selectAndChangeInputValue(priceInput, String(pricePerCommodity));
-        log.info(
-          `Price set: ${fixed0(pricePerCommodity)} ${data.currency}/commodity x${fixed0(materialDetails.length)} = ${fixed0(pricePerCommodity * materialDetails.length)} ${data.currency} total`,
-        );
-      } else {
-        assert(false, 'Could not find price input');
-      }
+      assert(priceInput, 'Could not find price input');
+      selectAndChangeInputValue(priceInput, String(pricePerCommodity));
+      log.info(
+        `Price set: ${fixed0(pricePerCommodity)} ${data.currency}/commodity x${fixed0(materialDetails.length)} = ${fixed0(pricePerCommodity * materialDetails.length)} ${data.currency} total`,
+      );
     }
 
-    // Step 3: Set origin address.
+    // Set origin address.
     const addressContainers = _$$(anchor, C.AddressSelector.container);
 
-    assert(addressContainers.length >= 1 && data.contOrigin, 'Could not find origin control');
+    assert(
+      addressContainers.length >= 1 && data.contOrigin !== undefined,
+      'Could not find origin control',
+    );
     await waitAct(`Set origin to ${data.contOrigin}?`);
-    const originSelected = await selectLocation(addressContainers[0], data.contOrigin);
-    assert(originSelected, `Could not select origin: ${data.contOrigin}`);
+    const originSet = await selectAddress(addressContainers[0], data.contOrigin);
+    assert(originSet, `Could not select origin: ${data.contOrigin}`);
     log.info(`Origin set: ${data.contOrigin}`);
 
-    // Step 4: Set destination address.
-    assert(addressContainers.length >= 2 && data.contDest, 'Could not find destination control');
+    // Set destination address.
+    assert(
+      addressContainers.length >= 2 && data.contDest !== undefined,
+      'Could not find destination control',
+    );
     await waitAct(`Set destination to ${data.contDest}?`);
-    const destinationSelected = await selectLocation(addressContainers[1], data.contDest);
-    assert(destinationSelected, `Could not select destination: ${data.contDest}`);
+    const destSet = await selectAddress(addressContainers[1], data.contDest);
+    assert(destSet, `Could not select destination: ${data.contDest}`);
     log.info(`Destination set: ${data.contDest}`);
 
-    if (data.autoProvisionStoreId) {
+    if (data.autoProvisionStoreId !== undefined) {
       setStatus('Setting auto-provision store...');
-      const storeSelect = _$(anchor, C.StoreSelect.container) as HTMLSelectElement | undefined;
+      // The store options only populate once the origin address resolves.
+      const storeSelect = await pollUntil(() => {
+        const select = _$(anchor, C.StoreSelect.container) as HTMLSelectElement | undefined;
+        return select !== undefined && select.options.length > 1 ? select : undefined;
+      }, 5000);
       assert(storeSelect, 'Auto-provision store select did not appear');
+
       const normalizedId = data.autoProvisionStoreId.replaceAll('-', '');
       const optionIndex = Array.from(storeSelect.options).findIndex(
         x => x.value === data.autoProvisionStoreId || x.value === normalizedId,
@@ -168,14 +180,13 @@ export const CONT_SEND = act.addActionStep<Data>({
 
     setDeadline(ctx, anchor, data.daysToFulfill);
 
-    // Step 5: Apply template.
+    // Apply template.
     await waitAct('Apply template?');
     await applyTemplate(ctx, anchor, newDraft.naturalId);
 
-    // Step 6: Save conditions (after user review).
+    // Save conditions, after the player has reviewed them.
     await waitAct('Save conditions?');
-    await saveConditions(ctx, anchor, newDraft.naturalId);
-    await waitActionFeedback(draftTile);
+    await saveConditions(ctx, draftTile, newDraft.naturalId);
 
     log.success(`Contract draft ${newDraft.naturalId} ready to send`);
     complete();

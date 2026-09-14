@@ -14,6 +14,7 @@ import RadioItem from '@src/components/forms/RadioItem.vue';
 import StatusCell from './StatusCell.vue';
 import TimeCell from './TimeCell.vue';
 import CargoBar from '@src/components/CargoBar.vue';
+import FuelHeaderButton from './FuelHeaderButton.vue';
 import { fixed0, percent0 } from '@src/utils/format';
 import { timestampEachMinute } from '@src/utils/dayjs';
 import coloredValue from '@src/infrastructure/prun-ui/css/colored-value.module.css';
@@ -1058,18 +1059,16 @@ function getCargoState(cargoRatio: number) {
               {{ getSortIndicator('repair') }}
             </span>
           </th>
-          <th
-            v-if="showColFuel"
-            :class="[$style.headerCell, $style.sortable, $style.colFuel]"
-            @click="setSort('fuel')">
-            Fuel
-            <span
-              :class="{
-                [$style.sortPrimary]: isPrimarySort('fuel'),
-                [$style.sortSecondary]: isSecondarySort('fuel'),
-              }">
-              {{ getSortIndicator('fuel') }}
-            </span>
+          <th v-if="showColFuel" :class="[$style.headerCell, $style.colFuel]">
+            <FuelHeaderButton @refuel="showBuffer('XIT REFUELACT')">
+              <span
+                :class="{
+                  [$style.sortPrimary]: isPrimarySort('fuel'),
+                  [$style.sortSecondary]: isSecondarySort('fuel'),
+                }">
+                {{ getSortIndicator('fuel') }}
+              </span>
+            </FuelHeaderButton>
           </th>
           <th
             v-if="showColProblems && hasAnyProblems"

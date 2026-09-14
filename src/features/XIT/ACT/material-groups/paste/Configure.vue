@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import Active from '@src/components/forms/Active.vue';
 import { Config } from '@src/features/XIT/ACT/material-groups/paste/config';
-import { parsePaste } from '@src/features/XIT/ACT/material-groups/paste/paste';
+import { parsePaste } from '@src/features/XIT/ACT/material-groups/paste/paste-parse';
+import { resolveTicker } from '@src/features/XIT/ACT/material-groups/paste/paste';
 
 const { config } = defineProps<{ data: UserData.MaterialGroupData; config: Config }>();
 
-const result = computed(() => parsePaste(config.materials));
-const errors = computed(() => result.value.errors);
-const fatal = computed(() => result.value.fatal);
+const result = computed(() => parsePaste(config.materials, resolveTicker));
 const rowCount = computed(() => result.value.rows.length);
-const hasError = computed(() => !!fatal.value || errors.value.length > 0 || rowCount.value === 0);
+const hasError = computed(
+  () => result.value.fatal !== undefined || result.value.errors.length > 0 || rowCount.value === 0,
+);
 
-// "N of M lines have errors" — M counts only non-empty lines.
-const nonEmptyLineCount = computed(
+// "N of M rows" counts only rows the player actually typed.
+const filledRowCount = computed(
   () => (config.materials ?? '').split(/\r\n|\r|\n/).filter(x => x.trim().length > 0).length,
 );
 
@@ -20,11 +21,12 @@ const summary = computed(() => {
   if ((config.materials ?? '').trim().length === 0) {
     return undefined;
   }
-  if (fatal.value) {
-    return fatal.value;
+  if (result.value.fatal !== undefined) {
+    return result.value.fatal;
   }
-  if (errors.value.length > 0) {
-    return `${errors.value.length} of ${nonEmptyLineCount.value} lines have errors`;
+  const errorCount = result.value.errors.length;
+  if (errorCount > 0) {
+    return `${errorCount} of ${filledRowCount.value} rows have errors`;
   }
   if (rowCount.value === 0) {
     return 'No materials parsed';
@@ -39,17 +41,15 @@ const summary = computed(() => {
       <textarea
         v-model="config.materials"
         :class="$style.textarea"
-        placeholder="Paste from a spreadsheet, or type rows as TICKER,QTY,PRICE&#10;RAT,100,530&#10;DW,50&#10;&#10;One delimiter per paste: tab (spreadsheet), comma, or semicolon.&#10;PRICE is optional; max 3 significant figures."
+        :placeholder="`Paste from spreadsheet or type manually\nTICKER  AMOUNT  PRICE\nRAT     100     530\n\nPrice column is optional; at most 3 significant figures.\nOne delimiter per paste: tab, comma or semicolon.`"
         spellcheck="false" />
     </Active>
-    <div
-      v-if="summary"
-      :class="[$style.summary, hasError ? $style.summaryError : $style.summaryOk]">
+    <div v-if="summary" :class="[$style.summary, hasError ? $style.bad : $style.good]">
       {{ summary }}
     </div>
-    <ul v-if="!fatal && errors.length > 0" :class="$style.errors">
-      <li v-for="error in errors" :key="error.line">
-        <span :class="$style.line">Line {{ error.line }}</span>
+    <ul v-if="result.fatal === undefined && result.errors.length > 0" :class="$style.errors">
+      <li v-for="error in result.errors" :key="error.line">
+        <span :class="$style.line">Row {{ error.line }}</span>
         {{ error.reason }}
       </li>
     </ul>
@@ -66,35 +66,35 @@ const summary = computed(() => {
   color: inherit;
   background: transparent;
   border: none;
+}
 
-  &:focus {
-    outline: none;
-  }
+.textarea:focus {
+  outline: none;
 }
 
 .summary {
   margin-top: 4px;
-  font-size: 12px;
+  font-size: 11px;
 }
 
-.summaryError {
-  color: rgb(217, 83, 79);
+.good {
+  color: var(--rp-color-green);
 }
 
-.summaryOk {
-  color: rgb(122, 168, 116);
+.bad {
+  color: var(--rp-color-red);
 }
 
+/* Cap the height so a paste with many bad rows scrolls instead of growing the
+   dialog past the window. */
 .errors {
-  /* Cap height so a paste with many bad lines scrolls instead of growing the
-     dialog past the window. ~8 rows visible before scrolling. */
   max-height: 160px;
   overflow-y: auto;
   margin: 4px 0 0;
   padding-left: 0;
   list-style: none;
   font-size: 11px;
-  color: rgb(217, 83, 79);
+  color: var(--rp-color-red);
 }
 
 .errors li {

@@ -4,6 +4,7 @@ import { dispatchClientPrunMessage } from '@src/infrastructure/prun-api/prun-api
 import { changeInputValue, clickElement } from '@src/util';
 import { sleep } from '@src/utils/sleep';
 import { setBufferSize, showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { rememberSplitOwner } from '@src/infrastructure/prun-ui/companion-buffer';
 
 interface TileAllocatorOptions {
   tile: PrunTile;
@@ -75,6 +76,11 @@ async function requestTile(command: string) {
 function splitBuffer(tile: PrunTile) {
   const width = parseInt(tile.container.style.width.replace('px', ''), 10);
   const height = parseInt(tile.container.style.height.replace('px', ''), 10);
+  // Save the tile id on the window before splitting destroys its element; later stages need it.
+  const windowEl = tile.frame.closest(`.${C.Window.window}`);
+  if (windowEl !== null) {
+    rememberSplitOwner(windowEl, tile.id);
+  }
   setBufferSize(tile.id, width + 450, height);
   const changeButton = _$$(tile.frame, C.TileControls.control).find(x => x.textContent === '|');
   void clickElement(changeButton);

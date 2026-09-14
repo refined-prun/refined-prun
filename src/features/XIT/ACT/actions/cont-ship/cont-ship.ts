@@ -35,13 +35,11 @@ act.addAction<Config>({
   },
   editComponent: Edit,
   configureComponent: Configure,
-  needsConfigure: data => {
-    return (
-      data.contOrigin === configurableValue ||
-      data.contDest === configurableValue ||
-      !!data.autoProvision
-    );
-  },
+  // Only ask for a configure dialog when something in it is actually settable.
+  needsConfigure: data =>
+    data.contOrigin === configurableValue ||
+    data.contDest === configurableValue ||
+    data.autoProvision === true,
   isValidConfig: (data, config) => {
     return (
       (data.contOrigin !== configurableValue || config.origin !== undefined) &&
@@ -56,11 +54,9 @@ act.addAction<Config>({
     const materials = await getMaterialGroup(data.group);
     assert(materials, 'Invalid material group');
 
-    assert(data.contOrigin, 'Missing origin');
     const contOrigin = resolveLocation(data.contOrigin, config?.origin, getMaterialGroupPlanet);
     assert(contOrigin, 'Invalid origin');
 
-    assert(data.contDest, 'Missing destination');
     const contDest = resolveLocation(data.contDest, config?.destination, getMaterialGroupPlanet);
     assert(contDest, 'Invalid destination');
 

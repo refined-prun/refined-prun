@@ -5,6 +5,7 @@ import GAME from '@src/features/XIT/SET/GAME.vue';
 import FEAT from '@src/features/XIT/SET/FEAT.vue';
 import FIN from '@src/features/XIT/SET/FIN.vue';
 import BFR from '@src/features/XIT/SET/BFR.vue';
+import ACT from '@src/features/XIT/SET/ACT.vue';
 
 const tabs: Tab[] = [
   {
@@ -26,6 +27,11 @@ const tabs: Tab[] = [
     id: 'BFR',
     label: 'Buffers',
     component: BFR,
+  },
+  {
+    id: 'ACT',
+    label: 'ACT',
+    component: ACT,
   },
 ];
 

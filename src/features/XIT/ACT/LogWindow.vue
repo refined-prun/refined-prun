@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { objectId } from '@src/utils/object-id';
-import { LogTag } from '@src/features/XIT/ACT/runner/logger';
+import { LogTag, LogContent } from '@src/features/XIT/ACT/runner/logger';
 
 const { messages, scrolling } = defineProps<{
-  messages: { tag: LogTag; message: string }[];
+  messages: { tag: LogTag; message: LogContent }[];
   scrolling: boolean;
 }>();
 
@@ -46,7 +46,17 @@ function getTagClass(tag: LogTag) {
   <div ref="log" :class="[$style.log, C.fonts.fontRegular]">
     <div v-for="message in messages" :key="objectId(message)">
       <b v-if="message.tag" :class="getTagClass(message.tag)">{{ message.tag }}: </b>
-      <span>{{ message.message }}</span>
+      <template v-if="typeof message.message === 'string'">
+        <span>{{ message.message }}</span>
+      </template>
+      <template v-else>
+        <span
+          v-for="(part, i) in message.message"
+          :key="i"
+          :class="part.yellow ? $style.yellow : undefined">
+          {{ part.text }}
+        </span>
+      </template>
     </div>
   </div>
 </template>
@@ -81,6 +91,10 @@ function getTagClass(tag: LogTag) {
 }
 
 .warning {
+  color: #f7a600;
+}
+
+.yellow {
   color: #f7a600;
 }
 </style>

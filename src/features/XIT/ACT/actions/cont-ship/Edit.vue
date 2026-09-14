@@ -6,6 +6,7 @@ import RadioItem from '@src/components/forms/RadioItem.vue';
 import { configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
 import { useContLocations } from '@src/features/XIT/ACT/actions/cont-locations';
 import { balancesStore } from '@src/infrastructure/prun-api/data/balances';
+import { maxContractDays, minContractDays } from '@src/features/XIT/ACT/actions/cont-limits';
 
 const { action, pkg } = defineProps<{
   action: UserData.ActionData;
@@ -17,6 +18,7 @@ const materialGroup = ref(action.group ?? materialGroups.value[0]);
 
 const staticLocations = useContLocations();
 
+// A group with no planet resolves to nothing at run time, so it is not offered.
 const groupTargetOptions = computed(() =>
   pkg.groups
     .filter(x => x.name && x.planet)
@@ -42,18 +44,16 @@ const daysToFulfill = ref(action.daysToFulfill ?? 3);
 const autoProvision = ref(action.autoProvision ?? false);
 
 function validate() {
-  const locations = locationOptions.value.map(x => (typeof x === 'string' ? x : x.value));
-  if (!locations.includes(contOrigin.value)) {
-    return false;
-  }
-  if (!locations.includes(contDest.value)) {
-    return false;
-  }
   if (!materialGroup.value) {
     return false;
   }
+  // A location saved before the player abandoned that base is no longer selectable.
+  const locations = locationOptions.value.map(x => (typeof x === 'string' ? x : x.value));
+  if (!locations.includes(contOrigin.value) || !locations.includes(contDest.value)) {
+    return false;
+  }
   const days = Number(daysToFulfill.value);
-  if (!Number.isInteger(days) || days < 1 || days > 99) {
+  if (!Number.isInteger(days) || days < minContractDays || days > maxContractDays) {
     return false;
   }
   const payment = Number(paymentPerTon.value);
@@ -99,7 +99,7 @@ defineExpose({ validate, save });
   </Active>
 
   <Active label="Days to Fulfill">
-    <NumericInput v-model="daysToFulfill" :min="1" :max="99" :step="1" />
+    <NumericInput v-model="daysToFulfill" :min="minContractDays" :max="maxContractDays" :step="1" />
   </Active>
 
   <Active label="Auto-provision">

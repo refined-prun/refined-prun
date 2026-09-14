@@ -1,7 +1,7 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import { fixed0 } from '@src/utils/format';
 import Edit from '@src/features/XIT/ACT/material-groups/manual/Edit.vue';
-import { MaterialBill } from '@src/features/XIT/ACT/shared-types';
+import { materialBillFromQuantities } from '@src/features/XIT/ACT/shared-types';
 
 act.addMaterialGroup({
   type: 'Manual',
@@ -22,10 +22,6 @@ act.addMaterialGroup({
       log.error('Missing materials.');
       return undefined;
     }
-    const materials: MaterialBill = {};
-    for (const ticker in data.materials) {
-      materials[ticker] = { quantity: data.materials[ticker] };
-    }
-    return materials;
+    return materialBillFromQuantities(data.materials);
   },
 });

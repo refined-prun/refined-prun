@@ -1,13 +1,16 @@
 export type LogTag = null | 'INFO' | 'ACTION' | 'SUCCESS' | 'ERROR' | 'SKIP' | 'WARNING' | 'CANCEL';
 
+export type LogPart = { text: string; yellow?: boolean };
+export type LogContent = string | LogPart[];
+
 export class Logger {
-  constructor(public readonly logMessage: (tag: LogTag, msg: string) => void) {}
+  constructor(public readonly logMessage: (tag: LogTag, msg: LogContent) => void) {}
 
   label(msg: string) {
     this.logMessage(null, msg);
   }
 
-  info(msg: string) {
+  info(msg: LogContent) {
     this.logMessage('INFO', msg);
   }
 

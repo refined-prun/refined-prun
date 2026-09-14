@@ -2,11 +2,12 @@
 import Active from '@src/components/forms/Active.vue';
 import Passive from '@src/components/forms/Passive.vue';
 import SelectInput from '@src/components/forms/SelectInput.vue';
-import { Config } from '@src/features/XIT/ACT/actions/mtra/config';
+import { Config, CX_BUY_ONLY_DEST } from '@src/features/XIT/ACT/actions/mtra/config';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import {
   atSameLocation,
   deserializeStorage,
+  isCXWarehouse,
   serializeStorage,
   storageSort,
 } from '@src/features/XIT/ACT/actions/utils';
@@ -45,8 +46,18 @@ const destinationStorages = computed(() => {
   return storages.sort(storageSort);
 });
 
+const originIsCXWarehouse = computed(() => {
+  const originRef = data.origin !== configurableValue ? data.origin : config.origin;
+  const origin = deserializeStorage(originRef);
+  return origin ? isCXWarehouse(origin) : false;
+});
+
 const destinationOptions = computed(() => {
-  return getOptions(destinationStorages.value);
+  const options = getOptions(destinationStorages.value);
+  if (originIsCXWarehouse.value) {
+    options.push({ label: CX_BUY_ONLY_DEST, value: CX_BUY_ONLY_DEST });
+  }
+  return options;
 });
 
 if (
@@ -73,7 +84,7 @@ watchEffect(() => {
   }
 
   if (data.dest === configurableValue) {
-    if (config.destination) {
+    if (config.destination && config.destination !== CX_BUY_ONLY_DEST) {
       const destination = deserializeStorage(config.destination);
       if (!destination || !destinationStorages.value.includes(destination)) {
         config.destination = undefined;

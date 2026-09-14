@@ -1,27 +1,11 @@
 <script setup lang="ts">
-import { getBurnThresholds } from '@src/features/XIT/BURN/utils';
-import { trunc0, trunc01 } from '@src/utils/format';
+import { burnDaysClass, formatBurnDays } from '@src/features/XIT/BURN/utils';
 
 const { days } = defineProps<{ days: number }>();
 
-const formattedDays = computed(() => {
-  if (days > 999) {
-    return '∞';
-  }
-  if (days >= 10) {
-    return trunc0(days);
-  }
-  return trunc01(days);
-});
+const formattedDays = computed(() => formatBurnDays(days));
 
-const burnClass = computed(() => {
-  const { isRed, isYellow, isGreen } = getBurnThresholds(days);
-  return {
-    [C.Workforces.daysMissing]: isRed,
-    [C.Workforces.daysWarning]: isYellow,
-    [C.Workforces.daysSupplied]: isGreen,
-  };
-});
+const burnClass = computed(() => burnDaysClass(days));
 </script>
 
 <template>

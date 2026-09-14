@@ -23,7 +23,11 @@ export class StepGenerator {
     return this.options.log;
   }
 
-  async generateSteps(pkg: UserData.ActionPackageData, config: ActionPackageConfig) {
+  async generateSteps(
+    pkg: UserData.ActionPackageData,
+    config: ActionPackageConfig,
+    preview: boolean,
+  ) {
     const state = generateState();
     const steps = [] as ActionStep[];
     let fail = false;
@@ -34,13 +38,17 @@ export class StepGenerator {
       }
       const actionConfig = config.actions[action.name!] ?? {};
       const log = new Logger((tag, message) =>
-        this.log.logMessage(tag, `[${action.name}] ${message}`),
+        this.log.logMessage(
+          tag,
+          typeof message === 'string' ? `[${action.name}] ${message}` : message,
+        ),
       );
       try {
         await info.generateSteps({
           data: action,
           config: actionConfig,
           packageName: pkg.global.name,
+          preview,
           log,
           fail: message => {
             if (message) {
@@ -93,7 +101,9 @@ export class StepGenerator {
     }
     const planet = group.planet;
     if (!planet) {
-      this.log.error(`Material group [${name}] has no planet configured`);
+      this.log.warning(
+        `Material group [${name}] has no planet configured; SFC destination will not be filled`,
+      );
       return undefined;
     }
     if (planet === configurableValue) {
@@ -134,7 +144,12 @@ export class StepGenerator {
     return await info.generateMaterialBill({
       data: group,
       config: groupConfig,
-      log: new Logger((tag, message) => this.log.logMessage(tag, `[${group.name}] ${message}`)),
+      log: new Logger((tag, message) =>
+        this.log.logMessage(
+          tag,
+          typeof message === 'string' ? `[${group.name}] ${message}` : message,
+        ),
+      ),
       setStatus: status => this.options.onStatusChanged(status),
     });
   }
@@ -159,5 +174,6 @@ function generateState() {
   }
   return {
     WAR: war,
+    reservedAgentIds: new Set<string>(),
   };
 }

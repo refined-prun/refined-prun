@@ -8,6 +8,11 @@ import {
   displayLocationValue,
   resolveLocation,
 } from '@src/features/XIT/ACT/actions/cont-locations';
+import {
+  isValidContractPrice,
+  maxContractPrice,
+  minContractPrice,
+} from '@src/features/XIT/ACT/actions/cont-limits';
 
 act.addAction<Config>({
   type: 'CONT Trade',
@@ -40,20 +45,15 @@ act.addAction<Config>({
     const materials = await getMaterialGroup(data.group);
     assert(materials, 'Invalid material group');
 
-    const includedMaterials = Object.values(materials).filter(x => x.quantity > 0);
-    assert(includedMaterials.length > 0, 'Material group has no materials to trade');
+    const traded = Object.values(materials).filter(x => x.quantity > 0);
+    assert(traded.length > 0, 'Material group has no materials to trade');
+
+    // Reject missing prices before editing a draft; a blank price creates a free trade.
     assert(
-      includedMaterials.every(
-        x =>
-          x.price !== undefined &&
-          Number.isFinite(x.price) &&
-          x.price >= 0.01 &&
-          x.price <= 100000000,
-      ),
-      `Each included material in [${data.group}] must have a price from 0.01 to 100000000. Use a Paste group with 3 columns (ticker, amount, price).`,
+      traded.every(x => isValidContractPrice(x.price)),
+      `Each material in [${data.group}] needs a price from ${minContractPrice} to ${maxContractPrice}. Use a Paste group with 3 columns (ticker, amount, price).`,
     );
 
-    assert(data.contLocation, 'Missing location');
     const location = resolveLocation(data.contLocation, config?.location, getMaterialGroupPlanet);
     assert(location, 'Invalid location');
 

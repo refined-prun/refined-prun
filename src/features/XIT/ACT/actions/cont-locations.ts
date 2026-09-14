@@ -5,6 +5,7 @@ import { getEntityNameFromAddress } from '@src/infrastructure/prun-api/data/addr
 import { comparePlanets } from '@src/util';
 import { configurableValue, groupTargetPrefix } from '@src/features/XIT/ACT/shared-types';
 
+/** Contract endpoints with player storage, shared by CONT actions and configure forms. */
 export function useContLocations() {
   return computed(() => {
     const seen = new Set<string>();
@@ -19,7 +20,7 @@ export function useContLocations() {
         continue;
       }
       const name = getEntityNameFromAddress(address);
-      if (name && !seen.has(name)) {
+      if (name !== undefined && !seen.has(name)) {
         seen.add(name);
         result.push(name);
       }
@@ -28,11 +29,19 @@ export function useContLocations() {
   });
 }
 
+/**
+ * Resolves a stored location value to a planet name: a literal name passes
+ * through, `configurableValue` reads the run's configure dialog, and a
+ * `group:` reference follows the named material group's target planet.
+ */
 export function resolveLocation(
-  value: string,
+  value: string | undefined,
   configValue: string | undefined,
   getMaterialGroupPlanet: (name: string) => string | undefined,
-): string | undefined {
+) {
+  if (value === undefined) {
+    return undefined;
+  }
   if (value === configurableValue) {
     return configValue;
   }
@@ -43,7 +52,7 @@ export function resolveLocation(
 }
 
 export function displayLocationValue(value: string | undefined) {
-  if (!value) {
+  if (value === undefined || value.length === 0) {
     return '--';
   }
   if (value.startsWith(groupTargetPrefix)) {

@@ -1,83 +1,69 @@
-import { fixed0 } from '@src/utils/format';
 import {
-  changeInputValue,
   changeSelectIndex,
   changeTextAreaValue,
   clickElement,
   focusElement,
-  selectMaterialInMaterialSelector,
   selectAndChangeInputValue,
+  selectMaterialInMaterialSelector,
 } from '@src/util';
 import { sleep } from '@src/utils/sleep';
+import { fixed0 } from '@src/utils/format';
 import { contractDraftsStore } from '@src/infrastructure/prun-api/data/contract-drafts';
 import { ActionStepExecuteContext, AssertFn } from '@src/features/XIT/ACT/shared-types';
+import { maxContractDays, minContractDays } from '@src/features/XIT/ACT/actions/cont-limits';
 
-// AddressSelector suggestions render in #autosuggest-portal outside the tile DOM.
-// Only one portal can be open at a time, so we search it directly.
-export async function selectLocation(container: Element, locationName: string) {
-  const input = (await $(container, C.AddressSelector.input)) as HTMLInputElement;
-  const portal = document.getElementById('autosuggest-portal');
-  if (!portal) {
-    return false;
-  }
+// Truncate generated text to the game's form limits to avoid field rejection.
+const maxNameLength = 50;
+const maxPreambleLength = 250;
 
-  focusElement(input);
-  changeInputValue(input, locationName);
-
-  const lower = locationName.toLowerCase();
-  const match = await pollUntil(
-    () =>
-      _$$(portal, C.AddressSelector.suggestionContent).find(x =>
-        x.textContent?.trim().toLowerCase().includes(lower),
-      ),
-    5000,
-  );
-  if (!match) {
-    return false;
-  }
-  await clickElement(match);
-  return true;
-}
-
-const isText = (text: string | undefined) => (x: Element) =>
-  text !== undefined && x.textContent?.trim().toLowerCase() === text.trim().toLowerCase();
-
-function findButton(anchor: Element, text: string | undefined) {
-  return _$$(anchor, C.Button.btn).find(isText(text)) as HTMLButtonElement | undefined;
-}
-
-async function pollUntil<T>(
-  condition: () => T,
+export async function pollUntil<T>(
+  produce: () => T,
   timeout: number,
   interval = 100,
 ): Promise<T | undefined> {
   const deadline = Date.now() + timeout;
-  while (Date.now() < deadline) {
-    const result = condition();
+  while (true) {
+    const result = produce();
     if (result) {
       return result;
     }
+    if (Date.now() >= deadline) {
+      return undefined;
+    }
     await sleep(interval);
   }
-  return undefined;
+}
+
+const hasText = (text: string | undefined) => (x: Element) =>
+  text !== undefined && x.textContent?.trim().toLowerCase() === text.trim().toLowerCase();
+
+function findButton(anchor: Element, text: string | undefined) {
+  return _$$(anchor, C.Button.btn).find(hasText(text)) as HTMLButtonElement | undefined;
+}
+
+function truncate(text: string, limit: number) {
+  return text.length > limit ? `${text.slice(0, limit - 1)}…` : text;
 }
 
 /**
- * Clicks "Create New" in the requested CONTD tile and waits for the new draft to
- * appear in the store. Returns the new draft.
+ * Finds the "Create New" button in the requested CONTD tile, clicks it, and waits for the
+ * new draft to appear in the store.
  */
-export async function createNewDraft(ctx: ActionStepExecuteContext<unknown>, anchor: Element) {
+export async function createNewDraft(ctx: ActionStepExecuteContext<unknown>, tile: PrunTile) {
+  const { anchor } = tile;
   const assert: AssertFn = ctx.assert;
   const { log, setStatus } = ctx;
+
   setStatus('Looking for Create New button...');
 
-  const findCreateBtn = () => findButton(anchor, L.ContractDrafts.actions.create());
+  const findCreateButton = () => findButton(anchor, L.ContractDrafts.actions.create());
 
-  const createBtn = await pollUntil(findCreateBtn, 10000);
+  const createBtn = await pollUntil(findCreateButton, 10000);
   assert(createBtn, 'Could not find "Create New" button');
 
   const beforeIds = new Set((contractDraftsStore.all.value ?? []).map(x => x.naturalId));
   await clickElement(createBtn);
+  await ctx.waitActionFeedback(tile);
 
   setStatus('Waiting for draft to be created...');
   const newDraft = await pollUntil(
@@ -100,35 +86,39 @@ export async function setDraftNameAndPreamble(
 ) {
   const assert: AssertFn = ctx.assert;
   const { log, setStatus } = ctx;
+
   setStatus('Setting contract name...');
 
-  // Keep generated text within the contract form limits.
-  name = name.length > 50 ? `${name.slice(0, 49)}…` : name;
-  preamble = preamble.length > 250 ? `${preamble.slice(0, 249)}…` : preamble;
-
-  const nameInput = await $(anchor, 'input');
-  selectAndChangeInputValue(nameInput, name);
+  // Use a timeout; await $() would hang if the form never renders.
+  const nameInput = await pollUntil(() => _$(anchor, 'input'), 5000);
+  assert(nameInput, 'Could not find name input');
+  selectAndChangeInputValue(nameInput, truncate(name, maxNameLength));
   log.info(`Name set: ${name}`);
 
   const preambleInput = _$(anchor, 'textarea');
   assert(preambleInput, 'Could not find preamble input');
   focusElement(preambleInput);
-  changeTextAreaValue(preambleInput, preamble);
+  changeTextAreaValue(preambleInput, truncate(preamble, maxPreambleLength));
   log.info('Preamble set');
 }
 
 /**
- * Clicks the first "save" button (draft details / preamble save).
+ * Clicks the draft-details save button and waits for the server to echo the
+ * saved name and preamble back into the store.
  */
 export async function saveDraftDetails(
   ctx: ActionStepExecuteContext<unknown>,
-  anchor: Element,
+  tile: PrunTile,
   draftId: string,
 ) {
+  const { anchor } = tile;
   const assert: AssertFn = ctx.assert;
   const { log, setStatus } = ctx;
+
   setStatus('Saving draft details...');
+
   const before = contractDraftsStore.getByNaturalId(draftId);
+  // Compare the form's actual values because the game may reformat them.
   const name = _$(anchor, 'input')?.value;
   const preamble = _$(anchor, 'textarea')?.value;
   const saveBtn = findButton(anchor, L.ContractDraft.action.save());
@@ -137,6 +127,8 @@ export async function saveDraftDetails(
     'Draft details save button is missing or disabled',
   );
   await clickElement(saveBtn);
+  await ctx.waitActionFeedback(tile);
+
   const saved = await pollUntil(() => {
     const draft = contractDraftsStore.getByNaturalId(draftId);
     return (
@@ -153,6 +145,7 @@ export async function saveDraftDetails(
 export async function openTemplate(ctx: ActionStepExecuteContext<unknown>, anchor: Element) {
   const assert: AssertFn = ctx.assert;
   const { setStatus } = ctx;
+
   setStatus('Opening template selection...');
 
   const templateBtn = await pollUntil(
@@ -160,13 +153,14 @@ export async function openTemplate(ctx: ActionStepExecuteContext<unknown>, ancho
     5000,
   );
   assert(templateBtn, 'Could not find "Select Template" button');
-
   await clickElement(templateBtn);
 
-  const container = await $(anchor, C.TemplateSelection.templateTypeSelect);
-  const select = _$(container, 'select');
-  assert(select, 'Could not find template type select');
-  return select;
+  const templateSelect = await pollUntil(() => {
+    const container = _$(anchor, C.TemplateSelection.templateTypeSelect);
+    return container === undefined ? undefined : _$(container, 'select');
+  }, 5000);
+  assert(templateSelect, 'Could not find template type select');
+  return templateSelect;
 }
 
 // Maps stored action values to the game's select option values.
@@ -177,16 +171,15 @@ const templateValueMap: Record<string, string> = {
 
 export function selectTemplateType(
   ctx: ActionStepExecuteContext<unknown>,
-  select: HTMLSelectElement,
-  value: string,
+  templateSelect: HTMLSelectElement,
+  templateValue: string,
 ) {
   const assert: AssertFn = ctx.assert;
-  const { log } = ctx;
-  const mapped = templateValueMap[value] ?? value;
-  const idx = Array.from(select.options).findIndex(x => x.value === mapped);
-  assert(idx >= 0, `Template "${value}" not found in select`);
-  changeSelectIndex(select, idx);
-  log.info(`Selected "${value}" template`);
+  const mapped = templateValueMap[templateValue] ?? templateValue;
+  const index = Array.from(templateSelect.options).findIndex(x => x.value === mapped);
+  assert(index >= 0, `Template "${templateValue}" not found in the template select`);
+  changeSelectIndex(templateSelect, index);
+  ctx.log.info(`Selected "${templateValue}" template`);
 }
 
 export async function setCurrency(
@@ -196,13 +189,14 @@ export async function setCurrency(
 ) {
   const assert: AssertFn = ctx.assert;
   const { log } = ctx;
-  const findCurrencySelect = () =>
-    _$$(anchor, 'select').find(x => Array.from(x.options).some(opt => opt.value === currency));
 
-  const select = await pollUntil(findCurrencySelect, 3000);
-  assert(select, `Could not find currency select for ${currency}`);
-  const idx = Array.from(select.options).findIndex(x => x.value === currency);
-  changeSelectIndex(select, idx);
+  const currencySelect = await pollUntil(
+    () => _$$(anchor, 'select').find(x => Array.from(x.options).some(o => o.value === currency)),
+    3000,
+  );
+  assert(currencySelect, `Could not find currency select for ${currency}`);
+  const index = Array.from(currencySelect.options).findIndex(x => x.value === currency);
+  changeSelectIndex(currencySelect, index);
   log.info(`Currency set to ${currency}`);
 }
 
@@ -217,8 +211,8 @@ export interface AddMaterialsOptions {
 }
 
 /**
- * Adds material rows to the contract template. Clicks "Add shipment"/"Add commodity"
- * for rows after the first, sets amount, selects material.
+ * Add rows after the first and set each material and amount.
+ * Like contd-paste-import/draft-form.ts importMaterials(), but driven by an ACT step.
  */
 export async function addMaterials(
   ctx: ActionStepExecuteContext<unknown>,
@@ -228,55 +222,65 @@ export async function addMaterials(
 ) {
   const assert: AssertFn = ctx.assert;
   const { log, setStatus } = ctx;
+
   setStatus('Adding materials to template...');
 
   const findAddButton = () =>
-    _$$(anchor, 'button').find(x => {
-      return (
-        isText(L.TemplateSelection.action.addShipment())(x) ||
-        isText(L.TemplateSelection.action.addCommodity())(x)
-      );
-    });
+    _$$(anchor, 'button').find(
+      x =>
+        hasText(L.TemplateSelection.action.addShipment())(x) ||
+        hasText(L.TemplateSelection.action.addCommodity())(x),
+    );
 
   for (let i = 0; i < materials.length; i++) {
-    const mat = materials[i];
+    const material = materials[i];
 
     if (i > 0) {
       const addBtn = findAddButton();
-      assert(addBtn, `Could not find add button for ${mat.ticker}`);
+      assert(addBtn, `Could not find add button for ${material.ticker}`);
       await clickElement(addBtn);
     }
 
+    // Select by index: extra template rows make the last row an unsafe target.
     const group = await pollUntil(() => _$$(anchor, C.TemplateSelection.group).at(i), 2000);
-    assert(group, `Could not find group for ${mat.ticker}`);
+    assert(group, `Could not find group for ${material.ticker}`);
 
-    const amountInput = group.querySelector<HTMLInputElement>('input[inputmode="numeric"]');
-    assert(amountInput, `Could not find amount input for ${mat.ticker}`);
-    selectAndChangeInputValue(amountInput, String(mat.amount));
+    const amountInput = _$$(group, 'input').find(x => x.inputMode === 'numeric');
+    assert(amountInput, `Could not find amount input for ${material.ticker}`);
+    selectAndChangeInputValue(amountInput, String(material.amount));
 
     const matSelector = _$(group, C.MaterialSelector.container);
-    assert(matSelector, `Could not find material selector for ${mat.ticker}`);
-    const selected = await selectMaterialInMaterialSelector(matSelector, mat.ticker);
-    assert(selected, `Could not select material ${mat.ticker}`);
-    await sleep(200);
-    log.info(`Added: ${mat.ticker} x${fixed0(mat.amount)}`);
+    assert(matSelector, `Could not find material selector for ${material.ticker}`);
+    const selected = await selectMaterialInMaterialSelector(matSelector, material.ticker);
+    assert(selected, `Could not select material ${material.ticker}`);
+    log.info(`Added: ${material.ticker} x${fixed0(material.amount)}`);
 
-    options?.setPrice?.(group, mat.ticker);
+    options?.setPrice?.(group, material.ticker);
   }
 }
 
+/**
+ * Sets the deadline (days to fulfill) input.
+ */
 export function setDeadline(ctx: ActionStepExecuteContext<unknown>, anchor: Element, days: number) {
   const assert: AssertFn = ctx.assert;
   const { log } = ctx;
-  assert(Number.isInteger(days) && days >= 1 && days <= 99, 'Deadline must be from 1 to 99 days');
 
-  const input = anchor.querySelector<HTMLInputElement>('input[name="deadline"]');
-  assert(input, 'Could not find deadline input');
-  selectAndChangeInputValue(input, String(days));
+  assert(
+    Number.isInteger(days) && days >= minContractDays && days <= maxContractDays,
+    `Deadline must be from ${minContractDays} to ${maxContractDays} days`,
+  );
+
+  const deadlineInput = _$$(anchor, 'input').find(x => x.name === 'deadline');
+  assert(deadlineInput, 'Could not find deadline input');
+  selectAndChangeInputValue(deadlineInput, String(days));
   log.info(`Deadline set: ${fixed0(days)} days`);
 }
 
-/** Clicks "Apply Template" and waits for conditions returned by the server. */
+/**
+ * Apply the template and wait for updated conditions from the server.
+ * The button's disabled class flickers on render and cannot confirm acceptance.
+ */
 export async function applyTemplate(
   ctx: ActionStepExecuteContext<unknown>,
   anchor: Element,
@@ -284,7 +288,9 @@ export async function applyTemplate(
 ) {
   const assert: AssertFn = ctx.assert;
   const { log, setStatus } = ctx;
+
   setStatus('Applying template...');
+
   const applyBtn = await pollUntil(
     () => findButton(anchor, L.TemplateSelection.action.template()),
     5000,
@@ -294,8 +300,10 @@ export async function applyTemplate(
     !applyBtn.disabled && !applyBtn.classList.contains(C.Button.disabled),
     'Template form is invalid',
   );
+
   const before = contractDraftsStore.getByNaturalId(draftId);
   await clickElement(applyBtn);
+
   const applied = await pollUntil(() => {
     const draft = contractDraftsStore.getByNaturalId(draftId);
     return draft !== undefined && draft !== before && draft.conditions.length > 0;
@@ -304,24 +312,31 @@ export async function applyTemplate(
   log.info('Template applied');
 }
 
-/** Clicks the conditions save button and waits for a valid, saved draft. */
+/**
+ * Clicks the conditions save button and waits for the draft to come back valid.
+ */
 export async function saveConditions(
   ctx: ActionStepExecuteContext<unknown>,
-  anchor: Element,
+  tile: PrunTile,
   draftId: string,
 ) {
+  const { anchor } = tile;
   const assert: AssertFn = ctx.assert;
   const { log, setStatus } = ctx;
+
   setStatus('Saving conditions...');
+
   const before = contractDraftsStore.getByNaturalId(draftId);
-  const condSaveBtn = (_$$(anchor, C.Button.btn) as HTMLButtonElement[]).findLast(
-    isText(L.ContractDraftSend.action.save()),
+  const condSaveBtn = _$$(anchor, C.Button.btn).findLast(
+    hasText(L.ContractDraftSend.action.save()),
   );
   assert(
     condSaveBtn && !condSaveBtn.classList.contains(C.Button.disabled),
     'Conditions save button is missing or disabled',
   );
   await clickElement(condSaveBtn);
+  await ctx.waitActionFeedback(tile);
+
   const saved = await pollUntil(() => {
     const draft = contractDraftsStore.getByNaturalId(draftId);
     return (

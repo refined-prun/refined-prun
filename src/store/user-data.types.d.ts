@@ -67,15 +67,17 @@ declare namespace UserData {
     materials?: Record<string, number>;
     exclusions?: string[];
     consumablesOnly?: boolean;
+    materialFilter?: 'All' | 'Workforce' | 'Production';
   }
 
-  type ActionType = 'CX Buy' | 'MTRA' | 'Refuel' | 'CONT Ship' | 'CONT Trade';
+  type ActionType = 'CX Buy' | 'MTRA' | 'Refuel' | 'CONT Ship' | 'CONT Trade' | 'GovBurn Data';
 
   interface ActionData {
     type: ActionType;
 
     name?: string;
     group?: string;
+    skippable?: boolean;
 
     allowUnfilled?: boolean;
     buyPartial?: boolean;
@@ -85,8 +87,24 @@ declare namespace UserData {
 
     buyMissingFuel?: boolean;
 
+    // GovBurn Data: planet natural ID or name.
+    planet?: string;
+
     origin?: string;
     dest?: string;
+
+    // MTRA specific.
+    postToAgent?: boolean;
+    noSfc?: boolean;
+    sfcDestination?: string;
+    printOffloadJson?: boolean;
+    offloadGroups?: string[];
+    agentGroups?: string[];
+    finishOnly?: boolean;
+    // Group names whose offload packages need a braPlanet repair reminder.
+    repairGroups?: string[];
+    // Open BRA for this planet after transfers.
+    braPlanet?: string;
 
     // CONT Ship specific.
     currency?: string;
