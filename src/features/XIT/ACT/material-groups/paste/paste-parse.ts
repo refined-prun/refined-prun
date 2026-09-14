@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import type { MaterialBill } from '@src/features/XIT/ACT/shared-types';
+import { MaterialBill } from '@src/features/XIT/ACT/material-bill';
 
 // Pure Paste parser; inject ticker lookup to test without stores or components.
 

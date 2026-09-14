@@ -2,7 +2,7 @@ import { act } from '@src/features/XIT/ACT/act-registry';
 import { ddmm, fixed0, fixed02 } from '@src/utils/format';
 import { selectAndChangeInputValue } from '@src/util';
 import { selectAddress } from '@src/infrastructure/prun-ui/utils/select-address';
-import { AssertFn, MaterialBill } from '@src/features/XIT/ACT/shared-types';
+import { AssertFn } from '@src/features/XIT/ACT/shared-types';
 import { isValidContractPrice } from '@src/features/XIT/ACT/actions/cont-limits';
 import {
   createNewDraft,
@@ -16,6 +16,7 @@ import {
   applyTemplate,
   saveConditions,
 } from '@src/features/XIT/ACT/action-steps/cont-utils';
+import { billQuantities, MaterialBill } from '@src/features/XIT/ACT/material-bill';
 
 interface Data {
   packageName: string;
@@ -28,12 +29,7 @@ interface Data {
 
 export const CONT_TRADE = act.addActionStep<Data>({
   type: 'CONT_TRADE',
-  totalMaterials: data =>
-    Object.fromEntries(
-      Object.entries(data.materials)
-        .filter(([, x]) => x.quantity > 0)
-        .map(([ticker, x]) => [ticker, x.quantity]),
-    ),
+  totalMaterials: data => billQuantities(data.materials, (_, quantity) => quantity > 0),
   description: data => {
     const materialCount = Object.keys(data.materials).length;
     const typeLabel = data.tradeType === 'BUYING' ? 'Buy' : 'Sell';

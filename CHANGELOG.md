@@ -7,6 +7,8 @@
 - `XIT AGENT`: Lists action packages synced via the private refined-agent channel (not AI-related)
 - `XIT BS`: Lists all player bases with links to key base commands
 - `XIT BURNACT`: Executes a resupply action package for a planet from the burn screen
+- `XIT DSP`: Plans shipments of resupply and repair materials to your bases
+- `XIT DISPATCHACT`: Executes the staged dispatch resupply/repair action package
 - `XIT FLT`: Enhanced fleet table with detailed status, cargo, fuel, and quick actions
 - `XIT FLOW`: Shows daily production, consumption, and value of each material across bases
 - `XIT INV`: Lists all inventories with cargo bars and filters by type

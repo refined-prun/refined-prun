@@ -12,12 +12,12 @@ import {
   getEntityNaturalIdFromAddress,
 } from '@src/infrastructure/prun-api/data/addresses';
 import { comparePlanets } from '@src/util';
-import { configurableValue, type MaterialBill } from '@src/features/XIT/ACT/shared-types';
+import { configurableValue } from '@src/features/XIT/ACT/shared-types';
 import { getResupplyDays } from '@src/core/burn';
-import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { fixed02 } from '@src/utils/format';
 import { shipSizes } from '@src/core/ship-sizes';
+import { billTotals } from '@src/features/XIT/ACT/material-bill';
 
 const { data, config, shipStore } = defineProps<{
   data: UserData.MaterialGroupData;
@@ -70,19 +70,6 @@ const effectiveDays = computed(() => {
 const bill = computed(() =>
   computeResupplyBill(data, effectivePlanet.value, effectiveDays.value, materialFilter.value),
 );
-
-function billTotals(entries: MaterialBill) {
-  let weight = 0;
-  let volume = 0;
-  for (const [ticker, { quantity }] of Object.entries(entries)) {
-    const mat = materialsStore.getByTicker(ticker);
-    if (mat) {
-      weight += mat.weight * quantity;
-      volume += mat.volume * quantity;
-    }
-  }
-  return { weight, volume };
-}
 
 const totals = computed(() => {
   const entries = bill.value;

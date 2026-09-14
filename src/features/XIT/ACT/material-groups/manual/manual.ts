@@ -1,7 +1,8 @@
 import { act } from '@src/features/XIT/ACT/act-registry';
 import { fixed0 } from '@src/utils/format';
 import Edit from '@src/features/XIT/ACT/material-groups/manual/Edit.vue';
-import { materialBillFromQuantities } from '@src/features/XIT/ACT/shared-types';
+
+import { materialBillFromQuantities } from '@src/features/XIT/ACT/material-bill';
 
 act.addMaterialGroup({
   type: 'Manual',

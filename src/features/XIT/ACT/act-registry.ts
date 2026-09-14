@@ -2,9 +2,9 @@ import {
   ActionStep,
   ActionStepExecuteContext,
   ActionStepGenerateContext,
-  MaterialBill,
   MaterialGroupGenerateContext,
 } from '@src/features/XIT/ACT/shared-types';
+import { MaterialBill } from '@src/features/XIT/ACT/material-bill';
 
 interface MaterialGroupInfo<TConfig> {
   type: UserData.MaterialGroupType;

@@ -61,9 +61,7 @@ act.addAction<Config>({
     // Assert-narrowed locals (rebound so nested helpers keep the non-undefined type).
     const maybeMaterials = await getMaterialGroup(data.group);
     assert(maybeMaterials, 'Invalid material group');
-    const materials = Object.fromEntries(
-      Object.entries(maybeMaterials).map(([ticker, x]) => [ticker, x.quantity]),
-    );
+    const materials = maybeMaterials;
 
     const serializedOrigin = data.origin === configurableValue ? config?.origin : data.origin;
     const maybeOrigin = deserializeStorage(serializedOrigin);
@@ -96,7 +94,9 @@ act.addAction<Config>({
         dest.type === 'STORE' &&
         destFits &&
         originItems.length > 0 &&
-        originItems.every(x => (materials[x.quantity!.material.ticker] ?? 0) >= x.quantity!.amount);
+        originItems.every(
+          x => (materials[x.quantity!.material.ticker]?.quantity ?? 0) >= x.quantity!.amount,
+        );
       if (fullCargoOffload) {
         log.info('Group covers the entire cargo hold - unloading via SHPI instead of MTRA');
         emitStep(SHPI_UNLOAD({ shipId: origin.addressableId }));
@@ -107,7 +107,7 @@ act.addAction<Config>({
               from: origin.id,
               to: dest.id,
               ticker,
-              amount: materials[ticker],
+              amount: materials[ticker].quantity,
             }),
           );
         }
@@ -115,7 +115,7 @@ act.addAction<Config>({
     }
 
     async function emitFinishSteps() {
-      // Post a single-group offload; the multi-group branch below handles DISPATCH stops.
+      // Post a single-group offload; the multi-group branch below handles DSP stops.
       if (
         dest.type === 'SHIP_STORE' &&
         data.postToAgent &&
@@ -164,9 +164,7 @@ act.addAction<Config>({
             const groupPlanet = getMaterialGroupPlanet(name);
             const offloadPkg = buildOffloadPackage(
               'Auto Offload',
-              Object.fromEntries(
-                Object.entries(groupMats).map(([ticker, x]) => [ticker, x.quantity]),
-              ),
+              groupMats,
               serializedDest,
               groupPlanet ? `${getPlanetName(groupPlanet)} Base` : configurableValue,
             );
@@ -209,7 +207,7 @@ act.addAction<Config>({
       emitTransferSteps();
     }
 
-    // DISPATCH repair reminders follow unloading and precede the next flight.
+    // DSP repair reminders follow unloading and precede the next flight.
     if (data.braPlanet) {
       emitStep(OPEN_BRA({ planet: data.braPlanet }));
     }

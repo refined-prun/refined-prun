@@ -1,4 +1,5 @@
 import { Logger } from '@src/features/XIT/ACT/runner/logger';
+import { MaterialBill } from '@src/features/XIT/ACT/material-bill';
 
 export interface ActionPackageConfig {
   materialGroups: Record<string, unknown>[];
@@ -18,17 +19,6 @@ export interface MaterialGroupGenerateContext<TConfig>
   extends ActionRunnerContext<UserData.MaterialGroupData> {
   config: TConfig;
   setStatus: (status: string) => void;
-}
-
-// Prices are per unit in the currency of the action's target exchange.
-export type MaterialBill = Record<string, { quantity: number; price?: number }>;
-
-export function materialBillFromQuantities(quantities: Record<string, number>): MaterialBill {
-  const materials: MaterialBill = {};
-  for (const ticker in quantities) {
-    materials[ticker] = { quantity: quantities[ticker] };
-  }
-  return materials;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

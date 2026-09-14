@@ -3,7 +3,7 @@ import { ddmm, fixed0, fixed2 } from '@src/utils/format';
 import { changeSelectIndex, selectAndChangeInputValue } from '@src/util';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { selectAddress } from '@src/infrastructure/prun-ui/utils/select-address';
-import { AssertFn, MaterialBill } from '@src/features/XIT/ACT/shared-types';
+import { AssertFn } from '@src/features/XIT/ACT/shared-types';
 import {
   pollUntil,
   createNewDraft,
@@ -17,6 +17,7 @@ import {
   applyTemplate,
   saveConditions,
 } from '@src/features/XIT/ACT/action-steps/cont-utils';
+import { billQuantities, MaterialBill } from '@src/features/XIT/ACT/material-bill';
 
 interface Data {
   packageName: string;
@@ -43,12 +44,7 @@ function findPriceInput(anchor: Element) {
 
 export const CONT_SEND = act.addActionStep<Data>({
   type: 'CONT_SEND',
-  totalMaterials: data =>
-    Object.fromEntries(
-      Object.entries(data.materials)
-        .filter(([, x]) => x.quantity > 0)
-        .map(([ticker, x]) => [ticker, x.quantity]),
-    ),
+  totalMaterials: data => billQuantities(data.materials, (_, quantity) => quantity > 0),
   description: data => {
     const materialCount = Object.keys(data.materials).length;
     const payment = data.payment !== 0 ? ` for ${fixed0(data.payment)} ${data.currency}` : '';

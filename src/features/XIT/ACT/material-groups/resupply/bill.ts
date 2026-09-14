@@ -4,7 +4,7 @@ import { workforcesStore } from '@src/infrastructure/prun-api/data/workforces';
 import { productionStore } from '@src/infrastructure/prun-api/data/production';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import type { MaterialFilter } from './config';
-import type { MaterialBill } from '@src/features/XIT/ACT/shared-types';
+import { MaterialBill } from '@src/features/XIT/ACT/material-bill';
 
 // Compute the planet's resupply bill for a day count; return undefined if inputs or burn data
 // are missing. Keep synchronous for reactive use in Configure.

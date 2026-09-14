@@ -97,13 +97,7 @@ function afterExecute(
   const materials = computeResupplyBill(resupplyGroup, planet, days, materialFilter) ?? {};
   const origin = mtraAction.dest === configurableValue ? mtraConfig.destination : mtraAction.dest;
 
-  const result = buildOffloadPackage(
-    groupName,
-    Object.fromEntries(
-      Object.entries(materials).map(([ticker, { quantity }]) => [ticker, quantity]),
-    ),
-    origin ?? configurableValue,
-  );
+  const result = buildOffloadPackage(groupName, materials, origin ?? configurableValue);
 
   log('INFO', 'Auto Offload JSON:');
   log(null, JSON.stringify(result, null, 2));

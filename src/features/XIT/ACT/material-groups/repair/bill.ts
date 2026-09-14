@@ -1,6 +1,6 @@
 import { getBuildingLastRepair } from '@src/infrastructure/prun-api/data/sites';
 import { isRepairableBuilding } from '@src/core/buildings';
-import type { MaterialBill } from '@src/features/XIT/ACT/shared-types';
+import { MaterialBill } from '@src/features/XIT/ACT/material-bill';
 
 // Compute the site's repair bill from age threshold and advance days.
 // Keep synchronous for reactive use in Configure and other features.
