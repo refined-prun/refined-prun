@@ -15,6 +15,8 @@ const props = defineProps<{
   // STO uses this so the two bars (current and projected) always render at
   // the same height regardless of load.
   disableMiniMode?: boolean;
+  // Callers with their own storage alarm can disable the automatic overflow display.
+  disableOverflow?: boolean;
 }>();
 
 const $style = useCssModule();
@@ -57,7 +59,7 @@ const cargoBar = computed<CargoBarData>(() => {
   const isMiniMode = !props.disableMiniMode && maxRatio <= 0.05 && maxRatio > 0;
   const activeLoad = useVolume ? vLoad : wLoad;
   const activeCapacity = useVolume ? vCap : wCap;
-  const isOverflowing = maxRatio > 1;
+  const isOverflowing = !props.disableOverflow && maxRatio > 1;
   // Scale factor applied to all category widths when overflowing, so the
   // category segments plus the final overflow segment add up to 100%.
   const overflowScale = isOverflowing ? 1 / maxRatio : 1;
@@ -280,6 +282,7 @@ function handleClick() {
       cursor: containerCursor,
     }"
     @click="handleClick">
+    <slot name="overlay" />
     <div :class="[$style.bar, miniBarClass]">
       <div
         v-for="segment in cargoBar.segments"
@@ -298,7 +301,9 @@ function handleClick() {
 
 <style module>
 .container {
+  position: relative;
   margin: 0;
+  padding: 0;
   display: flex;
   min-width: 30px;
   width: 100%;
