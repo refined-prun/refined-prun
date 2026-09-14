@@ -9,6 +9,7 @@ const props = defineProps<{
   storeId: string;
   onClickCmd: string;
   naturalId?: string;
+  includeInboundShips?: boolean;
   alarmLevel?: StorageAlarmLevel;
   alarmReason?: string;
 }>();
@@ -17,6 +18,10 @@ const combinedStore = computed(() => {
   const primary = storagesStore.getById(props.storeId);
   if (primary === undefined) {
     return undefined;
+  }
+
+  if (!props.includeInboundShips) {
+    return primary;
   }
 
   const inbound = getInboundShipStores(props.naturalId);

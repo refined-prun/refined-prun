@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PrunLink from '@src/components/PrunLink.vue';
 import PrunButton from '@src/components/PrunButton.vue';
-import InvBar from '@src/features/XIT/BS/InvBar.vue';
+import InvBar from '@src/components/InvBar.vue';
 import MaterialList from '@src/features/XIT/BURN/MaterialList.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { getPlanetBurn } from '@src/core/burn';
@@ -210,6 +210,7 @@ const warehouseStore = computed(() =>
         <InvBar
           :store-id="storeId"
           :natural-id="naturalId"
+          include-inbound-ships
           :on-click-cmd="`INV ${storeId.substring(0, 8)}`"
           :alarm-level="storageAlarm?.level"
           :alarm-reason="barAlarmReason" />

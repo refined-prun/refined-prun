@@ -9,6 +9,7 @@
 - `XIT BURNACT`: Executes a resupply action package for a planet from the burn screen
 - `XIT FLT`: Enhanced fleet table with detailed status, cargo, fuel, and quick actions
 - `XIT FLOW`: Shows daily production, consumption, and value of each material across bases
+- `XIT INV`: Lists all inventories with cargo bars and filters by type
 - `XIT PLNT`: Per-planet settings for bases you own
 - `XIT REPAIRACT`: Executes a repair action package for a planet using XIT REP settings
 - `XIT REFUELACT`: Executes a refuel action package for all ships docked at exchanges
