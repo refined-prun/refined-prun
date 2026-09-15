@@ -4,11 +4,12 @@ import '@src/features/XIT/ACT/actions/refuel/refuel';
 import '@src/features/XIT/ACT/material-groups/resupply/resupply';
 import '@src/features/XIT/ACT/material-groups/repair/repair';
 
-import DispatchActWindow from '@src/features/XIT/DSP/DispatchActWindow.vue';
+import DispatchExecWindow from '@src/features/XIT/DSP/DispatchExecWindow.vue';
 
 xit.add({
-  command: 'DISPATCHACT',
+  command: ['DISPATCHEXEC', 'DISPATCHACT'],
+  hidden: true,
   name: 'DISPATCH EXECUTE',
   description: 'Executes the staged dispatch resupply/repair action package.',
-  component: () => DispatchActWindow,
+  component: () => DispatchExecWindow,
 });

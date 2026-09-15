@@ -3,11 +3,13 @@ import { castArray } from '@src/utils/cast-array';
 import PrunLink from '@src/components/PrunLink.vue';
 import { objectId } from '@src/utils/object-id';
 
-const sorted = xit.registry.sort((a, b) => {
-  const commandA = castArray(a.command)[0];
-  const commandB = castArray(b.command)[0];
-  return commandA.localeCompare(commandB);
-});
+const sorted = xit.registry
+  .filter(x => !x.hidden)
+  .sort((a, b) => {
+    const commandA = castArray(a.command)[0];
+    const commandB = castArray(b.command)[0];
+    return commandA.localeCompare(commandB);
+  });
 </script>
 
 <template>

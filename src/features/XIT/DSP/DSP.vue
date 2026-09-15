@@ -409,7 +409,7 @@ function execute() {
     // Deep-clone to detach from tile-state reactivity.
     pkg: JSON.parse(JSON.stringify(pkg)),
   };
-  showBuffer('XIT DISPATCHACT');
+  showBuffer('XIT DISPATCHEXEC');
 }
 
 function reset() {

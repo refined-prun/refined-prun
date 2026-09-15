@@ -10,6 +10,7 @@ interface CommandDescriptor {
   command: Arrayable<string>;
   name: string | ((parameters: string[]) => string);
   description: string;
+  hidden?: boolean;
   mandatoryParameters?: string;
   optionalParameters?: string;
   component: (parameters: string[]) => Component;
