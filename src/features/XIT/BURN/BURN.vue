@@ -4,6 +4,7 @@ import RadioItem from '@src/components/forms/RadioItem.vue';
 import {
   BurnValues,
   clampNearZeroDailyAmount,
+  getInboundShips,
   getPlanetBurn,
   MaterialBurn,
   PlanetBurn,
@@ -94,8 +95,9 @@ const inf = useTileState('inf');
 const prod = useTileState('prod');
 const wf = useTileState('wf');
 const io = useTileState('io');
+const excludeInbound = useTileState('excludeInbound');
 
-function filterBurn(burn: BurnValues): BurnValues {
+function filterBurn(burn: BurnValues, naturalId: string): BurnValues {
   const filtered: BurnValues = {};
   for (const ticker of Object.keys(burn)) {
     const mat = burn[ticker];
@@ -104,7 +106,16 @@ function filterBurn(burn: BurnValues): BurnValues {
     if (!(hasProd && prod.value) && !(hasWf && wf.value)) {
       continue;
     }
-    filtered[ticker] = mat;
+    if (excludeInbound.value.includes(naturalId)) {
+      const remaining = mat.inventory + mat.remainingAllocation;
+      filtered[ticker] = {
+        ...mat,
+        inboundInventory: 0,
+        daysLeft: mat.dailyAmount >= 0 ? Number.POSITIVE_INFINITY : remaining / -mat.dailyAmount,
+      };
+    } else {
+      filtered[ticker] = mat;
+    }
   }
   return filtered;
 }
@@ -118,7 +129,11 @@ const planetBurn = computed(() => {
     .filter(x => x !== overall)
     .map(getPlanetBurn)
     .filter(x => x !== undefined)
-    .map(x => ({ ...x, burn: filterBurn(x.burn) }));
+    .map(x => ({
+      ...x,
+      burn: filterBurn(x.burn, x.naturalId),
+      hasInboundShips: getInboundShips(x.naturalId).length > 0,
+    }));
   if (filtered.length <= 1) {
     return filtered;
   }
@@ -163,7 +178,13 @@ const planetBurn = computed(() => {
     mat.daysLeft = mat.dailyAmount >= 0 ? Number.POSITIVE_INFINITY : remaining / -mat.dailyAmount;
   }
 
-  const overallSection = { burn: overallBurn, planetName: 'Overall', naturalId: '', storeId: '' };
+  const overallSection = {
+    hasInboundShips: filtered.some(x => x.hasInboundShips),
+    burn: filterBurn(overallBurn, ''),
+    planetName: 'Overall',
+    naturalId: '',
+    storeId: '',
+  };
 
   if (queryResult.value.overallOnly) {
     return [overallSection];
@@ -285,7 +306,7 @@ function copyBurnTable() {
               Inv
               <Tooltip
                 position="right"
-                tooltip="Stock at the base plus cargo on inbound ships. Fractional amount
+                tooltip="Stock at the base plus cargo on inbound ships when enabled. Fractional amount
                  represents the leftover materials since the last workforce consumption event." />
             </InlineFlex>
           </th>
@@ -319,6 +340,7 @@ function copyBurnTable() {
         v-for="burn in planetBurn"
         :key="burn.planetName"
         :can-minimize="planetBurn.length > 1"
+        :has-inbound-ships="burn.hasInboundShips"
         :burn="burn" />
     </table>
   </template>

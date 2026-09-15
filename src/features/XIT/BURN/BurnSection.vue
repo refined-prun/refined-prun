@@ -4,7 +4,11 @@ import PlanetHeader from '@src/features/XIT/BURN/PlanetHeader.vue';
 import MaterialList from '@src/features/XIT/BURN/MaterialList.vue';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
 
-const { burn, canMinimize } = defineProps<{ burn: PlanetBurn; canMinimize?: boolean }>();
+const { burn, canMinimize, hasInboundShips } = defineProps<{
+  burn: PlanetBurn;
+  canMinimize?: boolean;
+  hasInboundShips: boolean;
+}>();
 
 const expand = useTileState('expand');
 
@@ -26,6 +30,7 @@ const onHeaderClick = () => {
 <template>
   <tbody>
     <PlanetHeader
+      :has-inbound-ships="hasInboundShips"
       :has-minimize="canMinimize"
       :burn="burn"
       :minimized="isMinimized"

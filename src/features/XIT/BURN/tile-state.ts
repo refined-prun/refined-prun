@@ -8,5 +8,6 @@ export const useTileState = createTileStateHook({
   prod: true,
   wf: true,
   io: false,
+  excludeInbound: [] as string[],
   expand: [] as string[],
 });

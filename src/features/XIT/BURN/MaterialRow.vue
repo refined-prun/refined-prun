@@ -93,11 +93,8 @@ const needAmt = computed(() => computeNeed(burn, getResupplyDays(naturalId)));
       <MaterialIcon size="inline-table" :ticker="material.ticker" />
     </td>
     <td>
-      <span
-        :class="$style.tooltipReset"
-        :data-tooltip="burn.inboundInventory > 0 ? 'Includes items in inbound ships' : undefined">
+      <span>
         {{ invWhole }}<span :class="$style.fraction">{{ invFraction }}</span>
-        <template v-if="burn.inboundInventory > 0">*</template>
       </span>
     </td>
     <template v-if="io">
@@ -132,9 +129,5 @@ const needAmt = computed(() => computeNeed(burn, getResupplyDays(naturalId)));
 
 .fraction {
   color: #999;
-}
-
-.tooltipReset {
-  padding: 0;
 }
 </style>
