@@ -30,6 +30,7 @@
 - Provides 25% production bonus to chosen industry for duration of active program.
 - Members vote on programs (votes weighted by influence = workforce composition with tier multipliers: Pioneer 1x, Settler 1.25x, Technician 1.5x, Engineer 1.75x, Scientist 2x).
 - Requires upkeep (DW, MCG, PE, RAT) to stay active; scales with base count.
+- Upkeep runs on a 10-day cycle, independent of programs (programs are 7-day epochs). The full bill must be contributed before the cycle's due date for the CoGC to operate in the next cycle.
 
 ## Population Needs (Tiers)
 
