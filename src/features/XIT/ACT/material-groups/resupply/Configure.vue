@@ -153,12 +153,12 @@ const shipName = computed(() => {
       @click="fitToShip(ship.weight, ship.volume)">
       {{ ship.id }}
     </PrunButton>
-    <template v-if="shipName && shipFree">
+    <div v-if="shipName && shipFree" :class="$style.fitSelected">
       <span>Fit Selected</span>
       <PrunButton primary :disabled="!canFit" @click="fitToShip(shipFree.weight, shipFree.volume)">
         {{ shipName.slice(0, 12) }}
       </PrunButton>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -173,8 +173,20 @@ const shipName = computed(() => {
 
 .fitRow {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 6px;
   margin: 2px 4px 4px 8px;
+  white-space: nowrap;
+
+  > * {
+    flex-shrink: 0;
+  }
+}
+
+.fitSelected {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 </style>
