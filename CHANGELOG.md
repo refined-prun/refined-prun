@@ -4,7 +4,7 @@
 
 ### New commands
 
-- `XIT AGENT`: Lists action packages synced via the private refined-agent channel (not AI-related)
+- `XIT AGT`: Lists action packages synced via the private refined-agent channel
 - `XIT BS`: Lists all player bases with links to key base commands
 - `XIT BURNACT`: Executes a resupply action package for a planet from the burn screen
 - `XIT DATA`: Explores in-memory Refined PrUn game and tile data

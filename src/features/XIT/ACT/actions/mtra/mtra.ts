@@ -148,7 +148,7 @@ act.addAction<Config>({
         if (hasMultiGroups) {
           // One offload package per group name (union of print + agent lists).
           // LOG_JSON only for printGroups; POST_AGENT only for agentGroups.
-          // Multi-stop agent posts get chain ids so XIT AGENT can SFC to the next stop.
+          // Multi-stop agent posts get chain ids so XIT AGT can SFC to the next stop.
           let ids: string[] | undefined;
           if (agentGroups.length > 0) {
             ids = ctx.preview

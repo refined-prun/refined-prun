@@ -1,4 +1,4 @@
-// Encode action packages for refined-agent and derive the AGENT list from channel history.
+// Encode action packages for refined-agent and derive the AGT list from channel history.
 import {
   agentChannelStore,
   maxMessageLength,

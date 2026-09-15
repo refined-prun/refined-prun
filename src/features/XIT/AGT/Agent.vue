@@ -67,7 +67,7 @@ const packages = computed(() =>
 );
 
 function openPackage(messageId: string) {
-  showBuffer(`XIT AGENT ${messageId}`);
+  showBuffer(`XIT AGT ${messageId}`);
 }
 </script>
 

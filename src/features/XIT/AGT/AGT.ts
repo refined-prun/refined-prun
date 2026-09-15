@@ -2,7 +2,7 @@ import Agent from './Agent.vue';
 import ExecuteStoredPackage from './ExecuteStoredPackage.vue';
 
 xit.add({
-  command: 'AGENT',
+  command: ['AGT', 'AGENT'],
   name: 'Agent',
   description: 'Lists action packages synced via the private refined-agent channel.',
   optionalParameters: 'Message ID',

@@ -126,6 +126,6 @@ const extraSteps = computed(() => {
 </script>
 
 <template>
-  <div v-if="!entry"> Package "{{ messageId }}" not found. Refresh XIT AGENT and try again. </div>
+  <div v-if="!entry"> Package "{{ messageId }}" not found. Refresh XIT AGT and try again. </div>
   <ExecuteActionPackage v-else :pkg="entry.pkg" :extra-steps="extraSteps" />
 </template>
