@@ -17,6 +17,16 @@ function isCheckpoint(entry: MigrationEntry): entry is Checkpoint {
 // The date is for reference only, and it does not affect migration order.
 const migrations: MigrationEntry[] = [
   [
+    '15.09.2026 Add govburn data',
+    userData => {
+      userData.govburn ??= { planets: {}, config: { planets: {} } };
+      userData.govburn.config.resupplyDays ??= 30;
+      userData.govburn.config.red ??= 3;
+      userData.govburn.config.yellow ??= 7;
+      userData.govburn.config.slots ??= {};
+    },
+  ],
+  [
     '14.09.2026 Add noBuy setting',
     userData => {
       userData.settings.noBuy ??= [];

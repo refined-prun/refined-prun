@@ -11,6 +11,10 @@
 - `XIT DISPATCHACT`: Executes the staged dispatch resupply/repair action package
 - `XIT FLT`: Enhanced fleet table with detailed status, cargo, fuel, and quick actions
 - `XIT FLOW`: Shows daily production, consumption, and value of each material across bases
+- `XIT GOVBURN`: Tracks planetary infrastructure upkeep
+- `XIT GOVBURNACT`: Executes a planetary upkeep resupply action package
+- `XIT GOVBURNDATA`: Collects planetary infrastructure upkeep data via POPI/POPID buffers
+- `XIT GOVBURNEXEC`: Executes the staged planetary upkeep resupply action package
 - `XIT INV`: Lists all inventories with cargo bars and filters by type
 - `XIT PLNT`: Per-planet settings for bases you own
 - `XIT REPAIRACT`: Executes a repair action package for a planet using XIT REP settings

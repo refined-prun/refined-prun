@@ -160,4 +160,61 @@ declare namespace UserData {
     name: string;
     screenIds: string[];
   }
+
+  interface GovBurnPlanet {
+    naturalId: string;
+    name: string;
+    capturedAt: number;
+    buildings: GovBurnBuilding[];
+    cogc?: GovBurnCogc;
+  }
+
+  interface GovBurnBuilding {
+    ticker: string;
+    type: string;
+    projectId: string;
+    level: number;
+    upkeeps?: GovBurnUpkeep[];
+    upkeepsCapturedAt?: number;
+    // Upkeep ticker -> last contribution timestamps (ms epoch).
+    contribHistory?: Record<string, GovBurnContrib>;
+  }
+
+  interface GovBurnContrib {
+    // Last contribution by the player's own company.
+    own?: number;
+    // Last contribution by anyone (including own).
+    any?: number;
+  }
+
+  interface GovBurnUpkeep {
+    ticker: string;
+    stored: number;
+    amount: number;
+    duration: number;
+    nextTick: number;
+  }
+
+  interface GovBurnCogc {
+    dueDate: number;
+    // Current-cycle bill with contributed amounts; paid when every currentAmount >= amount.
+    materials: GovBurnCogcMaterial[];
+  }
+
+  interface GovBurnCogcMaterial {
+    ticker: string;
+    amount: number;
+    currentAmount: number;
+  }
+
+  // Building ticker -> required count of supplied upkeep materials.
+  // -1 (or missing): unconfigured - treat as 0 days (red).
+  // 0: deliberately unsupplied - infinity days (green).
+  // 1..upkeepCount: number of upkeep materials the player keeps supplied.
+  type GovBurnPlanetConfig = Record<string, number>;
+
+  // Building ticker -> chosen upkeep material tickers, in slot order.
+  // Persists GOVBURNACT's slot picks; may be shorter than the configured
+  // count when some slots are still unresolved.
+  type GovBurnPlanetSlots = Record<string, string[]>;
 }
