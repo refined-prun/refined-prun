@@ -24,7 +24,7 @@ const dragTabId = 'drag';
 const activeParserStorageKey = 'rprun-contd-import-export-active';
 
 // An empty stored value means hidden; only an absent value uses the default.
-const activeParser = ref(localStorage.getItem(activeParserStorageKey) ?? parserOptions[0].id);
+const activeParser = ref(localStorage.getItem(activeParserStorageKey) ?? '');
 watch(activeParser, value => localStorage.setItem(activeParserStorageKey, value));
 
 // Restore the last visible tab when Show is clicked.
