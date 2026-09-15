@@ -117,7 +117,7 @@ function copyFlowTable() {
     <table :class="$style.table">
       <thead>
         <tr>
-          <SortHeader sort-key="ticker">Ticker</SortHeader>
+          <SortHeader sort-key="ticker"></SortHeader>
           <SortHeader sort-key="delta">Delta</SortHeader>
           <SortHeader sort-key="production">Prod</SortHeader>
           <SortHeader sort-key="consumption">Cons</SortHeader>
