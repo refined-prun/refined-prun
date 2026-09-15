@@ -223,7 +223,7 @@ function confirmResetAllData(ev: Event) {
     <Active
       label="Resupply"
       tooltip="Default target amount of supplied days for the 'Need' column in XIT BURN.
-       Can be overridden per planet in XIT PLNT.">
+       Can be overridden per planet in XIT PLS.">
       <NumberInput v-model="userData.settings.burn.resupply" float />
     </Active>
   </form>

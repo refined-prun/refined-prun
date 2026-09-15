@@ -323,7 +323,7 @@ const PICKUP_LEAD_DAYS = 1;
 
 // Alarm for XIT BS's Inv column: a base whose accumulated produced goods fill -
 // or within PICKUP_LEAD_DAYS will fill - the pickup ship picked for it in XIT
-// PLNT. Returns undefined when no ship size is configured, when the pile is
+// PLS. Returns undefined when no ship size is configured, when the pile is
 // still too small, or when a ship is already in flight to the planet - a
 // dispatched ship clears the alarm so the player doesn't send a second one,
 // while a ship that has already landed does not (its cargo run isn't done until

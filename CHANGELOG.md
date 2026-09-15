@@ -17,7 +17,7 @@
 - `XIT GOVBURNDATA`: Collects planetary infrastructure upkeep data via POPI/POPID buffers
 - `XIT GOVBURNEXEC`: Executes the staged planetary upkeep resupply action package
 - `XIT INV`: Lists all inventories with cargo bars and filters by type
-- `XIT PLNT`: Per-planet settings for bases you own
+- `XIT PLS`: Per-planet settings for bases you own
 - `XIT REPAIRACT`: Executes a repair action package for a planet using XIT REP settings
 - `XIT REFUELACT`: Executes a refuel action package for all ships docked at exchanges
 - `XIT STO`: Per-base storage analysis

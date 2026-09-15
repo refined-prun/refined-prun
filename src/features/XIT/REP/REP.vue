@@ -116,12 +116,12 @@ const singleSiteInfo = computed(() => {
   <template v-else>
     <div v-if="singleSiteInfo" :class="$style.overrideNotice">
       <span>
-        Using XIT PLNT override for <b>{{ singleSiteInfo.planetName }}</b
+        Using XIT PLS override for <b>{{ singleSiteInfo.planetName }}</b
         >: threshold <b>{{ fixed02(singleSiteInfo.threshold) }}</b
         >, offset <b>{{ fixed02(singleSiteInfo.offset) }}</b
         >.
       </span>
-      <PrunButton dark inline @click="showBuffer('XIT PLNT')">Edit in XIT PLNT</PrunButton>
+      <PrunButton dark inline @click="showBuffer('XIT PLS')">Edit in XIT PLS</PrunButton>
     </div>
     <form v-else>
       <Active label="Age Threshold">

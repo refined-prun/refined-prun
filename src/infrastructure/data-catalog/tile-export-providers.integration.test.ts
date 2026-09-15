@@ -213,7 +213,7 @@ describe('catalog-backed tile exports', () => {
     'XIT REP',
     'XIT REPAIR',
     'XIT REPAIRS',
-    'XIT PLNT',
+    'XIT PLS',
     'XIT PLANETS',
     'XIT FLT',
     'XIT FLEET',

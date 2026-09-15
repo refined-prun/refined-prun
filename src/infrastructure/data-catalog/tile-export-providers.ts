@@ -231,7 +231,7 @@ const providers: TileDataProvider[] = [
   xitProvider('xit-fx-orders', ['FXTS'], ['fx-orders']),
   xitProvider('xit-burn', ['BURN'], ['burn', 'planet-settings']),
   xitProvider('xit-repair', ['REP', 'REPAIR', 'REPAIRS'], ['repair', 'planet-settings']),
-  xitProvider('xit-planet-settings', ['PLNT', 'PLANETS'], ['planet-settings', 'sites']),
+  xitProvider('xit-planet-settings', ['PLS', 'PLANETS'], ['planet-settings', 'sites']),
   xitProvider('xit-fleet', ['FLT', 'FLEET'], ['ships', 'flights']),
   xitProvider('xit-inventory', ['INV'], ['storages', 'warehouses']),
   xitProvider('xit-bases', ['BS'], ['sites', 'workforces', 'production', 'burn', 'repair']),

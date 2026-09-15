@@ -1,9 +1,9 @@
-import PLNT from '@src/features/XIT/PLNT/PLNT.vue';
+import PLS from '@src/features/XIT/PLS/PLS.vue';
 
 xit.add({
-  command: ['PLNT', 'PLANETS'],
+  command: ['PLS', 'PLANETS'],
   name: 'PLANET SETTINGS',
   description: 'Per-planet settings for bases you own.',
-  component: () => PLNT,
+  component: () => PLS,
   bufferSize: [700, 400],
 });
