@@ -64,6 +64,8 @@ tile.anchor.parentElement!
 
 Put on a separate line, start with a capital letter, end with a full stop.
 
+Keep non-obvious behavior, constraints, and reasons. Remove repetition and development history.
+
 ```ts
 // Bad
 const x = foo; // gets the thing
@@ -99,6 +101,19 @@ padding-top: 0px;
 padding-top: 0;
 ```
 
+### Vue Template Formatting
+
+When an element spans multiple lines, keep `>` on the last opening-tag line, put its
+content on a separate line, and keep the closing tag together:
+
+```vue
+<PrunButton dark :class="$style.prunButton" @click="planetContextMenu.showBuffer('PLI')">
+  PLI
+</PrunButton>
+```
+
+Preserve intentional whitespace between inline text elements.
+
 ---
 
 ## Feature Design Rules
@@ -128,10 +143,6 @@ Minimize settings. Features should either:
 - Have settings placed right where the feature is used (not in a global settings page)
 
 Adding extra settings/toggles has costs: UI bloat, more code to maintain, and removal is harder than addition because someone always ends up using them.
-
-### Feature Approval Threshold
-
-New features that take vertical space or are potentially controversial need a Discord poll. If less than ~75% vote yes, the feature is rejected. Vertical space is precious — users are very defensive about it.
 
 ---
 

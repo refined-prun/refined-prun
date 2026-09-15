@@ -86,6 +86,16 @@ The command should be short. Refer to `docs/game/commands.csv` for an example of
 
 ---
 
+## Tile UI Constraints
+
+### Scrolling and Forms
+
+Let the game's ScrollView scroll tile content. Avoid a second full-height scroll container,
+which adds another gutter. Put `@submit.prevent` on extension forms: Enter can submit a
+single-input form and reload the game even when its buttons use `type="button"`.
+
+---
+
 ## Auto-Imports (no explicit import needed)
 
 | Symbol | Source |
@@ -157,7 +167,7 @@ Four auto-imported functions for finding elements by CSS class name (`C.X.y`) or
 | Function | Returns | Mechanism | Use When |
 |----------|---------|-----------|----------|
 | `$` | `Promise<Element>` | MutationObserver — resolves when first match appears | Waiting for element to render (gate pattern) |
-| `$$` | `AsyncIterable<Element>` | MutationObserver — yields existing + future matches | Processing current and dynamically added elements |
+| `$$` | `Observable<Element>` | MutationObserver — emits existing + future matches | Processing current and dynamically added elements |
 | `_$` | `Element \| undefined` | Sync `getElementsByClassName` / `getElementsByTagName` | Element is guaranteed to exist already |
 | `_$$` | `Element[]` | Sync snapshot of all matches | All target elements exist already |
 
@@ -182,9 +192,9 @@ const container = await $(tile.anchor, C.StoreView.container);
 const text = await $(container, C.CommodityAd.text);
 ```
 
-### `$$` — Async Iterable (Subscribe Pattern)
+### `$$` — Observable (Subscribe Pattern)
 
-`AsyncIterable` that yields existing matches immediately, then watches for new ones via MutationObserver. Almost always paired with `subscribe()`.
+`Observable` that emits existing matches immediately, then watches for new ones via MutationObserver. Always paired with `subscribe()`.
 
 ```ts
 // Process each row as it appears (current + future)
@@ -548,6 +558,7 @@ Signature: `(value: number) => string`. Do **not** accept `undefined`.
 | `fixed02` | 0–2 | `"1,234"`, `"1,234.56"` | Values where trailing zeros are noise |
 | `fixed1` | 1 | `"1,234.6"` | Always 1 decimal |
 | `fixed2` | 2 | `"1,234.56"` | Prices, always exactly 2 decimals |
+| `fixed4` | 4 | `"1,234.5678"` | Rates and per-unit factors |
 | `percent0` | 0 | `"43%"` | Large percentages (>100%) |
 | `percent1` | 1 | `"42.5%"` | Medium percentages (10–100%) |
 | `percent2` | 2 | `"3.45%"` | Small percentages (<10%) |
