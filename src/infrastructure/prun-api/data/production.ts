@@ -105,6 +105,7 @@ const getBySiteId = (value?: string | null) => {
 export const productionStore = {
   ...state,
   fetchedAll,
+  isSiteFetched: (siteId: string) => fetchedAll.value || fetchedSites.has(siteId),
   getBySiteId,
   passiveGetBySiteId,
 };

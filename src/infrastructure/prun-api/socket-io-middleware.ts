@@ -2,6 +2,10 @@ import { decodePayload, encodePayload, Packet as EIOPacket } from 'engine.io-par
 import { Decoder, Encoder, Packet as SIOPacket, PacketType } from 'socket.io-parser';
 import { castArray } from '@src/utils/cast-array';
 
+// Captured before socketIOMiddleware() replaces window.WebSocket with a proxy.
+// Code that needs the real constructor imports this instead of reading the global.
+export const nativeWebSocket = WebSocket;
+
 export type Middleware<T> = {
   onOpen: () => void;
   onMessage: (payload: T) => Promise<boolean>;
@@ -55,7 +59,7 @@ export default function socketIOMiddleware<T>(middleware: Middleware<T>) {
   // I don't remember what this override is for, lol. Probably some FIO compatibility issues.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   WebSocket.prototype.addEventListener = function (type: any, listener: any, options: any) {
-    return this.addEventListener(type, listener, options);
+    return addEventListener.call(this, type, listener, options);
   };
 
   window.XMLHttpRequest = new Proxy(XMLHttpRequest, {

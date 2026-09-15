@@ -15,9 +15,15 @@ interface RequestHooks {
 }
 
 let hooks: RequestHooks | undefined = undefined;
+const requestTransportAvailable = ref(false);
 
 export function implementRequestHooks(newHooks: RequestHooks) {
   hooks = newHooks;
+  requestTransportAvailable.value = true;
+}
+
+export function isRequestTransportAvailable() {
+  return requestTransportAvailable.value;
 }
 
 export const request = {
@@ -65,7 +71,7 @@ export function createRequestGetter<T, K>(
   };
 }
 
-type RequestStore<T> = T & { request(): void };
+type RequestStore<T> = T & { request(): void; peek(): T };
 
 export function createRequestStore<T>(request: () => void, store: T): RequestStore<T> {
   const wrapped = {} as RequestStore<T>;
@@ -78,5 +84,6 @@ export function createRequestStore<T>(request: () => void, store: T): RequestSto
     });
   }
   wrapped.request = request;
+  wrapped.peek = () => store;
   return wrapped;
 }

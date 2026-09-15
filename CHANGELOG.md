@@ -7,6 +7,7 @@
 - `XIT AGENT`: Lists action packages synced via the private refined-agent channel (not AI-related)
 - `XIT BS`: Lists all player bases with links to key base commands
 - `XIT BURNACT`: Executes a resupply action package for a planet from the burn screen
+- `XIT DATA`: Explores in-memory Refined PrUn game and tile data
 - `XIT DSP`: Plans shipments of resupply and repair materials to your bases
 - `XIT DISPATCHACT`: Executes the staged dispatch resupply/repair action package
 - `XIT FLT`: Enhanced fleet table with detailed status, cargo, fuel, and quick actions
@@ -67,6 +68,7 @@
 - `XIT CONTS`: Fulfillable conditions can now be clicked to fulfill
 - `XIT FXTS`: Day totals now include both sides of trades
 - `XIT PRUNSTAT`: Switched to raylu's fork
+- Tile data export now supports many more commands
 
 ### Fixed
 
