@@ -45,6 +45,7 @@ export function correctPlanetCommand(parts: string[]) {
     }
     // For example, `LM HRT`
     if (stationCommands.has(command) && stationsStore.getByNaturalId(args[0])) {
+      parts[1] = args[0].toUpperCase();
       return;
     }
   }

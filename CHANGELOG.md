@@ -84,6 +84,7 @@
 - `XIT BURN`: Fixed color filters not matching fractional-day colors
 - `XIT BURN`: Fixed inventory values rounding up
 - Tooltips no longer get clipped by tile/window boundaries (`unclipped-tooltips`)
+- Station commands now correctly auto-capitalize, for example `inv mor` => `INV MOR` (`correct-commands`)
 
 ## 26.6.22.2033
 
