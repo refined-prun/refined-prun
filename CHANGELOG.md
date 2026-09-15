@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- `XIT ACT`: Fixed an error when some ships are not named
+
 ## 26.9.15
 
 ### New commands
