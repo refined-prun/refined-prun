@@ -21,8 +21,8 @@ const excludeInbound = useTileState('excludeInbound');
 const includesInbound = computed(() => !excludeInbound.value.includes(burn.naturalId));
 const inboundTooltip = computed(() =>
   includesInbound.value
-    ? 'Includes inbound cargo. Click to exclude them.'
-    : 'Excludes inbound cargo. Click to include them.',
+    ? 'Includes inbound cargo. Click to exclude it.'
+    : 'Excludes inbound cargo. Click to include it.',
 );
 const days = computed(() => countDays(burn.burn));
 const nameColspan = computed(() => (io.value ? 6 : 4));
