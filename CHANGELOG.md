@@ -35,11 +35,11 @@
 - `XIT ACT`: Added "Paste" material group
 - `XIT ACT`: Added "CONT Ship" and "CONT Trade" actions
 - `XIT ACT`: Added a "GovBurn Data" action to load planetary infrastructure and upkeep data through POPI, POPID, and COGC
-- `XIT ACT`: Added exchange selection to the "CX Buy" configuration
-- `XIT ACT`: Added resupply days to the "Resupply" configuration
-- `XIT ACT`: Added an All/Workforce/Production material filter to the "Resupply" configuration
+- `XIT ACT`: Added a "Configure on Execution" option to "Exchange" in "CX Buy" configuration
+- `XIT ACT`: Added a "Configure on Execution" toggle to "Days" in "Resupply" configuration
+- `XIT ACT`: Added an All/Workforce/Production material filter to the "Resupply" runtime configuration
 - `XIT ACT`: Added repair threshold and time offset settings to the "Repair" configuration
-- `XIT ACT`: Added "CX Buy Only" as an MTRA destination when loading from an exchange warehouse
+- `XIT ACT`: Added "CX Buy Only" as an MTRA destination in runtime configuration
 - `XIT ACT`: Added "All Exchanges" as a Refuel origin
 - `XIT ACT`: Added total material weight and volume to previews and execution logs
 - `XIT ACT`: Added resupply weight/volume totals and buttons to fit supplies to a ship size or the selected ship's free cargo capacity
