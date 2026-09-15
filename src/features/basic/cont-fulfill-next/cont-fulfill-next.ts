@@ -3,6 +3,7 @@ import Commands from '@src/components/forms/Commands.vue';
 import $style from './cont-fulfill-next.module.css';
 import { contractsStore } from '@src/infrastructure/prun-api/data/contracts';
 import { isFulfillable } from '@src/core/contract-conditions';
+import { waitActionFeedback } from '@src/infrastructure/prun-ui/utils/action-feedback';
 
 function onTileReady(tile: PrunTile) {
   const contract = computed(() => contractsStore.getByLocalId(tile.parameter!));
@@ -37,13 +38,19 @@ function onTileReady(tile: PrunTile) {
       reactive({
         isVisible,
         count,
-        onClick: () => {
+        onClick: (event: MouseEvent) => {
           const table = _$(tile.anchor, 'table');
           if (!table) {
             return;
           }
           const button = _$(table, C.Button.success);
-          button?.click();
+          if (!button) {
+            return;
+          }
+          if (event.shiftKey) {
+            void waitActionFeedback(tile.frame, { dismissSuccess: true });
+          }
+          button.click();
         },
       }),
     ).appendTo(containerCommand);

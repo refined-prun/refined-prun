@@ -4,7 +4,7 @@ import PrunButton from '@src/components/PrunButton.vue';
 defineProps<{
   isVisible: boolean;
   count: number;
-  onClick: () => void;
+  onClick: (event: MouseEvent) => void;
 }>();
 </script>
 
