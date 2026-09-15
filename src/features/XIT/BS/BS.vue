@@ -168,8 +168,8 @@ const filteredBases = computed(() => {
       <RadioItem v-model="showInv" horizontal>INV</RadioItem>
       <RadioItem v-model="showWar" horizontal>WAR</RadioItem>
       <div :class="$style.spacer" />
-      <PrunButton primary @click="showBuffer('XIT AGT')">AGT</PrunButton>
-      <PrunButton primary @click="showBuffer('XIT DSP')">DSP</PrunButton>
+      <PrunButton primary @click="showBuffer('XIT AGT')">AGENT</PrunButton>
+      <PrunButton primary @click="showBuffer('XIT DSP')">DISPATCH</PrunButton>
     </div>
     <table :class="$style.table">
       <thead>
