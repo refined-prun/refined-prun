@@ -5,7 +5,7 @@ xit.add({
   command: ['SET', 'SETTINGS'],
   name: 'REFINED PRUN SETTINGS',
   description: 'Refined PrUn settings.',
-  optionalParameters: 'Settings Tab Identifier',
+  optionalParameters: 'Settings Tab Identifier, Feature Identifier (FEAT)',
   component: parameters => {
     switch (parameters[0]?.toUpperCase()) {
       case 'PMMG':

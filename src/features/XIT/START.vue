@@ -3,12 +3,19 @@ import PrunLink from '@src/components/PrunLink.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import { userData } from '@src/store/user-data';
 import { saveUserData } from '@src/infrastructure/storage/user-data-serializer';
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
+import { hasUnseenChangelog } from '@src/features/XIT/WHATSNEW/changelog-data';
 
 const needsToChoose = ref(userData.settings.mode === undefined);
 
 function onBasicClick() {
   needsToChoose.value = false;
   userData.settings.mode = 'BASIC';
+  // FULL reloads, which re-runs startup and opens WHATSNEW on its own.
+  // BASIC doesn't reload, so trigger it here once the feature-set choice is made.
+  if (hasUnseenChangelog(userData.lastSeenChangelogVersion)) {
+    setTimeout(() => showBuffer('XIT WHATSNEW'), 500);
+  }
 }
 
 async function onFullClick() {

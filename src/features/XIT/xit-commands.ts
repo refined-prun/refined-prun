@@ -7,6 +7,7 @@ import { xitCommandKey } from '@src/hooks/use-xit-command';
 import { userData } from '@src/store/user-data';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import { tileKey } from '@src/hooks/use-tile';
+import { hasUnseenChangelog } from '@src/features/XIT/WHATSNEW/changelog-data';
 
 function onTileReady(tile: PrunTile) {
   const rawParameter = tile.parameter ?? 'CMDS';
@@ -75,5 +76,7 @@ export function initializeXitCommands() {
   tiles.observe('XIT', onTileReady);
   if (userData.settings.mode === undefined) {
     setTimeout(() => showBuffer('XIT START'), 1000);
+  } else if (hasUnseenChangelog(userData.lastSeenChangelogVersion)) {
+    setTimeout(() => showBuffer('XIT WHATSNEW'), 1500);
   }
 }

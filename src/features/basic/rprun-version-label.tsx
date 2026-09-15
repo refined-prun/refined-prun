@@ -1,10 +1,11 @@
+import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 import $style from './rprun-version-label.module.css';
 
 async function onFooterReady(footer: HTMLElement) {
   const userCount = await $(footer, C.UsersOnlineCount.container);
 
   function onClick() {
-    window.open('https://github.com/refined-prun/refined-prun/blob/main/CHANGELOG.md', '_blank');
+    showBuffer('XIT WHATSNEW');
   }
 
   createFragmentApp(() => (

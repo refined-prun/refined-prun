@@ -124,6 +124,19 @@ export default ts.config(
   },
 
   {
+    files: ['scripts/**/*.mjs'],
+    languageOptions: {
+      parserOptions: {
+        project: null,
+      },
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+      },
+    },
+  },
+
+  {
     ignores: [
       'dist/**/*',
       '.tmp/**/*',

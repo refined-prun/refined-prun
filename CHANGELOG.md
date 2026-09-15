@@ -21,6 +21,7 @@
 - `XIT REPAIRACT`: Executes a repair action package for a planet using XIT REP settings
 - `XIT REFUELACT`: Executes a refuel action package for all ships docked at exchanges
 - `XIT STO`: Per-base storage analysis
+- `XIT WHATSNEW`: Refined PrUn release notes
 
 ### Added
 
