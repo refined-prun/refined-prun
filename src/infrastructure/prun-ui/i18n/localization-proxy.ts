@@ -39,6 +39,18 @@ export function createLocalizationProxy(node: any, path: string) {
       reportMissingLocalization(path);
       return undefined;
     },
+    ownKeys() {
+      if (node && (typeof node === 'object' || typeof node === 'function')) {
+        return Reflect.ownKeys(node);
+      }
+      return [];
+    },
+    getOwnPropertyDescriptor(_target, key) {
+      if (node && Reflect.has(node, key)) {
+        return Reflect.getOwnPropertyDescriptor(node, key);
+      }
+      return undefined;
+    },
   });
 }
 

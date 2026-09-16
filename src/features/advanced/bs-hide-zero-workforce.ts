@@ -32,9 +32,11 @@ function onTileReady(tile: PrunTile) {
 }
 
 function init() {
-  applyLocalizationPatch(L.SiteWorkforces.table.currentWorkforce, value =>
-    value.replace('Current Workforce', 'Current'),
-  );
+  applyLocalizationPatch(L.SiteWorkforces.table.currentWorkforce, {
+    en: () => 'Current',
+    es: () => 'Actual',
+    de: () => 'Aktuelle',
+  });
   tiles.observe('BS', onTileReady);
 }
 
