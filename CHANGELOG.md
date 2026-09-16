@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 26.9.16
+
 ### Added
 
 - `XIT AGT`: Added a short guide on usage
