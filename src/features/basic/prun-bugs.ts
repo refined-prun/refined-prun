@@ -80,7 +80,7 @@ function preventDragSelection() {
     });
   };
 
-  document.addEventListener('dragstart', e => {
+  window.addEventListener('dragstart', e => {
     const target = e.target as Element;
     if (target.closest('[draggable="true"]') === null) {
       return;
@@ -88,7 +88,7 @@ function preventDragSelection() {
     document.body.classList.add(noSelectClass);
   });
 
-  document.addEventListener('dragend', queueReset);
+  window.addEventListener('dragend', queueReset);
   window.addEventListener('blur', queueReset);
 }
 
