@@ -1,0 +1,15 @@
+.container {
+  /* Preserve game-owned nodes so the game can still update them. */
+  &:has(> .replacement:not(:empty)) {
+    /* Hide bare text nodes as well as child elements. */
+    font-size: 0;
+
+    > :not(.replacement) {
+      display: none;
+    }
+  }
+}
+
+.replacement {
+  display: inline;
+}
