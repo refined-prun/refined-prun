@@ -73,6 +73,7 @@ function openPackage(messageId: string) {
 
 <template>
   <ActionBar>
+    <PrunButton dark @click="showBuffer('XIT HELP AGT')">What is this?</PrunButton>
     <PrunButton primary :disabled="loading" @click="refresh">REFRESH</PrunButton>
   </ActionBar>
   <div v-if="inaccessible">

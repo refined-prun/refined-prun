@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `XIT AGT`: Added a short guide on usage
+
 ### Fixed
 
 - `INV`: Fixed a "Component failed to render" error on ship flight start (`inv-ship-destination-location`)
