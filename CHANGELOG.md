@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- `XIT STO`: Fixed text overflow in tooltips (`unclipped-tooltips`)
+
 ## 26.9.16
 
 ### Added
