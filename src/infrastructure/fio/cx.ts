@@ -172,9 +172,8 @@ export interface MarketPrices {
   sell: number | undefined;
 }
 
-// Buy is the Ask, sell is the Bid. MM materials sell at the MM bid and buy at the
-// cheaper of the Ask and the MM ask (most MM materials only have an MM bid).
-// A side with no market data falls back to getPrice.
+// Both sides use the MM buy price for configured MM materials, then VWAP7D.
+// Missing prices fall back to getPrice.
 export function getMarketPrices(ticker: string): MarketPrices {
   const upper = ticker.toUpperCase();
   if (ignored.value.has(upper)) {
@@ -185,14 +184,9 @@ export function getMarketPrices(ticker: string): MarketPrices {
   const info = cxStore.fetched
     ? cxStore.prices.get(userData.settings.pricing.exchange)?.get(upper)
     : undefined;
-  if (!info) {
-    return { buy: fallback, sell: fallback };
-  }
-  if (mmMaterials.value.has(upper)) {
-    const asks = [info.Ask, info.MMSell].filter(isPresent);
-    return { buy: asks.length > 0 ? Math.min(...asks) : fallback, sell: info.MMBuy ?? fallback };
-  }
-  return { buy: info.Ask ?? fallback, sell: info.Bid ?? fallback };
+  const mmPrice = mmMaterials.value.has(upper) ? info?.MMBuy : undefined;
+  const price = mmPrice ?? info?.VWAP7D ?? fallback;
+  return { buy: price, sell: price };
 }
 
 export function getMaterialPrice(material: PrunApi.Material) {
