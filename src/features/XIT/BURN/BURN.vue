@@ -18,7 +18,12 @@ import MaterialRow from '@src/features/XIT/BURN/MaterialRow.vue';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { countDays, getSortedTickers } from '@src/features/XIT/BURN/utils';
+import {
+  BurnSortKey,
+  burnSortNaturalDesc,
+  countDays,
+  getSortedTickers,
+} from '@src/features/XIT/BURN/utils';
 import InlineFlex from '@src/components/InlineFlex.vue';
 import { findWithQuery } from '@src/utils/find-with-query';
 import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
@@ -96,6 +101,28 @@ const prod = useTileState('prod');
 const wf = useTileState('wf');
 const io = useTileState('io');
 const excludeInbound = useTileState('excludeInbound');
+const sortBy = useTileState('sortBy');
+const sortDesc = useTileState('sortDesc');
+
+// Click cycle: natural direction -> reversed -> default order.
+function onSortClick(key: BurnSortKey) {
+  if (sortBy.value !== key) {
+    sortBy.value = key;
+    sortDesc.value = burnSortNaturalDesc[key];
+  } else if (sortDesc.value === burnSortNaturalDesc[key]) {
+    sortDesc.value = !sortDesc.value;
+  } else {
+    sortBy.value = '';
+    sortDesc.value = false;
+  }
+}
+
+function sortArrow(key: BurnSortKey) {
+  if (sortBy.value !== key) {
+    return '';
+  }
+  return sortDesc.value ? ' ▼' : ' ▲';
+}
 
 function filterBurn(burn: BurnValues, naturalId: string): BurnValues {
   const filtered: BurnValues = {};
@@ -301,9 +328,9 @@ function copyBurnTable() {
             {{ anyExpanded ? '-' : '+' }}
           </th>
           <th v-else />
-          <th>
+          <th :class="$style.sortable" @click="onSortClick('inv')">
             <InlineFlex>
-              Inv
+              Inv{{ sortArrow('inv') }}
               <Tooltip
                 position="right"
                 tooltip="Stock at the base plus cargo on inbound ships when enabled. Fractional amount
@@ -313,23 +340,25 @@ function copyBurnTable() {
           <template v-if="io">
             <th>In</th>
             <th>Out</th>
-            <th>Net</th>
+            <th :class="$style.sortable" @click="onSortClick('burn')"
+              >Net{{ sortArrow('burn') }}</th
+            >
           </template>
-          <th v-else>
+          <th v-else :class="$style.sortable" @click="onSortClick('burn')">
             <InlineFlex>
-              Burn
+              Burn{{ sortArrow('burn') }}
               <Tooltip position="bottom" tooltip="How much of a material is consumed per day." />
             </InlineFlex>
           </th>
-          <th>
+          <th :class="$style.sortable" @click="onSortClick('need')">
             <InlineFlex>
-              Need
+              Need{{ sortArrow('need') }}
               <Tooltip
                 position="bottom"
                 tooltip="How much of a material needs to be delivered to be fully supplied." />
             </InlineFlex>
           </th>
-          <th>Days</th>
+          <th :class="$style.sortable" @click="onSortClick('days')">Days{{ sortArrow('days') }}</th>
           <th>CMD</th>
         </tr>
       </thead>
@@ -369,6 +398,11 @@ function copyBurnTable() {
   font-size: 12px;
   padding-left: 18px;
   font-weight: bold;
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
 }
 
 .radioItemWithTooltip {
