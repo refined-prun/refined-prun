@@ -10,4 +10,6 @@ export const useTileState = createTileStateHook({
   io: false,
   excludeInbound: [] as string[],
   expand: [] as string[],
+  sortBy: '' as string,
+  sortDesc: false,
 });
