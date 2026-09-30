@@ -42,7 +42,7 @@ export function findWithQuery<T>(
 
     if (nextTerm === 'not') {
       isNot = true;
-      excludeAll = true;
+      excludeAll = false;
       nextTerm = '';
       nextTermParts.length = 0;
       continue;
