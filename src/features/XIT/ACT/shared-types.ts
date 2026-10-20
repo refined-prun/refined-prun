@@ -61,6 +61,8 @@ export interface ActionStepExecuteContext<T> extends ActionRunnerContext<T> {
   fail: (message?: string) => never;
   assert: AssertFn;
   requestTile: (command: string, opts?: WaitActOptions) => Promise<PrunTile | undefined>;
+  // A second tile below the requestTile tile, for steps that need two tiles at once.
+  requestSecondaryTile: (command: string, opts?: WaitActOptions) => Promise<PrunTile | undefined>;
 }
 
 export const configurableValue = 'Configure on Execution';

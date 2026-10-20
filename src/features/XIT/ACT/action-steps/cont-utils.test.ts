@@ -66,6 +66,7 @@ function context() {
       }
     },
     requestTile: vi.fn(),
+    requestSecondaryTile: vi.fn(),
   } satisfies ActionStepExecuteContext<unknown>;
 }
 
