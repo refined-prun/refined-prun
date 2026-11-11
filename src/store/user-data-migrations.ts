@@ -17,6 +17,12 @@ function isCheckpoint(entry: MigrationEntry): entry is Checkpoint {
 // The date is for reference only, and it does not affect migration order.
 const migrations: MigrationEntry[] = [
   [
+    '12.11.2026 Remove contd-upward-search-results',
+    userData => {
+      removeFeature(userData, 'contd-upward-search-results');
+    },
+  ],
+  [
     '12.11.2026 Remove flt-hide-transponder',
     userData => {
       removeFeature(userData, 'flt-hide-transponder');

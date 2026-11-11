@@ -8,6 +8,7 @@
 
 ### Removed
 
+- `contd-upward-search-results`: The game now shows suggestions outside the buffer
 - `flt-hide-transponder`: The game no longer shows the transponder column
 
 ### Fixed

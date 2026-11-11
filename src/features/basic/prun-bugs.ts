@@ -118,9 +118,6 @@ function init() {
   // Prevent PROD buffer vertical scroll bar gutter from being always visible.
   applyCssRule('PROD', `.${C.SiteProductionLines.container}`, $style.containerScrollbarGutter);
 
-  // User search results box in GIFT is too big to fit in the tile.
-  applyCssRule('GIFT', `.${C.UserSelector.suggestionsContainer}`, $style.giftSearchResults);
-
   // Fixes the dot / arrow in system info being left skewed
   applyCssRule(
     'SYSI',
