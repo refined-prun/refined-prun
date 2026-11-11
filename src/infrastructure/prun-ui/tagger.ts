@@ -1,4 +1,9 @@
 export enum ElementTag {
+  FLT_NAME_CELL = 'rp-flt-name-cell',
+  FLT_STATUS_CELL = 'rp-flt-status-cell',
+  FLT_LOCATION_CELL = 'rp-flt-location-cell',
+  FLT_DESTINATION_CELL = 'rp-flt-destination-cell',
+  FLT_ETA_CELL = 'rp-flt-eta-cell',
   FXPO_LOTS_FIELD = 'rp-fxpo-lots-field',
   FXPO_CURRENT_PRICE_FIELD = 'rp-fxpo-current-price-field',
   FXPO_MAXIMUM_PRICE_FIELD = 'rp-fxpo-maximum-price-field',
@@ -10,6 +15,17 @@ export enum ElementTag {
 }
 
 export function tagUI() {
+  tagTileTable(
+    ['FLT', 'FLTS', 'FLTP'],
+    [
+      [L.FleetPanel.table.ship(), ElementTag.FLT_NAME_CELL],
+      [L.FleetPanel.table.status(), ElementTag.FLT_STATUS_CELL],
+      [L.FleetPanel.table.location(), ElementTag.FLT_LOCATION_CELL],
+      [L.FleetPanel.table.destination(), ElementTag.FLT_DESTINATION_CELL],
+      [L.FleetPanel.table.eta(), ElementTag.FLT_ETA_CELL],
+    ],
+  );
+
   tagTileFormFields('FXPO', [
     [L.ForExPlaceOrderForm.label.lots(), ElementTag.FXPO_LOTS_FIELD],
     [L.ForExPlaceOrderForm.label.price(), ElementTag.FXPO_CURRENT_PRICE_FIELD],
@@ -52,7 +68,7 @@ function tagFormFields(parent: Element, tagMap: Map<string, ElementTag>) {
   });
 }
 
-function tagTileTable(command: string, mapItems: MapItems) {
+function tagTileTable(command: Arrayable<string>, mapItems: MapItems) {
   const tagMap = buildMap(mapItems);
   tiles.observe(command, tile => {
     subscribe($$(tile.anchor, 'table'), table => tagTable(table, tagMap));
