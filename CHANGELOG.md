@@ -8,6 +8,12 @@
 
 ### Fixed
 
+- `CONTD`: Fixed the material "all" button getting stuck (`contd-fill-all-button`)
+- `CONTD`: Fixed contract template imports getting stuck during material selection (`contd-import-export`)
+- `CXO`: Fixed the "delete" button getting stuck (`cxo-delete-order-button`)
+- `CXOB`: Fixed the "del" button getting stuck (`cxob-delete-own-exchange-orders`)
+- `CXPO`: Fixed the "del" button getting stuck (`cxpo-order-book`)
+- `XIT ACT`: Fixed MTRA and CONT actions getting stuck during material selection
 - `XIT STO`: Fixed text overflow in tooltips (`unclipped-tooltips`)
 
 ## 26.9.16

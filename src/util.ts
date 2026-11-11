@@ -4,6 +4,7 @@ import { getStarNaturalId, starsStore } from '@src/infrastructure/prun-api/data/
 import { stationsStore } from '@src/infrastructure/prun-api/data/stations';
 import { getMaterialName } from '@src/infrastructure/prun-ui/i18n';
 import { sleep } from './utils/sleep';
+import { waitUntil } from '@src/utils/wait';
 
 // Download a file containing fileData with fileName
 export function downloadFile(fileData, fileName, isJSON: boolean = true) {
@@ -68,24 +69,40 @@ export async function selectMaterialInMaterialSelector(baseElement: Element, tic
   }
   const input = await $(container, 'input');
 
-  const suggestionsContainer = await $(container, C.MaterialSelector.suggestionsContainer);
   focusElement(input);
   changeInputValue(input, ticker);
+  // Let React replace the previous query's suggestions.
+  await sleep(0);
 
-  const suggestionsList = await $(container, C.MaterialSelector.suggestionsList);
-  suggestionsContainer.style.display = 'none';
-  const match = _$$(suggestionsList, C.MaterialSelector.suggestionEntry).find(
-    x => _$(x, C.ColoredIcon.label)?.textContent === ticker,
-  );
+  // Autosuggest links each input to its own popup, including portalled popups.
+  const getPopup = () => {
+    const popupId = input.getAttribute('aria-controls');
+    return popupId ? document.getElementById(popupId) : null;
+  };
+  const findMatch = (popup: HTMLElement | null) =>
+    popup
+      ? _$$(popup, C.MaterialSelector.suggestionEntry).find(
+          x => _$(x, C.ColoredIcon.label)?.textContent === ticker,
+        )
+      : undefined;
+  await waitUntil(() => !input.isConnected || findMatch(getPopup()));
 
-  if (!match) {
-    suggestionsContainer.style.display = '';
+  const popup = getPopup();
+  const match = findMatch(popup);
+  if (!input.isConnected || !popup || !match) {
     return false;
   }
 
-  await clickElement(match);
-  suggestionsContainer.style.display = '';
-  return true;
+  const display = popup.style.display;
+  popup.style.display = 'none';
+  try {
+    mouseOverElement(popup, match);
+    await sleep(0);
+    await clickElement(match);
+    return true;
+  } finally {
+    popup.style.display = display;
+  }
 }
 
 // A function to compare two planets (to be used in .sort() functions)
