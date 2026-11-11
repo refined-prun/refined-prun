@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FilterRow from '@src/components/FilterRow.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import GovBurnConfig from '@src/features/XIT/GOVBURN/GovBurnConfig.vue';
 import GovBurnDaysCell from '@src/features/XIT/GOVBURN/GovBurnDaysCell.vue';
@@ -77,11 +78,11 @@ function onActClick(naturalId: string) {
 <template>
   <GovBurnConfig v-if="showConfig" @done="showConfig = false" />
   <template v-else>
-    <div :class="C.ComExOrdersPanel.filter">
+    <FilterRow>
       <div :class="$style.spacer" />
       <PrunButton primary @click="showConfig = true">CONFIG</PrunButton>
       <PrunButton primary @click="showBuffer('XIT GOVBURNDATA')">DATA</PrunButton>
-    </div>
+    </FilterRow>
     <p v-if="rows.length === 0" :class="$style.empty">No planets configured.</p>
     <table v-else>
       <thead>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FilterRow from '@src/components/FilterRow.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import PrunLink from '@src/components/PrunLink.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
@@ -216,10 +217,10 @@ function getPlanetNaturalIdFromAlert(alert: PrunApi.Alert) {
 <template>
   <LoadingSpinner v-if="rows === undefined" />
   <template v-else>
-    <div :class="C.ComExOrdersPanel.filter">
+    <FilterRow>
       <RadioItem v-model="gov" horizontal>GOV</RadioItem>
       <RadioItem v-model="cogc" horizontal>COGC</RadioItem>
-    </div>
+    </FilterRow>
     <table>
       <thead>
         <tr>

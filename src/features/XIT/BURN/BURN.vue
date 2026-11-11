@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FilterRow from '@src/components/FilterRow.vue';
 import CopyButton from '@src/components/CopyButton.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import {
@@ -267,7 +268,7 @@ function copyBurnTable() {
 <template>
   <LoadingSpinner v-if="planetBurn === undefined" />
   <template v-else>
-    <div :class="C.ComExOrdersPanel.filter">
+    <FilterRow>
       <RadioItem v-model="red" horizontal>RED</RadioItem>
       <RadioItem v-model="yellow" horizontal>YELLOW</RadioItem>
       <RadioItem v-model="green" horizontal>GREEN</RadioItem>
@@ -293,7 +294,7 @@ function copyBurnTable() {
       <RadioItem v-model="io" horizontal>I/O</RadioItem>
       <div :class="$style.spacer" />
       <CopyButton :copy-fn="copyBurnTable" data-tooltip-position="bottom" />
-    </div>
+    </FilterRow>
     <table>
       <thead>
         <tr>

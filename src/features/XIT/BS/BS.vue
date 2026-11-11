@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FilterRow from '@src/components/FilterRow.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import TextInput from '@src/components/forms/TextInput.vue';
@@ -149,7 +150,7 @@ const filteredBases = computed(() => {
 <template>
   <LoadingSpinner v-if="bases === undefined" />
   <template v-else>
-    <div :class="C.ComExOrdersPanel.filter">
+    <FilterRow>
       <div :class="$style.searchContainer">
         Planet:&nbsp;
         <TextInput v-model="planetFilter" />
@@ -170,7 +171,7 @@ const filteredBases = computed(() => {
       <div :class="$style.spacer" />
       <PrunButton primary @click="showBuffer('XIT AGT')">AGENT</PrunButton>
       <PrunButton primary @click="showBuffer('XIT DSP')">DISPATCH</PrunButton>
-    </div>
+    </FilterRow>
     <table :class="$style.table">
       <thead>
         <tr>

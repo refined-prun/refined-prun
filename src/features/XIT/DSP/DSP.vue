@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FilterRow from '@src/components/FilterRow.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
@@ -421,7 +422,7 @@ function reset() {
 <template>
   <LoadingSpinner v-if="bases === undefined" />
   <div v-else :class="$style.layout">
-    <div :class="C.ComExOrdersPanel.filter">
+    <FilterRow>
       <RadioItem
         v-for="option in exchangeFilterOptions"
         :key="option.code"
@@ -441,7 +442,7 @@ function reset() {
         @click="execute">
         EXECUTE
       </PrunButton>
-    </div>
+    </FilterRow>
     <div ref="panesEl" :class="$style.panes">
       <ShipPool :ships="filteredCxShips" :base-configs="baseConfigs" />
       <div :class="$style.left">

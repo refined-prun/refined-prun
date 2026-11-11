@@ -21,6 +21,7 @@
 - `FLT`: Fixed ship condition appearing in the wrong column (`flt-ship-condition`)
 - `XIT ACT`: Fixed MTRA and CONT actions getting stuck during material selection
 - `XIT STO`: Fixed text overflow in tooltips (`unclipped-tooltips`)
+- Fixed filter bar layout in XIT commands
 
 ## 26.9.16
 

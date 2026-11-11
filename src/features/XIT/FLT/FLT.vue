@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FilterRow from '@src/components/FilterRow.vue';
 import { computed } from 'vue';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
@@ -785,23 +786,23 @@ function getCargoState(cargoRatio: number) {
 
       <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Ship list</div>
-        <div :class="C.ComExOrdersPanel.filter">
+        <FilterRow>
           <RadioItem v-model="showStlShips" horizontal>STL</RadioItem>
           <RadioItem v-model="showFtlShips" horizontal>FTL</RadioItem>
-        </div>
+        </FilterRow>
       </div>
 
       <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Flight state</div>
-        <div :class="C.ComExOrdersPanel.filter">
+        <FilterRow>
           <RadioItem v-model="showInFlightShips" horizontal>IN FLIGHT</RadioItem>
           <RadioItem v-model="showNotInFlightShips" horizontal>DOCKED</RadioItem>
-        </div>
+        </FilterRow>
       </div>
 
       <div v-for="group in optionFilterGroups" :key="group.key" :class="$style.filterGroup">
         <div :class="$style.filterTitle">{{ group.title }}</div>
-        <div :class="C.ComExOrdersPanel.filter">
+        <FilterRow>
           <RadioItem
             v-for="option in group.options"
             :key="`${group.key}-${option}`"
@@ -810,12 +811,12 @@ function getCargoState(cargoRatio: number) {
             @update:model-value="group.onToggle(option)">
             {{ option }}
           </RadioItem>
-        </div>
+        </FilterRow>
       </div>
 
       <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Columns</div>
-        <div :class="C.ComExOrdersPanel.filter">
+        <FilterRow>
           <RadioItem v-model="showColName" horizontal>NAME</RadioItem>
           <RadioItem v-model="showColShipClass" horizontal>CLASS</RadioItem>
           <RadioItem v-model="showColSize" horizontal>SIZE</RadioItem>
@@ -825,21 +826,21 @@ function getCargoState(cargoRatio: number) {
           <RadioItem v-model="showColRepair" horizontal>REPAIR</RadioItem>
           <RadioItem v-model="showColFuel" horizontal>FUEL</RadioItem>
           <RadioItem v-model="showColProblems" horizontal>PROBLEMS</RadioItem>
-        </div>
+        </FilterRow>
       </div>
 
       <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Reset</div>
-        <div :class="C.ComExOrdersPanel.filter">
+        <FilterRow>
           <RadioItem :model-value="false" horizontal @update:model-value="clearFilters">
             RESET ALL FILTERS
           </RadioItem>
-        </div>
+        </FilterRow>
       </div>
 
       <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Primary sort</div>
-        <div :class="C.ComExOrdersPanel.filter">
+        <FilterRow>
           <RadioItem
             v-for="key in [
               'none',
@@ -859,12 +860,12 @@ function getCargoState(cargoRatio: number) {
             {{ key.toUpperCase() }}
             {{ primarySortKey === key && key !== 'none' ? getSortIndicator(key as SortKey) : '' }}
           </RadioItem>
-        </div>
+        </FilterRow>
       </div>
 
       <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Secondary sort</div>
-        <div :class="C.ComExOrdersPanel.filter">
+        <FilterRow>
           <RadioItem
             v-for="key in [
               'none',
@@ -884,12 +885,12 @@ function getCargoState(cargoRatio: number) {
             {{ key.toUpperCase() }}
             {{ secondarySortKey === key && key !== 'none' ? getSortIndicator(key as SortKey) : '' }}
           </RadioItem>
-        </div>
+        </FilterRow>
       </div>
 
       <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Layout</div>
-        <div :class="C.ComExOrdersPanel.filter">
+        <FilterRow>
           <RadioItem
             :model-value="layoutMode === 'compact'"
             horizontal
@@ -914,19 +915,19 @@ function getCargoState(cargoRatio: number) {
             @update:model-value="layoutMode = 'legacy'">
             LEGACY
           </RadioItem>
-        </div>
+        </FilterRow>
       </div>
 
       <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Route</div>
-        <div :class="C.ComExOrdersPanel.filter">
+        <FilterRow>
           <RadioItem v-model="hideReturningToCx" horizontal>HIDE CX RETURNS</RadioItem>
-        </div>
+        </FilterRow>
       </div>
 
       <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Fuel</div>
-        <div :class="C.ComExOrdersPanel.filter">
+        <FilterRow>
           <RadioItem
             v-for="threshold in fuelAlertOptions"
             :key="threshold"
@@ -935,12 +936,12 @@ function getCargoState(cargoRatio: number) {
             @update:model-value="onFuelAlertToggle(threshold, $event)">
             ≤{{ threshold }}%
           </RadioItem>
-        </div>
+        </FilterRow>
       </div>
 
       <div :class="$style.filterGroup">
         <div :class="$style.filterTitle">Problematic fuel level</div>
-        <div :class="C.ComExOrdersPanel.filter">
+        <FilterRow>
           <RadioItem
             v-for="threshold in fuelAlertOptions"
             :key="`prob-${threshold}`"
@@ -949,7 +950,7 @@ function getCargoState(cargoRatio: number) {
             @update:model-value="problemFuelThreshold = $event ? threshold : 'any'">
             ≤{{ threshold }}%
           </RadioItem>
-        </div>
+        </FilterRow>
       </div>
     </div>
 

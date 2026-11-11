@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FilterRow from '@src/components/FilterRow.vue';
 import CopyButton from '@src/components/CopyButton.vue';
 import InlineFlex from '@src/components/InlineFlex.vue';
 import LoadingSpinner from '@src/components/LoadingSpinner.vue';
@@ -110,10 +111,10 @@ function copyFlowTable() {
 <template>
   <LoadingSpinner v-if="sorted === undefined" />
   <template v-else>
-    <div :class="C.ComExOrdersPanel.filter">
+    <FilterRow>
       <div :class="$style.spacer" />
       <CopyButton :copy-fn="copyFlowTable" data-tooltip-position="bottom" />
-    </div>
+    </FilterRow>
     <table :class="$style.table">
       <thead>
         <tr>
