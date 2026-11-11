@@ -1,14 +1,16 @@
+import { ElementTag } from '@src/infrastructure/prun-ui/tagger';
 import { refPrunId } from '@src/infrastructure/prun-ui/attributes';
 import ShipCondition from './ShipCondition.vue';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, 'tr'), row => {
+  subscribe($$(tile.anchor, ElementTag.FLT_NAME_CELL), cell => {
+    const row = cell.closest('tr')!;
     createFragmentApp(
       ShipCondition,
       reactive({
         id: refPrunId(row),
       }),
-    ).appendTo(row.children[1]);
+    ).appendTo(cell);
   });
 }
 
