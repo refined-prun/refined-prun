@@ -79,6 +79,25 @@ declare global {
       info: string;
       note: string;
     };
+    AdminDestroyOverlay: {
+      container: string;
+      label: string;
+      targets: string;
+    };
+    AdminInventoryPanel: {
+      container: string;
+    };
+    AdminMaterialGrid: {
+      container: string;
+      filter: string;
+      grid: string;
+      scrollbars: string;
+    };
+    AdminMaterialItemView: {
+      container: string;
+      image: string;
+      name: string;
+    };
     AgentPreamble: {
       columnA: string;
       columnB: string;
@@ -219,6 +238,7 @@ declare global {
       disabled: string;
       disabledInline: string;
       disabledInlineMobile: string;
+      icon: string;
       inline: string;
       inlineMobile: string;
       loading: string;
@@ -302,10 +322,14 @@ declare global {
     ChartContainer: {
       chart: string;
       container: string;
+      inline: string;
       settings: string;
     };
     ChatMessage: {
       message: string;
+    };
+    ChoiceInput: {
+      container: string;
     };
     CoGC: {
       container: string;
@@ -328,6 +352,21 @@ declare global {
       container: string;
       sectionHead: string;
       vote: string;
+    };
+    CollapsibleSection: {
+      container: string;
+      content: string;
+      header: string;
+      open: string;
+      toggle: string;
+      toggleOpen: string;
+    };
+    CollapsibleTableGroup: {
+      groupHeader: string;
+      headerContent: string;
+      icons: string;
+      toggle: string;
+      toggleCollapsed: string;
     };
     ColoredIcon: {
       container: string;
@@ -377,7 +416,12 @@ declare global {
       tradesEmpty: string;
     };
     ComExOrdersPanel: {
+      bar: string;
       filter: string;
+      filterLabel: string;
+      filterOptions: string;
+      filters: string;
+      materialSelector: string;
     };
     ComExOrdersTable: {
       number: string;
@@ -406,10 +450,12 @@ declare global {
     };
     CompanyCreation: {
       container: string;
+      content: string;
+      footer: string;
       heading: string;
       left: string;
-      overflowContainer: string;
       right: string;
+      step: string;
     };
     CompanyHeadquarters: {
       container: string;
@@ -500,6 +546,13 @@ declare global {
       agentList: string;
       image: string;
     };
+    CountryBadge: {
+      ai: string;
+      badge: string;
+      ci: string;
+      ic: string;
+      nc: string;
+    };
     CreateForm: {
       container: string;
       form: string;
@@ -580,6 +633,10 @@ declare global {
       messageMobile: string;
       overlay: string;
       overlayMobile: string;
+    };
+    ExecutionRoute: {
+      countdown: string;
+      indicator: string;
     };
     Experts: {
       figure: string;
@@ -724,9 +781,9 @@ declare global {
     };
     GridItemView: {
       container: string;
-      selected: string;
       image: string;
       name: string;
+      selected: string;
     };
     Head: {
       container: string;
@@ -793,6 +850,9 @@ declare global {
       info: string;
       name: string;
     };
+    ImageIcon: {
+      icon: string;
+    };
     Impersonation: {
       container: string;
       hidden: string;
@@ -813,6 +873,10 @@ declare global {
       indicator: string;
       indicatorActive: string;
       value: string;
+    };
+    InflationChart: {
+      categorySelect: string;
+      container: string;
     };
     InfrastructureUpkeep: {
       green: string;
@@ -863,6 +927,7 @@ declare global {
       controls: string;
       grid: string;
       list: string;
+      marquee: string;
       scrollbars: string;
     };
     ItemsRow: {
@@ -941,13 +1006,13 @@ declare global {
       container: string;
     };
     MainState: {
-      body: string;
       container: string;
       foot: string;
       head: string;
       screenSelector: string;
       sidebar: string;
       tileContainer: string;
+      tiles: string;
     };
     MaterialIcon: {
       container: string;
@@ -1085,6 +1150,29 @@ declare global {
     };
     Motion: {
       input: string;
+    };
+    NewsFilters: {
+      filter: string;
+      label: string;
+    };
+    NewsHeadItem: {
+      count: string;
+    };
+    NewsList: {
+      bar: string;
+      empty: string;
+    };
+    NewsListItem: {
+      container: string;
+      content: string;
+      indicator: string;
+      indicatorRead: string;
+      indicatorUnread: string;
+      text: string;
+      time: string;
+    };
+    NewsText: {
+      summary: string;
     };
     NoTestServerAccess: {
       container: string;
@@ -1246,6 +1334,9 @@ declare global {
     };
     ProductionLines: {
       empty: string;
+      slotsEmpty: string;
+      slotsFilled: string;
+      slotsPartiallyFilled: string;
       table: string;
     };
     ProductionQueue: {
@@ -1256,12 +1347,14 @@ declare global {
       figureLabel: string;
       figureMobile: string;
       figures: string;
+      handle: string;
+      handleDisabled: string;
       inputoutput: string;
       largeline: string;
       line: string;
       materials: string;
-      orderMoveButtons: string;
       orderTile: string;
+      rowDragging: string;
       table: string;
       value: string;
     };
@@ -1385,6 +1478,19 @@ declare global {
       restrictionMobile: string;
       unavailable: string;
     };
+    Route: {
+      header: string;
+      input: string;
+      inputMobile: string;
+      name: string;
+      naturalId: string;
+    };
+    RouteExecutionLink: {
+      status: string;
+    };
+    RouteExecutions: {
+      empty: string;
+    };
     RoutePreferencesSelect: {
       container: string;
     };
@@ -1398,10 +1504,23 @@ declare global {
       delete: string;
       input: string;
       name: string;
+      open: string;
       screen: string;
       screens: string;
       selector: string;
       undo: string;
+    };
+    ScreenVariableControls: {
+      bar: string;
+      list: string;
+      location: string;
+      material: string;
+      variable: string;
+    };
+    Screens: {
+      addForm: string;
+      empty: string;
+      optionsInput: string;
     };
     ScrollView: {
       thumbHorizontal: string;
@@ -1649,16 +1768,35 @@ declare global {
     StationInfrastructure: {
       list: string;
     };
+    Status: {
+      error: string;
+      light: string;
+      ok: string;
+      warning: string;
+    };
     SteamReviewPanel: {
       actions: string;
       container: string;
       hint: string;
+    };
+    Step: {
+      commands: string;
+      container: string;
+      containerDragging: string;
+      containerInsertAfter: string;
+      containerInsertBefore: string;
+      handle: string;
+      position: string;
+      summary: string;
+      type: string;
     };
     Steps: {
       active: string;
       centered: string;
       container: string;
       controls: string;
+      empty: string;
+      emptyOver: string;
       highlight: string;
       noBottomMargin: string;
       noTopMargin: string;
@@ -1779,6 +1917,7 @@ declare global {
     };
     TileFrame: {
       anchor: string;
+      anchorDragging: string;
       body: string;
       cmd: string;
       controls: string;
@@ -1847,6 +1986,8 @@ declare global {
       inputMobile: string;
       passive: string;
       passiveMobile: string;
+      sectionContainer: string;
+      sectionTitle: string;
       static: string;
       staticMobile: string;
       suggestion: string;
@@ -1863,6 +2004,22 @@ declare global {
       center: string;
       container: string;
       info: string;
+    };
+    Waypoint: {
+      commandsSteps: string;
+      commandsWaypoint: string;
+      container: string;
+      containerDragging: string;
+      destination: string;
+      handle: string;
+      info: string;
+      label: string;
+      position: string;
+      waypoint: string;
+    };
+    Waypoints: {
+      container: string;
+      empty: string;
     };
     Window: {
       body: string;

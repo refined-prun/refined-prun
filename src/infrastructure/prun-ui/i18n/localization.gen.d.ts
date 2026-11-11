@@ -95,6 +95,7 @@ declare global {
       AUTH_LOGIN_PASSWORD_INVALID: LL;
       AUTH_LOGIN_PERMISSION_DENIED: LL;
       BLOCKLIST_BLOCKED: LL;
+      BLUEPRINT_INSUFFICIENT_REACTOR_POWER: LL;
       CHAT_ALREADY_JOINED: LL;
       CHAT_NOT_ALLOWED_ADD_MESSAGE: LL;
       CHAT_NOT_ALLOWED_ADD_USER: LL;
@@ -159,6 +160,7 @@ declare global {
       SHIPYARD_SHIP_ALREADY_UPGRADING: LL;
       SHIPYARD_SHIP_NOT_EMPTY: LL;
       SHIPYARD_WRONG_SHIP_BLUEPRINT: LL;
+      SHIP_ASSIGNED_TO_ROUTE: LL;
       SHIP_ILLEGAL_REPAIR_LOCATION: LL;
       SHIP_INVALID_ROUTE_ES_324: LL;
       SHIP_IN_TRANSIT: LL;
@@ -305,6 +307,18 @@ declare global {
         votes: LL;
       };
     };
+    AdminInventory: {
+      destroy: {
+        label: LL;
+      };
+      error: {
+        restricted: LL;
+      };
+      filter: {
+        placeholder: LL;
+      };
+      title: LL;
+    };
     AgentPreamble: {
       intro: PL<{ br: string }>;
       introductory: {
@@ -419,6 +433,11 @@ declare global {
       RELEASE_NOTES: LL;
       SHIPYARD_PROJECT_FINISHED: PL<{ address: string }>;
       SHIP_FLIGHT_ENDED: PL<{ registration: string; destination: string }>;
+      SHIP_ROUTE_EXECUTION_ABORTED_NOT_FLYABLE: PL<{ ship: string; route: string }>;
+      SHIP_ROUTE_EXECUTION_ABORTED_NO_LICENSE: PL<{ ship: string; route: string }>;
+      SHIP_ROUTE_EXECUTION_COMPLETED: PL<{ ship: string; route: string }>;
+      SHIP_ROUTE_SHIPMENT_NOT_UNLOADED: PL<{ ship: string; count: string; route: string }>;
+      SHIP_ROUTE_SHIPMENT_TOO_LARGE: PL<{ ship: string; count: string; route: string }>;
       SITE_EXPERT_DROPPED: PL<{ category: string; address: string }>;
       TUTORIAL_TASK_FINISHED: LL;
       USER_CONVERSION_REMINDER_LICENSE: LL;
@@ -490,6 +509,11 @@ declare global {
       RELEASE_NOTES: LL;
       SHIPYARD_PROJECT_FINISHED: LL;
       SHIP_FLIGHT_ENDED: LL;
+      SHIP_ROUTE_EXECUTION_ABORTED_NOT_FLYABLE: LL;
+      SHIP_ROUTE_EXECUTION_ABORTED_NO_LICENSE: LL;
+      SHIP_ROUTE_EXECUTION_COMPLETED: LL;
+      SHIP_ROUTE_SHIPMENT_NOT_UNLOADED: LL;
+      SHIP_ROUTE_SHIPMENT_TOO_LARGE: LL;
       SITE_EXPERT_DROPPED: LL;
       TUTORIAL_TASK_FINISHED: LL;
       USER_CONVERSION_REMINDER_LICENSE: LL;
@@ -906,7 +930,10 @@ declare global {
       };
     };
     Button: {
-      title: LL;
+      hint: {
+        context: LL;
+        license: LL;
+      };
     };
     CalculatedDistance: {
       jumps: PL<{ jumps: string }>;
@@ -1297,10 +1324,9 @@ declare global {
       filter: {
         clearMaterialFilters: LL;
         exchanges: LL;
-        hide: LL;
         materials: LL;
-        show: LL;
         statuses: LL;
+        title: LL;
         types: LL;
       };
       title: LL;
@@ -1665,12 +1691,14 @@ declare global {
           systemIdInput: LL;
         };
       };
+      INFL: LL;
       INFU: LL;
       INV: LL & {
         parameter: {
           storeIdInput: LL;
         };
       };
+      INVADM: LL;
       LEAD: LL;
       LIC: LL;
       LM: LL & {
@@ -1728,6 +1756,7 @@ declare global {
           mode: LL;
         };
       };
+      NEWS: LL;
       NOTIG: LL;
       NOTPNS: LL;
       NOTS: LL;
@@ -1788,6 +1817,16 @@ declare global {
         };
       };
       RSB: LL;
+      RT: LL & {
+        parameter: {
+          routeIdInput: LL;
+        };
+      };
+      RTE: LL & {
+        parameter: {
+          shipIdInput: LL;
+        };
+      };
       SCRN: LL;
       SFC: LL & {
         parameter: {
@@ -3004,7 +3043,9 @@ declare global {
     };
     Fleet: {
       context: {
+        fleet: LL;
         planetInformation: LL;
+        routes: LL;
         shipFlightControl: LL;
         systemMap: LL;
       };
@@ -3023,7 +3064,7 @@ declare global {
         eta: LL;
         fuel: LL;
         location: LL;
-        registration: LL;
+        route: LL;
         ship: LL;
         status: LL;
       };
@@ -3691,6 +3732,38 @@ declare global {
         dec: LL;
         inc: LL;
       };
+    };
+    InflationChartContainer: {
+      basket: {
+        agriculturalProduce: LL;
+        constructionPrefabsAdvanced: LL;
+        constructionPrefabsBasic: LL;
+        constructionPrefabsLightweight: LL;
+        constructionPrefabsReinforced: LL;
+        consumablesEngineer: LL;
+        consumablesPioneer: LL;
+        consumablesScientist: LL;
+        consumablesSettler: LL;
+        consumablesTechnician: LL;
+        fuels: LL;
+      };
+      error: {
+        noData: LL;
+      };
+      interval: {
+        daily: LL;
+        monthly: LL;
+        yearly: LL;
+      };
+      materials: {
+        all: LL;
+        basket: LL;
+        category: LL;
+        material: LL;
+      };
+    };
+    InflationPanel: {
+      title: LL;
     };
     InfrastructureContractors: {
       table: {
@@ -6107,6 +6180,45 @@ declare global {
       LIFE_SUPPORT: LL;
       SAFETY: LL;
     };
+    News: {
+      ECONOMIC_REPORT: LL;
+      GATEWAY_LINK_ESTABLISHED: PL<{
+        gateway: string;
+        address: string;
+        otherGateway: string;
+        otherAddress: string;
+      }>;
+      PLANETARY_PROJECT_FINISHED: PL<{ project: string; planet: string }>;
+      PLANET_COLONIZED: PL<{ user: string; planet: string }>;
+      PLANET_NAMED: PL<{ user: string; naturalId: string; name: string }>;
+      POPULATION_FIRST_ENGINEERS: PL<{ population: number; planet: string }>;
+      POPULATION_FIRST_SCIENTISTS: PL<{ population: number; planet: string }>;
+      SYSTEM_NAMED: PL<{ user: string; naturalId: string; name: string }>;
+    };
+    NewsFilters: {
+      affinity: LL & {
+        none: LL;
+      };
+      title: LL;
+    };
+    NewsHeadItem: {
+      news: PL<{ count: string }> & {
+        tooltip: LL;
+      };
+    };
+    NewsList: {
+      action: {
+        markAllRead: LL;
+      };
+      empty: LL;
+      noMatches: LL;
+    };
+    NewsPanel: {
+      title: LL;
+    };
+    NewsText: {
+      unknownType: PL<{ type: string }>;
+    };
     NoData: {
       label: LL;
     };
@@ -7145,6 +7257,81 @@ declare global {
       BORROWER: LL;
       LENDER: LL;
     };
+    Route: {
+      action: {
+        addWaypoint: LL;
+      };
+      name: {
+        unnamed: LL;
+      };
+    };
+    RouteEditor: {
+      action: {
+        cancel: LL;
+        save: LL;
+      };
+      label: {
+        destination: LL;
+        durationAmount: LL;
+        durationUnit: LL;
+        fuel: LL;
+        fuelSource: LL;
+        material: LL;
+        maximum: LL;
+        maximumUnits: LL;
+        minimum: LL;
+        minimumUnits: LL;
+        retain: LL;
+        waypoint: LL;
+      };
+      title: {
+        load: LL;
+        refuel: LL;
+        unload: LL;
+        wait: LL;
+        waypoint: LL;
+      };
+      validation: {
+        amountRange: LL;
+      };
+    };
+    RouteExecutions: {
+      ExecutionState: {
+        AWAITING_MISSION: LL;
+        BLOCKED: LL;
+        FLYING: LL;
+        PLANNING: LL;
+        RUNNING_STEPS: LL;
+        STEP_BLOCKED: LL;
+        WAITING: LL;
+      };
+      error: {
+        empty: LL;
+        execution: LL;
+        ship: LL;
+      };
+      label: {
+        flight: LL;
+        route: LL;
+        ship: LL;
+      };
+      position: PL<{ position: string | number; total: string | number }>;
+      section: {
+        progress: LL;
+      };
+      table: {
+        destination: LL;
+        progress: LL;
+        route: LL;
+        ship: LL;
+        state: LL;
+        step: LL;
+      };
+      title: {
+        execution: LL;
+        executions: LL;
+      };
+    };
     RoutePreferencesSelect: {
       label: {
         useGateways: LL;
@@ -7152,6 +7339,110 @@ declare global {
       value: {
         leastJumps: LL;
         shortestFTL: LL;
+      };
+    };
+    Routes: {
+      StepSummary: {
+        LOAD: {
+          retain: PL<{ summary: string; retain: number }>;
+        };
+        LOAD_SHIPMENT: LL;
+        REFUEL: {
+          exact: PL<{ fuel: string; source: string; value: string }>;
+          range: PL<{ fuel: string; source: string; minimum: string; maximum: string }>;
+        };
+        UNLOAD_SHIPMENT: LL;
+        material: {
+          exact: PL<{ material: string; value: string }>;
+          range: PL<{ material: string; minimum: string; maximum: string }>;
+        };
+      };
+      StepType: {
+        LOAD: LL;
+        LOAD_SHIPMENT: LL;
+        REFUEL: LL;
+        UNLOAD: LL;
+        UNLOAD_SHIPMENT: LL;
+        WAIT: LL;
+      };
+      action: {
+        assign: LL;
+        copyRoute: LL;
+        createRoute: LL;
+        deleteRoute: LL;
+        deleteStep: LL;
+        deleteWaypoint: LL;
+        editStep: LL;
+        editWaypoint: LL;
+        execution: LL;
+        unassign: LL;
+        viewRoute: LL;
+      };
+      amount: {
+        allCarried: LL;
+        capacity: LL;
+        units: PL<{ units: number }>;
+      };
+      amountType: {
+        ABSOLUTE: LL;
+        ALL_CARRIED: LL;
+        CAPACITY: LL;
+      };
+      context: {
+        executions: LL;
+        routes: LL;
+      };
+      duration: {
+        DAYS: PL<{ amount: number }>;
+        HOURS: PL<{ amount: number }>;
+        MINUTES: PL<{ amount: number }>;
+        SECONDS: PL<{ amount: number }>;
+      };
+      durationUnit: {
+        DAYS: LL;
+        HOURS: LL;
+        MINUTES: LL;
+        SECONDS: LL;
+      };
+      fuelSource: {
+        LOCAL_STORE: LL;
+        SHIP_STORE: LL;
+      };
+      fuelType: {
+        FTL: LL;
+        STL: LL;
+      };
+      label: {
+        loop: LL;
+        waypoint: LL;
+      };
+      section: {
+        assignments: LL;
+        route: LL;
+        settings: LL;
+      };
+      steps: {
+        noData: LL;
+      };
+      table: {
+        assignedShips: LL;
+        commands: LL;
+        creationTime: LL;
+        name: LL;
+        route: LL;
+        waypoints: LL;
+      };
+      waypoints: {
+        noData: LL;
+      };
+    };
+    RoutesPanel: {
+      error: {
+        route: LL;
+      };
+      title: {
+        route: LL;
+        routes: LL;
       };
     };
     ScreenControls: {
@@ -7308,6 +7599,7 @@ declare global {
         Status: LL;
       };
       label: {
+        assignedRoute: LL;
         blueprint: LL;
         cargohold: LL;
         commissioned: LL;
@@ -7372,6 +7664,7 @@ declare global {
     };
     ShipFuelInventoryPanel: {
       context: {
+        routes: LL;
         shipFlightControl: LL;
         shipInformation: LL;
         shipInventory: LL;
@@ -7394,6 +7687,7 @@ declare global {
     };
     ShipInventoryPanel: {
       context: {
+        routes: LL;
         shipFlightControl: LL;
         shipFuel: LL;
         shipInformation: LL;
@@ -8798,6 +9092,7 @@ declare global {
       };
       status: {
         stationary: LL;
+        upgrading: LL;
       };
     };
   }
