@@ -1,3 +1,4 @@
+import { ElementTag } from '@src/infrastructure/prun-ui/tagger';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
 import { flightsStore } from '@src/infrastructure/prun-api/data/flights';
 import { formatEta } from '@src/utils/format';
@@ -7,10 +8,11 @@ import { createReactiveSpan } from '@src/utils/reactive-element';
 import { keepLast } from '@src/utils/keep-last';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, 'tr'), onRowReady);
+  subscribe($$(tile.anchor, ElementTag.FLT_ETA_CELL), onEtaCellReady);
 }
 
-function onRowReady(row: HTMLTableRowElement) {
+function onEtaCellReady(cell: HTMLElement) {
+  const row = cell.closest('tr')!;
   const id = refPrunId(row);
   const arrival = computed(() => {
     const ship = shipsStore.getById(id.value);
@@ -22,8 +24,8 @@ function onRowReady(row: HTMLTableRowElement) {
       ? ` (${formatEta(timestampEachMinute.value, arrival.value)})`
       : undefined,
   );
-  const span = createReactiveSpan(row, eta);
-  keepLast(row, () => row.children[7], span);
+  const span = createReactiveSpan(cell, eta);
+  keepLast(cell, () => cell, span);
 }
 
 function init() {
