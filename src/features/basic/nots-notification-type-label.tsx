@@ -146,6 +146,17 @@ const labels: NotificationTypeLabel[] = [
     color: '#c084fc',
   },
   {
+    types: [
+      'SHIP_ROUTE_EXECUTION_COMPLETED',
+      'SHIP_ROUTE_EXECUTION_ABORTED_NOT_FLYABLE',
+      'SHIP_ROUTE_EXECUTION_ABORTED_NO_LICENSE',
+      'SHIP_ROUTE_SHIPMENT_TOO_LARGE',
+      'SHIP_ROUTE_SHIPMENT_NOT_UNLOADED',
+    ],
+    label: 'ROUTE',
+    color: '#c084fc',
+  },
+  {
     types: ['POPULATION_REPORT_AVAILABLE'],
     label: 'POPR',
     color: '#00c9b7',

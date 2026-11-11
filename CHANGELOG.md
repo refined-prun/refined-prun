@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `NOTS`: Added labels for ship route notifications (`nots-notification-type-label`)
+
 ### Changed
 
 - `XIT FLOW`: The default price is now VWAP7D for both buy and sell
