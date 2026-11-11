@@ -68,11 +68,16 @@ export async function selectMaterialInMaterialSelector(baseElement: Element, tic
   }
   const input = await $(container, 'input');
 
-  const suggestionsContainer = await $(container, C.MaterialSelector.suggestionsContainer);
+  // The game renders the suggestions in a portal outside of the material selector.
+  // The aria-controls attribute of the input holds the ID of the suggestions container.
+  const suggestionsId = input.getAttribute('aria-controls');
+  const suggestionsContainer: HTMLElement =
+    (suggestionsId ? document.getElementById(suggestionsId) : null) ??
+    (await $(container, C.MaterialSelector.suggestionsContainer));
   focusElement(input);
   changeInputValue(input, ticker);
 
-  const suggestionsList = await $(container, C.MaterialSelector.suggestionsList);
+  const suggestionsList = await $(suggestionsContainer, C.MaterialSelector.suggestionsList);
   suggestionsContainer.style.display = 'none';
   const match = _$$(suggestionsList, C.MaterialSelector.suggestionEntry).find(
     x => _$(x, C.ColoredIcon.label)?.textContent === ticker,
