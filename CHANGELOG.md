@@ -6,6 +6,10 @@
 
 - `XIT FLOW`: The default price is now VWAP7D for both buy and sell
 
+### Removed
+
+- `flt-hide-transponder`: The game no longer shows the transponder column
+
 ### Fixed
 
 - `CONTD`: Fixed the material "all" button getting stuck (`contd-fill-all-button`)
