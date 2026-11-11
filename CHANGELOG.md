@@ -17,6 +17,7 @@
 - `CONTD`: Fixed contract template imports getting stuck during material selection (`contd-import-export`)
 - `CXO`: Fixed the "delete" button getting stuck (`cxo-delete-order-button`)
 - `CXOB`: Fixed the "del" button getting stuck (`cxob-delete-own-exchange-orders`)
+- `CXOS`: Fixed the "delete filled" button remaining visible while filters are collapsed (`cxos-hide-delete-filled`)
 - `CXPO`: Fixed the "del" button getting stuck (`cxpo-order-book`)
 - `FLT`: Fixed flight status icons centering (`flt-flight-status-icons`)
 - `FLT`: Fixed ship condition appearing in the wrong column (`flt-ship-condition`)

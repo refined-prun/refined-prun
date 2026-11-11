@@ -1,10 +1,11 @@
 import css from '@src/utils/css-utils.module.css';
 
 function init() {
-  // This selector will only trigger when the filters are hidden, since there will be
-  // no other elements between the "clear material filters" button and
-  // the action bar with the "Delete Filled" button.
-  applyCssRule('CXOS', `.${C.Button.btn} + .${C.ActionBar.container}`, css.hidden);
+  applyCssRule(
+    'CXOS',
+    `.${C.ActionBar.container} > .${C.ActionBar.element}:has(> .${C.CollapsibleSection.container}:not(.${C.CollapsibleSection.open})) + .${C.ActionBar.element}`,
+    css.hidden,
+  );
 }
 
 features.add(
