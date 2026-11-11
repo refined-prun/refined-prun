@@ -1,11 +1,16 @@
+import { ElementTag } from '@src/infrastructure/prun-ui/tagger';
 import { extractPlanetName } from '@src/util';
 
 function onTileReady(tile: PrunTile) {
-  subscribe($$(tile.anchor, C.Link.link), link => {
-    if (link.textContent) {
-      link.textContent = extractPlanetName(link.textContent);
-    }
-  });
+  for (const tag of [ElementTag.FLT_LOCATION_CELL, ElementTag.FLT_DESTINATION_CELL]) {
+    subscribe($$(tile.anchor, tag), cell => {
+      subscribe($$(cell, C.Link.link), link => {
+        if (link.textContent) {
+          link.textContent = extractPlanetName(link.textContent);
+        }
+      });
+    });
+  }
 }
 
 function init() {
