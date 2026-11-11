@@ -17,6 +17,7 @@
 - `CXO`: Fixed the "delete" button getting stuck (`cxo-delete-order-button`)
 - `CXOB`: Fixed the "del" button getting stuck (`cxob-delete-own-exchange-orders`)
 - `CXPO`: Fixed the "del" button getting stuck (`cxpo-order-book`)
+- `FLT`: Fixed flight status icons centering (`flt-flight-status-icons`)
 - `FLT`: Fixed ship condition appearing in the wrong column (`flt-ship-condition`)
 - `XIT ACT`: Fixed MTRA and CONT actions getting stuck during material selection
 - `XIT STO`: Fixed text overflow in tooltips (`unclipped-tooltips`)

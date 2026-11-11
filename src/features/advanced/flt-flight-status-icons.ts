@@ -1,3 +1,4 @@
+import { ElementTag } from '@src/infrastructure/prun-ui/tagger';
 import $style from './flt-flight-status-icons.module.css';
 
 function init() {
@@ -13,7 +14,7 @@ function init() {
   applyLocalizationPatch(L.ShipStatus.lock, () => '⟴');
   applyLocalizationPatch(L.ShipStatus.decay, () => '⟴');
   applyLocalizationPatch(L.ShipStatus.jumpgateway, () => '⟴');
-  applyCssRule(['FLT', 'FLTS', 'FLTP'], `td:nth-child(4)`, $style.status);
+  applyCssRule(['FLT', 'FLTS', 'FLTP'], `.${ElementTag.FLT_STATUS_CELL}`, $style.status);
 }
 
 features.add(import.meta.url, init, 'FLT: Replaces the flight status text with arrow icons.');
