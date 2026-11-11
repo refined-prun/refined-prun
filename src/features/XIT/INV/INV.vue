@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FilterRow from '@src/components/FilterRow.vue';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
 import { shipsStore } from '@src/infrastructure/prun-api/data/ships';
@@ -165,7 +166,7 @@ const filteredRows = computed(() => {
 <template>
   <LoadingSpinner v-if="!filteredRows" />
   <template v-else>
-    <div :class="C.ComExOrdersPanel.filter">
+    <FilterRow>
       <RadioItem v-model="showCx" horizontal>CX</RadioItem>
       <RadioItem v-model="showBase" horizontal>BS</RadioItem>
       <RadioItem v-model="showShip" horizontal>SHP</RadioItem>
@@ -184,7 +185,7 @@ const filteredRows = computed(() => {
           {{ '\uf00d' }}
         </PrunButton>
       </div>
-    </div>
+    </FilterRow>
     <table :class="$style.table">
       <thead>
         <tr>

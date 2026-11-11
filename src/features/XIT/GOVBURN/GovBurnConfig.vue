@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FilterRow from '@src/components/FilterRow.vue';
 import Active from '@src/components/forms/Active.vue';
 import Commands from '@src/components/forms/Commands.vue';
 import NumberInput from '@src/components/forms/NumberInput.vue';
@@ -89,11 +90,11 @@ function onInputKeydown(ev: KeyboardEvent) {
 <template>
   <GovBurnImport v-if="showImport" @done="showImport = false" />
   <template v-else>
-    <div :class="C.ComExOrdersPanel.filter">
+    <FilterRow>
       <div :class="$style.spacer" />
       <PrunButton primary @click="showImport = true">IMPORT</PrunButton>
       <PrunButton primary @click="emit('done')">DONE</PrunButton>
-    </div>
+    </FilterRow>
 
     <SectionHeader>Thresholds</SectionHeader>
     <form @submit.prevent>

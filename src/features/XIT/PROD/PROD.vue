@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FilterRow from '@src/components/FilterRow.vue';
 import RadioItem from '@src/components/forms/RadioItem.vue';
 import { getPlanetProduction, PlanetProduction } from '@src/core/production';
 import ProdSection from './ProdSection.vue';
@@ -64,13 +65,13 @@ function onExpandAllClick() {
 </script>
 
 <template>
-  <div :class="C.ComExOrdersPanel.filter">
+  <FilterRow>
     <RadioItem v-model="headers" horizontal>Headers</RadioItem>
     <RadioItem v-model="displayProduction" horizontal>Production</RadioItem>
     <RadioItem v-model="inactive" horizontal>Inactive</RadioItem>
     <RadioItem v-model="queue" horizontal>Queue</RadioItem>
     <RadioItem v-model="notQueued" horizontal>Not Queued</RadioItem>
-  </div>
+  </FilterRow>
   <table>
     <thead>
       <tr v-if="headers">
