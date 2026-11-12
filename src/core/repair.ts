@@ -17,6 +17,24 @@ export interface RepairEntry {
   fullMaterials: PrunApi.MaterialAmount[];
 }
 
+// Sum the current repair materials that BRA requires for a planet.
+export function getPlanetRepairBill(site: PrunApi.Site) {
+  const quantities = new Map<string, PrunApi.MaterialAmount>();
+
+  for (const building of site.platforms.filter(isRepairableBuilding)) {
+    for (const { material, amount } of building.repairMaterials) {
+      const current = quantities.get(material.ticker);
+      if (current) {
+        current.amount += amount;
+      } else {
+        quantities.set(material.ticker, { material, amount });
+      }
+    }
+  }
+
+  return [...quantities.values()];
+}
+
 export function calculateBuildingEntries(sites?: PrunApi.Site[]) {
   if (!sites) {
     return undefined;
