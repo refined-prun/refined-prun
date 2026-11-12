@@ -1,4 +1,6 @@
 import { parseDisplayedInteger } from './numbers';
+import { MaterialEntry } from './parsers';
+import { SHIP_BAYS, fillBay } from './ship-fill';
 
 // The drag payload is not usable. Read the source icon and selected inventory stacks.
 let lastDragSource: Element | undefined;
@@ -54,6 +56,8 @@ export interface QuickAmount {
   resolve: (stack: DraggedStack) => number;
   // Open a quantity prompt instead of adding a row.
   prompt?: boolean;
+  // Fill a ship bay: amounts for all dragged stacks at once, merged into existing rows.
+  fill?: (stacks: DraggedStack[]) => MaterialEntry[];
 }
 
 export function quickAmounts(quantity: number, single: boolean): QuickAmount[] {
@@ -81,4 +85,19 @@ export function quickAmounts(quantity: number, single: boolean): QuickAmount[] {
     { label: 'AMT', amount: quantity, resolve: stack => stack.quantity, prompt: true },
     ...sorted,
   ];
+}
+
+// One option per transport ship: fills the bay up to its weight or volume
+// limit, whichever comes first, counting the materials already listed.
+export function shipAmounts(stacks: DraggedStack[], existing: MaterialEntry[]): QuickAmount[] {
+  return SHIP_BAYS.map(bay => {
+    const fill = (dragged: DraggedStack[]) => fillBay(bay, existing, dragged);
+    const total = sumBy(fill(stacks), x => x.amount);
+    return {
+      label: bay.label,
+      amount: total,
+      resolve: stack => fillBay(bay, existing, [stack])[0]?.amount ?? 0,
+      fill,
+    };
+  });
 }

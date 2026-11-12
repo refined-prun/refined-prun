@@ -3,7 +3,8 @@ import { ComponentPublicInstance } from 'vue';
 import PrunButton from '@src/components/PrunButton.vue';
 import { clamp } from '@src/utils/clamp';
 import { MaterialEntry } from './parsers';
-import { DraggedStack, QuickAmount, getDraggedStacks, quickAmounts } from './drag';
+import { DraggedStack, QuickAmount, getDraggedStacks, quickAmounts, shipAmounts } from './drag';
+import { SHIP_BAYS, bayUsage, cargoLoad } from './ship-fill';
 import { parseDisplayedInteger } from './numbers';
 
 const materials = defineModel<MaterialEntry[]>({ required: true });
@@ -18,6 +19,37 @@ const promptAmount = ref('');
 let promptNeedsFocus = false;
 let dragDepth = 0;
 const hoveredOption = ref<number | undefined>();
+
+const options = computed<QuickAmount[]>(() => {
+  const stacks = dragHover.value;
+  if (!stacks) {
+    return [];
+  }
+  return [
+    ...quickAmounts(Math.max(...stacks.map(x => x.quantity)), stacks.length === 1),
+    ...shipAmounts(stacks, materials.value),
+  ];
+});
+
+const load = computed(() => cargoLoad(materials.value));
+
+const formatLoad = (value: number) => value.toLocaleString(undefined, { maximumFractionDigits: 1 });
+
+const loadSummary = computed(() => {
+  const current = load.value;
+  const usage = SHIP_BAYS.map(bay => `${bay.label} ${Math.round(bayUsage(bay, current) * 100)}%`);
+  return `${formatLoad(current.weight)}t · ${formatLoad(current.volume)}m³ — ${usage.join(' · ')}`;
+});
+
+// Ship fills add to an existing row of the same material instead of duplicating it.
+const addMaterial = (ticker: string, amount: number) => {
+  const row = materials.value.find(x => x.ticker === ticker && x.price === undefined);
+  if (row) {
+    row.amount += amount;
+  } else {
+    materials.value.push({ ticker, amount });
+  }
+};
 
 // Block the game's dragover handler from resetting dropEffect to none.
 const acceptDrag = (e: DragEvent) => {
@@ -71,6 +103,12 @@ const onOptionDrop = (e: DragEvent, option: QuickAmount) => {
   dragHover.value = undefined;
   hoveredOption.value = undefined;
   if (!stacks) {
+    return;
+  }
+  if (option.fill) {
+    for (const entry of option.fill(stacks)) {
+      addMaterial(entry.ticker, entry.amount);
+    }
     return;
   }
   if (option.prompt) {
@@ -159,15 +197,15 @@ const focusPrompt = (el: Element | ComponentPublicInstance | null) => {
       <PrunButton dark inline @click="confirmPrompt">add</PrunButton>
       <PrunButton dark inline @click="amountPrompt = undefined">x</PrunButton>
     </div>
+    <div v-if="materials.length > 0 && !dragHover" :class="[$style.loadSummary, C.type.typeSmall]">
+      {{ loadSummary }}
+    </div>
     <div v-if="dragHover" :class="$style.dropOverlay">
       <div :class="[$style.dropOverlayLabel, C.type.typeSmall]">
         {{ dragHover.map(x => x.ticker).join(', ') }}
       </div>
       <div
-        v-for="(option, index) in quickAmounts(
-          Math.max(...dragHover.map(x => x.quantity)),
-          dragHover.length === 1,
-        )"
+        v-for="(option, index) in options"
         :key="option.label"
         :class="$style.overlayCell"
         @dragover="onOptionDragOver($event, index)"
@@ -176,6 +214,8 @@ const focusPrompt = (el: Element | ComponentPublicInstance | null) => {
           :class="[
             C.DropTargetView.item,
             $style.overlaySquare,
+            option.fill && $style.shipSquare,
+            option.fill && option.amount < 1 && $style.shipFull,
             hoveredOption === index && C.DropTargetView.isOver,
           ]">
           {{ option.label }}
@@ -270,6 +310,22 @@ const focusPrompt = (el: Element | ComponentPublicInstance | null) => {
   justify-content: center;
   /* Handle drops on the whole cell, not just the square. */
   pointer-events: none;
+}
+
+/* Ship bay choices stand out from plain quantities. */
+.shipSquare {
+  border-color: rgb(63, 162, 222);
+  color: rgb(63, 162, 222);
+}
+
+/* The bay is already full with the listed materials. */
+.shipFull {
+  opacity: 0.35;
+}
+
+.loadSummary {
+  padding: 4px 0 0;
+  color: rgb(136, 136, 136);
 }
 
 /* Allow a second row of quantity choices in narrow buffers. */
