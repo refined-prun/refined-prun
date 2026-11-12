@@ -13,6 +13,7 @@ interface TileAllocatorOptions {
 
 export class TileAllocator {
   private allocatedTile?: HTMLElement;
+  private secondaryTile?: HTMLElement;
 
   constructor(options: TileAllocatorOptions) {
     const { tile } = options;
@@ -32,6 +33,28 @@ export class TileAllocator {
       this.allocatedTile = await requestTile(command);
     }
     return tiles.findByContainer(this.allocatedTile?.parentElement)[0];
+  }
+
+  // Splits the companion tile in two, so a step can use two tiles in the ACT window.
+  async requestSecondaryTile(command: string) {
+    if (!this.secondaryTile?.isConnected) {
+      const primary = this.allocatedTile;
+      const child = primary?.parentElement;
+      if (!primary?.isConnected || !child?.classList.contains(C.Node.child)) {
+        return undefined;
+      }
+      const splitButton = _$$(primary, C.TileControls.control).find(x => x.textContent === '–');
+      await clickElement(splitButton);
+      const node = await $(child, C.Node.node);
+      const children = _$$(node, C.Node.child);
+      if (children.length < 2) {
+        return undefined;
+      }
+      this.allocatedTile = await $(children[0], C.Tile.tile);
+      this.secondaryTile = await $(children[1], C.Tile.tile);
+    }
+    await changeTileCommand(this.secondaryTile, command);
+    return tiles.findByContainer(this.secondaryTile.parentElement)[0];
   }
 }
 

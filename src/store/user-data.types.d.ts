@@ -70,7 +70,14 @@ declare namespace UserData {
     materialFilter?: 'All' | 'Workforce' | 'Production';
   }
 
-  type ActionType = 'CX Buy' | 'MTRA' | 'Refuel' | 'CONT Ship' | 'CONT Trade' | 'GovBurn Data';
+  type ActionType =
+    | 'CX Buy'
+    | 'MTRA'
+    | 'Refuel'
+    | 'CONT Ship'
+    | 'CONT Trade'
+    | 'GovBurn Data'
+    | 'Ship Contracts';
 
   interface ActionData {
     type: ActionType;
@@ -118,6 +125,10 @@ declare namespace UserData {
     // CONT Trade specific.
     contTradeType?: 'BUYING' | 'SELLING';
     contLocation?: string;
+
+    // Ship Contracts specific. Ads are LMA parameters, for example `BEN/8036`.
+    ship?: string;
+    adKeys?: string[];
   }
 
   interface TaskList {

@@ -162,6 +162,11 @@ Experts provide fixed bonus multipliers to production line efficiency in their i
 - Ad fees set by planetary governor (base + time factor).
 - Shipping ads require origin/destination specification; one of them must be at the LM location.
 - Accepting an ad automatically creates a contract between players.
+- A shipping ad is listed only on the LM where it was posted, not on the LM at its other end.
+- `LMA` takes `<LM natural id>/<ad natural id>`, for example `LMA BEN/8036`.
+- The client gets ads only for LMs that are open. For other LMs, the extension uses FIO
+  (`rest.fnar.net/localmarket/shipping/{source,destination}/{location}`; 204 with no body when empty).
+- Ad `minimumRating` values seen: `PENDING`, `A`, `B`, `C`, `D`.
 
 ### Foreign Exchange (FX)
 - Trade currencies in 1,000-unit ("Lot") increments.
@@ -184,6 +189,11 @@ Experts provide fixed bonus multipliers to production line efficiency in their i
 - Flights are split in segments, for example: DEP (departure from planet), JMP (jump), CHRG (charging FTL engine), APP (approach to target).
 - Aborting flight: finishes current segment; CHRG aborts still complete the ensuing jump; JMP aborts land in random orbit.
 - Fuel deducted per segment at segment start.
+- `Star.connections` holds the system IDs of the FTL links. Void sectors have no FTL links.
+- **Gateways**: player-built links between systems (`JUMP_GATEWAY` segment). A link goes one way
+  (`OutgoingLink`) and works only when `OPERATIONAL` and `ESTABLISHED`. Volume upgrades raise
+  `MaxShipVolume`. Ships without FTL stay in their system unless a gateway takes them out. Only gateways
+  reach void sectors. Data source: FIO `api.fnar.net/gateway`; rprun has no gateway store.
 
 ### Cargo & Inventory
 - Cargo limited by weight (t) and volume (m3).

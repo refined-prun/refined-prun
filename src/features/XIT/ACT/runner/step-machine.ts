@@ -159,6 +159,8 @@ export class StepMachine {
           }
         },
         requestTile: async (command, opts) => await this.requestTile(command, opts),
+        requestSecondaryTile: async (command, opts) =>
+          await this.requestSecondaryTile(command, opts),
       });
     } catch (e) {
       if (e === ExecutionStopped) {
@@ -179,6 +181,18 @@ export class StepMachine {
     await this.waitAct(`Open ${command}`, opts);
     this.options.onStatusChanged(`Opening ${command}...`);
     tile = await this.options.tileAllocator.requestTile(command);
+    if (tile === undefined) {
+      this.log.error(`Failed to open ${command}`);
+      this.stop();
+      throw ExecutionStopped;
+    }
+    return tile;
+  }
+
+  private async requestSecondaryTile(command: string, opts?: WaitActOptions) {
+    await this.waitAct(`Open ${command}`, opts);
+    this.options.onStatusChanged(`Opening ${command}...`);
+    const tile = await this.options.tileAllocator.requestSecondaryTile(command);
     if (tile === undefined) {
       this.log.error(`Failed to open ${command}`);
       this.stop();

@@ -2,7 +2,7 @@ import PpuLabel from './PpuLabel.vue';
 import { refValue } from '@src/utils/reactive-dom';
 import { fixed2 } from '@src/utils/format';
 import { getPrunId } from '@src/infrastructure/prun-ui/attributes';
-import { localAdsStore } from '@src/infrastructure/prun-api/data/local-ads';
+import { getLocalAdById } from '@src/core/shipping/shipping-ads';
 
 function onLMTileReady(tile: PrunTile) {
   subscribe($$(tile.anchor, C.CommodityAd.container), onAdContainerReady);
@@ -11,7 +11,7 @@ function onLMTileReady(tile: PrunTile) {
 async function onAdContainerReady(container: HTMLElement) {
   const text = await $(container, C.CommodityAd.text);
   const id = getPrunId(container);
-  const ad = localAdsStore.getById(id);
+  const ad = getLocalAdById(id);
   if (!ad || ad.type !== 'COMMODITY_SHIPPING') {
     return;
   }
