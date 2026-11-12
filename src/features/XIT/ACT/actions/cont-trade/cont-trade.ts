@@ -38,6 +38,7 @@ act.addAction<Config>({
   isValidConfig: (data, config) => {
     return data.contLocation !== configurableValue || config.location !== undefined;
   },
+  priceRule: () => ({ required: true }),
   generateSteps: async ctx => {
     const { data, config, packageName, getMaterialGroup, getMaterialGroupPlanet, emitStep } = ctx;
     const assert: AssertFn = ctx.assert;

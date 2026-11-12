@@ -17,9 +17,10 @@ act.addMaterialGroup<Config>({
   },
   configureComponent: Configure,
   needsConfigure: () => true,
-  isValidConfig: (_data, config) => parseMaterials(config.materials, resolveTicker) !== undefined,
-  generateMaterialBill: async ({ config, log }) => {
-    const result = parseMaterials(config.materials, resolveTicker);
+  isValidConfig: (_data, config, priceRules) =>
+    parseMaterials(config.materials, resolveTicker, priceRules) !== undefined,
+  generateMaterialBill: async ({ config, priceRules, log }) => {
+    const result = parseMaterials(config.materials, resolveTicker, priceRules);
     if (!result) {
       log.error('Invalid or missing pasted materials.');
       return undefined;

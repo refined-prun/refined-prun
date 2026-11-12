@@ -1,5 +1,6 @@
 import Papa from 'papaparse';
 import { MaterialBill } from '@src/features/XIT/ACT/material-bill';
+import { PriceRule } from '@src/features/XIT/ACT/shared-types';
 
 // Pure Paste parser; inject ticker lookup to test without stores or components.
 
@@ -10,9 +11,6 @@ export const delimiterNames: Record<Delimiter, string> = {
   ';': 'semicolon-separated',
   ',': 'comma-separated',
 };
-
-// Reject prices exceeding CXPO's significant-figure limit to prevent rounding.
-export const maxPriceSignificantFigures = 3;
 
 export interface ParsedRow {
   ticker: string;
@@ -112,7 +110,7 @@ function parseQuantity(raw: string): { amount: number } | { error: string } {
   return { amount: parsed.value };
 }
 
-function parsePrice(raw: string): { price: number } | { error: string } {
+function parsePrice(raw: string, priceRules: PriceRule[]): { price: number } | { error: string } {
   const candidates = numberCandidates(raw);
   if (candidates.length === 0) {
     return { error: `"${raw}" is not a supported number` };
@@ -125,25 +123,35 @@ function parsePrice(raw: string): { price: number } | { error: string } {
   if ('error' in parsed) {
     return parsed;
   }
-  // CXPO_BUY writes the limit through fixed02. Do not accept one it would round.
+  // The action steps write the price through fixed02. Do not accept one they would round.
   if ((parsed.normalized.split('.')[1]?.length ?? 0) > 2) {
     return { error: `price "${raw}" has more than two decimal places` };
   }
   const digits = parsed.normalized.replace('.', '').replace(/^0+/, '').replace(/0+$/, '');
-  if (digits.length > maxPriceSignificantFigures) {
-    const suggestion = Number(parsed.value.toPrecision(maxPriceSignificantFigures));
-    return {
-      error: `price "${raw}" has more than ${maxPriceSignificantFigures} significant figures (use ${suggestion})`,
-    };
+  for (const rule of priceRules) {
+    const figures = rule.maxSignificantFigures;
+    if (figures !== undefined && digits.length > figures) {
+      const suggestion = Number(parsed.value.toPrecision(figures));
+      return {
+        error: `price "${raw}" has more than ${figures} significant figures for ${rule.source} (use ${suggestion})`,
+      };
+    }
   }
   return { price: parsed.value };
 }
 
-export function parsePaste(input: string | undefined, resolveTicker: ResolveTicker): ParseResult {
+// The price rules come from the actions that use the group; a group has no rules of its own.
+export function parsePaste(
+  input: string | undefined,
+  resolveTicker: ResolveTicker,
+  priceRules: PriceRule[] = [],
+): ParseResult {
   const result: ParseResult = { rows: [], errors: [] };
   if (input === undefined || input.trim().length === 0) {
     return result;
   }
+
+  const priceRequiredBy = priceRules.find(x => x.required)?.source;
 
   const prices = new Map<string, { price: number; line: number }>();
 
@@ -192,7 +200,7 @@ export function parsePaste(input: string | undefined, resolveTicker: ResolveTick
 
     const row: ParsedRow = { ticker, amount: quantity.amount };
     if (priceRaw !== undefined && priceRaw.length > 0) {
-      const price = parsePrice(priceRaw);
+      const price = parsePrice(priceRaw, priceRules);
       if ('error' in price) {
         result.errors.push({ line, reason: price.error });
         continue;
@@ -210,6 +218,9 @@ export function parsePaste(input: string | undefined, resolveTicker: ResolveTick
         prices.set(ticker, { price: price.price, line });
       }
       row.price = price.price;
+    } else if (priceRequiredBy !== undefined) {
+      result.errors.push({ line, reason: `${priceRequiredBy} needs a price` });
+      continue;
     }
     result.rows.push(row);
   }
@@ -220,8 +231,9 @@ export function parsePaste(input: string | undefined, resolveTicker: ResolveTick
 export function parseMaterials(
   input: string | undefined,
   resolveTicker: ResolveTicker,
+  priceRules: PriceRule[] = [],
 ): MaterialBill | undefined {
-  const { rows, errors, fatal } = parsePaste(input, resolveTicker);
+  const { rows, errors, fatal } = parsePaste(input, resolveTicker, priceRules);
   if (fatal !== undefined || errors.length > 0 || rows.length === 0) {
     return undefined;
   }

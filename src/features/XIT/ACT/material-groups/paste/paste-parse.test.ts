@@ -3,6 +3,8 @@ import { parseMaterials, parsePaste } from './paste-parse';
 
 const known = ['RAT', 'DW', 'OVE', 'FEO'];
 const resolveTicker = (ticker: string) => known.find(x => x === ticker.toUpperCase());
+const bid = { source: '[Buy]', maxSignificantFigures: 3 };
+const contract = { source: '[Sell]', required: true };
 
 describe('parsePaste', () => {
   it('rejects an unterminated quoted quantity instead of silently accepting it', () => {
@@ -70,21 +72,38 @@ describe('parsePaste', () => {
     expect(result.rows).toHaveLength(2);
   });
 
-  it('rejects a price with more than three significant figures', () => {
-    const result = parsePaste('RAT,100,45.67', resolveTicker);
+  it('accepts a price with many significant figures when no action limits them', () => {
+    const result = parsePaste('RAT,100,16.57\nDW,50,123456', resolveTicker, [contract]);
+    expect(result.errors).toEqual([]);
+    expect(result.rows.map(x => x.price)).toEqual([16.57, 123456]);
+  });
+
+  it('rejects a price with more significant figures than an action permits', () => {
+    const result = parsePaste('RAT,100,45.67', resolveTicker, [contract, bid]);
     expect(result.rows).toEqual([]);
     expect(result.errors).toEqual([
       {
         line: 1,
-        reason: 'price "45.67" has more than 3 significant figures (use 45.7)',
+        reason: 'price "45.67" has more than 3 significant figures for [Buy] (use 45.7)',
       },
     ]);
   });
 
   it('accepts prices whose extra digits are non-significant zeros', () => {
-    const result = parsePaste('RAT,100,530\nDW,50,123000000', resolveTicker);
+    const result = parsePaste('RAT,100,530\nDW,50,123000000', resolveTicker, [bid]);
     expect(result.errors).toEqual([]);
     expect(result.rows.map(x => x.price)).toEqual([530, 123000000]);
+  });
+
+  it('rejects a row without a price when an action needs one', () => {
+    const input = 'RAT,100,16.57\nDW,50\nOVE,10,';
+    const result = parsePaste(input, resolveTicker, [contract]);
+    expect(result.rows).toEqual([{ ticker: 'RAT', amount: 100, price: 16.57 }]);
+    expect(result.errors).toEqual([
+      { line: 2, reason: '[Sell] needs a price' },
+      { line: 3, reason: '[Sell] needs a price' },
+    ]);
+    expect(parseMaterials(input, resolveTicker, [contract])).toBeUndefined();
   });
 
   it.each(['1,600', '1.600'])('rejects ambiguous quantity and price %s', raw => {

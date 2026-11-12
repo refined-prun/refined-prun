@@ -3,6 +3,7 @@ import {
   ActionStepExecuteContext,
   ActionStepGenerateContext,
   MaterialGroupGenerateContext,
+  PriceRule,
 } from '@src/features/XIT/ACT/shared-types';
 import { MaterialBill } from '@src/features/XIT/ACT/material-bill';
 
@@ -13,7 +14,11 @@ interface MaterialGroupInfo<TConfig> {
   editComponent?: Component;
   configureComponent?: Component;
   needsConfigure?: (data: UserData.MaterialGroupData) => boolean;
-  isValidConfig?: (data: UserData.MaterialGroupData, config: TConfig) => boolean;
+  isValidConfig?: (
+    data: UserData.MaterialGroupData,
+    config: TConfig,
+    priceRules: PriceRule[],
+  ) => boolean;
   generateMaterialBill: (
     ctx: MaterialGroupGenerateContext<TConfig>,
   ) => Promise<MaterialBill | undefined>;
@@ -41,6 +46,8 @@ interface ActionInfo<TConfig> {
   configureComponent?: Component;
   needsConfigure?: (data: UserData.ActionData) => boolean;
   isValidConfig?: (data: UserData.ActionData, config: TConfig) => boolean;
+  // Limits the prices of the material group that the action uses.
+  priceRule?: (data: UserData.ActionData) => Omit<PriceRule, 'source'> | undefined;
   generateSteps: (ctx: ActionStepGenerateContext<TConfig>) => Promise<void>;
 }
 

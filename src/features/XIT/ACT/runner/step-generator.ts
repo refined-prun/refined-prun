@@ -8,6 +8,7 @@ import { warehousesStore } from '@src/infrastructure/prun-api/data/warehouses';
 import { exchangesStore } from '@src/infrastructure/prun-api/data/exchanges';
 import { storagesStore } from '@src/infrastructure/prun-api/data/storage';
 import { act } from '@src/features/XIT/ACT/act-registry';
+import { getGroupPriceRules } from '@src/features/XIT/ACT/price-rules';
 
 interface StepGeneratorOptions {
   log: Logger;
@@ -144,6 +145,7 @@ export class StepGenerator {
     return await info.generateMaterialBill({
       data: group,
       config: groupConfig,
+      priceRules: getGroupPriceRules(pkg, name),
       log: new Logger((tag, message) =>
         this.log.logMessage(
           tag,

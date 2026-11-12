@@ -15,9 +15,20 @@ export interface ActionRunnerContext<T> {
   log: Logger;
 }
 
+// A limit that an action sets on the prices of the material group it uses.
+export interface PriceRule {
+  // The action that sets the limit, as shown to the player.
+  source: string;
+  // Each material needs a price.
+  required?: boolean;
+  // The game does not keep more significant figures than this in the price.
+  maxSignificantFigures?: number;
+}
+
 export interface MaterialGroupGenerateContext<TConfig>
   extends ActionRunnerContext<UserData.MaterialGroupData> {
   config: TConfig;
+  priceRules: PriceRule[];
   setStatus: (status: string) => void;
 }
 

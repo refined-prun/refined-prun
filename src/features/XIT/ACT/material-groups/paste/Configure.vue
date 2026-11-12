@@ -3,10 +3,15 @@ import Active from '@src/components/forms/Active.vue';
 import { Config } from '@src/features/XIT/ACT/material-groups/paste/config';
 import { parsePaste } from '@src/features/XIT/ACT/material-groups/paste/paste-parse';
 import { resolveTicker } from '@src/features/XIT/ACT/material-groups/paste/paste';
+import { PriceRule } from '@src/features/XIT/ACT/shared-types';
 
-const { config } = defineProps<{ data: UserData.MaterialGroupData; config: Config }>();
+const { config, priceRules = [] } = defineProps<{
+  data: UserData.MaterialGroupData;
+  config: Config;
+  priceRules?: PriceRule[];
+}>();
 
-const result = computed(() => parsePaste(config.materials, resolveTicker));
+const result = computed(() => parsePaste(config.materials, resolveTicker, priceRules));
 const rowCount = computed(() => result.value.rows.length);
 const hasError = computed(
   () => result.value.fatal !== undefined || result.value.errors.length > 0 || rowCount.value === 0,
@@ -33,6 +38,17 @@ const summary = computed(() => {
   }
   return `${rowCount.value} material${rowCount.value === 1 ? '' : 's'} ready`;
 });
+
+const placeholder = computed(() => {
+  const presence = priceRules.some(x => x.required) ? 'required' : 'optional';
+  const figures = Math.min(...priceRules.map(x => x.maxSignificantFigures ?? Infinity));
+  const limit = isFinite(figures) ? `${figures} significant figures` : '2 decimal places';
+  return (
+    'Paste from spreadsheet or type manually\nTICKER  AMOUNT  PRICE\nRAT     100     530\n\n' +
+    `Price column is ${presence}; at most ${limit}.\n` +
+    'One delimiter per paste: tab, comma or semicolon.'
+  );
+});
 </script>
 
 <template>
@@ -41,7 +57,7 @@ const summary = computed(() => {
       <textarea
         v-model="config.materials"
         :class="$style.textarea"
-        :placeholder="`Paste from spreadsheet or type manually\nTICKER  AMOUNT  PRICE\nRAT     100     530\n\nPrice column is optional; at most 3 significant figures.\nOne delimiter per paste: tab, comma or semicolon.`"
+        :placeholder="placeholder"
         spellcheck="false" />
     </Active>
     <div v-if="summary" :class="[$style.summary, hasError ? $style.bad : $style.good]">

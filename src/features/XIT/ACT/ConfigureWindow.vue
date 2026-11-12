@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ActionPackageConfig } from '@src/features/XIT/ACT/shared-types';
+import { ActionPackageConfig, PriceRule } from '@src/features/XIT/ACT/shared-types';
 import { configurableValue } from '@src/features/XIT/ACT/shared-types';
+import { getGroupPriceRules } from '@src/features/XIT/ACT/price-rules';
 import { deserializeStorage } from '@src/features/XIT/ACT/actions/utils';
 import SectionHeader from '@src/components/SectionHeader.vue';
 import { act } from '@src/features/XIT/ACT/act-registry';
@@ -16,6 +17,7 @@ interface Block {
   data: unknown;
   config: unknown;
   shipStore?: PrunApi.Store;
+  priceRules?: PriceRule[];
 }
 
 const blocks = computed(() => {
@@ -41,12 +43,15 @@ const blocks = computed(() => {
         shipStore = store;
       }
     }
+    const priceRules = getGroupPriceRules(pkg, name);
     blocks.push({
       name: `[${name}]: ${info.type} Material Group`,
       component: info.configureComponent,
       data: group,
       config: groupConfig,
       shipStore,
+      // An empty list would become a DOM attribute on a component that has no such prop.
+      priceRules: priceRules.length > 0 ? priceRules : undefined,
     });
   }
   for (const action of pkg.actions) {
@@ -78,7 +83,8 @@ const blocks = computed(() => {
         :is="block.component"
         :data="block.data"
         :config="block.config"
-        :ship-store="block.shipStore" />
+        :ship-store="block.shipStore"
+        :price-rules="block.priceRules" />
     </template>
     <slot name="extra" />
   </div>

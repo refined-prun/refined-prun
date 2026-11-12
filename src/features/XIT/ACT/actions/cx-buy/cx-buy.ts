@@ -5,6 +5,10 @@ import { Config } from '@src/features/XIT/ACT/actions/cx-buy/config';
 import { CXPO_BUY } from '@src/features/XIT/ACT/action-steps/CXPO_BUY';
 import { fixed0, fixed02 } from '@src/utils/format';
 import { fillAmount } from '@src/features/XIT/ACT/actions/cx-buy/utils';
+import {
+  isValidCxPrice,
+  maxCxPriceSignificantFigures,
+} from '@src/features/XIT/ACT/actions/cx-limits';
 import { AssertFn, configurableValue } from '@src/features/XIT/ACT/shared-types';
 import { userData } from '@src/store/user-data';
 
@@ -29,6 +33,9 @@ act.addAction<Config>({
     !!(data.skippable && config.skip) ||
     data.exchange !== configurableValue ||
     config.exchange !== undefined,
+  // Only a bid writes the price of the material group to CXPO.
+  priceRule: data =>
+    data.allowUnfilled ? { maxSignificantFigures: maxCxPriceSignificantFigures } : undefined,
   generateSteps: async ctx => {
     const { data, config, state, log, getMaterialGroup, emitStep } = ctx;
 
@@ -73,6 +80,11 @@ act.addAction<Config>({
         continue;
       }
       const { quantity: amount, price } = materials[ticker];
+      // Fail on a price that CXPO would change, in case the material group did not check it.
+      assert(
+        !allowUnfilled || price === undefined || isValidCxPrice(price),
+        `Price for ${ticker} in [${data.group}] has more than ${maxCxPriceSignificantFigures} significant figures`,
+      );
       const priceLimit = price ?? data.priceLimits?.[ticker] ?? Infinity;
       if (isNaN(priceLimit)) {
         log.error('Non-numerical price limit on ' + ticker);

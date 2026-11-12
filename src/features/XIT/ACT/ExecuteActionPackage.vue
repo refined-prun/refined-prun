@@ -9,6 +9,7 @@ import LogWindow from '@src/features/XIT/ACT/LogWindow.vue';
 import ConfigWindow from '@src/features/XIT/ACT/ConfigureWindow.vue';
 import { ActionPackageConfig, ActionStep } from '@src/features/XIT/ACT/shared-types';
 import { act } from '@src/features/XIT/ACT/act-registry';
+import { getGroupPriceRules } from '@src/features/XIT/ACT/price-rules';
 
 const { pkg, afterExecute, extraSteps } = defineProps<{
   pkg: UserData.ActionPackageData;
@@ -78,7 +79,8 @@ const isValidConfig = computed(() => {
   for (const group of pkg.groups) {
     const info = act.getMaterialGroupInfo(group.type);
     let groupConfig = config.value.materialGroups[group.name!] ?? {};
-    const isValid = info?.isValidConfig?.(group, groupConfig) ?? true;
+    const priceRules = getGroupPriceRules(pkg, group.name);
+    const isValid = info?.isValidConfig?.(group, groupConfig, priceRules) ?? true;
     if (!isValid) {
       return false;
     }
