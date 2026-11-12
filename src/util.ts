@@ -68,11 +68,11 @@ export async function selectMaterialInMaterialSelector(baseElement: Element, tic
   }
   const input = await $(container, 'input');
 
-  const suggestionsContainer = await $(container, C.MaterialSelector.suggestionsContainer);
   focusElement(input);
   changeInputValue(input, ticker);
 
-  const suggestionsList = await $(container, C.MaterialSelector.suggestionsList);
+  const suggestionsContainer = await $(document, C.MaterialSelector.suggestionsContainer);
+  const suggestionsList = await $(suggestionsContainer, C.MaterialSelector.suggestionsList);
   suggestionsContainer.style.display = 'none';
   const match = _$$(suggestionsList, C.MaterialSelector.suggestionEntry).find(
     x => _$(x, C.ColoredIcon.label)?.textContent === ticker,
