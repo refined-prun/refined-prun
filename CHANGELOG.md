@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 26.11.12
+
 ### Added
 
 - `NOTS`: Added labels for ship route notifications (`nots-notification-type-label`)
