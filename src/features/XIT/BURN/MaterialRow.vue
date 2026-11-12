@@ -4,7 +4,7 @@ import MaterialIcon from '@src/components/MaterialIcon.vue';
 import DaysCell from '@src/features/XIT/BURN/DaysCell.vue';
 import { fixed0, fixed1, fixed2, trunc0, trunc01, trunc02 } from '@src/utils/format';
 import { useTileState } from '@src/features/XIT/BURN/tile-state';
-import { getBurnThresholds } from '@src/features/XIT/BURN/utils';
+import { getBurnThresholds, getDaysAll } from '@src/features/XIT/BURN/utils';
 import PrunButton from '@src/components/PrunButton.vue';
 import { showBuffer } from '@src/infrastructure/prun-ui/buffers';
 
@@ -37,6 +37,7 @@ const invFraction = computed(() => {
 });
 const isInf = computed(() => production.value >= 0);
 const days = computed(() => (isInf.value ? Number.POSITIVE_INFINITY : burn.daysLeft));
+const daysAll = computed(() => getDaysAll(burn));
 
 const thresholds = computed(() => getBurnThresholds(days.value));
 
@@ -115,6 +116,7 @@ const needAmt = computed(() => computeNeed(burn, getResupplyDays(naturalId)));
       <span>{{ isNaN(needAmt) ? '0' : fixed0(needAmt) }}</span>
     </td>
     <DaysCell :days="days" />
+    <DaysCell :days="daysAll" />
     <td>
       <PrunButton dark inline @click="showBuffer(`CXM ${material.ticker}`)">CXM</PrunButton>
     </td>

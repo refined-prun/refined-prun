@@ -19,7 +19,12 @@ import MaterialRow from '@src/features/XIT/BURN/MaterialRow.vue';
 import { useXitParameters } from '@src/hooks/use-xit-parameters';
 import { materialsStore } from '@src/infrastructure/prun-api/data/materials';
 import { sitesStore } from '@src/infrastructure/prun-api/data/sites';
-import { countDays, getSortedTickers } from '@src/features/XIT/BURN/utils';
+import {
+  countDays,
+  getDaysAll,
+  getSortedTickers,
+  getWarehouseAmounts,
+} from '@src/features/XIT/BURN/utils';
 import InlineFlex from '@src/components/InlineFlex.vue';
 import { findWithQuery } from '@src/utils/find-with-query';
 import { convertToPlanetNaturalId } from '@src/core/planet-natural-id';
@@ -100,8 +105,12 @@ const excludeInbound = useTileState('excludeInbound');
 
 function filterBurn(burn: BurnValues, naturalId: string): BurnValues {
   const filtered: BurnValues = {};
+  const warehouse = getWarehouseAmounts(naturalId);
   for (const ticker of Object.keys(burn)) {
-    const mat = burn[ticker];
+    // The overall section has no planet: it sums the warehouse stock of each planet.
+    const mat = naturalId
+      ? { ...burn[ticker], warehouseInventory: warehouse[ticker] ?? 0 }
+      : burn[ticker];
     const hasProd = mat.input > 0 || mat.output > 0;
     const hasWf = mat.workforce > 0;
     if (!(hasProd && prod.value) && !(hasWf && wf.value)) {
@@ -169,6 +178,8 @@ const planetBurn = computed(() => {
       overallBurn[ticker].remainingAllocation += mat.remainingAllocation;
       overallBurn[ticker].inventory += mat.inventory;
       overallBurn[ticker].inboundInventory += mat.inboundInventory;
+      overallBurn[ticker].warehouseInventory =
+        (overallBurn[ticker].warehouseInventory ?? 0) + (mat.warehouseInventory ?? 0);
     }
   }
 
@@ -228,8 +239,8 @@ function onExpandAllClick() {
 function formatBurnTable(burns: PlanetBurn[]) {
   const resupply = userData.settings.burn.resupply;
   const header = io.value
-    ? 'Planet\tTicker\tInv\tIn\tOut\tNet\tNeed\tDays'
-    : 'Planet\tTicker\tInv\tBurn/day\tNeed\tDays';
+    ? 'Planet\tTicker\tInv\tIn\tOut\tNet\tNeed\tDays\tDays All'
+    : 'Planet\tTicker\tInv\tBurn/day\tNeed\tDays\tDays All';
   const lines = [header];
   const round = (x: number) => Math.round(x * 1000) / 1000;
   for (const planet of burns) {
@@ -237,6 +248,7 @@ function formatBurnTable(burns: PlanetBurn[]) {
     for (const material of sorted) {
       const mat = planet.burn[material.ticker];
       const days = mat.dailyAmount >= 0 ? '' : Math.floor(mat.daysLeft).toString();
+      const daysAll = mat.dailyAmount >= 0 ? '' : Math.floor(getDaysAll(mat)).toString();
       const burn = round(mat.dailyAmount);
       const inv = mat.inventory + mat.inboundInventory + mat.remainingAllocation;
       const need =
@@ -247,10 +259,12 @@ function formatBurnTable(burns: PlanetBurn[]) {
         const inAmt = round(mat.input + mat.workforce);
         const outAmt = round(mat.output);
         lines.push(
-          `${planet.planetName}\t${material.ticker}\t${inv}\t${inAmt}\t${outAmt}\t${burn}\t${need}\t${days}`,
+          `${planet.planetName}\t${material.ticker}\t${inv}\t${inAmt}\t${outAmt}\t${burn}\t${need}\t${days}\t${daysAll}`,
         );
       } else {
-        lines.push(`${planet.planetName}\t${material.ticker}\t${inv}\t${burn}\t${need}\t${days}`);
+        lines.push(
+          `${planet.planetName}\t${material.ticker}\t${inv}\t${burn}\t${need}\t${days}\t${daysAll}`,
+        );
       }
     }
   }
@@ -331,6 +345,14 @@ function copyBurnTable() {
             </InlineFlex>
           </th>
           <th>Days</th>
+          <th>
+            <InlineFlex>
+              Days All
+              <Tooltip
+                position="bottom"
+                tooltip="Days left when the stock in the warehouse on the same planet is added." />
+            </InlineFlex>
+          </th>
           <th>CMD</th>
         </tr>
       </thead>
