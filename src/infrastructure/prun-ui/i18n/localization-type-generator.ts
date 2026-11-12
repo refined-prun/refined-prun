@@ -55,7 +55,7 @@ function emitLocalizationTree(tree: LocalizationTree, indent: number = 0) {
 }
 
 // This is to create an "example" template that one can check to match in-game text with localization keys.
-function emitStatic(ast: MessageFormatElement[]) {
+export function emitStatic(ast: MessageFormatElement[]) {
   const nodeStrings: string[] = [];
   for (const node of ast) {
     switch (node.type) {
@@ -112,12 +112,29 @@ function emitStatic(ast: MessageFormatElement[]) {
         break;
     }
   }
-  // Some of the English localization keys had NBSP, which eslint did not like.
-  // I replace all of these with regular spaces here.
-  return nodeStrings.join('').replaceAll('\u00A0', ' ');
+  return (
+    nodeStrings
+      .join('')
+      // Replace NBSP with normal space.
+      .replaceAll('\u00A0', ' ')
+      // Replace program apostrophes that function as escapes for ICU Message Syntax with human apostrophes.
+      .replaceAll('\u0027', '\u2019')
+  );
 }
 
 function emitFormatOptions(ast: MessageFormatElement[]): `void` | `{${string}}` {
+  const options = extractFormatOptions(ast);
+  if (options.size == 0) {
+    return `void`;
+  }
+  return `{ ${options
+    .entries()
+    .map(x => `${x[0]}: ${x[1].join(' | ')}`)
+    .toArray()
+    .join('; ')} }`;
+}
+
+export function extractFormatOptions(ast: MessageFormatElement[]): Map<string, string[]> {
   const options: Map<string, string[]> = new Map();
   function visit(nodes: MessageFormatElement[]) {
     for (const n of nodes) {
@@ -157,12 +174,5 @@ function emitFormatOptions(ast: MessageFormatElement[]): `void` | `{${string}}` 
     }
   }
   visit(ast);
-  if (options.size == 0) {
-    return `void`;
-  }
-  return `{ ${options
-    .entries()
-    .map(x => `${x[0]}: ${x[1].join(' | ')}`)
-    .toArray()
-    .join('; ')} }`;
+  return options;
 }
